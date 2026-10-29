@@ -1,0 +1,49 @@
+# Pen parity audit against OpenPencil
+
+2026-10-29 · source baseline `24461adec7073312d460d76f08f069de18e4fb78` · paths relative to the project root after moving `upstream-editor` into it.
+
+**Evidence level: inspected source and existing test definitions only. No runtime, test execution, build, hardware, or cross-application round-trip success is asserted here.** This evaluates the licensed OpenPencil implementation against [FEATURES.md](FEATURES.md), whose reference features are vendor-reported. Full parity remains the terminal product target; these are gaps to close, not a reduction of that target.
+
+## Capability matrix
+
+“Present” means relevant implementation exists; it does not mean equivalent behavior has been executed.
+
+| Reference category | Source evidence | Existing test evidence | Current gap / confidence boundary |
+| --- | --- | --- | --- |
+| Canvas/selection/history | `packages/core/src/editor/`; `packages/core/src/canvas/` | `packages/core/tests/editor/viewport.test.ts`; `packages/core/tests/editor/undo/` | Present; exact Pen selection/navigation parity requires UI comparison. |
+| Layers/properties | `src/components/`; `packages/core/src/editor/structure/` | `packages/core/tests/editor/structure/layer-state-undo.test.ts` | Present; do not rebuild the shell before exercising it. |
+| Flex layout | `packages/core/src/layout/`; `packages/pen/src/layout.ts` | `tests/engine/layout/auto-layout/`; `packages/core/tests/editor/layout/` | Present, including authoring/layout machinery; visual edge cases need fixture comparison. |
+| Vector drawing | `packages/core/src/editor/shapes/pen.ts`; `packages/core/src/editor/shapes/pencil.ts` | `packages/core/tests/editor/pen-resume.test.ts`; `packages/core/tests/editor/pencil.test.ts` | Present; Pen's point-editing shortcuts and scale semantics need acceptance mapping. |
+| Text/fonts | `packages/core/src/editor/text/`; `src/app/editor/fonts/`; `packages/pen/src/text.ts` | `packages/pen/tests/text.test.ts`; `tests/engine/text/` | Present; cross-platform font shaping and external document font portability remain runtime questions. |
+| Graphics | `packages/core/src/canvas/`; `packages/scene-graph/src/shaders/`; `src/components/fill-picker/shader/` | `packages/core/tests/editor/shaders.test.ts`; `packages/vue/tests/controls/shader.test.ts` | Native preset shaders exist. Pen mesh and arbitrary GLSL shader import/effects do not map to them. |
+| Components | `packages/core/src/editor/components/`; `packages/pen/src/instances.ts` | `packages/pen/tests/instances.test.ts`; `packages/core/tests/editor/components/` | Present. `.pen` reusable non-frame objects are copied rather than linked instances. |
+| Slots | `packages/scene-graph/src/slots/`; `packages/core/src/editor/components/slots/`; `packages/vue/src/controls/slots/` | `packages/scene-graph/tests/slots/content.test.ts`; `packages/core/tests/editor/components/slots/` | Native slots exist, but `.pen` `slot` metadata is ignored by the adapter. |
+| Variables/themes | `packages/core/src/editor/variables/`; `packages/pen/src/variables.ts` | `packages/pen/tests/variables.test.ts`; `packages/core/tests/editor/variables/` | Present; complete Pen theme/alias editing and round-trip need proof. |
+| Libraries | `packages/core/src/library/`; `src/app/libraries/`; `src/components/libraries/` | `packages/core/tests/library/`; `tests/e2e/components/library-lifecycle.spec.ts` | Native publication/update exists. `.pen` imports and `.lib.pen` dependency resolution are missing from the examined reader. |
+| File interchange | `packages/core/src/io/formats.ts`; `packages/core/src/io/formats/{fig,svg,raster,pdf,html}/` | `tests/engine/io/export-formats.test.ts`; `tests/engine/io/fig/`; `tests/engine/io/svg/` | Broad import/export exists. `.pen` is read-only; there is no `.pen` writer or save target. |
+| Browser workflow | `packages/dom-css/src/browser.ts`; `packages/dom-css/src/runtime/browser.ts`; `packages/core/src/io/formats/html/` | `tests/engine/io/dom-css-formats.test.ts` | HTML/CSS-to-layers exists. No equivalent URL-navigation/device-preview/page-capture workflow found in examined app/Core/DOM packages. An iframe CSS evaluator is not that workflow. |
+| AI editing | `src/app/ai/`; `src/components/chat/`; `packages/harness/` | `tests/app/ai/`; `tests/e2e/` | Provider/chat/tool infrastructure exists; Pen's precise parallel/variant/session behaviors need mapping and provider execution. |
+| External automation | `packages/mcp/src/`; `src/app/automation/` | `packages/mcp/tests/`; `tests/engine/mcp/browser-rpc.test.ts`; `tests/app/automation/bridge/export.test.ts` | MCP and editor automation exist. Pen tool names/contracts and browser tool parity are not established. |
+| CLI | `packages/cli/src/` | `tests/engine/cli/export/` | CLI exists; `.pen` write-through absent from shared I/O. |
+| Code/design exchange | `packages/dom-css/`; `packages/design-jsx/`; `src/app/code/` | `packages/core/tests/design-jsx/export-round-trip.test.ts`; `tests/engine/io/dom-css-formats.test.ts` | HTML/JSX and code export present; continuous bidirectional code synchronization is a separate acceptance claim. |
+| Procedural content | `src/app/code/sandbox/`; `packages/core/src/tools/analyze/eval/` | `tests/e2e/code/sandbox.spec.ts`; `tests/engine/app/code/sandbox.test.ts` | Code evaluation exists, but no persisted Pen-style script node, `scriptUri`/input controls/file watching/derived children contract found. |
+| Presentations | `packages/core/src/io/formats/pdf/plan.ts`; `packages/core/src/io/formats/pptx/export.ts` | `tests/engine/io/pptx/export/{render,fidelity}.test.ts` | Frame/page PDF and editable/raster-fallback PPTX exist. No Pen-style slides filmstrip/order/presenter navigation found. Files named `presentation.ts` inspected here format UI state, not slide presentation. |
+| Sharing | `src/app/collab/`; `packages/cloud/` | `tests/engine/collab/` | Collaboration/cloud infrastructure exists. Snapshot upload, complete dependency bundling, viewer download, update/revoke equivalence require separate verification. |
+| Hosted image operations | `src/app/editor/vectorize/`; `packages/core/src/vector/` | `tests/app/editor/vectorize/providers.test.ts`; `tests/engine/vector/vectorize.test.ts` | Provider-based vectorization exists. No background-removal entry point found by bounded search in app/Core sources. Services and provider costs remain separate from editor subscriptions. |
+
+## Concrete `.pen` 2.21 gaps
+
+- **No output path:** `packages/pen/src/index.ts` exports parsing/building only. `penFormat` in `packages/core/src/io/formats.ts` declares reading; `src/app/document/io/save/targets.ts` selects `.fig`; `src/app/document/io/write.ts` carries `.fig` persistence assumptions. A writer added only to `packages/pen` would not complete save behavior across UI/CLI/MCP.
+- **Lossy paints/effects:** `packages/pen/src/paints.ts` only converts solid, ordinary gradient and image paints. `packages/pen/tests/paints.test.ts` explicitly expects mesh fills to be skipped. `packages/pen/src/effects.ts` omits shader effects, with that omission asserted in `effects.test.ts`. Linear burn/dodge also lack direct scene-graph mapping.
+- **Unsupported node semantics:** `sceneType` in `packages/pen/src/nodes.ts` falls back to `FRAME`. Browser/script/note/context content therefore has no equivalent behavior. Prompt nodes are skipped. `createSceneNode` only creates linked instances for reusable frames.
+- **Library/slot loss:** `imports` is validated in `schema.ts` but no use was found in the examined parser/reader/import path. `PROPERTY_FIELDS.slot` is empty; no `.pen` slot authoring conversion is present. Native library/slot implementations must be bridged, not rewritten.
+- **Permissive version, strict JSON:** `schema.ts` makes the version optional and accepts arbitrary strings. It parses through Valibot's JSON parser; no JSON-comment preprocessing was found. This differs from the public reference's JSON-comment support and provides no explicit future-version rejection.
+- **Unknown fields are not fidelity:** loose schema acceptance preserves unknown values in the parsed object, but `buildPenGraph` projects known fields into a graph. That is not lossless retention or round-trip compatibility.
+
+## Implementation priority
+
+1. **First tractable gap: import loss diagnostics.** Detect unsupported nodes, paints/effects, imports, slots and versions before graph conversion; return structured warnings through shared Core I/O and show them in UI/CLI/MCP. Never silently present a damaged import as full compatibility. Test mixed supported/unsupported fixtures and unchanged current document on rejected input.
+2. **Next substantial slice: supported `.pen` 2.21 export and save.** Reuse the shared I/O registry and existing save machinery. Start with an explicit supported scene-graph subset and actionable rejection for unsupported data; cover caller adapters, file naming, assets, unit round-trips and a real Pen-open → Open Pen-edit/save → Pen-reopen journey. Do not claim general parity from that subset.
+3. **Then map existing native systems:** slots/library imports and components first; custom mesh/GLSL, persistent scripts and browser nodes require new renderer/runtime contracts. Slides can reuse frame ordering and PDF/PPTX export infrastructure once its actual workflow is specified.
+
+Full parity remains open after all three priorities. The acceptance ledger must separately cover every matrix row with executed outcomes and retain all unsupported cases. No production code changed in this audit.

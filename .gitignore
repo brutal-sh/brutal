@@ -102,3 +102,14 @@ dist-metrics/
 
 # SwiftPM output of desktop Swift packages built by hand
 desktop/swift/*/.build/
+
+# Open Pen local investigation
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+local-evidence/
+test-results/
+playwright-report/
+.DS_Store
