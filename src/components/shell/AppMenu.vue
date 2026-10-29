@@ -17,6 +17,7 @@ import {
 import { useTemplateRef, watch } from 'vue'
 import IconChevronRight from '~icons/lucide/chevron-right'
 
+import type { MenuEntry } from '@open-pencil/vue/editor/menu-model'
 import { useI18n } from '@open-pencil/vue/i18n'
 import { vTestId } from '@open-pencil/vue/testing'
 
@@ -48,6 +49,11 @@ import { useMenuUI } from '@/components/ui/menu/menu'
 import MenuScrollArea from '@/components/ui/menu/MenuScrollArea.vue'
 import { IS_TAURI } from '@/constants'
 
+const emit = defineEmits<{ action: [] }>()
+function select(item: MenuEntry) {
+  runMenuAction(item)
+  emit('action')
+}
 const store = useEditorStore()
 
 const { rename, editingName, startRename, commitRename } = useDocumentNameRename(store)
@@ -161,7 +167,7 @@ const { overflowStart, overflowEnd, scrollTowardHidden } = useScrollOverflow(men
                                 v-else
                                 :class="menuCls.item"
                                 :disabled="menuDisabled(sub)"
-                                @select="runMenuAction(sub)"
+                                @select="select(sub)"
                               >
                                 <span class="flex-1">{{ menuLabel(sub) }}</span>
                                 <AppShortcutText v-if="menuShortcut(sub)">{{
@@ -188,7 +194,7 @@ const { overflowStart, overflowEnd, scrollTowardHidden } = useScrollOverflow(men
                       v-else
                       :class="menuCls.item"
                       :disabled="menuDisabled(item)"
-                      @select="runMenuAction(item)"
+                      @select="select(item)"
                     >
                       <span class="flex-1">{{ menuLabel(item) }}</span>
                       <AppShortcutText v-if="menuShortcut(item)">{{

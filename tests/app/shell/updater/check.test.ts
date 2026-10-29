@@ -3,7 +3,7 @@ import { afterEach, describe, expect, test } from 'bun:test'
 import { useI18n } from '@open-pencil/vue/i18n'
 
 import { toast } from '@/app/shell/ui'
-import { checkForAppUpdate } from '@/app/shell/updater/check'
+import { checkForAppUpdate, scheduleStartupUpdateCheck } from '@/app/shell/updater/check'
 import { UPDATER_WINDOW_LABEL, UPDATER_WINDOW_URL } from '@/app/shell/updater/window'
 
 import { clearTauriMocks, mockTauriIPC } from '#tests/helpers/tauri/mocks'
@@ -25,6 +25,20 @@ afterEach(async () => {
 })
 
 describe('checkForAppUpdate', () => {
+  test('does not schedule an update request in a build without update endpoints', async () => {
+    const calls: string[] = []
+    await mockTauriIPC((cmd) => {
+      calls.push(cmd)
+      return null
+    })
+
+    scheduleStartupUpdateCheck(messages)
+    await new Promise((resolve) => setTimeout(resolve, 2600))
+
+    expect(calls).toEqual([])
+    expect(toast.toasts.value).toEqual([])
+  })
+
   test('returns quietly when no update is available', async () => {
     const calls: string[] = []
     await mockTauriIPC((cmd) => {

@@ -22,5 +22,14 @@ export default {
     empty: 'px-2 py-4 text-center text-xs text-muted',
     form: 'space-y-2 border-t border-border p-2',
     actions: 'flex justify-end gap-1'
+  },
+  variants: {
+    docked: {
+      true: {
+        root: 'border-b-0',
+        header: 'gap-1.5 px-3 py-2',
+        trigger: 'gap-2 rounded-md px-1 py-1.5 text-muted focus-visible:outline-panel-focus'
+      }
+    }
   }
 } as const

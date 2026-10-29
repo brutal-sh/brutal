@@ -19,6 +19,7 @@ import DesignCheckPanel from './design-check/DesignCheckPanel.vue'
 import DesignPanel from './DesignPanel.vue'
 import ZoomDropdown from './editor/ZoomDropdown.vue'
 
+const { agentOnLeft = false } = defineProps<{ agentOnLeft?: boolean }>()
 const propertiesTabs = tv(propertiesTabsTheme)
 
 const { activeTab } = useAIChat()
@@ -51,7 +52,13 @@ const problemCount = computed(() => {
     <CommentsPanel v-else-if="commenting" />
     <TabsRoot
       v-show="!commenting && !history"
-      v-model="activeTab"
+      :model-value="agentOnLeft && activeTab === 'ai' ? 'design' : activeTab"
+      @update:model-value="
+        (value) => {
+          if (value === 'design' || value === 'code' || value === 'ai' || value === 'lint')
+            activeTab = value
+        }
+      "
       class="flex min-h-0 flex-1 flex-col"
     >
       <TabsList :class="tabStyles.list()">
@@ -66,7 +73,12 @@ const problemCount = computed(() => {
           <icon-lucide-code :class="tabStyles.icon()" aria-hidden="true" />
           <span :class="tabStyles.label()">{{ panels.code }}</span>
         </TabsTrigger>
-        <TabsTrigger value="ai" data-test-id="properties-tab-ai" :class="tabStyles.trigger()">
+        <TabsTrigger
+          v-if="!agentOnLeft"
+          value="ai"
+          data-test-id="properties-tab-ai"
+          :class="tabStyles.trigger()"
+        >
           <icon-lucide-sparkles :class="tabStyles.icon()" aria-hidden="true" />
           <span :class="tabStyles.label()">{{ panels.ai }}</span>
         </TabsTrigger>
@@ -88,14 +100,14 @@ const problemCount = computed(() => {
           />
           <span :class="tabStyles.label()">{{ checkMessages.tab }}</span>
         </TabsTrigger>
-        <ZoomDropdown v-if="activeTab === 'design'" />
+        <ZoomDropdown v-if="!agentOnLeft && activeTab === 'design'" />
       </TabsList>
 
       <TabsContent
         value="design"
         class="flex min-h-0 flex-1 flex-col"
         :force-mount="true"
-        :hidden="activeTab !== 'design'"
+        :hidden="activeTab !== 'design' && !(agentOnLeft && activeTab === 'ai')"
       >
         <DesignPanel />
       </TabsContent>
@@ -119,6 +131,7 @@ const problemCount = computed(() => {
       </TabsContent>
 
       <TabsContent
+        v-if="!agentOnLeft"
         value="ai"
         class="flex min-h-0 flex-1 flex-col"
         :force-mount="true"

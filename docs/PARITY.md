@@ -1,4 +1,8 @@
+> **User correction, 2026-10-30:** The terminal criterion is **1:1 visual and functional parity with `/Applications/Pen.app` 1.2.21**, excluding subscription/licensing gates. The initial OpenPencil shell is not accepted. The user's screenshot and live Pen UI are the visual references. Floating Agent/history and separate composer at left, vertical tools, document and action pills, inspector states, and embedded right browser must be compared state-for-state. Any remaining mismatch stays open.
+
 # Pen parity audit against OpenPencil
+
+**Current implementation update:** the table below is the initial source audit. The fork now has bounded `.pen` import diagnostics, a writer for ordinary shapes/layout/paints/images/variables/instances, normal `.pen` Save/Save As, presentation navigation, and a native browser preview implementation. See [executed acceptance evidence](ACCEPTANCE.md) for checks and remaining limits. Full parity is still open; a refusal prevents loss but does not satisfy a feature requirement.
 
 2026-10-29 · source baseline `24461adec7073312d460d76f08f069de18e4fb78` · paths relative to the project root after moving `upstream-editor` into it.
 

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ToolbarRoot } from 'reka-ui'
+import { tv } from 'tailwind-variants'
 
 import type { EditorToolDef, Tool } from '@open-pencil/core'
 import {
@@ -16,6 +17,9 @@ import ToolButton from '@/components/toolbar/ToolButton.vue'
 import ToolFlyout from '@/components/toolbar/ToolFlyout.vue'
 import type { ToolbarUI, ToolIconMap, ToolLabels } from '@/components/toolbar/types'
 import Tip from '@/components/ui/overlay/Tip.vue'
+import toolbarTheme from '@/theme/toolbar'
+
+const styles = tv(toolbarTheme)()
 
 const { items, activeTool, flyoutSelections, toolIcons, toolLabels, toolShortcuts, ui } =
   defineProps<{
@@ -40,18 +44,16 @@ function selectedTool(tool: EditorToolDef) {
 defineSlots<{
   /** A button that runs a command, such as placing an icon, rather than picking a tool. */
   action(props: { action: ToolbarAction }): unknown
+  /** Additional desktop commands participate in the rail's keyboard navigation. */
+  end?(): unknown
+  /** Commands outside the tool rail, such as the application menu. */
+  after?(): unknown
 }>()
 </script>
 
 <template>
-  <div
-    data-canvas-obstacle
-    class="absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 items-center"
-  >
-    <ToolbarRoot
-      data-test-id="toolbar"
-      class="flex gap-0.5 rounded-xl bg-panel p-1 shadow-[0_8px_30px_rgb(0_0_0/0.4)]"
-    >
+  <div data-canvas-obstacle :class="styles.desktopRoot()">
+    <ToolbarRoot data-test-id="toolbar" orientation="vertical" :class="styles.desktopRail()">
       <template v-for="item in items" :key="item.kind === 'tool' ? item.tool.key : item.action">
         <slot v-if="item.kind === 'action'" name="action" :action="item.action" />
 
@@ -59,6 +61,7 @@ defineSlots<{
 
         <Tip
           v-else-if="item.tool.flyout"
+          side="right"
           :label="
             toolTip(toolLabels[selectedTool(item.tool)], toolShortcuts[selectedTool(item.tool)])
           "
@@ -76,7 +79,10 @@ defineSlots<{
         </Tip>
 
         <ToolbarItem v-else v-slot="{ active, actions }" :tool="item.tool.key">
-          <Tip :label="toolTip(toolLabels[item.tool.key], toolShortcuts[item.tool.key])">
+          <Tip
+            :label="toolTip(toolLabels[item.tool.key], toolShortcuts[item.tool.key])"
+            side="right"
+          >
             <ToolButton
               :data-test-id="toolbarToolTestId(item.tool.key)"
               :icon="toolIcons[item.tool.key]"
@@ -88,6 +94,8 @@ defineSlots<{
           </Tip>
         </ToolbarItem>
       </template>
+      <slot name="end" />
     </ToolbarRoot>
+    <slot name="after" />
   </div>
 </template>

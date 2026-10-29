@@ -1,6 +1,5 @@
-//! Receives the ChatGPT sign-in redirect. OpenAI registers one redirect for the Codex client,
-//! `http://localhost:1455/auth/callback`, so the app listens there for the single request that
-//! carries the authorization code, then closes the port.
+//! Receives sign-in redirects on loopback only. ChatGPT requires port 1455; OpenRouter accepts
+//! an OS-assigned port. The listener checks the attempt's state and closes after one result.
 
 use std::io::{ErrorKind, Read, Write};
 use std::net::{TcpListener, TcpStream};
@@ -12,6 +11,23 @@ use url::Url;
 
 const CALLBACK_ADDRESS: &str = "127.0.0.1:1455";
 const CALLBACK_PATH: &str = "/auth/callback";
+
+#[derive(Debug, Default, Clone, Copy, serde::Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum OAuthProvider {
+    #[default]
+    ChatGPT,
+    OpenRouter,
+}
+
+impl OAuthProvider {
+    fn address(self) -> &'static str {
+        match self {
+            Self::ChatGPT => CALLBACK_ADDRESS,
+            Self::OpenRouter => "127.0.0.1:0",
+        }
+    }
+}
 /// Codes expire after ten minutes; a sign-in left open longer has to start again.
 const WAIT_LIMIT: Duration = Duration::from_secs(10 * 60);
 const POLL_INTERVAL: Duration = Duration::from_millis(100);
@@ -133,7 +149,7 @@ fn escape_html(text: &str) -> String {
 fn respond(stream: &mut TcpStream, status: &str, message: &str) {
     let message = escape_html(message);
     let body = format!(
-        "<!doctype html><meta charset=\"utf-8\"><title>OpenPencil</title>\
+        "<!doctype html><meta charset=\"utf-8\"><title>Open Pen</title>\
          <p style=\"font:16px system-ui;margin:48px auto;max-width:480px\">{message}</p>"
     );
     let response = format!(
@@ -144,10 +160,10 @@ fn respond(stream: &mut TcpStream, status: &str, message: &str) {
     let _ = stream.write_all(response.as_bytes());
 }
 
-fn bind() -> Result<TcpListener, LoopbackError> {
+fn bind(provider: OAuthProvider) -> Result<TcpListener, LoopbackError> {
     let started = Instant::now();
     loop {
-        match TcpListener::bind(CALLBACK_ADDRESS) {
+        match TcpListener::bind(provider.address()) {
             Ok(listener) => return Ok(listener),
             Err(error) if error.kind() == ErrorKind::AddrInUse => {
                 if started.elapsed() >= REBIND_LIMIT {
@@ -213,7 +229,8 @@ pub async fn chatgpt_oauth_listen(
     loopback: tauri::State<'_, ChatGPTOAuthLoopback>,
     state: String,
     pages: CallbackPages,
-) -> Result<(), LoopbackError> {
+    provider: Option<OAuthProvider>,
+) -> Result<String, LoopbackError> {
     let cancelled = Arc::new(AtomicBool::new(false));
     if let Some((_, previous)) = loopback
         .current
@@ -229,20 +246,25 @@ pub async fn chatgpt_oauth_listen(
         .lock()
         .map_err(|_| LoopbackError::Failed)?
         .take();
-    let listener = tauri::async_runtime::spawn_blocking(bind)
+    let listener = tauri::async_runtime::spawn_blocking(move || bind(provider.unwrap_or_default()))
         .await
         .map_err(|_| LoopbackError::Failed)??;
     // Cancelled while binding: drop the port rather than hold it for an attempt that is over.
     if cancelled.load(Ordering::SeqCst) {
         return Err(LoopbackError::Failed);
     }
+    let port = listener
+        .local_addr()
+        .map_err(|_| LoopbackError::Failed)?
+        .port();
+    let callback_url = format!("http://localhost:{port}{CALLBACK_PATH}");
     *loopback.pending.lock().map_err(|_| LoopbackError::Failed)? = Some(Pending {
         listener,
         state,
         pages,
         cancelled,
     });
-    Ok(())
+    Ok(callback_url)
 }
 
 /// Waits for the redirect on the port `chatgpt_oauth_listen` took, then releases it.
@@ -291,6 +313,39 @@ pub fn chatgpt_oauth_cancel(loopback: tauri::State<'_, ChatGPTOAuthLoopback>, st
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn openrouter_receives_a_local_redirect_without_claiming_chatgpts_port() {
+        let listener = bind(OAuthProvider::OpenRouter).unwrap();
+        let address = listener.local_addr().unwrap();
+        assert!(address.ip().is_loopback());
+        assert_ne!(address.port(), 0);
+        assert_eq!(OAuthProvider::ChatGPT.address(), CALLBACK_ADDRESS);
+        let worker = std::thread::spawn(move || {
+            wait(Pending {
+                listener,
+                state: "openrouter-state".into(),
+                pages: CallbackPages {
+                    signed_in: "Return to Open Pen".into(),
+                    cancelled: "Cancelled".into(),
+                    stale: "Stale".into(),
+                },
+                cancelled: Arc::new(AtomicBool::new(false)),
+            })
+        });
+        let mut stream = TcpStream::connect(address).unwrap();
+        stream.write_all(b"GET /auth/callback?code=test-code&state=openrouter-state HTTP/1.1\r\nHost: localhost\r\n\r\n").unwrap();
+        let mut response = String::new();
+        stream.read_to_string(&mut response).unwrap();
+        assert!(response.starts_with("HTTP/1.1 200 OK"));
+        assert_eq!(
+            worker.join().unwrap().unwrap(),
+            LoopbackOutcome::Code {
+                code: "test-code".into()
+            }
+        );
+        assert!(TcpStream::connect(address).is_err());
+    }
 
     #[test]
     fn reads_the_code_for_this_attempt() {

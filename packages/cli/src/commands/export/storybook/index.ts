@@ -61,7 +61,7 @@ function toPosix(path: string): string {
   return path.split(sep).join(posix.sep)
 }
 
-/** Repository-relative path for `openpencil://` links, when the file sits under the cwd. */
+/** Repository-relative path for `openpen://` links, when the file sits under the cwd. */
 function linkPath(file: string): string | undefined {
   const path = toPosix(relative(process.cwd(), resolve(file)))
   return path.startsWith('../') || isAbsolute(path) ? undefined : path

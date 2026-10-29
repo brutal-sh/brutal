@@ -3,20 +3,23 @@ import { TabsList, TabsRoot, TabsTrigger } from 'reka-ui'
 import { tv } from 'tailwind-variants'
 import { computed, useTemplateRef, watch } from 'vue'
 
+import { useViewportKind } from '@open-pencil/vue/editor/viewport-kind'
 import { useI18n } from '@open-pencil/vue/i18n'
 
 import { animationsEnabled } from '@/app/shell/motion'
 import { useTabsStore, createTab } from '@/app/tabs'
+import WorkspaceMenu from '@/components/editor/WorkspaceMenu.vue'
 import PreparationIndicator from '@/components/preparation/tab/PreparationIndicator.vue'
 import { useScrollOverflow } from '@/components/ui/list/useScrollOverflow'
 import Tip from '@/components/ui/overlay/Tip.vue'
 import tabBarTheme from '@/theme/tab-bar'
 
 const { files } = useI18n()
+const { isMobile } = useViewportKind()
 
 const { tabs, activeTabId, switchTab, closeTab } = useTabsStore()
 const tabBarStyles = tv(tabBarTheme)
-const baseStyles = tabBarStyles()
+const baseStyles = computed(() => tabBarStyles({ mobile: isMobile.value }))
 
 const scroller = useTemplateRef<HTMLElement>('scroller')
 const { overflowing, overflowStart, overflowEnd, scrollTowardHidden } = useScrollOverflow(
@@ -74,6 +77,7 @@ function onClose(e: MouseEvent, tabId: string) {
     activation-mode="automatic"
     :class="baseStyles.root()"
   >
+    <WorkspaceMenu v-if="!isMobile" />
     <div
       ref="scroller"
       :class="baseStyles.scroller()"
@@ -86,20 +90,22 @@ function onClose(e: MouseEvent, tabId: string) {
           :key="tab.id"
           data-slot="tab-item"
           :data-active="tab.isActive || undefined"
-          :class="tabBarStyles({ active: tab.isActive, home: tab.isHome }).item()"
+          :class="tabBarStyles({ active: tab.isActive, home: tab.isHome, mobile: isMobile }).item()"
           @mousedown="onMiddleClick($event, tab.id, tab.isHome)"
         >
           <TabsTrigger
             :value="tab.id"
             data-test-id="tabbar-tab"
-            :class="tabBarStyles({ active: tab.isActive, home: tab.isHome }).trigger()"
+            :class="
+              tabBarStyles({ active: tab.isActive, home: tab.isHome, mobile: isMobile }).trigger()
+            "
             :aria-label="tab.isHome ? files.home : undefined"
             :data-active="tab.isActive || undefined"
             :data-dirty="tab.isDirty || undefined"
           >
             <icon-lucide-house v-if="tab.isHome" :class="baseStyles.icon()" />
             <PreparationIndicator v-else-if="tab.isPreparing" :progress="tab.preparationProgress" />
-            <icon-lucide-file v-else :class="baseStyles.icon()" />
+            <icon-lucide-file v-else-if="!tab.isHome" :class="baseStyles.icon()" />
             <span v-if="!tab.isHome" :class="baseStyles.label()">{{ tab.name }}</span>
             <Tip v-if="tab.isDirty" :label="files.unsavedChanges" side="bottom">
               <span role="img" :aria-label="files.unsavedChanges" :class="baseStyles.dirtyDot()" />
@@ -109,7 +115,7 @@ function onClose(e: MouseEvent, tabId: string) {
             <button
               type="button"
               data-test-id="tabbar-close"
-              :class="tabBarStyles({ active: tab.isActive }).close()"
+              :class="tabBarStyles({ active: tab.isActive, mobile: isMobile }).close()"
               :data-active="tab.isActive || undefined"
               :aria-label="files.closeTab({ name: tab.name })"
               tabindex="-1"

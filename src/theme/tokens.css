@@ -51,23 +51,23 @@
   --color-*: initial;
   --color-white: #ffffff;
   --color-black: #000000;
-  --color-panel: #2a2a2a;
-  --color-panel-secondary: #242424;
-  --color-panel-field: #383838;
-  --color-panel-field-hover: #404040;
+  --color-panel: #27262b;
+  --color-panel-secondary: #222126;
+  --color-panel-field: #333239;
+  --color-panel-field-hover: #3d3c43;
   --color-panel-focus: #3b82f6;
   --color-panel-selected: #2f6fdd;
   --color-panel-selected-muted: #353b46;
-  --color-canvas: #1e1e1e;
-  --color-border: #3a3a3a;
-  --color-hover: #353535;
+  --color-canvas: #18171c;
+  --color-border: #3b3a40;
+  --color-hover: #3a393f;
   /* The accent family; src/app/shell/accent/palette.ts derives other accents from it. */
   --color-accent: #2563eb;
   --color-on-accent: #ffffff;
   --color-on-primary: #1f2328;
   --color-surface: #f0f0f0;
   --color-muted: #a6a6a6;
-  --color-input: #1e1e1e;
+  --color-input: #222126;
   --color-component: #bb8cff;
   --color-slot: #f45cc4;
   /*

@@ -22,7 +22,20 @@ const tabBarTheme = {
     scrollIcon: 'size-3.5'
   },
   variants: {
-    // Home is pinned first as an icon, the way Figma's desktop app shows it.
+    mobile: {
+      true: {},
+      false: {
+        root: 'inline-flex h-[42px] w-max max-w-full min-w-0 items-center gap-1 rounded-[24px] border border-border bg-panel px-2 shadow-sm',
+        scroller: 'h-8',
+        list: 'items-center gap-1',
+        item: 'h-8 rounded-full border-r-0 pr-1',
+        trigger: 'rounded-full text-xs',
+        close: 'size-6 rounded-full sm:size-6',
+        newTab: 'size-7 rounded-full ms-0',
+        scroll: 'rounded-full'
+      }
+    },
+    // Home stays pinned first; desktop shows the app name and mobile keeps the compact icon.
     home: {
       true: {
         item: 'max-w-none min-w-0 pr-0',
@@ -42,7 +55,26 @@ const tabBarTheme = {
       }
     }
   },
+  compoundVariants: [
+    {
+      mobile: false,
+      active: true,
+      class: {
+        item: 'bg-hover',
+        trigger: 'bg-transparent'
+      }
+    },
+    {
+      mobile: false,
+      home: true,
+      class: {
+        item: 'pr-0',
+        trigger: 'px-2.5 font-medium'
+      }
+    }
+  ],
   defaultVariants: {
+    mobile: false,
     active: false,
     home: false
   }

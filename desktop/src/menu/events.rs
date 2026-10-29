@@ -6,7 +6,7 @@ use tauri::Manager;
 pub fn handle_menu_event<R: tauri::Runtime>(app: &tauri::AppHandle<R>, event_id: &str) {
     #[cfg(debug_assertions)]
     if event_id == "dev-tools" {
-        if let Some(window) = app.get_webview_window("main") {
+        if let Some(window) = app.get_webview("main") {
             if window.is_devtools_open() {
                 window.close_devtools();
             } else {

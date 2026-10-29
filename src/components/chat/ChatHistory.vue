@@ -31,12 +31,14 @@ const {
   conversations,
   selectedId,
   disabled = false,
-  saved = false
+  saved = false,
+  docked = false
 } = defineProps<{
   conversations: { id: string; title: string; documentName: string; available: boolean }[]
   selectedId?: string
   disabled?: boolean
   saved?: boolean
+  docked?: boolean
 }>()
 const emit = defineEmits<{
   select: [id: string]
@@ -47,7 +49,7 @@ const emit = defineEmits<{
 }>()
 const { ai } = useI18n()
 const triggerClass = tv(iconButtonTheme)({ size: 'sm' })
-const styles = chatHistoryTheme()
+const styles = computed(() => chatHistoryTheme({ docked }))
 const menu = useMenuUI({ content: 'min-w-44' })
 const item = menuItem({ justify: 'start' })
 const open = ref(false)
@@ -165,7 +167,17 @@ function closeMenu(event: Event) {
         </PopoverPortal>
       </PopoverRoot>
       <slot name="actions" />
-      <IconButton :label="ai.newChat" :disabled="disabled" size="sm" @click="emit('create')"
+      <AppButton
+        v-if="docked"
+        size="xs"
+        :aria-label="ai.newChat"
+        :disabled="disabled"
+        @click="emit('create')"
+      >
+        <template #leading><icon-lucide-plus /></template>
+        New
+      </AppButton>
+      <IconButton v-else :label="ai.newChat" :disabled="disabled" size="sm" @click="emit('create')"
         ><icon-lucide-plus :class="styles.icon()"
       /></IconButton>
       <DropdownMenuRoot v-if="saved">

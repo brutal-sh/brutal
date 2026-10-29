@@ -56,6 +56,7 @@ import LoadingScreen from '@/components/shell/LoadingScreen.vue'
 import TabBar from '@/components/TabBar.vue'
 import { IS_BROWSER, IS_CLOUD_SITE } from '@/constants'
 
+const commandPaletteOpen = ref(false)
 const route = useRoute()
 /**
  * The active tab as it shows: a version of its document being previewed takes the document's
@@ -299,11 +300,18 @@ onUnmounted(() => {
     <ColorSpaceBanner />
     <FontStatusBanner />
     <RenameSelectionDialog />
-    <CommandPalette />
-    <TabBar />
+    <CommandPalette v-model:open="commandPaletteOpen" />
+    <div class="flex h-14 shrink-0 items-center px-2">
+      <TabBar class="max-w-[55%]" />
+    </div>
     <HomeWorkspace v-show="activeTab?.kind === 'home'" @new-document="createTab()" />
     <CloudVersionDialog />
-    <EditorWorkspace v-if="shown && shown.tab.kind !== 'home'" :key="shown.key" :tab="shown.tab" />
+    <EditorWorkspace
+      v-if="shown && shown.tab.kind !== 'home'"
+      :key="shown.key"
+      :tab="shown.tab"
+      @open-command-palette="commandPaletteOpen = true"
+    />
     <LoadingScreen v-if="openingCloudLink" />
   </div>
 </template>

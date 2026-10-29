@@ -40,7 +40,7 @@ describe('Cloud links', () => {
     const web = readCloudLink(new URL(`${SERVER}/share/abc#secret`))
     if (!web) throw new Error('Expected a Cloud link')
     const desktop = new URL(cloudDesktopLinkURL(web.kind, web.id, web.server, web.secret))
-    expect([desktop.protocol, desktop.host]).toEqual(['openpencil:', 'cloud'])
+    expect([desktop.protocol, desktop.host]).toEqual(['openpen:', 'cloud'])
     expect(desktop.searchParams.get('url')).toBe(`${SERVER}/share/abc`)
     expect(desktop.hash).toBe('#secret')
   })

@@ -21,7 +21,12 @@ import {
 } from '@open-pencil/core/io/formats/raster'
 import { computeAllLayouts } from '@open-pencil/core/layout'
 import { fontManager, prepareGraphFonts, WEB_FONT_PROVIDER_IDS } from '@open-pencil/core/text'
-import { parsePenDocument } from '@open-pencil/pen'
+import {
+  inspectPenCompatibility,
+  parsePenDocument,
+  parsePenFile,
+  PenImportError
+} from '@open-pencil/pen'
 import type { SceneGraph } from '@open-pencil/scene-graph'
 
 // pen.dev's own exports of every frame in probes.pen, recorded with the fonts and icons they draw
@@ -57,6 +62,18 @@ const iconSetSchema = v.pipe(
 
 const manifest = v.parse(manifestSchema, await Bun.file(join(ORACLES, 'manifest.json')).text())
 const source = await Bun.file(join(ORACLES, manifest.document)).text()
+const probeDocument = parsePenDocument(source)
+const unsupportedFrames = new Map(
+  probeDocument.children.flatMap((frame) => {
+    const document = { ...probeDocument, children: [frame] }
+    return inspectPenCompatibility(document).length > 0 ? [[frame.id, document] as const] : []
+  })
+)
+// Rejected frames have rejection tests below; only supported frames enter the pixel oracle.
+const supportedSource = JSON.stringify({
+  ...probeDocument,
+  children: probeDocument.children.filter((frame) => !unsupportedFrames.has(frame.id))
+})
 
 const googleIndexSchema = v.pipe(v.string(), v.parseJson(), v.record(v.string(), v.string()))
 
@@ -113,7 +130,7 @@ const readProbes = once(async (): Promise<SceneGraph> => {
   const { graph } = await new IORegistry([penFormat]).readDocument(
     {
       name: manifest.document,
-      data: new TextEncoder().encode(source),
+      data: new TextEncoder().encode(supportedSource),
       readAsset: (path) => Bun.file(join(ORACLES, path)).bytes()
     },
     { icons: recordedIcons() }
@@ -134,6 +151,9 @@ afterAll(() => {
 })
 
 describe('.pen frames against pen.dev', () => {
+  test('rejects the complete mixed probe document instead of losing unsupported nodes', () => {
+    expect(() => parsePenFile(source)).toThrow(PenImportError)
+  })
   test('every target is a frame of the probe document, exported by pen.dev', () => {
     const frames = new Set(parsePenDocument(source).children.map((node) => node.id))
     for (const { penNodeId } of manifest.targets) {
@@ -143,6 +163,13 @@ describe('.pen frames against pen.dev', () => {
   })
 
   for (const target of manifest.targets) {
+    const unsupported = unsupportedFrames.get(target.penNodeId)
+    if (unsupported) {
+      test(`${target.node} reports unsupported content instead of claiming visual fidelity`, () => {
+        expect(() => parsePenFile(JSON.stringify(unsupported))).toThrow(PenImportError)
+      })
+      continue
+    }
     test(`${target.node} draws as pen.dev draws it`, async () => {
       const graph = await readProbes()
       const codec = createCanvasKitRasterCodec(await initCanvasKit())

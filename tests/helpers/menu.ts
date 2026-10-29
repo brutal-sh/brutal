@@ -7,6 +7,9 @@ import { expect, type Page } from '@playwright/test'
  */
 export async function openAppMenu(page: Page, name: string) {
   await expect(page.getByRole('menu')).toHaveCount(0)
+  if (!(await page.getByRole('menubar').isVisible())) {
+    await page.getByRole('button', { name: 'Main menu', exact: true }).click()
+  }
   await page.getByRole('menubar').getByRole('menuitem', { name, exact: true }).click()
   const menu = page.getByRole('menu', { name })
   await expect(menu).toBeVisible()

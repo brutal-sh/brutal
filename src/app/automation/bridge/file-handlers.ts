@@ -66,7 +66,7 @@ export function createFileHandlers(files?: AutomationFiles) {
       throw new Error(`"${name}" has not been saved to a file yet; pass a path to save it`)
     }
     if (path && files && !isTauri()) {
-      await store.saveFigFileCopy((data) => writeThroughServer(files, path, data))
+      await store.saveFigFileCopy((data) => writeThroughServer(files, path, data), path)
       return
     }
     if (path) await ensureTauriParentDirectory(path)

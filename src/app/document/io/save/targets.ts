@@ -1,26 +1,23 @@
 import { pickBrowserSaveFile } from '@/app/document/io/capability'
 
-export async function chooseTauriFigSavePath() {
+export async function chooseTauriDocumentSavePath(suggestedName = 'Untitled.fig') {
   const { save } = await import('@tauri-apps/plugin-dialog')
   return save({
-    defaultPath: 'Untitled.fig',
-    filters: [{ name: 'Figma file', extensions: ['fig'] }]
+    defaultPath: suggestedName,
+    filters: [
+      { name: 'Figma file', extensions: ['fig'] },
+      { name: 'Pen file', extensions: ['pen'] }
+    ]
   })
 }
 
-export async function chooseBrowserFigSaveHandle() {
-  try {
-    return await pickBrowserSaveFile({
-      suggestedName: 'Untitled.fig',
-      types: [
-        {
-          description: 'Figma file',
-          accept: { 'application/octet-stream': ['.fig'] }
-        }
-      ]
-    })
-  } catch (error) {
-    if ((error as Error).name === 'AbortError') return null
-    throw error
-  }
+/** Null means no picker; cancellation rejects with AbortError so it never opens a second prompt. */
+export function chooseBrowserDocumentSaveHandle(suggestedName = 'Untitled.fig') {
+  return pickBrowserSaveFile({
+    suggestedName,
+    types: [
+      { description: 'Figma file', accept: { 'application/octet-stream': ['.fig'] } },
+      { description: 'Pen file', accept: { 'application/json': ['.pen'] } }
+    ]
+  })
 }

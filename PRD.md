@@ -8,6 +8,7 @@ Owner: Jason. Started 2026-10-29. Target: independent local-first alternative to
 - Keep /Applications/Pen.app and its active design task unchanged.
 - Improve the stack where evidence supports it; reuse existing mature editor capabilities before building new ones.
 - Core editing needs no subscription. External hosted AI may still cost money; local models are an independent option.
+- User selected existing Codex or Claude CLI login for real AI testing. Do not copy credentials or assume permission for separate paid provider accounts.
 
 ## Done evidence
 Every row in docs/FEATURES.md has an implemented equivalent and an executed behavioral acceptance check, or an explicitly user-approved exclusion. A build, mock, static inspection, roadmap, or one working slice does not establish parity.

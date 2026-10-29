@@ -300,11 +300,12 @@ describe('parsePenFile — instances', () => {
     expect(copyOf(graph, 'hidden', 'dot').visible).toBe(false)
   })
 
-  test('copies a reusable layer that is not a frame', () => {
-    const graph = parseDocument([
-      { id: 'swatch', type: 'rectangle', reusable: true, width: 20, height: 20, fill: '#FF0000' },
-      { id: 'use', type: 'ref', ref: 'swatch', x: 40 }
-    ])
-    expect(getNodeOrThrow(graph, 'use')).toMatchObject({ type: 'RECTANGLE', x: 40, width: 20 })
+  test('rejects a non-frame component instead of losing its instance links', () => {
+    expect(() =>
+      parseDocument([
+        { id: 'swatch', type: 'rectangle', reusable: true, width: 20, height: 20, fill: '#FF0000' },
+        { id: 'use', type: 'ref', ref: 'swatch', x: 40 }
+      ])
+    ).toThrow('Only frame components')
   })
 })

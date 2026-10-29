@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, test } from 'bun:test'
 
 import { readReloadSource } from '@/app/document/io/reload-source'
-import { chooseTauriFigSavePath } from '@/app/document/io/save/targets'
+import { chooseTauriDocumentSavePath } from '@/app/document/io/save/targets'
 import { createDocumentWriter } from '@/app/document/io/write'
 
 import { clearTauriMocks, mockTauriIPC } from '#tests/helpers/tauri/mocks'
@@ -79,12 +79,15 @@ describe('Tauri document IO helpers', () => {
       expect(args).toEqual({
         options: {
           defaultPath: 'Untitled.fig',
-          filters: [{ name: 'Figma file', extensions: ['fig'] }]
+          filters: [
+            { name: 'Figma file', extensions: ['fig'] },
+            { name: 'Pen file', extensions: ['pen'] }
+          ]
         }
       })
       return '/tmp/Untitled.fig'
     })
 
-    await expect(chooseTauriFigSavePath()).resolves.toBe('/tmp/Untitled.fig')
+    await expect(chooseTauriDocumentSavePath()).resolves.toBe('/tmp/Untitled.fig')
   })
 })

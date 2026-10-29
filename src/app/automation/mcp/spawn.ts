@@ -28,6 +28,11 @@ import {
   type MCPFailure
 } from './failure'
 import {
+  loadNativeTestMCPConfiguration,
+  nativeTestMCPRoute,
+  type NativeTestMCPConfiguration
+} from './native-test'
+import {
   disabledMCPTools,
   mcpAuthenticationEnabled,
   mcpRootDirectory,
@@ -50,9 +55,22 @@ export interface AutomationServerHandle {
   managed: boolean
 }
 
-const DEV_AUTOMATION_HTTP_URL = import.meta.env.DEV
+const NATIVE_TEST_MODE = import.meta.env.MODE === 'native-test'
+let nativeTestConfiguration: NativeTestMCPConfiguration | null = null
+let nativeTestLoading: Promise<void> | null = null
+let DEV_AUTOMATION_HTTP_URL = import.meta.env.DEV
   ? __OPENPENCIL_LOCAL_AUTOMATION_HTTP_URL__
-  : `http://127.0.0.1:${AUTOMATION_HTTP_PORT}`
+  : `http://127.0.0.1:${NATIVE_TEST_MODE ? 0 : AUTOMATION_HTTP_PORT}`
+async function configureNativeTestMCP(): Promise<void> {
+  if (!NATIVE_TEST_MODE) return
+  nativeTestLoading ??= (async () => {
+    const { invoke } = await import('@tauri-apps/api/core')
+    nativeTestConfiguration = await loadNativeTestMCPConfiguration(invoke)
+    DEV_AUTOMATION_HTTP_URL = nativeTestMCPRoute(nativeTestConfiguration).httpURL
+  })()
+  await nativeTestLoading
+}
+
 export function getMCPServerURL(): string {
   return `${DEV_AUTOMATION_HTTP_URL}/mcp`
 }
@@ -172,6 +190,8 @@ async function discoveryFileExists(discoveryPath: string): Promise<boolean> {
  * endpoint's discoveryPath field.
  */
 async function computeExpectedDiscoveryPath(): Promise<string> {
+  await configureNativeTestMCP()
+  if (nativeTestConfiguration) return nativeTestConfiguration.discoveryPath
   const { homeDir, join } = await import('@tauri-apps/api/path')
   const home = await homeDir()
   if (!home) throw new Error('homeDir() returned an empty string')
@@ -183,16 +203,16 @@ async function computeExpectedDiscoveryPath(): Promise<string> {
   // matches the server's path in the common case. When it doesn't (custom
   // LOCALAPPDATA), resolveDiscoveryPath() falls back to the /health endpoint.
   if (isMac) {
-    return join(home, 'Library', 'Application Support', 'OpenPencil', 'mcp.json')
+    return join(home, 'Library', 'Application Support', 'Open Pen', 'mcp.json')
   }
   if (isWindows) {
-    return join(home, 'AppData', 'Local', 'OpenPencil', 'mcp.json')
+    return join(home, 'AppData', 'Local', 'Open Pen', 'mcp.json')
   }
-  // Linux: $XDG_RUNTIME_DIR/openpencil/mcp.json or ~/.openpencil/mcp.json.
+  // Linux: $XDG_RUNTIME_DIR/openpen/mcp.json or ~/.openpen/mcp.json.
   // In Tauri we don't have direct env access, so we use the home-directory
   // fallback. The server may use XDG_RUNTIME_DIR if set — when the paths
   // differ, resolveDiscoveryPath() falls back to the /health endpoint.
-  return join(home, '.openpencil', 'mcp.json')
+  return join(home, '.openpen', 'mcp.json')
 }
 
 /**
@@ -207,8 +227,8 @@ async function computeExpectedDiscoveryPath(): Promise<string> {
  * compromised server could redirect us to a malicious path. This is mitigated
  * by the fact that the server is on localhost and was spawned by us. The
  * fallback exists because local computation can be wrong (e.g., XDG_RUNTIME_DIR
- * mismatches on Linux where the server uses `$XDG_RUNTIME_DIR/openpencil` but
- * the local computation falls back to `~/.openpencil`).
+ * mismatches on Linux where the server uses `$XDG_RUNTIME_DIR/openpen` but
+ * the local computation falls back to `~/.openpen`).
  */
 async function resolveDiscoveryPath(healthDiscoveryPath?: string): Promise<string> {
   const expected = await computeExpectedDiscoveryPath()
@@ -304,6 +324,7 @@ export async function readAutomationHealth(
   authToken: string | null = runtimeAutomationAuthToken
 ): Promise<AutomationHealth | null> {
   try {
+    await configureNativeTestMCP()
     const headers = authToken ? { Authorization: `Bearer ${authToken}` } : undefined
     const res = await fetch(`${DEV_AUTOMATION_HTTP_URL}/health`, {
       headers,
@@ -505,6 +526,7 @@ function exitedStartupError(
 }
 
 async function startMCPIfNeeded(timing: MCPStartupTiming): Promise<AutomationServerHandle | null> {
+  await configureNativeTestMCP()
   runtimeAutomationStartupError = null
   runtimeAutomationStartupFailure = null
   if (import.meta.env.DEV) return configureDevMCP()
@@ -527,10 +549,13 @@ async function startMCPIfNeeded(timing: MCPStartupTiming): Promise<AutomationSer
   // The app bundle directory (Tauri executableDir) is read-only and cannot be
   // used as a safe fallback for open_file, save_file, or export tools.
   const mcpRoot = mcpRootDirectory.value.trim() || (await resolveTauriHomeDir())
+  const discoveryPath = await computeExpectedDiscoveryPath()
   const resolved = resolvePlatformCommand(MCP_EXECUTABLE)
   const command = Command.create(resolved.command, resolved.args, {
     env: {
       PORT: String(AUTOMATION_HTTP_PORT),
+      OPENPENCIL_MCP_DISCOVERY_PATH: discoveryPath,
+      OPENPENCIL_MCP_SOCKET: discoveryPath.replace(/mcp\.json$/, 'mcp.sock'),
       OPENPENCIL_MCP_AUTH_TOKEN: authToken ?? '',
       OPENPENCIL_MCP_CORS_ORIGIN: window.location.origin,
       OPENPENCIL_MCP_TCP: '1',
@@ -540,7 +565,8 @@ async function startMCPIfNeeded(timing: MCPStartupTiming): Promise<AutomationSer
       // of the pipe closes with it, and the server exits on that.
       OPENPENCIL_MCP_EXIT_ON_STDIN_CLOSE: '1',
       OPENPENCIL_MCP_DISABLED_TOOLS: serializeDisabledTools(disabledMCPTools.value),
-      OPENPENCIL_MCP_SCOPE: mcpScope()
+      OPENPENCIL_MCP_SCOPE: mcpScope(),
+      ...(nativeTestConfiguration ? nativeTestMCPRoute(nativeTestConfiguration).env : {})
     }
   })
 

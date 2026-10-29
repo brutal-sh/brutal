@@ -22,6 +22,7 @@ import type { ToolbarActionItem } from '@/components/toolbar/types'
 import { useMenuUI } from '@/components/ui/menu/menu'
 
 const store = useEditorStore()
+defineSlots<{ default?(): unknown; after?(): unknown }>()
 const { isMobile } = useViewportKind()
 const { getCommand } = useEditorCommands()
 const { showActionToast } = useActionToast()
@@ -74,6 +75,8 @@ function onActionTap(item: ToolbarActionItem) {
         <template #action="{ action }">
           <InsertIconButton v-if="action === 'insert-icon'" :ui="toolbarUI" />
         </template>
+        <template #end><slot /></template>
+        <template #after><slot name="after" /></template>
       </DesktopToolbar>
 
       <MobileToolbar

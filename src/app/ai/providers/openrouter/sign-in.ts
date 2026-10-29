@@ -1,10 +1,6 @@
-import * as v from 'valibot'
-
 import { IS_TAURI } from '@open-pencil/core/constants'
 
 import { createDeferred } from '@/app/runtime/deferred'
-import { openExternalLink } from '@/app/shell/ui'
-import { WEB_APP_ORIGIN } from '@/constants'
 
 import {
   callbackOutcome,
@@ -14,6 +10,7 @@ import {
   type SignInCallback,
   type SignInFailure
 } from '../sign-in/attempt'
+import { openRouterLoopback } from './loopback'
 import {
   exchangeOpenRouterCode,
   openRouterAuthorizationURL,
@@ -23,10 +20,6 @@ import {
 /** Served from `public/`; it relays the redirect to the editor over this channel. */
 export const OPENROUTER_CALLBACK_PATH = '/oauth/openrouter.html'
 export const OPENROUTER_CALLBACK_CHANNEL = 'open-pencil:openrouter-oauth'
-/** Served from `public/` on the web app; it hands the redirect to the desktop app's deep link. */
-export const OPENROUTER_DESKTOP_CALLBACK_PATH = '/oauth/openrouter-desktop.html'
-/** Emitted by the desktop shell for an `openpencil://oauth/<provider>?…` link. */
-const OAUTH_CALLBACK_EVENT = 'oauth-callback'
 const POPUP_NAME = 'open-pencil-openrouter'
 const POPUP_FEATURES = 'popup,width=520,height=720'
 
@@ -38,9 +31,6 @@ export interface OpenRouterSignInOptions {
   /** Prefills the name of the key OpenRouter creates. */
   keyLabel: string
 }
-
-/** What the desktop shell forwards from an `openpencil://oauth/<provider>?…` link. */
-const oauthCallbackSchema = v.object({ provider: v.string(), query: v.string() })
 
 /** A redirect that resolves once, or as expired when the code's lifetime passes. */
 function pendingRedirect() {
@@ -78,40 +68,21 @@ function popupCallback(state: string): Promise<SignInCallback | { failure: 'bloc
   })
 }
 
-/**
- * The system browser, whose hosted callback page opens an `openpencil://oauth/openrouter` link;
- * the desktop shell forwards its query as an `oauth-callback` event.
- */
-async function deepLinkCallback(state: string): Promise<SignInCallback> {
-  const { listen } = await import('@tauri-apps/api/event')
-  const { received, stop } = pendingRedirect()
-  const unlisten = await listen<unknown>(OAUTH_CALLBACK_EVENT, (event) => {
-    const callback = v.safeParse(oauthCallbackSchema, event.payload)
-    if (callback.success && callback.output.provider === 'openrouter') {
-      received.resolve(callbackOutcome(callback.output.query, state))
-    }
-  })
-  return {
-    open: openExternalLink,
-    wait: () => received.promise,
-    close: () => {
-      stop()
-      unlisten()
-    }
-  }
-}
-
 /** Signs in to OpenRouter with OAuth PKCE and returns a new API key for this app. */
 export function signInWithOpenRouter({
   signal,
   keyLabel
 }: OpenRouterSignInOptions): OpenRouterSignIn {
-  const callbackURL = IS_TAURI
-    ? new URL(OPENROUTER_DESKTOP_CALLBACK_PATH, WEB_APP_ORIGIN).href
-    : new URL(OPENROUTER_CALLBACK_PATH, window.location.origin).href
+  let callbackURL = IS_TAURI ? '' : new URL(OPENROUTER_CALLBACK_PATH, window.location.origin).href
   return startSignIn({
     signal,
-    callback: IS_TAURI ? deepLinkCallback : popupCallback,
+    callback: IS_TAURI
+      ? async (state) => {
+          const loopback = await openRouterLoopback(state)
+          callbackURL = loopback.callbackURL
+          return loopback.callback
+        }
+      : popupCallback,
     authorizationURL: (pkce) => openRouterAuthorizationURL(callbackURL, pkce, keyLabel),
     exchange: (code, verifier) => exchangeOpenRouterCode(code, verifier)
   })

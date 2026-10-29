@@ -73,11 +73,11 @@ export {
 } from '#mcp/tool/registration'
 
 export interface ServerOptions {
-  /** TCP port for the HTTP + WebSocket server. Ignored when `withTcp` is false. When set to 0 with `withTcp: true`, binds to an ephemeral port. Defaults to 7600. */
+  /** TCP port for the HTTP + WebSocket server. Ignored when `withTcp` is false. When set to 0 with `withTcp: true`, binds to an ephemeral port. Defaults to 7610. */
   httpPort?: number
   /** Path to the Unix domain socket. Auto-resolved if omitted. */
   socketPath?: string | null
-  /** Whether to also listen on TCP (in addition to the socket). API default is `false`; the CLI passes `true` by default (derived from PORT, default 7600). */
+  /** Whether to also listen on TCP (in addition to the socket). API default is `false`; the CLI passes `true` by default (derived from PORT, default 7610). */
   withTcp?: boolean
   enableEval?: boolean
   /** Tool names omitted from every MCP session. */
@@ -313,7 +313,7 @@ function wireConnectionHandling(
 }
 
 function buildServerContext(options: ServerOptions) {
-  const httpPort = options.httpPort ?? 7600
+  const httpPort = options.httpPort ?? 7610
   const toolPolicy: ToolPolicy = {
     allowEval: options.enableEval ?? false,
     disabledTools: [...new Set(options.disabledTools)],

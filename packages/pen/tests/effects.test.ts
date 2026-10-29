@@ -40,7 +40,7 @@ describe('parsePenFile — effects', () => {
     expect(inner).toMatchObject({ type: 'INNER_SHADOW', radius: 6, visible: false })
   })
 
-  test('skips shader effects', () => {
-    expect(effectsOf({ type: 'shader', url: './fx.glsl' })).toEqual([])
+  test('rejects shader effects instead of silently omitting them', () => {
+    expect(() => effectsOf({ type: 'shader', url: './fx.glsl' })).toThrow('Effect shader')
   })
 })

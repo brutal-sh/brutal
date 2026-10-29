@@ -2,7 +2,7 @@
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
   "description": "Capability for the main window",
-  "windows": ["main"],
+  "webviews": ["main"],
   "permissions": [
     "core:default",
     "core:window:allow-destroy",
@@ -73,7 +73,11 @@
         { "path": "$HOME/Library/Application Support/OpenPencil/mcp.json" },
         { "path": "$LOCALDATA/OpenPencil/mcp.json" },
         { "path": "$RUNTIME/openpencil/mcp.json" },
-        { "path": "$HOME/.openpencil/mcp.json" }
+        { "path": "$HOME/.openpencil/mcp.json" },
+        { "path": "$HOME/Library/Application Support/Open Pen/mcp.json" },
+        { "path": "$LOCALDATA/Open Pen/mcp.json" },
+        { "path": "$RUNTIME/openpen/mcp.json" },
+        { "path": "$HOME/.openpen/mcp.json" }
       ]
     },
     "fs:allow-fstat",
@@ -83,10 +87,10 @@
       "identifier": "fs:allow-read-text-file",
       "allow": [
         { "path": "$HOME/.pi/agent/settings.json" },
-        { "path": "$HOME/Library/Application Support/OpenPencil/mcp.json" },
-        { "path": "$LOCALDATA/OpenPencil/mcp.json" },
-        { "path": "$RUNTIME/openpencil/mcp.json" },
-        { "path": "$HOME/.openpencil/mcp.json" }
+        { "path": "$HOME/Library/Application Support/Open Pen/mcp.json" },
+        { "path": "$LOCALDATA/Open Pen/mcp.json" },
+        { "path": "$RUNTIME/openpen/mcp.json" },
+        { "path": "$HOME/.openpen/mcp.json" }
       ]
     },
     {
@@ -96,17 +100,21 @@
         { "path": "$HOME/Library/Application Support/OpenPencil/mcp.json" },
         { "path": "$LOCALDATA/OpenPencil/mcp.json" },
         { "path": "$RUNTIME/openpencil/mcp.json" },
-        { "path": "$HOME/.openpencil/mcp.json" }
+        { "path": "$HOME/.openpencil/mcp.json" },
+        { "path": "$HOME/Library/Application Support/Open Pen/mcp.json" },
+        { "path": "$LOCALDATA/Open Pen/mcp.json" },
+        { "path": "$RUNTIME/openpen/mcp.json" },
+        { "path": "$HOME/.openpen/mcp.json" }
       ]
     },
     {
       "identifier": "fs:allow-exists",
       "allow": [
         { "path": "$HOME/.pi/agent/auth.json" },
-        { "path": "$HOME/Library/Application Support/OpenPencil/mcp.json" },
-        { "path": "$LOCALDATA/OpenPencil/mcp.json" },
-        { "path": "$RUNTIME/openpencil/mcp.json" },
-        { "path": "$HOME/.openpencil/mcp.json" }
+        { "path": "$HOME/Library/Application Support/Open Pen/mcp.json" },
+        { "path": "$LOCALDATA/Open Pen/mcp.json" },
+        { "path": "$RUNTIME/openpen/mcp.json" },
+        { "path": "$HOME/.openpen/mcp.json" }
       ]
     },
     {
@@ -120,7 +128,11 @@
         { "path": "$HOME/Library/Application Support/OpenPencil/mcp.json" },
         { "path": "$LOCALDATA/OpenPencil/mcp.json" },
         { "path": "$RUNTIME/openpencil/mcp.json" },
-        { "path": "$HOME/.openpencil/mcp.json" }
+        { "path": "$HOME/.openpencil/mcp.json" },
+        { "path": "$HOME/Library/Application Support/Open Pen/mcp.json" },
+        { "path": "$LOCALDATA/Open Pen/mcp.json" },
+        { "path": "$RUNTIME/openpen/mcp.json" },
+        { "path": "$HOME/.openpen/mcp.json" }
       ]
     },
     {

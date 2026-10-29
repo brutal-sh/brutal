@@ -1,4 +1,5 @@
 import { describeDiagnosticError, recordDocumentFailure } from '@/app/diagnostics'
+import { documentSaveFormat, type DocumentSaveFormat } from '@/app/document/io/save/format'
 import { storageLocationOf } from '@/app/integrations/storage/location'
 import type { StorageDocumentBinding } from '@/app/integrations/storage/types'
 import { persistStorageCanvasLocally } from '@/app/storage/sync/persist'
@@ -35,11 +36,16 @@ export function createDocumentWriter({
     return true
   }
 
-  return async function writeFile(data: Uint8Array, version: number): Promise<boolean> {
+  return async function writeFile(
+    data: Uint8Array,
+    version: number,
+    format: DocumentSaveFormat = 'fig'
+  ): Promise<boolean> {
     setLastWriteTime(Date.now())
     try {
       const storage = getStorageBinding()
       if (storage) {
+        if (format !== 'fig') throw new Error('Storage documents must use FIG encoding.')
         await persistStorageCanvasLocally({
           ...storageLocationOf(storage),
           canvasId: storage.documentId,
@@ -51,6 +57,12 @@ export function createDocumentWriter({
 
       const filePath = getFilePath()
       const fileHandle = getFileHandle()
+      const destinationName = fileHandle?.name ?? filePath
+      if (destinationName && documentSaveFormat(destinationName) !== format) {
+        throw new Error(
+          'The save destination changed format. Save again to use the new destination.'
+        )
+      }
       if (filePath && isTauri()) {
         const { writeFile: tauriWrite } = await import('@tauri-apps/plugin-fs')
         await tauriWrite(filePath, data)
@@ -66,7 +78,7 @@ export function createDocumentWriter({
     } catch (error) {
       recordDocumentFailure({
         operation: 'save',
-        format: 'fig',
+        format,
         ...describeDiagnosticError(error),
         retryable: describeDiagnosticError(error).retryable
       })

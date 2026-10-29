@@ -68,7 +68,7 @@ export const Waiting: Story = {}
 
 export const WaitingInDesktopBrowser: Story = {
   args: {
-    desktopLink: 'openpencil://join?room=abcdefghijklmnopqrstuvwxyz012345',
+    desktopLink: 'openpen://join?room=abcdefghijklmnopqrstuvwxyz012345',
     downloadURL: 'https://github.com/open-pencil/open-pencil/releases/latest'
   }
 }

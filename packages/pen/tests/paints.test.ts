@@ -99,7 +99,9 @@ describe('parsePenFile — fills', () => {
     expectPoint(gradientPoint(transform, { x: 0.5, y: 1 }), 0.5, 0)
   })
 
-  test('skips paints it cannot draw instead of painting them black', () => {
-    expect(fillsOf([{ type: 'mesh_gradient', columns: 2 }, '#FF0000'])).toHaveLength(1)
+  test('rejects paints it cannot draw instead of silently omitting them', () => {
+    expect(() => fillsOf([{ type: 'mesh_gradient', columns: 2 }, '#FF0000'])).toThrow(
+      'Paint mesh_gradient'
+    )
   })
 })

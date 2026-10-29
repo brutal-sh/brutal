@@ -1,0 +1,3 @@
+- Moves the Agent to a left sidebar with separate conversation and composer surfaces, alongside Layers, Slides, Components and Libraries.
+- Places desktop drawing tools in a vertical rail and keeps the inspector over the canvas so selection does not shift the drawing surface.
+- Uses floating document and view controls with a dark canvas and hidden rulers by default.

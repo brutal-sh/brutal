@@ -27,6 +27,8 @@ use tauri::{Emitter, Manager};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    // Native acceptance launches pin their own executable search order.
+    #[cfg(not(feature = "native-test"))]
     let _ = fix_path_env::fix();
     agents::path::augment_process_path();
 
@@ -62,46 +64,66 @@ pub fn run() {
         .manage(launch::PendingRooms::default())
         .manage(NativeMenuState(Mutex::new(NativeMenuInputs::default())))
         .manage(launch::PendingCloudLinks::default())
-        .invoke_handler(tauri::generate_handler![
-            agents::lookup::agent_lookup,
-            agents::lookup::agent_workspace,
-            files::fig::build_fig_file,
-            network::oauth::chatgpt_oauth_listen,
-            network::oauth::chatgpt_oauth_wait,
-            network::oauth::chatgpt_oauth_cancel,
-            credential_read,
-            credential_access_paused,
-            credential_retry_access,
-            credential_remove,
-            credential_status,
-            credential_store_availability,
-            credential_write,
-            agents::mcp::mcp_lookup,
-            agents::skills::skill_folders,
-            agents::skills::project_skill_folders,
-            agents::skills::skill_folder_file,
-            #[cfg(feature = "native-test")]
-            launch::native_test_open_deep_link,
-            system::opener::open_external_url,
-            #[cfg(feature = "native-test")]
-            system::opener::take_native_test_opened_urls,
-            launch::paths::path_matches_suffix,
-            list_system_fonts,
-            load_system_font,
-            icons::sf_symbols_catalogue,
-            icons::sf_symbols_render,
-            proxy_http_request,
-            cancel_http_request,
-            files::recent::set_recent_files,
-            set_native_menu_features,
-            native_menu_checked,
-            set_native_menu_checked,
-            launch::take_pending_open,
-            launch::take_pending_rooms,
-            system::env::sharing_disabled_by_env,
-            launch::take_pending_cloud_links,
-            system::env::webview_version
-        ])
+        .invoke_handler({
+            let handler: fn(tauri::ipc::Invoke) -> bool = tauri::generate_handler![
+                network::browser::browser_preview_open,
+                network::browser::browser_preview_status,
+                network::browser::browser_preview_action,
+                network::browser::browser_preview_resize,
+                network::browser::browser_preview_layout,
+                network::browser::browser_preview_capture,
+                #[cfg(feature = "native-test")]
+                agents::native_test::native_test_mcp_configuration,
+                agents::lookup::agent_lookup,
+                agents::lookup::agent_workspace,
+                files::fig::build_fig_file,
+                network::oauth::chatgpt_oauth_listen,
+                network::oauth::chatgpt_oauth_wait,
+                network::oauth::chatgpt_oauth_cancel,
+                credential_read,
+                credential_access_paused,
+                credential_retry_access,
+                credential_remove,
+                credential_status,
+                credential_store_availability,
+                credential_write,
+                agents::mcp::mcp_lookup,
+                agents::skills::skill_folders,
+                agents::skills::project_skill_folders,
+                agents::skills::skill_folder_file,
+                #[cfg(feature = "native-test")]
+                launch::native_test_open_deep_link,
+                system::opener::open_external_url,
+                #[cfg(feature = "native-test")]
+                system::opener::take_native_test_opened_urls,
+                launch::paths::path_matches_suffix,
+                list_system_fonts,
+                load_system_font,
+                icons::sf_symbols_catalogue,
+                icons::sf_symbols_render,
+                proxy_http_request,
+                cancel_http_request,
+                files::recent::set_recent_files,
+                set_native_menu_features,
+                native_menu_checked,
+                set_native_menu_checked,
+                launch::take_pending_open,
+                launch::take_pending_rooms,
+                system::env::sharing_disabled_by_env,
+                launch::take_pending_cloud_links,
+                system::env::webview_version
+            ];
+            move |invoke: tauri::ipc::Invoke| {
+                if !network::browser::policy::permits_app_command(invoke.message.webview().label())
+                {
+                    invoke
+                        .resolver
+                        .reject("Browser preview content cannot access application commands.");
+                    return true;
+                }
+                handler(invoke)
+            }
+        })
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_clipboard_manager::init())
@@ -138,7 +160,7 @@ pub fn run() {
             // - Windows / Linux: the link is argv, and the plugin parses it in its own
             //   setup (`handle_cli_arguments`).
             // - macOS: AppKit delivers the GetURL event *before* the app's setup. Traced
-            //   on a cold `open openpencil://…`: `RunEvent::Opened` at T+0.085 s, this
+            //   on a cold `open openpen://…`: `RunEvent::Opened` at T+0.085 s, this
             //   closure at T+0.342 s, and `on_open_url` never fired.
             //
             // In all three cases the URL survives only in the plugin's `current`, so it
@@ -160,7 +182,7 @@ pub fn run() {
         .run(|_app, event| match event {
             tauri::RunEvent::ExitRequested {
                 api, code: None, ..
-            } if !_app.webview_windows().is_empty() => {
+            } if !_app.windows().is_empty() => {
                 api.prevent_exit();
                 // The frontend asks about unsaved documents and exits when they agree.
                 let _ = _app.emit("menu-event", "quit");

@@ -2,6 +2,7 @@ import * as v from 'valibot'
 
 import { SceneGraph } from '@open-pencil/scene-graph'
 
+import { assertPenCompatible } from './compatibility'
 import { pathNetwork } from './geometry'
 import { removeUnusedIconComponents } from './icons'
 import { createImageStore } from './images'
@@ -78,6 +79,7 @@ export function parsePenDocument(json: string): PenDocument {
 
 /** Builds the scene graph of a document `parsePenDocument` read. */
 export function buildPenGraph(doc: PenDocument, options: PenReadOptions = {}): SceneGraph {
+  assertPenCompatible(doc)
   const graph = new SceneGraph()
 
   for (const page of graph.getPages(true)) {

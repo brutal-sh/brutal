@@ -93,7 +93,7 @@ describe('saved document identity', () => {
         throw new DOMException('Not allowed in this context', 'NotAllowedError')
       })
     })
-    vi.spyOn(saveTargets, 'chooseBrowserFigSaveHandle').mockResolvedValue(refused)
+    vi.spyOn(saveTargets, 'chooseBrowserDocumentSaveHandle').mockResolvedValue(refused)
     const download = vi.spyOn(browserIO, 'downloadBlob').mockReturnValue(undefined)
     const { actions, setSourceIdentity } = createSaveHarness(refused)
 

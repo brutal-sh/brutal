@@ -1,4 +1,29 @@
-# OpenPencil
+# Open Pen
+
+Private local-first design editor, built on the MIT-licensed [OpenPencil](https://github.com/open-pencil/open-pencil) engine. The target is functional parity with Pen without an editor subscription or license activation. **Parity is not yet achieved.**
+
+The implementation baseline is OpenPencil `24461adec7073312d460d76f08f069de18e4fb78`. Its attribution and MIT license remain intact. Pen's proprietary code and assets are not part of this repository.
+
+## Run this fork
+
+Use Bun 1.4.2 or newer. Install Git LFS and retrieve fixtures before running fixture-dependent tests.
+
+```sh
+bun install --frozen-lockfile
+cp .env.example .env.local
+bun run build:packages
+bun run dev
+```
+
+The desktop wrapper uses Tauri 2 and requires the Rust/macOS development toolchain: `bun run tauri dev`. Open Pen has its own bundle identity, credential service, deep links and local MCP endpoint. See [desktop configuration](docs/DESKTOP.md). The upstream updater is disabled; this fork has no release feed yet.
+
+Cloud and feedback are off in the supplied environment example. Core editing requires no account. Optional external AI and image providers retain their own authentication and costs; local model support does not make hosted inference free.
+
+Follow [the parity matrix](docs/PARITY.md), [execution evidence](docs/ACCEPTANCE.md), and [the private tracking board](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor). Supported `.pen` files can be edited and saved; unsupported content is rejected before conversion or writing. New documents and remote storage default to `.fig`. See [format limits](packages/pen/README.md).
+
+## Upstream documentation
+
+The following describes the upstream project. Its download links, hosted services and published packages are OpenPencil, rather than releases of this private fork.
 
 [![MIT license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![npm](https://img.shields.io/npm/v/@open-pencil/cli?label=%40open-pencil%2Fcli)](https://www.npmjs.com/package/@open-pencil/cli)

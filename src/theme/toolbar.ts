@@ -1,5 +1,9 @@
 const toolbarTheme = {
   slots: {
+    desktopRoot:
+      'absolute top-12 left-2 z-10 flex max-h-[calc(100%-3.5rem)] flex-col items-center gap-2',
+    desktopRail:
+      'scrollbar-none flex w-9 flex-col items-center gap-1 overflow-y-auto rounded-[18px] border border-border bg-panel p-px py-1 shadow-lg',
     button:
       'flex size-8 cursor-pointer items-center justify-center border-none bg-transparent text-muted transition-colors outline-none focus-visible:ring-1 focus-visible:ring-panel-focus',
     icon: 'size-4',
@@ -32,8 +36,9 @@ const toolbarTheme = {
         flyoutTrigger: 'rounded-[6px] select-none active:bg-hover active:text-surface'
       },
       false: {
-        button: 'rounded-lg',
-        flyoutTrigger: 'rounded-lg hover:bg-hover hover:text-surface'
+        button: 'shrink-0 rounded-lg',
+        flyoutGroup: 'shrink-0 flex-col',
+        flyoutTrigger: 'h-6 w-8 shrink-0 rounded-lg hover:bg-hover hover:text-surface'
       }
     },
     disabled: {
@@ -44,6 +49,13 @@ const toolbarTheme = {
     }
   },
   compoundVariants: [
+    {
+      active: true,
+      mobile: false,
+      class: {
+        button: 'bg-hover text-surface'
+      }
+    },
     {
       active: false,
       mobile: true,

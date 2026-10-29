@@ -19,6 +19,20 @@ import {
 import { toolShortcutLabels } from '@/app/editor/toolbar/shortcuts'
 
 const SHAPES: ToolbarEntry[] = ['RECTANGLE', 'LINE', 'ELLIPSE', 'POLYGON', 'STAR']
+/** A complete stored layout from before the desktop rail, also used for customization cases. */
+const LEGACY_GROUPS: ToolbarEntry[][] = [
+  ['SELECT'],
+  ['FRAME', 'SECTION'],
+  SHAPES,
+  ['PEN', 'PENCIL'],
+  ['TEXT'],
+  ['STICKY'],
+  ['SHAPE_WITH_TEXT'],
+  ['CONNECTOR'],
+  ['HAND'],
+  ['COMMENT'],
+  ['insert-icon']
+]
 const SHORTCUTS = toolShortcutLabels('mac')
 const LABELS = { ...SHORTCUTS }
 
@@ -33,12 +47,23 @@ describe('normalizeToolbarLayout', () => {
     )
   })
 
+  test('preserves stored order, flyouts and visibility when the defaults change', () => {
+    const hidden: ToolbarEntry[] = ['STICKY', 'SHAPE_WITH_TEXT', 'CONNECTOR']
+    expect(layout(LEGACY_GROUPS, hidden)).toEqual({ groups: LEGACY_GROUPS, hidden })
+    expect(layout([...LEGACY_GROUPS].reverse(), ['COMMENT']).groups).toEqual(
+      [...LEGACY_GROUPS].reverse()
+    )
+  })
+
   test('drops unknown entries, repeats and empty groups', () => {
     const groups = [['SELECT', 'LASSO', 'SELECT'], [], ['FRAME', 'SECTION', 'FRAME']]
     const result = normalizeToolbarLayout(groups, ['HAND', 'HAND', 'GHOST'])
-    expect(result.groups.slice(0, 2)).toEqual([['SELECT'], ['FRAME', 'SECTION']])
-    // The sticky, shape and connector tools are placed hidden, as the default layout keeps them.
-    expect(result.hidden).toEqual(['HAND', 'STICKY', 'SHAPE_WITH_TEXT', 'CONNECTOR'])
+    expect(
+      result.groups.filter((group) => group.includes('SELECT') || group.includes('FRAME'))
+    ).toEqual([['SELECT'], ['FRAME', 'SECTION']])
+    expect(result.groups.every((group) => group.length > 0)).toBe(true)
+    expect(result.groups.flat()).toHaveLength(new Set(result.groups.flat()).size)
+    expect(result.hidden).toEqual(['HAND', 'SHAPE_WITH_TEXT', 'CONNECTOR', 'insert-icon'])
   })
 
   test('never hides Move', () => {
@@ -47,19 +72,15 @@ describe('normalizeToolbarLayout', () => {
 
   test('keeps commands out of flyouts', () => {
     const result = layout([['SELECT', 'insert-icon', 'HAND'], ['COMMENT']])
-    expect(result.groups.slice(-6)).toEqual([
-      ['STICKY'],
-      ['SHAPE_WITH_TEXT'],
-      ['CONNECTOR'],
-      ['insert-icon'],
-      ['HAND'],
-      ['COMMENT']
+    expect(result.groups.filter((group) => group.includes('insert-icon'))).toEqual([
+      ['insert-icon']
     ])
+    expect(result.groups).toContainEqual(['HAND'])
   })
 
   test('puts a tool the stored layout lacks into its default flyout', () => {
     const result = layout([['SELECT'], ['STAR', 'RECTANGLE', 'ELLIPSE'], ['LINE']])
-    expect(result.groups[2]).toEqual(['STAR', 'RECTANGLE', 'ELLIPSE', 'POLYGON'])
+    expect(result.groups).toContainEqual(['STAR', 'RECTANGLE', 'ELLIPSE', 'POLYGON'])
     expect(result.groups.at(-1)).toEqual(['LINE'])
   })
 
@@ -67,27 +88,40 @@ describe('normalizeToolbarLayout', () => {
     const stored: ToolbarEntry[][] = [['TEXT'], ['SELECT'], SHAPES, ['HAND']]
     expect(layout(stored).groups).toEqual([
       ['TEXT'],
-      ['STICKY'],
-      ['SHAPE_WITH_TEXT'],
-      ['CONNECTOR'],
-      ['SELECT'],
       ['FRAME', 'SECTION'],
+      ['STICKY'],
+      ['SELECT'],
       SHAPES,
       ['PEN', 'PENCIL'],
       ['HAND'],
       ['COMMENT'],
+      ['SHAPE_WITH_TEXT'],
+      ['CONNECTOR'],
       ['insert-icon']
     ])
   })
 })
 
 describe('tools hidden by default', () => {
-  test('a layout stored before the sticky tool gets it hidden, and a shown one stays shown', () => {
+  test('a missing secondary action stays hidden, while explicit visibility stays unchanged', () => {
     const before = DEFAULT_TOOLBAR_LAYOUT.groups.map((group) =>
-      group.filter((entry) => entry !== 'STICKY')
+      group.filter((entry) => entry !== 'insert-icon')
     )
-    expect(layout(before).hidden).toEqual(['STICKY'])
+    expect(layout(before).hidden).toEqual(['insert-icon'])
     expect(layout(DEFAULT_TOOLBAR_LAYOUT.groups, []).hidden).toEqual([])
+  })
+
+  test('sticky is available immediately and the hidden icon action can be restored', () => {
+    const shown = toolbarItems(DEFAULT_TOOLBAR_LAYOUT, LABELS, SHORTCUTS)
+    expect(shown.some((item) => item.kind === 'tool' && item.tool.key === 'STICKY')).toBe(true)
+    expect(shown.some((item) => item.kind === 'action' && item.action === 'insert-icon')).toBe(
+      false
+    )
+    const restored = setToolbarEntryHidden(DEFAULT_TOOLBAR_LAYOUT, 'insert-icon', false)
+    expect(toolbarItems(restored, LABELS, SHORTCUTS)).toContainEqual({
+      kind: 'action',
+      action: 'insert-icon'
+    })
   })
 })
 
@@ -98,11 +132,11 @@ describe('toolbarItems', () => {
       LABELS,
       SHORTCUTS
     )
-    expect(items[1]).toEqual({
+    expect(items).toContainEqual({
       kind: 'tool',
       tool: { key: 'FRAME', label: 'F', shortcut: 'F' }
     })
-    expect(items[2]).toEqual({
+    expect(items).toContainEqual({
       kind: 'tool',
       tool: {
         key: 'LINE',
@@ -127,7 +161,7 @@ describe('toolbarItems', () => {
 })
 
 describe('editing', () => {
-  const base = layout(DEFAULT_TOOLBAR_LAYOUT.groups)
+  const base = layout(LEGACY_GROUPS)
 
   test('hiding and showing keeps the entry in place', () => {
     const hidden = setToolbarEntryHidden(base, 'PEN', true)
@@ -190,7 +224,7 @@ describe('editing', () => {
 })
 
 describe('dragging', () => {
-  const base = layout(DEFAULT_TOOLBAR_LAYOUT.groups)
+  const base = layout(LEGACY_GROUPS)
   /** Where an entry sits in the list the dragged Pen is lifted out of. */
   const indexOf = (entry: ToolbarEntry) => {
     const flat: ToolbarEntry[] = base.groups.flat().filter((other) => other !== 'PEN')

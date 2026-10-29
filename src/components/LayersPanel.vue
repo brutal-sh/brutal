@@ -14,6 +14,7 @@ import AssetsPanel from './assets-panel/AssetsPanel.vue'
 import LayerTree from './LayerTree/LayerTree.vue'
 import PagesPanel from './PagesPanel.vue'
 
+const { embedded = false } = defineProps<{ embedded?: boolean }>()
 const { menu, panels } = useI18n()
 const activePanel = ref<'file' | 'assets'>('file')
 const panelModel = computed({
@@ -36,8 +37,8 @@ const splitterStyles = tv(splitterTheme)({ direction: 'vertical' })
     class="flex min-w-0 flex-1 flex-col overflow-hidden border-r border-border bg-panel"
     style="contain: paint layout style"
   >
-    <AppMenu />
-    <div class="shrink-0 border-b border-border px-2 py-1.5">
+    <AppMenu v-if="!embedded" />
+    <div v-if="!embedded" class="shrink-0 border-b border-border px-2 py-1.5">
       <SegmentedControl
         v-model="panelModel"
         :options="panelOptions"

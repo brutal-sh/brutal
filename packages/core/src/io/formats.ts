@@ -4,10 +4,12 @@ import { filename } from 'pathe/utils'
 import { sceneNodeToJSX, selectionToJSX } from '@open-pencil/design-jsx'
 import { isDrawIOExportFileName } from '@open-pencil/drawio'
 import {
+  assertPenCompatible,
   buildPenGraph,
   isDataURL,
   parsePenDocument,
   penAssets,
+  writePenFile,
   type PenIconRequest,
   type PenIconSource
 } from '@open-pencil/pen'
@@ -299,7 +301,20 @@ export const penFormat: IOFormatAdapter<'pen'> = {
   extensions: ['pen'],
   mimeTypes: ['application/json', 'text/plain'],
   support: {
-    readDocument: true
+    readDocument: true,
+    writeDocument: true,
+    ...EXPORT_EVERY_TARGET
+  },
+  exportOptions: FIXED_SIZE_EXPORT,
+  async writeDocument(graph) {
+    return penExportResult(graph)
+  },
+  async exportContent(request) {
+    const graph =
+      request.target.scope === 'document'
+        ? request.graph
+        : extractExportGraph(request.graph, request.target).graph
+    return penExportResult(graph)
   },
   laysOutOnRead: true,
   matchesFile(fileName, mimeType) {
@@ -307,6 +322,7 @@ export const penFormat: IOFormatAdapter<'pen'> = {
   },
   async readDocument(input, context) {
     const doc = parsePenDocument(new TextDecoder().decode(input.data))
+    assertPenCompatible(doc)
     const assets = penAssets(doc)
     const [images, icons] = await Promise.all([
       loadPenImages(assets.images, input),
@@ -323,6 +339,16 @@ export const penFormat: IOFormatAdapter<'pen'> = {
         )
     })
     return { graph, sourceFormat: 'pen' }
+  }
+}
+
+function penExportResult(graph: SceneGraph): ExportResult {
+  return {
+    format: 'pen',
+    mimeType: 'application/json',
+    extension: 'pen',
+    data: writePenFile(graph),
+    encoding: 'utf8'
   }
 }
 

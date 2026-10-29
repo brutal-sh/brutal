@@ -1,5 +1,6 @@
 import type { Editor, EditorState } from '@open-pencil/core'
 import { prefetchFigmaSchema } from '@open-pencil/core/clipboard'
+import type { IORegistry } from '@open-pencil/core/io'
 
 import { createDocumentViewportActions, downloadBlob } from '@/app/document/io/browser'
 import { createDOMOpenActions } from '@/app/document/io/dom'
@@ -21,7 +22,8 @@ export function createDocumentIOActions(
   editor: Editor,
   state: DocumentIOState,
   viewportSize: ViewportSize,
-  preparationController: EditorPreparationController
+  preparationController: EditorPreparationController,
+  io: IORegistry
 ) {
   const sourceState = createDocumentSourceState()
 
@@ -46,6 +48,7 @@ export function createDocumentIOActions(
   const { setViewportSize, getViewportSize, fitCurrentPageToViewport } =
     createDocumentViewportActions(editor, viewportSize)
   const sourceActions = createDocumentSourceActions({
+    io,
     editor,
     state,
     stopWatchingFile,

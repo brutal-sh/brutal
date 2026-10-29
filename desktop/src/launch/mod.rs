@@ -1,5 +1,5 @@
 //! Everything that asks the app to open something: file associations, launch arguments, and
-//! `openpencil://` links, queued until the frontend takes them.
+//! `openpen://` links, queued until the frontend takes them.
 
 pub mod args;
 pub mod links;
@@ -16,7 +16,7 @@ pub struct PendingOpenFile {
     path: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     node: Option<String>,
-    /// Which producer queued this entry: a `openpencil://` link (true) or a file
+    /// Which producer queued this entry: a `openpen://` link (true) or a file
     /// association / argv path (false). The frontend cannot tell them apart from
     /// the path alone — a canonicalized Windows path is verbatim (`\\?\C:\…`).
     #[serde(rename = "deepLink")]
@@ -26,11 +26,11 @@ pub struct PendingOpenFile {
 #[derive(Default)]
 pub struct PendingOpen(Mutex<Vec<PendingOpenFile>>);
 
-/// Rooms from `openpencil://join` links, waiting for the frontend to open them.
+/// Rooms from `openpen://join` links, waiting for the frontend to open them.
 #[derive(Default)]
 pub struct PendingRooms(Mutex<Vec<String>>);
 
-/// Cloud invitations and shared links from `openpencil://cloud` links, waiting for the frontend.
+/// Cloud invitations and shared links from `openpen://cloud` links, waiting for the frontend.
 #[derive(Default)]
 pub struct PendingCloudLinks(Mutex<Vec<links::CloudLink>>);
 
@@ -80,7 +80,7 @@ fn queue_pending<R: tauri::Runtime>(app: &tauri::AppHandle<R>, files: Vec<Pendin
     }
 
     let _ = app.emit("open-associated-files", ());
-    if let Some(window) = app.get_webview_window("main") {
+    if let Some(window) = app.get_window("main") {
         let _ = window.set_focus();
     }
 }
@@ -112,7 +112,7 @@ pub fn queue_deep_links<R: tauri::Runtime>(app: &tauri::AppHandle<R>, urls: Vec<
     let mut files = Vec::new();
     let mut rooms = Vec::new();
     let mut cloud_links = Vec::new();
-    for url in urls.iter().filter(|url| url.scheme() == "openpencil") {
+    for url in urls.iter().filter(|url| url.scheme() == "openpen") {
         match links::parse_deep_link(url) {
             Ok(links::DeepLink::Open(open)) => files.push(PendingOpenFile {
                 path: open.file,
@@ -124,7 +124,7 @@ pub fn queue_deep_links<R: tauri::Runtime>(app: &tauri::AppHandle<R>, urls: Vec<
             // The sign-in that opened the browser is waiting; it checks the state itself.
             Ok(links::DeepLink::OAuth(callback)) => {
                 let _ = app.emit("oauth-callback", callback);
-                if let Some(window) = app.get_webview_window("main") {
+                if let Some(window) = app.get_window("main") {
                     let _ = window.set_focus();
                 }
             }
@@ -151,7 +151,7 @@ fn queue_cloud_links<R: tauri::Runtime>(app: &tauri::AppHandle<R>, links: Vec<li
     }
 
     let _ = app.emit("open-cloud-links", ());
-    if let Some(window) = app.get_webview_window("main") {
+    if let Some(window) = app.get_window("main") {
         let _ = window.set_focus();
     }
 }
@@ -166,7 +166,7 @@ fn queue_rooms<R: tauri::Runtime>(app: &tauri::AppHandle<R>, rooms: Vec<String>)
     }
 
     let _ = app.emit("open-room-links", ());
-    if let Some(window) = app.get_webview_window("main") {
+    if let Some(window) = app.get_window("main") {
         let _ = window.set_focus();
     }
 }

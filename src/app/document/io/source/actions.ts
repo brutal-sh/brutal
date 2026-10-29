@@ -1,4 +1,5 @@
 import type { Editor, EditorState } from '@open-pencil/core'
+import type { IORegistry } from '@open-pencil/core/io'
 import { exportFigFile } from '@open-pencil/core/io/formats/fig'
 
 import { createAutosave } from '@/app/document/autosave'
@@ -6,15 +7,18 @@ import { createDocumentChanges } from '@/app/document/io/changes'
 import {
   documentNameFromFigPath,
   downloadNameFromPath,
-  figDownloadName
+  documentDownloadName
 } from '@/app/document/io/names'
 import { createSaveActions } from '@/app/document/io/save/actions'
+import { documentSaveFormat } from '@/app/document/io/save/format'
 import { createDocumentSourceState } from '@/app/document/io/source/state'
 import type { DocumentSourceAccess } from '@/app/document/io/types'
 import { createDocumentRecovery } from '@/app/document/recovery'
 import { recoveryEnabled } from '@/app/document/recovery/preferences'
+import { notificationMessages } from '@/app/i18n/notifications'
 import { storageLocationOf } from '@/app/integrations/storage/location'
 import type { StorageDocumentBinding, StorageLocation } from '@/app/integrations/storage/types'
+import { toast } from '@/app/shell/ui'
 import { createCanvasId } from '@/app/storage/id'
 import { isTauri } from '@/app/tauri/env'
 import { trackDocumentFormat } from '@/app/telemetry'
@@ -27,6 +31,7 @@ type DocumentSourceState = EditorState & {
 export { createDocumentSourceState }
 
 type DocumentSourceOptions = DocumentSourceAccess & {
+  io: IORegistry
   editor: Editor
   state: DocumentSourceState
   stopWatchingFile: () => void
@@ -35,6 +40,7 @@ type DocumentSourceOptions = DocumentSourceAccess & {
 }
 
 export function createDocumentSourceActions({
+  io,
   editor,
   state,
   stopWatchingFile,
@@ -55,6 +61,21 @@ export function createDocumentSourceActions({
   getRenderer
 }: DocumentSourceOptions) {
   const changes = createDocumentChanges(editor)
+  let pendingSave: Promise<boolean> | null = null
+  let disposed = false
+
+  /** Keep target selection, encoding, writing and saved-state updates in one transaction. */
+  function serializeSave(operation: () => Promise<boolean>): Promise<boolean> {
+    const run = () => (disposed ? Promise.resolve(false) : operation())
+    // Start an idle save immediately, preserving the file picker's user activation.
+    const result = pendingSave ? pendingSave.then(run, run) : run()
+    pendingSave = result
+    const settled = () => {
+      if (pendingSave === result) pendingSave = null
+    }
+    void result.then(settled, settled)
+    return result
+  }
 
   async function saveAndTrack(save: () => Promise<boolean>) {
     const revision = changes.capture()
@@ -73,6 +94,24 @@ export function createDocumentSourceActions({
     })
   }
 
+  async function buildPenFile() {
+    const result = await io.writeDocument('pen', editor.graph)
+    return typeof result.data === 'string' ? new TextEncoder().encode(result.data) : result.data
+  }
+
+  async function saveUserDocument(save: () => Promise<boolean>) {
+    try {
+      return await saveAndTrack(save)
+    } catch (error) {
+      toast.error(
+        notificationMessages
+          .get()
+          .operationFailed({ error: error instanceof Error ? error.message : String(error) })
+      )
+      return false
+    }
+  }
+
   function buildRecoveryFigFile() {
     return exportFigFile(editor.graph, {
       pageId: state.currentPageId,
@@ -88,10 +127,11 @@ export function createDocumentSourceActions({
     hasWritableSource
   })
 
-  const { saveFigFile, saveFigFileAs, writeFile } = createSaveActions({
+  const { saveFigFile, saveFigFileAs } = createSaveActions({
     state,
     version: changes.capture,
     buildFigFile,
+    buildPenFile,
     getFilePath,
     setFilePath,
     getFileHandle,
@@ -116,10 +156,8 @@ export function createDocumentSourceActions({
     version: changes.capture,
     getSavedVersion,
     hasWritableSource,
-    saveCurrentDocument: async (version) => {
-      const revision = changes.capture()
-      const data = await buildFigFile()
-      if (await writeFile(data, version)) changes.markSaved(revision)
+    saveCurrentDocument: async () => {
+      await serializeSave(() => saveAndTrack(saveFigFile))
     }
   })
 
@@ -144,15 +182,15 @@ export function createDocumentSourceActions({
   ) {
     stopWatchingFile()
     setStorageBinding(null)
-    const isFig = sourceFormat === 'fig'
-    setFileHandle(isFig ? (handle ?? null) : null)
-    setFilePath(isFig ? (path ?? null) : null)
-    setDownloadName(figDownloadName(fileName, sourceFormat))
+    const writable = sourceFormat === 'fig' || sourceFormat === 'pen'
+    setFileHandle(writable ? (handle ?? null) : null)
+    setFilePath(writable ? (path ?? null) : null)
+    setDownloadName(documentDownloadName(fileName, sourceFormat))
     setSourceIdentity({ handle: handle ?? null, path: path ?? null })
     markDocumentSaved()
     void recovery.markProtectedVersion(changes.capture())
     trackDocumentFormat('document_opened', sourceFormat)
-    if (isFig && (handle || path)) {
+    if (writable && (handle || path)) {
       void startWatchingFile()
     }
   }
@@ -180,15 +218,8 @@ export function createDocumentSourceActions({
     state.documentName = documentNameFromFigPath(downloadName)
   }
 
-  let retargeting = false
-
-  /**
-   * Save to a new target; when the write fails, the document keeps the source it had. A second
-   * retarget while one is in flight is refused, so a failure never restores another save's target.
-   */
+  /** Called inside the shared save queue, so rollback cannot restore another save's target. */
   async function saveToNewTarget(planTarget: () => void): Promise<boolean> {
-    if (retargeting) return false
-    retargeting = true
     const previous = {
       filePath: getFilePath(),
       fileHandle: getFileHandle(),
@@ -212,8 +243,6 @@ export function createDocumentSourceActions({
     } catch (error) {
       restore()
       throw error
-    } finally {
-      retargeting = false
     }
   }
 
@@ -229,9 +258,12 @@ export function createDocumentSourceActions({
    * Hand the document to `write`, such as an MCP server saving it to a path a browser cannot
    * reach, and count it saved as a download is. Where the document saves next does not change.
    */
-  async function saveFigFileCopy(write: (data: Uint8Array) => Promise<void>): Promise<boolean> {
+  async function saveFigFileCopy(
+    write: (data: Uint8Array) => Promise<void>,
+    fileName = 'Untitled.fig'
+  ): Promise<boolean> {
     const version = changes.capture()
-    await write(await buildFigFile())
+    await write(await (documentSaveFormat(fileName) === 'pen' ? buildPenFile() : buildFigFile()))
     await recovery.markProtectedVersion(version)
     return true
   }
@@ -257,6 +289,7 @@ export function createDocumentSourceActions({
   }
 
   function disposeDocumentIO() {
+    disposed = true
     changes.dispose()
     stopWatchingFile()
     autosave.disposeAutosave()
@@ -268,14 +301,15 @@ export function createDocumentSourceActions({
     setDocumentSource,
     setStorageDocumentSource,
     setPlannedFilePath,
-    saveFigFileToPath,
-    saveFigFileCopy: (write: (data: Uint8Array) => Promise<void>) =>
-      saveAndTrack(() => saveFigFileCopy(write)),
-    saveFigFileToStorage,
+    saveFigFileToPath: (path: string) => serializeSave(() => saveFigFileToPath(path)),
+    saveFigFileCopy: (write: (data: Uint8Array) => Promise<void>, fileName?: string) =>
+      serializeSave(() => saveAndTrack(() => saveFigFileCopy(write, fileName))),
+    saveFigFileToStorage: (location: StorageLocation) =>
+      serializeSave(() => saveFigFileToStorage(location)),
     startWatchingCurrentFile,
     disposeDocumentIO,
-    saveFigFile: () => saveAndTrack(saveFigFile),
-    saveFigFileAs: () => saveAndTrack(saveFigFileAs),
+    saveFigFile: () => serializeSave(() => saveUserDocument(saveFigFile)),
+    saveFigFileAs: () => serializeSave(() => saveUserDocument(saveFigFileAs)),
     hasUnsavedChanges: changes.hasUnsavedChanges,
     markDocumentSaved,
     markDocumentChanged: changes.markChanged,

@@ -29,6 +29,8 @@ export async function checkForAppUpdate(options: UpdateCheckOptions) {
 }
 
 export function scheduleStartupUpdateCheck(messages: Ref<UpdaterMessages>) {
+  if (typeof __OPENPENCIL_UPDATES_ENABLED__ === 'undefined' || !__OPENPENCIL_UPDATES_ENABLED__)
+    return
   if (startupCheckStarted || !isTauri()) return
   startupCheckStarted = true
   void promiseTimeout(STARTUP_UPDATE_CHECK_DELAY_MS).then(() =>

@@ -3,7 +3,7 @@ import { describe, expect, test } from 'bun:test'
 import {
   documentNameFromFigPath,
   downloadNameFromPath,
-  figDownloadName
+  documentDownloadName
 } from '@/app/document/io/names'
 
 describe('document names from paths', () => {
@@ -18,9 +18,9 @@ describe('document names from paths', () => {
     expect(downloadNameFromPath('')).toBe('Untitled.fig')
   })
 
-  test('save a document read from another format under a .fig name', () => {
-    expect(figDownloadName('Landing.fig', 'fig')).toBe('Landing.fig')
-    expect(figDownloadName('Landing.pen', 'pen')).toBe('Landing.fig')
-    expect(figDownloadName('Landing', 'html')).toBe('Landing.fig')
+  test('retain writable document formats and convert other imports to .fig', () => {
+    expect(documentDownloadName('Landing.fig', 'fig')).toBe('Landing.fig')
+    expect(documentDownloadName('Landing.pen', 'pen')).toBe('Landing.pen')
+    expect(documentDownloadName('Landing', 'html')).toBe('Landing.fig')
   })
 })

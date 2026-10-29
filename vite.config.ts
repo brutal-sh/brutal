@@ -11,6 +11,7 @@ import { defineConfig, loadEnv } from 'vite'
 import { ensureBrandAssets } from '@open-pencil/brand-tools'
 import { ensureDemoDocument } from '@open-pencil/demo-tools'
 
+import desktopConfig from './desktop/tauri.conf.json'
 import packageJson from './package.json'
 import { viteBuildTarget } from './src/app/shell/support/baseline'
 import { createOpenPencilAliases } from './vite/aliases'
@@ -50,6 +51,9 @@ export default defineConfig(async ({ command, mode }) => {
     },
     define: {
       __OPENPENCIL_APP_VERSION__: JSON.stringify(packageJson.version),
+      __OPENPENCIL_UPDATES_ENABLED__: JSON.stringify(
+        desktopConfig.plugins.updater.endpoints.length > 0
+      ),
       __OPENPENCIL_CLOUD_SITE__: JSON.stringify(cloudSite),
       __OPENPENCIL_OFFICIAL_CLOUD_URL__: JSON.stringify(
         env.VITE_OPENPENCIL_OFFICIAL_CLOUD_URL ?? null

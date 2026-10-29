@@ -54,7 +54,10 @@ test('a design token file dropped on the canvas opens the variables import', asy
   const tokens = { color: { $type: 'color', brand: { $value: '#2563eb' } } }
 
   await dropOnCanvas(page, [
-    { name: 'brand.tokens.json', bytes: [...new TextEncoder().encode(JSON.stringify(tokens))] }
+    {
+      name: 'brand.tokens.json',
+      bytes: [...new TextEncoder().encode(JSON.stringify(tokens))]
+    }
   ])
 
   await expect(page.getByRole('dialog', { name: 'Import design tokens' })).toBeVisible()
@@ -76,4 +79,89 @@ test('an SVG dropped on the canvas is placed, not opened as a document', async (
   await expect(page.getByText('Could not open', { exact: false })).toHaveCount(0)
   await expect(tabs.getByRole('tab')).toHaveCount(1)
   await expect(tabs.getByRole('tab').first()).toHaveText(tabName)
+})
+
+test('unsupported .pen content reports its loss and preserves the current unsaved design', async ({
+  page
+}) => {
+  await page.goto('/?test')
+  const canvas = new CanvasHelper(page)
+  await canvas.waitForInit()
+  await canvas.drawRect(100, 100, 120, 80)
+  const tabs = page.getByTestId('tabbar-tab')
+  const current = await tabs.first().textContent()
+  const document = {
+    version: '2.21',
+    children: [
+      {
+        id: 'browser',
+        type: 'browser',
+        name: 'Unsupported page',
+        width: 800,
+        height: 600
+      }
+    ]
+  }
+
+  await dropOnCanvas(page, [
+    {
+      name: 'unsupported.pen',
+      bytes: [...new TextEncoder().encode(JSON.stringify(document))]
+    }
+  ])
+
+  await expect(page.getByText('Could not open “unsupported.pen”', { exact: false })).toBeVisible()
+  await expect(
+    page
+      .getByRole('region', { name: 'Notifications (F8)' })
+      .getByText(/Node type browser has no equivalent editor behavior/)
+  ).toBeVisible()
+  await expect(tabs).toHaveCount(1)
+  await expect(tabs.first()).toHaveText(current ?? '')
+  await expect(page.getByTestId('layers-item').filter({ hasText: 'Rectangle 1' })).toHaveCount(1)
+  await expect(tabs.first().getByRole('img', { name: 'Unsaved changes' })).toHaveCount(1)
+})
+
+test('a supported .pen opens as an editable document while preserving the original tab', async ({
+  page
+}) => {
+  await page.goto('/?test')
+  const canvas = new CanvasHelper(page)
+  await canvas.waitForInit()
+  await canvas.drawRect(100, 100, 120, 80)
+  const document = {
+    version: '2.21',
+    children: [
+      {
+        id: 'card',
+        type: 'rectangle',
+        name: 'Imported card',
+        x: 80,
+        y: 80,
+        width: 240,
+        height: 160,
+        fill: '#2277DD'
+      }
+    ]
+  }
+
+  await dropOnCanvas(page, [
+    {
+      name: 'editable.pen',
+      bytes: [...new TextEncoder().encode(JSON.stringify(document))]
+    }
+  ])
+
+  const tabs = page.getByTestId('tabbar-tab')
+  await expect(tabs).toHaveCount(2)
+  await expect(tabs.last()).toContainText('editable')
+  await expect(page.getByTestId('layers-item').filter({ hasText: 'Imported card' })).toHaveCount(1)
+  await page.getByTestId('layers-item').filter({ hasText: 'Imported card' }).click()
+  await page.keyboard.press('Meta+d')
+  await expect(page.getByTestId('layers-item').filter({ hasText: 'Imported card' })).toHaveCount(2)
+  await page.keyboard.press('Meta+z')
+  await expect(page.getByTestId('layers-item').filter({ hasText: 'Imported card' })).toHaveCount(1)
+  await tabs.first().click()
+  await expect(page.getByTestId('layers-item').filter({ hasText: 'Rectangle 1' })).toHaveCount(1)
+  canvas.assertNoErrors()
 })

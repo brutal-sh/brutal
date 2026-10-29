@@ -19,7 +19,7 @@ if (process.argv.includes('--help') || process.argv.includes('-h')) {
       `  --help, -h    Show this help message\n` +
       `  --version     Print the version\n\n` +
       `Environment variables:\n` +
-      `  PORT                         TCP port (default: 7600, set to 0 to disable TCP)\n` +
+      `  PORT                         TCP port (default: 7610, set to 0 to disable TCP)\n` +
       `  OPENPENCIL_MCP_SOCKET        Override Unix socket path (recorded in the discovery file)\n` +
       `  OPENPENCIL_MCP_DISCOVERY_PATH Override discovery file (mcp.json) location; defaults to the\n` +
       `                               platform path. Parent dir created 0o700. Mainly for test isolation.\n` +
@@ -48,9 +48,9 @@ if (process.argv.includes('--help') || process.argv.includes('-h')) {
   process.exit(0)
 }
 
-const rawPortText = (process.env.PORT ?? '7600').trim()
+const rawPortText = (process.env.PORT ?? '7610').trim()
 // Reject non-digit strings (including hex like "0x50" and partially-numeric like
-// "7600abc") — Number.parseInt would silently parse these, masking misconfig.
+// "7610abc") — Number.parseInt would silently parse these, masking misconfig.
 if (!/^\d+$/.test(rawPortText)) {
   process.stderr.write(`Error: PORT must be an integer in 0–65535, got "${process.env.PORT}"\n`)
   process.exit(1)

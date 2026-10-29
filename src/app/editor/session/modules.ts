@@ -62,7 +62,7 @@ export function createEditorStoreModules(
   const flash = createFlashActions(editor, state)
   const pen = createPenActions(editor, state)
   const vectorEdit = createVectorEditActions(editor, state)
-  const documentIO = createDocumentIOActions(editor, state, viewportSize, preparationController)
+  const documentIO = createDocumentIOActions(editor, state, viewportSize, preparationController, io)
   const documentExport = createDocumentExportActions(editor, state, io, documentIO.downloadBlob)
   const mobileClipboard = createMobileClipboardActions(editor)
   const profiler = createProfilerActions(editor)

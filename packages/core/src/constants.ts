@@ -172,7 +172,7 @@ export const TEXT_SELECTION_ALPHA = 0.3
 export const TEXT_CARET_COLOR = BLACK
 export const TEXT_CARET_WIDTH = 1
 
-export const AUTOMATION_HTTP_PORT = 7600
+export const AUTOMATION_HTTP_PORT = 7610
 /**
  * Request header the app's own ACP and Pi harness chats send to the MCP server, so their sessions
  * show as those agents rather than as an outside MCP client.
@@ -241,7 +241,7 @@ export type InterfaceTheme = 'light' | 'dark'
 /** A new page's background, which Figma picks from the interface theme it was made in. */
 export const PAGE_DEFAULT_BACKGROUNDS: Record<InterfaceTheme, Color> = {
   light: CANVAS_BG_COLOR,
-  dark: { r: 0x1e / 255, g: 0x1e / 255, b: 0x1e / 255, a: 1 }
+  dark: { r: 0x18 / 255, g: 0x17 / 255, b: 0x1c / 255, a: 1 }
 }
 
 /** A new section's fill, which Figma picks from the interface theme it was made in. */

@@ -105,6 +105,7 @@ export function createMCPRuntimeService(dependencies: MCPRuntimeDependencies) {
   }
 
   async function refreshOperation(): Promise<MCPRuntimeResult> {
+    if (!dependencies.canConnect()) return stopOperation(false)
     state.checking = true
     try {
       const health = await dependencies.readHealth(server?.authToken)
@@ -141,6 +142,7 @@ export function createMCPRuntimeService(dependencies: MCPRuntimeDependencies) {
   }
 
   async function startOperation(): Promise<MCPRuntimeResult> {
+    if (!dependencies.canConnect()) return stopOperation(false)
     state.status = 'starting'
     state.failure = null
     state.externallyManaged = false

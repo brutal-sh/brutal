@@ -11,11 +11,11 @@ import {
 import { fetchStub } from '#tests/helpers/fetch'
 import { clearTauriMocks, installTauriMockWindow, mockTauriIPC } from '#tests/helpers/tauri/mocks'
 
-const DISCOVERY_PATH = '/mock/home/.openpencil/mcp.json'
+const DISCOVERY_PATH = '/mock/home/Library/Application Support/Open Pen/mcp.json'
 const DISCOVERY_JSON = JSON.stringify({
   pid: 1234,
-  socketPath: '/mock/home/.openpencil/mcp.sock',
-  httpPort: 7600,
+  socketPath: '/mock/home/Library/Application Support/Open Pen/mcp.sock',
+  httpPort: 7610,
   authRequired: true,
   authToken: 'discovery-token',
   version: '0.0.0-test',
@@ -80,6 +80,7 @@ describe('Tauri MCP spawning', () => {
 
     vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response('', { status: 404 }))
     await mockTauriIPC((cmd, args) => {
+      if (cmd === 'plugin:path|join') return (args as { paths: string[] }).paths.join('/')
       if (cmd === 'mcp_lookup')
         return { available: true, path: '/mock/bin/openpencil-mcp-http', searched: ['/mock/bin'] }
       if (cmd === 'plugin:path|resolve_directory') return '/mock/home'
@@ -118,7 +119,8 @@ describe('Tauri MCP spawning', () => {
     })
 
     vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response('', { status: 404 }))
-    await mockTauriIPC((cmd) => {
+    await mockTauriIPC((cmd, args) => {
+      if (cmd === 'plugin:path|join') return (args as { paths: string[] }).paths.join('/')
       if (cmd === 'mcp_lookup')
         return { available: true, path: '/mock/bin/openpencil-mcp-http', searched: ['/mock/bin'] }
       if (cmd === 'plugin:path|resolve_directory') return '/mock/home'
@@ -141,7 +143,8 @@ describe('Tauri MCP spawning', () => {
     })
 
     vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response('', { status: 404 }))
-    await mockTauriIPC((cmd) => {
+    await mockTauriIPC((cmd, args) => {
+      if (cmd === 'plugin:path|join') return (args as { paths: string[] }).paths.join('/')
       if (cmd === 'plugin:path|resolve_directory') return '/mock/home'
       if (cmd === 'plugin:fs|exists') return false
       if (cmd === 'mcp_lookup')
@@ -175,7 +178,8 @@ describe('Tauri MCP spawning', () => {
         })
       )
     )
-    await mockTauriIPC((cmd) => {
+    await mockTauriIPC((cmd, args) => {
+      if (cmd === 'plugin:path|join') return (args as { paths: string[] }).paths.join('/')
       if (cmd === 'plugin:path|resolve_directory') return '/mock/home'
       if (cmd === 'plugin:fs|exists') return true
       return null
@@ -218,6 +222,7 @@ describe('Tauri MCP spawning', () => {
     const spawned: { onEvent: ((event: unknown) => void) | null } = { onEvent: null }
     const calls: Array<{ cmd: string; args: unknown }> = []
     await mockTauriIPC((cmd, args) => {
+      if (cmd === 'plugin:path|join') return (args as { paths: string[] }).paths.join('/')
       calls.push({ cmd, args })
       if (cmd === 'mcp_lookup')
         return { available: true, path: '/mock/bin/openpencil-mcp-http', searched: ['/mock/bin'] }
@@ -227,7 +232,9 @@ describe('Tauri MCP spawning', () => {
           args: [],
           options: {
             env: {
-              PORT: '7600',
+              PORT: '7610',
+              OPENPENCIL_MCP_DISCOVERY_PATH: DISCOVERY_PATH,
+              OPENPENCIL_MCP_SOCKET: '/mock/home/Library/Application Support/Open Pen/mcp.sock',
               OPENPENCIL_MCP_AUTH_TOKEN: expect.any(String),
               OPENPENCIL_MCP_CORS_ORIGIN: 'tauri://localhost',
               OPENPENCIL_MCP_TCP: '1',
@@ -302,6 +309,7 @@ describe('Tauri MCP spawning', () => {
       })
     )
     await mockTauriIPC((cmd, args) => {
+      if (cmd === 'plugin:path|join') return (args as { paths: string[] }).paths.join('/')
       if (cmd === 'mcp_lookup')
         return { available: true, path: '/mock/bin/openpencil-mcp-http', searched: ['/mock/bin'] }
       if (cmd === 'plugin:shell|spawn') return 77
@@ -332,6 +340,7 @@ describe('Tauri MCP spawning', () => {
 
     vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response('', { status: 404 }))
     await mockTauriIPC((cmd, args) => {
+      if (cmd === 'plugin:path|join') return (args as { paths: string[] }).paths.join('/')
       if (cmd === 'mcp_lookup')
         return { available: true, path: '/mock/bin/openpencil-mcp-http', searched: ['/mock/bin'] }
       if (cmd === 'plugin:path|resolve_directory') return '/mock/home'

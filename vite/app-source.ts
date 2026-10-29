@@ -6,6 +6,7 @@ import Icons from 'unplugin-icons/vite'
 import Components from 'unplugin-vue-components/vite'
 import type { Alias, Plugin, PluginOption } from 'vite'
 
+import desktopConfig from '../desktop/tauri.conf.json' with { type: 'json' }
 import rootManifest from '../package.json' with { type: 'json' }
 import { createOpenPencilAliases } from './aliases.ts'
 import { inlineScriptPlugin } from './inline-script.ts'
@@ -67,6 +68,9 @@ export function appSourceConfig(): AppSourceConfig {
     ],
     define: {
       __OPENPENCIL_APP_VERSION__: JSON.stringify(rootManifest.version),
+      __OPENPENCIL_UPDATES_ENABLED__: JSON.stringify(
+        desktopConfig.plugins.updater.endpoints.length > 0
+      ),
       __OPENPENCIL_LOCAL_AUTOMATION_TOKEN__: JSON.stringify(''),
       __OPENPENCIL_LOCAL_AUTOMATION_URL__: JSON.stringify(''),
       __OPENPENCIL_LOCAL_AUTOMATION_HTTP_URL__: JSON.stringify('')

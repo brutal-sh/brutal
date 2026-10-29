@@ -12,6 +12,9 @@ type NativeTestNode = {
   parentId?: string | null
   type: string
   text?: string
+  width?: number
+  height?: number
+  fills?: Array<{ type: string; imageHash?: string }>
 }
 
 type NativeTestStore = {
@@ -23,6 +26,7 @@ type NativeTestStore = {
     sceneVersion: number
   }
   graph: {
+    images: Map<string, Uint8Array>
     createNode: (type: string, parentId: string, changes: Record<string, unknown>) => NativeTestNode
     deleteNode: (id: string) => void
     getChildren: (id: string) => NativeTestNode[]

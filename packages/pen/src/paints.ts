@@ -63,6 +63,11 @@ export function mapBlendMode(value: string | undefined): BlendMode | undefined {
   return value === undefined ? undefined : BLEND_MODES[value]
 }
 
+/** The public .pen spelling of a supported native paint blend mode. */
+export function penBlendMode(value: BlendMode): string | undefined {
+  return Object.entries(BLEND_MODES).find(([, mode]) => mode === value)?.[0]
+}
+
 const GRADIENT_TYPES: Partial<Record<string, FillType>> = {
   linear: 'GRADIENT_LINEAR',
   radial: 'GRADIENT_RADIAL',

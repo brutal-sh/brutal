@@ -8,7 +8,11 @@ pub fn file_association_path(path: PathBuf) -> Option<PathBuf> {
         return None;
     }
     let ext = path.extension()?.to_string_lossy().to_lowercase();
-    matches!(ext.as_str(), "fig" | "pen" | "drawio" | "dio" | "mmd" | "mermaid").then_some(path)
+    matches!(
+        ext.as_str(),
+        "fig" | "pen" | "drawio" | "dio" | "mmd" | "mermaid"
+    )
+    .then_some(path)
 }
 
 fn path_from_arg(arg: String, cwd: &Path) -> Option<PathBuf> {
@@ -37,7 +41,7 @@ pub fn open_paths_from_args(args: Vec<String>, cwd: &Path) -> Vec<PathBuf> {
         .collect()
 }
 
-/// `openpencil://` URLs among a second launch's arguments: Windows and Linux start a new
+/// `openpen://` URLs among a second launch's arguments: Windows and Linux start a new
 /// process for a link, and the single-instance plugin hands its arguments to this one.
 #[cfg(all(
     any(target_os = "macos", windows, target_os = "linux"),
@@ -45,7 +49,7 @@ pub fn open_paths_from_args(args: Vec<String>, cwd: &Path) -> Vec<PathBuf> {
 ))]
 pub fn deep_links_from_args(args: &[String]) -> Vec<url::Url> {
     args.iter()
-        .filter(|arg| arg.starts_with("openpencil://"))
+        .filter(|arg| arg.starts_with("openpen://"))
         .filter_map(|arg| url::Url::parse(arg).ok())
         .collect()
 }

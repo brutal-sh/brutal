@@ -9,6 +9,8 @@ export function downloadNameFromPath(path: string): string {
   return basename(path) || 'Untitled.fig'
 }
 
-export function figDownloadName(fileName: string, sourceFormat: string): string {
-  return sourceFormat === 'fig' ? fileName : `${filename(fileName) ?? fileName}.fig`
+export function documentDownloadName(fileName: string, sourceFormat: string): string {
+  return sourceFormat === 'fig' || sourceFormat === 'pen'
+    ? fileName
+    : `${filename(fileName) ?? fileName}.fig`
 }

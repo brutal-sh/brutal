@@ -81,15 +81,24 @@ defineExpose({ restoreDraft, insert: editor.insert, focus: editor.focus })
 <template>
   <TooltipProvider>
     <!-- The message box rests on the panel as a card, its shadow parting it from the messages. -->
-    <div class="shrink-0 px-2.5 pt-1 pb-2.5">
+    <div class="shrink-0 px-2.5 pt-1 pb-2.5 group-data-[docked=true]/agent:p-0">
       <form class="relative" @submit="handleSubmit" @paste.stop="emit('paste', $event)">
         <InputGroup
           :disabled="disabled"
-          :ui="{ root: 'shadow-[0_1px_2px_rgb(0_0_0/0.08),0_4px_14px_rgb(0_0_0/0.12)]' }"
+          :ui="{
+            root: 'shadow-[0_1px_2px_rgb(0_0_0/0.08),0_4px_14px_rgb(0_0_0/0.12)] group-data-[docked=true]/agent:flex group-data-[docked=true]/agent:min-h-[110px] group-data-[docked=true]/agent:flex-col group-data-[docked=true]/agent:rounded-[20px] group-data-[docked=true]/agent:bg-panel group-data-[docked=true]/agent:shadow-none',
+            control: 'group-data-[docked=true]/agent:flex-1',
+            toolbar: 'group-data-[docked=true]/agent:px-2.5 group-data-[docked=true]/agent:pb-2'
+          }"
         >
           <template v-if="$slots.attachment" #attachment><slot name="attachment" /></template>
 
-          <div ref="host" class="min-w-0" @copy.stop @cut.stop />
+          <div
+            ref="host"
+            class="min-w-0 group-data-[docked=true]/agent:min-h-[72px]"
+            @copy.stop
+            @cut.stop
+          />
 
           <template #leading><slot name="leading" /></template>
 

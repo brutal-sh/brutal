@@ -19,15 +19,30 @@ export interface ToolbarLayout {
 /** The one entry the toolbar always shows, so it is never empty. */
 export const PINNED_TOOLBAR_ENTRY: ToolbarEntry = 'SELECT'
 
-/**
- * Tools the toolbar keeps hidden until shown from Customize toolbar, such as FigJam's sticky
- * note, shape and connector, which Figma's own toolbar does not offer.
- */
-const HIDDEN_BY_DEFAULT: readonly ToolbarEntry[] = ['STICKY', 'SHAPE_WITH_TEXT', 'CONNECTOR']
+/** Secondary tools remain available through Customize toolbar. */
+const HIDDEN_BY_DEFAULT: readonly ToolbarEntry[] = ['SHAPE_WITH_TEXT', 'CONNECTOR', 'insert-icon']
+
+const DEFAULT_TOOL_ORDER: readonly Tool[] = [
+  'SELECT',
+  'RECTANGLE',
+  'PEN',
+  'TEXT',
+  'FRAME',
+  'STICKY',
+  'HAND',
+  'COMMENT'
+]
+
+function defaultToolRank(tool: EditorToolDef): number {
+  const index = DEFAULT_TOOL_ORDER.indexOf(tool.key)
+  return index === -1 ? DEFAULT_TOOL_ORDER.length : index
+}
 
 export const DEFAULT_TOOLBAR_LAYOUT: Readonly<ToolbarLayout> = {
   groups: [
-    ...EDITOR_TOOLS.map((tool) => [...(tool.flyout ?? [tool.key])]),
+    ...[...EDITOR_TOOLS]
+      .sort((a, b) => defaultToolRank(a) - defaultToolRank(b))
+      .map((tool) => [...(tool.flyout ?? [tool.key])]),
     ...TOOLBAR_ACTIONS.map((action) => [action])
   ],
   hidden: [...HIDDEN_BY_DEFAULT]

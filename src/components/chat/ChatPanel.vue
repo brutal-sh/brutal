@@ -36,6 +36,8 @@ import ChatRunLocation from '@/components/chat/ChatRunLocation.vue'
 import ChatTranscript from '@/components/chat/ChatTranscript.vue'
 import { useImageDrop } from '@/components/chat/input/useImageDrop'
 
+const { docked = false } = defineProps<{ docked?: boolean }>()
+
 const { isConfigured, ensureChat, history, chatFailure, clearChatFailure, providerID } = useAIChat()
 const { ai } = useI18n()
 const dates = useDateFormat()
@@ -292,82 +294,102 @@ function handleStop() {
   <div
     ref="panel"
     data-test-id="chat-panel"
-    class="flex min-w-0 flex-1 flex-col overflow-hidden select-text"
+    :data-docked="docked || undefined"
+    class="group/agent flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden select-text data-[docked=true]:gap-2"
   >
-    <ChatHistory
-      :saved="history.conversations.value.some((row) => row.id === history.current.value?.id)"
-      :conversations="historyOptions"
-      :selected-id="history.current.value?.id"
-      :disabled="history.busy.value"
-      @create="historyAction(history.newChat)"
-      @select="historyAction(() => history.open($event))"
-      @rename="renameConversation"
-      @save-trace="saveTrace"
-      @delete="historyAction(() => history.remove($event))"
+    <div
+      data-slot="chat-transcript-card"
+      class="flex min-h-0 flex-1 flex-col overflow-hidden group-data-[docked=true]/agent:rounded-[20px] group-data-[docked=true]/agent:border group-data-[docked=true]/agent:border-border group-data-[docked=true]/agent:bg-panel"
     >
-      <template #actions><ChatFollowAgentsToggle /></template>
-    </ChatHistory>
-    <p v-if="history.storageError.value" role="alert" class="px-3 py-2 text-xs text-error">
-      {{ ai.chatStorageFailed }}
-    </p>
-    <ChatProviderSetup v-if="!isConfigured" />
-
-    <template v-if="isConfigured || messages.length">
-      <p
-        v-if="history.current.value?.interrupted && status === 'ready'"
-        role="status"
-        class="px-3 py-2 text-xs text-muted"
+      <slot name="navigation" />
+      <ChatHistory
+        :docked="docked"
+        :saved="history.conversations.value.some((row) => row.id === history.current.value?.id)"
+        :conversations="historyOptions"
+        :selected-id="history.current.value?.id"
+        :disabled="history.busy.value"
+        @create="historyAction(history.newChat)"
+        @select="historyAction(() => history.open($event))"
+        @rename="renameConversation"
+        @save-trace="saveTrace"
+        @delete="historyAction(() => history.remove($event))"
       >
-        {{ ai.chatInterrupted }}
+        <template #actions><ChatFollowAgentsToggle /></template>
+      </ChatHistory>
+      <p v-if="history.storageError.value" role="alert" class="px-3 py-2 text-xs text-error">
+        {{ ai.chatStorageFailed }}
       </p>
-      <ChatTranscript
-        :messages="messages"
-        :status="status"
-        :show-continue="showContinue"
-        :queued="queuedMessages"
-        :steers="!providerID.startsWith('acp:') && providerID !== 'harness:pi'"
-        @remove-queued="removeQueuedMessage"
-        :nodes-live="!history.readOnly.value"
-        :interactive="chat !== null && !submission.busy.value"
-        @regenerate="submission.regenerate()"
-        @revert="(messageId) => submission.revert(messageId)"
-        @restore="(messageId) => submission.restore(messageId)"
-        @edit="(messageId, text) => submission.resend(messageId, text)"
-        @continue="
-          submission.submit({
-            modelText: 'Continue where you left off',
-            displayText: 'Continue where you left off',
-            images: [],
-            nodes: []
-          })
-        "
-      />
+      <ChatProviderSetup v-if="!docked && !isConfigured" />
 
-      <p v-if="agentHistoryReadOnly" role="status" class="px-3 py-2 text-xs text-muted">
-        {{ ai.chatAgentReadOnly }}
-      </p>
-      <p v-if="history.readOnly.value" role="status" class="px-3 py-2 text-xs text-muted">
-        {{ ai.chatReadOnly }}
-      </p>
-      <ChatRunLocation
-        v-if="runLocation"
-        :agent="runLocation.agent"
-        :page="runLocation.page"
-        @open="runLocation.open"
-      />
-      <ChatInput
-        v-if="isConfigured && !agentHistoryReadOnly && !history.readOnly.value"
-        ref="chatInput"
-        :status="status"
-        :dragging="draggingImages"
-        :disabled="submission.busy.value || history.busy.value"
-        @submit="sendOrQueue"
-        @stop="handleStop"
-        @interrupt="handleStop"
-        @error="toast.error"
-      />
+      <template v-if="isConfigured || messages.length">
+        <p
+          v-if="history.current.value?.interrupted && status === 'ready'"
+          role="status"
+          class="px-3 py-2 text-xs text-muted"
+        >
+          {{ ai.chatInterrupted }}
+        </p>
+        <ChatTranscript
+          :messages="messages"
+          :status="status"
+          :show-continue="showContinue"
+          :queued="queuedMessages"
+          :steers="!providerID.startsWith('acp:') && providerID !== 'harness:pi'"
+          @remove-queued="removeQueuedMessage"
+          :nodes-live="!history.readOnly.value"
+          :interactive="chat !== null && !submission.busy.value"
+          @regenerate="submission.regenerate()"
+          @revert="(messageId) => submission.revert(messageId)"
+          @restore="(messageId) => submission.restore(messageId)"
+          @edit="(messageId, text) => submission.resend(messageId, text)"
+          @continue="
+            submission.submit({
+              modelText: 'Continue where you left off',
+              displayText: 'Continue where you left off',
+              images: [],
+              nodes: []
+            })
+          "
+        />
 
-      <ChatPermissionDialog />
-    </template>
+        <p v-if="agentHistoryReadOnly" role="status" class="px-3 py-2 text-xs text-muted">
+          {{ ai.chatAgentReadOnly }}
+        </p>
+        <p v-if="history.readOnly.value" role="status" class="px-3 py-2 text-xs text-muted">
+          {{ ai.chatReadOnly }}
+        </p>
+        <ChatRunLocation
+          v-if="runLocation"
+          :agent="runLocation.agent"
+          :page="runLocation.page"
+          @open="runLocation.open"
+        />
+      </template>
+    </div>
+    <ChatProviderSetup
+      v-if="docked && !isConfigured"
+      :fill="false"
+      size="compact"
+      class="shrink-0 rounded-[20px] border border-border bg-panel"
+      :ui="{
+        root: 'min-h-[110px] px-4 py-3',
+        content: 'w-full max-w-none items-start text-left',
+        icon: 'hidden',
+        action: 'mt-3 justify-start'
+      }"
+    />
+    <ChatInput
+      v-if="isConfigured && !agentHistoryReadOnly && !history.readOnly.value"
+      ref="chatInput"
+      :status="status"
+      :dragging="draggingImages"
+      :disabled="submission.busy.value || history.busy.value"
+      @submit="sendOrQueue"
+      @stop="handleStop"
+      @interrupt="handleStop"
+      @error="toast.error"
+    />
+
+    <ChatPermissionDialog v-if="isConfigured || messages.length" />
   </div>
 </template>

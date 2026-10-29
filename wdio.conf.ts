@@ -1,4 +1,6 @@
-import { homedir } from 'node:os'
+import { mkdtemp } from 'node:fs/promises'
+import { createServer } from 'node:net'
+import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -13,14 +15,22 @@ const capability: TauriCapabilities = {
   'tauri:options': { application: appBinary }
 }
 
-// Keep the spawned MCP server's discovery file out of the user's application
-// support directory. It stays inside the home directory because the app only
-// accepts a server-reported path within it.
-process.env.OPENPENCIL_MCP_DISCOVERY_PATH = join(
-  homedir(),
-  '.openpencil-native-test',
-  'mcp.json'
-)
+// Parent and worker processes share one test-owned route. No production MCP files or ports.
+if (!process.env.OPENPENCIL_NATIVE_TEST_DIRECTORY) {
+  process.env.OPENPENCIL_NATIVE_TEST_DIRECTORY = await mkdtemp(
+    join(tmpdir(), 'openpen-native-test-')
+  )
+  const server = createServer()
+  await new Promise<void>((resolve) => {
+    server.listen(0, '127.0.0.1', resolve)
+  })
+  const address = server.address()
+  if (!address || typeof address === 'string') throw new Error('No test MCP port allocated')
+  process.env.OPENPENCIL_NATIVE_TEST_MCP_PORT = String(address.port)
+  await new Promise<void>((resolve, reject) => {
+    server.close((error) => (error ? reject(error) : resolve()))
+  })
+}
 
 export const config: WebdriverIO.Config = {
   runner: 'local',
