@@ -21,6 +21,17 @@ const { panels } = useI18n()
       :number-max="360"
       :thumb-fill="colorToCSS(ctx.sliderPreview.hue)"
       data-test-id="color-slider-hue"
+      :ui="
+        ctx.compact
+          ? {
+              label: 'hidden',
+              input: 'hidden',
+              slider: 'h-4 rounded-[10px]',
+              track: 'rounded-[10px]',
+              thumb: 'border-[3px]'
+            }
+          : undefined
+      "
       @update="ctx.updateRGBAHue($event.space === 'hsl' ? $event.h : 0)"
       @update-number="ctx.updateRGBAHue"
     />
@@ -38,6 +49,17 @@ const { panels } = useI18n()
       checkerboard
       :thumb-fill="colorToCSS(ctx.color)"
       data-test-id="color-slider-alpha"
+      :ui="
+        ctx.compact
+          ? {
+              label: 'hidden',
+              input: 'hidden',
+              slider: 'h-4 rounded-[10px]',
+              track: 'rounded-[10px]',
+              thumb: 'border-[3px]'
+            }
+          : undefined
+      "
       @update="ctx.updateRGBAAlpha($event.alpha)"
       @update-number="ctx.updateRGBAAlpha($event / 100)"
     />

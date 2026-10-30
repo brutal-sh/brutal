@@ -3,6 +3,7 @@ import { TabsContent, TabsRoot } from 'reka-ui'
 import { ref, watch } from 'vue'
 
 import { useAIChat } from '@/app/ai/chat/use'
+import { useEditorStore } from '@/app/editor/active-store'
 import AssetsPanel from '@/components/assets-panel/AssetsPanel.vue'
 import ChatPanel from '@/components/chat/ChatPanel.vue'
 import SlidesPanel from '@/components/editor/SlidesPanel.vue'
@@ -13,6 +14,14 @@ import WorkspaceSidebarNavigation from './WorkspaceSidebarNavigation.vue'
 
 const panel = ref('agent')
 const { activeTab } = useAIChat()
+const store = useEditorStore()
+watch(
+  () => store.state.renameNodeId,
+  (id) => {
+    if (id) panel.value = 'layers'
+  },
+  { flush: 'sync' }
+)
 // Existing Ask AI actions still reveal the agent, now on the left.
 watch(panel, (value) => {
   if (value !== 'agent' && activeTab.value === 'ai') activeTab.value = 'design'

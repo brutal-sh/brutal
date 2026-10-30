@@ -7,9 +7,14 @@ import { provideColorPickerPanel } from '@/components/color-picker-panel/context
 import FormatControls from '@/components/color-picker-panel/FormatControls.vue'
 import HueAlphaSliders from '@/components/color-picker-panel/HueAlphaSliders.vue'
 
-const { color, okhcl = null } = defineProps<{
+const {
+  color,
+  okhcl = null,
+  compact = false
+} = defineProps<{
   color: Color
   okhcl?: OkHCLControls | null
+  compact?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -23,6 +28,9 @@ provideColorPickerPanel(
     },
     get okhcl() {
       return okhcl
+    },
+    get compact() {
+      return compact
     }
   },
   emit
@@ -30,9 +38,11 @@ provideColorPickerPanel(
 </script>
 
 <template>
-  <div class="flex flex-col gap-2">
-    <ColorAreaControl />
-    <HueAlphaSliders />
+  <div class="flex flex-col" :class="compact ? 'gap-3' : 'gap-2'">
+    <div :class="compact ? 'flex flex-col gap-1.5' : 'contents'">
+      <ColorAreaControl />
+      <HueAlphaSliders />
+    </div>
     <FormatControls />
   </div>
 </template>

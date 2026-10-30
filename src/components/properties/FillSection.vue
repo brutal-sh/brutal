@@ -156,6 +156,7 @@ function updateSolidColor(
             >
               <template #preview>
                 <FillPicker
+                  :compact="compact"
                   :fill="displayFill(fill, binding.resolvedValue)"
                   :okhcl="createFillOkhclAdapter(okhcl, activeNode, index)"
                   :shader="fillShader(activeNode, fill)"

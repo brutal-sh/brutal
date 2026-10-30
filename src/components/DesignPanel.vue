@@ -144,7 +144,7 @@ const { panels } = useI18n()
     <TypographySection />
     <FillSection :compact="!advanced" />
     <template v-if="strokesAndEffects">
-      <StrokeSection />
+      <StrokeSection :compact="!advanced" />
       <EffectsSection />
     </template>
     <SelectionColorsSection />
@@ -279,7 +279,7 @@ const { panels } = useI18n()
         <TypographySection v-if="node.type === 'TEXT' || node.type === 'SHAPE_WITH_TEXT'" />
         <FillSection :compact="!advanced" />
         <template v-if="strokesAndEffects">
-          <StrokeSection />
+          <StrokeSection :compact="!advanced" />
           <EffectsSection />
         </template>
       </template>

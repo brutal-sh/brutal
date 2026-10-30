@@ -34,10 +34,12 @@ const {
   okhcl = null,
   swatchBackground,
   keepOpen,
+  compact = false,
   shader = null,
   layerSize = null
 } = defineProps<{
   fill: Fill
+  compact?: boolean
   /** The shader the paint draws, when it is a shader's frame; the picker then edits the shader. */
   shader?: ShaderPaint | null
   okhcl?: OkHCLControls | null
@@ -66,7 +68,7 @@ const { open: popupOpen, portalActive } = useRetainedPopup(undefined, () => {
   emit('openChange', false)
 })
 const cls = usePopoverUI({
-  content: 'max-h-(--reka-popover-content-available-height) w-[264px] overflow-y-auto p-3'
+  content: 'max-h-(--reka-popover-content-available-height) w-[264px] overflow-y-auto'
 })
 const { panels } = useI18n()
 
@@ -107,7 +109,7 @@ function stopEscapePropagation(event: KeyboardEvent) {
 
       <PopoverPortal v-if="portalActive">
         <PopoverContent
-          :class="cls.content"
+          :class="[cls.content, compact ? 'p-0' : 'p-3']"
           :side-offset="4"
           side="left"
           data-picker-content
@@ -115,7 +117,10 @@ function stopEscapePropagation(event: KeyboardEvent) {
           @pointer-down-outside="keepOpenOnPress"
           @focus-outside="keepOpenOnFocus"
         >
-          <div class="mb-2 flex items-center gap-0.5">
+          <div
+            class="flex items-center gap-0.5"
+            :class="compact ? 'border-b border-border p-3' : 'mb-2'"
+          >
             <Tip :label="panels.solid">
               <button
                 :data-active="root.category === 'SOLID' || undefined"
@@ -162,32 +167,36 @@ function stopEscapePropagation(event: KeyboardEvent) {
             </Tip>
           </div>
 
-          <ColorPickerPanel
-            v-if="root.category === 'SOLID'"
-            :color="root.fill.color"
-            :okhcl="okhcl"
-            @update="emit('update', applySolidFillColor(root.fill, $event))"
-          />
+          <div :class="compact ? 'p-3' : undefined">
+            <ColorPickerPanel
+              :compact="compact"
+              v-if="root.category === 'SOLID'"
+              :color="root.fill.color"
+              :okhcl="okhcl"
+              @update="emit('update', applySolidFillColor(root.fill, $event))"
+            />
 
-          <GradientEditor
-            v-if="root.category === 'GRADIENT'"
-            v-model:active-stop="activeStop"
-            :fill="root.fill"
-            @update="emit('update', $event)"
-          />
+            <GradientEditor
+              :compact="compact"
+              v-if="root.category === 'GRADIENT'"
+              v-model:active-stop="activeStop"
+              :fill="root.fill"
+              @update="emit('update', $event)"
+            />
 
-          <ShaderFillPicker
-            v-if="shader"
-            :preset="shader.preset"
-            @update="emit('updateShader', $event)"
-          />
+            <ShaderFillPicker
+              v-if="shader"
+              :preset="shader.preset"
+              @update="emit('updateShader', $event)"
+            />
 
-          <ImageFillPicker
-            v-else-if="root.category === 'IMAGE'"
-            :fill="root.fill"
-            :layer-size="layerSize"
-            @update="emit('update', $event)"
-          />
+            <ImageFillPicker
+              v-else-if="root.category === 'IMAGE'"
+              :fill="root.fill"
+              :layer-size="layerSize"
+              @update="emit('update', $event)"
+            />
+          </div>
         </PopoverContent>
       </PopoverPortal>
     </PopoverRoot>

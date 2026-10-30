@@ -4,7 +4,7 @@ import type { SceneNode, Stroke } from '@open-pencil/scene-graph'
 
 import { CanvasHelper } from '#tests/helpers/canvas'
 import { waitForDemo } from '#tests/helpers/demo'
-import { propertyItems, propertySection } from '#tests/helpers/properties'
+import { openAdvancedProperties, propertyItems, propertySection } from '#tests/helpers/properties'
 
 async function dragSlider(page: Page, canvas: CanvasHelper, testId: string, ratio: number) {
   const slider = page.getByTestId(testId).locator(':scope > [data-orientation="horizontal"]')
@@ -116,6 +116,7 @@ test('stroke picker hsb saturation and brightness sliders update stroke color on
   await canvas.waitForRender()
 
   await expect(propertyItems(page, 'strokes')).toBeVisible()
+  await openAdvancedProperties(page)
   await openStrokePicker(page)
   await chooseFormat(page, 'HSB')
 

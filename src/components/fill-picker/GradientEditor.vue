@@ -18,7 +18,7 @@ import IconButton from '@/components/ui/button/IconButton.vue'
 import AppSelect from '@/components/ui/select/AppSelect.vue'
 import fillPickerTheme from '@/theme/fill-picker'
 
-const { fill } = defineProps<{ fill: Fill }>()
+const { fill, compact = false } = defineProps<{ fill: Fill; compact?: boolean }>()
 const emit = defineEmits<{ update: [fill: Fill] }>()
 const activeStop = defineModel<number>('activeStop')
 const { panels, editor } = useI18n()
@@ -121,6 +121,7 @@ function listStopClass(active: boolean) {
           >
             <template #preview>
               <ColorPicker
+                :compact="compact"
                 :color="stop.color"
                 @update="
                   (color) => {

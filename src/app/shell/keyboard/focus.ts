@@ -22,6 +22,27 @@ export function isEditing(event: Event) {
   return event.composedPath().some(isEditableTarget)
 }
 
+/** Open overlays own navigation keys; history may still reach a paint picker. */
+export function overlayHandlesKeyboard(event: KeyboardEvent, allowPickers = false): boolean {
+  const picker = '[data-picker-content]'
+  const accepts = (target: Element) => !(allowPickers && target.closest(picker))
+  return (
+    event
+      .composedPath()
+      .some(
+        (target) =>
+          target instanceof Element &&
+          target.matches(
+            '[data-picker-content], [role="dialog"], [role="listbox"], [role="menu"]'
+          ) &&
+          accepts(target)
+      ) ||
+    [...document.querySelectorAll('[data-dismissable-layer]:not([data-state="closed"])')].some(
+      accepts
+    )
+  )
+}
+
 export function hasDocumentTextSelection(): boolean {
   const selection = window.getSelection()
   return selection !== null && !selection.isCollapsed && selection.toString().length > 0

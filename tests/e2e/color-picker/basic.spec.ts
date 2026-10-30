@@ -3,6 +3,7 @@ import { expect, test, type Page } from '@playwright/test'
 import { parseOkHCLPayload } from '@open-pencil/scene-graph/color'
 
 import { CanvasHelper } from '#tests/helpers/canvas'
+import { openAdvancedProperties } from '#tests/helpers/properties'
 
 let page: Page
 let canvas: CanvasHelper
@@ -14,6 +15,7 @@ test.beforeAll(async ({ browser }) => {
   await page.goto('/')
   canvas = new CanvasHelper(page)
   await canvas.waitForInit()
+  await openAdvancedProperties(page)
 })
 
 test.afterAll(async () => {

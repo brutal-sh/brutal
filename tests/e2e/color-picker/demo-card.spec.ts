@@ -2,6 +2,7 @@ import { expect, test, type Page } from '@playwright/test'
 
 import { CanvasHelper } from '#tests/helpers/canvas'
 import { waitForDemo } from '#tests/helpers/demo'
+import { openAdvancedProperties } from '#tests/helpers/properties'
 
 async function dragSlider(page: Page, canvas: CanvasHelper, testId: string, ratio: number) {
   const slider = page.getByTestId(testId).getByRole('slider')
@@ -103,6 +104,7 @@ test('demo card fill changes from hsb saturation and brightness sliders', async 
   test.setTimeout(30_000)
   const canvas = new CanvasHelper(page)
   await selectDemoCard(page, canvas)
+  await openAdvancedProperties(page)
 
   await page.getByTestId('fill-picker-swatch').first().click()
   await expect(page.getByTestId('fill-picker-tab-solid')).toBeVisible()

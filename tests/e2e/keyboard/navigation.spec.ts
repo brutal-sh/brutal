@@ -91,6 +91,7 @@ test('Page Down and Page Up switch pages', async () => {
   const currentPage = () =>
     editor.page.evaluate(() => window.openPencil?.getStore?.().state.currentPageId)
 
+  await editor.canvas.click(800, 500)
   await editor.page.keyboard.press('PageDown')
   await expect.poll(currentPage).toBe(second)
   await editor.page.keyboard.press('PageUp')

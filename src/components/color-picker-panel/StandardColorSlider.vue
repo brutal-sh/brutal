@@ -53,6 +53,7 @@ const styles = useColorSliderUI(
   <div :class="styles.root.value">
     <span :class="styles.label.value">{{ label }}</span>
     <ColorSliderRoot
+      :aria-label="label"
       :class="styles.slider.value"
       :model-value="modelValue"
       :channel="channel"

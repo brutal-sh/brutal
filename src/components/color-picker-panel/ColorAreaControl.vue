@@ -9,18 +9,20 @@ const ctx = useColorPickerPanelContext()
 <template>
   <ColorAreaRoot
     v-slot="{ style }"
-    :model-value="ctx.rekaColor"
+    :model-value="ctx.hsbColor"
     color-space="hsb"
     x-channel="saturation"
     y-channel="brightness"
     @update:color="ctx.onRekaColorUpdate"
   >
     <ColorAreaArea
-      class="relative h-[140px] w-full cursor-crosshair overflow-hidden rounded"
+      class="relative w-full cursor-crosshair"
+      :class="ctx.compact ? 'h-[194px] rounded-md' : 'h-[140px] rounded'"
       :style="style"
     >
       <ColorAreaThumb
-        class="pointer-events-none absolute size-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white shadow-sm"
+        class="pointer-events-none absolute rounded-full border-white shadow-sm"
+        :class="ctx.compact ? 'size-3.5 border-[3px]' : 'size-2.5 border-2'"
       />
     </ColorAreaArea>
   </ColorAreaRoot>

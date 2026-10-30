@@ -47,6 +47,7 @@ const {
 import StrokeSettingsPopover from './StrokeSettingsPopover.vue'
 
 const strokeCtx = useStrokeControls()
+const { compact = false } = defineProps<{ compact?: boolean }>()
 const { advancedActive } = strokeCtx
 const { nodes: selectedNodes } = useNodeProps()
 /** Empty when the layers align their strokes differently, so the field reads Mixed. */
@@ -172,6 +173,7 @@ function onToggleSides(nodes: readonly SceneNode[]) {
           >
             <template #preview>
               <FillPicker
+                :compact="compact"
                 :label="panels.stroke"
                 :fill="displayStroke(stroke, binding.resolvedValue)"
                 :okhcl="createStrokeOkhclAdapter(okhcl, activeNode, index)"

@@ -10,12 +10,18 @@ const { panels } = useI18n()
 
 <template>
   <div
-    class="grid grid-cols-[repeat(3,minmax(0,1fr))] gap-px overflow-hidden rounded border border-border bg-border"
+    class="grid"
+    :class="
+      ctx.compact
+        ? 'grid-cols-4 gap-1'
+        : 'grid-cols-3 gap-px overflow-hidden rounded border border-border bg-border'
+    "
   >
     <input
       type="number"
       :aria-label="panels.red"
-      class="bg-input px-2 py-1 text-xs text-surface outline-none"
+      class="min-w-0 bg-input px-2 py-1 text-xs text-surface outline-none"
+      :class="{ rounded: ctx.compact }"
       :value="Math.round(ctx.rgbColor.r)"
       min="0"
       max="255"
@@ -24,7 +30,8 @@ const { panels } = useI18n()
     <input
       type="number"
       :aria-label="panels.green"
-      class="bg-input px-2 py-1 text-xs text-surface outline-none"
+      class="min-w-0 bg-input px-2 py-1 text-xs text-surface outline-none"
+      :class="{ rounded: ctx.compact }"
       :value="Math.round(ctx.rgbColor.g)"
       min="0"
       max="255"
@@ -33,11 +40,23 @@ const { panels } = useI18n()
     <input
       type="number"
       :aria-label="panels.blue"
-      class="bg-input px-2 py-1 text-xs text-surface outline-none"
+      class="min-w-0 bg-input px-2 py-1 text-xs text-surface outline-none"
+      :class="{ rounded: ctx.compact }"
       :value="Math.round(ctx.rgbColor.b)"
       min="0"
       max="255"
       @change="ctx.updateRGBChannelValue('b', inputNumberValue($event))"
+    />
+    <input
+      v-if="ctx.compact"
+      type="number"
+      :aria-label="panels.alpha"
+      class="min-w-0 rounded bg-input px-2 py-1 text-xs text-surface outline-none"
+      :value="Number(ctx.color.a.toFixed(2))"
+      min="0"
+      max="1"
+      step="0.01"
+      @change="ctx.updateRGBAAlpha(inputNumberValue($event))"
     />
   </div>
 </template>

@@ -55,6 +55,12 @@ export function colorToCSS(color: Color): string {
   return formatRgb({ mode: 'rgb', r: color.r, g: color.g, b: color.b, alpha: color.a })
 }
 
+/** Editable RGBA text keeps the alpha channel visible for opaque colors too. */
+export function colorToCSSRGBA(color: Color): string {
+  const { r, g, b, a } = colorToRgba255(color)
+  return `rgba(${r}, ${g}, ${b}, ${a})`
+}
+
 export function colorToCSSCompact(color: Color): string {
   const { r, g, b } = colorToRgba255(color)
   const a = Number(color.a.toFixed(3))
