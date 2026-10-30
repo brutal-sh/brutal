@@ -24,7 +24,7 @@ export default {
       bound: false,
       class: {
         binding:
-          'absolute right-0 bg-panel-field opacity-0 group-hover/paint:opacity-100 group-focus-within/paint:opacity-100 has-[[data-open]]:opacity-100'
+          'absolute right-10 bg-panel-field opacity-0 group-hover/paint:opacity-100 group-focus-within/paint:opacity-100 has-[[data-open]]:opacity-100 has-[[data-state=unresolved]]:static has-[[data-state=unresolved]]:opacity-100'
       }
     }
   ]

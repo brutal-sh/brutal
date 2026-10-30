@@ -107,6 +107,8 @@
   "missingStyle": "Stile mancante ({id})",
   "selectedCount": "{count} selezionati",
   "goToMainComponent": "Vai al componente principale",
+  "paintColor": "Colore",
+  "paintGradient": "Sfumatura",
   "solid": "Pieno",
   "linearGradient": "Lineare",
   "radialGradient": "Radiale",

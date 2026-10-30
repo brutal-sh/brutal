@@ -107,6 +107,8 @@
   "missingStyle": "Brakujący styl ({id})",
   "selectedCount": "Zaznaczono: {count}",
   "goToMainComponent": "Przejdź do głównego komponentu",
+  "paintColor": "Kolor",
+  "paintGradient": "Gradient",
   "solid": "Jednolity",
   "linearGradient": "Liniowy",
   "radialGradient": "Promieniowy",

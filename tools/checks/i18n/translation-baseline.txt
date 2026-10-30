@@ -540,3 +540,5 @@ de:settings.cloud
 fr:settings.cloud
 it:settings.cloud
 es:panels.effectColor
+es:panels.paintColor
+pl:panels.paintGradient

@@ -107,6 +107,8 @@
   "missingStyle": "Fehlender Stil ({id})",
   "selectedCount": "{count} ausgewählt",
   "goToMainComponent": "Zur Hauptkomponente",
+  "paintColor": "Farbe",
+  "paintGradient": "Farbverlauf",
   "solid": "Vollton",
   "linearGradient": "Linear",
   "radialGradient": "Radial",

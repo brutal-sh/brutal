@@ -6,7 +6,7 @@ This catalogs every current documentation chapter. Requirements are paraphrased;
 
 Subscriptions, vendor activation and vendor account gates are excluded. Independent equivalents must still protect documents, credentials and published data. External AI/service costs and provider authentication remain separate. Vendor source/assets stay in ignored private evidence.
 
-Machine-readable requirements: [features.json](features.json). Source/heading inventory and cached-page hashes: [sources.json](sources.json). [Shortcut matrix](shortcuts.md), [serialized fields](format-fields.md), [CLI/MCP contracts](command-contract.md), [native screen coverage](../PARITY-STATE-MATRIX.md), [execution evidence](../ACCEPTANCE.md), [reference provenance](../PEN-REFERENCE.md).
+Machine-readable requirements: [features.json](features.json). Source/heading inventory and cached-page hashes: [sources.json](sources.json). [Shortcut matrix](shortcuts.md), [serialized fields](format-fields.md), [native paint controls](paint-controls.md), [CLI/MCP contracts](command-contract.md), [native screen coverage](../PARITY-STATE-MATRIX.md), [execution evidence](../ACCEPTANCE.md), [reference provenance](../PEN-REFERENCE.md).
 
 ## Acceptance rules
 
@@ -331,4 +331,4 @@ Source: [Troubleshooting](https://docs.pen.dev/troubleshooting).
 
 The inventory contains 152 requirements across 23 chapter pages plus the documentation landing page. It covers documented features; it cannot prove discovery of undocumented or account/OS-specific behavior. Every native surface still requires direct comparison. The private HTML cache is research evidence, not shipped documentation or production code.
 
-Re-entry: resolve the paint-row hover overlap, then compare the first open inspector/menu state in the native ledger. Keep this catalog and its JSON in the same change when requirements or acceptance evidence change.
+Re-entry: compare the remaining paint/inspector states, then the first open inspector/menu state in the native ledger. Keep this catalog and its JSON in the same change when requirements or acceptance evidence change.

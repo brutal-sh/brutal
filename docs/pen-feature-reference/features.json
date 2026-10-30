@@ -462,7 +462,7 @@
             "../PAINT-PARITY.md",
             "../ACCEPTANCE.md"
           ],
-          "evidence_limit": "Named compact bound/unbound paint and native color/blend Save/reopen paths executed. Hover variable-button overlap, reorder and full compositing/state comparison remain open."
+          "evidence_limit": "Named compact paint and native color/blend paths, hover width, variable access and category Undo executed. Reorder, every width/state and full compositing comparison remain open."
         },
         {
           "id": "DRAW-09",
@@ -471,7 +471,8 @@
           "acceptance": "Move stops/handles/mesh points, change grid/colors and compare render after reopen.",
           "status": "partial",
           "evidence": [
-            "../PAINT-PARITY.md"
+            "../PAINT-PARITY.md",
+            "paint-controls.md"
           ],
           "evidence_limit": "Nested stop edit/dismissal and one-stop rendered output checked; Mesh and complete menu/layout parity remain open."
         },
@@ -501,7 +502,10 @@
           "behavior": "File/URL fills, editable inputs, gallery and shader effects.",
           "acceptance": "Load an independent shader; edit inputs, resize, handle errors and reopen.",
           "status": "open",
-          "evidence": []
+          "evidence": [
+            "../PAINT-PARITY.md",
+            "paint-controls.md"
+          ]
         },
         {
           "id": "DRAW-13",

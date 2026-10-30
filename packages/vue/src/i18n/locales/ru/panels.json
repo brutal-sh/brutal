@@ -123,6 +123,8 @@
   "missingStyle": "Недоступный стиль ({id})",
   "selectedCount": "Выбрано: {count}",
   "goToMainComponent": "Перейти к главному компоненту",
+  "paintColor": "Цвет",
+  "paintGradient": "Градиент",
   "solid": "Сплошной",
   "linearGradient": "Линейный",
   "radialGradient": "Радиальный",

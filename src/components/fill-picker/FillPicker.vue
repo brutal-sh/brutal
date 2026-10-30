@@ -76,6 +76,10 @@ const cls = usePopoverUI({
 })
 const { panels } = useI18n()
 const blendModeGroups = useBlendModeGroups()
+const colorLabel = computed(() => (compact ? panels.value.paintColor : panels.value.solid))
+const gradientLabel = computed(() =>
+  compact ? panels.value.paintGradient : panels.value.linearGradient
+)
 
 /** Dragging a gradient handle on the canvas leaves the picker open, as in Figma. */
 function keepOpenOnPress(event: PointerDownOutsideEvent) {
@@ -130,22 +134,24 @@ function stopEscapePropagation(event: KeyboardEvent) {
               class="flex min-w-0 flex-1 items-center gap-0.5"
               :class="compact ? 'rounded-md bg-input' : undefined"
             >
-              <Tip :label="panels.solid">
+              <Tip :label="colorLabel">
                 <button
                   :data-active="root.category === 'SOLID' || undefined"
+                  :aria-pressed="root.category === 'SOLID'"
                   :class="tabClass(root.category === 'SOLID')"
-                  :aria-label="panels.solid"
+                  :aria-label="colorLabel"
                   data-test-id="fill-picker-tab-solid"
                   @click="root.actions.toSolid"
                 >
                   <icon-lucide-square class="size-3.5" />
                 </button>
               </Tip>
-              <Tip :label="panels.linearGradient">
+              <Tip :label="gradientLabel">
                 <button
                   :data-active="root.category === 'GRADIENT' || undefined"
+                  :aria-pressed="root.category === 'GRADIENT'"
                   :class="tabClass(root.category === 'GRADIENT')"
-                  :aria-label="panels.linearGradient"
+                  :aria-label="gradientLabel"
                   data-test-id="fill-picker-tab-gradient"
                   @click="root.actions.toGradient"
                 >
@@ -155,6 +161,7 @@ function stopEscapePropagation(event: KeyboardEvent) {
               <Tip :label="panels.image">
                 <button
                   :data-active="(root.category === 'IMAGE' && !shader) || undefined"
+                  :aria-pressed="root.category === 'IMAGE' && !shader"
                   :class="tabClass(root.category === 'IMAGE' && !shader)"
                   :aria-label="panels.image"
                   data-test-id="fill-picker-tab-image"
@@ -166,6 +173,7 @@ function stopEscapePropagation(event: KeyboardEvent) {
               <Tip :label="panels.shader">
                 <button
                   :data-active="shader !== null || undefined"
+                  :aria-pressed="shader !== null"
                   :class="tabClass(shader !== null)"
                   :aria-label="panels.shader"
                   data-test-id="fill-picker-tab-shader"

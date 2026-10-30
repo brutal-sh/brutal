@@ -122,6 +122,8 @@
   "missingStyle": "Estilo no disponible ({id})",
   "selectedCount": "{count} seleccionados",
   "goToMainComponent": "Ir al componente principal",
+  "paintColor": "Color",
+  "paintGradient": "Degradado",
   "solid": "Sólido",
   "linearGradient": "Lineal",
   "radialGradient": "Radial",

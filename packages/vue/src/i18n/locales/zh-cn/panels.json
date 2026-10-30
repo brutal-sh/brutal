@@ -123,6 +123,8 @@
   "missingStyle": "缺失样式 ({id})",
   "selectedCount": "已选择 {count} 个",
   "goToMainComponent": "转到主组件",
+  "paintColor": "颜色",
+  "paintGradient": "渐变",
   "solid": "纯色",
   "linearGradient": "线性",
   "radialGradient": "径向",

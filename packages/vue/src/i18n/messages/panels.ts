@@ -512,6 +512,8 @@ export const panelMessageDefaults = {
 
   gap: 'Gap',
 
+  paintColor: 'Color',
+  paintGradient: 'Gradient',
   solid: 'Solid',
   linearGradient: 'Linear',
   radialGradient: 'Radial',

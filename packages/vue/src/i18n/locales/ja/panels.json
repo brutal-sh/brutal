@@ -122,6 +122,8 @@
   "missingStyle": "不明なスタイル ({id})",
   "selectedCount": "{count} 個を選択",
   "goToMainComponent": "メインコンポーネントに移動",
+  "paintColor": "カラー",
+  "paintGradient": "グラデーション",
   "solid": "ソリッド (単色)",
   "linearGradient": "線形グラデーション",
   "radialGradient": "放射状グラデーション",
