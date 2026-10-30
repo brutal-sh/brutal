@@ -660,5 +660,9 @@
   "meshResetPosition": "Réinitialiser la position",
   "meshResetCurve": "Réinitialiser la courbe",
   "meshPoint": "Point",
-  "meshHandles": "Poignées"
+  "meshHandles": "Poignées",
+  "exportLayer": "Exporter le calque",
+  "exportLayers": "Exporter les calques ({count})",
+  "exportPDFPages": "Les calques sont exportés en pages d’un PDF, dans l’ordre de sélection.",
+  "exportFailed": "Impossible d’exporter les calques sélectionnés. Réessayez."
 }

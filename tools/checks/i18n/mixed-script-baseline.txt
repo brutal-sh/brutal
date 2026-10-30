@@ -593,3 +593,5 @@ zh-cn:ai.queueMessage
 ja:ai.queueMessage
 ja:ai.skillsDescription
 zh-cn:ai.skillsDescription
+ja:panels.exportPDFPages
+zh-cn:panels.exportPDFPages

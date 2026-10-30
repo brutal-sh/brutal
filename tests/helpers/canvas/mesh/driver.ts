@@ -5,6 +5,17 @@ import type * as Mesh from '@open-pencil/scene-graph/gradient/mesh'
 
 export function meshDriver(page: () => Page) {
   return {
+    resize(nodeId: string, width: number, height: number) {
+      return page().evaluate(
+        ({ nodeId, width, height }) => {
+          const store = window.openPencil?.getStore?.()
+          if (!store) throw new Error('Editor unavailable')
+          store.updateNode(nodeId, { width, height })
+          store.requestRender()
+        },
+        { nodeId, width, height }
+      )
+    },
     async show(kind: 'fills' | 'strokes' = 'fills') {
       return page().evaluate(async (kind) => {
         const store = window.openPencil?.getStore?.()

@@ -653,5 +653,9 @@
   "meshResetPosition": "位置をリセット",
   "meshResetCurve": "曲線をリセット",
   "meshPoint": "ポイント",
-  "meshHandles": "ハンドル"
+  "meshHandles": "ハンドル",
+  "exportLayer": "レイヤーを書き出す",
+  "exportLayers": "レイヤーを書き出す ({count})",
+  "exportPDFPages": "レイヤーは選択順に1つのPDFの各ページとして書き出されます。",
+  "exportFailed": "選択したレイヤーを書き出せませんでした。もう一度お試しください。"
 }

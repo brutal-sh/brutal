@@ -667,5 +667,9 @@
   "meshResetPosition": "Resetuj pozycję",
   "meshResetCurve": "Resetuj krzywą",
   "meshPoint": "Punkt",
-  "meshHandles": "Uchwyty"
+  "meshHandles": "Uchwyty",
+  "exportLayer": "Eksportuj warstwę",
+  "exportLayers": "Eksportuj warstwy ({count})",
+  "exportPDFPages": "Warstwy są eksportowane jako strony jednego pliku PDF, w kolejności zaznaczenia.",
+  "exportFailed": "Nie można wyeksportować zaznaczonych warstw. Spróbuj ponownie."
 }

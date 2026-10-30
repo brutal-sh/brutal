@@ -1,7 +1,12 @@
 import type { SceneGraph } from '@open-pencil/scene-graph'
 
-import { computeContentBounds } from '#core/io/formats/raster'
+import {
+  computeContentBounds,
+  headlessRenderNodes,
+  renderNodesToImage
+} from '#core/io/formats/raster'
 import { renderNodesToSVG, type SVGExportOptions, type SVGTextLayout } from '#core/io/formats/svg'
+import type { IOContext } from '#core/io/types'
 
 import { withPDFDOM, type SVGPageParser } from './dom'
 import {
@@ -16,6 +21,7 @@ import {
 import type { PDFPageSpec } from './plan'
 
 export interface PDFExportOptions {
+  context?: IOContext
   title?: string
   /** The faces the text uses, to embed their files; without them text uses standard PDF fonts. */
   fonts?: readonly PDFFontFace[]
@@ -35,25 +41,31 @@ export interface PDFExportResult {
 
 interface PreparedPage {
   spec: PDFPageSpec
-  svgElement: Element
+  svgElement?: Element
+  raster?: Uint8Array
   width: number
   height: number
 }
 
 type PageSVGOptions = Pick<SVGExportOptions, 'textLayout' | 'fontAlias'>
 
-function preparePage(
+function hasMeshPaint(graph: SceneGraph, id: string): boolean {
+  const node = graph.getNode(id)
+  if (!node?.visible) return false
+  return (
+    [...node.fills, ...node.strokes].some(
+      (paint) => paint.visible && paint.type === 'GRADIENT_MESH'
+    ) || node.childIds.some((child) => hasMeshPaint(graph, child))
+  )
+}
+
+async function preparePage(
   graph: SceneGraph,
   spec: PDFPageSpec,
   svgOptions: PageSVGOptions,
-  parse: SVGPageParser
-): PreparedPage | null {
-  const svg = renderNodesToSVG(graph, spec.pageId, spec.nodeIds, {
-    xmlDeclaration: false,
-    ...svgOptions
-  })
-  if (!svg) return null
-
+  parse: SVGPageParser,
+  context?: IOContext
+): Promise<PreparedPage | null> {
   const bounds = computeContentBounds(graph, spec.nodeIds)
   if (!bounds) return null
 
@@ -61,6 +73,28 @@ function preparePage(
   const height = bounds.maxY - bounds.minY
   if (width <= 0 || height <= 0) return null
 
+  // Pen exports Mesh pages as a 2× image; ordinary pages keep their vector/text output.
+  if (spec.nodeIds.some((id) => hasMeshPaint(graph, id))) {
+    const options = { scale: 2, format: 'PNG' } as const
+    const raster =
+      context?.canvasKit && context.renderer
+        ? renderNodesToImage(
+            context.canvasKit,
+            context.renderer,
+            graph,
+            spec.pageId,
+            spec.nodeIds,
+            options
+          )
+        : await headlessRenderNodes(graph, spec.pageId, spec.nodeIds, options)
+    if (!raster) throw new Error('Could not render Mesh page for PDF export')
+    return { spec, raster, width, height }
+  }
+  const svg = renderNodesToSVG(graph, spec.pageId, spec.nodeIds, {
+    xmlDeclaration: false,
+    ...svgOptions
+  })
+  if (!svg) return null
   const svgElement = parse(svg)
   return svgElement ? { spec, svgElement, width, height } : null
 }
@@ -89,11 +123,13 @@ async function renderPages(
     textLayout: options.textLayout,
     fontAlias: embedding ? embeddedFontAlias(embedding) : undefined
   }
-  const preparePages = () =>
-    specs
-      .map((spec) => preparePage(graph, spec, svgOptions, parse))
-      .filter((page): page is PreparedPage => page !== null)
-  let prepared = preparePages()
+  const preparePages = async () => {
+    const pages = []
+    for (const spec of specs)
+      pages.push(await preparePage(graph, spec, svgOptions, parse, options.context))
+    return pages.filter((page): page is PreparedPage => page !== null)
+  }
+  let prepared = await preparePages()
   if (prepared.length === 0) return null
   const first = prepared[0]
 
@@ -115,12 +151,14 @@ async function renderPages(
   // written again without the names of faces that are not embedded.
   if (embedding) {
     const cut = await cutFontInstances(embedding)
-    if (!registerEmbeddedFonts(doc, embedding) || !cut) prepared = preparePages()
+    if (!registerEmbeddedFonts(doc, embedding) || !cut) prepared = await preparePages()
   }
 
   for (const [index, page] of prepared.entries()) {
     if (index > 0) doc.addPage([page.width, page.height], orientationOf(page))
-    await svg2pdf(page.svgElement, doc, { x: 0, y: 0, width: page.width, height: page.height })
+    if (page.raster) doc.addImage(page.raster, 'PNG', 0, 0, page.width, page.height)
+    else if (page.svgElement)
+      await svg2pdf(page.svgElement, doc, { x: 0, y: 0, width: page.width, height: page.height })
   }
 
   return {

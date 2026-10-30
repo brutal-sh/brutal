@@ -653,5 +653,9 @@
   "meshResetPosition": "重置位置",
   "meshResetCurve": "重置曲线",
   "meshPoint": "点",
-  "meshHandles": "控制柄"
+  "meshHandles": "控制柄",
+  "exportLayer": "导出图层",
+  "exportLayers": "导出图层 ({count})",
+  "exportPDFPages": "图层将按选择顺序导出为同一 PDF 的各个页面。",
+  "exportFailed": "无法导出所选图层。请重试。"
 }

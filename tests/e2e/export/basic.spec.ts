@@ -4,7 +4,7 @@ import type { ExportSetting } from '@open-pencil/scene-graph'
 
 import { expectInViewport } from '#tests/e2e/fixtures'
 import { CanvasHelper } from '#tests/helpers/canvas'
-import { propertyItems, propertySection } from '#tests/helpers/properties'
+import { openAdvancedProperties, propertyItems, propertySection } from '#tests/helpers/properties'
 
 let page: Page
 let canvas: CanvasHelper
@@ -17,6 +17,7 @@ test.beforeAll(async ({ browser }) => {
   await page.goto('/')
   canvas = new CanvasHelper(page)
   await canvas.waitForInit()
+  await openAdvancedProperties(page)
   await canvas.clearCanvas()
   await canvas.drawRect(200, 200, 100, 100)
 })

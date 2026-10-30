@@ -37,6 +37,7 @@ import ContextSection from './properties/ContextSection.vue'
 import DocumentSection from './properties/DocumentSection.vue'
 import EffectsSection from './properties/EffectsSection.vue'
 import ExportSection from './properties/ExportSection.vue'
+import ExportSectionCompact from './properties/ExportSectionCompact.vue'
 import FillSection from './properties/FillSection.vue'
 import FramePresetSelect from './properties/frame-presets/FramePresetSelect.vue'
 import FramePresetsSection from './properties/frame-presets/FramePresetsSection.vue'
@@ -149,7 +150,7 @@ const { panels } = useI18n()
     </template>
     <SelectionColorsSection />
     <LayoutGridSection v-if="advanced && supportsLayoutGuides" />
-    <ExportSection />
+    <component :is="advanced ? ExportSection : ExportSectionCompact" />
   </div>
 
   <!-- Single selection: retain one paused subtree while frame presets are shown. -->
@@ -287,7 +288,7 @@ const { panels } = useI18n()
       <LayoutGridSection v-if="advanced && supportsLayoutGuides" />
 
       <CodeExportSection :node-id="node.id" />
-      <ExportSection />
+      <component :is="advanced ? ExportSection : ExportSectionCompact" />
     </div>
   </RetainedPanel>
 
@@ -300,6 +301,6 @@ const { panels } = useI18n()
     <VariablesSection @open-dialog="openVariablesDialog(store)" />
     <StatusesSection />
     <DocumentSection />
-    <ExportSection />
+    <ExportSection v-if="advanced" />
   </div>
 </template>

@@ -660,5 +660,9 @@
   "meshResetPosition": "Ripristina posizione",
   "meshResetCurve": "Ripristina curva",
   "meshPoint": "Punto",
-  "meshHandles": "Maniglie"
+  "meshHandles": "Maniglie",
+  "exportLayer": "Esporta livello",
+  "exportLayers": "Esporta livelli ({count})",
+  "exportPDFPages": "I livelli vengono esportati come pagine di un PDF, nell’ordine di selezione.",
+  "exportFailed": "Impossibile esportare i livelli selezionati. Riprova."
 }

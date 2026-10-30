@@ -660,5 +660,9 @@
   "meshResetPosition": "Position zurücksetzen",
   "meshResetCurve": "Kurve zurücksetzen",
   "meshPoint": "Punkt",
-  "meshHandles": "Griffe"
+  "meshHandles": "Griffe",
+  "exportLayer": "Ebene exportieren",
+  "exportLayers": "Ebenen exportieren ({count})",
+  "exportPDFPages": "Ebenen werden in Auswahlreihenfolge als Seiten einer PDF exportiert.",
+  "exportFailed": "Die ausgewählten Ebenen konnten nicht exportiert werden. Erneut versuchen."
 }

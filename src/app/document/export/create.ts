@@ -1,3 +1,5 @@
+import { invoke } from '@tauri-apps/api/core'
+
 import type { Editor, EditorState } from '@open-pencil/core'
 import type { BuiltinIOFormatId, ExportRequest, IORegistry } from '@open-pencil/core/io'
 
@@ -13,6 +15,7 @@ import {
 } from '@/app/document/export/files'
 import type { ExportOptions } from '@/app/document/export/types'
 import { trackDocumentFormat } from '@/app/telemetry'
+import { IS_TAURI } from '@/constants'
 
 type DownloadBlob = (data: Uint8Array, filename: string, mime: string) => void
 
@@ -45,7 +48,16 @@ export function createDocumentExportActions(
       formatId,
       { graph: editor.graph, target },
       exportOptions,
-      editor.renderer ? { canvasKit: editor.renderer.ck, renderer: editor.renderer } : undefined
+      editor.renderer
+        ? {
+            canvasKit: editor.renderer.ck,
+            renderer: editor.renderer,
+            encodeWebP: IS_TAURI
+              ? async (png: Uint8Array) =>
+                  new Uint8Array(await invoke<ArrayBuffer>('encode_webp', { png: Array.from(png) }))
+              : undefined
+          }
+        : undefined
     )
 
     const baseName = getExportBaseName(editor.graph, target)

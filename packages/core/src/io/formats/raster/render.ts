@@ -178,6 +178,14 @@ function renderToSurface(
       foundAlphaBounds && shouldTrimAlphaBounds(foundAlphaBounds, width, height)
         ? foundAlphaBounds
         : null
+    if (format === 'JPG') {
+      const matte = new ck.Paint()
+      matte.setColor(ck.WHITE)
+      matte.setBlendMode(ck.BlendMode.DstOver)
+      downsampleCanvas.drawPaint(matte)
+      downsampleSurface.flush()
+      matte.delete()
+    }
     const image = alphaBounds
       ? downsampleSurface.makeImageSnapshot([
           alphaBounds.minX,

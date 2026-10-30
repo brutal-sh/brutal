@@ -90,6 +90,7 @@ export function getExportBaseName(graph: SceneGraph, target: ExportRequest['targ
 
 export function getExportOptions(format: IOFormatAdapter, options?: ExportOptions): unknown {
   if (format.id === 'html') return options
+  if (format.id === 'pdf') return { mode: options?.pdfMode ?? 'single' }
   if (format.exportOptions?.scale) {
     return { scale: options?.scale ?? 1, quality: options?.quality }
   }

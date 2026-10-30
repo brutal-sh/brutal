@@ -148,7 +148,7 @@ function rasterFormat<F extends RasterExportFormat>(format: F): IOFormatAdapter<
       colorSpace: false
     },
     async exportContent(request, options?: RasterExportOptions, context?: IOContext) {
-      const data = await renderRaster(
+      let data = await renderRaster(
         request,
         {
           format,
@@ -157,6 +157,10 @@ function rasterFormat<F extends RasterExportFormat>(format: F): IOFormatAdapter<
         },
         context
       )
+      if (!data && format === 'WEBP' && context?.encodeWebP) {
+        const png = await renderRaster(request, { format: 'PNG', scale: options?.scale }, context)
+        if (png) data = new Uint8Array(await context.encodeWebP(png))
+      }
       if (!data) throw new Error('Nothing to export')
       return {
         format: extension,
@@ -492,12 +496,18 @@ export const pdfFormat: IOFormatAdapter<'pdf'> = {
   mimeTypes: ['application/pdf'],
   support: EXPORT_EVERY_TARGET,
   exportOptions: FIXED_SIZE_EXPORT,
-  async exportContent(request) {
+  async exportContent(request, options?: { mode?: 'single' | 'frames' }, context?: IOContext) {
     const target = resolveExportNodes(request)
     if (!target) throw new Error('Nothing to export')
     // Embedded, as Figma embeds every face its PDFs draw.
-    const { exportPDFDocument } = await import('./formats/pdf/document')
-    const data = (await exportPDFDocument(request.graph, [target], { embedFonts: true }))?.data
+    const { exportPDFDocument, planPDFPages } = await import('./formats/pdf')
+    const pages = planPDFPages(request.graph, {
+      mode: options?.mode === 'frames' ? 'frames' : 'single',
+      ids: target.nodeIds,
+      currentPageId: target.pageId
+    })
+    const data = (await exportPDFDocument(request.graph, pages, { embedFonts: true, context }))
+      ?.data
     if (!data) throw new Error('Nothing to export')
     return {
       format: 'pdf',

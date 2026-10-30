@@ -1,5 +1,6 @@
 import type { SceneGraph } from '@open-pencil/scene-graph'
 
+import type { IOContext } from '#core/io/types'
 import { fontManager } from '#core/text/fonts'
 
 import { renderPagesToPDFDetailed, type PDFExportResult } from './export'
@@ -7,6 +8,7 @@ import type { PDFPageSpec } from './plan'
 import { pdfFontFaces, preparePagesForPDF, preparePDFFonts, withPDFTextLayout } from './prepare'
 
 export interface PDFDocumentOptions {
+  context?: IOContext
   /** Embed the font files the text uses; without them, text uses standard PDF fonts. */
   embedFonts: boolean
   /** Lay the pages out first, as pages other than the open one have no layout yet. */
@@ -29,6 +31,7 @@ export async function exportPDFDocument(
   const fonts = options.embedFonts ? pdfFontFaces(status) : undefined
   return withPDFTextLayout((textLayout) =>
     renderPagesToPDFDetailed(graph, specs, {
+      context: options.context,
       fonts,
       textLayout,
       fallbackFile: (family, style, file) =>

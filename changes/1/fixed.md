@@ -3,3 +3,5 @@
 - macOS builds find the SF Symbols library when Command Line Tools uses the Swift Build output layout.
 
 - Keep nested color pickers open when Tab follows a format-menu selection, including while deferred cleanup timers are delayed.
+
+- Composite transparent JPEG artwork over white while retaining transparency in PNG exports.

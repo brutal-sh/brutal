@@ -660,5 +660,9 @@
   "meshResetPosition": "Restablecer posición",
   "meshResetCurve": "Restablecer curva",
   "meshPoint": "Punto",
-  "meshHandles": "Controles"
+  "meshHandles": "Controles",
+  "exportLayer": "Exportar capa",
+  "exportLayers": "Exportar capas ({count})",
+  "exportPDFPages": "Las capas se exportan como páginas de un PDF, en el orden de selección.",
+  "exportFailed": "No se pudieron exportar las capas seleccionadas. Inténtalo de nuevo."
 }

@@ -489,6 +489,11 @@ export const panelMessageDefaults = {
   strokeAlignInside: 'Inside',
   strokeAlignCenter: 'Center',
   strokeAlignOutside: 'Outside',
+  exportLayer: 'Export layer',
+  exportLayers: params('Export layers ({count})'),
+  exportPDFPages:
+    'Layers will be exported as pages in a single PDF. Pages are sorted in the order they were selected.',
+  exportFailed: 'Could not export the selected layers. Try again.',
   exportScale: 'Export scale',
   exportFormat: 'Export format',
   exportPreview: 'Preview',

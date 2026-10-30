@@ -4,5 +4,6 @@
 pub mod color;
 pub mod env;
 pub mod opener;
+pub mod raster;
 #[cfg(target_os = "macos")]
 pub mod window;
