@@ -14,12 +14,14 @@ export interface PenImage {
 /** The images a document's paints name, by URL. */
 export interface PenImages {
   get(url: string): PenImage | undefined
+  shader(url: string): string | undefined
 }
 
 /** Stores the images a host loaded, by the URLs paints name them with; others stay unpainted. */
 export function createImageStore(
   graph: SceneGraph,
-  files: ReadonlyMap<string, Uint8Array> = new Map()
+  files: ReadonlyMap<string, Uint8Array> = new Map(),
+  shaders: ReadonlyMap<string, string> = new Map()
 ): PenImages {
   const byURL = new Map<string, PenImage | undefined>()
   const store = (bytes: Uint8Array): PenImage => {
@@ -30,6 +32,7 @@ export function createImageStore(
     return { hash, size: size && size.width > 0 && size.height > 0 ? size : null }
   }
   return {
+    shader: (url) => shaders.get(url),
     get(url) {
       if (byURL.has(url)) return byURL.get(url)
       const file = files.get(url)

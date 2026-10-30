@@ -9,6 +9,7 @@ import {
   readPluginData,
   withoutPluginData
 } from '@open-pencil/scene-graph/plugin-data'
+import { fragmentShaderOf, readShaderPaints } from '@open-pencil/scene-graph/shaders'
 
 export interface PenExportDiagnostic {
   nodeId?: string
@@ -145,6 +146,7 @@ export function nodeDiagnostics(
 type NodeProblem = (field: string, message: string) => unknown
 
 function inspectPluginContent(node: SceneNode, add: NodeProblem) {
+  const shaders = readShaderPaints(node)
   if (
     hasPluginData(node.pluginData, OPEN_PENCIL_PLUGIN_DATA.mainAxisDistribution) &&
     readPluginData(node.pluginData, OPEN_PENCIL_PLUGIN_DATA.mainAxisDistribution) === undefined
@@ -168,6 +170,9 @@ function inspectPluginContent(node: SceneNode, add: NodeProblem) {
   if (
     contentPluginData(
       withoutPluginData(node.pluginData, [
+        ...(shaders.length > 0 && shaders.every((shader) => fragmentShaderOf(shader.preset))
+          ? [OPEN_PENCIL_PLUGIN_DATA.shader]
+          : []),
         OPEN_PENCIL_PLUGIN_DATA.nodeContext,
         OPEN_PENCIL_PLUGIN_DATA.meshPaints,
         OPEN_PENCIL_PLUGIN_DATA.deferredFill,

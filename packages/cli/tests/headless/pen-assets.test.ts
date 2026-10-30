@@ -5,7 +5,7 @@ import { join } from 'node:path'
 
 import { toUint8Array } from 'js-base64'
 
-import { loadDocument } from '#cli/headless'
+import { documentAssetReader, loadDocument } from '#cli/headless'
 
 // A 2 × 1 PNG.
 const PNG = toUint8Array(
@@ -16,6 +16,21 @@ const root = await mkdtemp(join(tmpdir(), 'pen-assets-'))
 afterAll(() => rm(root, { recursive: true, force: true }))
 
 describe('loadDocument — .pen images', () => {
+  test('bounded shader assets honor the caller limit and keep the document-folder boundary', async () => {
+    const folder = join(root, 'shader')
+    await mkdir(folder)
+    await writeFile(join(folder, 'small.glsl'), 'void main(){}')
+    await writeFile(join(folder, 'large.glsl'), 'x'.repeat(128))
+    await writeFile(join(root, 'outside.glsl'), 'outside')
+    await symlink(join(root, 'outside.glsl'), join(folder, 'linked.glsl'))
+    const read = documentAssetReader(join(folder, 'document.pen'))
+    expect(
+      new TextDecoder().decode((await read('small.glsl', { maxBytes: 32 })) ?? undefined)
+    ).toBe('void main(){}')
+    await expect(read('large.glsl', { maxBytes: 32 })).rejects.toThrow('size limit')
+    expect(await read('../outside.glsl', { maxBytes: 32 })).toBeNull()
+    expect(await read('linked.glsl', { maxBytes: 32 })).toBeNull()
+  })
   test('reads images beside the document, but nothing outside its folder', async () => {
     const folder = join(root, 'doc')
     await mkdir(join(folder, 'images'), { recursive: true })

@@ -1,0 +1,27 @@
+# Shader parity
+
+Reference: actual `/Applications/Pen.app`1.2.21. Overall design/functionality parity remains open.
+
+## Measured reference
+
+The Shader paint category initially offers a path or URL, a file action, six suggestions, Shader Gallery and an agent tip. Loading an independently authored local GLSL file exposes block-comment annotations as numeric, color and vector controls. Native Size32→24 followed by Tab wrote only `uniforms.u_size:24`; the other defaults stayed in the source. Save As into the source folder rewrote the URL to `shader-uniform-reference.glsl`. An early MCP screenshot showed24px checks, blue at the top-left. Subsequent native canvas inspection and native640×480 PNG export agree on white at the top-left, establishing bottom-left fragment coordinates and logical24px checks for the delivered reference. The contradictory MCP image is retained as a reason to require native evidence. Native PNG samples at(4,4),(56,4),(4,56) are respectively white, #336699, #336699.
+
+The same reference rejected `uniform bool` with a compiler error despite the public documentation listing it. Removing that declaration triggered an automatic source reload and rendered the checkerboard. A data:text/plain source URL was treated as a missing file; it is not a viable self-contained interchange mechanism. The valid local source was restored before saving. Private captures: pen-shader-empty-current.jpg, pen-shader-uniform-controls.jpg, pen-shader-native-render-reference.jpg and pen-shader-reference-2x.png; fixture: pen-shader-reference.pen and shader-uniform-reference.glsl.
+
+## Independent implementation in progress
+
+GLSL sources use the existing shader paint, still-frame, edit-history and FIG metadata pipeline through a validated OpenPenFragmentShader preset component. Source loading is explicit and bounded to1MiB; HTTP requests omit credentials, and relative native files use the existing document-folder boundary. Source text is compiled as GLSL, never evaluated as JavaScript. Compact controls use a file/path input and annotated controls; the inherited preset editor stays available for its existing paints.
+
+Pen reading/writing retains source URL, uniforms, visibility, opacity, blend and fill/stroke geometry. Open Pen writes an `openPenSource` snapshot extension so its own saved file can reopen without the companion file. Actual Pen uses the ordinary URL; that extension does not make a missing companion file available to Pen. Importing a browser-picked source and moving/copying companion sources still needs full native/interchange acceptance.
+
+Executed model checks cover annotation defaults/ranges, ignored commented declarations, source validation, multiple fills/strokes, bounded host asset loading, URL decoding and source-snapshot reopening. Visual exporters refuse a missing or stale GLSL frame instead of silently delivering blank artwork; component-code exporters explicitly refuse GLSL source they cannot preserve.
+
+Seven browser workflows execute file selection, logical-pixel rendering, Size edits with Tab, compiler-error retention, selection-change cancellation, Undo, live width/height resizing, translucent output, editor animation, an actual time-zero PNG download and stroke geometry retention. The committed focused canvas snapshot is compared with zero allowed pixel difference. All22 combined Mesh/shader/export/stroke browser workflows passed. These results do not establish native acceptance or complete shader compatibility.
+
+Actual Pen's native translucent shader PNG contains RGBA [102,203,255,128] for `vec4(.2,.4,.6,.5)`, consistent with its premultiplied output contract. Its `@time` shader visibly animates in the ordinary editor; two independent native PNG exports both capture time zero ([0,64,128,255]). Open Pen's executed browser paths match those samples, including an exported 640×480 PNG while the editor animation is running.
+
+Review-driven regressions execute immediate off-page source-only shader export and compare its decoded pixels without changing the current page. SVG shader fills/strokes now reference their frame pattern and retain paint opacity. The SVG-to-PDF converter dropped image-pattern strokes in an executed test, so shader pages reuse the existing2× raster PDF path. All101 SVG/off-page/Mesh-PDF checks passed after that correction, including existing solid/P3 opacity cases. This establishes those format paths, not exact native PDF parity.
+
+The debug native build and installed signature verified, but native fixture loading reached a macOS Documents-folder permission prompt after the ad-hoc signature changed. A process sample shows the file-open wait, and TCC logs identify the pending permission and code-requirement mismatch. Automation cannot access UserNotificationCenter; the requested user approval remains pending. Native shader edit/save/reopen/export acceptance is therefore still open. Recovery drafts were closed without discarding them.
+
+Open: texture inputs, pencil:object/background, SDF/mouse/mipmap semantics, shader effects, automatic source watching, complete gallery equivalents and visual/keyboard/failure/export/native acceptance. Shared-frame identity after duplication or FIG content-hash remapping needs dedicated acceptance; single-paint persistence tests do not establish that case. The gallery’s measured75 groups/375 examples remain catalog coverage, not implemented acceptance.

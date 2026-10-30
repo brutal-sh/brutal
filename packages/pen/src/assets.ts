@@ -64,6 +64,8 @@ export interface PenAssets {
   icons: PenIconRequest[]
   /** Images to load: files relative to the document, and data URLs. */
   images: string[]
+  /** Local GLSL files; a missing file retains its URL and any Open Pen snapshot. */
+  shaders: string[]
 }
 
 function paintList(paints: PenPaints | undefined): PenPaint[] {
@@ -71,11 +73,19 @@ function paintList(paints: PenPaints | undefined): PenPaint[] {
   return Array.isArray(paints) ? paints : [paints]
 }
 
-function paintImages(paints: PenPaints | undefined, images: Set<string>) {
+function paintFiles(paints: PenPaints | undefined, assets: Pick<Found, 'images' | 'shaders'>) {
   for (const paint of paintList(paints)) {
     if (typeof paint === 'object' && paint.type === 'image' && typeof paint.url === 'string') {
-      if (isDocumentAssetPath(paint.url) || isDataURL(paint.url)) images.add(paint.url)
+      if (isDocumentAssetPath(paint.url) || isDataURL(paint.url)) assets.images.add(paint.url)
     }
+    if (
+      typeof paint === 'object' &&
+      paint.type === 'shader' &&
+      typeof paint.url === 'string' &&
+      paint.url &&
+      isDocumentAssetPath(paint.url)
+    )
+      assets.shaders.add(paint.url)
   }
 }
 
@@ -84,6 +94,7 @@ interface Found {
   /** Requests by their name and options, so each is listed once. */
   icons: Map<string, PenIconRequest>
   images: Set<string>
+  shaders: Set<string>
   libraries: Set<string>
   /** Icons an override names without its library, which comes from the layer it overrides. */
   bareIcons: Set<string>
@@ -137,9 +148,9 @@ function collect(node: PenOverride, assets: Found) {
       for (const icon of icons) assets.bareIcons.add(icon)
     }
   }
-  paintImages(node.fill, assets.images)
+  paintFiles(node.fill, assets)
   if (!(typeof node.stroke === 'object' && 'thickness' in node.stroke)) {
-    paintImages(node.stroke, assets.images)
+    paintFiles(node.stroke, assets)
   }
   for (const child of node.children ?? []) collect(child, assets)
   for (const override of Object.values(node.descendants ?? {})) collect(override, assets)
@@ -154,11 +165,16 @@ export function penAssets(doc: PenDocument): PenAssets {
     doc,
     icons: new Map(),
     images: new Set(),
+    shaders: new Set(),
     libraries: new Set(),
     bareIcons: new Set(),
     weights: new Set()
   }
   for (const node of doc.children) collect(node satisfies PenNode, assets)
   addIcons([...assets.libraries], [...assets.bareIcons], [...assets.weights], assets)
-  return { icons: [...assets.icons.values()], images: [...assets.images] }
+  return {
+    icons: [...assets.icons.values()],
+    images: [...assets.images],
+    shaders: [...assets.shaders]
+  }
 }

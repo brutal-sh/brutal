@@ -22,6 +22,8 @@ export interface PenReadOptions {
   layout?(graph: SceneGraph): void
   /** The image files the document's paints name, by their URL in it; see `penAssets`. */
   images?: ReadonlyMap<string, Uint8Array>
+  /** GLSL sources loaded by the host, keyed by the shader URL. */
+  shaders?: ReadonlyMap<string, string>
   /** Where icon glyphs come from; icons are empty frames without it. */
   icons?: PenIconSource
 }
@@ -89,7 +91,7 @@ export function buildPenGraph(doc: PenDocument, options: PenReadOptions = {}): S
   const build: Build = {
     graph,
     ctx: buildVarContext(graph, doc),
-    images: createImageStore(graph, options.images),
+    images: createImageStore(graph, options.images, options.shaders),
     icons: options.icons,
     components: new Map(),
     effective: new Map(),

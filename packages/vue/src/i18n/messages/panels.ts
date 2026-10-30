@@ -234,8 +234,14 @@ export const panelMessageDefaults = {
   slotLimits: 'Slot limits',
   slotLimitCount: count({ one: '{count} limit', many: '{count} limits' }),
   slotLimitIssueCount: count({ one: '{count} issue', many: '{count} issues' }),
-  slotMinimumLayers: count({ one: 'At least {count} layer', many: 'At least {count} layers' }),
-  slotMaximumLayers: count({ one: 'At most {count} layer', many: 'At most {count} layers' }),
+  slotMinimumLayers: count({
+    one: 'At least {count} layer',
+    many: 'At least {count} layers'
+  }),
+  slotMaximumLayers: count({
+    one: 'At most {count} layer',
+    many: 'At most {count} layers'
+  }),
   slotPreferredOnly: 'Preferred instances only',
   slotNonPreferredFound: count({
     one: '{count} layer is not preferred',
@@ -543,6 +549,12 @@ export const panelMessageDefaults = {
   radialGradient: 'Radial',
   image: 'Image',
   shader: 'Shader',
+  shaderSourcePath: 'Shader path or URL',
+  chooseShaderFile: 'Choose shader file',
+  reloadShader: 'Reload shader',
+  shaderLoadFailed: 'Could not load shader',
+  shaderSourceTip:
+    'Tip: You can ask an agent to generate a shader for you based on your description or find more shaders in Goodies.',
   addShaderEffect: 'Add effect',
   searchShaderEffects: 'Search effects',
   noShaderEffects: 'No effects found',

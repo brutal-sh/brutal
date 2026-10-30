@@ -5,6 +5,7 @@ import type { Fill, SceneNode, Stroke } from '@open-pencil/scene-graph'
 import { colorToHexRaw } from '@open-pencil/scene-graph/color'
 import { SIDE_STROKE_TYPES } from '@open-pencil/scene-graph/node-defaults'
 import type { Color } from '@open-pencil/scene-graph/primitives'
+import { shaderOfPaint } from '@open-pencil/scene-graph/shaders'
 import { resolvedPaintBindings } from '@open-pencil/scene-graph/variables'
 import { useColorBindingProvider } from '@open-pencil/vue/controls/binding-provider'
 import { applySolidStrokeColor, applyStrokePaint } from '@open-pencil/vue/controls/color-model'
@@ -22,6 +23,7 @@ import FillPicker from '@/components/fill-picker/FillPicker.vue'
 import NumberField from '@/components/inputs/NumberField.vue'
 import PaintField from '@/components/inputs/PaintField.vue'
 import VariableBindingPicker from '@/components/properties/binding/VariableBindingPicker.vue'
+import { fillLabel } from '@/components/properties/fill-label'
 import PropertyItemRow from '@/components/properties/item-list/PropertyItemRow.vue'
 import {
   applyPaintMutation,
@@ -191,9 +193,11 @@ function onToggleSides(nodes: readonly SceneNode[]) {
           >
             <template #preview>
               <FillPicker
+                :key="selectedNodeIds.join(':')"
                 :compact="compact"
                 :label="panels.stroke"
                 :fill="displayStroke(stroke, binding.resolvedValue, activeNode, index)"
+                :shader="activeNode && shaderOfPaint(activeNode, stroke)"
                 :okhcl="createStrokeOkhclAdapter(okhcl, activeNode, index)"
                 :layer-size="selectedNodeIds.length === 1 ? activeNode : null"
                 :keep-open="gradients.pressesHandle"
@@ -238,6 +242,7 @@ function onToggleSides(nodes: readonly SceneNode[]) {
                       remapMeshColorBindings(store, selectedNodeIds, 'strokes', index, sources)
                     })
                 "
+                @update-shader="store.setShaderPaint(selectedNodeIds, 'strokes', index, $event)"
                 @update-blend-mode="
                   commitPaintSetting(binding.actions, flush, () =>
                     actions.patch(index, { blendMode: $event })
@@ -268,6 +273,9 @@ function onToggleSides(nodes: readonly SceneNode[]) {
                   )
                 "
               />
+              <span v-else class="min-w-0 flex-1 truncate font-mono text-xs text-surface">
+                {{ fillLabel(stroke, undefined, activeNode && shaderOfPaint(activeNode, stroke)) }}
+              </span>
             </template>
 
             <template #binding>

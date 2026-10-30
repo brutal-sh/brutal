@@ -59,7 +59,8 @@ describe('penAssets', () => {
         { name: 'material-symbols-rounded:star', options: { wght: 300 } },
         { name: 'ph:star' }
       ],
-      images: ['./photo.png', `data:image/png;base64,${PNG}`]
+      images: ['./photo.png', `data:image/png;base64,${PNG}`],
+      shaders: []
     })
   })
 

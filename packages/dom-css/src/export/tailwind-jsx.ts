@@ -3,7 +3,7 @@ import type { SceneGraph } from '@open-pencil/scene-graph'
 import type { ShaderComponent, ShaderPreset } from '@open-pencil/scene-graph/shaders'
 
 import type { DesignDocument, DesignElement, DesignNode } from '../types'
-import { shaderEffectAttributes } from './components/shaders'
+import { assertShaderComponentExport, shaderEffectAttributes } from './components/shaders'
 import { SHADER_UTILITIES } from './components/styling'
 import { mergeClassNames, serializeTailwindClasses } from './html'
 import { sceneNodeToDesignDocument, type SceneGraphToDesignOptions } from './projection'
@@ -52,6 +52,7 @@ function attributes(node: DesignElement, themeVariables: readonly string[]): Syn
  * props, with telemetry off as every OpenPencil export has it.
  */
 function shaderElement(preset: ShaderPreset, depth: number): SyntaxNode {
+  assertShaderComponentExport(preset)
   const effect =
     (at: number) =>
     (component: ShaderComponent): SyntaxNode =>

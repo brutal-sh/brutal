@@ -5,7 +5,13 @@ import { sceneNodeToDesignDocument } from '#dom-css/export/projection'
 import { sceneNodesToTailwindJSXWithLayers } from '#dom-css/export/tailwind-jsx'
 
 import { SceneGraph } from '@open-pencil/scene-graph'
-import { createShaderPaint, withShaderPaints } from '@open-pencil/scene-graph/shaders'
+import {
+  createShaderPaint,
+  fragmentShaderPreset,
+  shaderPresetKey,
+  withShaderPaints,
+  type ShaderPreset
+} from '@open-pencil/scene-graph/shaders'
 
 const PRESET = {
   components: [{ type: 'Aurora', props: { colorA: '#ff3300', speed: 2 } }, { type: 'FilmGrain' }]
@@ -18,9 +24,9 @@ const JPEG_FRAME = new Uint8Array([
 ])
 
 /** A layer with no children that fills with a shader, whose still frame is saved. */
-function shaderLayer(frame = FRAME) {
+function shaderLayer(frame = FRAME, preset: ShaderPreset = PRESET) {
   const graph = new SceneGraph()
-  const { paint, shader } = createShaderPaint(PRESET)
+  const { paint, shader } = createShaderPaint(preset)
   graph.images.set(shader.image, frame)
   const node = graph.createNode('RECTANGLE', graph.getPages()[0].id, {
     name: 'Glow',
@@ -28,11 +34,47 @@ function shaderLayer(frame = FRAME) {
     height: 120,
     fills: [paint]
   })
-  graph.updateNode(node.id, { pluginData: withShaderPaints(node, [paint], [shader]) })
+  graph.updateNode(node.id, {
+    pluginData: withShaderPaints(
+      node,
+      [paint],
+      [{ ...shader, frame: { width: 200, height: 120, preset: shaderPresetKey(preset) } }]
+    )
+  })
   return { graph, id: node.id }
 }
 
+const RESERVED_PRESETS: ShaderPreset[] = [
+  { components: [{ type: 'Aurora' }, { type: 'OpenPenFragmentShader' }] },
+  {
+    components: [
+      { type: 'Aurora', children: [{ type: 'OpenPenFragmentShader', props: { invalid: true } }] }
+    ]
+  }
+]
+
 describe('shader fills in DOM exports', () => {
+  test.each(RESERVED_PRESETS)(
+    'refuses reserved GLSL components in mixed or nested presets',
+    (preset) => {
+      const { graph, id } = shaderLayer(FRAME, preset)
+      expect(() => sceneNodesToTailwindJSXWithLayers(graph, [id])).toThrow(
+        'GLSL shader component export'
+      )
+    }
+  )
+  test('GLSL keeps its static frame and refuses invalid library-component imports', () => {
+    const preset = fragmentShaderPreset({
+      url: 'checks.glsl',
+      source: 'void main(){}',
+      uniforms: {}
+    })
+    const { graph, id } = shaderLayer(FRAME, preset)
+    expect(serializeHTML(sceneNodeToDesignDocument(graph, id))).toContain('data:image/png;base64,')
+    expect(() => sceneNodesToTailwindJSXWithLayers(graph, [id])).toThrow(
+      'GLSL shader component export'
+    )
+  })
   test('Tailwind JSX plays the shader behind the layer instead of inlining its still frame', () => {
     const { graph, id } = shaderLayer()
     const { code, layerIds } = sceneNodesToTailwindJSXWithLayers(graph, [id])

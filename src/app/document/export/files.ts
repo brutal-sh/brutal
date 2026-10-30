@@ -113,6 +113,17 @@ export function getExportBytes(data: ExportData): Uint8Array {
 }
 
 export function createExportTargetActions(editor: Editor, state: EditorState, io: IORegistry) {
+  async function prepareExportTarget(target: ExportRequest['target']) {
+    let pages: (string | null)[]
+    if (target.scope === 'document') pages = editor.graph.getPages().map((page) => page.id)
+    else if (target.scope === 'page') pages = [target.pageId]
+    else {
+      const ids = target.scope === 'node' ? [target.nodeId] : target.nodeIds
+      pages = ids.map((id) => findPageId(editor.graph, id))
+    }
+    for (const page of new Set(pages)) if (page) await editor.drawPageShaderFrames(page)
+  }
+
   /**
    * Renders `nodeIds` on the page that holds them, which need not be the page on screen;
    * without IDs, renders every layer of `pageId`.
@@ -128,6 +139,7 @@ export function createExportTargetActions(editor: Editor, state: EditorState, io
     const ids = nodeIds.length > 0 ? nodeIds : editor.graph.getChildren(pageId).map((n) => n.id)
     if (ids.length === 0) return null
     const ownerPageId = findPageId(editor.graph, ids[0]) ?? pageId
+    await prepareExportTarget({ scope: 'selection', nodeIds: ids })
     return renderNodesToImage(renderer.ck, renderer, editor.graph, ownerPageId, ids, {
       scale,
       format
@@ -144,7 +156,12 @@ export function createExportTargetActions(editor: Editor, state: EditorState, io
     return io.listExportFormats(state.selectedIds.size > 0 ? 'selection' : 'page')
   }
 
-  return { renderExportImage, getSelectionExportTarget, listSelectionExportFormats }
+  return {
+    prepareExportTarget,
+    renderExportImage,
+    getSelectionExportTarget,
+    listSelectionExportFormats
+  }
 }
 
 export async function chooseTauriExportPath(fileName: string, format: string, ext: string) {

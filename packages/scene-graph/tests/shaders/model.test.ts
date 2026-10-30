@@ -4,6 +4,8 @@ import { SceneGraph } from '@open-pencil/scene-graph'
 import { OPEN_PENCIL_PLUGIN_DATA, pluginDataEntry } from '@open-pencil/scene-graph/plugin-data'
 import {
   createShaderPaint,
+  assertFragmentFrames,
+  fragmentShaderPreset,
   isShaderFrameCurrent,
   readShaderPaints,
   shaderOfPaint,
@@ -27,6 +29,33 @@ function rectangle() {
 }
 
 describe('shader paints', () => {
+  test('refuses missing or stale GLSL export frames and ignores hidden content', () => {
+    const { graph, node } = rectangle()
+    const preset = fragmentShaderPreset({
+      url: 'checks.glsl',
+      source: 'void main(){}',
+      uniforms: {}
+    })
+    const { paint, shader } = createShaderPaint(preset)
+    graph.updateNode(node.id, {
+      fills: [paint],
+      pluginData: withShaderPaints(node, [paint], [shader])
+    })
+    expect(() => assertFragmentFrames(graph, [node.id])).toThrow('Render the GLSL shader')
+    graph.images.set(shader.image, new Uint8Array([1]))
+    graph.updateNode(node.id, {
+      pluginData: withShaderPaints(
+        node,
+        [paint],
+        [{ ...shader, frame: { width: 100, height: 50, preset: shaderPresetKey(preset) } }]
+      )
+    })
+    expect(() => assertFragmentFrames(graph, [node.id])).not.toThrow()
+    graph.updateNode(node.id, { width: 120 })
+    expect(() => assertFragmentFrames(graph, [node.id])).toThrow('Render the GLSL shader')
+    graph.updateNode(node.id, { visible: false })
+    expect(() => assertFragmentFrames(graph, [node.id])).not.toThrow()
+  })
   test('an image paint draws the shader whose frame it shows', () => {
     const { graph, node } = rectangle()
     const { paint, shader } = createShaderPaint(AURORA)

@@ -10,6 +10,6 @@ export interface ShaderRasterizer {
    * `preset`'s first frame at `size` pixels, encoded as `shaderFrameEncoding` picks, or null
    * when it cannot draw here.
    */
-  render(preset: ShaderPreset, size: Size): Promise<Uint8Array | null>
+  render(preset: ShaderPreset, size: Size, logicalSize?: Size): Promise<Uint8Array | null>
   destroy?(): void
 }

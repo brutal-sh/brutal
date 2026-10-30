@@ -4,10 +4,23 @@ import { es, jsx } from '@open-pencil/emit'
 import type { SceneGraph } from '@open-pencil/scene-graph'
 import { findLayerByPath } from '@open-pencil/scene-graph/behaviours'
 import {
+  FRAGMENT_SHADER_COMPONENT,
   shaderOfPaint,
   type ShaderComponent,
   type ShaderPreset
 } from '@open-pencil/scene-graph/shaders'
+
+/** The preset library cannot import independently compiled GLSL as one of its components. */
+export function assertShaderComponentExport(preset: ShaderPreset) {
+  const visit = (component: ShaderComponent) => {
+    if (component.type === FRAGMENT_SHADER_COMPONENT)
+      throw new Error(
+        'GLSL shader component export is not supported yet. Use a static HTML or image export.'
+      )
+    component.children?.forEach(visit)
+  }
+  preset.components.forEach(visit)
+}
 
 import { isPositioned } from '../projection'
 import type { ComponentElement, ComponentNode } from './model'
@@ -27,6 +40,7 @@ export function shaderLayer(
   preset: ShaderPreset | undefined
 ): ShaderLayer | undefined {
   if (!preset) return undefined
+  assertShaderComponentExport(preset)
   const position = node.base.position
   return {
     preset,

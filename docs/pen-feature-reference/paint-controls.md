@@ -22,6 +22,8 @@ Shader Gallery opens Goodies with Featured, Styles, Design Systems, Scripts and 
 
 Private evidence: pen-shader-gallery-ax.txt and pen-shader-gallery-reference.png. The reference's temporary Mesh/Shader category changes were undone; the fill was confirmed restored to #CC9933/Linear Dodge without saving those experiments.
 
+Subsequent native source/uniform, logical-pixel, alpha and time/export measurements and the independent implementation's bounded progress are recorded in [SHADER-PARITY.md](../SHADER-PARITY.md). The new source controls do not close gallery/effect or complete Shader acceptance.
+
 ## Mesh export menu
 
 Native inspection offers PNG, JPEG, WEBP and PDF. PDF disables the scale control and describes one layer per page, in selection order. Exporting the independent 256×256 Mesh through this native path produced a one-page256×256pt PDF containing a512×512 image. SVG is absent from this menu; Open Pen’s extra SVG Mesh refusal remains an extension limit. Private proof: pen-mesh-export-formats.jpg and pen-mesh-native-export.pdf. Multi-selection page ordering and the remaining Mesh export formats have not been executed here.

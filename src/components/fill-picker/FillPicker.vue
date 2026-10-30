@@ -5,7 +5,12 @@ import { tv } from 'tailwind-variants'
 import { computed } from 'vue'
 
 import type { BlendMode, Fill } from '@open-pencil/scene-graph'
-import type { ShaderPaint, ShaderPreset } from '@open-pencil/scene-graph/shaders'
+import {
+  fragmentShaderOf,
+  fragmentShaderPreset,
+  type ShaderPaint,
+  type ShaderPreset
+} from '@open-pencil/scene-graph/shaders'
 import { applySolidFillColor, type OkHCLControls } from '@open-pencil/vue/controls/color-model'
 import { DEFAULT_SHADER_PRESET } from '@open-pencil/vue/controls/shader'
 import { useI18n } from '@open-pencil/vue/i18n'
@@ -16,6 +21,7 @@ import ColorPickerPanel from '@/components/color-picker-panel/ColorPickerPanel.v
 import GradientEditor from '@/components/fill-picker/GradientEditor.vue'
 import ImageFillPicker from '@/components/fill-picker/ImageFillPicker.vue'
 import ShaderFillPicker from '@/components/fill-picker/shader/ShaderFillPicker.vue'
+import ShaderSourcePicker from '@/components/fill-picker/shader/ShaderSourcePicker.vue'
 import { PaintColorIcon, PaintGradientIcon, PaintShaderIcon } from '@/components/icons/paint'
 import { useBlendModeGroups } from '@/components/inputs/blend-mode'
 import IconButton from '@/components/ui/button/IconButton.vue'
@@ -79,6 +85,7 @@ const cls = usePopoverUI({
   content: 'max-h-(--reka-popover-content-available-height) w-[264px] overflow-y-auto'
 })
 const { panels } = useI18n()
+const fragment = computed(() => (shader ? fragmentShaderOf(shader.preset) : null))
 const blendModeGroups = useBlendModeGroups()
 const colorLabel = computed(() => (compact ? panels.value.paintColor : panels.value.solid))
 const gradientLabel = computed(() =>
@@ -114,7 +121,9 @@ function stopEscapePropagation(event: KeyboardEvent) {
           <FillSwatch :fill="fill" class="size-full" v-slot="swatch">
             <span
               class="pointer-events-none absolute inset-0"
-              :style="{ background: swatchBackground ?? imageBackground ?? swatch.background }"
+              :style="{
+                background: swatchBackground ?? imageBackground ?? swatch.background
+              }"
             />
           </FillSwatch>
         </button>
@@ -183,7 +192,19 @@ function stopEscapePropagation(event: KeyboardEvent) {
                   :class="tabClass(shader !== null)"
                   :aria-label="panels.shader"
                   data-test-id="fill-picker-tab-shader"
-                  @click="shader || emit('updateShader', DEFAULT_SHADER_PRESET)"
+                  @click="
+                    shader ||
+                    emit(
+                      'updateShader',
+                      compact
+                        ? fragmentShaderPreset({
+                            url: '',
+                            source: '',
+                            uniforms: {}
+                          })
+                        : DEFAULT_SHADER_PRESET
+                    )
+                  "
                 >
                   <PaintShaderIcon v-if="compact" class="size-3.5" />
                   <icon-lucide-sparkles v-else class="size-3.5" />
@@ -233,8 +254,14 @@ function stopEscapePropagation(event: KeyboardEvent) {
               @update="(next, sources) => emit('update', next, sources)"
             />
 
+            <ShaderSourcePicker
+              v-if="fragment"
+              :key="shader?.image"
+              :shader="fragment"
+              @update="emit('updateShader', $event)"
+            />
             <ShaderFillPicker
-              v-if="shader"
+              v-else-if="shader"
               :preset="shader.preset"
               @update="emit('updateShader', $event)"
             />

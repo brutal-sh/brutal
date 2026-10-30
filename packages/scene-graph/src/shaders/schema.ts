@@ -46,3 +46,19 @@ export const shaderPaintSchema = v.object({
 })
 
 export type ShaderPaint = v.InferOutput<typeof shaderPaintSchema>
+
+export const MAX_FRAGMENT_SOURCE_LENGTH = 1024 * 1024
+const finiteUniformSchema = v.pipe(v.number(), v.finite())
+export const shaderUniformValueSchema = v.union([
+  finiteUniformSchema,
+  v.boolean(),
+  v.pipe(v.string(), v.maxLength(16384)),
+  v.pipe(v.array(finiteUniformSchema), v.minLength(2), v.maxLength(4))
+])
+export type ShaderUniformValue = v.InferOutput<typeof shaderUniformValueSchema>
+export const fragmentShaderSchema = v.object({
+  url: v.pipe(v.string(), v.maxLength(16384)),
+  source: v.pipe(v.string(), v.maxLength(MAX_FRAGMENT_SOURCE_LENGTH)),
+  uniforms: v.record(v.string(), shaderUniformValueSchema)
+})
+export type FragmentShader = v.InferOutput<typeof fragmentShaderSchema>

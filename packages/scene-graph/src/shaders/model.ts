@@ -2,10 +2,12 @@ import { sha1 } from '@noble/hashes/legacy.js'
 import { bytesToHex, utf8ToBytes } from '@noble/hashes/utils.js'
 
 import { TRANSPARENT } from '../constants'
+import type { SceneGraph } from '../graph'
 import { readAllPluginData, withAllPluginData } from '../plugin-data/field'
 import { OPEN_PENCIL_PLUGIN_DATA } from '../plugin-data/fields'
 import { randomHex } from '../random'
 import type { Fill, SceneNode } from '../types'
+import { fragmentShaderOf } from './fragment'
 import type { ShaderPaint, ShaderPreset } from './schema'
 
 /** What shader paints read of a node. */
@@ -97,4 +99,34 @@ export function isShaderFrameCurrent(
     Math.round(frame.width) === Math.round(size.width) &&
     Math.round(frame.height) === Math.round(size.height)
   )
+}
+
+/** A source-only or stale GLSL paint cannot silently turn into empty exported artwork. */
+export function assertFragmentPaintFrame(
+  graph: Pick<SceneGraph, 'images'>,
+  node: SceneNode,
+  paint: Fill
+) {
+  if (!node.visible || node.opacity <= 0 || !paint.visible || paint.opacity <= 0) return
+  const shader = shaderOfPaint(node, paint)
+  const fragment = shader && fragmentShaderOf(shader.preset)
+  if (!shader || !fragment || (!fragment.source && !fragment.url)) return
+  if (!graph.images.get(shader.image)?.length || !isShaderFrameCurrent(shader, node))
+    throw new Error(
+      'Render the GLSL shader before exporting. Choose or reload its source in the editor.'
+    )
+}
+
+export function assertFragmentFrames(graph: SceneGraph, nodeIds: readonly string[]) {
+  const pending = [...nodeIds]
+  const seen = new Set<string>()
+  for (const id of pending) {
+    if (seen.has(id)) continue
+    seen.add(id)
+    const node = graph.getNode(id)
+    if (!node?.visible || node.opacity <= 0) continue
+    for (const paint of [...node.fills, ...node.strokes])
+      assertFragmentPaintFrame(graph, node, paint)
+    pending.push(...node.childIds)
+  }
 }

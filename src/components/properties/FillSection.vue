@@ -169,6 +169,7 @@ function updateSolidColor(
             >
               <template #preview>
                 <FillPicker
+                  :key="selectedNodeIds.join(':')"
                   :compact="compact"
                   :fill="displayFill(fill, binding.resolvedValue, activeNode, index)"
                   :okhcl="createFillOkhclAdapter(okhcl, activeNode, index)"

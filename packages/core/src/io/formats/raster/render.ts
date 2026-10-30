@@ -5,6 +5,7 @@ import type { RenderColorSpace } from '@open-pencil/scene-graph/color'
 import { getWorldMatrix } from '@open-pencil/scene-graph/coordinate'
 import { computeDescendantVisualBounds, type VisualBounds } from '@open-pencil/scene-graph/geometry'
 import type { Mat3 } from '@open-pencil/scene-graph/matrix'
+import { assertFragmentFrames } from '@open-pencil/scene-graph/shaders'
 
 import type { SkiaRenderer } from '#core/canvas'
 import { getPageColor } from '#core/figma-api/page-backgrounds'
@@ -287,6 +288,7 @@ export function renderNodesToImage(
   if (!ensureSinglePageSelection(graph, pageId, nodeIds)) {
     throw new Error('Raster export selection must stay on a single page')
   }
+  assertFragmentFrames(graph, nodeIds)
 
   const bounds = computeContentBounds(graph, nodeIds)
   if (!bounds) return null

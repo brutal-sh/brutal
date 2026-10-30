@@ -1,4 +1,5 @@
 import type { SceneGraph } from '@open-pencil/scene-graph'
+import { shaderOfPaint } from '@open-pencil/scene-graph/shaders'
 
 import {
   computeContentBounds,
@@ -49,13 +50,14 @@ interface PreparedPage {
 
 type PageSVGOptions = Pick<SVGExportOptions, 'textLayout' | 'fontAlias'>
 
-function hasMeshPaint(graph: SceneGraph, id: string): boolean {
+function hasRasterPaint(graph: SceneGraph, id: string): boolean {
   const node = graph.getNode(id)
   if (!node?.visible) return false
   return (
     [...node.fills, ...node.strokes].some(
-      (paint) => paint.visible && paint.type === 'GRADIENT_MESH'
-    ) || node.childIds.some((child) => hasMeshPaint(graph, child))
+      (paint) =>
+        paint.visible && (paint.type === 'GRADIENT_MESH' || shaderOfPaint(node, paint) !== null)
+    ) || node.childIds.some((child) => hasRasterPaint(graph, child))
   )
 }
 
@@ -73,8 +75,8 @@ async function preparePage(
   const height = bounds.maxY - bounds.minY
   if (width <= 0 || height <= 0) return null
 
-  // Pen exports Mesh pages as a 2× image; ordinary pages keep their vector/text output.
-  if (spec.nodeIds.some((id) => hasMeshPaint(graph, id))) {
+  // Mesh and shader pages use 2× pixels; svg2pdf drops image-pattern strokes.
+  if (spec.nodeIds.some((id) => hasRasterPaint(graph, id))) {
     const options = { scale: 2, format: 'PNG' } as const
     const raster =
       context?.canvasKit && context.renderer
@@ -87,7 +89,7 @@ async function preparePage(
             options
           )
         : await headlessRenderNodes(graph, spec.pageId, spec.nodeIds, options)
-    if (!raster) throw new Error('Could not render Mesh page for PDF export')
+    if (!raster) throw new Error('Could not render paint pixels for PDF export')
     return { spec, raster, width, height }
   }
   const svg = renderNodesToSVG(graph, spec.pageId, spec.nodeIds, {

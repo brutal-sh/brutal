@@ -14,6 +14,7 @@ import {
   type PenIconSource
 } from '@open-pencil/pen'
 import type { SceneGraph } from '@open-pencil/scene-graph'
+import { MAX_FRAGMENT_SOURCE_LENGTH } from '@open-pencil/scene-graph/shaders'
 
 import { defaultIcons, drawIcon, type IconData, type IconProvider } from '#core/icons'
 import { layoutAuthoredNodes } from '#core/layout'
@@ -263,6 +264,25 @@ async function loadPenImages(
   return images
 }
 
+async function loadPenShaders(urls: readonly string[], input: ReadDocumentInput) {
+  const sources = new Map<string, string>()
+  await Promise.all(
+    urls.map(async (url) => {
+      try {
+        const bytes = await input.readAsset?.(decodeURIComponent(url), {
+          maxBytes: MAX_FRAGMENT_SOURCE_LENGTH
+        })
+        if (bytes && bytes.byteLength <= MAX_FRAGMENT_SOURCE_LENGTH)
+          sources.set(url, new TextDecoder('utf-8', { fatal: true }).decode(bytes))
+      } catch (error) {
+        // Keep the source URL and any saved snapshot when an external file is unavailable.
+        console.warn('Could not load a shader source', error)
+      }
+    })
+  )
+  return sources
+}
+
 /** Icons from `provider`; a document whose icons cannot be fetched opens with empty icons. */
 /** A request's options as a key, so requests drawn the same way share a fetch. */
 const optionsKey = (options: Record<string, number> | undefined) => JSON.stringify(options ?? null)
@@ -328,14 +348,16 @@ export const penFormat: IOFormatAdapter<'pen'> = {
     const doc = parsePenDocument(new TextDecoder().decode(input.data))
     assertPenCompatible(doc)
     const assets = penAssets(doc)
-    const [images, icons] = await Promise.all([
+    const [images, icons, shaders] = await Promise.all([
       loadPenImages(assets.images, input),
-      loadPenIcons(assets.icons, context?.icons ?? defaultIcons)
+      loadPenIcons(assets.icons, context?.icons ?? defaultIcons),
+      loadPenShaders(assets.shaders, input)
     ])
     // A .pen file stores its layout intent, not the sizes and positions it implies.
     const graph = buildPenGraph(doc, {
       images,
       icons,
+      shaders,
       layout: (target) =>
         layoutAuthoredNodes(
           target,

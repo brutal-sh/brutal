@@ -9,6 +9,7 @@ import { SceneGraph } from '@open-pencil/scene-graph'
 import { computeImageHash } from '@open-pencil/scene-graph/images'
 import {
   createShaderPaint,
+  fragmentShaderPreset,
   shaderOfPaint,
   shaderPresetKey,
   withShaderPaints,
@@ -25,37 +26,50 @@ const PRESET: ShaderPreset = { components: [{ type: 'Aurora', props: { colorA: '
  * the frame only under the SHA-1 of its bytes, so the archive names it that, in the paint and in
  * the plugin data alike.
  */
-test('a shader fill keeps its frame and preset through a .fig archive', async () => {
-  await initCodec()
-  const graph = new SceneGraph()
-  const { paint, shader } = createShaderPaint(PRESET)
-  const frame = { width: 120, height: 80, preset: shaderPresetKey(PRESET) }
-  const png = new Uint8Array([137, 80, 78, 71, 13, 10, 26, 10])
-  graph.images.set(shader.image, png)
-  const node = graph.createNode('RECTANGLE', graph.getPages()[0].id, {
-    name: 'Shader',
-    width: 120,
-    height: 80,
-    fills: [paint]
-  })
-  graph.updateNode(node.id, {
-    pluginData: withShaderPaints(node, [paint], [{ ...shader, frame }])
-  })
+test.each([
+  ['library', PRESET],
+  [
+    'GLSL',
+    fragmentShaderPreset({
+      url: 'checks.glsl',
+      source: 'void main(){gl_FragColor=vec4(1.0);}',
+      uniforms: { size: 24 }
+    })
+  ]
+] as const)(
+  'a %s shader fill keeps its frame and source through a .fig archive',
+  async (_kind, preset) => {
+    await initCodec()
+    const graph = new SceneGraph()
+    const { paint, shader } = createShaderPaint(preset)
+    const frame = { width: 120, height: 80, preset: shaderPresetKey(preset) }
+    const png = new Uint8Array([137, 80, 78, 71, 13, 10, 26, 10])
+    graph.images.set(shader.image, png)
+    const node = graph.createNode('RECTANGLE', graph.getPages()[0].id, {
+      name: 'Shader',
+      width: 120,
+      height: 80,
+      fills: [paint]
+    })
+    graph.updateNode(node.id, {
+      pluginData: withShaderPaints(node, [paint], [{ ...shader, frame }])
+    })
 
-  const bytes = await exportFigFile(graph)
-  const read = await parseFigFile(bytes.buffer as ArrayBuffer)
-  const copy = expectDefined(
-    collectAllNodes(read).find((candidate) => candidate.name === 'Shader'),
-    'shader layer'
-  )
-  const [fill] = copy.fills
+    const bytes = await exportFigFile(graph)
+    const read = await parseFigFile(bytes.buffer as ArrayBuffer)
+    const copy = expectDefined(
+      collectAllNodes(read).find((candidate) => candidate.name === 'Shader'),
+      'shader layer'
+    )
+    const [fill] = copy.fills
 
-  const figmaName = computeImageHash(png)
-  expect(fill).toMatchObject({ type: 'IMAGE', imageHash: figmaName })
-  expect(read.images.get(figmaName)).toEqual(png)
-  expect(read.images.has(shader.image)).toBe(false)
-  expect(shaderOfPaint(copy, fill)).toEqual({ ...shader, image: figmaName, frame })
-})
+    const figmaName = computeImageHash(png)
+    expect(fill).toMatchObject({ type: 'IMAGE', imageHash: figmaName })
+    expect(read.images.get(figmaName)).toEqual(png)
+    expect(read.images.has(shader.image)).toBe(false)
+    expect(shaderOfPaint(copy, fill)).toEqual({ ...shader, image: figmaName, frame })
+  }
+)
 
 test('images stored under other names are written once, under the SHA-1 of their bytes', async () => {
   await initCodec()

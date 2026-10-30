@@ -1,8 +1,8 @@
-import { readFile, realpath } from 'node:fs/promises'
+import { open, readFile, realpath } from 'node:fs/promises'
 import { dirname, resolve, sep } from 'node:path'
 
 import { SkiaRenderer } from '@open-pencil/core/canvas'
-import { BUILTIN_IO_FORMATS, IORegistry } from '@open-pencil/core/io'
+import { BUILTIN_IO_FORMATS, IORegistry, type ReadDocumentInput } from '@open-pencil/core/io'
 import { populateAllFigPages, populateFigPage } from '@open-pencil/core/io/formats/fig'
 import { headlessHTMLReader } from '@open-pencil/core/io/formats/html/import'
 import { initCanvasKit } from '@open-pencil/core/io/formats/raster'
@@ -29,12 +29,29 @@ const io = new IORegistry(CLI_IO_FORMATS)
  * Reads a file a document names relative to itself, only from the document's folder: a path that
  * leaves it, through `..` or a link, reads nothing.
  */
-function documentAssetReader(filePath: string) {
-  return async (path: string): Promise<Uint8Array | null> => {
+export function documentAssetReader(filePath: string): NonNullable<ReadDocumentInput['readAsset']> {
+  return async (path, options) => {
     const folder = await realpath(dirname(filePath))
     const target = await realpath(resolve(folder, path)).catch(() => null)
     if (!target?.startsWith(folder + sep)) return null
-    return new Uint8Array(await readFile(target))
+    const limit = options?.maxBytes
+    if (limit === undefined) return new Uint8Array(await readFile(target))
+    if (!Number.isSafeInteger(limit) || limit < 0) throw new Error('Invalid file size limit.')
+    const file = await open(target, 'r')
+    try {
+      if ((await file.stat()).size > limit) throw new Error('File exceeds its size limit.')
+      const bytes = new Uint8Array(limit + 1)
+      let offset = 0
+      while (offset < bytes.length) {
+        const { bytesRead } = await file.read(bytes, offset, bytes.length - offset, null)
+        if (!bytesRead) break
+        offset += bytesRead
+      }
+      if (offset > limit) throw new Error('File exceeds its size limit.')
+      return bytes.slice(0, offset)
+    } finally {
+      await file.close()
+    }
   }
 }
 

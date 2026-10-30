@@ -90,7 +90,7 @@ export function createShaderFrames(
     const node = graph.getNode(id)
     if (!node) return
     const size = { width: node.width, height: node.height }
-    const bytes = await active.render(shader.preset, shaderFramePixels(size))
+    const bytes = await active.render(shader.preset, shaderFramePixels(size), size)
     // The preset, the layer, or the document may have changed while the frame was drawn.
     const now = graph === ctx.graph ? graph.getNode(id) : undefined
     const current = now && shownShaders(now).find((item) => item.image === shader.image)

@@ -1,6 +1,8 @@
 import { IS_TAURI } from '@open-pencil/core/constants'
 import type { ReadDocumentInput } from '@open-pencil/core/io'
 
+import { readBoundedFile } from '@/app/tauri/files'
+
 /**
  * Reads the files a document opened from `path` names relative to itself, such as a `.pen`
  * document's images, from the document's folder only. A browser has no path to read beside, so
@@ -9,7 +11,7 @@ import type { ReadDocumentInput } from '@open-pencil/core/io'
  */
 export function documentAssetReader(path: string | undefined): ReadDocumentInput['readAsset'] {
   if (!IS_TAURI || !path) return undefined
-  return async (relative) => {
+  return async (relative, options) => {
     const [{ dirname, join, resolve, sep }, { lstat, readFile }] = await Promise.all([
       import('@tauri-apps/api/path'),
       import('@tauri-apps/plugin-fs')
@@ -24,6 +26,8 @@ export function documentAssetReader(path: string | undefined): ReadDocumentInput
       const info = await lstat(step).catch(() => null)
       if (!info || info.isSymlink) return null
     }
-    return readFile(target).catch(() => null)
+    const read =
+      options?.maxBytes === undefined ? readFile(target) : readBoundedFile(target, options.maxBytes)
+    return read.catch(() => null)
   }
 }

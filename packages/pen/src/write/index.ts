@@ -60,7 +60,7 @@ export function writePenDocument(graph: SceneGraph): PenDocument {
     diagnostics.push({ nodeId: node.id, path, message })
 
   const paints = (node: SceneNode, fills: SceneNode['fills'], path: string) =>
-    writePaints(graph, fills, path, (at, message) => add(node, at, message))
+    writePaints(graph, fills, path, (at, message) => add(node, at, message), node)
 
   function effects(node: SceneNode, path: string): PenEffect[] {
     return node.effects.flatMap<PenEffect>((effect, index) => {

@@ -17,9 +17,14 @@ import {
 } from '@open-pencil/scene-graph/gradient'
 import { createMeshGradient } from '@open-pencil/scene-graph/gradient/mesh'
 import type { Vector } from '@open-pencil/scene-graph/primitives'
+import {
+  createShaderPaint,
+  fragmentShaderPreset,
+  withShaderPaints
+} from '@open-pencil/scene-graph/shaders'
 
 import { imagePaint, type PenImages } from './images'
-import { penMeshPaintSchema } from './schema'
+import { penMeshPaintSchema, penShaderPaintSchema } from './schema'
 import type {
   PenGradientPaint,
   PenImagePaint,
@@ -157,13 +162,61 @@ function convertMeshPaint(
   }
 }
 
+function convertShaderPaint(
+  paint: PenPaint,
+  ctx: VarContext,
+  node: SceneNode | undefined,
+  images: PenImages | undefined,
+  previous: Fill[]
+): Fill | null {
+  const parsed = v.safeParse(penShaderPaintSchema, paint)
+  if (!parsed.success || !node) return null
+  const raw = parsed.output
+  const { paint: fill, shader } = createShaderPaint(
+    fragmentShaderPreset({
+      url: raw.url,
+      source: images?.shader(raw.url) ?? raw.openPenSource ?? '',
+      uniforms: raw.uniforms ?? {}
+    })
+  )
+  node.pluginData = withShaderPaints(
+    node,
+    [...node.fills, ...node.strokes, ...previous, fill],
+    [shader]
+  )
+  return {
+    ...fill,
+    opacity: resolveNumber(raw.opacity, ctx, 1),
+    visible: resolveBoolean(raw.enabled, ctx),
+    blendMode: mapBlendMode(raw.blendMode)
+  }
+}
+
+function convertImagePaint(
+  paint: PenImagePaint,
+  ctx: VarContext,
+  node: SceneNode | undefined,
+  images: PenImages | undefined
+): Fill | null {
+  const source = paint
+  const image = source.url ? images?.get(source.url) : undefined
+  if (!image) return null
+  const box = { width: node?.width ?? 0, height: node?.height ?? 0 }
+  return {
+    ...imagePaint(source, image, box, resolveNumber(source.opacity, ctx, 1)),
+    visible: resolveBoolean(source.enabled, ctx),
+    blendMode: mapBlendMode(source.blendMode)
+  }
+}
+
 function convertPaint(
   paint: PenPaint,
   index: number,
   field: PaintField,
   ctx: VarContext,
   node: SceneNode | undefined,
-  images: PenImages | undefined
+  images: PenImages | undefined,
+  previous: Fill[]
 ): Fill | null {
   if (typeof paint === 'string' || paint.type === 'color') {
     const raw = typeof paint === 'string' ? paint : paint.color
@@ -193,17 +246,8 @@ function convertPaint(
     }
   }
   if (paint.type === 'mesh_gradient') return convertMeshPaint(paint, ctx, field, index, node)
-  if (paint.type === 'image') {
-    const source = paint as PenImagePaint
-    const image = source.url ? images?.get(source.url) : undefined
-    if (!image) return null
-    const box = { width: node?.width ?? 0, height: node?.height ?? 0 }
-    return {
-      ...imagePaint(source, image, box, resolveNumber(source.opacity, ctx, 1)),
-      visible: resolveBoolean(source.enabled, ctx),
-      blendMode: mapBlendMode(source.blendMode)
-    }
-  }
+  if (paint.type === 'shader') return convertShaderPaint(paint, ctx, node, images, previous)
+  if (paint.type === 'image') return convertImagePaint(paint as PenImagePaint, ctx, node, images)
   return null
 }
 
@@ -219,7 +263,7 @@ export function convertPaints(
   const list = Array.isArray(paints) ? paints : [paints]
   const result: Fill[] = []
   for (const paint of list) {
-    const converted = convertPaint(paint, result.length, field, ctx, node, images)
+    const converted = convertPaint(paint, result.length, field, ctx, node, images, result)
     if (converted) result.push(converted)
   }
   return result

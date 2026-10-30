@@ -58,7 +58,7 @@ describe('.pen import compatibility', () => {
 
   test('refuses known loss before calling the layout service and keeps source unchanged', () => {
     const doc: PenDocument = {
-      children: [{ ...frame, fill: { type: 'shader', url: './fx.glsl' } }]
+      children: [{ ...frame, fill: { type: 'future-paint' } }]
     }
     const original = structuredClone(doc)
     let layoutCalls = 0

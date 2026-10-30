@@ -31,8 +31,12 @@ export function createDocumentExportActions(
   io: IORegistry,
   downloadBlob: DownloadBlob
 ) {
-  const { renderExportImage, getSelectionExportTarget, listSelectionExportFormats } =
-    createExportTargetActions(editor, state, io)
+  const {
+    prepareExportTarget,
+    renderExportImage,
+    getSelectionExportTarget,
+    listSelectionExportFormats
+  } = createExportTargetActions(editor, state, io)
 
   async function renderExportFile(
     target: ExportRequest['target'],
@@ -43,6 +47,7 @@ export function createDocumentExportActions(
     if (!format) throw new Error(`Unknown export format: ${formatId}`)
 
     const exportOptions = getExportOptions(format, options)
+    await prepareExportTarget(target)
 
     const result = await io.exportContent(
       formatId,

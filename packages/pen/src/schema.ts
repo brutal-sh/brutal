@@ -2,6 +2,10 @@ import stripJSONComments from 'strip-json-comments'
 import * as v from 'valibot'
 
 import { MAX_MESH_DIMENSION } from '@open-pencil/scene-graph/constants'
+import {
+  MAX_FRAGMENT_SOURCE_LENGTH,
+  shaderUniformValueSchema
+} from '@open-pencil/scene-graph/shaders'
 
 /**
  * The `.pen` document as pen.dev writes it (schema 2.21), plus the older forms still found in
@@ -89,7 +93,17 @@ export const penMeshPaintSchema = v.pipe(
   }, 'Mesh colors and points must match its dimensions.')
 )
 
-/** Shader and any other paint type this reader does not draw. */
+export const penShaderPaintSchema = v.looseObject({
+  type: v.literal('shader'),
+  ...paintBase,
+  opacity: v.optional(numSchema),
+  url: v.pipe(v.string(), v.maxLength(16384)),
+  uniforms: v.optional(v.record(v.string(), shaderUniformValueSchema)),
+  /** Open Pen source snapshot; Pen uses the ordinary URL beside it. */
+  openPenSource: v.optional(v.pipe(v.string(), v.maxLength(MAX_FRAGMENT_SOURCE_LENGTH)))
+})
+
+/** Any paint type this reader does not draw. */
 const otherPaintSchema = v.looseObject({ type: strSchema, ...paintBase })
 
 const paintSchema = v.union([
@@ -98,6 +112,7 @@ const paintSchema = v.union([
   gradientPaintSchema,
   imagePaintSchema,
   penMeshPaintSchema,
+  penShaderPaintSchema,
   otherPaintSchema
 ])
 const paintsSchema = v.union([paintSchema, v.array(paintSchema)])
@@ -267,6 +282,7 @@ export type PenPaints = v.InferOutput<typeof paintsSchema>
 export type PenGradientPaint = v.InferOutput<typeof gradientPaintSchema>
 export type PenMeshPaint = v.InferOutput<typeof penMeshPaintSchema>
 export type PenImagePaint = v.InferOutput<typeof imagePaintSchema>
+export type PenShaderPaint = v.InferOutput<typeof penShaderPaintSchema>
 export type PenLegacyStroke = v.InferOutput<typeof legacyStrokeSchema>
 export type PenEffect = v.InferOutput<typeof effectSchema>
 export type PenSides = v.InferOutput<typeof sidesSchema>

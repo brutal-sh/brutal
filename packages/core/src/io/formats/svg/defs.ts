@@ -63,14 +63,14 @@ export function formatColor(
   if (colorSpace === 'display-p3') {
     return colorToDisplayCSS(alphaColor, { colorSpace })
   }
-  // Hex has no alpha. Stops and shadows already emit theirs; solid fills use `solidFillOpacity`.
+  // Hex has no alpha. Stops and shadows already emit theirs; fills use `svgFillOpacity`.
   return colorToHex(alphaColor)
 }
 
 /**
  * A solid paint's SVG color. The canvas paints `opacity` and drops color alpha: `setAlphaf`
  * replaces it, and `.pen` stores a hex alpha in both fields. Display P3 carries that painted
- * alpha in the color. sRGB hex cannot, so `solidFillOpacity` emits it beside the color.
+ * alpha in the color. sRGB hex cannot, so `svgFillOpacity` emits it beside the color.
  */
 export function formatSolidColor(
   color: Color,
@@ -84,16 +84,16 @@ export function formatSolidColor(
 }
 
 /**
- * `fill-opacity` for a solid paint. Omitted at full opacity so an opaque export stays unchanged.
- * Display P3 already carries the same alpha in the color `formatSolidColor` returns, unless
+ * `fill-opacity` for a paint. Omitted at full opacity so an opaque export stays unchanged.
+ * Solid Display P3 carries the same alpha in the color `formatSolidColor` returns, unless
  * `separate` is set because that color was replaced and can no longer carry it.
  */
-export function solidFillOpacity(
+export function svgFillOpacity(
   fill: Fill,
   colorSpace: RenderColorSpace,
   separate = false
 ): number | undefined {
-  if (fill.type !== 'SOLID' || (colorSpace === 'display-p3' && !separate)) return undefined
+  if (fill.type === 'SOLID' && colorSpace === 'display-p3' && !separate) return undefined
   const alpha = round(fill.opacity)
   return alpha < 1 ? alpha : undefined
 }
