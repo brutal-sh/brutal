@@ -146,6 +146,14 @@ const sourceLibraryPublicationSchema: v.GenericSchema<unknown, SourceLibraryPubl
  * it share one schema.
  */
 export const OPEN_PENCIL_PLUGIN_DATA = {
+  shaderSlots: jsonPluginDataField(
+    'shaderSlots',
+    'format',
+    v.object({
+      fills: v.array(v.nullable(v.object({ shader: shaderPaintSchema, image: v.string() }))),
+      strokes: v.array(v.nullable(v.object({ shader: shaderPaintSchema, image: v.string() })))
+    })
+  ),
   meshPaints: jsonPluginDataField(
     'meshPaints',
     'format',

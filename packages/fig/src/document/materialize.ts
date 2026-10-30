@@ -21,7 +21,7 @@ import {
 } from '../instance-overrides/source-children'
 import { nodeChangeToProps } from '../node-change'
 import { generatedFrameCodec } from '../node-change/generated/codecs'
-import { readNodeChangePluginData } from '../node-change/plugin-data'
+import { readNodeChangePluginData, restoreShaderPaints } from '../node-change/plugin-data'
 import { figArchiveRecordInfo, type FigArchiveRecordInfo } from '../record-patch'
 import { applyDocumentLayoutBindings } from './bindings/layout'
 import { applyDocumentPaintBindings } from './bindings/paint'
@@ -524,6 +524,7 @@ function materializeReaderInto(
   }
   // These passes apply to the nodes this page added, not to the whole graph.
   const materialized = [...graph.nodes.values()].filter((node) => !existingNodeIds.has(node.id))
+  for (const node of materialized) restoreShaderPaints(graph, node)
   state.definitionTypes ??= seedDefinitionTypes(graph)
   linkComponentPropertyValues(graph, sources, materialized, state.definitionTypes)
   graph.preserveSourceMetadataDuring(() => {

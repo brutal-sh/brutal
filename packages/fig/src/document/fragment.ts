@@ -2,6 +2,8 @@ import type { GUID } from '@open-pencil/kiwi/fig'
 import type { NodeChange } from '@open-pencil/kiwi/fig/codec'
 import { guidToString } from '@open-pencil/kiwi/fig/guid'
 
+import { bytesToHex } from '../node-change/bytes'
+import { forEachImageReference } from '../node-change/images'
 import { isUnsupportedFigFragmentType } from '../node-classification'
 import {
   materializeDocument,
@@ -30,9 +32,16 @@ export function materializeFigFragment(
   options: FragmentMaterializationOptions = {}
 ): MaterializedFigFragment {
   const changes = normalizeFigFragment(source, options)
+  const images = new Map(options.images)
+  forEachImageReference(changes, (image) => {
+    const bytes = image.dataBlob === undefined ? undefined : blobs[image.dataBlob]
+    if (!bytes || image.hash === undefined) return
+    const hash = typeof image.hash === 'string' ? image.hash : bytesToHex(image.hash)
+    images.set(hash, bytes)
+  })
   const result = materializeDocument(changes, blobs, {
     derivedBounds: true,
-    images: options.images
+    images
   })
   const rootIds: string[] = []
   const dependencyPageIds: string[] = []

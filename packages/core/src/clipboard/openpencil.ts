@@ -9,6 +9,7 @@ import type {
   SceneNode,
   WindingRule
 } from '@open-pencil/scene-graph'
+import { nodeImageHashes } from '@open-pencil/scene-graph/images'
 import {
   createInstanceOverrideState,
   deserializeInstanceOverrideState,
@@ -188,9 +189,7 @@ function collectImageHashes(nodes: SceneNode[], graph: SceneGraph): Set<string> 
   const hashes = new Set<string>()
   function walk(nodeList: SceneNode[]) {
     for (const node of nodeList) {
-      for (const fill of node.fills) {
-        if (fill.imageHash) hashes.add(fill.imageHash)
-      }
+      for (const hash of nodeImageHashes(node)) hashes.add(hash)
       walk(graph.getChildren(node.id))
     }
   }

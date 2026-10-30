@@ -3,6 +3,23 @@ import { bytesToHex } from '@noble/hashes/utils.js'
 import { imageSize as readImageHeader } from 'image-size'
 
 import type { Matrix, Size } from './primitives'
+import type { SceneNode } from './types'
+
+/** Every painted image reference, including strokes, vector regions and styled text. */
+export function* nodeImageHashes(node: SceneNode): Generator<string> {
+  const paints = [
+    ...node.fills,
+    ...node.strokes,
+    ...node.fillGeometry.flatMap((geometry) => geometry.fills ?? []),
+    ...node.strokeGeometry.flatMap((geometry) => geometry.fills ?? []),
+    ...node.textDecorationFills,
+    ...node.styleRuns.flatMap((run) => [
+      ...(run.style.fills ?? []),
+      ...(run.style.textDecorationFills ?? [])
+    ])
+  ]
+  for (const paint of paints) if (paint.type === 'IMAGE' && paint.imageHash) yield paint.imageHash
+}
 
 /**
  * The name an image's bytes are stored under: the hex SHA-1 of the bytes, as Figma names images,

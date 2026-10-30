@@ -1,5 +1,6 @@
 import type { NodeCloneMode } from '../copy'
 import type { SceneGraph } from '../graph'
+import { hasShaderPaint, withSyncedShaderPaints } from '../shaders/model'
 import { detachOwnedSlotContent, restoreOwnedSlotContent } from '../slots/frames'
 import type { SceneNode } from '../types'
 import { keepOwnContentSize } from './content-size'
@@ -37,6 +38,12 @@ export {
 export function copyInstanceComponentProps(component: SceneNode): Partial<SceneNode> {
   const props: Partial<SceneNode> = {}
   for (const key of INSTANCE_SYNC_PROPS) copyProp(props, component, key)
+  if (hasShaderPaint(component))
+    props.pluginData = withSyncedShaderPaints(
+      { fills: [], strokes: [], pluginData: [] },
+      component,
+      props
+    )
   return props
 }
 
@@ -133,6 +140,8 @@ export function swapInstanceComponent(
 
   if (!keepName && (!previousComponent || instance.name === previousComponent.name))
     updates.name = component.name
+  if (hasShaderPaint(instance) || hasShaderPaint(source))
+    updates.pluginData = withSyncedShaderPaints(instance, source, updates)
 
   const childIds = Array.from(instance.childIds)
   const slotContent = detachOwnedSlotContent(graph, instance)
@@ -193,6 +202,8 @@ function syncInstancesOf(
           if (isProtectedSyncField(instance, key, protectedField)) continue
           copyProp(updates, source, key)
         }
+        if (hasShaderPaint(instance) || hasShaderPaint(source))
+          updates.pluginData = withSyncedShaderPaints(instance, source, updates)
         // An instance that hugs its layers sizes to what it shows, not to the component.
         keepOwnContentSize(graph, updates, instance, source)
         updateSyncedProps(graph, instance, updates)

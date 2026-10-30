@@ -418,7 +418,8 @@ provideNumberField({
   invalidReason
 })
 
-watch(editing, (value) => emit('editing-change', value))
+// A committing field can unmount before a queued focus change reaches the editor.
+watch(editing, (value) => emit('editing-change', value), { flush: 'sync' })
 watch(
   () => modelValue,
   (value) => {

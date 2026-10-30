@@ -1,4 +1,5 @@
 import { pick } from 'es-toolkit'
+import { isEqual } from 'es-toolkit/predicate'
 
 import type { SceneNode, Stroke } from '@open-pencil/scene-graph'
 import {
@@ -9,6 +10,8 @@ import {
 } from '@open-pencil/scene-graph/shaders'
 
 import type { EditorContext } from '#core/editor/types'
+
+import { isSharedShaderFrame } from './ownership'
 
 /** What a stroke has beyond its paint. */
 const STROKE_FIELDS = [
@@ -44,9 +47,17 @@ export function createShaderActions(ctx: EditorContext, nodes: NodeActions) {
     const previous = node?.[list].at(index)
     if (!node || !previous) return
     const existing = shaderOfPaint(node, previous)
-    const { paint, shader } = existing
-      ? { paint: previous, shader: { image: existing.image, preset: structuredClone(preset) } }
-      : createShaderPaint(preset)
+    if (existing && isEqual(existing.preset, preset)) return
+    const next =
+      existing && !isSharedShaderFrame(ctx.graph, existing.image)
+        ? { paint: previous, shader: { image: existing.image, preset: structuredClone(preset) } }
+        : createShaderPaint(preset)
+    if (existing && next.shader.image !== existing.image) {
+      const bytes = ctx.graph.images.get(existing.image)
+      if (bytes) ctx.graph.images.set(next.shader.image, bytes)
+    }
+    const paint = existing ? { ...previous, imageHash: next.shader.image } : next.paint
+    const { shader } = next
     const shown = { ...paint, opacity: previous.opacity, visible: previous.visible }
     const fills = list === 'fills' ? replaceAt(node.fills, index, shown) : node.fills
     // A stroke keeps its weight and geometry; only its paint changes.

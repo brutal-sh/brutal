@@ -22,9 +22,8 @@ const PRESET: ShaderPreset = { components: [{ type: 'Aurora', props: { colorA: '
 
 /**
  * A shader paint is an image paint of its frame with the preset in plugin data, so a `.fig`
- * archive keeps both: Figma draws the frame, and OpenPencil reads the shader back. Figma reads
- * the frame only under the SHA-1 of its bytes, so the archive names it that, in the paint and in
- * the plugin data alike.
+ * archive keeps both: Figma draws content-addressed frames; Open Pen restores a mutable frame
+ * identity per paint slot, keeping distinct presets even when their PNG pixels are identical.
  */
 test.each([
   ['library', PRESET],
@@ -64,10 +63,13 @@ test.each([
     const [fill] = copy.fills
 
     const figmaName = computeImageHash(png)
-    expect(fill).toMatchObject({ type: 'IMAGE', imageHash: figmaName })
+    const runtimeImage = expectDefined(fill.imageHash)
+    expect(fill.type).toBe('IMAGE')
+    expect(fill.imageHash).not.toBe(figmaName)
     expect(read.images.get(figmaName)).toEqual(png)
+    expect(read.images.get(runtimeImage)).toEqual(png)
     expect(read.images.has(shader.image)).toBe(false)
-    expect(shaderOfPaint(copy, fill)).toEqual({ ...shader, image: figmaName, frame })
+    expect(shaderOfPaint(copy, fill)).toEqual({ ...shader, image: runtimeImage, frame })
   }
 )
 

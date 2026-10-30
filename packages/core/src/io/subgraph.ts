@@ -1,4 +1,5 @@
 import { SceneGraph } from '@open-pencil/scene-graph'
+import { nodeImageHashes } from '@open-pencil/scene-graph/images'
 import { styleRunReferences } from '@open-pencil/scene-graph/text'
 import { variableValueReferences } from '@open-pencil/scene-graph/variables'
 
@@ -141,9 +142,7 @@ function collectReferencedResources(source: SceneGraph, graph: SceneGraph) {
   const imageHashes = new Set<string>()
   const variableIds = new Set<string>()
   for (const node of graph.nodes.values()) {
-    for (const fill of node.fills) {
-      if (fill.type === 'IMAGE' && fill.imageHash) imageHashes.add(fill.imageHash)
-    }
+    for (const hash of nodeImageHashes(node)) imageHashes.add(hash)
     const bound = [
       ...Object.values(node.boundVariables),
       ...styleRunReferences(node.styleRuns).variables

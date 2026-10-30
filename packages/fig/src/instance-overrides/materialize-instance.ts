@@ -11,6 +11,7 @@ import { createDefaultSourceMetadata } from '@open-pencil/scene-graph/node-defau
 import { paintBindingTarget } from '@open-pencil/scene-graph/variables'
 
 import { nodeChangeToProps } from '../node-change'
+import { restoreShaderPaints } from '../node-change/plugin-data'
 import { numericVariableBindingScales } from '../node-change/variable/bindings'
 import {
   recordVariableBindingClaims,
@@ -194,7 +195,10 @@ export function materializeInstance(
       throw new Error(`Preallocated occurrence has wrong parent ${current.sourceId}`)
     }
     const node = existing ?? createLayer(current, nodeType, parent, propsWithIdentity, owner)
-    if (existing) graph.updateNode(existing.id, propsWithIdentity)
+    if (existing) {
+      graph.updateNode(existing.id, propsWithIdentity)
+      restoreShaderPaints(graph, node)
+    }
     const sharedSource = graph.getNode(sourceChildren.get(current) ?? '')
     if (sharedSource) shareUnchanged(node, sharedSource)
     nodes.set(current, node)

@@ -4,6 +4,7 @@ import type { SceneNode } from '@open-pencil/scene-graph'
 import type { Size } from '@open-pencil/scene-graph/primitives'
 import {
   isShaderFrameCurrent,
+  createShaderPaint,
   readShaderPaints,
   shaderFramePixels,
   shaderOfPaint,
@@ -14,6 +15,7 @@ import {
 
 import type { EditorContext, EditorOptions } from '#core/editor/types'
 
+import { isSharedShaderFrame } from './ownership'
 import type { ShaderRasterizer } from './types'
 
 /** How long a layer must keep its size before its frames are drawn again. */
@@ -85,16 +87,40 @@ export function createShaderFrames(
     })
   }
 
-  async function drawFrame(id: string, shader: ShaderPaint, active: ShaderRasterizer) {
+  function independentFrame(node: SceneNode, shader: ShaderPaint): ShaderPaint {
+    const graph = ctx.graph
+    if (!isSharedShaderFrame(graph, shader.image)) return shader
+    const image = createShaderPaint(shader.preset).shader.image
+    const bytes = graph.images.get(shader.image)
+    if (bytes) graph.images.set(image, bytes)
+    let replaced = false
+    const replace = <T extends SceneNode['fills'][number]>(paint: T): T => {
+      if (replaced || paint.type !== 'IMAGE' || paint.imageHash !== shader.image) return paint
+      replaced = true
+      return { ...paint, imageHash: image }
+    }
+    const fills = node.fills.map(replace)
+    const strokes = node.strokes.map(replace)
+    const next = { ...shader, image }
+    graph.updateNode(node.id, {
+      fills,
+      strokes,
+      pluginData: withShaderPaints(node, [...fills, ...strokes], [next])
+    })
+    return next
+  }
+
+  async function drawFrame(id: string, requested: ShaderPaint, active: ShaderRasterizer) {
     const graph = ctx.graph
     const node = graph.getNode(id)
     if (!node) return
     const size = { width: node.width, height: node.height }
-    const bytes = await active.render(shader.preset, shaderFramePixels(size), size)
+    const bytes = await active.render(requested.preset, shaderFramePixels(size), size)
     // The preset, the layer, or the document may have changed while the frame was drawn.
     const now = graph === ctx.graph ? graph.getNode(id) : undefined
-    const current = now && shownShaders(now).find((item) => item.image === shader.image)
-    if (!bytes || !now || !current || !isEqual(current.preset, shader.preset)) return
+    const current = now && shownShaders(now).find((item) => item.image === requested.image)
+    if (!bytes || !now || !current || !isEqual(current.preset, requested.preset)) return
+    const shader = independentFrame(now, current)
     graph.images.set(shader.image, bytes)
     drawn.set(shader.image, frameKey(shader, size))
     for (const renderer of ctx.getRenderers()) renderer.forgetImage(shader.image)
@@ -103,7 +129,7 @@ export function createShaderFrames(
       pluginData: withShaderPaints(
         now,
         [...now.fills, ...now.strokes],
-        [{ ...current, frame: { ...size, preset: shaderPresetKey(current.preset) } }]
+        [{ ...shader, frame: { ...size, preset: shaderPresetKey(shader.preset) } }]
       )
     })
     ctx.requestRender()

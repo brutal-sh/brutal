@@ -36,6 +36,25 @@ export function hasShaderPaint(node: ShaderNode): boolean {
   return [...node.fills, ...node.strokes].some((paint) => shaderOfPaint(node, paint) !== null)
 }
 
+/** A copied paint follows its source shader; overridden paint lists keep their own metadata. */
+export function withSyncedShaderPaints(
+  target: ShaderNode,
+  source: ShaderNode,
+  changes: Partial<Pick<SceneNode, 'fills' | 'strokes'>>
+): SceneNode['pluginData'] {
+  const fills = changes.fills ?? target.fills
+  const strokes = changes.strokes ?? target.strokes
+  const shaders = [
+    ...fills.map((paint) => shaderOfPaint(changes.fills ? source : target, paint)),
+    ...strokes.map((paint) => shaderOfPaint(changes.strokes ? source : target, paint))
+  ].filter((shader) => shader !== null)
+  return withShaderPaints(
+    { pluginData: withAllPluginData(target.pluginData, OPEN_PENCIL_PLUGIN_DATA.shader, []) },
+    [...fills, ...strokes],
+    shaders
+  )
+}
+
 /**
  * The node's plugin data with `shaders` set by their image, keeping only shaders a fill or
  * stroke of `paints` still shows, so removing or replacing a paint leaves no entry behind.

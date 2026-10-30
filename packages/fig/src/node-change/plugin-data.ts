@@ -8,19 +8,28 @@ import type {
   Fill,
   PluginDataEntry,
   PluginRelaunchDataEntry,
+  SceneGraph,
   SceneNode
 } from '@open-pencil/scene-graph'
 import type { ExportFormatId } from '@open-pencil/scene-graph/export-format'
 import { clampExportScale } from '@open-pencil/scene-graph/export-scale'
+import { computeImageHash } from '@open-pencil/scene-graph/images'
 import { fillSchema, meshGradientSchema } from '@open-pencil/scene-graph/paints'
 import {
   hasPluginData,
+  readPluginData,
   OPEN_PENCIL_PLUGIN_DATA,
   OPEN_PENCIL_PLUGIN_ID,
   withPluginData,
   type PluginDataField
 } from '@open-pencil/scene-graph/plugin-data'
 import type { Rect } from '@open-pencil/scene-graph/primitives'
+import {
+  shaderOfPaint,
+  shaderPresetKey,
+  withShaderPaints,
+  type ShaderPaint
+} from '@open-pencil/scene-graph/shaders'
 import { paintBindingTarget } from '@open-pencil/scene-graph/variables'
 
 import { readEffectiveFigmaRawField } from '../source-metadata'
@@ -209,14 +218,7 @@ export function serializePluginRelaunchData(
 /** Figma has no mesh paint; native records keep a solid preview and this lossless payload. */
 function meshPaintPayload(fill: Fill) {
   v.parse(fillSchema, fill)
-  return pick(fill, [
-    'type',
-    'color',
-    'opacity',
-    'visible',
-    'blendMode',
-    'meshGradient'
-  ])
+  return pick(fill, ['type', 'color', 'opacity', 'visible', 'blendMode', 'meshGradient'])
 }
 
 export function applyMeshPaintsPluginData(
@@ -250,4 +252,55 @@ export function restoreMeshPaints<T extends Fill>(
       ? { ...paint, ...structuredClone(meshPaintPayload(mesh)) }
       : paint
   })
+}
+
+/** Paint slots keep presets distinct when identical PNG frames share a FIG content hash. */
+export function applyShaderPaintsPluginData(
+  node: Pick<SceneNode, 'fills' | 'strokes' | 'pluginData'>,
+  images: ReadonlyMap<string, Uint8Array>
+): void {
+  const slot = (paint: Fill) => {
+    const shader = shaderOfPaint(node, paint)
+    if (!shader) return null
+    const bytes = images.get(shader.image)
+    return { shader, image: bytes ? computeImageHash(bytes) : shader.image }
+  }
+  const fills = node.fills.map(slot)
+  const strokes = node.strokes.map(slot)
+  node.pluginData = withPluginData(
+    node.pluginData,
+    OPEN_PENCIL_PLUGIN_DATA.shaderSlots,
+    fills.some(Boolean) || strokes.some(Boolean) ? { fills, strokes } : undefined
+  )
+}
+
+/** Restore mutable frame identities without changing Figma's content-addressed image records. */
+export function restoreShaderPaints(graph: SceneGraph, node: SceneNode): void {
+  const slots = readPluginData(node.pluginData, OPEN_PENCIL_PLUGIN_DATA.shaderSlots)
+  if (!slots) return
+  const shaders: ShaderPaint[] = []
+  const restore = <T extends Fill>(paints: T[], field: 'fills' | 'strokes'): T[] =>
+    paints.map((paint, index) => {
+      const saved = slots[field][index]
+      if (!saved || paint.type !== 'IMAGE' || paint.imageHash !== saved.image) return paint
+      const image = computeImageHash(
+        new TextEncoder().encode(
+          JSON.stringify([
+            'shader',
+            node.id,
+            field,
+            index,
+            saved.image,
+            shaderPresetKey(saved.shader.preset)
+          ])
+        )
+      )
+      const bytes = graph.images.get(saved.image)
+      if (bytes) graph.images.set(image, bytes)
+      shaders.push({ ...saved.shader, image })
+      return { ...paint, imageHash: image }
+    })
+  node.fills = restore(node.fills, 'fills')
+  node.strokes = restore(node.strokes, 'strokes')
+  node.pluginData = withShaderPaints(node, [...node.fills, ...node.strokes], shaders)
 }

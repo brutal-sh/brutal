@@ -5,6 +5,7 @@ import { cloneNodeProps, copyEffects, copyFills, copyStrokes, copyStyleRuns } fr
 import type { NodeCloneMode } from '../copy'
 import type { SceneGraph } from '../graph'
 import { scaleNodeChanges } from '../scaling/node'
+import { hasShaderPaint, withSyncedShaderPaints } from '../shaders/model'
 import { ownsSlotContent, slotPropertyId } from '../slots/frames'
 import type { SceneNode } from '../types'
 import { scaleVariableBindingUnits } from '../variables/units'
@@ -135,6 +136,21 @@ interface SyncedFieldsInput {
   skip: (key: string) => boolean
 }
 
+function followPaints(
+  updates: Partial<SceneNode>,
+  copy: SceneNode,
+  source: SceneNode,
+  skip: SyncedFieldsInput['skip']
+) {
+  if (updates.fills)
+    updates.fillStyleId = skip('fillStyleId') ? copy.fillStyleId : source.fillStyleId
+  if (hasShaderPaint(copy) || hasShaderPaint(source))
+    updates.pluginData = withSyncedShaderPaints(copy, source, {
+      fills: skip('fills') ? undefined : (updates.fills ?? copy.fills),
+      strokes: skip('strokes') ? undefined : (updates.strokes ?? copy.strokes)
+    })
+}
+
 /** The fields a copy takes from its component's layer, placed in the copy's parent. */
 function copySyncedFields(
   updates: Partial<SceneNode>,
@@ -158,9 +174,7 @@ function copySyncedFields(
     if (isEqual(copy[key], from[key])) continue
     copyProp(updates, from, key)
   }
-  // New paints bring their style link, unless the copy keeps a style of its own.
-  if (updates.fills)
-    updates.fillStyleId = skip('fillStyleId') ? copy.fillStyleId : source.fillStyleId
+  followPaints(updates, copy, source, skip)
   followVectorGeometry(updates, copy, source)
   remeasureChangedText(updates, copy)
   return { placed, x: !placedByLayout && !skip('x'), y: !placedByLayout && !skip('y') }

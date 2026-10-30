@@ -1,4 +1,5 @@
 import type { SceneGraph } from '../graph'
+import { withSyncedShaderPaints } from '../shaders/model'
 import type { SceneNode } from '../types'
 import { paintBindingTarget } from '../variables/fields'
 import { overriddenBindingField } from './overrides'
@@ -51,6 +52,7 @@ export function sourceWithEffectiveFill(
   return {
     ...source,
     fills: effective.fills,
+    pluginData: withSyncedShaderPaints(source, effective, { fills: effective.fills }),
     fillStyleId: effective.fillStyleId,
     boundVariables: fillBindings(source.boundVariables, effective.boundVariables),
     variableBindingScales: fillBindings(

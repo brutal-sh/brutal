@@ -11,7 +11,7 @@ import { meshDriver } from '#tests/helpers/canvas/mesh/driver'
 import { readScenePixels } from '#tests/helpers/canvas/pixels'
 import { shaderDriver } from '#tests/helpers/canvas/shader-driver'
 import { testPath } from '#tests/helpers/paths'
-import { propertyItems, propertySection } from '#tests/helpers/properties'
+import { propertyField, propertyItems, propertySection } from '#tests/helpers/properties'
 import { getSelectedNode } from '#tests/helpers/store'
 
 const editor = useEditorSetupWithClear('/?test&no-rulers')
@@ -26,6 +26,7 @@ async function chooseSource(name = 'checks.glsl') {
 }
 
 async function openShader() {
+  await shader.resetViewport()
   await editor.canvas.drawRect(300, 300, 320, 240)
   await propertyItems(editor.page, 'fills')
     .first()
@@ -187,3 +188,69 @@ test('the stroke picker edits a shader while preserving stroke geometry through 
   expect((await getSelectedNode(editor.page))?.strokes[0]).toEqual(before)
   editor.canvas.assertNoErrors()
 })
+
+for (const edit of ['uniform', 'resize'] as const)
+  test(`a duplicated shader keeps its original pixels when the copy changes ${edit}`, async () => {
+    await openShader()
+    await chooseSource()
+    await expect.poll(async () => (await shader.read())?.pixels).toEqual([white, white, blue])
+    const original = expectDefined(await getSelectedNode(editor.page), 'original shader')
+    await editor.page.keyboard.press('Escape')
+    await editor.page.keyboard.press('ControlOrMeta+d')
+    const copy = expectDefined(await getSelectedNode(editor.page), 'duplicated shader')
+    expect(copy.id).not.toBe(original.id)
+    for (const [property, label, value] of [
+      ['x', 'X Axis', '700'],
+      ['y', 'Y Axis', '300']
+    ]) {
+      const field = propertyField(editor.page, property)
+      await field.click()
+      const input = field.getByRole('spinbutton', { name: label, exact: true })
+      await input.fill(value)
+      await input.press('Enter')
+    }
+    expect(await getSelectedNode(editor.page)).toMatchObject({
+      x: 700,
+      y: 300,
+      width: 320,
+      height: 240
+    })
+    if (edit === 'uniform') {
+      await propertyItems(editor.page, 'fills')
+        .first()
+        .getByRole('button', { name: 'Fill', exact: true })
+        .click()
+      const size = editor.page.getByRole('spinbutton', { name: 'Size', exact: true })
+      await size.focus()
+      await size.fill('24')
+      await size.press('Tab')
+      await expect.poll(async () => (await shader.read())?.fragment?.uniforms.u_size).toBe(24)
+      await expect
+        .poll(() => shader.read())
+        .toMatchObject({
+          width: 640,
+          height: 480,
+          logicalSize: { width: 320, height: 240 },
+          pixels: [white, blue, blue]
+        })
+      await editor.page.keyboard.press('Escape')
+      expect(
+        await readScenePixels(editor.page, [
+          { x: 328, y: 304 },
+          { x: 728, y: 304 }
+        ])
+      ).toEqual([white, blue])
+      await editor.canvas.undo()
+      await expect.poll(async () => (await shader.read())?.pixels).toEqual([white, white, blue])
+    } else {
+      await shader.resize(copy.id, 400, 240)
+      await expect.poll(async () => (await shader.read())?.width).toBe(800)
+    }
+    expect(await shader.read('fills', original.id)).toMatchObject({
+      width: 640,
+      height: 480,
+      pixels: [white, white, blue]
+    })
+    expect(await readScenePixels(editor.page, [{ x: 328, y: 304 }])).toEqual([white])
+    editor.canvas.assertNoErrors()
+  })

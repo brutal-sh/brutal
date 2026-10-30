@@ -28,6 +28,7 @@ import { snapshotInstanceGeometry } from '../instance/geometry'
 import {
   applyExportSettingsPluginData,
   applyMeshPaintsPluginData,
+  applyShaderPaintsPluginData,
   applyLibrarySourcePluginData,
   applyTextPathBoxPluginData,
   mergePluginData,
@@ -948,6 +949,7 @@ export function overridableNodeFields(
   applyVariableModes(context, node, nc)
   context.serializeVariableBindings(node, nc, context.graph, context.varIdToGuid)
   applyMeshPaintsPluginData(node)
+  applyShaderPaintsPluginData(node, context.graph.images)
   // An empty list clears inherited mesh metadata when this occurrence changes to a solid.
   nc.pluginData = mergePluginData(node.pluginData)
   return nc
@@ -1009,6 +1011,7 @@ export function sceneNodeToKiwiWithContext(
   applyVariableModes(context, node, nc)
 
   applyMeshPaintsPluginData(node)
+  applyShaderPaintsPluginData(node, context.graph.images)
   applyExportSettingsPluginData(node)
   applyLibrarySourcePluginData(node)
   serializeNodeStatus(node, nc)

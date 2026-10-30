@@ -3,7 +3,11 @@ import { expect, test } from 'bun:test'
 import { expectDefined } from '#core-tests/helpers/assert'
 
 import { exportPDFDocument } from '@open-pencil/core/io/formats/pdf'
-import { createCanvasKitRasterCodec, initCanvasKit } from '@open-pencil/core/io/formats/raster'
+import {
+  createCanvasKitRasterCodec,
+  initCanvasKit,
+  headlessRenderNodes
+} from '@open-pencil/core/io/formats/raster'
 import { renderNodesToSVG } from '@open-pencil/core/io/formats/svg'
 import { SceneGraph } from '@open-pencil/scene-graph'
 import {
@@ -51,6 +55,17 @@ test.each(['fills', 'strokes'] as const)(
     expect(svg).toMatch(new RegExp(`${attribute}="url\\(#img\\d+\\)"`))
     expect(svg).toContain(`${attribute}-opacity="0.5"`)
     expect(svg).toContain('data:image/png;base64,')
+    const pixels = expectDefined(
+      createCanvasKitRasterCodec(await initCanvasKit()).decode(
+        expectDefined(
+          await headlessRenderNodes(graph, pageId, [node.id], { format: 'PNG', scale: 2 })
+        )
+      )
+    )
+    const offset = (20 * pixels.width + (field === 'fills' ? 20 : 2)) * 4
+    const pixel = Array.from(pixels.data.slice(offset, offset + 4))
+    for (const [index, value] of [51, 102, 153, 128].entries())
+      expect(Math.abs(pixel[index] - value)).toBeLessThanOrEqual(1)
     const pdf = expectDefined(
       await exportPDFDocument(graph, [{ pageId, nodeIds: [node.id] }], { embedFonts: false }),
       'PDF'
