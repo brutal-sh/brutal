@@ -120,6 +120,8 @@
   "shaderSourcePath": "Ścieżka lub URL shadera",
   "chooseShaderFile": "Wybierz plik shadera",
   "reloadShader": "Wczytaj shader ponownie",
+  "shaderUsedInFile": "Używane w tym pliku",
+  "revealShaderFile": "Pokaż plik shadera",
   "shaderLoadFailed": "Nie udało się wczytać shadera",
   "shaderSourceTip": "Wskazówka: poproś agenta o wygenerowanie shadera na podstawie opisu lub znajdź więcej shaderów w Goodies.",
   "addShaderEffect": "Dodaj efekt",

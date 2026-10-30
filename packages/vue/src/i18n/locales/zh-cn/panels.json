@@ -136,6 +136,8 @@
   "shaderSourcePath": "着色器路径或URL",
   "chooseShaderFile": "选择着色器文件",
   "reloadShader": "重新加载着色器",
+  "shaderUsedInFile": "此文件中使用的着色器",
+  "revealShaderFile": "显示着色器文件",
   "shaderLoadFailed": "无法加载着色器",
   "shaderSourceTip": "提示：可以让代理根据你的描述生成着色器，或在Goodies中查找更多着色器。",
   "addShaderEffect": "添加效果",

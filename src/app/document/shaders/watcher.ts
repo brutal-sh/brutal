@@ -10,10 +10,12 @@ import {
   type FragmentShader
 } from '@open-pencil/scene-graph/shaders'
 
-import { documentAssetPath } from '@/app/document/io/assets'
 import { watchTauriFile } from '@/app/document/io/watch/targets'
-import { loadFragmentSource, validateFragmentSource } from '@/app/document/shaders/source'
-import { isTauri } from '@/app/tauri/env'
+import {
+  fragmentSourceFilePath,
+  loadFragmentSource,
+  validateFragmentSource
+} from '@/app/document/shaders/source'
 
 interface SourceWatch {
   controller: AbortController
@@ -35,17 +37,6 @@ interface SourceWatcherOptions {
   validateSource: (shader: FragmentShader) => Promise<void>
 }
 
-async function resolveSource(url: string, documentPath: string | null, chosen: boolean) {
-  if (!isTauri() || /^https?:/i.test(url)) return null
-  if (url.startsWith('/') || /^file:/i.test(url)) {
-    if (!chosen) return null
-    if (!/^file:/i.test(url)) return url
-    const file = new URL(url)
-    return file.hostname ? null : decodeURIComponent(file.pathname)
-  }
-  return documentPath ? documentAssetPath(documentPath, decodeURIComponent(url)) : null
-}
-
 /** Keep external GLSL changes out of edit history, including when Undo restores an older preset. */
 export function createShaderSourceWatcher(
   editor: Editor,
@@ -54,13 +45,14 @@ export function createShaderSourceWatcher(
 ) {
   const ports: SourceWatcherOptions = {
     watchSource: (path, changed) => watchTauriFile(path, () => 0, changed),
-    resolveSource,
+    resolveSource: fragmentSourceFilePath,
     loadSource: loadFragmentSource,
     validateSource: validateFragmentSource,
     ...options
   }
   const sources = new Map<string, SourceWatch>()
   const errors = shallowReactive(new Map<string, string>())
+  const sourceOrder = shallowReactive(new Set<string>())
   const chosen = new Set<string>()
   let disposed = false
   let scheduled = false
@@ -183,6 +175,8 @@ export function createShaderSourceWatcher(
       )
     )
     const active = new Set([...urls].map(keyFor))
+    for (const url of sourceOrder) if (!urls.has(url)) sourceOrder.delete(url)
+    for (const url of urls) sourceOrder.add(url)
     for (const url of errors.keys()) if (!urls.has(url)) errors.delete(url)
     for (const [key, entry] of sources) {
       if (active.has(key)) continue
@@ -241,10 +235,12 @@ export function createShaderSourceWatcher(
     }
     sources.clear()
     errors.clear()
+    sourceOrder.clear()
   }
   schedule()
   return {
     shaderSourceErrors: errors,
+    shaderSourceOrder: sourceOrder,
     watchShaderSource: (shader: FragmentShader) => {
       const { url } = shader
       chosen.add(url)

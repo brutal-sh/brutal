@@ -552,6 +552,8 @@ export const panelMessageDefaults = {
   shaderSourcePath: 'Shader path or URL',
   chooseShaderFile: 'Choose shader file',
   reloadShader: 'Reload shader',
+  shaderUsedInFile: 'Used in this file',
+  revealShaderFile: 'Reveal shader file',
   shaderLoadFailed: 'Could not load shader',
   shaderSourceTip:
     'Tip: You can ask an agent to generate a shader for you based on your description or find more shaders in Goodies.',

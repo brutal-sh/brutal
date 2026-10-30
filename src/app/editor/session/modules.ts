@@ -79,6 +79,7 @@ export function createEditorStoreModules(
     ...vectorEdit,
     watchShaderSource: shaderSources.watchShaderSource,
     shaderSourceErrors: shaderSources.shaderSourceErrors,
+    shaderSourceOrder: shaderSources.shaderSourceOrder,
     /** Going read-only keeps a vector edit in progress, as the editor keeps edited text. */
     setReadOnly(readOnly: boolean) {
       if (readOnly) vectorEdit.exitNodeEditMode(true)

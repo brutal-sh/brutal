@@ -149,6 +149,32 @@ test('serialized absolute source paths need an explicit choice, and removed pain
   }
 })
 
+test('used-source order retains active references and appends a source when it returns', async () => {
+  const session = setup()
+  const { editor, node, watcher } = session
+  try {
+    const other = editor.graph.createNode('RECTANGLE', editor.state.currentPageId, {
+      fills: [colorToFill({ r: 1, g: 1, b: 1, a: 1 })]
+    })
+    const second = { ...original, url: 'time.glsl' }
+    editor.setShaderPaint([other.id], 'fills', 0, fragmentShaderPreset(second))
+    await settled()
+    expect([...watcher.shaderSourceOrder]).toEqual(['checks.glsl', 'time.glsl'])
+    editor.setShaderPaint([node.id], 'fills', 0, fragmentShaderPreset(second))
+    await settled()
+    expect([...watcher.shaderSourceOrder]).toEqual(['time.glsl'])
+    editor.setShaderPaint([node.id], 'fills', 0, fragmentShaderPreset(original))
+    await settled()
+    expect([...watcher.shaderSourceOrder]).toEqual(['time.glsl', 'checks.glsl'])
+    editor.graph.deleteNode(other.id)
+    await settled()
+    expect([...watcher.shaderSourceOrder]).toEqual(['checks.glsl'])
+  } finally {
+    session.dispose()
+  }
+  expect(watcher.shaderSourceOrder.size).toBe(0)
+})
+
 test('a changed uniform type validates every paint override before replacing any source', async () => {
   const session = setup(async (shader) => {
     if (shader.source === 'vector' && typeof shader.uniforms.u_size === 'number')

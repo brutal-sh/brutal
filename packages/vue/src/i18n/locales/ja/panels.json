@@ -135,6 +135,8 @@
   "shaderSourcePath": "シェーダーのパスまたはURL",
   "chooseShaderFile": "シェーダーファイルを選択",
   "reloadShader": "シェーダーを再読み込み",
+  "shaderUsedInFile": "このファイルで使用中",
+  "revealShaderFile": "シェーダーファイルを表示",
   "shaderLoadFailed": "シェーダーを読み込めませんでした",
   "shaderSourceTip": "ヒント：説明をもとにシェーダーを生成するようエージェントに依頼するか、Goodiesで他のシェーダーを探せます。",
   "addShaderEffect": "エフェクトを追加",

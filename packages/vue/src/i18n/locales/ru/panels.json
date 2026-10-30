@@ -136,6 +136,8 @@
   "shaderSourcePath": "Путь или URL шейдера",
   "chooseShaderFile": "Выбрать файл шейдера",
   "reloadShader": "Перезагрузить шейдер",
+  "shaderUsedInFile": "Используется в этом файле",
+  "revealShaderFile": "Показать файл шейдера",
   "shaderLoadFailed": "Не удалось загрузить шейдер",
   "shaderSourceTip": "Совет: попросите агента создать шейдер по вашему описанию или найдите другие шейдеры в Goodies.",
   "addShaderEffect": "Добавить эффект",

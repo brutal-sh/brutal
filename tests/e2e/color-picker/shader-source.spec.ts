@@ -84,6 +84,33 @@ test('invalid source reports its compiler failure and retains the previous paint
   editor.canvas.assertNoErrors()
 })
 
+test('the used-source picker follows document references and resets defaults only on a different source', async () => {
+  await openShader()
+  await chooseSource()
+  const original = expectDefined(await getSelectedNode(editor.page), 'original shader')
+  const size = editor.page.getByRole('spinbutton', { name: 'Size', exact: true })
+  await size.focus()
+  await size.fill('24')
+  await size.press('Tab')
+  await editor.page.keyboard.press('Escape')
+  await openShader()
+  await chooseSource('alpha.glsl')
+  const used = editor.page.locator('[data-slot="shader-used-sources"]')
+  await expect(used.getByRole('button', { name: 'alpha.glsl', exact: true })).toBeVisible()
+  await used.getByRole('button', { name: 'checks.glsl', exact: true }).click()
+  await expect(size).toHaveAttribute('aria-valuenow', '32')
+  await expect(used.getByRole('button', { name: 'alpha.glsl', exact: true })).toHaveCount(0)
+  expect((await shader.read('fills', original.id))?.fragment?.uniforms).toEqual({ u_size: 24 })
+  await editor.page.locator('[data-picker-content]').screenshot({
+    path: test.info().outputPath('shader-used-source-picker.png')
+  })
+  await editor.page.keyboard.press('Escape')
+  await editor.canvas.undo()
+  await expect.poll(async () => (await shader.read())?.fragment?.url).toBe('alpha.glsl')
+  expect((await shader.read('fills', original.id))?.fragment?.uniforms).toEqual({ u_size: 24 })
+  editor.canvas.assertNoErrors()
+})
+
 test('reloading the same GLSL URL keeps uniform edits and rejects invalid replacements', async () => {
   await openShader()
   let source = await readFile(testPath('fixtures/shaders', 'checks.glsl'), 'utf8')
@@ -100,14 +127,14 @@ test('reloading the same GLSL URL keeps uniform edits and rejects invalid replac
   await size.press('Tab')
   await expect.poll(async () => (await shader.read())?.fragment?.uniforms).toEqual({ u_size: 24 })
   source = source.replace('#336699', '#669933')
-  await editor.page.getByRole('button', { name: 'Reload shader', exact: true }).click()
+  await path.press('Enter')
   await expect
     .poll(async () => (await shader.read())?.pixels)
     .toEqual([white, [102, 153, 51, 255], [102, 153, 51, 255]])
   expect((await shader.read())?.fragment?.uniforms).toEqual({ u_size: 24 })
   const valid = (await shader.read())?.fragment
   source = 'void main(){ gl_FragColor = invalid; }'
-  await editor.page.getByRole('button', { name: 'Reload shader', exact: true }).click()
+  await path.press('Enter')
   await expect(editor.page.getByRole('alert')).toBeVisible()
   expect((await shader.read())?.fragment).toEqual(valid)
   await editor.page.keyboard.press('Escape')

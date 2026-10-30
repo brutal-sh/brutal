@@ -5,7 +5,9 @@ import { computed, onScopeDispose, ref, watch } from 'vue'
 import { colorToHex8, parseColor } from '@open-pencil/scene-graph/color'
 import {
   fragmentShaderPreset,
+  fragmentShaderOf,
   fragmentUniforms,
+  readShaderPaints,
   MAX_FRAGMENT_SOURCE_LENGTH,
   type FragmentShader,
   type FragmentUniform,
@@ -14,14 +16,19 @@ import {
 } from '@open-pencil/scene-graph/shaders'
 import { useI18n } from '@open-pencil/vue/i18n'
 
-import { loadFragmentSource, validateFragmentSource } from '@/app/document/shaders/source'
+import {
+  fragmentSourceFilePath,
+  loadFragmentSource,
+  validateFragmentSource
+} from '@/app/document/shaders/source'
 import { useEditorStore } from '@/app/editor/active-store'
 import { isTauri } from '@/app/tauri/env'
 import ColorInput from '@/components/ColorPicker/ColorInput.vue'
 import NumberField from '@/components/inputs/NumberField.vue'
+import AppButton from '@/components/ui/button/AppButton.vue'
 import IconButton from '@/components/ui/button/IconButton.vue'
-import AppAlert from '@/components/ui/feedback/AppAlert.vue'
 import AppInput from '@/components/ui/input/AppInput.vue'
+import Tip from '@/components/ui/overlay/Tip.vue'
 import PanelFieldGroup from '@/components/ui/panel/PanelFieldGroup.vue'
 
 const { shader } = defineProps<{ shader: FragmentShader }>()
@@ -32,6 +39,22 @@ const path = ref(shader.url)
 const error = ref('')
 const loading = ref(false)
 const sourceError = computed(() => store.shaderSourceErrors.get(shader.url))
+const usedSources = computed(() => {
+  void store.state.sceneVersion
+  const sources = new Map<string, FragmentShader>()
+  for (const node of store.graph.getAllNodes())
+    for (const paint of readShaderPaints(node)) {
+      const source = fragmentShaderOf(paint.preset)
+      if (source?.url) sources.set(source.url, source)
+    }
+  return [...store.shaderSourceOrder].flatMap((url) => sources.get(url) ?? [])
+})
+const numberUI = {
+  leading: 'px-2 [&_span]:text-xs',
+  field: 'text-right text-xs',
+  display: 'text-xs',
+  value: 'text-right'
+}
 let request: AbortController | null = null
 watch(
   () => shader.url,
@@ -74,6 +97,23 @@ async function apply(load: (signal: AbortSignal) => Promise<FragmentShader>) {
 }
 function loadPath() {
   return apply((signal) => loadFragmentSource(path.value, store.getDocumentFilePath(), signal))
+}
+function useSource(source: FragmentShader) {
+  path.value = source.url
+  // A browser-uploaded file has no readable path; the document retains its validated source.
+  return isTauri() || /^https?:/i.test(source.url)
+    ? loadPath()
+    : apply(async () => ({ ...source, uniforms: {} }))
+}
+async function revealSource() {
+  try {
+    const local = await fragmentSourceFilePath(shader.url, store.getDocumentFilePath(), true)
+    if (!local) throw new Error('This shader has no local file to reveal.')
+    const { revealItemInDir } = await import('@tauri-apps/plugin-opener')
+    await revealItemInDir(local)
+  } catch (failure) {
+    error.value = failure instanceof Error ? failure.message : String(failure)
+  }
 }
 const dialog = useFileDialog({
   accept: '.glsl,.frag,text/plain',
@@ -139,38 +179,66 @@ function setNumber(control: FragmentUniform, at: number, next: number) {
     <div class="flex items-center gap-1">
       <AppInput
         v-model="path"
-        class="min-w-0 flex-1"
+        class="h-6 min-w-0 flex-1 text-xs"
+        tone="panel"
         :aria-label="panels.shaderSourcePath"
         :placeholder="panels.shaderSourcePath"
         @enter="loadPath"
         @change="loadPath"
       />
-      <IconButton :label="panels.chooseShaderFile" :disabled="loading" @click="pickFile"
+      <IconButton
+        v-if="shader.source && !/^https?:/i.test(shader.url)"
+        class="rounded-md bg-panel-field"
+        :label="panels.revealShaderFile"
+        :disabled="loading || !isTauri()"
+        @click="revealSource"
         ><icon-lucide-folder-search class="size-3.5"
       /></IconButton>
       <IconButton
-        v-if="shader.source"
-        :label="panels.reloadShader"
+        :label="panels.chooseShaderFile"
+        class="rounded-md bg-panel-field"
         :disabled="loading"
-        @click="loadPath"
-        ><icon-lucide-refresh-cw class="size-3.5"
+        @click="pickFile"
+        ><icon-lucide-upload class="size-3.5"
       /></IconButton>
     </div>
-    <AppAlert
+    <div v-if="usedSources.length" class="flex flex-col gap-1" data-slot="shader-used-sources">
+      <p class="mb-1 text-xs text-muted">{{ panels.shaderUsedInFile }}</p>
+      <Tip v-for="source in usedSources" :key="source.url" :label="source.url" as-child
+        ><AppButton
+          :disabled="loading"
+          class="h-6 w-full justify-start truncate bg-panel-field px-2 text-xs"
+          @click="useSource(source)"
+          >{{ source.url }}</AppButton
+        ></Tip
+      >
+    </div>
+    <p
       v-if="error || metadata.error || sourceError"
-      tone="error"
-      :heading="panels.shaderLoadFailed"
-      :description="error || metadata.error || sourceError"
-    />
+      role="alert"
+      :aria-label="panels.shaderLoadFailed"
+      class="m-0 text-xs text-error"
+    >
+      {{ error || metadata.error || sourceError }}
+    </p>
     <template v-for="control in metadata.controls" :key="control.name">
-      <PanelFieldGroup v-if="control.color" :label="control.label">
+      <PanelFieldGroup
+        v-if="control.color"
+        :label="control.label"
+        :ui="{ label: 'text-xs leading-4' }"
+      >
         <ColorInput
+          class="h-6 rounded bg-panel-field px-1"
           :color="parseColor(String(value(control)))"
           editable
           @update="set(control, colorToHex8($event))"
         />
       </PanelFieldGroup>
-      <PanelFieldGroup v-else-if="control.size > 1" :label="control.label">
+      <PanelFieldGroup
+        v-else-if="control.size > 1"
+        :label="control.label"
+        :ui="{ label: 'text-xs leading-4' }"
+      >
         <div class="flex gap-1">
           <NumberField
             v-for="at in control.size"
@@ -180,6 +248,7 @@ function setNumber(control: FragmentUniform, at: number, next: number) {
             :aria-label="`${control.label} ${['X', 'Y', 'Z', 'W'][at - 1]}`"
             :step="control.integer ? 1 : 0.01"
             :inherit-binding="false"
+            :ui="numberUI"
             @commit="setNumber(control, at - 1, $event)"
           />
         </div>
@@ -192,6 +261,7 @@ function setNumber(control: FragmentUniform, at: number, next: number) {
         :max="control.max"
         :step="control.integer ? 1 : 0.1"
         :inherit-binding="false"
+        :ui="numberUI"
         @commit="setNumber(control, 0, $event)"
       />
     </template>
