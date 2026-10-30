@@ -93,6 +93,11 @@ const displayedSides = computed(() =>
       :label="panels.individualPadding"
       :active="ctx.showIndividualPadding"
       class="mt-1.5"
+      :class="
+        compact
+          ? 'rounded data-[state=on]:border-transparent data-[state=on]:bg-accent/15 data-[state=on]:text-primary'
+          : undefined
+      "
       @click="ctx.toggleIndividualPadding"
     >
       <icon-lucide-square v-if="compact" class="size-3.5" />

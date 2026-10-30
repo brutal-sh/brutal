@@ -310,6 +310,11 @@ export function applyPenProperties(node: SceneNode, pen: PenNode, build: Build):
   node.effects = convertEffects(pen.effect, ctx)
   applyCornerRadius(node, pen.cornerRadius, ctx)
   applyPadding(node, pen.padding, ctx)
+  node.pluginData = withPluginData(
+    node.pluginData,
+    OPEN_PENCIL_PLUGIN_DATA.paddingMode,
+    Array.isArray(pen.padding) && pen.padding.length === 4 ? 'INDIVIDUAL' : undefined
+  )
 
   // Text without a width resizes to its content, which laying out the document measures.
   if (isTextLike) applyTextProps(node, pen, ctx)

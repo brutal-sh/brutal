@@ -1,4 +1,5 @@
 import { createEditor, type Editor } from '@open-pencil/core'
+import { hasStoredBackground, setDefaultPageBackground } from '@open-pencil/core/figma-api'
 import type { SceneGraph, SceneNode } from '@open-pencil/scene-graph'
 
 import { loadFont } from '@/app/editor/fonts'
@@ -9,6 +10,9 @@ export async function applyImportedDocument(
   imported: SceneGraph,
   load?: DocumentLoadSession
 ) {
+  for (const page of imported.getPages()) {
+    if (!hasStoredBackground(page)) setDefaultPageBackground(imported, page, editor.state.theme)
+  }
   const firstPage = imported.getPages()[0] as SceneNode | undefined
   const pageId = firstPage?.id ?? imported.rootId
   const stagingEditor = createEditor({

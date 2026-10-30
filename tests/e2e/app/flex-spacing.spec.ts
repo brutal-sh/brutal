@@ -50,6 +50,9 @@ test('Space Around redistributes on resize, supports clean Undo, saves and reope
     )
   })
   await canvas.waitForInit()
+  await expect
+    .poll(() => page.evaluate(() => window.openPencil?.getStore?.().state.pageColor))
+    .toEqual({ r: 24 / 255, g: 24 / 255, b: 27 / 255, a: 1 })
   await page.getByRole('tab', { name: 'Layers', exact: true }).click()
   await page.getByTestId('layers-item').filter({ hasText: 'Spacing row' }).first().click()
   const inspector = page.getByTestId('properties-panel')

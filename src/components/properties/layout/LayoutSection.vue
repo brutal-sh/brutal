@@ -46,6 +46,7 @@ const { compact = false } = defineProps<{ compact?: boolean }>()
             size="xs"
             :active="ctx.node.layoutMode !== 'NONE'"
             class="data-[state=on]:bg-accent/15"
+            :class="compact ? 'data-[state=on]:text-primary' : undefined"
             @click="
               ctx.editor.setLayoutMode(
                 ctx.node.id,

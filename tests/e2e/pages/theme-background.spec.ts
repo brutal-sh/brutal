@@ -1,9 +1,9 @@
 import { expect, test, type Page } from '@playwright/test'
 
-// Recorded in Figma desktop 126: a page made in the dark theme is #1E1E1E, in the light one #F5F5F5.
+// The independent editor uses Pen's observed dark canvas default, #18181B.
 // These specs open the app without CanvasHelper, whose init keeps other specs on the light page.
 
-const DARK = 0x1e / 255
+const DARK = 0x18 / 255
 const LIGHT = 0.96
 
 async function openFresh(page: Page) {
@@ -28,11 +28,9 @@ test('a new document and its new pages take the dark page in the dark theme', as
 
 test('the light theme starts documents on the light page', async ({ page }) => {
   await openFresh(page)
-  await page.evaluate(async () => {
-    const themeModulePath = '/src/app/shell/theme.ts'
-    const themeModule = await import(themeModulePath)
-    themeModule.setAppTheme('light')
-  })
+  await page.getByRole('button', { name: 'Main menu', exact: true }).click()
+  await page.getByRole('menuitem', { name: 'Toggle Light/Dark mode', exact: true }).click()
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
   // The theme setting persists, so the reloaded app starts a new document in it.
   await page.reload()
   await page.getByTestId('canvas-element').and(page.locator('[data-ready="1"]')).waitFor()

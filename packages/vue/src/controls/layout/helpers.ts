@@ -1,4 +1,4 @@
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import type { ComputedRef } from 'vue'
 
 import type { Editor } from '@open-pencil/core'
@@ -24,7 +24,11 @@ import {
   sizeKeepingAspectRatio,
   type LayoutSizingAxis
 } from '@open-pencil/scene-graph/layout'
-import { OPEN_PENCIL_PLUGIN_DATA, withPluginData } from '@open-pencil/scene-graph/plugin-data'
+import {
+  OPEN_PENCIL_PLUGIN_DATA,
+  readPluginData,
+  withPluginData
+} from '@open-pencil/scene-graph/plugin-data'
 
 import { useNodePreview } from '#vue/controls/node-preview/use'
 import { useSelectedNodeState } from '#vue/editor/selection-state/nodes'
@@ -135,7 +139,6 @@ export function createGridTrackActions(editor: Editor, node: ComputedRef<SceneNo
 }
 
 export function createPaddingActions(editor: Editor, node: ComputedRef<SceneNode | null>) {
-  const showIndividualPadding = ref(false)
   const preview = useNodePreview(editor)
 
   const hasUniformPadding = computed(() => {
@@ -153,6 +156,11 @@ export function createPaddingActions(editor: Editor, node: ComputedRef<SceneNode
     if (!n) return true
     return n.paddingLeft === n.paddingRight && n.paddingTop === n.paddingBottom
   })
+  const showIndividualPadding = computed(
+    () =>
+      !hasSymmetricPadding.value ||
+      readPluginData(node.value?.pluginData, OPEN_PENCIL_PLUGIN_DATA.paddingMode) === 'INDIVIDUAL'
+  )
 
   function setHorizontalPadding(v: number) {
     if (!node.value) return
@@ -177,7 +185,42 @@ export function createPaddingActions(editor: Editor, node: ComputedRef<SceneNode
   }
 
   function toggleIndividualPadding() {
-    showIndividualPadding.value = !showIndividualPadding.value
+    const n = node.value
+    if (!n) return
+    const collapsing = showIndividualPadding.value
+    const changes: Partial<SceneNode> = {
+      pluginData: withPluginData(
+        n.pluginData,
+        OPEN_PENCIL_PLUGIN_DATA.paddingMode,
+        collapsing ? undefined : 'INDIVIDUAL'
+      )
+    }
+    if (collapsing) {
+      changes.paddingBottom = n.paddingTop
+      changes.paddingLeft = n.paddingRight
+      const bindings = { ...n.boundVariables }
+      const scales = { ...n.variableBindingScales }
+      if (bindings.paddingTop) {
+        bindings.paddingBottom = bindings.paddingTop
+        if (scales.paddingTop !== undefined) scales.paddingBottom = scales.paddingTop
+        else delete scales.paddingBottom
+      } else {
+        delete bindings.paddingBottom
+        delete scales.paddingBottom
+      }
+      if (bindings.paddingRight) {
+        bindings.paddingLeft = bindings.paddingRight
+        if (scales.paddingRight !== undefined) scales.paddingLeft = scales.paddingRight
+        else delete scales.paddingLeft
+      } else {
+        delete bindings.paddingLeft
+        delete scales.paddingLeft
+      }
+      changes.boundVariables = bindings
+      changes.variableBindingScales = scales
+    }
+    preview.update([n.id], changes, 'Change padding mode')
+    preview.commit()
   }
 
   return {

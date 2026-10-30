@@ -11,7 +11,8 @@ import { SceneGraph, type SceneNode } from '@open-pencil/scene-graph'
 import { getNodeLocalMatrix } from '@open-pencil/scene-graph/coordinate'
 import {
   OPEN_PENCIL_PLUGIN_DATA,
-  OPEN_PENCIL_PLUGIN_ID
+  OPEN_PENCIL_PLUGIN_ID,
+  readPluginData
 } from '@open-pencil/scene-graph/plugin-data'
 
 import { parseDocument } from '../helpers/document'
@@ -24,6 +25,29 @@ function ordinary(type: SceneNode['type'] = 'RECTANGLE') {
 }
 
 describe('bounded .pen writer', () => {
+  test.each([
+    { padding: [5, 10, 5, 10], mode: 'INDIVIDUAL' },
+    { padding: [5, 10], mode: undefined }
+  ])('reads padding presentation from the authored array $padding', ({ padding, mode }) => {
+    const graph = parsePenFile(
+      JSON.stringify({
+        version: '2.21',
+        children: [
+          {
+            id: 'padding',
+            type: 'frame',
+            width: 300,
+            height: 100,
+            padding
+          }
+        ]
+      })
+    )
+    expect(
+      readPluginData(graph.getNode('padding')?.pluginData, OPEN_PENCIL_PLUGIN_DATA.paddingMode)
+    ).toBe(mode)
+    expect(writePenDocument(graph).children[0].padding).toEqual([5, 10])
+  })
   test('rejects invalid distribution metadata instead of silently exporting another alignment', () => {
     const { graph, node } = ordinary('FRAME')
     graph.updateNode(node.id, {
