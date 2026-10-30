@@ -37,11 +37,12 @@ export function useGradientStops(fill: Ref<Fill>, onUpdate: (fill: Fill) => void
     return s[Math.min(activeStopIndex.value, s.length - 1)].color
   })
 
-  const barBackground = computed(() =>
-    stops.value.length
+  const barBackground = computed(() => {
+    if (stops.value.length === 1) return colorToCSS(stops.value[0].color)
+    return stops.value.length
       ? `linear-gradient(to right, ${stops.value.map((s) => `${colorToCSS(s.color)} ${s.position * 100}%`).join(', ')})`
       : ''
-  )
+  })
 
   function emitStops(newStops: GradientStop[]) {
     onUpdate({ ...fill.value, gradientStops: newStops })
@@ -70,9 +71,11 @@ export function useGradientStops(fill: Ref<Fill>, onUpdate: (fill: Fill) => void
   }
 
   function removeStop(index: number) {
-    if (stops.value.length <= 2) return
-    emitStops(stops.value.filter((_, i) => i !== index))
-    activeStopIndex.value = Math.min(activeStopIndex.value, stops.value.length - 2)
+    if (stops.value.length <= 1) return
+    const next = stops.value.filter((_, i) => i !== index)
+    const selected = activeStopIndex.value - Number(index < activeStopIndex.value)
+    activeStopIndex.value = Math.min(selected, next.length - 1)
+    emitStops(next)
   }
 
   function updateStopPosition(index: number, position: number) {

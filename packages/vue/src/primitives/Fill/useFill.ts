@@ -40,6 +40,8 @@ export function fillIsTransparent(fill: Fill): boolean {
 
 export function fillSwatchBackground(fill: Fill): string {
   if (fillCategory(fill) === 'GRADIENT' && fill.gradientStops?.length) {
+    if (fill.gradientStops.length === 1)
+      return colorToCSS(effectiveColor(fill.gradientStops[0].color, fill.opacity))
     return `linear-gradient(to right, ${gradientCSS(fill.gradientStops, fill.opacity)})`
   }
   return colorToCSS(effectiveColor(fill.color, fill.opacity))

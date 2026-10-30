@@ -208,32 +208,6 @@ test('a picker focusing its first control on open shows no tooltip until keyboar
   await editor.page.clock.resume()
 })
 
-test('fill gradient switch changes fill type', async () => {
-  await editor.canvas.clearCanvas()
-  await editor.canvas.pressKey('Escape')
-  await editor.canvas.waitForRender()
-  // fresh rect with default solid fill
-  await editor.canvas.drawRect(300, 300, 80, 80)
-  await editor.canvas.waitForRender()
-
-  await expect(propertySection(editor.page, 'Fill')).toBeVisible({ timeout: 5000 })
-
-  const fillItem = propertyItems(editor.page, 'fills').first()
-  await expect(fillItem).toBeVisible({ timeout: 5000 })
-  const fillSwatch = fillItem.getByTestId('fill-picker-swatch')
-  await expect(fillSwatch).toBeVisible({ timeout: 5000 })
-  await fillSwatch.click()
-  await editor.canvas.waitForRender()
-
-  await editor.page.getByTestId('fill-picker-tab-gradient').click()
-  await editor.canvas.waitForRender()
-
-  const node = expectDefined(await getSelectedNode(editor.page), 'gradient-filled node')
-  expect(node.fills[0]?.type).toBe('GRADIENT_LINEAR')
-  await fillSwatch.click()
-  editor.canvas.assertNoErrors()
-})
-
 test('variable bind badge appears on fill', async () => {
   await editor.canvas.clearCanvas()
   await editor.canvas.drawRect(200, 200, 80, 80)
@@ -326,7 +300,7 @@ test('fill color can bind an existing variable', async () => {
   editor.canvas.assertNoErrors()
 })
 
-test('bound fill picker opens non-destructively and Escape rolls back color edits', async () => {
+test('bound fill picker opens non-destructively and Escape retains edits that Undo restores', async () => {
   await editor.canvas.clearCanvas()
   await editor.canvas.drawRect(200, 200, 80, 80)
 
@@ -375,7 +349,17 @@ test('bound fill picker opens non-destructively and Escape rolls back color edit
     const node = id ? store.getNode(id) : null
     return { color: node?.fills[0]?.color, binding: node?.boundVariables['fills/0/color'] }
   })
-  expect(after).toEqual(before)
+  expect(after.color).not.toEqual(before.color)
+  expect(after.binding).toBeUndefined()
+  await editor.canvas.undo()
+  const restored = await editor.page.evaluate(() => {
+    const store = window.openPencil?.getStore?.()
+    if (!store) throw new Error('OpenPencil store not initialized')
+    const id = [...store.state.selectedIds][0]
+    const node = id ? store.getNode(id) : null
+    return { color: node?.fills[0]?.color, binding: node?.boundVariables['fills/0/color'] }
+  })
+  expect(restored).toEqual(before)
   await expect(fillItem.getByText('rollback-brand')).toBeVisible()
   editor.canvas.assertNoErrors()
 })

@@ -66,7 +66,7 @@ const { open: popupOpen, portalActive } = useRetainedPopup(undefined, () => {
   emit('openChange', false)
 })
 const cls = usePopoverUI({
-  content: 'max-h-(--reka-popover-content-available-height) w-60 overflow-y-auto p-2'
+  content: 'max-h-(--reka-popover-content-available-height) w-[264px] overflow-y-auto p-3'
 })
 const { panels } = useI18n()
 
@@ -81,9 +81,8 @@ function keepOpenOnFocus(event: FocusOutsideEvent) {
     event.preventDefault()
 }
 
-function cancelFromEscape(event: KeyboardEvent) {
+function stopEscapePropagation(event: KeyboardEvent) {
   event.stopPropagation()
-  emit('cancel')
 }
 </script>
 
@@ -112,7 +111,7 @@ function cancelFromEscape(event: KeyboardEvent) {
           :side-offset="4"
           side="left"
           data-picker-content
-          @escape-key-down="cancelFromEscape"
+          @escape-key-down="stopEscapePropagation"
           @pointer-down-outside="keepOpenOnPress"
           @focus-outside="keepOpenOnFocus"
         >

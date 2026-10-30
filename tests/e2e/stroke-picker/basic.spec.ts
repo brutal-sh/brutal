@@ -140,7 +140,7 @@ test('stroke picker hsb saturation and brightness sliders update stroke color on
   ).toBe(true)
 })
 
-test('bound stroke picker is non-destructive, rolls back Escape, and detaches in one undo step', async ({
+test('bound stroke picker is non-destructive, retains Escape edits, and detaches in one undo step', async ({
   page
 }) => {
   const canvas = new CanvasHelper(page)
@@ -189,7 +189,11 @@ test('bound stroke picker is non-destructive, rolls back Escape, and detaches in
     const node = id ? store.getNode(id) : null
     return { color: node?.strokes[0]?.color, binding: node?.boundVariables['strokes/0/color'] }
   })
-  expect(afterEscape).toEqual(before)
+  expect(afterEscape.color).not.toEqual(before.color)
+  expect(afterEscape.binding).toBeUndefined()
+  await canvas.undo()
+  await canvas.waitForRender()
+  expect((await getSelectedStroke(page))?.color).toEqual(before.color)
 
   await openStrokePicker(page)
   await dragSlider(page, canvas, 'color-slider-hue', 0.75)

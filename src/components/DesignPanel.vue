@@ -283,7 +283,7 @@ const { panels } = useI18n()
           <EffectsSection />
         </template>
       </template>
-      <SelectionColorsSection />
+      <SelectionColorsSection v-if="advanced" />
       <LayoutGridSection v-if="advanced && supportsLayoutGuides" />
 
       <CodeExportSection :node-id="node.id" />

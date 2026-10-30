@@ -465,8 +465,11 @@
           "feature": "Gradients",
           "behavior": "Linear, radial, angular and mesh editing.",
           "acceptance": "Move stops/handles/mesh points, change grid/colors and compare render after reopen.",
-          "status": "open",
-          "evidence": []
+          "status": "partial",
+          "evidence": [
+            "../PAINT-PARITY.md"
+          ],
+          "evidence_limit": "Nested stop edit/dismissal and one-stop rendered output checked; Mesh and complete menu/layout parity remain open."
         },
         {
           "id": "DRAW-10",

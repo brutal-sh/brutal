@@ -11,7 +11,7 @@ import {
 } from '@open-pencil/vue/primitives/GradientEditor'
 import { inputValue } from '@open-pencil/vue/shared/dom-events'
 
-import ColorPickerPanel from '@/components/color-picker-panel/ColorPickerPanel.vue'
+import ColorPicker from '@/components/ColorPicker/ColorPicker.vue'
 import NumberField from '@/components/inputs/NumberField.vue'
 import PaintField from '@/components/inputs/PaintField.vue'
 import IconButton from '@/components/ui/button/IconButton.vue'
@@ -41,7 +41,7 @@ function listStopClass(active: boolean) {
     v-slot="root"
   >
     <div>
-      <div class="mb-2 w-28">
+      <div class="mb-2">
         <AppSelect
           :model-value="root.subtype"
           :options="root.subtypes"
@@ -66,7 +66,7 @@ function listStopClass(active: boolean) {
           :index="idx"
           :active="idx === bar.activeStopIndex"
           :dragging="idx === bar.draggingIndex"
-          :removable="bar.stops.length > 2"
+          :removable="bar.stops.length > 1"
           :class="barStopClass(idx === bar.activeStopIndex, idx === bar.draggingIndex)"
           :style="{ left: `${stop.position * 100}%`, background: colorToCSS(stop.color) }"
           @select="root.actions.selectStop"
@@ -93,7 +93,7 @@ function listStopClass(active: boolean) {
           :stop="stop"
           :index="idx"
           :active="idx === root.activeStopIndex"
-          :removable="root.stops.length > 2"
+          :removable="root.stops.length > 1"
           :interactive="false"
           :class="listStopClass(idx === root.activeStopIndex)"
           @select="root.actions.selectStop"
@@ -120,11 +120,25 @@ function listStopClass(active: boolean) {
             @click.stop
           >
             <template #preview>
-              <button
-                class="size-4 shrink-0 cursor-pointer rounded border border-border p-0"
-                :style="{ background: s.css }"
-                @click.stop="s.actions.select"
-              />
+              <ColorPicker
+                :color="stop.color"
+                @update="
+                  (color) => {
+                    root.actions.selectStop(idx)
+                    root.actions.updateActiveColor(color)
+                  }
+                "
+              >
+                <template #trigger="{ style }">
+                  <button
+                    type="button"
+                    :aria-label="panels.editColor"
+                    class="size-4 shrink-0 cursor-pointer rounded border border-border p-0"
+                    :style="style"
+                    @click.stop="s.actions.select"
+                  />
+                </template>
+              </ColorPicker>
             </template>
             <template #value>
               <input
@@ -137,7 +151,7 @@ function listStopClass(active: boolean) {
             </template>
           </PaintField>
           <IconButton
-            v-if="root.stops.length > 2"
+            v-if="root.stops.length > 1"
             :label="editor.removeGradientStop"
             @click.stop="s.actions.remove"
           >
@@ -145,8 +159,6 @@ function listStopClass(active: boolean) {
           </IconButton>
         </GradientEditorStop>
       </div>
-
-      <ColorPickerPanel :color="root.activeColor" @update="root.actions.updateActiveColor" />
     </div>
   </GradientEditorRoot>
 </template>
