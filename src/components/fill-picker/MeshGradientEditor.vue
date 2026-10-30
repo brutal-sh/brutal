@@ -12,6 +12,7 @@ import { randomIndex } from '@open-pencil/scene-graph/random'
 import { useI18n } from '@open-pencil/vue/i18n'
 
 import ColorPicker from '@/components/ColorPicker/ColorPicker.vue'
+import { MeshIndependentIcon, MeshMirroredIcon } from '@/components/icons/paint'
 import AppButton from '@/components/ui/button/AppButton.vue'
 import { usePopoverUI } from '@/components/ui/overlay/popover'
 import SegmentedControl from '@/components/ui/select/SegmentedControl.vue'
@@ -170,13 +171,13 @@ function selectPoint(index: number, event: MouseEvent) {
             { value: 'mirrored', label: panels.meshMirroredHandles },
             { value: 'independent', label: panels.meshIndependentHandles }
           ]"
-          :ui="{ root: 'w-full', item: 'min-w-0' }"
+          :ui="{ root: 'w-full', item: 'min-w-0 font-normal' }"
           @update:model-value="mirrored = $event === 'mirrored'"
         >
           <template #option="{ option }"
-            ><icon-lucide-spline
+            ><MeshMirroredIcon
               v-if="option.value === 'mirrored'"
-              class="size-4" /><icon-lucide-git-branch v-else class="size-4"
+              class="size-4" /><MeshIndependentIcon v-else class="size-4"
           /></template>
         </SegmentedControl>
         <span :class="cls.label()" class="mt-3">{{ panels.meshOutline }}</span>
@@ -187,7 +188,7 @@ function selectPoint(index: number, event: MouseEvent) {
             { value: 'off', label: panels.propertyOff },
             { value: 'on', label: panels.propertyOn }
           ]"
-          :ui="{ root: 'w-full' }"
+          :ui="{ root: 'w-full', item: 'font-normal' }"
           @update:model-value="outline = $event === 'on'"
         />
       </div>
@@ -231,7 +232,9 @@ function selectPoint(index: number, event: MouseEvent) {
         <span>{{ panels.paintColor }}</span>
         <ColorPicker :color="mixedColor ? BLACK : selectedColor" compact @update="setColor">
           <template #trigger="{ style }"
-            ><AppButton :class="cls.action({ class: 'flex-1' })" :aria-label="panels.editColor"
+            ><AppButton
+              :class="cls.action({ class: 'justify-start' })"
+              :aria-label="panels.editColor"
               ><span
                 :class="cls.selectedSwatch()"
                 :data-mixed="mixedColor || undefined"

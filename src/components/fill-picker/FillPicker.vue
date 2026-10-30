@@ -16,6 +16,7 @@ import ColorPickerPanel from '@/components/color-picker-panel/ColorPickerPanel.v
 import GradientEditor from '@/components/fill-picker/GradientEditor.vue'
 import ImageFillPicker from '@/components/fill-picker/ImageFillPicker.vue'
 import ShaderFillPicker from '@/components/fill-picker/shader/ShaderFillPicker.vue'
+import { PaintColorIcon, PaintGradientIcon, PaintShaderIcon } from '@/components/icons/paint'
 import { useBlendModeGroups } from '@/components/inputs/blend-mode'
 import IconButton from '@/components/ui/button/IconButton.vue'
 import { usePopoverUI } from '@/components/ui/overlay/popover'
@@ -146,7 +147,8 @@ function stopEscapePropagation(event: KeyboardEvent) {
                   data-test-id="fill-picker-tab-solid"
                   @click="root.actions.toSolid"
                 >
-                  <icon-lucide-square class="size-3.5" />
+                  <PaintColorIcon v-if="compact" class="size-3.5" />
+                  <icon-lucide-square v-else class="size-3.5" />
                 </button>
               </Tip>
               <Tip :label="gradientLabel">
@@ -158,7 +160,8 @@ function stopEscapePropagation(event: KeyboardEvent) {
                   data-test-id="fill-picker-tab-gradient"
                   @click="root.actions.toGradient"
                 >
-                  <icon-lucide-blend class="size-3.5" />
+                  <PaintGradientIcon v-if="compact" class="size-3.5" />
+                  <icon-lucide-blend v-else class="size-3.5" />
                 </button>
               </Tip>
               <Tip :label="panels.image">
@@ -182,7 +185,8 @@ function stopEscapePropagation(event: KeyboardEvent) {
                   data-test-id="fill-picker-tab-shader"
                   @click="shader || emit('updateShader', DEFAULT_SHADER_PRESET)"
                 >
-                  <icon-lucide-sparkles class="size-3.5" />
+                  <PaintShaderIcon v-if="compact" class="size-3.5" />
+                  <icon-lucide-sparkles v-else class="size-3.5" />
                 </button>
               </Tip>
             </div>

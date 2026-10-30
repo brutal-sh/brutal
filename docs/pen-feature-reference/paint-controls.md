@@ -21,3 +21,7 @@ The Shader category starts with a path-or-URL field, a file action, six suggesti
 Shader Gallery opens Goodies with Featured, Styles, Design Systems, Scripts and Shaders tabs. The inspected Shaders tab contains75 named groups and375 examples, five per group. Each example exposes Use Shader Example, Add Shader Fill, Apply Shader Effect and Copy Fill. Its main action can apply to a selection or insert an editable example, according to the exposed help. That help is a reference claim; insertion, clipboard and shader-effect results were not executed in this pass. Gallery membership is version-specific. Independent equivalents, source loading, editable uniforms, animation, failures, export and save/reopen remain open.
 
 Private evidence: pen-shader-gallery-ax.txt and pen-shader-gallery-reference.png. The reference's temporary Mesh/Shader category changes were undone; the fill was confirmed restored to #CC9933/Linear Dodge without saving those experiments.
+
+## Mesh export menu
+
+Native inspection offers PNG, JPEG, WEBP and PDF. PDF disables the scale control and describes one layer per page, in selection order. Exporting the independent 256×256 Mesh through this native path produced a one-page256×256pt PDF containing a512×512 image. SVG is absent from this menu; Open Pen’s extra SVG Mesh refusal remains an extension limit. Private proof: pen-mesh-export-formats.jpg and pen-mesh-native-export.pdf. Multi-selection page ordering and the remaining Mesh export formats have not been executed here.

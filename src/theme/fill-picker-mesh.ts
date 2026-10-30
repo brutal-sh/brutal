@@ -15,11 +15,10 @@ export default {
     color:
       'size-6 cursor-pointer rounded-md border border-border outline-none data-[active]:ring-2 data-[active]:ring-panel-focus focus-visible:ring-2 focus-visible:ring-panel-focus',
     selected: 'space-y-2 pt-1',
-    selectedRow:
-      'flex h-6 items-center justify-between gap-2 rounded-md bg-input pl-2 text-xs text-muted',
-    selectedColor: 'flex items-center justify-between gap-2 text-xs text-muted',
+    selectedRow: 'grid h-6 grid-cols-[52px_1fr] items-center gap-2 text-xs text-muted',
+    selectedColor: 'grid grid-cols-[52px_1fr] items-center gap-2 text-xs text-muted',
     selectedSwatch:
       'size-4 rounded-sm border border-border data-[mixed]:bg-[conic-gradient(from_180deg,#ef4444,#eab308,#22c55e,#06b6d4,#3b82f6,#a855f7,#ef4444)]',
-    action: 'h-6 bg-input text-surface'
+    action: 'h-6 bg-input font-normal text-surface'
   }
 }

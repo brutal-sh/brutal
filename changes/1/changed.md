@@ -7,3 +7,5 @@
 - Generates a distinct violet pen-nib desktop icon from the tracked Open Pen artwork master.
 - Replaces the storage sidebar on Home with a centered creation composer, import actions, document tabs and larger preview cards; keeps search and storage in compact controls, exposes recovery drafts and component libraries, and sends Home prompts and images through the new document’s Agent.
 - Removes a document’s recovery snapshot when Undo returns it to a clean state, while preserving unrelated drafts and edits arriving during cleanup.
+
+- Use compact paint category and Mesh tangent glyphs with separate point labels and regular-weight actions.
