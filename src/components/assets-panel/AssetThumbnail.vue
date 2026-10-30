@@ -6,10 +6,17 @@ import { useEditorStore } from '@/app/editor/active-store'
 import { findAssetPage } from '@/components/assets-panel/page'
 import { ASSET_GRID_THUMBNAIL_SIZE, ASSET_THUMBNAIL_RENDER_SCALE } from '@/constants'
 
-const { nodeId, alt, size } = defineProps<{
+const {
+  nodeId,
+  alt,
+  size,
+  fill = false
+} = defineProps<{
   nodeId: string
   alt: string
   size: number
+  aspectRatio?: number
+  fill?: boolean
 }>()
 
 const editor = useEditorStore()
@@ -57,9 +64,10 @@ watch(
   <div
     ref="thumbnail"
     data-slot="asset-thumbnail"
+    :style="fill ? { aspectRatio } : undefined"
     :class="[
       'flex shrink-0 items-center justify-center overflow-hidden rounded bg-canvas/60',
-      isGridThumbnail ? 'size-24' : 'size-10'
+      fill ? 'w-full' : isGridThumbnail ? 'size-24' : 'size-10'
     ]"
   >
     <img

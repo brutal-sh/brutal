@@ -11,7 +11,11 @@ import type { ToolbarUI } from '@/components/toolbar/types'
 import IconPicker from './IconPicker.vue'
 
 /** The toolbar's icon picker, also opened by the Insert Icon command. */
-const { ui, mobile = false } = defineProps<{ ui?: ToolbarUI; mobile?: boolean }>()
+const {
+  ui,
+  mobile = false,
+  showTrigger = true
+} = defineProps<{ ui?: ToolbarUI; mobile?: boolean; showTrigger?: boolean }>()
 const store = useEditorStore()
 const panels = usePanelMessages()
 
@@ -29,7 +33,7 @@ function insert(name: string) {
     align="center"
     @select="insert"
   >
-    <template #trigger>
+    <template v-if="showTrigger" #trigger>
       <ToolButton
         :icon="IconSmilePlus"
         :label="panels.insertIcon"
@@ -38,5 +42,8 @@ function insert(name: string) {
         :ui="ui"
       />
     </template>
+    <template v-else #anchor
+      ><span aria-hidden="true" class="pointer-events-none absolute top-24 left-12 size-px"
+    /></template>
   </IconPicker>
 </template>

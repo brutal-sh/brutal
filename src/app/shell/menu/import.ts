@@ -7,7 +7,7 @@ import { toast } from '@/app/shell/ui'
 import { importCanvasFile } from './actions/import'
 
 /** A fresh picker captures its destination, so switching tabs cannot import into another design. */
-export function importCanvasFileDialog(): void {
+export function importCanvasFileDialog(kind: 'all' | 'image' | 'figma' = 'all'): void {
   const store = getActiveEditorStoreOrNull()
   if (!store || store.state.readOnly) {
     toast.error('Choose an editable design before importing.')
@@ -17,7 +17,10 @@ export function importCanvasFileDialog(): void {
   const page = store.state.currentPageId
   const point = pastePoint(store)
   const dialog = useFileDialog({
-    accept: 'image/png,image/jpeg,image/webp,image/gif,image/svg+xml,.fig',
+    accept:
+      kind === 'figma'
+        ? '.fig'
+        : `image/png,image/jpeg,image/webp,image/gif,image/svg+xml${kind === 'all' ? ',.fig' : ''}`,
     multiple: false,
     reset: true
   })

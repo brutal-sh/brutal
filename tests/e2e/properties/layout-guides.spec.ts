@@ -1,6 +1,7 @@
 import { expect, test, type Page } from '@playwright/test'
 
 import { CanvasHelper } from '#tests/helpers/canvas'
+import { openAdvancedProperties } from '#tests/helpers/properties'
 import { layoutGuidesDriver } from '#tests/helpers/properties/layout-guides-driver'
 
 // Each case repeats a selection made in Figma desktop 126.
@@ -17,6 +18,7 @@ const COLUMNS = {
 async function setup(page: Page, guides: (typeof COLUMNS)[][]) {
   await page.goto('/?test')
   await new CanvasHelper(page).waitForInit()
+  await openAdvancedProperties(page)
   const scene = layoutGuidesDriver(() => page)
   return { scene, ...(await scene.build(guides)) }
 }

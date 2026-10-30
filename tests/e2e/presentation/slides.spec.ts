@@ -72,3 +72,102 @@ test('an empty page explains how to add slides and exits by its close button', a
   await expect(dialog).toBeHidden()
   await expect(trigger).toBeFocused()
 })
+
+test('Slides previews select frames and export all or selected slides as PDF pages', async ({
+  page
+}, testInfo) => {
+  await page.addInitScript(() => {
+    window.showSaveFilePicker = undefined
+  })
+  await page.goto('/')
+  await new CanvasHelper(page).waitForInit()
+  await seedPresentation(page)
+  await page.getByRole('tab', { name: 'Slides', exact: true }).click()
+  const panel = page.getByRole('region', { name: 'Slides', exact: true })
+  await expect(panel.getByRole('img', { name: 'Opening', exact: true })).toBeVisible()
+  await expect(panel.getByRole('img', { name: 'Closing', exact: true })).toBeVisible()
+  await expect(panel.getByRole('button', { name: 'Hidden frame', exact: true })).toHaveCount(0)
+  await panel.getByRole('button', { name: 'Opening', exact: true }).click()
+  await expect(panel.getByRole('button', { name: 'Opening', exact: true })).toHaveAttribute(
+    'aria-pressed',
+    'true'
+  )
+  const before = await editorSnapshot(page)
+  for (const [action, count] of [
+    ['Export all slides', 2],
+    ['Export selected slides (1)', 1]
+  ] as const) {
+    await panel.getByRole('button', { name: 'Export PDF', exact: true }).click()
+    const download = page.waitForEvent('download')
+    await page.getByRole('menuitem', { name: action, exact: true }).click()
+    const file = await download
+    const path = testInfo.outputPath(`slides-${count}.pdf`)
+    await file.saveAs(path)
+    const { readFile } = await import('node:fs/promises')
+    const pdf = (await readFile(path)).toString('latin1')
+    expect(pdf.startsWith('%PDF-')).toBe(true)
+    expect(pdf.match(/\/Type \/Page\b/g)).toHaveLength(count)
+    expect(await editorSnapshot(page)).toEqual(before)
+  }
+  await panel.getByRole('button', { name: 'Present', exact: true }).click()
+  await expect(page.getByRole('dialog', { name: 'Presentation', exact: true })).toBeVisible()
+  await page.keyboard.press('Escape')
+  await expect(panel.getByRole('button', { name: 'Present', exact: true })).toBeFocused()
+  await page.screenshot({ path: testInfo.outputPath('slides-panel.png') })
+})
+
+test('Components creates a component from the selection and Undo restores the frame', async ({
+  page
+}) => {
+  await page.goto('/')
+  await new CanvasHelper(page).waitForInit()
+  await page.getByRole('tab', { name: 'Components', exact: true }).click()
+  const panel = page.getByTestId('assets-panel')
+  const create = panel.getByRole('button', { name: 'Create component', exact: true })
+  await expect(create).toBeDisabled()
+  await seedPresentation(page)
+  await expect(create).toBeEnabled()
+  await create.click()
+  await expect(panel.getByTestId('asset-item')).toHaveCount(1)
+  await expect(create).toBeDisabled()
+  await expect(panel.getByRole('img', { name: 'Closing preview', exact: true })).toBeVisible()
+  await page.getByRole('tab', { name: 'Layers', exact: true }).click()
+  await page.keyboard.press('ControlOrMeta+z')
+  await page.getByRole('tab', { name: 'Components', exact: true }).click()
+  await expect(panel.getByTestId('asset-item')).toHaveCount(0)
+  await expect(create).toBeEnabled()
+})
+
+test('Libraries stays inline and opens the local publication and manager flows', async ({
+  page
+}) => {
+  await page.goto('/')
+  await new CanvasHelper(page).waitForInit()
+  await seedPresentation(page)
+  await page.getByRole('tab', { name: 'Components', exact: true }).click()
+  await page
+    .getByTestId('assets-panel')
+    .getByRole('button', { name: 'Create component', exact: true })
+    .click()
+  await page.getByRole('tab', { name: 'Libraries', exact: true }).click()
+  const panel = page.getByRole('region', { name: 'Libraries', exact: true })
+  await expect(panel).toBeVisible()
+  await expect(page.getByRole('dialog')).toHaveCount(0)
+  await panel.getByRole('button', { name: 'Turn this file into a library', exact: true }).click()
+  const publish = page.getByRole('dialog').filter({ hasText: 'Publish library' })
+  await publish.getByLabel('Library ID').fill('inline-library')
+  await publish.getByLabel('Library name').fill('Inline library')
+  await publish.getByRole('button', { name: 'Publish library', exact: true }).click()
+  await expect(publish).toBeHidden()
+  await page.getByRole('tab', { name: 'Agent', exact: true }).click()
+  await page.getByRole('tab', { name: 'Libraries', exact: true }).click()
+  await expect(panel.getByRole('heading', { name: 'Inline library', exact: true })).toBeVisible()
+  await panel.getByRole('button', { name: 'Add library', exact: true }).click()
+  await expect(panel.getByRole('button', { name: 'Remove library', exact: true })).toBeVisible()
+  await panel.getByRole('button', { name: 'Remove library', exact: true }).click()
+  await expect(panel.getByRole('button', { name: 'Add library', exact: true })).toBeVisible()
+  await panel.getByRole('button', { name: 'Manage libraries', exact: true }).click()
+  await expect(page.getByTestId('asset-libraries-dialog')).toBeVisible()
+  await page.keyboard.press('Escape')
+  await expect(panel).toBeVisible()
+})

@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test'
 
 import { expect, test, useEditorSetup } from '#tests/e2e/fixtures'
+import { openAppMenu } from '#tests/helpers/menu'
 
 const editor = useEditorSetup('/?test&no-rulers')
 
@@ -67,7 +68,11 @@ test.beforeEach(async () => {
 })
 
 async function openCode(page: Page) {
-  await page.getByTestId('properties-tab-code').click()
+  await (
+    await openAppMenu(page, 'View')
+  )
+    .getByRole('menuitem', { name: 'Code editor', exact: true })
+    .click()
   await expect(codeLine(page, 'name="Swatch"')).toBeVisible()
 }
 

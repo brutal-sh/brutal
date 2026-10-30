@@ -18,6 +18,7 @@ import { recoveryEnabled } from '@/app/document/recovery/preferences'
 import { notificationMessages } from '@/app/i18n/notifications'
 import { storageLocationOf } from '@/app/integrations/storage/location'
 import type { StorageDocumentBinding, StorageLocation } from '@/app/integrations/storage/types'
+import { rememberRecentFile } from '@/app/recent-files'
 import { toast } from '@/app/shell/ui'
 import { createCanvasId } from '@/app/storage/id'
 import { isTauri } from '@/app/tauri/env'
@@ -148,7 +149,11 @@ export function createDocumentSourceActions({
     startWatchingFile: () => {
       void startWatchingFile()
     },
-    onWriteSuccess: (version) => recovery.markProtectedVersion(version),
+    onWriteSuccess: async (version) => {
+      await recovery.markProtectedVersion(version)
+      const path = getFilePath()
+      if (path && isTauri()) rememberRecentFile(path)
+    },
     onDownloadSuccess: (version) => recovery.markProtectedVersion(version)
   })
 

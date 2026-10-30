@@ -15,7 +15,7 @@ import { requestRenameSelection } from '@/app/editor/selection/rename-dialog'
 import { TOOL_SHORTCUTS } from '@/app/editor/session'
 import { openSettingsDialog } from '@/app/settings/dialog'
 import { setSnappingPreference } from '@/app/settings/preferences/apply'
-import { isButtonActivation, isEditing } from '@/app/shell/keyboard/focus'
+import { isButtonActivation, isEditing, isToggleInput } from '@/app/shell/keyboard/focus'
 import { shortcutEvent } from '@/app/shell/keyboard/layout'
 import { bindSpaceHandTool } from '@/app/shell/keyboard/space-tool'
 import type {
@@ -133,12 +133,12 @@ function shouldIgnoreShortcut(
   options: KeyboardShortcutOptions,
   history = false
 ) {
+  const toggleHistory = history && isToggleInput(event.target)
   return (
     isButtonActivation(event) ||
     hasOpenDismissableLayer(history) ||
     originatedInOverlay(event, history) ||
-    isEditing(event) ||
-    options.inputFocused.value ||
+    (!toggleHistory && (isEditing(event) || options.inputFocused.value)) ||
     editingTextHandles(options, history) ||
     !!options.store.state.numberFieldFocused
   )

@@ -11,6 +11,8 @@ import AppAlert from '@/components/ui/feedback/AppAlert.vue'
 import AppPlaceholder from '@/components/ui/feedback/AppPlaceholder.vue'
 import AppSkeleton from '@/components/ui/feedback/AppSkeleton.vue'
 
+defineProps<{ label?: boolean }>()
+
 const store = useEditorStore()
 const presentation = createPresentationSession({
   collectSlides: () => collectPresentationSlides(store.graph, store.state.currentPageId),
@@ -52,7 +54,8 @@ onScopeDispose(presentation.dispose)
 </script>
 
 <template>
-  <IconButton label="Present" size="sm" @click="start"
+  <AppButton v-if="label" @click="start"><icon-lucide-play class="size-4" />Present</AppButton>
+  <IconButton v-else label="Present" size="sm" @click="start"
     ><icon-lucide-play class="size-4"
   /></IconButton>
   <AppDialog

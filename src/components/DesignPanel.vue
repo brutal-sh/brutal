@@ -5,6 +5,7 @@ import { getNodeEditCapability } from '@open-pencil/core'
 import { layerResizes, layerStrokesAndEffects } from '@open-pencil/scene-graph/generated'
 import { readIcon } from '@open-pencil/scene-graph/icons'
 import { useEditorCommands } from '@open-pencil/vue/editor/commands'
+import { useInlineRename } from '@open-pencil/vue/editor/inline-rename'
 import { useSelectionState } from '@open-pencil/vue/editor/selection-state'
 import { useI18n } from '@open-pencil/vue/i18n'
 import { useSceneComputed } from '@open-pencil/vue/internal/scene-computed'
@@ -13,11 +14,14 @@ import { useEditorStore } from '@/app/editor/active-store'
 import { openVariablesDialog } from '@/app/editor/tokens/dialog'
 import { openLibraryReview, useLibraryService } from '@/app/libraries'
 import { COMPONENT_TYPES, sceneNodeIcon } from '@/components/icons'
+import AppButton from '@/components/ui/button/AppButton.vue'
 import IconButton from '@/components/ui/button/IconButton.vue'
+import AppInput from '@/components/ui/input/AppInput.vue'
 import Tip from '@/components/ui/overlay/Tip.vue'
 import PanelHeader from '@/components/ui/panel/PanelHeader.vue'
 
 import AppearanceSection from './properties/AppearanceSection.vue'
+import CodeExportSection from './properties/CodeExportSection.vue'
 import BehaviourPanel from './properties/component-properties/behaviour/BehaviourPanel.vue'
 import ComponentPropertiesSection from './properties/component-properties/ComponentPropertiesSection.vue'
 import ComponentPropertyListSection from './properties/component-properties/ComponentPropertyListSection.vue'
@@ -29,6 +33,7 @@ import { usePropertyBinding } from './properties/component-properties/usePropert
 import VariantAuthoringSection from './properties/component-properties/variant/VariantAuthoringSection.vue'
 import ConnectorSection from './properties/connector/ConnectorSection.vue'
 import ConstraintsSection from './properties/constraints/ConstraintsSection.vue'
+import ContextSection from './properties/ContextSection.vue'
 import DocumentSection from './properties/DocumentSection.vue'
 import EffectsSection from './properties/EffectsSection.vue'
 import ExportSection from './properties/ExportSection.vue'
@@ -57,6 +62,7 @@ import TypographySection from './properties/TypographySection.vue'
 import VariablesSection from './properties/VariablesSection.vue'
 
 const store = useEditorStore()
+const { advanced = true } = defineProps<{ advanced?: boolean }>()
 const libraryService = useLibraryService()
 const activeTool = computed(() => store.state.activeTool)
 const { selectedNode: node, selectedCount: multiCount } = useSelectionState()
@@ -64,6 +70,8 @@ const swapBinding = usePropertyBinding('INSTANCE_SWAP')
 const swapLinked = computed(() => !!swapBinding.definition.value)
 const showBooleanOperations = computed(() => multiCount.value >= 2)
 const { getCommand } = useEditorCommands()
+const createComponent = getCommand('selection.createComponent')
+const rename = useInlineRename((id, name) => store.renameNode(id, name))
 const goToMainComponent = getCommand('selection.goToMainComponent')
 const detachInstance = getCommand('selection.detachInstance')
 const isComponentType = computed(() => {
@@ -127,20 +135,20 @@ const { panels } = useI18n()
         <SelectionActionsControl :show-boolean-operations="showBooleanOperations" />
       </template>
     </PanelHeader>
-    <StatusSection />
+    <StatusSection v-if="advanced" />
     <ComponentPropertiesSection />
     <PositionSection />
-    <ConstraintsSection />
+    <ConstraintsSection v-if="advanced" />
     <SelectionLayoutSection />
-    <AppearanceSection />
+    <AppearanceSection :compact="!advanced" />
     <TypographySection />
-    <FillSection />
+    <FillSection :compact="!advanced" />
     <template v-if="strokesAndEffects">
       <StrokeSection />
       <EffectsSection />
     </template>
     <SelectionColorsSection />
-    <LayoutGridSection v-if="supportsLayoutGuides" />
+    <LayoutGridSection v-if="advanced && supportsLayoutGuides" />
     <ExportSection />
   </div>
 
@@ -154,7 +162,10 @@ const { panels } = useI18n()
       <PanelHeader :component="isComponentType">
         <template #icon>
           <LayerTypeMenu
-            v-if="node.type === 'FRAME' || node.type === 'GROUP' || node.type === 'SECTION'"
+            v-if="
+              advanced &&
+              (node.type === 'FRAME' || node.type === 'GROUP' || node.type === 'SECTION')
+            "
             :node="node"
             :icon="selectedIcon"
           />
@@ -164,10 +175,21 @@ const { panels } = useI18n()
             </span>
           </Tip>
         </template>
-        <span role="heading" aria-level="2" class="min-w-0">
+        <span role="heading" aria-level="2" :aria-label="node.name" class="min-w-0">
           <!-- A swap linked to a property shows the property in place of the layer, as Figma does. -->
           <PropertyBoundField v-if="swapLinked" field="INSTANCE_SWAP" compact />
-          <template v-else>{{ node.name }}</template>
+          <AppInput
+            v-else
+            :key="node.id"
+            :model-value="node.name"
+            aria-label="Layer name"
+            class="border-transparent bg-transparent font-normal shadow-none"
+            :disabled="!getNodeEditCapability(store.graph, node.id).editable"
+            @focus="rename.start(node.id, node.name)"
+            @blur="rename.commit(node.id, $event)"
+            @keydown="rename.onKeydown"
+            @keydown.esc="($event.target as HTMLInputElement).value = node.name"
+          />
         </span>
         <template #actions>
           <IconButton
@@ -188,7 +210,7 @@ const { panels } = useI18n()
             :service="libraryService"
             @review="openSelectedInstanceReview"
           />
-          <SelectionActionsControl />
+          <SelectionActionsControl v-if="advanced" />
           <template v-if="node.type === 'INSTANCE'">
             <IconButton
               :label="goToMainComponent.label"
@@ -208,8 +230,19 @@ const { panels } = useI18n()
         </template>
       </PanelHeader>
 
+      <div v-if="!isComponentType" class="border-b border-border px-3 pb-2">
+        <AppButton
+          variant="soft"
+          size="xs"
+          class="w-full justify-center font-normal"
+          :disabled="!createComponent.enabled.value"
+          @click="createComponent.run()"
+          ><icon-lucide-diamond-plus class="size-3.5" />Create Component</AppButton
+        >
+      </div>
+
       <TextContentSection v-if="node.type === 'TEXT'" :node-id="node.id" />
-      <StatusSection />
+      <StatusSection v-if="advanced" />
       <ComponentPropertiesSection v-if="node.type === 'INSTANCE'" />
       <VariantAuthoringSection
         v-if="
@@ -222,10 +255,11 @@ const { panels } = useI18n()
 
       <ComponentPropertyListSection />
       <SlotAuthoringSection />
+      <ContextSection :key="node.id" :node-id="node.id" />
       <BehaviourPanel v-if="node.type === 'COMPONENT' || node.type === 'COMPONENT_SET'" />
 
       <!-- Presets size artboards; an icon is a glyph. -->
-      <FramePresetSelect v-if="node.type === 'FRAME' && !readIcon(node)" />
+      <FramePresetSelect v-if="advanced && node.type === 'FRAME' && !readIcon(node)" />
 
       <IconSection />
       <StickySection />
@@ -234,24 +268,25 @@ const { panels } = useI18n()
       <!-- A connector is placed and shaped by its ends, and styled by its line. -->
       <template v-if="node.type !== 'CONNECTOR'">
         <PositionSection />
-        <ConstraintsSection />
+        <ConstraintsSection v-if="advanced" />
         <!-- A sticky note's size follows its text and its scale; Figma leaves W and H read-only. -->
-        <LayoutSection v-if="layerResizes(node)" />
+        <LayoutSection v-if="layerResizes(node)" :compact="!advanced" />
       </template>
-      <AppearanceSection />
+      <AppearanceSection :compact="!advanced" />
       <template v-if="node.type !== 'CONNECTOR'">
         <MaskSection />
         <!-- A shape with text's typography is its label's, as in Figma. -->
         <TypographySection v-if="node.type === 'TEXT' || node.type === 'SHAPE_WITH_TEXT'" />
-        <FillSection />
+        <FillSection :compact="!advanced" />
         <template v-if="strokesAndEffects">
           <StrokeSection />
           <EffectsSection />
         </template>
       </template>
       <SelectionColorsSection />
-      <LayoutGridSection v-if="supportsLayoutGuides" />
+      <LayoutGridSection v-if="advanced && supportsLayoutGuides" />
 
+      <CodeExportSection :node-id="node.id" />
       <ExportSection />
     </div>
   </RetainedPanel>

@@ -52,3 +52,17 @@ Current Open Pen menus are not accepted as1:1. Native menu order/labels/actions,
 ## User close-ups, 2026-10-30
 
 The supplied toolbar and Move menu close-ups are retained privately in ignored `local-evidence/pen-toolbar-reference.png` and `local-evidence/pen-move-menu-reference.png`. They supersede approximate toolbar styling:36 CSS-pixel capsule rail, circular selected Move control with a subtle outline, circular sidebar and ellipsis controls, compact caret beneath Move and Rectangle only, and a right-opening Move/Scale flyout. The flyout shows Move (V), Scale (K), a selected check, icons, and approximately28-pixel rows/14-pixel text. Scale needs real content scaling; merely adding a menu item is insufficient.
+
+## Live panel audit, 2026-10-30
+
+Layers, Slides, Components and Libraries were opened in the installed Pen application. Private captures: `pen-layers-audit.png`, `pen-slides-audit.png`, `pen-components-audit.png` under ignored local-evidence. Slides shows numbered large previews with a Present footer and Export PDF menu: all slides / selected slides (disabled at zero). Components has search, full-width Create Component, selection hint and two-column previews. Libraries is an inline tab with imported libraries, bundled library cards and a footer to turn the current file into a library. Open Pen’s modal-only Libraries and existing Components layout remain mismatches. Slides implementation is under active correction; no full-parity claim.
+
+## Continued live inspection and implementation
+
+The current default inspector has no Design/Code/Lint tab row in Pen. Open Pen's code/check tools now use Commands and a return action; Status, presets, constraints and guides remain available through Advanced properties. Native Context/name Save→Recents→reopen was executed. Compact layout and native delivered state comparison remain open.
+
+The reference Script item selects a tool; creating it makes a default200×200 Script node, with Context/position/dimensions, script file path picker, Convert to layers, effects and exports. Script Gallery opens Goodies→Scripts, listing Candlestick, Chart, Circle Text, Circular Visualizer, Clock, Digital Spectrum, Digital Time, Flow Field, Gauge, Lines and Radar. These behaviors require an independent implementation; adding an inert Script entry does not satisfy them. Inspection used a separate audit document; original user designs were not edited.
+
+Primitives Icon and separate Image/SVG/Figma chooser entries now execute existing insertion pipelines in Open Pen; browser import and one-step Undo passed. Exact remaining order, extra tools and native delivery remain open. The reference File/Edit/View menu inventory was re-observed; missing Snapshot/guides/CLI and Agent Chat Text Size remain gaps.
+
+2026-10-30 installed continuation: compact inspector and Primitives Icon action are delivered in the normal debug app. Real Lucide search/insertion and Undo executed. Focused Clip checkbox supports both native Cmd+Z and native Edit→Undo. Native HTML settings output with names/IDs/centering was saved and inspected. Reference root Fill Width writes `fill_container(350)` while geometry stays350×225; Open Pen still disables this deferred intent and requires a persistence/layout correction. Reference Script, snapshot dependencies and native guides remain open; menu presence is not functional acceptance.

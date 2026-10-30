@@ -11,10 +11,6 @@ export class ChatHarness {
     return this.page.getByRole('tab', { name: 'Agent', exact: true })
   }
 
-  get designTab() {
-    return this.page.getByRole('tab', { name: 'Design' })
-  }
-
   get apiKeyInput() {
     return this.page.getByTestId('provider-settings-api-key')
   }
@@ -37,11 +33,11 @@ export class ChatHarness {
 
   async open(): Promise<void> {
     await this.page.goto('/')
-    await this.page.evaluate(async () => {
-      const themeModulePath = '/src/app/shell/theme.ts'
-      const themeModule = await import(themeModulePath)
-      themeModule.useAppTheme().setTheme('dark')
-    })
+    await this.page.locator('html[data-theme]').waitFor()
+    if ((await this.page.locator('html').getAttribute('data-theme')) === 'light') {
+      await this.page.getByRole('button', { name: 'Main menu', exact: true }).click()
+      await this.page.getByRole('menuitem', { name: 'Toggle Light/Dark mode', exact: true }).click()
+    }
     await this.page.waitForFunction(() => document.documentElement.dataset.theme === 'dark')
   }
 

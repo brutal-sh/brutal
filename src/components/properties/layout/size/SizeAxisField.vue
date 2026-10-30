@@ -16,7 +16,12 @@ import { useSelectUI } from '@/components/ui/select/select'
 
 type SizeSelectValue = LayoutSizing | `add-${SizeLimitProp}` | `remove-${SizeLimitProp}`
 
-const { axis, icon, label } = defineProps<SizeAxisFieldProps>()
+const {
+  axis,
+  icon,
+  label,
+  compact = false
+} = defineProps<SizeAxisFieldProps & { compact?: boolean }>()
 
 const ctx = useLayoutControlsContext()
 const { open: popupOpen, portalActive } = useRetainedPopup()
@@ -72,6 +77,7 @@ function handleSelect(value: SizeSelectValue) {
 <template>
   <Tip :label="label">
     <VariableNumberField
+      :compact="compact"
       :icon="icon"
       :aria-label="label"
       :model-value="Math.round(ctx.node[axis])"
@@ -82,7 +88,7 @@ function handleSelect(value: SizeSelectValue) {
       @commit="(value: number, previous: number) => ctx.commitAxisSize(axis, value, previous)"
       @cancel="ctx.cancelPreview"
     >
-      <template #after-variable>
+      <template v-if="!compact" #after-variable>
         <SelectRoot
           v-model:open="popupOpen"
           :model-value="sizing()"

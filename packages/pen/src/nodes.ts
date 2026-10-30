@@ -8,6 +8,7 @@ import type {
 } from '@open-pencil/scene-graph'
 import { CORNER_FIELDS } from '@open-pencil/scene-graph/fields'
 import { fillSizingFields } from '@open-pencil/scene-graph/layout'
+import { OPEN_PENCIL_PLUGIN_DATA, withPluginData } from '@open-pencil/scene-graph/plugin-data'
 import type { Color } from '@open-pencil/scene-graph/primitives'
 
 import { convertEffects } from './effects'
@@ -153,7 +154,7 @@ const STROKE_WRITES = [
  */
 const PROPERTY_FIELDS = {
   name: ['name'],
-  context: [],
+  context: ['pluginData'],
   x: PLACEMENT_FIELDS,
   y: PLACEMENT_FIELDS,
   width: ['width'],
@@ -273,6 +274,11 @@ export function applyPenProperties(node: SceneNode, pen: PenNode, build: Build):
     boundVariables: {},
     variableModes: pen.theme ? { [ctx.collectionId]: ctx.modeId() } : {}
   } satisfies Partial<SceneNode>)
+  node.pluginData = withPluginData(
+    node.pluginData,
+    OPEN_PENCIL_PLUGIN_DATA.nodeContext,
+    pen.context
+  )
   bindIfVar(node, 'visible', pen.enabled, ctx)
   bindIfVar(node, 'opacity', pen.opacity, ctx)
   bindIfVar(node, 'width', pen.width, ctx)

@@ -12,7 +12,7 @@ const { panels } = useI18n()
     <input
       type="checkbox"
       data-test-id="clip-content-checkbox"
-      class="accent-accent"
+      class="accent-surface"
       :checked="layout.clipsContent.value === true"
       :indeterminate="layout.clipsContent.value === MIXED"
       @change="layout.toggleClipsContent()"

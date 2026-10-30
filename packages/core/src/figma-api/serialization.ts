@@ -1,4 +1,5 @@
 import type { SceneGraph, SceneNode } from '@open-pencil/scene-graph'
+import { OPEN_PENCIL_PLUGIN_DATA, readPluginData } from '@open-pencil/scene-graph/plugin-data'
 
 import { pluginChildren } from './accessors/sticky'
 import { figmaFills, figmaStrokes } from './accessors/visual'
@@ -54,6 +55,8 @@ export function nodeProxyToJSON(
     width: n.width,
     height: n.height
   }
+  const context = readPluginData(n.pluginData, OPEN_PENCIL_PLUGIN_DATA.nodeContext)
+  if (context !== undefined) obj.context = context
   if (n.fills.length > 0) obj.fills = figmaFills(graph, n)
   if (n.strokes.length > 0) obj.strokes = figmaStrokes(graph, n)
   if (n.effects.length > 0) obj.effects = n.effects

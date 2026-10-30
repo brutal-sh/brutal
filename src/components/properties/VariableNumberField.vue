@@ -27,7 +27,8 @@ const {
   nodeIds,
   bindingPath,
   bindingPaths,
-  units
+  units,
+  compact = false
 } = defineProps<{
   modelValue: number | symbol
   min?: number
@@ -45,6 +46,7 @@ const {
   bindingPaths?: readonly NumberBindingPath[]
   /** Units a typed value may end with; the commit reports the one typed. */
   units?: readonly string[]
+  compact?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -120,7 +122,7 @@ defineOptions({ inheritAttrs: false })
           "
         />
       </template>
-      <template #suffix>
+      <template v-if="!compact" #suffix>
         <span :class="$slots['after-variable'] ? '' : 'pr-1'" class="flex items-center">
           <VariableBindingPicker
             :trigger-label="panels.applyVariable"

@@ -67,6 +67,7 @@ function onActionTap(item: ToolbarActionItem) {
 
 <template>
   <ToolbarRoot v-slot="{ activeTool, flyoutSelections, actions }" :tools="tools">
+    <InsertIconButton v-if="!actionItems.includes('insert-icon')" :show-trigger="false" />
     <ToolbarContextMenu>
       <DesktopToolbar
         v-if="!isMobile"

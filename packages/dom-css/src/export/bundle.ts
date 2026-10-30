@@ -8,6 +8,9 @@ import { tokenStylesheet, type TokenStylesheetFormat } from '../tokens/styleshee
 import type { DesignDocument, DesignElement, DesignNode, DesignStyleDeclaration } from '../types'
 import { mergeClassNames, serializeHTML, splitWhitespace } from './html'
 
+import themeCSS from 'tailwindcss/theme.css?raw'
+import utilitiesCSS from 'tailwindcss/utilities.css?raw'
+
 /** A font face the exported text uses. */
 export interface WebFontFaceRequest {
   family: string
@@ -35,6 +38,7 @@ export type WebFontFaceResolver = (
 ) => Promise<WebFontFaceAsset[]>
 
 export interface ExportHTMLBundleOptions {
+  center?: boolean
   html?: 'fragment' | 'standalone'
   style?: 'inline' | 'tailwind'
   assets?: 'inline' | 'external'
@@ -206,14 +210,7 @@ async function tokenCSS(document: DesignDocument, format: TokenStylesheetFormat)
 
 async function compileTailwindClasses(classNames: string[], tokens: string): Promise<string> {
   if (classNames.length === 0) return ''
-  const [{ compile }, { readFile }] = await Promise.all([
-    import('tailwindcss'),
-    import(/* @vite-ignore */ 'node:fs/promises')
-  ])
-  const [themeCSS, utilitiesCSS] = await Promise.all([
-    readFile(new URL(import.meta.resolve('tailwindcss/theme.css')), 'utf8'),
-    readFile(new URL(import.meta.resolve('tailwindcss/utilities.css')), 'utf8')
-  ])
+  const { compile } = await import('tailwindcss')
   const compiler = await compile(`${themeCSS}\n${tokens}\n${utilitiesCSS}`)
   return compiler.build(classNames)
 }
@@ -360,6 +357,7 @@ async function exportStandaloneHTML(
   const stageCSS = `.op-stage{position:relative;width:${size.width}px;height:${size.height}px;overflow:hidden;background:transparent}`
   let body: string
   let css = `${RESET_CSS}${stageCSS}`
+  if (options.center) css += 'body{display:grid;place-content:center;min-height:100vh}'
 
   if (options.style === 'tailwind') {
     body = serializeHTML(doc, { style: 'tailwind' })
@@ -407,6 +405,7 @@ export async function exportHTMLBundle(
   options: ExportHTMLBundleOptions = {}
 ): Promise<ExportHTMLBundle> {
   const resolvedOptions: Required<ExportHTMLBundleOptions> = {
+    center: options.center ?? false,
     html: options.html ?? 'fragment',
     style: options.style ?? 'inline',
     assets: options.assets ?? 'inline',
@@ -416,10 +415,13 @@ export async function exportHTMLBundle(
 
   if (resolvedOptions.html === 'standalone') return exportStandaloneHTML(document, resolvedOptions)
 
-  return {
-    entrypoint: 'index.html',
-    files: [
-      { path: 'index.html', content: serializeHTML(document, { style: resolvedOptions.style }) }
-    ]
+  const markup = serializeHTML(document, { style: resolvedOptions.style })
+  if (resolvedOptions.assets === 'external') {
+    const extracted = extractImageAssets(markup, resolvedOptions.assetBasePath)
+    return {
+      entrypoint: 'index.html',
+      files: [{ path: 'index.html', content: extracted.html }, ...extracted.files]
+    }
   }
+  return { entrypoint: 'index.html', files: [{ path: 'index.html', content: markup }] }
 }

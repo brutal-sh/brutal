@@ -3,6 +3,7 @@ import type { Page } from '@playwright/test'
 import type { Vector } from '@open-pencil/scene-graph/primitives'
 
 import { expect, test, useEditorSetupWithClear } from '#tests/e2e/fixtures'
+import { openAppMenu } from '#tests/helpers/menu'
 
 const editor = useEditorSetupWithClear('/?test&no-rulers')
 
@@ -96,7 +97,11 @@ function lintPanel(page: Page) {
 }
 
 async function openLint(page: Page) {
-  await page.getByRole('tab', { name: /^Lint/ }).click()
+  await (
+    await openAppMenu(page, 'View')
+  )
+    .getByRole('menuitem', { name: 'Design checks', exact: true })
+    .click()
   await expect(lintPanel(page).getByText('Low text contrast')).toBeVisible()
 }
 
@@ -138,7 +143,8 @@ function selectedIds(page: Page) {
 }
 
 test.afterEach(async () => {
-  await editor.page.getByRole('tab', { name: 'Design' }).click()
+  const back = editor.page.getByRole('button', { name: 'Back to design properties', exact: true })
+  if (await back.isVisible()) await back.click()
 })
 
 test('Lint lists issues by rule and connects rows to the canvas', async () => {
@@ -266,37 +272,32 @@ test('Canvas markers explain themselves on hover and open Lint on click', async 
   await editor.canvas.click(CLOSE_MARKER.x, CLOSE_MARKER.y)
   await expect(tooltip).toHaveCount(0)
   await expect.poll(() => selectedIds(editor.page)).toEqual([scene.closeId])
-  await expect(editor.page.getByRole('tab', { name: /^Lint/ })).toHaveAttribute(
-    'aria-selected',
-    'true'
-  )
+  await expect(lintPanel(editor.page)).toBeVisible()
   await expect(lintPanel(editor.page).locator(`[data-node-id="${scene.closeId}"]`)).toBeVisible()
 })
 
-/** Edge pins sit this far inside the canvas, leaving room for the chevron they point with. */
-const EDGE_PIN_INSET = 12
-
-/**
- * Where the edge pin for a layer off screen sits, following the canvas: the ray from the
- * viewport center toward the layer, where it leaves the inset viewport.
- */
-function edgePinCenter(width: number, height: number, target: Vector): Vector {
-  const center = { x: width / 2, y: height / 2 }
-  const dx = target.x - center.x
-  const dy = target.y - center.y
-  const length = Math.hypot(dx, dy)
-  const halfWidth = width / 2 - EDGE_PIN_INSET
-  const halfHeight = height / 2 - EDGE_PIN_INSET
-  const t = Math.min(
-    dx === 0 ? Infinity : (halfWidth * length) / Math.abs(dx),
-    dy === 0 ? Infinity : (halfHeight * length) / Math.abs(dy)
-  )
-  const point = { x: center.x + (dx / length) * t, y: center.y + (dy / length) * t }
-  // The pill is 16px wide and stays inside the inset viewport.
-  return {
-    x: Math.min(Math.max(point.x, EDGE_PIN_INSET + 8), width - EDGE_PIN_INSET - 8),
-    y: Math.min(Math.max(point.y, EDGE_PIN_INSET + 8), height - EDGE_PIN_INSET - 8)
+/** Locate the left-edge pin after floating chrome has displaced it along the edge. */
+async function hoverLeftEdgePin(height: number): Promise<Vector> {
+  for (let y = 20; y < height - 20; y += 8) {
+    await editor.canvas.hover(20, y)
+    const key = await editor.page.evaluate(
+      () => window.openPencil?.getStore?.().state.designIssues?.hoveredMarkerKey ?? null
+    )
+    if (!key?.startsWith('edge:')) continue
+    let bottom = y
+    while (bottom < height - 20) {
+      await editor.canvas.hover(20, bottom + 1)
+      const next = await editor.page.evaluate(
+        () => window.openPencil?.getStore?.().state.designIssues?.hoveredMarkerKey ?? null
+      )
+      if (next !== key) break
+      bottom++
+    }
+    const point = { x: 20, y: Math.round((y + bottom) / 2) }
+    await hoverMarker(point)
+    return point
   }
+  throw new Error('No reachable left-edge issue pin')
 }
 
 test('Issues off screen are pinned to the canvas edge and lead to the nearest most severe one', async () => {
@@ -313,10 +314,7 @@ test('Issues off screen are pinned to the canvas edge and lead to the nearest mo
     store.requestRender()
   }, panX)
   await waitForMarkers(editor.page)
-  const caption = { x: CARD.x + 24 + 100 + panX, y: CARD.y + 24 + 12 }
-  const pin = edgePinCenter(canvas.width, canvas.height, caption)
-
-  await hoverMarker(pin)
+  const pin = await hoverLeftEdgePin(canvas.height)
   const tooltip = editor.page.getByTestId('issue-marker-tooltip')
   await expect(tooltip).toContainText('Off screen to the left')
   await expect(tooltip).toContainText('Low text contrast')
@@ -361,6 +359,7 @@ test('Other pages are checked for the page list and the Document scope', async (
     }).id
   })
 
+  await editor.page.getByRole('tab', { name: 'Layers', exact: true }).click()
   const checkoutBadge = editor.page
     .getByTestId('pages-item')
     .filter({ hasText: 'Checkout' })
@@ -389,6 +388,7 @@ test('Other pages are checked for the page list and the Document scope', async (
 test('Canvas markers and Layers panel marks can be turned off from the View menu', async () => {
   await buildScene(editor.page)
   await waitForMarkers(editor.page)
+  await editor.page.getByRole('tab', { name: 'Layers', exact: true }).click()
   // The card is collapsed in the Layers panel, so it shows the error inside it as a dot.
   const cardMark = editor.page
     .getByTestId('layers-item')
@@ -401,7 +401,7 @@ test('Canvas markers and Layers panel marks can be turned off from the View menu
       () => window.openPencil?.getStore?.().state.designIssues?.markers.length ?? 0
     )
 
-  await editor.page.getByRole('menuitem', { name: 'View' }).click()
+  await openAppMenu(editor.page, 'View')
   const toggle = editor.page.getByRole('menuitemcheckbox', { name: 'Design issues' })
   await expect(toggle).toHaveAttribute('aria-checked', 'true')
   await toggle.click()
@@ -411,7 +411,7 @@ test('Canvas markers and Layers panel marks can be turned off from the View menu
   await editor.canvas.hover(CLOSE_MARKER.x + 1, CLOSE_MARKER.y)
   await expect(editor.page.getByTestId('issue-marker-tooltip')).toHaveCount(0)
 
-  await editor.page.getByRole('menuitem', { name: 'View' }).click()
+  await openAppMenu(editor.page, 'View')
   await editor.page.getByRole('menuitemcheckbox', { name: 'Design issues' }).click()
   await expect.poll(markerCount).toBeGreaterThan(0)
 })
@@ -456,16 +456,17 @@ test('A marker opens an issue past the rows its group shows at first', async () 
   await hoverMarker(marker)
   await editor.canvas.click(marker.x, marker.y)
 
-  await expect(editor.page.getByRole('tab', { name: /^Lint/ })).toHaveAttribute(
-    'aria-selected',
-    'true'
-  )
+  await expect(lintPanel(editor.page)).toBeVisible()
   await expect(lintPanel(editor.page).locator(`[data-node-id="${lastNoteId}"]`)).toBeInViewport()
 })
 
 test('A group lists its first rows and shows the rest on request', async () => {
   await addNotes(editor.page)
-  await editor.page.getByRole('tab', { name: /^Lint/ }).click()
+  await (
+    await openAppMenu(editor.page, 'View')
+  )
+    .getByRole('menuitem', { name: 'Design checks', exact: true })
+    .click()
   const rows = lintPanel(editor.page).locator('[data-rule-id="min-text-size"] [data-issue-id]')
   await expect(rows).toHaveCount(50)
 

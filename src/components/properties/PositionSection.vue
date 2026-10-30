@@ -43,6 +43,51 @@ function handleAlign(
       actions
     }"
   >
+    <PanelSection v-if="active" :label="panels.alignment">
+      <div role="toolbar" :aria-label="panels.alignment" class="flex justify-between">
+        <div class="flex gap-0.5">
+          <IconButton
+            :label="panels.alignLeft"
+            size="xs"
+            @click="handleAlign(actions.align, 'horizontal', 'min')"
+            ><icon-lucide-align-start-vertical class="size-3.5"
+          /></IconButton>
+          <IconButton
+            :label="panels.alignCenterHorizontally"
+            size="xs"
+            @click="handleAlign(actions.align, 'horizontal', 'center')"
+            ><icon-lucide-align-center-vertical class="size-3.5"
+          /></IconButton>
+          <IconButton
+            :label="panels.alignRight"
+            size="xs"
+            @click="handleAlign(actions.align, 'horizontal', 'max')"
+            ><icon-lucide-align-end-vertical class="size-3.5"
+          /></IconButton>
+        </div>
+        <div class="flex gap-0.5">
+          <IconButton
+            :label="panels.alignTop"
+            size="xs"
+            @click="handleAlign(actions.align, 'vertical', 'min')"
+            ><icon-lucide-align-start-horizontal class="size-3.5"
+          /></IconButton>
+          <IconButton
+            :label="panels.alignCenterVertically"
+            size="xs"
+            @click="handleAlign(actions.align, 'vertical', 'center')"
+            ><icon-lucide-align-center-horizontal class="size-3.5"
+          /></IconButton>
+          <IconButton
+            :label="panels.alignBottom"
+            size="xs"
+            @click="handleAlign(actions.align, 'vertical', 'max')"
+            ><icon-lucide-align-end-horizontal class="size-3.5"
+          /></IconButton>
+          <AlignmentActionsMenu v-if="canTidy" />
+        </div>
+      </div>
+    </PanelSection>
     <PanelSection v-if="active" :label="panels.position">
       <template v-if="inAutoLayout" #actions>
         <IconButton
@@ -53,56 +98,6 @@ function handleAlign(
           <icon-lucide-scan class="size-3.5" />
         </IconButton>
       </template>
-      <div role="toolbar" :aria-label="panels.position" class="mb-1.5 flex justify-between">
-        <div class="flex gap-0.5">
-          <IconButton
-            :label="panels.alignLeft"
-            size="xs"
-            @click="handleAlign(actions.align, 'horizontal', 'min')"
-          >
-            <icon-lucide-align-start-vertical class="size-3.5" />
-          </IconButton>
-          <IconButton
-            :label="panels.alignCenterHorizontally"
-            size="xs"
-            @click="handleAlign(actions.align, 'horizontal', 'center')"
-          >
-            <icon-lucide-align-center-vertical class="size-3.5" />
-          </IconButton>
-          <IconButton
-            :label="panels.alignRight"
-            size="xs"
-            @click="handleAlign(actions.align, 'horizontal', 'max')"
-          >
-            <icon-lucide-align-end-vertical class="size-3.5" />
-          </IconButton>
-        </div>
-        <div class="flex gap-0.5">
-          <IconButton
-            :label="panels.alignTop"
-            size="xs"
-            @click="handleAlign(actions.align, 'vertical', 'min')"
-          >
-            <icon-lucide-align-start-horizontal class="size-3.5" />
-          </IconButton>
-          <IconButton
-            :label="panels.alignCenterVertically"
-            size="xs"
-            @click="handleAlign(actions.align, 'vertical', 'center')"
-          >
-            <icon-lucide-align-center-horizontal class="size-3.5" />
-          </IconButton>
-          <IconButton
-            :label="panels.alignBottom"
-            size="xs"
-            @click="handleAlign(actions.align, 'vertical', 'max')"
-          >
-            <icon-lucide-align-end-horizontal class="size-3.5" />
-          </IconButton>
-          <AlignmentActionsMenu v-if="canTidy" />
-        </div>
-      </div>
-
       <PanelGrid :columns="2">
         <Tip :label="panels.xAxis">
           <NumberField

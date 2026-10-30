@@ -40,7 +40,9 @@ export function useSelectionCapabilities() {
     canGroup: computed(() => selectedCount.value >= 2),
     canFrameSelection: computed(() => hasSelection.value),
     canUngroup: computed(() => selection.isGroup.value),
-    canCreateComponent: computed(() => hasSelection.value),
+    canCreateComponent: computed(
+      () => hasSelection.value && selectedNode.value?.type !== 'COMPONENT'
+    ),
     canCreateComponentSet: selection.canCreateComponentSet,
     canDetachInstance: computed(() => selection.isInstance.value),
     canDetachIcon: computed(() => selection.isIcon.value),

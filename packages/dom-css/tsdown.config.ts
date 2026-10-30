@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs'
+
 import { defineConfig } from 'tsdown'
 
 export default defineConfig({
@@ -9,6 +11,15 @@ export default defineConfig({
     'jsx-runtime': './src/import/jsx/runtime.ts',
     'jsx-dev-runtime': './src/import/jsx/dev-runtime.ts'
   },
+  plugins: [
+    {
+      name: 'raw-css',
+      load(id) {
+        if (id.endsWith('.css?raw'))
+          return `export default ${JSON.stringify(readFileSync(id.slice(0, -4), 'utf8'))}`
+      }
+    }
+  ],
   platform: 'neutral',
   format: ['esm'],
   dts: true,
@@ -20,6 +31,7 @@ export default defineConfig({
     moduleSideEffects: false
   },
   deps: {
+    alwaysBundle: [/^tailwindcss\/.*\.css\?raw$/],
     neverBundle: ['@open-pencil/scene-graph', /^@open-pencil\/scene-graph\//, 'node:fs/promises'],
     onlyBundle: false
   },
@@ -33,7 +45,8 @@ export default defineConfig({
             const cleanId = id.split('?')[0]
             const parts = cleanId.split(/[\\/]/g)
             const srcIndex = parts.lastIndexOf('src')
-            const file = srcIndex >= 0 ? parts.slice(srcIndex + 1).join('/') : parts.at(-1) ?? 'chunk'
+            const file =
+              srcIndex >= 0 ? parts.slice(srcIndex + 1).join('/') : (parts.at(-1) ?? 'chunk')
             return `chunks/${file.replace(/\.(ts|tsx)$/, '')}`
           }
         }

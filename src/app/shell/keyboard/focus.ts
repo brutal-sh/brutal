@@ -6,6 +6,12 @@ function isEditableTarget(target: EventTarget | null | undefined): boolean {
   )
 }
 
+export function isToggleInput(target: EventTarget | null | undefined): boolean {
+  return (
+    target instanceof HTMLInputElement && (target.type === 'checkbox' || target.type === 'radio')
+  )
+}
+
 export function isButtonActivation(event: KeyboardEvent): boolean {
   if (event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) return false
   if (event.code !== 'Enter' && event.code !== 'Space') return false

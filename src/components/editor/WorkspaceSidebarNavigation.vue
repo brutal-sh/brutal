@@ -3,10 +3,8 @@ import { TabsList, TabsTrigger } from 'reka-ui'
 
 import { useI18n } from '@open-pencil/vue/i18n'
 
-import IconButton from '@/components/ui/button/IconButton.vue'
 import Tip from '@/components/ui/overlay/Tip.vue'
 
-defineEmits<{ libraries: [] }>()
 const { ai, panels } = useI18n()
 </script>
 
@@ -52,8 +50,17 @@ const { ai, panels } = useI18n()
         <span class="hidden group-data-[state=active]:inline">{{ panels.components }}</span>
       </TabsTrigger>
     </Tip>
-    <IconButton :label="panels.libraries" size="sm" @click="$emit('libraries')">
-      <icon-lucide-library class="size-4" />
-    </IconButton>
+    <Tip :label="panels.libraries">
+      <TabsTrigger
+        value="libraries"
+        :aria-label="panels.libraries"
+        class="group flex h-[29px] min-w-[29px] items-center gap-2 rounded-md px-2.5 text-[13px] font-medium text-muted outline-none hover:bg-hover focus-visible:ring-2 focus-visible:ring-panel-focus data-[state=active]:bg-hover data-[state=active]:text-surface"
+      >
+        <icon-lucide-library class="size-4" /><span
+          class="hidden group-data-[state=active]:inline"
+          >{{ panels.libraries }}</span
+        >
+      </TabsTrigger>
+    </Tip>
   </TabsList>
 </template>

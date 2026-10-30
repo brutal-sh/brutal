@@ -1,5 +1,15 @@
 import type { Locator, Page } from '@playwright/test'
 
+import { openAppMenu } from '#tests/helpers/menu'
+
+export async function openAdvancedProperties(page: Page) {
+  await (
+    await openAppMenu(page, 'View')
+  )
+    .getByRole('menuitem', { name: 'Advanced properties', exact: true })
+    .click()
+}
+
 export function propertySection(page: Page, name: string): Locator {
   return page.getByRole('region', { name, exact: true })
 }

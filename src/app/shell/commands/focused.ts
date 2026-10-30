@@ -2,7 +2,7 @@ import { isCanvasTextInput } from '@open-pencil/vue/canvas/text-edit'
 import type { EditorCommandId } from '@open-pencil/vue/editor/commands'
 
 import type { EditorStore } from '@/app/editor/active-store'
-import { isInputElement } from '@/app/shell/keyboard/focus'
+import { isInputElement, isToggleInput } from '@/app/shell/keyboard/focus'
 
 /**
  * Commands a focused text field carries out itself. As in VS Code's
@@ -34,6 +34,10 @@ export function runFocusedCommand(
   runCommand: (id: EditorCommandId) => void,
   id: EditorCommandId
 ): void {
+  if ((id === 'edit.undo' || id === 'edit.redo') && isToggleInput(document.activeElement)) {
+    runCommand(id)
+    return
+  }
   if (id === 'selection.selectAll' && isCanvasTextInput(document.activeElement)) {
     store.textEditor?.selectAll()
     store.requestRender()

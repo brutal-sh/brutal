@@ -6,7 +6,7 @@ import {
   type EditorCommandId
 } from '@open-pencil/vue/editor/commands'
 
-import { isEditing } from '@/app/shell/keyboard/focus'
+import { isEditing, isToggleInput } from '@/app/shell/keyboard/focus'
 import { shortcutEvent } from '@/app/shell/keyboard/layout'
 
 const DOCUMENT_COMMANDS = ['edit.undo', 'edit.redo'] as const satisfies EditorCommandId[]
@@ -23,7 +23,7 @@ export function useDocumentShortcuts(): (event: KeyboardEvent) => void {
   for (const command of DOCUMENT_COMMANDS) {
     for (const keys of [editorCommandMetadata(command).keybinding ?? []].flat()) {
       bindings[keys] = (event) => {
-        if (isEditing(event)) return
+        if (isEditing(event) && !isToggleInput(event.target)) return
         event.preventDefault()
         runCommand(command)
       }

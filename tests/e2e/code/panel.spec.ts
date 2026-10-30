@@ -8,6 +8,7 @@ import {
   waitForNode,
   waitForNodeNamed
 } from '#tests/helpers/code-panel'
+import { openAppMenu } from '#tests/helpers/menu'
 
 const editor = useEditorSetup()
 
@@ -16,12 +17,8 @@ test.beforeEach(async () => {
   await editor.canvas.waitForInit()
 })
 
-function codeTab() {
-  return editor.page.getByTestId('properties-tab-code')
-}
-
 function designTab() {
-  return editor.page.getByTestId('properties-tab-design')
+  return editor.page.getByRole('button', { name: 'Back to design properties', exact: true })
 }
 
 function codePanel() {
@@ -34,7 +31,11 @@ function codeEditor() {
 
 /** Opens the editor; with nothing selected that means choosing to write new Design JSX. */
 async function openCodePanel() {
-  await codeTab().click()
+  await (
+    await openAppMenu(editor.page, 'View')
+  )
+    .getByRole('menuitem', { name: 'Code editor', exact: true })
+    .click()
   const writeJSX = codePanel().getByRole('button', { name: 'Write JSX' })
   await expect(codeEditor().or(writeJSX)).toBeVisible()
   if (await writeJSX.isVisible()) await writeJSX.click()
@@ -68,7 +69,7 @@ test('inactive Code tab defers JSX generation for large selections', async () =>
     return performance.now() - startedAt
   })
   expect(selectionDuration).toBeLessThan(1000)
-  await expect(designTab()).toHaveAttribute('data-state', 'active')
+  await expect(editor.page.getByTestId('design-panel-multi')).toBeVisible()
   await openCodePanel()
   await expect(codeEditor()).toContainText('Frame')
 })
@@ -123,11 +124,8 @@ test('keeps the last valid preview while showing invalid-code diagnostics', asyn
   await expect(errorAlert).toBeVisible()
   await expect(errorAlert).toHaveCSS('color', 'rgb(250, 133, 133)')
 
-  await editor.page.evaluate(async () => {
-    const themeModulePath = '/src/app/shell/theme.ts'
-    const themeModule = await import(themeModulePath)
-    themeModule.useAppTheme().setTheme('light')
-  })
+  await editor.page.getByRole('button', { name: 'Main menu', exact: true }).click()
+  await editor.page.getByRole('menuitem', { name: 'Toggle Light/Dark mode', exact: true }).click()
   await editor.page.waitForFunction(() => document.documentElement.dataset.theme === 'light')
   await expect(errorAlert).toHaveCSS('color', 'rgb(185, 28, 28)')
   expect(await hasNodeNamed(editor.page, 'Last valid')).toBe(true)

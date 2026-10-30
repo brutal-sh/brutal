@@ -13,6 +13,7 @@ import PaddingControls from '../padding/PaddingControls.vue'
 import FlexGapField from './FlexGapField.vue'
 
 const ctx = useLayoutControlsContext()
+const { compact = false } = defineProps<{ compact?: boolean }>()
 const { panels } = useI18n()
 const alignmentCells = computed(() => {
   const horizontal = [
@@ -64,5 +65,5 @@ const alignmentCells = computed(() => {
     </div>
   </div>
   <PaddingControls />
-  <ClipContentControl />
+  <ClipContentControl v-if="!compact" />
 </template>

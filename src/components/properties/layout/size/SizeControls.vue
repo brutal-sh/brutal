@@ -9,7 +9,9 @@ import SizeLimitField from '@/components/properties/layout/size/SizeLimitField.v
 import type { SizeLimitItem } from '@/components/properties/layout/size/types'
 import IconButton from '@/components/ui/button/IconButton.vue'
 import PanelGrid from '@/components/ui/panel/PanelGrid.vue'
+import AppCheckbox from '@/components/ui/toggle/AppCheckbox.vue'
 
+const { compact = false } = defineProps<{ compact?: boolean }>()
 const ctx = useLayoutControlsContext()
 const { panels } = useI18n()
 
@@ -50,10 +52,10 @@ const visibleSizeLimits = computed(() =>
 </script>
 
 <template>
-  <PanelGrid :columns="1">
-    <SizeAxisField axis="width" icon="W" :label="panels.width" />
-    <SizeAxisField axis="height" icon="H" :label="panels.height" />
-    <template v-if="ctx.aspectRatioLockable" #actions>
+  <PanelGrid :columns="compact ? 2 : 1">
+    <SizeAxisField axis="width" icon="W" :label="panels.width" :compact="compact" />
+    <SizeAxisField axis="height" icon="H" :label="panels.height" :compact="compact" />
+    <template v-if="ctx.aspectRatioLockable && !compact" #actions>
       <IconButton
         :label="panels.lockAspectRatio"
         size="xs"
@@ -66,6 +68,44 @@ const visibleSizeLimits = computed(() =>
       </IconButton>
     </template>
   </PanelGrid>
+  <div v-if="compact" class="mt-2 grid grid-cols-2 gap-1.5 text-[11px] text-surface">
+    <label
+      v-for="axis in ['width', 'height'] as const"
+      :key="axis"
+      class="flex items-center gap-1.5"
+    >
+      <AppCheckbox
+        neutral
+        :ariaLabel="axis === 'width' ? 'Fill Width' : 'Fill Height'"
+        :model-value="(axis === 'width' ? ctx.widthSizing : ctx.heightSizing) === 'FILL'"
+        :disabled="
+          !(axis === 'width' ? ctx.widthSizingOptions : ctx.heightSizingOptions).some(
+            (option) => option.value === 'FILL'
+          )
+        "
+        @update:model-value="ctx.setAxisSizing(axis, $event ? 'FILL' : 'FIXED')"
+      />{{ axis === 'width' ? 'Fill Width' : 'Fill Height' }}
+    </label>
+    <template v-if="ctx.node.layoutMode !== 'NONE'">
+      <label
+        v-for="axis in ['width', 'height'] as const"
+        :key="axis"
+        class="flex items-center gap-1.5"
+      >
+        <AppCheckbox
+          neutral
+          :ariaLabel="axis === 'width' ? 'Hug Width' : 'Hug Height'"
+          :model-value="(axis === 'width' ? ctx.widthSizing : ctx.heightSizing) === 'HUG'"
+          :disabled="
+            !(axis === 'width' ? ctx.widthSizingOptions : ctx.heightSizingOptions).some(
+              (option) => option.value === 'HUG'
+            )
+          "
+          @update:model-value="ctx.setAxisSizing(axis, $event ? 'HUG' : 'FIXED')"
+        />{{ axis === 'width' ? 'Hug Width' : 'Hug Height' }}
+      </label>
+    </template>
+  </div>
 
   <PanelGrid v-if="visibleSizeLimits.length" :columns="2" class="mt-1.5">
     <SizeLimitField v-for="item in visibleSizeLimits" :key="item.prop" :item="item" />

@@ -1,11 +1,13 @@
 import { expect, test } from '@playwright/test'
 
 import { CanvasHelper } from '#tests/helpers/canvas'
+import { openAdvancedProperties } from '#tests/helpers/properties'
 import { layerTypeDriver } from '#tests/helpers/properties/layer-type-driver'
 
 test('the layer type menu turns a frame into a group and back', async ({ page }) => {
   await page.goto('/?test')
   await new CanvasHelper(page).waitForInit()
+  await openAdvancedProperties(page)
   const layer = layerTypeDriver(() => page)
   await layer.build()
   const trigger = page.getByRole('button', { name: 'Layer type', exact: true })
@@ -20,6 +22,7 @@ test('the layer type menu turns a frame into a group and back', async ({ page })
 test('the layer type menu turns a frame on the page into a section and back', async ({ page }) => {
   await page.goto('/?test')
   await new CanvasHelper(page).waitForInit()
+  await openAdvancedProperties(page)
   const layer = layerTypeDriver(() => page)
   await layer.build()
   const trigger = page.getByRole('button', { name: 'Layer type', exact: true })

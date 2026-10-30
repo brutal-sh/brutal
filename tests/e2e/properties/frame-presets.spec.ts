@@ -1,4 +1,5 @@
 import { expect, test, useEditorSetup } from '#tests/e2e/fixtures'
+import { openAdvancedProperties } from '#tests/helpers/properties'
 import { getSelectedNode } from '#tests/helpers/store'
 import { toolbarToolTestId } from '#tests/helpers/test-ids'
 
@@ -41,6 +42,7 @@ test('creates and resizes a frame with presets', async () => {
     height: 912
   })
 
+  await openAdvancedProperties(editor.page)
   const framePreset = editor.page.getByRole('combobox', { name: 'Frame preset' })
   await framePreset.click()
   await expect(editor.page.getByRole('option', { name: 'Wireframe', exact: true })).toHaveCount(0)

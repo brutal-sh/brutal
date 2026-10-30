@@ -5,6 +5,7 @@ import type { Editor, EditorState } from '@open-pencil/core'
 import {
   findPageId,
   type ExportRequest,
+  type ExportAsset,
   type IOFormatAdapter,
   type IORegistry
 } from '@open-pencil/core/io'
@@ -20,6 +21,7 @@ type ExportData = string | ArrayBuffer | Uint8Array
 type DownloadBlob = (data: Uint8Array, filename: string, mime: string) => void
 
 export interface ExportedFile {
+  assets?: ExportAsset[]
   bytes: Uint8Array
   fileName: string
   format: string
@@ -38,7 +40,7 @@ function sanitizeZipEntryName(name: string): string {
     })
     .join('')
   const flat = withoutControl
-    .replace(/[/\\]+/g, '_') // path separators
+    .replace(/[/\\:]+/g, '_') // path separators
     .replace(/\.{2,}/g, '_') // parent-dir refs / repeated dots
     .replace(/^[.\s]+/, '') // leading dots / whitespace
     .trim()
@@ -60,7 +62,19 @@ export function bundleExportFiles(files: ExportedFile[]): Uint8Array {
       name = `${stem} (${i})${tail}`
     }
     used.add(name)
-    entries[name] = file.bytes
+    const prefix = file.assets?.length && files.length > 1 ? `${name}/` : ''
+    entries[prefix + name] = file.bytes
+    for (const asset of file.assets ?? []) {
+      if (
+        /[\\:]/.test(asset.path) ||
+        Array.from(asset.path).some((ch) => ch.charCodeAt(0) < 0x20 || ch.charCodeAt(0) === 0x7f) ||
+        asset.path.split('/').some((part) => !part || part === '.' || part === '..')
+      )
+        throw new Error('Invalid export asset path')
+      const key = prefix + asset.path
+      if (key in entries) throw new Error('Duplicate export asset path')
+      entries[key] = getExportBytes(asset.content)
+    }
   }
   return zipSync(entries)
 }
@@ -75,6 +89,7 @@ export function getExportBaseName(graph: SceneGraph, target: ExportRequest['targ
 }
 
 export function getExportOptions(format: IOFormatAdapter, options?: ExportOptions): unknown {
+  if (format.id === 'html') return options
   if (format.exportOptions?.scale) {
     return { scale: options?.scale ?? 1, quality: options?.quality }
   }

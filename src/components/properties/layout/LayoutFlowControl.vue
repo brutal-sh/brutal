@@ -13,13 +13,16 @@ import SegmentedControl from '@/components/ui/select/SegmentedControl.vue'
 defineSlots<{ default?(): VNode[] }>()
 
 const layout = useSelectionLayout()
+const { compact = false } = defineProps<{ compact?: boolean }>()
 const { panels } = useI18n()
 
 const layoutModes = computed<Array<{ value: LayoutMode; label: string }>>(() => [
   { value: 'NONE', label: panels.value.freeform },
   { value: 'VERTICAL', label: panels.value.layoutVertical },
   { value: 'HORIZONTAL', label: panels.value.layoutHorizontal },
-  { value: 'GRID', label: panels.value.layoutGrid }
+  ...(!compact || layout.layoutMode.value === 'GRID'
+    ? [{ value: 'GRID' as const, label: panels.value.layoutGrid }]
+    : [])
 ])
 
 // Layers with different flows leave every option off.
@@ -31,7 +34,7 @@ const mode = computed(() => {
 
 <template>
   <div>
-    <label class="mb-1 block text-[11px] text-muted">{{ panels.flow }}</label>
+    <label v-if="!compact" class="mb-1 block text-[11px] text-muted">{{ panels.flow }}</label>
     <div class="flex items-center gap-1.5">
       <SegmentedControl
         :model-value="mode"
@@ -43,9 +46,16 @@ const mode = computed(() => {
         <template #option="{ option }">
           <Tip :label="option.label">
             <span class="flex items-center justify-center">
-              <icon-lucide-move v-if="option.value === 'NONE'" class="size-3.5" />
-              <icon-lucide-rows-2 v-else-if="option.value === 'VERTICAL'" class="size-3.5" />
-              <icon-lucide-columns-2 v-else-if="option.value === 'HORIZONTAL'" class="size-3.5" />
+              <icon-lucide-layout-grid v-if="option.value === 'NONE' && compact" class="size-3.5" />
+              <icon-lucide-move v-else-if="option.value === 'NONE'" class="size-3.5" />
+              <icon-lucide-arrow-down-to-line
+                v-else-if="option.value === 'VERTICAL'"
+                class="size-3.5"
+              />
+              <icon-lucide-arrow-right-to-line
+                v-else-if="option.value === 'HORIZONTAL'"
+                class="size-3.5"
+              />
               <icon-lucide-layout-grid v-else class="size-3.5" />
             </span>
           </Tip>

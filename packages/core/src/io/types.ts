@@ -108,6 +108,9 @@ export interface ExportResult {
 }
 
 export interface HTMLExportOptions {
+  center?: boolean
+  includeLayerNames?: boolean
+  includeLayerIds?: boolean
   html?: 'fragment' | 'standalone'
   style?: 'inline' | 'tailwind'
   assets?: 'inline' | 'external'

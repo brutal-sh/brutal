@@ -20,6 +20,28 @@ function ordinary(type: SceneNode['type'] = 'RECTANGLE') {
 }
 
 describe('bounded .pen writer', () => {
+  test('ignores an empty internal FIG canvas but rejects hidden content or paint', () => {
+    const { graph } = ordinary()
+    const internal = graph.addPage('Internal Only Canvas')
+    graph.updateNode(internal.id, { internalOnly: true })
+    expect(writePenDocument(graph).children).toHaveLength(1)
+    const hidden = graph.createNode('RECTANGLE', internal.id)
+    expect(() => writePenDocument(graph)).toThrow(PenExportError)
+    graph.deleteNode(hidden.id)
+    graph.updateNode(internal.id, {
+      fills: [{ type: 'SOLID', color: { r: 1, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]
+    })
+    expect(() => writePenDocument(graph)).toThrow(PenExportError)
+  })
+
+  test('accepts an absent FIG symbol ID without ignoring a real component link', () => {
+    const { graph, node } = ordinary()
+    graph.updateNode(node.id, { componentId: '' })
+    expect(writePenDocument(graph).children).toHaveLength(1)
+    graph.updateNode(node.id, { componentId: 'real-component' })
+    expect(() => writePenDocument(graph)).toThrow(PenExportError)
+  })
+
   test.each(['FRAME', 'RECTANGLE', 'ELLIPSE', 'POLYGON', 'TEXT', 'GROUP', 'COMPONENT'] as const)(
     'accepts ordinary default %s nodes',
     (type) => {

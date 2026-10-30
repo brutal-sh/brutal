@@ -58,10 +58,11 @@ function toggleSidebar() {
   if (sidebar.value?.isCollapsed) sidebar.value.expand()
   else sidebar.value?.collapse()
 }
-const { activeTab } = useAIChat()
+const { activeTab, advancedProperties } = useAIChat()
 const inspectorVisible = computed(
   () =>
     inspectorPinned.value ||
+    advancedProperties.value ||
     store.state.selectedIds.size > 0 ||
     activeTab.value === 'code' ||
     activeTab.value === 'lint'
@@ -195,13 +196,14 @@ const { pending: roomPending } = useRoomActions()
         <div
           v-show="inspectorVisible"
           data-canvas-obstacle
-          class="absolute top-14 right-2 bottom-12 z-10 flex w-72 flex-col overflow-hidden rounded-[20px] border border-island-border bg-panel shadow-lg"
+          class="absolute top-14 right-2 bottom-2 z-10 flex w-[220px] flex-col overflow-hidden rounded-[14px] border border-island-border bg-panel shadow-lg"
         >
           <PropertiesPanel :agent-on-left="true" />
         </div>
         <div
           data-canvas-obstacle
-          class="absolute right-0 bottom-0 z-10 flex items-center gap-2 rounded-full border border-island-border bg-panel px-2 py-1"
+          class="absolute bottom-0 z-10 flex items-center gap-2 rounded-full border border-island-border bg-panel px-2 py-1"
+          :class="inspectorVisible ? 'right-[236px]' : 'right-0'"
         >
           <IconButton label="Zoom out" size="sm" @click="zoom(100)"
             ><icon-lucide-minus class="size-4"

@@ -1,6 +1,6 @@
 import { expect, expectInViewport, test, useEditorSetup } from '#tests/e2e/fixtures'
 import { expectDefined } from '#tests/helpers/assert'
-import { propertyItems, propertySection } from '#tests/helpers/properties'
+import { openAdvancedProperties, propertyItems, propertySection } from '#tests/helpers/properties'
 
 const editor = useEditorSetup()
 
@@ -171,7 +171,7 @@ test('effect settings expand semantically and row remove stays visible', async (
 
   const remove = effectItem.getByRole('button', { name: 'Remove effect' })
   await expect(remove).toHaveCSS('opacity', '1')
-  await editor.page.getByRole('tab', { name: 'Design' }).focus()
+  await editor.page.getByRole('tab', { name: 'Layers', exact: true }).focus()
   await editor.page.mouse.move(0, 0)
   await expect(remove).toHaveCSS('opacity', '1')
 })
@@ -250,6 +250,7 @@ test('multi-select blend mode change is one undo step', async () => {
 })
 
 test('mask action toggles mask section and mask type control', async () => {
+  await openAdvancedProperties(editor.page)
   await editor.canvas.drawRect(500, 100, 60, 60)
   await editor.canvas.waitForRender()
   const id = await getSelectedId()

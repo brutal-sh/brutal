@@ -2,12 +2,14 @@
 import type { BlendMode } from '@open-pencil/scene-graph'
 import { POINT_COUNT_RANGE } from '@open-pencil/scene-graph/polygon'
 import { MIXED } from '@open-pencil/vue/controls/node-props'
+import { LAYOUT_CONTAINER_TYPES } from '@open-pencil/vue/controls/selection-layout'
 import { useVariableModes } from '@open-pencil/vue/controls/variable-modes'
 import { useI18n } from '@open-pencil/vue/i18n'
 import { AppearanceControlsRoot } from '@open-pencil/vue/primitives/AppearanceControls'
 
 import NumberField from '@/components/inputs/NumberField.vue'
 import { useBlendModeGroups } from '@/components/properties/blend-mode/use'
+import ClipContentControl from '@/components/properties/layout/ClipContentControl.vue'
 import VariableNumberField from '@/components/properties/VariableNumberField.vue'
 import IconButton from '@/components/ui/button/IconButton.vue'
 import PanelFieldGroup from '@/components/ui/panel/PanelFieldGroup.vue'
@@ -22,6 +24,7 @@ import VariableModeRows from './variable-modes/VariableModeRows.vue'
 import VisibilityControl from './visibility/VisibilityControl.vue'
 
 const { panels } = useI18n()
+const { compact = false } = defineProps<{ compact?: boolean }>()
 const variableModes = useVariableModes()
 type BlendModeSelectValue = BlendMode | 'MIXED'
 
@@ -77,8 +80,8 @@ function blendModeGroups(value: BlendMode | typeof MIXED) {
         :label="panels.layerVisibility"
       />
 
-      <PanelGrid :columns="2" distribution="wide-first">
-        <PanelFieldGroup :label="panels.blendMode">
+      <PanelGrid :columns="2" :distribution="compact ? 'equal' : 'wide-first'">
+        <PanelFieldGroup v-if="!compact" :label="panels.blendMode">
           <AppSelect
             :model-value="blendModeValue === MIXED ? 'MIXED' : blendModeValue"
             class="w-full"
@@ -90,9 +93,29 @@ function blendModeGroups(value: BlendMode | typeof MIXED) {
           />
         </PanelFieldGroup>
 
-        <PanelFieldGroup :label="panels.opacity">
+        <PanelFieldGroup
+          :label="compact ? undefined : panels.opacity"
+          :ui="{
+            container: compact ? 'flex-row items-center gap-0 rounded bg-panel-field' : undefined
+          }"
+        >
+          <AppSelect
+            v-if="compact"
+            :model-value="blendModeValue === MIXED ? 'MIXED' : blendModeValue"
+            :groups="blendModeGroups(blendModeValue)"
+            :label="panels.blendMode"
+            @update:model-value="
+              (value: BlendModeSelectValue) => value !== 'MIXED' && actions.setBlendMode(value)
+            "
+          >
+            <template #trigger
+              ><IconButton :label="panels.blendMode" class="size-5 shrink-0"
+                ><icon-lucide-blend class="size-3" /></IconButton
+            ></template>
+          </AppSelect>
           <VariableNumberField
             v-if="node && !isMulti"
+            :compact="compact"
             suffix="%"
             :aria-label="panels.opacity"
             :model-value="opacityPercent"
@@ -103,7 +126,7 @@ function blendModeGroups(value: BlendMode | typeof MIXED) {
             @update:model-value="actions.updateProp('opacity', $event / 100)"
             @commit="(v: number, p: number) => actions.commitProp('opacity', v / 100, p / 100)"
           >
-            <template #icon>
+            <template v-if="!compact" #icon>
               <icon-lucide-blend class="size-3" />
             </template>
           </VariableNumberField>
@@ -118,14 +141,51 @@ function blendModeGroups(value: BlendMode | typeof MIXED) {
             @update:model-value="actions.updateProp('opacity', $event / 100)"
             @commit="(v: number, p: number) => actions.commitProp('opacity', v / 100, p / 100)"
           >
-            <template #icon>
+            <template v-if="!compact" #icon>
               <icon-lucide-blend class="size-3" />
             </template>
           </NumberField>
         </PanelFieldGroup>
+        <VariableNumberField
+          v-if="compact && hasCornerRadius && !showIndependentCorners && node && !isMulti"
+          compact
+          :aria-label="panels.radius"
+          :model-value="cornerRadiusValue"
+          :min="0"
+          :node-id="node.id"
+          binding-path="cornerRadius"
+          :binding-paths="cornerRadiusBindingPaths"
+          @update:model-value="actions.updateUniformRadius"
+          @commit="actions.commitUniformRadius"
+          ><template #icon><icon-lucide-square-round-corner class="size-3" /></template
+        ></VariableNumberField>
+        <NumberField
+          v-else-if="compact && hasCornerRadius && !showIndependentCorners"
+          data-property="cornerRadius"
+          :aria-label="panels.radius"
+          :model-value="cornerRadiusValue"
+          :disabled="cornerRadiusDisabled"
+          :min="0"
+          @update:model-value="actions.updateUniformRadius"
+          @commit="actions.commitUniformRadius"
+          ><template #icon><icon-lucide-square-round-corner class="size-3" /></template
+        ></NumberField>
+        <template v-if="compact && splitsCorners" #actions
+          ><IconButton
+            :label="panels.independentCornerRadii"
+            size="xs"
+            :active="showIndependentCorners"
+            :disabled="cornerRadiusDisabled"
+            @click="actions.toggleIndependentCorners"
+            ><icon-lucide-square-round-corner class="size-3" /></IconButton
+        ></template>
       </PanelGrid>
 
-      <PanelGrid v-if="hasCornerRadius && !showIndependentCorners" :columns="2" class="mt-1.5">
+      <PanelGrid
+        v-if="!compact && hasCornerRadius && !showIndependentCorners"
+        :columns="2"
+        class="mt-1.5"
+      >
         <PanelFieldGroup :label="panels.radius">
           <VariableNumberField
             v-if="node && !isMulti"
@@ -171,7 +231,7 @@ function blendModeGroups(value: BlendMode | typeof MIXED) {
       </PanelGrid>
 
       <PanelGrid
-        v-else-if="hasCornerRadius && !isMulti && node"
+        v-else-if="hasCornerRadius && showIndependentCorners && !isMulti && node"
         :columns="2"
         class="mt-1.5 [&>[data-slot=actions]]:self-start"
         data-corner-grid
@@ -261,7 +321,13 @@ function blendModeGroups(value: BlendMode | typeof MIXED) {
         </PanelFieldGroup>
       </PanelGrid>
 
-      <PanelGrid v-if="hasCornerRadius && !cornerRadiusDisabled" :columns="2" class="mt-1.5">
+      <PanelGrid
+        v-if="
+          hasCornerRadius && !cornerRadiusDisabled && (!compact || cornerSmoothingPercent !== 0)
+        "
+        :columns="2"
+        class="mt-1.5"
+      >
         <PanelFieldGroup :label="panels.cornerSmoothing">
           <NumberField
             suffix="%"
@@ -284,6 +350,9 @@ function blendModeGroups(value: BlendMode | typeof MIXED) {
       </PanelGrid>
 
       <VariableModeRows :choices="variableModes.applied.value" @set="variableModes.setMode" />
+      <ClipContentControl
+        v-if="compact && node && !isMulti && LAYOUT_CONTAINER_TYPES.has(node.type)"
+      />
     </PanelSection>
   </AppearanceControlsRoot>
 </template>

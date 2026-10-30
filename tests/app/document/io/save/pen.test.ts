@@ -1,6 +1,8 @@
 import 'fake-indexeddb/auto'
 import { afterEach, expect, spyOn, test } from 'bun:test'
 
+import * as nativeFS from '@tauri-apps/plugin-fs'
+
 import { createDefaultEditorState } from '@open-pencil/core'
 import { BUILTIN_IO_FORMATS, IORegistry } from '@open-pencil/core/io'
 import { SceneGraph } from '@open-pencil/scene-graph'
@@ -12,6 +14,8 @@ import * as targets from '@/app/document/io/save/targets'
 import { createDocumentSourceState } from '@/app/document/io/source/state'
 import { createDocumentWriter } from '@/app/document/io/write'
 import { createEditorStore } from '@/app/editor/session/create'
+import { recentDocuments } from '@/app/recent-files'
+import * as nativeEnvironment from '@/app/tauri/env'
 
 import { asDouble } from '#tests/helpers/doubles'
 
@@ -247,4 +251,23 @@ test('storage refuses .pen encoding before persistence or a saved-version update
     'Storage documents must use FIG encoding'
   )
   expect(source.getSavedVersion()).toBe(0)
+})
+
+test('a successful native Save immediately remembers its local path', async () => {
+  const previous = recentDocuments.value
+  const native = spyOn(nativeEnvironment, 'isTauri').mockReturnValue(true)
+  const write = spyOn(nativeFS, 'writeFile').mockResolvedValue(undefined)
+  const store = createEditorStore()
+  try {
+    store.setDocumentSource('history.pen', 'pen', undefined, '/native/history.pen')
+    store.createShape('RECTANGLE', 0, 0, 100, 50)
+    expect(await store.saveFigFile()).toBe(true)
+    expect(write).toHaveBeenCalledTimes(1)
+    expect(recentDocuments.value[0]).toMatchObject({ kind: 'local', path: '/native/history.pen' })
+  } finally {
+    store.dispose()
+    native.mockRestore()
+    write.mockRestore()
+    recentDocuments.value = previous
+  }
 })

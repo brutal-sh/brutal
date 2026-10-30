@@ -198,6 +198,11 @@ export const APP_MENU_SCHEMA = [
     label: 'View',
     paletteIcon: 'eye',
     items: [
+      { id: 'inspector-design', label: 'Design properties' },
+      { id: 'inspector-advanced', label: 'Advanced properties' },
+      { id: 'inspector-code', label: 'Code editor' },
+      { id: 'inspector-lint', label: 'Design checks' },
+      { type: 'separator' },
       {
         id: 'view.zoom100',
         label: 'Zoom to 100%',

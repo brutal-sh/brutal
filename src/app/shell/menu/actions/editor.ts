@@ -1,5 +1,6 @@
 import type { SceneNode } from '@open-pencil/scene-graph'
 
+import { useAIChat } from '@/app/ai/chat/use'
 import { useEditorStore } from '@/app/editor/active-store'
 import {
   setCommentsOnCanvas,
@@ -56,7 +57,22 @@ export function toggleSelectedTextUnderline(): void {
 export function createSharedEditorMenuActions(
   setTheme: (theme: 'light' | 'dark' | 'auto') => void
 ) {
+  const { activeTab, advancedProperties } = useAIChat()
   return {
+    'inspector-design': () => {
+      activeTab.value = 'design'
+      advancedProperties.value = false
+    },
+    'inspector-advanced': () => {
+      activeTab.value = 'design'
+      advancedProperties.value = true
+    },
+    'inspector-code': () => {
+      activeTab.value = 'code'
+    },
+    'inspector-lint': () => {
+      activeTab.value = 'lint'
+    },
     'zoom-in': () => store.applyZoom(-100, window.innerWidth / 2, window.innerHeight / 2),
     'zoom-out': () => store.applyZoom(100, window.innerWidth / 2, window.innerHeight / 2),
     'view-split-right': () => store.splitPane(store.activePaneId.value, 'horizontal'),

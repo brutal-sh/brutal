@@ -14,6 +14,7 @@ import { computed, onMounted, ref, shallowRef, watch } from 'vue'
 import type { SceneNode } from '@open-pencil/scene-graph'
 import { cycleSafeParent } from '@open-pencil/scene-graph/instances'
 import { createDefaultNode } from '@open-pencil/scene-graph/node-defaults'
+import { useEditorCommands } from '@open-pencil/vue/editor/commands'
 import { useI18n } from '@open-pencil/vue/i18n'
 
 import { useEditorStore } from '@/app/editor/active-store'
@@ -62,6 +63,9 @@ type AssetGroup = {
   assets: LocalAsset[]
 }
 
+const { workspace = false } = defineProps<{ workspace?: boolean }>()
+const { getCommand, runCommand } = useEditorCommands()
+const createComponent = getCommand('selection.createComponent')
 const editor = useEditorStore()
 const libraryService = useLibraryService()
 const remoteAssets = libraryService.enabledAssets
@@ -351,9 +355,10 @@ async function insertSelectedAsset() {
         data-test-id="assets-search"
         size="sm"
         class="min-w-0 flex-1"
-        :placeholder="panels.searchLocalComponents"
+        :placeholder="workspace ? 'Search components...' : panels.searchLocalComponents"
       />
       <AppButton
+        v-if="!workspace"
         v-bind="insertButton"
         class="relative"
         :aria-label="libraryUpdateCount > 0 ? panels.reviewLibraryUpdates : panels.manageLibraries"
@@ -368,6 +373,7 @@ async function insertSelectedAsset() {
         </span>
       </AppButton>
       <SegmentedControl
+        v-if="!workspace"
         v-model="assetView"
         data-test-id="assets-view-toggle"
         :options="viewOptions"
@@ -381,9 +387,23 @@ async function insertSelectedAsset() {
       </SegmentedControl>
     </div>
 
+    <div v-if="workspace" class="shrink-0 px-3 pb-3">
+      <AppButton
+        class="w-full"
+        variant="solid"
+        color="primary"
+        :disabled="!createComponent.enabled.value"
+        @click="runCommand('selection.createComponent')"
+      >
+        <icon-lucide-diamond-plus class="size-4" />{{ commands.createComponent }}
+      </AppButton>
+      <p v-if="!createComponent.enabled.value" class="mt-2 text-xs text-muted">
+        Select an element to create a component.
+      </p>
+    </div>
     <div class="scrollbar-thin flex min-h-0 flex-1 flex-col overflow-y-auto px-2 pb-2">
       <section v-for="group in assetGroups" :key="group.pageId" class="mb-3">
-        <h2 class="mb-1 px-1 text-[11px] font-semibold text-muted">
+        <h2 v-if="!workspace" class="mb-1 px-1 text-[11px] font-semibold text-muted">
           {{ group.pageName }}
         </h2>
         <div :class="assetView === 'grid' ? 'grid grid-cols-2 gap-2' : 'flex flex-col gap-0.5'">
@@ -399,7 +419,7 @@ async function insertSelectedAsset() {
                 :class="[
                   'group/asset rounded text-left text-xs text-surface outline-none hover:bg-hover focus-visible:ring-1 focus-visible:ring-panel-focus',
                   assetView === 'grid'
-                    ? 'flex min-w-0 flex-col items-center gap-1 p-1.5'
+                    ? 'flex min-w-0 flex-col items-center gap-2 p-1.5'
                     : 'flex w-full items-center gap-2 px-1.5 py-1'
                 ]"
                 @click="void openDetails(asset)"
@@ -408,6 +428,7 @@ async function insertSelectedAsset() {
               >
                 <AssetThumbnail
                   v-if="asset.componentId"
+                  :fill="workspace && assetView === 'grid'"
                   :node-id="asset.componentId"
                   :alt="`${asset.name} preview`"
                   :size="

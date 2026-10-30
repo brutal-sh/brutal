@@ -7,11 +7,13 @@ const {
   ariaLabel,
   ariaLabelledby,
   ariaDescribedby,
-  disabled = false
+  disabled = false,
+  neutral = false
 } = defineProps<
   {
     modelValue?: boolean | 'indeterminate'
     disabled?: boolean
+    neutral?: boolean
     ariaDescribedby?: string
   } & (
     | { ariaLabel: string; ariaLabelledby?: never }
@@ -29,7 +31,12 @@ const emit = defineEmits<{ 'update:modelValue': [value: boolean] }>()
     :aria-labelledby="ariaLabelledby"
     :aria-describedby="ariaDescribedby"
     :disabled="disabled"
-    class="flex size-4 shrink-0 items-center justify-center rounded border border-border bg-panel-field text-on-accent outline-none transition-colors hover:border-accent/60 data-[state=checked]:border-accent data-[state=checked]:bg-accent data-[state=indeterminate]:border-accent data-[state=indeterminate]:bg-accent focus-visible:ring-2 focus-visible:ring-accent/40 disabled:opacity-50"
+    class="flex size-4 shrink-0 items-center justify-center rounded border border-border bg-panel-field outline-none transition-colors hover:border-accent/60 focus-visible:ring-2 focus-visible:ring-accent/40 disabled:opacity-50"
+    :class="
+      neutral
+        ? 'text-panel data-[state=checked]:border-surface data-[state=checked]:bg-surface data-[state=indeterminate]:border-surface data-[state=indeterminate]:bg-surface'
+        : 'text-on-accent data-[state=checked]:border-accent data-[state=checked]:bg-accent data-[state=indeterminate]:border-accent data-[state=indeterminate]:bg-accent'
+    "
     @update:model-value="(value) => emit('update:modelValue', value === true)"
   >
     <CheckboxIndicator class="flex items-center justify-center">

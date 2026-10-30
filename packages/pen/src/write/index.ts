@@ -3,6 +3,7 @@ import { colorToHex8 } from '@open-pencil/scene-graph/color'
 import { getNodeLocalMatrix } from '@open-pencil/scene-graph/coordinate'
 import { layoutSizing } from '@open-pencil/scene-graph/layout'
 import Matrix from '@open-pencil/scene-graph/matrix'
+import { OPEN_PENCIL_PLUGIN_DATA, readPluginData } from '@open-pencil/scene-graph/plugin-data'
 import { textLengthPixels } from '@open-pencil/scene-graph/text'
 import { vectorNetworkPaths } from '@open-pencil/scene-graph/vector-network'
 
@@ -198,6 +199,7 @@ export function writePenDocument(graph: SceneGraph): PenDocument {
     const result: PenNode = {
       id: node.id,
       name: node.name,
+      context: readPluginData(node.pluginData, OPEN_PENCIL_PLUGIN_DATA.nodeContext),
       type: type ?? 'frame',
       x,
       y,

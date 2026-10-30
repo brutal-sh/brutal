@@ -1,11 +1,14 @@
 import { expect, test } from '#tests/helpers/chat/fixture'
 
-test('⌘J switches between Design and AI', async ({ chat }) => {
-  await chat.designTab.waitFor()
+test('⌘J reveals Agent and returns to Layers', async ({ chat }) => {
+  await chat.page.getByRole('tab', { name: 'Layers', exact: true }).click()
   await chat.page.keyboard.press('Meta+j')
   await expect(chat.chatTab).toHaveAttribute('data-state', 'active')
   await chat.page.keyboard.press('Meta+j')
-  await expect(chat.designTab).toHaveAttribute('data-state', 'active')
+  await expect(chat.page.getByRole('tab', { name: 'Layers', exact: true })).toHaveAttribute(
+    'data-state',
+    'active'
+  )
 })
 
 test('AI tab directs provider setup to unified settings', async ({ chat }) => {

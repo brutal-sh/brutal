@@ -1,5 +1,7 @@
 import * as v from 'valibot'
 
+import { OPEN_PENCIL_PLUGIN_DATA } from '@open-pencil/scene-graph/plugin-data'
+
 import type { FigmaNodeProxy } from '#core/figma-api'
 import {
   toolNumber,
@@ -16,6 +18,7 @@ interface TreeEntry {
   w: number
   h: number
   text?: string
+  context?: string
   children?: TreeEntry[]
 }
 
@@ -43,6 +46,10 @@ function nodeToTreeEntry(
     w: node.width,
     h: node.height
   }
+  const context = OPEN_PENCIL_PLUGIN_DATA.nodeContext.decode(
+    node.getPluginData(OPEN_PENCIL_PLUGIN_DATA.nodeContext.key)
+  )
+  if (context !== undefined) entry.context = context
   if (node.type === 'TEXT') entry.text = node.characters
   if (children.length > 0) entry.children = children
   return entry

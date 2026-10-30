@@ -145,6 +145,7 @@ const sourceLibraryPublicationSchema: v.GenericSchema<unknown, SourceLibraryPubl
  * it share one schema.
  */
 export const OPEN_PENCIL_PLUGIN_DATA = {
+  nodeContext: jsonPluginDataField('nodeContext', 'content', v.string()),
   /** A text node's direction, on TEXT nodes. */
   textDirection: textPluginDataField('textDirection', 'format', DIRECTIONS),
   /** An auto-layout frame's direction. */

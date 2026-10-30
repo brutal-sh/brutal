@@ -36,6 +36,7 @@ import {
 export type PropertiesTab = 'design' | 'code' | 'ai' | 'lint'
 
 const activeTab = ref<PropertiesTab>('design')
+const advancedProperties = ref(false)
 
 const chatSession = createChatSessionManager({
   isConfigured,
@@ -84,6 +85,7 @@ export function useAIChat() {
     unsplashKeyStatus,
     setUnsplashKey,
     activeTab,
+    advancedProperties,
     isConfigured,
     history,
     ensureChat: history.ensureChat,

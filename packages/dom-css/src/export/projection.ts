@@ -33,6 +33,7 @@ export type VectorElementRenderer = (graph: SceneGraph, node: SceneNode) => Desi
 
 export interface SceneGraphToDesignOptions {
   rootId?: string
+  includeSourceNames?: boolean
   includeSourceIds?: boolean
   /** Write variable-bound values as `var(--name)` where CSS resolves them as drawn. Default true. */
   tokens?: boolean
@@ -395,11 +396,13 @@ function imageSourceURL(node: SceneNode): string | undefined {
 function attrsForNode(
   graph: SceneGraph,
   node: SceneNode,
-  includeSourceIds: boolean
+  includeSourceIds: boolean,
+  includeSourceNames: boolean
 ): Record<string, string> {
   const attrs: Record<string, string> = includeSourceIds
     ? { 'data-open-pencil-node-id': node.id }
     : {}
+  if (includeSourceNames) attrs['data-layer-name'] = node.name
   const sourceURL = imageSourceURL(node)
   if (sourceURL) attrs.src = sourceURL
   const fill = node.fills.at(0)
@@ -420,6 +423,7 @@ function tagNameForNode(node: SceneNode): string {
 interface ProjectionContext {
   graph: SceneGraph
   includeSourceIds: boolean
+  includeSourceNames: boolean
   tokens: DesignTokens | undefined
   vectorElement: VectorElementRenderer | undefined
   shown: ReadonlySet<string> | undefined
@@ -460,7 +464,10 @@ function sceneNodeToDesignNode(
   const parent = node.parentId ? graph.getNode(node.parentId) : undefined
   const entered = tokens?.enter(node, inherited, root)
   const modes = entered?.modes ?? inherited
-  const attrs = { ...attrsForNode(graph, node, includeSourceIds), ...entered?.attrs }
+  const attrs = {
+    ...attrsForNode(graph, node, includeSourceIds, context.includeSourceNames),
+    ...entered?.attrs
+  }
   const css: FieldCSS = (field, literal) => tokens?.reference(node, field, modes) ?? literal
 
   if (node.type === 'TEXT') {
@@ -514,11 +521,18 @@ function sceneNodeToDesignNode(
 
 function projectionContext(
   graph: SceneGraph,
-  { includeSourceIds = true, tokens = true, vectorElement, shown }: SceneGraphToDesignOptions
+  {
+    includeSourceIds = true,
+    includeSourceNames = false,
+    tokens = true,
+    vectorElement,
+    shown
+  }: SceneGraphToDesignOptions
 ): ProjectionContext {
   return {
     graph,
     includeSourceIds,
+    includeSourceNames,
     tokens: tokens ? new DesignTokens(graph) : undefined,
     vectorElement,
     shown

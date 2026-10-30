@@ -39,6 +39,7 @@ import PanelSection from '@/components/ui/panel/PanelSection.vue'
 import AppSelect from '@/components/ui/select/AppSelect.vue'
 
 const fillCtx = useFillControls()
+const { compact = false } = defineProps<{ compact?: boolean }>()
 const store = useEditorStore()
 const okhcl = useOkHCL()
 const gradients = useGradientEditing()
@@ -212,7 +213,7 @@ function updateSolidColor(
             </PaintField>
           </BindableValueRoot>
 
-          <template #details>
+          <template v-if="!compact || (fill.blendMode && fill.blendMode !== 'NORMAL')" #details>
             <PanelFieldGroup :label="panels.blendMode">
               <AppSelect
                 :model-value="fill.blendMode ?? 'NORMAL'"

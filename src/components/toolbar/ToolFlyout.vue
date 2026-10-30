@@ -2,6 +2,8 @@
 import {
   ToolbarButton,
   DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuItemIndicator,
   DropdownMenuPortal,
   DropdownMenuRadioGroup,
@@ -23,7 +25,9 @@ import {
   vTestId
 } from '@open-pencil/vue/testing'
 
+import { useEditorStore } from '@/app/editor/active-store'
 import { toolTip } from '@/app/editor/toolbar/shortcuts'
+import { importCanvasFileDialog } from '@/app/shell/menu/import'
 import ToolButton from '@/components/toolbar/ToolButton.vue'
 import type { ToolbarUI, ToolIconMap, ToolLabels } from '@/components/toolbar/types'
 import AppShortcutText from '@/components/ui/menu/AppShortcutText.vue'
@@ -52,6 +56,8 @@ const {
 }>()
 
 const toolbar = tv(toolbarTheme)
+const store = useEditorStore()
+const primitives = computed(() => tool.flyout?.includes('RECTANGLE'))
 const { editor } = useI18n()
 const triggerActive = computed(() => isToolbarToolActive(tool, activeTool))
 const styles = computed(() => toolbar({ active: triggerActive.value, mobile }))
@@ -90,7 +96,9 @@ function flyoutItemClass() {
         <ToolbarButton
           v-test-id="toolbarFlyoutTestId(tool.key, mobile)"
           :data-mobile="mobile || undefined"
-          :aria-label="editor.toolOptions({ tool: toolLabels[tool.key] })"
+          :aria-label="
+            primitives ? 'Primitives' : editor.toolOptions({ tool: toolLabels[tool.key] })
+          "
           :class="styles.flyoutTrigger({ class: ui?.flyoutTrigger })"
         >
           <IconChevronDown :class="styles.flyoutTriggerIcon({ class: ui?.flyoutTriggerIcon })" />
@@ -103,6 +111,11 @@ function flyoutItemClass() {
           :side-offset="8"
           align="start"
           :class="styles.flyoutContent({ class: ui?.flyoutContent })"
+          @close-auto-focus="
+            (event) => {
+              if (store.state.iconPickerOpen) event.preventDefault()
+            }
+          "
         >
           <MenuScrollArea>
             <DropdownMenuRadioGroup :model-value="selectedTool">
@@ -139,6 +152,36 @@ function flyoutItemClass() {
                 </AppShortcutText>
               </DropdownMenuRadioItem>
             </DropdownMenuRadioGroup>
+            <template v-if="primitives">
+              <DropdownMenuItem
+                :class="flyoutItemClass()"
+                :disabled="store.state.readOnly"
+                @select="store.state.iconPickerOpen = true"
+              >
+                <span :class="styles.flyoutItemIndicator()" aria-hidden="true" />
+                <icon-lucide-smile :class="styles.flyoutItemIcon()" />
+                <span :class="styles.flyoutItemLabel()">Icon</span>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator class="my-1 h-px bg-border" />
+              <DropdownMenuItem
+                :class="flyoutItemClass()"
+                :disabled="store.state.readOnly"
+                @select="importCanvasFileDialog('image')"
+              >
+                <span :class="styles.flyoutItemIndicator()" aria-hidden="true" />
+                <icon-lucide-image :class="styles.flyoutItemIcon()" />
+                <span :class="styles.flyoutItemLabel()">Import Image or SVG…</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                :class="flyoutItemClass()"
+                :disabled="store.state.readOnly"
+                @select="importCanvasFileDialog('figma')"
+              >
+                <span :class="styles.flyoutItemIndicator()" aria-hidden="true" />
+                <icon-lucide-figma :class="styles.flyoutItemIcon()" />
+                <span :class="styles.flyoutItemLabel()">Import Figma…</span>
+              </DropdownMenuItem>
+            </template>
           </MenuScrollArea>
         </DropdownMenuContent>
       </DropdownMenuPortal>

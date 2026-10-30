@@ -16,6 +16,7 @@ import IconButton from '@/components/ui/button/IconButton.vue'
 import PanelSection from '@/components/ui/panel/PanelSection.vue'
 
 const { panels } = useI18n()
+const { compact = false } = defineProps<{ compact?: boolean }>()
 </script>
 
 <template>
@@ -46,26 +47,28 @@ const { panels } = useI18n()
           </IconButton>
         </template>
 
-        <LayoutFlowControl v-if="LAYOUT_CONTAINER_TYPES.has(ctx.node.type)">
+        <LayoutFlowControl v-if="LAYOUT_CONTAINER_TYPES.has(ctx.node.type)" :compact="compact">
           <LayoutWrapToggle v-if="ctx.isFlex" />
         </LayoutFlowControl>
         <div v-if="ctx.node.type !== 'TEXT'" class="mt-2 mb-1 text-[11px] text-muted">
           {{ panels.dimensions }}
         </div>
         <TextResizingControl v-if="ctx.node.type === 'TEXT'" />
-        <SizeControls />
+        <SizeControls :compact="compact" />
         <ClipContentControl
-          v-if="LAYOUT_CONTAINER_TYPES.has(ctx.node.type) && ctx.node.layoutMode === 'NONE'"
+          v-if="
+            !compact && LAYOUT_CONTAINER_TYPES.has(ctx.node.type) && ctx.node.layoutMode === 'NONE'
+          "
         />
 
         <template
           v-if="LAYOUT_CONTAINER_TYPES.has(ctx.node.type) && ctx.node.layoutMode !== 'NONE'"
         >
-          <FlexControls v-if="ctx.isFlex" />
+          <FlexControls v-if="ctx.isFlex" :compact="compact" />
           <template v-if="ctx.isGrid">
             <GridControls />
             <PaddingControls />
-            <ClipContentControl />
+            <ClipContentControl v-if="!compact" />
           </template>
         </template>
       </PanelSection>

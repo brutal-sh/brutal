@@ -5,7 +5,9 @@ import { createDefaultNode } from '@open-pencil/scene-graph/node-defaults'
 import {
   contentPluginData,
   hasPluginData,
-  OPEN_PENCIL_PLUGIN_DATA
+  OPEN_PENCIL_PLUGIN_DATA,
+  readPluginData,
+  withoutPluginData
 } from '@open-pencil/scene-graph/plugin-data'
 
 export interface PenExportDiagnostic {
@@ -123,6 +125,7 @@ export function nodeDiagnostics(
   const defaults = createDefaultNode(() => node.id, node.type)
   for (const field of Object.keys(defaults) as (keyof SceneNode)[]) {
     if (copy && (field === 'componentId' || field === 'instanceOverrides')) continue
+    if (field === 'componentId' && node.componentId === '') continue
     if (
       !handled?.has(field) &&
       !WRITTEN.has(field) &&
@@ -132,7 +135,15 @@ export function nodeDiagnostics(
       add(field, `The non-default ${field} property is not supported by .pen export.`)
     }
   }
-  if (contentPluginData(node.pluginData).length)
+  if (
+    hasPluginData(node.pluginData, OPEN_PENCIL_PLUGIN_DATA.nodeContext) &&
+    readPluginData(node.pluginData, OPEN_PENCIL_PLUGIN_DATA.nodeContext) === undefined
+  )
+    add('context', 'Invalid node context metadata cannot be exported.')
+  if (
+    contentPluginData(withoutPluginData(node.pluginData, [OPEN_PENCIL_PLUGIN_DATA.nodeContext]))
+      .length
+  )
     add('pluginData', 'Plugin content (including shaders, icons and behaviours) is not supported.')
   inspectNodeFeatures(node, add)
   if (!copy && node.id.includes('/'))
@@ -180,7 +191,10 @@ function inspectLayout(node: SceneNode, add: NodeProblem) {
 
 export function documentDiagnostics(graph: SceneGraph): PenExportDiagnostic[] {
   const diagnostics: PenExportDiagnostic[] = []
-  if (graph.getPages(true).length !== 1)
+  if (
+    graph.getPages(true).filter((page) => !page.internalOnly || page.childIds.length > 0).length !==
+    1
+  )
     diagnostics.push({
       path: '/pages',
       message: '.pen stores one canvas. Export one page at a time.'

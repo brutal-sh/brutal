@@ -51,6 +51,7 @@ export function createDocumentExportActions(
     const baseName = getExportBaseName(editor.graph, target)
     return {
       bytes: getExportBytes(result.data),
+      assets: result.assets,
       fileName: getExportFileName(baseName, format, result.extension, options),
       format: format.label,
       ext: `.${result.extension}`,
@@ -59,6 +60,15 @@ export function createDocumentExportActions(
   }
 
   function saveExportFile(file: ExportedFile): Promise<boolean> {
+    if (file.assets?.length)
+      return saveExportedFile(
+        bundleExportFiles([file]),
+        `${file.fileName}.zip`,
+        'ZIP',
+        '.zip',
+        'application/zip',
+        downloadBlob
+      )
     return saveExportedFile(
       file.bytes,
       file.fileName,

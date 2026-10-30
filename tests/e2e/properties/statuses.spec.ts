@@ -1,7 +1,10 @@
 import { expect, test, useEditorSetupWithClear } from '#tests/e2e/fixtures'
-import { propertySection } from '#tests/helpers/properties'
+import { openAdvancedProperties, propertySection } from '#tests/helpers/properties'
 
 const editor = useEditorSetupWithClear('/?test')
+test.beforeEach(async () => {
+  await openAdvancedProperties(editor.page)
+})
 
 /** Builds a section and selects it, returning its id. */
 async function createSection() {

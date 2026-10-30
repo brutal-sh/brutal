@@ -5,6 +5,7 @@ import * as v from 'valibot'
 import { FigmaAPI } from '@open-pencil/core/figma-api'
 import { ALL_TOOLS, defineTool } from '@open-pencil/core/tools'
 import { SceneGraph } from '@open-pencil/scene-graph'
+import { OPEN_PENCIL_PLUGIN_DATA, withPluginData } from '@open-pencil/scene-graph/plugin-data'
 
 const tool = defineTool({
   name: 'place_box',
@@ -58,5 +59,25 @@ describe('tool arguments', () => {
     expect(() =>
       builtIn('set_font').execute(figma, { id: text.id, font: { family: 'Verdana' } })
     ).toThrow('Invalid arguments for set_font')
+  })
+})
+
+test('read tools expose stored node context to the design agent', () => {
+  const graph = new SceneGraph()
+  const page = graph.getPages()[0]
+  const node = graph.createNode('FRAME', page.id, { name: 'Annotated' })
+  graph.updateNode(node.id, {
+    pluginData: withPluginData(
+      node.pluginData,
+      OPEN_PENCIL_PLUGIN_DATA.nodeContext,
+      'Use the supplied design constraints.'
+    )
+  })
+  const figma = new FigmaAPI(graph)
+  expect(builtIn('get_node').execute(figma, { id: node.id })).toMatchObject({
+    context: 'Use the supplied design constraints.'
+  })
+  expect(builtIn('get_page_tree').execute(figma, {})).toMatchObject({
+    children: [{ id: node.id, context: 'Use the supplied design constraints.' }]
   })
 })

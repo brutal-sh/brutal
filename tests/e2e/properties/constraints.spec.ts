@@ -1,12 +1,13 @@
 import { expect, test } from '@playwright/test'
 
 import { CanvasHelper } from '#tests/helpers/canvas'
-import { propertySection } from '#tests/helpers/properties'
+import { openAdvancedProperties, propertySection } from '#tests/helpers/properties'
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/?test&no-rulers')
   const canvas = new CanvasHelper(page)
   await canvas.waitForInit()
+  await openAdvancedProperties(page)
 })
 
 async function createConstrainedChildren(page: Parameters<typeof propertySection>[0]) {

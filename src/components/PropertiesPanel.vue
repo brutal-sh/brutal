@@ -11,6 +11,7 @@ import { useEditorStore } from '@/app/editor/active-store'
 import { countIssues } from '@/app/editor/design-check/issues'
 import ChatPanel from '@/components/chat/ChatPanel.vue'
 import { CloudVersionHistory } from '@/components/cloud/integration'
+import AppButton from '@/components/ui/button/AppButton.vue'
 import propertiesTabsTheme from '@/theme/panel/properties-tabs'
 
 import CodePanel from './CodePanel.vue'
@@ -22,7 +23,11 @@ import ZoomDropdown from './editor/ZoomDropdown.vue'
 const { agentOnLeft = false } = defineProps<{ agentOnLeft?: boolean }>()
 const propertiesTabs = tv(propertiesTabsTheme)
 
-const { activeTab } = useAIChat()
+const { activeTab, advancedProperties } = useAIChat()
+function backToDesign() {
+  activeTab.value = 'design'
+  advancedProperties.value = false
+}
 const { panels } = useI18n()
 const checkMessages = useDesignCheckMessages()
 const store = useEditorStore()
@@ -50,7 +55,30 @@ const problemCount = computed(() => {
   >
     <CloudVersionHistory v-if="history" />
     <CommentsPanel v-else-if="commenting" />
+    <div v-if="agentOnLeft" v-show="!commenting && !history" class="flex min-h-0 flex-1 flex-col">
+      <AppButton
+        v-if="activeTab === 'code' || activeTab === 'lint' || advancedProperties"
+        class="m-2 self-start"
+        aria-label="Back to design properties"
+        @click="backToDesign"
+      >
+        <icon-lucide-arrow-left class="size-3.5" />Design properties
+      </AppButton>
+      <div
+        v-show="activeTab === 'design' || activeTab === 'ai'"
+        class="flex min-h-0 flex-1 flex-col"
+      >
+        <DesignPanel :advanced="advancedProperties" />
+      </div>
+      <div v-show="activeTab === 'code'" class="flex min-h-0 flex-1 flex-col">
+        <CodePanel :active="activeTab === 'code'" />
+      </div>
+      <div v-show="activeTab === 'lint'" class="flex min-h-0 flex-1 flex-col">
+        <DesignCheckPanel :active="activeTab === 'lint'" />
+      </div>
+    </div>
     <TabsRoot
+      v-if="!agentOnLeft"
       v-show="!commenting && !history"
       :model-value="agentOnLeft && activeTab === 'ai' ? 'design' : activeTab"
       @update:model-value="
