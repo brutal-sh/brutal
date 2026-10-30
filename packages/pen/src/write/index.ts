@@ -7,6 +7,7 @@ import { OPEN_PENCIL_PLUGIN_DATA, readPluginData } from '@open-pencil/scene-grap
 import { textLengthPixels } from '@open-pencil/scene-graph/text'
 import { vectorNetworkPaths } from '@open-pencil/scene-graph/vector-network'
 
+import { penBlendMode } from '../paints'
 import type { PenDocument, PenEffect, PenNode } from '../schema'
 import {
   documentDiagnostics,
@@ -66,8 +67,9 @@ export function writePenDocument(graph: SceneGraph): PenDocument {
       const at = `${path}/${index}`
       if (effect.spread !== 0)
         add(node, `${at}/spread`, 'Shadow spread is not supported by .pen 2.21.')
-      if (effect.blendMode && effect.blendMode !== 'NORMAL')
-        add(node, `${at}/blendMode`, 'Only normal effect blending is supported.')
+      const blendMode = effect.blendMode ? penBlendMode(effect.blendMode) : undefined
+      if (effect.blendMode && !blendMode)
+        add(node, `${at}/blendMode`, `Effect blend mode ${effect.blendMode} is not supported.`)
       if (effect.showShadowBehindNode === false)
         add(node, `${at}/showShadowBehindNode`, 'Hidden shadows behind nodes are not supported.')
       if (effect.type === 'DROP_SHADOW' || effect.type === 'INNER_SHADOW')
@@ -78,6 +80,7 @@ export function writePenDocument(graph: SceneGraph): PenDocument {
             color: colorToHex8(effect.color),
             offset: { ...effect.offset },
             blur: effect.radius,
+            blendMode,
             enabled: effect.visible
           }
         ]
@@ -86,6 +89,7 @@ export function writePenDocument(graph: SceneGraph): PenDocument {
           {
             type: effect.type === 'LAYER_BLUR' ? 'blur' : 'background_blur',
             radius: effect.radius,
+            blendMode,
             enabled: effect.visible
           }
         ]

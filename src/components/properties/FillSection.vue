@@ -150,6 +150,8 @@ function updateSolidColor(
             batch-label="Change fill color"
           >
             <PaintField
+              :compact="compact"
+              :bound="binding.state === 'bound'"
               class="w-full flex-none"
               :opacity="fill.opacity"
               :opacity-label="panels.opacity"

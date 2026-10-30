@@ -628,5 +628,8 @@
   "strokeMiterShort": "マイター",
   "strokeRoundShort": "ラウンド",
   "strokeBevelShort": "ベベル",
-  "strokeSquareShort": "スクエア"
+  "strokeSquareShort": "スクエア",
+  "effectColor": "カラー",
+  "effectOffset": "オフセット",
+  "effectBlur": "ぼかし"
 }

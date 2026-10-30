@@ -1,11 +1,13 @@
 import { expect, test } from '@playwright/test'
 
 import { CanvasHelper } from '#tests/helpers/canvas'
+import { openAdvancedProperties } from '#tests/helpers/properties'
 
 for (const theme of ['light', 'dark']) {
   test(`inline effect settings in ${theme}`, async ({ page }) => {
     await page.goto('/?test')
     await new CanvasHelper(page).waitForInit()
+    await openAdvancedProperties(page)
     const id = await page.evaluate(async (mode) => {
       const path = '/src/app/shell/theme.ts'
       const module = await import(path)
@@ -30,7 +32,8 @@ for (const theme of ['light', 'dark']) {
     }, theme)
     const section = page.getByRole('region', { name: 'Effects', exact: true })
     await section.getByRole('button', { name: 'Expand effect settings' }).click()
-    if (theme === 'light') await expect(section).toHaveScreenshot('inline-shadow-light.png')
+    if (theme === 'light')
+      await expect(section).toHaveScreenshot('inline-shadow-light.png', { maxDiffPixelRatio: 0 })
     const radius = section.getByRole('spinbutton', { name: 'B', exact: true })
     await radius.focus()
     await radius.fill('20')
@@ -54,7 +57,7 @@ for (const theme of ['light', 'dark']) {
       )
       .toBe(12)
     await section.getByRole('combobox', { name: 'Effects', exact: true }).click()
-    await page.getByRole('option', { name: 'Layer blur', exact: true }).click()
+    await page.getByRole('option', { name: 'Layer Blur', exact: true }).click()
     await expect(section.getByRole('spinbutton', { name: 'B', exact: true })).toBeVisible()
     await section.getByRole('button', { name: 'Remove effect' }).click()
     await expect

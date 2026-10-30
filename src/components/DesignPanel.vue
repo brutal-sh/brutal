@@ -145,7 +145,7 @@ const { panels } = useI18n()
     <FillSection :compact="!advanced" />
     <template v-if="strokesAndEffects">
       <StrokeSection :compact="!advanced" />
-      <EffectsSection />
+      <EffectsSection :compact="!advanced" />
     </template>
     <SelectionColorsSection />
     <LayoutGridSection v-if="advanced && supportsLayoutGuides" />
@@ -280,7 +280,7 @@ const { panels } = useI18n()
         <FillSection :compact="!advanced" />
         <template v-if="strokesAndEffects">
           <StrokeSection :compact="!advanced" />
-          <EffectsSection />
+          <EffectsSection :compact="!advanced" />
         </template>
       </template>
       <SelectionColorsSection v-if="advanced" />

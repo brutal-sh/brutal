@@ -635,5 +635,8 @@
   "strokeMiterShort": "Onglet",
   "strokeRoundShort": "Arrondi",
   "strokeBevelShort": "Biseau",
-  "strokeSquareShort": "Carré"
+  "strokeSquareShort": "Carré",
+  "effectColor": "Couleur",
+  "effectOffset": "Décalage",
+  "effectBlur": "Flou"
 }

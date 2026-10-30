@@ -635,5 +635,8 @@
   "strokeMiterShort": "Gehrung",
   "strokeRoundShort": "Rund",
   "strokeBevelShort": "Abgeschrägt",
-  "strokeSquareShort": "Quadratisch"
+  "strokeSquareShort": "Quadratisch",
+  "effectColor": "Farbe",
+  "effectOffset": "Versatz",
+  "effectBlur": "Weichzeichnung"
 }

@@ -628,5 +628,8 @@
   "strokeMiterShort": "尖角",
   "strokeRoundShort": "圆角",
   "strokeBevelShort": "斜角",
-  "strokeSquareShort": "方形"
+  "strokeSquareShort": "方形",
+  "effectColor": "颜色",
+  "effectOffset": "偏移",
+  "effectBlur": "模糊"
 }

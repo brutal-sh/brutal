@@ -48,6 +48,7 @@ defineOptions({ inheritAttrs: false })
 const { options, groups, label, placeholder, displayLabel, placement, size, ui } =
   defineProps<AppSelectProps<T>>()
 const modelValue = defineModel<T>({ required: true })
+const emit = defineEmits<{ closeAutoFocus: [event: Event] }>()
 const slots = useSlots()
 const styles = tv(theme)()
 const { open: popupOpen, portalActive } = useRetainedPopup()
@@ -100,7 +101,12 @@ const itemUI = computed(() => ({ item: ui?.item, indicator: ui?.indicator }))
       </SelectValue>
       <icon-lucide-chevron-down :class="styles.chevron({ class: ui?.chevron })" />
     </SelectTrigger>
-    <AppSelectContent v-if="portalActive" :placement="contentPlacement" :ui="contentUI">
+    <AppSelectContent
+      v-if="portalActive"
+      :placement="contentPlacement"
+      :ui="contentUI"
+      @close-auto-focus="emit('closeAutoFocus', $event)"
+    >
       <template v-for="(group, index) in optionGroups" :key="index">
         <SelectSeparator v-if="index > 0" :class="styles.separator({ class: ui?.separator })" />
         <SelectGroup>

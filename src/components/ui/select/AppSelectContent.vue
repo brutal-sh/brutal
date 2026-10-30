@@ -24,6 +24,7 @@ interface AppSelectContentProps {
 }
 
 const { placement = 'below', align = 'start', ui } = defineProps<AppSelectContentProps>()
+const emit = defineEmits<{ closeAutoFocus: [event: Event] }>()
 
 const styles = computed(() => useSelectUI({ ...ui, contentVariants: { placement } }))
 const positioning = computed(() =>
@@ -35,7 +36,11 @@ const positioning = computed(() =>
 
 <template>
   <SelectPortal>
-    <SelectContent v-bind="positioning" :class="styles.content">
+    <SelectContent
+      v-bind="positioning"
+      :class="styles.content"
+      @close-auto-focus="emit('closeAutoFocus', $event)"
+    >
       <SelectScrollUpButton :class="styles.scrollButton">
         <icon-lucide-chevron-up class="size-3" />
       </SelectScrollUpButton>

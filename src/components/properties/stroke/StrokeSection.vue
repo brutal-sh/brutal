@@ -171,6 +171,8 @@ function onToggleSides(nodes: readonly SceneNode[]) {
           batch-label="Change stroke color"
         >
           <PaintField
+            :compact="compact"
+            :bound="binding.state === 'bound'"
             :opacity="stroke.opacity"
             :opacity-label="panels.opacity"
             @update:opacity="actions.patch(index, { opacity: $event })"

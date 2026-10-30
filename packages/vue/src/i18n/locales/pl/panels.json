@@ -642,5 +642,8 @@
   "strokeMiterShort": "Ostre",
   "strokeRoundShort": "Zaokrąglone",
   "strokeBevelShort": "Ścięte",
-  "strokeSquareShort": "Kwadratowe"
+  "strokeSquareShort": "Kwadratowe",
+  "effectColor": "Kolor",
+  "effectOffset": "Przesunięcie",
+  "effectBlur": "Rozmycie"
 }

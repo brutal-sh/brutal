@@ -635,5 +635,8 @@
   "strokeMiterShort": "Inglete",
   "strokeRoundShort": "Redondo",
   "strokeBevelShort": "Bisel",
-  "strokeSquareShort": "Cuadrado"
+  "strokeSquareShort": "Cuadrado",
+  "effectColor": "Color",
+  "effectOffset": "Desplazamiento",
+  "effectBlur": "Desenfoque"
 }

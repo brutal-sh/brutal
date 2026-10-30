@@ -635,5 +635,8 @@
   "strokeMiterShort": "Spigolo",
   "strokeRoundShort": "Arrotondato",
   "strokeBevelShort": "Smusso",
-  "strokeSquareShort": "Quadrato"
+  "strokeSquareShort": "Quadrato",
+  "effectColor": "Colore",
+  "effectOffset": "Scostamento",
+  "effectBlur": "Sfocatura"
 }

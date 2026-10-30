@@ -1,9 +1,16 @@
 import { expect, test, useEditorSetup } from '#tests/e2e/fixtures'
 import { expectDefined } from '#tests/helpers/assert'
-import { propertyField, propertyItems, propertySection } from '#tests/helpers/properties'
+import {
+  openAdvancedProperties,
+  propertyField,
+  propertyItems,
+  propertySection
+} from '#tests/helpers/properties'
 import { getPageChildren, getSelectedNode } from '#tests/helpers/store'
 
 const editor = useEditorSetup()
+
+test.beforeAll(async () => openAdvancedProperties(editor.page))
 
 test('property sections are always expanded (no collapse on title click)', async () => {
   await editor.canvas.clearCanvas()
@@ -501,7 +508,7 @@ test('alignment buttons align nodes to same X', async () => {
   await editor.canvas.pressKey('Meta+a')
   await editor.canvas.waitForRender()
 
-  await propertySection(editor.page, 'Position').getByRole('button', { name: 'Align left' }).click()
+  await propertySection(editor.page, 'Alignment').getByRole('button', { name: 'Align left' }).click()
   await editor.canvas.waitForRender()
 
   const children = await getPageChildren(editor.page)

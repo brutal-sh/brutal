@@ -366,10 +366,13 @@ export const panelMessageDefaults = {
   collapseEffectSettings: 'Collapse effect settings',
   toggleExportPreview: 'Toggle export preview',
 
-  dropShadow: 'Drop shadow',
-  innerShadow: 'Inner shadow',
-  layerBlur: 'Layer blur',
-  backgroundBlur: 'Background blur',
+  effectColor: 'Color',
+  effectOffset: 'Offset',
+  effectBlur: 'Blur',
+  dropShadow: 'Drop Shadow',
+  innerShadow: 'Inner Shadow',
+  layerBlur: 'Layer Blur',
+  backgroundBlur: 'Background Blur',
   foregroundBlur: 'Foreground blur',
 
   maskType: 'Mask type',

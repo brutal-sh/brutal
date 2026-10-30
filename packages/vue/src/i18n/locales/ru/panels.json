@@ -642,5 +642,8 @@
   "strokeMiterShort": "Острый",
   "strokeRoundShort": "Скруглённый",
   "strokeBevelShort": "Скошенный",
-  "strokeSquareShort": "Квадратный"
+  "strokeSquareShort": "Квадратный",
+  "effectColor": "Цвет",
+  "effectOffset": "Смещение",
+  "effectBlur": "Размытие"
 }

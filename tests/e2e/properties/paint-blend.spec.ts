@@ -35,6 +35,23 @@ for (const kind of ['fills', 'strokes'] as const) {
         const id = store && [...store.state.selectedIds][0]
         return id ? store?.getNode(id)?.boundVariables[`${kind}/0/color`] : undefined
       }, kind)
+    const row = propertyItems(editor.page, kind).first()
+    await expect(row.getByRole('spinbutton', { name: 'Opacity', exact: true })).toHaveCount(0)
+    await expect(row.locator('[data-slot="pill"]')).toContainText('paint-brand')
+    await row.getByRole('button', { name: 'Apply variable', exact: true }).click()
+    await editor.page.getByRole('button', { name: 'Detach variable', exact: true }).click()
+    await expect(row.getByRole('spinbutton', { name: 'Opacity', exact: true })).toBeVisible()
+    expect(
+      await row
+        .locator('[data-property="opacity"]')
+        .evaluate((field) =>
+          [...field.querySelectorAll('span')].every((span) => span.scrollWidth <= span.clientWidth)
+        )
+    ).toBe(true)
+    const hex = row.locator('[data-property="color-hex"]')
+    expect(await hex.evaluate((input) => input.scrollWidth <= input.clientWidth)).toBe(true)
+    await editor.canvas.undo()
+    await expect(row.locator('[data-slot="pill"]')).toContainText('paint-brand')
     await propertyItems(editor.page, kind).first().getByTestId('fill-picker-swatch').click()
     const popup = editor.page.locator('[data-picker-content]')
     await popup.getByRole('combobox', { name: 'Blend mode' }).click()
