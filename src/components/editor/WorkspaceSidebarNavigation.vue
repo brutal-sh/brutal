@@ -1,55 +1,58 @@
 <script setup lang="ts">
 import { TabsList, TabsTrigger } from 'reka-ui'
 
+import { useI18n } from '@open-pencil/vue/i18n'
+
 import IconButton from '@/components/ui/button/IconButton.vue'
 import Tip from '@/components/ui/overlay/Tip.vue'
 
 defineEmits<{ libraries: [] }>()
+const { ai, panels } = useI18n()
 </script>
 
 <template>
-  <TabsList aria-label="Workspace panels" class="flex shrink-0 items-center gap-1 px-3 py-3">
-    <Tip label="Agent">
+  <TabsList aria-label="Workspace panels" class="flex shrink-0 items-center gap-1 px-3 pt-3 pb-0.5">
+    <Tip :label="ai.modelAgentConnection">
       <TabsTrigger
         value="agent"
-        class="group flex h-8 items-center gap-2 rounded-lg px-2.5 text-muted outline-none hover:bg-hover focus-visible:ring-2 focus-visible:ring-panel-focus data-[state=active]:bg-hover data-[state=active]:text-surface"
+        class="group flex h-[29px] min-w-[29px] items-center gap-2 rounded-md px-2.5 text-[13px] font-medium text-muted outline-none hover:bg-hover focus-visible:ring-2 focus-visible:ring-panel-focus data-[state=active]:bg-hover data-[state=active]:text-surface"
       >
         <icon-lucide-message-circle class="size-4" />
-        <span class="hidden text-xs group-data-[state=active]:inline">Agent</span>
-        <span class="sr-only group-data-[state=active]:hidden">Agent</span>
+        <span class="hidden group-data-[state=active]:inline">{{ ai.modelAgentConnection }}</span>
+        <span class="sr-only group-data-[state=active]:hidden">{{ ai.modelAgentConnection }}</span>
       </TabsTrigger>
     </Tip>
-    <Tip label="Layers">
+    <Tip :label="panels.layers">
       <TabsTrigger
         value="layers"
-        aria-label="Layers"
-        class="group flex h-8 items-center gap-2 rounded-lg px-2.5 text-muted outline-none hover:bg-hover focus-visible:ring-2 focus-visible:ring-panel-focus data-[state=active]:bg-hover data-[state=active]:text-surface"
+        :aria-label="panels.layers"
+        class="group flex h-[29px] min-w-[29px] items-center gap-2 rounded-md px-2.5 text-[13px] font-medium text-muted outline-none hover:bg-hover focus-visible:ring-2 focus-visible:ring-panel-focus data-[state=active]:bg-hover data-[state=active]:text-surface"
       >
         <icon-lucide-layers class="size-4" />
-        <span class="hidden text-xs group-data-[state=active]:inline">Layers</span>
+        <span class="hidden group-data-[state=active]:inline">{{ panels.layers }}</span>
       </TabsTrigger>
     </Tip>
-    <Tip label="Slides">
+    <Tip :label="panels.slides">
       <TabsTrigger
         value="slides"
-        aria-label="Slides"
-        class="group flex h-8 items-center gap-2 rounded-lg px-2.5 text-muted outline-none hover:bg-hover focus-visible:ring-2 focus-visible:ring-panel-focus data-[state=active]:bg-hover data-[state=active]:text-surface"
+        :aria-label="panels.slides"
+        class="group flex h-[29px] min-w-[29px] items-center gap-2 rounded-md px-2.5 text-[13px] font-medium text-muted outline-none hover:bg-hover focus-visible:ring-2 focus-visible:ring-panel-focus data-[state=active]:bg-hover data-[state=active]:text-surface"
       >
         <icon-lucide-presentation class="size-4" />
-        <span class="hidden text-xs group-data-[state=active]:inline">Slides</span>
+        <span class="hidden group-data-[state=active]:inline">{{ panels.slides }}</span>
       </TabsTrigger>
     </Tip>
-    <Tip label="Components">
+    <Tip :label="panels.components">
       <TabsTrigger
         value="components"
-        aria-label="Components"
-        class="group flex h-8 items-center gap-2 rounded-lg px-2.5 text-muted outline-none hover:bg-hover focus-visible:ring-2 focus-visible:ring-panel-focus data-[state=active]:bg-hover data-[state=active]:text-surface"
+        :aria-label="panels.components"
+        class="group flex h-[29px] min-w-[29px] items-center gap-2 rounded-md px-2.5 text-[13px] font-medium text-muted outline-none hover:bg-hover focus-visible:ring-2 focus-visible:ring-panel-focus data-[state=active]:bg-hover data-[state=active]:text-surface"
       >
         <icon-lucide-blocks class="size-4" />
-        <span class="hidden text-xs group-data-[state=active]:inline">Components</span>
+        <span class="hidden group-data-[state=active]:inline">{{ panels.components }}</span>
       </TabsTrigger>
     </Tip>
-    <IconButton label="Libraries" size="sm" @click="$emit('libraries')">
+    <IconButton :label="panels.libraries" size="sm" @click="$emit('libraries')">
       <icon-lucide-library class="size-4" />
     </IconButton>
   </TabsList>

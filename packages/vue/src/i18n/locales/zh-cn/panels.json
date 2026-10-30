@@ -618,5 +618,8 @@
   "variableModesFromLibraries": "来自库",
   "variableModeAuto": "自动（{mode}）",
   "variableModeAutoMixed": "自动",
-  "variableModeHeading": "模式"
+  "variableModeHeading": "模式",
+  "slides": "幻灯片",
+  "components": "组件",
+  "libraries": "库"
 }

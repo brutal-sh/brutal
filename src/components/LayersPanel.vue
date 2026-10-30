@@ -4,8 +4,10 @@ import { tv } from 'tailwind-variants'
 import { computed, ref } from 'vue'
 
 import { useI18n } from '@open-pencil/vue/i18n'
+import { useSceneComputed } from '@open-pencil/vue/internal/scene-computed'
 import { vTestId } from '@open-pencil/vue/testing'
 
+import { useEditorStore } from '@/app/editor/active-store'
 import AppMenu from '@/components/shell/AppMenu.vue'
 import SegmentedControl from '@/components/ui/select/SegmentedControl.vue'
 import splitterTheme from '@/theme/splitter'
@@ -16,6 +18,8 @@ import PagesPanel from './PagesPanel.vue'
 
 const { embedded = false } = defineProps<{ embedded?: boolean }>()
 const { menu, panels } = useI18n()
+const store = useEditorStore()
+const hasMultiplePages = useSceneComputed(() => store.graph.getPages().length > 1)
 const activePanel = ref<'file' | 'assets'>('file')
 const panelModel = computed({
   get: () => activePanel.value,
@@ -34,7 +38,8 @@ const splitterStyles = tv(splitterTheme)({ direction: 'vertical' })
 <template>
   <aside
     data-test-id="layers-panel"
-    class="flex min-w-0 flex-1 flex-col overflow-hidden border-r border-border bg-panel"
+    class="flex min-w-0 flex-1 flex-col overflow-hidden bg-panel"
+    :class="!embedded && 'border-r border-border'"
     style="contain: paint layout style"
   >
     <AppMenu v-if="!embedded" />
@@ -56,6 +61,7 @@ const splitterStyles = tv(splitterTheme)({ direction: 'vertical' })
       </SegmentedControl>
     </div>
     <AssetsPanel v-if="activePanel === 'assets'" />
+    <LayerTree v-else-if="embedded && !hasMultiplePages" data-test-id="layers-tree" />
     <SplitterGroup
       v-else
       direction="vertical"
@@ -75,6 +81,7 @@ const splitterStyles = tv(splitterTheme)({ direction: 'vertical' })
       </SplitterResizeHandle>
       <SplitterPanel :default-size="70" :min-size="20" class="flex flex-col overflow-hidden">
         <header
+          v-if="!embedded"
           data-test-id="layers-header"
           class="shrink-0 px-3 py-2 text-[11px] font-semibold text-surface"
         >

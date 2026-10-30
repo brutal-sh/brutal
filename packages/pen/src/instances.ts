@@ -9,7 +9,9 @@ import {
   recordInstanceOverride,
   swapInstanceComponent
 } from '@open-pencil/scene-graph/instances'
+import { claimSlotContent, slotScope } from '@open-pencil/scene-graph/slots'
 
+import { PenImportError } from './compatibility'
 import { applyPenProperties, createSceneNode, fieldsSetBy, type Build } from './nodes'
 import type { PenNode, PenOverride } from './schema'
 
@@ -170,10 +172,12 @@ function overrideLayer(build: Build, target: SceneNode, override: PenOverride): 
       applyPenProperties(target, merged, build)
       recordChangedFields(graph, target, before, fields)
       if (children) {
+        const scope = slotScope(graph, target.id)
+        if (scope.kind === 'slot') claimSlotContent(graph, scope)
         const replaced = target.childIds
         for (const childId of replaced) graph.deleteNode(childId)
         for (const child of children) createSceneNode(child, target.id, build)
-        build.replaced.add(target.id)
+        if (scope.kind !== 'slot') build.replaced.add(target.id)
       }
     } finally {
       leave?.()
@@ -206,7 +210,18 @@ function applyDescendants(
 ): void {
   for (const [path, override] of Object.entries(descendants ?? {})) {
     const target = resolvePath(build.graph, instance, path)
-    if (!target) continue
+    if (!target) {
+      if (override.children)
+        throw new PenImportError([
+          {
+            code: 'unsupported-slot',
+            nodeId: instance.id,
+            path: `/instances/${instance.id}/descendants/${path}`,
+            message: 'The target of this children replacement does not exist.'
+          }
+        ])
+      continue
+    }
     if (override.type) replaceLayer(build, target, override, populate)
     else overrideLayer(build, target, override)
   }

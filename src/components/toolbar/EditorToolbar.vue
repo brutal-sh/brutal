@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
+import type { Tool } from '@open-pencil/core'
 import { useEditorCommands } from '@open-pencil/vue/editor/commands'
 import { useViewportKind } from '@open-pencil/vue/editor/viewport-kind'
 import { useI18n } from '@open-pencil/vue/i18n'
@@ -22,7 +23,11 @@ import type { ToolbarActionItem } from '@/components/toolbar/types'
 import { useMenuUI } from '@/components/ui/menu/menu'
 
 const store = useEditorStore()
-defineSlots<{ default?(): unknown; after?(): unknown }>()
+defineSlots<{
+  default?(): unknown
+  after?(): unknown
+  afterTool?(props: { tool: Tool }): unknown
+}>()
 const { isMobile } = useViewportKind()
 const { getCommand } = useEditorCommands()
 const { showActionToast } = useActionToast()
@@ -46,7 +51,9 @@ const actionItems = computed(() =>
   items.value.flatMap((item) => (item.kind === 'action' ? [item.action] : []))
 )
 
-const flyoutMenuCls = useMenuUI({ content: 'min-w-32' })
+const flyoutMenuCls = useMenuUI({
+  content: 'min-w-32 rounded-md border border-menu-border shadow-lg'
+})
 const toolbarUI = { flyoutContent: flyoutMenuCls.content }
 const { editActions, arrangeActions } = useToolbarActions({ store, getCommand, menu })
 
@@ -76,6 +83,7 @@ function onActionTap(item: ToolbarActionItem) {
           <InsertIconButton v-if="action === 'insert-icon'" :ui="toolbarUI" />
         </template>
         <template #end><slot /></template>
+        <template #afterTool="{ tool }"><slot name="afterTool" :tool="tool" /></template>
         <template #after><slot name="after" /></template>
       </DesktopToolbar>
 

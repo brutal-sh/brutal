@@ -2,7 +2,7 @@
 
 The native editor has an embedded browser dock on the right. Its toolbar opens an HTTP(S) address, goes back or forward, reloads, chooses Desktop or Phone width, captures the visible page into the selected design, and closes the dock. Desktop uses the available dock width; Phone caps it at 390 CSS pixels and centers it. Both use the available dock height. The reported dimensions are the actual viewport, not a claimed hardware emulation.
 
-On macOS, capture uses the live `WKWebView` snapshot API, encodes PNG, and inserts through the existing image-placement action. Undo removes the inserted layer. A delayed capture cannot insert after its chosen document/page changes. Capture is raster output; editable DOM import remains a separate task. Other native platforms report capture as unavailable.
+On macOS, capture uses the live `WKWebView` snapshot API, encodes PNG, and inserts through the existing image-placement action. Undo removes the inserted layer. A delayed capture cannot insert after its chosen document/page changes. Capture is raster output; the separate Import action now creates editable layers within the bounded contract below. Other native platforms report capture as unavailable.
 
 ## Isolation and lifecycle
 
@@ -16,21 +16,26 @@ Native test runs have a separate bundle identifier, incognito storage and proces
 
 ## Verification
 
-The previous separate-window implementation passed two native end-to-end tests for navigation, responsive viewport pixels, capture insertion, undo, and remote IPC denial. Those results do not establish the newer embedded presentation.
+For the embedded implementation, four compiled Rust policy tests and eleven focused Bun tests passed. The Bun coverage includes dock bounds, editor-only capability targeting, delayed capture guards and closing a pending preview before a new document opens. Vue and native-test TypeScript checking passed, and focused lint had no errors. Two embedded native end-to-end tests then passed in 2.2 seconds (three seconds for the spec). The controlled fixture verified:
 
-For the embedded implementation, four compiled Rust policy tests and eleven focused Bun tests passed. The Bun coverage includes dock bounds, editor-only capability targeting, delayed capture guards and closing a pending preview before a new document opens. Vue and native-test TypeScript checking passed, and focused lint had no errors. Embedded native runtime acceptance is being executed separately; do not treat compilation as that evidence.
+- The preview belongs to the main window, with native position and size matching the right dock: `x=967`, `y=176`, `303×559` logical pixels in this test window.
+- The ResizeObserver changed its width to 280 and back to 303; Phone remained bounded by the actual available dock width.
+- Back, forward and reload operated on the fixture's real history. Native snapshot decoded to `606×1118` pixels at the test display's scale, with expected center RGBA `[34,170,85,255]`.
+- The capture control inserted a layer with the matching dimensions and a stored 20,284-byte PNG; the editor's actual Meta-Z shortcut removed it.
+- Remote application-status, OS-platform and filesystem-existence invocations were rejected. Privileged URLs and bounds outside the editor were also rejected. Closing the dock removed the child.
+
+The first embedded run exposed a test race: URL changes can precede document commit, so navigating again immediately can replace the first load without creating history. The fixture now waits for the first page's script to execute before navigating. The final run had no async-script timeout or retry. Native overlay hide/show calls were exercised, but visual occlusion under every dialog/menu has not been qualified. These tests do not establish screenshot-level parity with Pen.app.
 
 The embedded native test uses a local HTTP fixture. It runs one bounded WebDriver async script while the child exists, because the current test driver's standalone-window lookup otherwise loses its main executor. The script exercises the actual Vue controls and native snapshot, then closes the child before returning. No driver capability or production evaluation bridge is added for the test.
 
-Local logs use the `.git/open-pen-browser-embedded-*` prefix. They are local evidence, not versioned artifacts.
+Local logs use the `.git/open-pen-browser-embedded-*` prefix; the final runtime evidence is `.git/open-pen-browser-embedded-e2e-final.log`. They are local evidence, not versioned artifacts.
 
-## Next slice: editable DOM import
+## Editable DOM import — executed 2026-10-30
 
-Reuse the existing DOM/CSS-to-design conversion rather than adding another renderer:
+The Import action extracts the current viewport through a fixed native script, validates its bounded payload, and builds editable frames, text and readable image assets. Extraction excludes scripts, handlers and form values. The native callback is bound to its URL, generation, nonce, timeout and payload limits. Images are read inside the page under browser origin/CORS rules; there is no privileged host fetch.
 
-1. Add a fixed, bounded native extraction script for the currently previewed page. Collect rendered element/text hierarchy, computed style, geometry and resolved asset addresses; exclude script bodies and event-handler attributes. Do not accept arbitrary JavaScript from the UI.
-2. Validate the returned payload at the app boundary, then adapt it to `DesignDocument` and the existing `designDocumentToSceneGraph` / `sceneGraphFromStyledHTML` conversion. The current HTML helper evaluates supplied HTML in its own sandbox; it does not itself extract an arbitrary live page.
-3. Present import diagnostics and insert into the chosen document as an undoable group/frame. Reuse image/font loading and insertion machinery; preserve the current document on extraction or conversion failure.
-4. Test a controlled responsive page with text, flex layout, images and a cross-origin frame. Assert editable layers/text, unsupported-content diagnostics, assets, undo and save/reopen. A screenshot is not evidence for this path.
+Conversion preflights assets, fonts, target page and read-only state before a synchronous insertion. A closed dock or changed document cannot receive a late import. The action inserts one undoable tree. Same-origin/CORS-readable images are stored in the document; unavailable assets and unsupported content produce explicit diagnostics without changing it.
 
-Cross-origin iframe interiors, canvas/WebGL/video contents, shadow trees and website-specific behavior need explicit compatibility handling and diagnostics.
+Executed:18 unit tests/72 assertions, Vue/native type checks and scoped lint passed. A native run passed three checks covering10 editable descendants, a4,155-byte image, refusal without mutation, text editing, Undo/Redo, and real `.fig` disk save/reopen. A second native run passed after correcting text-width conversion: source and imported text wrapping were visually inspected, and edited text/image assets survived save/reopen. Local evidence: `native-browser-import-source.png`, `native-browser-import-layers.png`, and browser-import logs in ignored `local-evidence/`.
+
+This is a bounded importer, not full browser import parity. Gradients/background images, SVG, canvas/video, iframe interiors, shadow/custom elements, pseudo content and special paints/clipping remain unsupported. Responsive constraints become measured fixed geometry. Only macOS has been exercised. A whole-window screenshot with the browser child open remains outstanding because the test driver loses its ordinary window route while that child exists.

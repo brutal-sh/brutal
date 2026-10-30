@@ -10,6 +10,7 @@ import { tryStartConnectorLineDrag } from '#vue/shared/input/connector/line'
 import { tryStartGradientDrag } from '#vue/shared/input/gradient'
 import { tryStartLineEndDrag } from '#vue/shared/input/line/end'
 import { tryStartResize } from '#vue/shared/input/resize'
+import { tryStartScale } from '#vue/shared/input/scale'
 import {
   createSelectionMoveDrag,
   clickSelectsInside,
@@ -52,6 +53,11 @@ function tryStartHandleDrag(
   setDrag: (d: DragState) => void
 ): boolean {
   if (editor.state.readOnly) return false
+  if (editor.state.activeTool === 'SCALE') {
+    const drag = tryStartScale(cx, cy, editor)
+    if (drag) setDrag(drag)
+    return drag !== null
+  }
   if (tryStartGradientDrag(editor, sx, sy, setDrag)) return true
   // An open gradient's handles replace the layer's selection handles, which then do not respond.
   if (editedGradient(editor.graph, editor.state.gradientEdit)) return false

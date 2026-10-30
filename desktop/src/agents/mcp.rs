@@ -3,7 +3,7 @@
 use super::path::search_dirs;
 
 /// Name of the MCP entry point installed by `@open-pencil/mcp`.
-const MCP_EXECUTABLE: &str = "openpencil-mcp-http";
+const MCP_EXECUTABLE: &str = "openpen-mcp-http";
 /// Bound on the directories reported back to the settings diagnostics.
 const MAX_REPORTED_SEARCH_DIRS: usize = 12;
 

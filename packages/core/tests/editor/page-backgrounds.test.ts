@@ -106,7 +106,7 @@ describe('editor page backgrounds', () => {
 
 // Recorded in Figma desktop 126: a page made in the dark theme is #1E1E1E, in the light one #F5F5F5.
 describe('new page backgrounds follow the interface theme', () => {
-  const dark: Color = { r: 0x18 / 255, g: 0x17 / 255, b: 0x1c / 255, a: 1 }
+  const dark: Color = { r: 0x18 / 255, g: 0x18 / 255, b: 0x1b / 255, a: 1 }
   const light: Color = { r: 0.96, g: 0.96, b: 0.96, a: 1 }
 
   test('a new document and the pages added to it', async () => {

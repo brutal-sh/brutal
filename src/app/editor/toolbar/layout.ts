@@ -20,7 +20,13 @@ export interface ToolbarLayout {
 export const PINNED_TOOLBAR_ENTRY: ToolbarEntry = 'SELECT'
 
 /** Secondary tools remain available through Customize toolbar. */
-const HIDDEN_BY_DEFAULT: readonly ToolbarEntry[] = ['SHAPE_WITH_TEXT', 'CONNECTOR', 'insert-icon']
+const HIDDEN_BY_DEFAULT: readonly ToolbarEntry[] = [
+  'SHAPE_WITH_TEXT',
+  'CONNECTOR',
+  'insert-icon',
+  'PENCIL',
+  'SECTION'
+]
 
 const DEFAULT_TOOL_ORDER: readonly Tool[] = [
   'SELECT',

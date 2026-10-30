@@ -1,3 +1,9 @@
 - Moves the Agent to a left sidebar with separate conversation and composer surfaces, alongside Layers, Slides, Components and Libraries.
 - Places desktop drawing tools in a vertical rail and keeps the inspector over the canvas so selection does not shift the drawing surface.
 - Uses floating document and view controls with a dark canvas and hidden rulers by default.
+- Suggests `.pen` for the first local Save and accepts JSON comments while preserving strict malformed-file rejection.
+- Keeps document-tab keyboard focus while the browser dock spans the full editor height.
+- Uses measured Pen toolbar dimensions, inset borders, menu typography and dark surfaces.
+- Generates a distinct violet pen-nib desktop icon from the tracked Open Pen artwork master.
+- Replaces the storage sidebar on Home with a centered creation composer, import actions, document tabs and larger preview cards; keeps search and storage in compact controls, exposes recovery drafts and component libraries, and sends Home prompts and images through the new document’s Agent.
+- Removes a document’s recovery snapshot when Undo returns it to a clean state, while preserving unrelated drafts and edits arriving during cleanup.

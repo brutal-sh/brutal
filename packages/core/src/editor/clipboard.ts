@@ -2,6 +2,7 @@ import { uniq } from 'es-toolkit'
 
 import { parseFigmaClipboard } from '@open-pencil/fig/clipboard'
 import { CommittedGraphEventError, type SceneNode } from '@open-pencil/scene-graph'
+import { captureGraphCheckpoint } from '@open-pencil/scene-graph/checkpoint'
 import { attachedConnectors } from '@open-pencil/scene-graph/connectors'
 import { getAxisAlignedBoundsInParent } from '@open-pencil/scene-graph/coordinate'
 import { cycleSafeParent } from '@open-pencil/scene-graph/instances'
@@ -159,21 +160,46 @@ export function createClipboardActions(ctx: EditorContext) {
     cursorPos?: Vector,
     options: PasteOptions = {}
   ) {
-    // Copy properties writes layers for Paste properties only, as in Figma.
     if (snapshot.properties) return
-    let created: string[] = []
-    ctx.undo.runBatch('Paste', () => {
-      const dependencies = importClipboardDependenciesWithUndo(ctx, snapshot)
-      created = pasteOpenPencilNodes(
-        dependencies.nodes,
-        snapshot.placement,
-        snapshot.images,
-        dependencies.componentDependencies,
-        cursorPos,
-        options
-      )
-    })
+    const created = ctx.undo.runBatch('Paste', () =>
+      pasteSnapshotNodes(snapshot, cursorPos, options)
+    )
     await fontActions.loadFontsForNodes(created)
+  }
+
+  function pasteSnapshotNodes(
+    snapshot: ClipboardSnapshot,
+    cursorPos?: Vector,
+    options: PasteOptions = {}
+  ) {
+    const dependencies = importClipboardDependenciesWithUndo(ctx, snapshot)
+    return pasteOpenPencilNodes(
+      dependencies.nodes,
+      snapshot.placement,
+      snapshot.images,
+      dependencies.componentDependencies,
+      cursorPos,
+      options
+    )
+  }
+
+  /** Preflight fonts/assets before calling: this insertion cannot yield or leave partial history. */
+  function pastePreparedSnapshot(snapshot: ClipboardSnapshot, cursorPos?: Vector, label = 'Paste') {
+    if (snapshot.properties) throw new Error('Property snapshots cannot be inserted as layers')
+    const checkpoint = captureGraphCheckpoint(ctx.graph)
+    const selection = new Set(ctx.state.selectedIds)
+    try {
+      return ctx.undo.runBatch(label, () => {
+        const created = pasteSnapshotNodes(snapshot, cursorPos)
+        if (!created.length) throw new Error('The selected destination cannot accept these layers')
+        return created
+      })
+    } catch (error) {
+      checkpoint.restore()
+      ctx.setSelectedIds(selection)
+      ctx.requestRender()
+      throw error
+    }
   }
 
   async function pasteFromHTML(html: string, cursorPos?: Vector, options: PasteOptions = {}) {
@@ -450,6 +476,7 @@ export function createClipboardActions(ctx: EditorContext) {
       duplicateNode(ctx, node, parentId, position),
     ...copyActions,
     pasteSnapshot,
+    pastePreparedSnapshot,
     pasteFromHTML,
     warnMissingImages,
     deleteNodes,

@@ -2,6 +2,7 @@ import { invoke } from '@tauri-apps/api/core'
 import * as v from 'valibot'
 
 import type { PreviewBounds } from './dock'
+import { validateExtractedPage, type ExtractedPage } from './dom/schema'
 import { captureBytes, previewStatusSchema } from './schema'
 import type { PreviewAction, PreviewPreset, PreviewStatus } from './schema'
 
@@ -11,6 +12,7 @@ export interface BrowserPreviewNative {
   action(action: PreviewAction): Promise<void>
   resize(preset: PreviewPreset): Promise<void>
   capture(url: string): Promise<Uint8Array<ArrayBuffer>>
+  extract(url: string): Promise<ExtractedPage>
 }
 
 let pendingPreviewOperation: Promise<unknown> = Promise.resolve()
@@ -44,7 +46,16 @@ export function createBrowserPreviewNative(
     action: (action) => enqueue(() => callNative('browser_preview_action', { action })),
     resize: () => enqueue(() => callNative('browser_preview_resize', { bounds: requireBounds() })),
     capture: (url) =>
-      enqueue(async () => captureBytes(await callNative('browser_preview_capture', { url })))
+      enqueue(async () => captureBytes(await callNative('browser_preview_capture', { url }))),
+    extract: (url) =>
+      enqueue(async () => {
+        const requestId = crypto.randomUUID()
+        return validateExtractedPage(
+          await callNative('browser_preview_extract', { url, requestId }),
+          requestId,
+          url
+        )
+      })
   }
   return {
     native,

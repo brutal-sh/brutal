@@ -17,7 +17,7 @@ export function createPresentationSession(deps: PresentationDependencies) {
   const imageURL = ref<string | null>(null)
   const loading = ref(false)
   const failed = ref(false)
-  const current = computed(() => slides.value[index.value])
+  const current = computed(() => slides.value.at(index.value))
   const createURL = deps.createURL ?? URL.createObjectURL.bind(URL)
   const revokeURL = deps.revokeURL ?? URL.revokeObjectURL.bind(URL)
   let revision = 0

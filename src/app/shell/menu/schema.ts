@@ -83,6 +83,7 @@ export const APP_MENU_SCHEMA = [
       { id: 'new', label: 'New', shortcut: 'MOD+N' },
       { id: 'open', label: 'Open…', shortcut: 'MOD+O' },
       { id: 'open-recent', label: 'Open Recent', target: 'native' },
+      { id: 'import-canvas', label: 'Import Image/SVG/Figma…' },
       { id: 'browse-files', label: 'Browse Files…', handler: 'shell' },
       { id: 'open-tour', label: 'Open the Tour', handler: 'shell' },
       {
@@ -109,6 +110,9 @@ export const APP_MENU_SCHEMA = [
         palette: { icon: 'download' },
         shortcut: 'MOD+SHIFT+E',
         sub: [
+          { id: 'export-pdf', label: 'PDF', palette: { icon: 'download' } },
+          { id: 'export-jpeg', label: 'JPEG', palette: { icon: 'download' } },
+          { id: 'export-webp', label: 'WebP', palette: { icon: 'download' } },
           {
             id: 'export-png',
             label: 'PNG',
@@ -551,8 +555,8 @@ export const APP_MENU_SCHEMA = [
  * sit between them. Only the labels and accelerators are shared here.
  */
 export const APP_MENU_APP_ITEMS = [
-  { id: 'about', label: 'About OpenPencil' },
+  { id: 'about', label: 'About Open Pen' },
   { id: 'check-updates', label: 'Check for Updates…' },
   SETTINGS_MENU_ITEM,
-  { id: 'quit', label: 'Quit OpenPencil', shortcut: 'MOD+Q' }
+  { id: 'quit', label: 'Quit Open Pen', shortcut: 'MOD+Q' }
 ] satisfies AppMenuActionItem[]

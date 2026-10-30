@@ -15,6 +15,7 @@ paths = [
   '''^packages/docs/\.vitepress/cache/''',
   '''^packages/cloud/dist-standalone/''',
   '''^test-results/''',
+  '''^local-evidence/''',
   '''^scratch/'''
 ]
 

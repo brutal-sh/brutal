@@ -1,8 +1,7 @@
 import { expect, test } from '@playwright/test'
 
 import { CanvasHelper } from '#tests/helpers/canvas'
-
-import { editorSnapshot, seedPresentation } from './fixture'
+import { editorSnapshot, seedPresentation } from '#tests/helpers/presentation/fixture'
 
 test('renders frames as slides, navigates and returns to the unchanged editor', async ({
   page

@@ -8,7 +8,7 @@ import { createDeferred } from '@/app/runtime/deferred'
 
 // Installed companions report the version of the app under test, as matching ones do.
 const COMPANION_PACKAGES: Record<string, string> = {
-  'openpencil-mcp-http': '@open-pencil/mcp',
+  'openpen-mcp-http': '@open-pencil/mcp',
   'openpencil-harness': '@open-pencil/harness'
 }
 
@@ -26,6 +26,32 @@ function lookup(...commands: string[]): AgentLookup {
 }
 
 describe('local agent discovery', () => {
+  test('fork production setup never installs the upstream bridge and can restart its own bridge', async () => {
+    let available = false
+    const installBridge = mock(async () => undefined)
+    const restartBridge = mock(async () => undefined)
+    const discovery = createAgentDiscovery({
+      enabled: true,
+      manualBridgeSetup: true,
+      lookup: async () => lookup('npm', ...(available ? ['openpen-mcp-http'] : [])),
+      install: async () => undefined,
+      installBridge,
+      restartBridge
+    })
+    await discovery.refresh()
+    expect(discovery.canvasBridgeCommand.value).toBe('bun run setup:local-runtime')
+    expect(discovery.canvasBridgeInstallable.value).toBe(false)
+    await discovery.setupCanvasBridge()
+    expect(installBridge).not.toHaveBeenCalled()
+    expect(restartBridge).not.toHaveBeenCalled()
+    expect(discovery.error.value).toBe('canvas-install')
+    available = true
+    await discovery.refresh()
+    await discovery.setupCanvasBridge()
+    expect(restartBridge).toHaveBeenCalledTimes(1)
+    expect(discovery.error.value).toBeNull()
+  })
+
   test('installs the canvas companion once, discovers it, and restarts the bridge', async () => {
     let installed = false
     const pending = createDeferred<undefined>()
@@ -36,7 +62,7 @@ describe('local agent discovery', () => {
     const restartBridge = mock(async () => undefined)
     const discovery = createAgentDiscovery({
       enabled: true,
-      lookup: async () => lookup('gemini', 'npm', ...(installed ? ['openpencil-mcp-http'] : [])),
+      lookup: async () => lookup('gemini', 'npm', ...(installed ? ['openpen-mcp-http'] : [])),
       install: async () => undefined,
       installBridge,
       restartBridge
@@ -65,7 +91,7 @@ describe('local agent discovery', () => {
         versions: { '@open-pencil/mcp': version },
         executables: {
           bun: '/home/test/.bun/bin/bun',
-          'openpencil-mcp-http': '/home/test/.bun/bin/openpencil-mcp-http'
+          'openpen-mcp-http': '/home/test/.bun/bin/openpen-mcp-http'
         }
       }),
       install: async () => undefined,
@@ -127,7 +153,7 @@ describe('local agent discovery', () => {
     })
     const discovery = createAgentDiscovery({
       enabled: true,
-      lookup: async () => lookup('gemini', 'openpencil-mcp-http'),
+      lookup: async () => lookup('gemini', 'openpen-mcp-http'),
       install: async () => undefined,
       installBridge,
       restartBridge
@@ -316,7 +342,7 @@ describe('Harness companion setup', () => {
       enabled: true,
       lookup: async () => ({
         searchPath: '/test/bin',
-        executables: { npm: '/test/bin/npm', 'openpencil-mcp-http': '/home/me/.bun/bin/mcp' },
+        executables: { npm: '/test/bin/npm', 'openpen-mcp-http': '/home/me/.bun/bin/mcp' },
         versions: { '@open-pencil/mcp': '0.12.0' }
       }),
       install: async () => undefined,

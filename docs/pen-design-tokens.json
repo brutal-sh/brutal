@@ -1,0 +1,193 @@
+{
+  "$description": "Measured design values from the installed Pen.app 1.2.21. Independent implementation inputs; no proprietary implementation or artwork.",
+  "source": {
+    "app": "/Applications/Pen.app",
+    "cssMember": "out/editor/assets/index-DTgIVMRT.css",
+    "cssSha256": "f62ed913156b171fdbe571b7f6a9d74ba37a7eb5583183dfaa97ecb579ce70cd",
+    "inventoryEvidence": "ev_8f1a15567794eb3394216913ecb95a80b500f1339a38fe2756dace08a3ce6158"
+  },
+  "dark": {
+    "canvas": {
+      "$type": "color",
+      "$value": "#18181b",
+      "$extensions": {
+        "confidence": "observed-packaged"
+      }
+    },
+    "island": {
+      "$type": "color",
+      "$value": "#27272a",
+      "$extensions": {
+        "confidence": "observed-packaged"
+      }
+    },
+    "foreground": {
+      "$type": "color",
+      "$value": "#c8c8c8",
+      "$extensions": {
+        "confidence": "observed-packaged"
+      }
+    },
+    "menuText": {
+      "$type": "color",
+      "$value": "#f4f4f5",
+      "$extensions": {
+        "confidence": "observed-packaged"
+      }
+    },
+    "muted": {
+      "$type": "color",
+      "$value": "#a1a1aa",
+      "$extensions": {
+        "confidence": "observed-packaged"
+      }
+    },
+    "inputBorder": {
+      "$type": "color",
+      "$value": "#3f3f46",
+      "$extensions": {
+        "confidence": "observed-packaged"
+      }
+    },
+    "islandRim": {
+      "$type": "color",
+      "$value": "#a0b2cc21",
+      "$extensions": {
+        "confidence": "observed-packaged"
+      }
+    },
+    "menuBorder": {
+      "$type": "color",
+      "$value": "#202020",
+      "$extensions": {
+        "confidence": "observed-packaged"
+      }
+    }
+  },
+  "toolbar": {
+    "button": {
+      "$type": "dimension",
+      "$value": {
+        "value": 28,
+        "unit": "px"
+      },
+      "$extensions": {
+        "confidence": "observed-packaged"
+      }
+    },
+    "icon": {
+      "$type": "dimension",
+      "$value": {
+        "value": 16,
+        "unit": "px"
+      },
+      "$extensions": {
+        "confidence": "observed-packaged"
+      }
+    },
+    "gap": {
+      "$type": "dimension",
+      "$value": {
+        "value": 4,
+        "unit": "px"
+      },
+      "$extensions": {
+        "confidence": "observed-packaged"
+      }
+    },
+    "padding": {
+      "$type": "dimension",
+      "$value": {
+        "value": 4,
+        "unit": "px"
+      },
+      "$extensions": {
+        "confidence": "observed-packaged"
+      }
+    },
+    "radius": {
+      "$type": "dimension",
+      "$value": {
+        "value": 20,
+        "unit": "px"
+      },
+      "$extensions": {
+        "confidence": "observed-packaged"
+      }
+    },
+    "buttonRadius": {
+      "$type": "dimension",
+      "$value": {
+        "value": 16,
+        "unit": "px"
+      },
+      "$extensions": {
+        "confidence": "observed-packaged"
+      }
+    },
+    "caretHeight": {
+      "$type": "dimension",
+      "$value": {
+        "value": 12,
+        "unit": "px"
+      },
+      "$extensions": {
+        "confidence": "observed-packaged"
+      }
+    },
+    "caretWidth": {
+      "$type": "dimension",
+      "$value": {
+        "value": 28,
+        "unit": "px"
+      },
+      "$extensions": {
+        "confidence": "observed-packaged"
+      }
+    },
+    "rim": {
+      "$type": "dimension",
+      "$value": {
+        "value": 1,
+        "unit": "px"
+      },
+      "$extensions": {
+        "confidence": "observed-packaged"
+      }
+    }
+  },
+  "menu": {
+    "widthMinPx": 128,
+    "radiusPx": 6,
+    "paddingPx": 4,
+    "textPx": 12,
+    "lineHeightPx": 16,
+    "rowPaddingYPx": 6,
+    "shortcutPx": 11,
+    "confidence": "observed-packaged"
+  },
+  "navigation": {
+    "heightPx": 29,
+    "minimumWidthPx": 29,
+    "radiusPx": 6,
+    "fontPx": 13,
+    "weight": 500,
+    "confidence": "observed-packaged"
+  },
+  "font": {
+    "family": "ui-sans-serif, -apple-system, system-ui, Segoe UI, Helvetica, Apple Color Emoji, Arial, sans-serif, Segoe UI Emoji, Segoe UI Symbol",
+    "confidence": "observed-packaged"
+  },
+  "limitations": [
+    "Packaged classes are not runtime computed styles; actual state comparison remains required.",
+    "REA native observation hit its45-second provider deadline. A subsequent CUA screenshot of the running app and open Move menu was observed; computed-style coverage is still missing.",
+    "The ASAR inventory records integrity contradictions; extracted observed bytes are reference evidence, not publisher-integrity verification."
+  ],
+  "extraction": {
+    "literalComponentClassSets": 2561,
+    "rootThemeProperties": 51,
+    "baseThemeProperties": 158,
+    "darkThemeProperties": 43,
+    "rawReferenceDirectory": "local-evidence/pen-design-extraction (ignored/private)"
+  }
+}

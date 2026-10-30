@@ -5,6 +5,36 @@ import { toolbarFlyoutTestId } from '@open-pencil/vue/testing'
 import { expectDefined } from '#tests/helpers/assert'
 import { CanvasHelper } from '#tests/helpers/canvas'
 
+test('Find layers focuses matching layers without adding document history', async ({
+  page
+}, testInfo) => {
+  const canvas = new CanvasHelper(page)
+  await page.goto('/?test')
+  await canvas.waitForInit()
+  await canvas.drawRect(220, 220, 160, 80)
+  await page
+    .getByRole('tablist', { name: 'Workspace panels' })
+    .getByRole('tab', { name: 'Layers', exact: true })
+    .click()
+  const layers = page.getByTestId('layers-item')
+  await expect(layers).toHaveCount(1)
+  await page.getByRole('button', { name: 'Find layers', exact: true }).click()
+  const search = page.getByRole('dialog', { name: 'Find layers', exact: true })
+  const input = search.getByRole('textbox', { name: 'Find layers', exact: true })
+  await expect(input).toBeFocused()
+  await input.fill('rectangle')
+  await search.getByRole('button', { name: 'Rectangle 1', exact: true }).click()
+  await expect(page.getByTestId('design-panel-single')).toBeVisible()
+  await page.screenshot({ path: testInfo.outputPath('workspace-layer-search.png') })
+  await input.fill('absent layer')
+  await expect(search.getByRole('button', { name: 'Rectangle 1', exact: true })).toHaveCount(0)
+  await search.getByRole('button', { name: 'Close layer search', exact: true }).click()
+  await expect(search).toBeHidden()
+  await canvas.undo()
+  await expect(layers).toHaveCount(0)
+  canvas.assertNoErrors()
+})
+
 test('workspace panels switch exclusively and document tabs open and close', async ({
   page
 }, testInfo) => {
@@ -25,11 +55,11 @@ test('workspace panels switch exclusively and document tabs open and close', asy
 
     await navigation.getByRole('tab', { name: 'Layers', exact: true }).click()
     await expect(page.getByTestId('layers-panel')).toBeVisible()
-    await expect(page.getByTestId('chat-panel')).toBeHidden()
+    await expect(page.getByRole('tabpanel', { name: 'Agent', exact: true })).toBeHidden()
     await navigation.getByRole('tab', { name: 'Components', exact: true }).click()
     await expect(page.getByTestId('assets-panel')).toBeVisible()
     await expect(page.getByTestId('layers-panel')).toBeHidden()
-    await expect(page.getByTestId('chat-panel')).toBeHidden()
+    await expect(page.getByRole('tabpanel', { name: 'Agent', exact: true })).toBeHidden()
     const expandedCanvas = expectDefined(
       await canvas.canvas.boundingBox(),
       'expanded sidebar canvas'
@@ -92,6 +122,35 @@ test('vertical tools draw on a stable canvas while inspector and zoom controls w
     await expect(toolbar).toHaveAttribute('aria-orientation', 'vertical')
     const canvasBefore = expectDefined(await canvas.canvas.boundingBox(), 'canvas bounds')
     const rail = expectDefined(await toolbar.boundingBox(), 'tool rail bounds')
+    expect(rail.width).toBe(36)
+    await expect(page.getByRole('button', { name: 'Toggle sidebar', exact: true })).toHaveCSS(
+      'width',
+      '28px'
+    )
+    await expect(page.getByRole('button', { name: 'Command palette', exact: true })).toHaveCSS(
+      'width',
+      '28px'
+    )
+    const move = toolbar.getByRole('button', { name: 'Move', exact: true })
+    await expect(move).toHaveCSS('width', '28px')
+    await expect(move).toHaveCSS('height', '28px')
+    await expect(move).toHaveCSS('border-top-width', '1px')
+    await expect(move).toHaveCSS('border-top-style', 'solid')
+    await expect(move).toHaveCSS('border-top-color', 'rgb(63, 63, 70)')
+    await expect(toolbar).toHaveCSS('background-color', 'rgb(39, 39, 42)')
+    await expect(toolbar).toHaveCSS('border-top-color', 'rgba(160, 178, 204, 0.13)')
+    await page.getByTestId(toolbarFlyoutTestId('SELECT')).click()
+    const moveMenu = page.getByRole('menu')
+    await expect(moveMenu).toHaveCSS('border-top-color', 'rgb(32, 32, 32)')
+    await expect(moveMenu).toHaveCSS('border-top-width', '1px')
+    await expect(moveMenu.getByRole('menuitemradio', { name: /^Move/ })).toBeVisible()
+    await expect(moveMenu.getByRole('menuitemradio', { name: /^Scale/ })).toBeVisible()
+    await expect(moveMenu.getByRole('menuitemradio', { name: /^Move/ })).toHaveCSS(
+      'font-size',
+      '12px'
+    )
+    await page.screenshot({ path: testInfo.outputPath('workspace-move-menu.png') })
+    await page.keyboard.press('Escape')
     expect(rail.height).toBeGreaterThan(rail.width)
     expect(rail.x).toBeGreaterThanOrEqual(canvasBefore.x)
     expect(rail.y).toBeGreaterThanOrEqual(canvasBefore.y)

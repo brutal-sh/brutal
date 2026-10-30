@@ -34,6 +34,12 @@ type EmbeddedResult =
 describe('native embedded browser preview', () => {
   before(async () => {
     server = createServer((request, response) => {
+      response.setHeader('Access-Control-Allow-Origin', '*')
+      if (request.url === '/reports') {
+        response.setHeader('Content-Type', 'application/json')
+        response.end(JSON.stringify(ipcReports))
+        return
+      }
       if (request.url?.startsWith('/report?')) {
         ipcReports.push(request.url)
         response.end('ok')
@@ -42,7 +48,7 @@ describe('native embedded browser preview', () => {
       response.writeHead(200, { 'Content-Type': 'text/html' })
       response.end(
         // oxlint-disable-next-line open-pencil/no-hand-rolled-color -- Exact pixels are the native snapshot acceptance contract.
-        `<!doctype html><title>Preview fixture</title><style>html,body{margin:0;width:100%;height:100%;background:rgb(238,51,68)}@media(max-width:500px){html,body{background:rgb(34,170,85)}}</style><a href="/second">Next page</a><script>(async()=>{const invoke=window.__TAURI__?.core?.invoke; const commands=[['browser_preview_status',{}],['plugin:os|platform',{}],['plugin:fs|exists',{path:'/tmp/openpen-no-access-fixture'}]]; const blocked=await Promise.all(commands.map(async([command,args])=>{if(!invoke)return true;try{await invoke(command,args);return false}catch{return true}}));await fetch('/report?blocked='+blocked.join(','));})();</script>`
+        `<!doctype html><title>Preview fixture</title><style>html,body{margin:0;width:100%;height:100%;background:rgb(238,51,68)}@media(max-width:500px){html,body{background:rgb(34,170,85)}}</style><a href="/second">Next page</a><script>(async()=>{const invoke=window.__TAURI__?.core?.invoke; const commands=[['browser_preview_status',{}],['plugin:os|platform',{}],['plugin:fs|exists',{path:'/tmp/openpen-no-access-fixture'}]]; const blocked=await Promise.all(commands.map(async([command,args])=>{if(!invoke)return true;try{await invoke(command,args);return false}catch{return true}}));await fetch('/report?blocked='+blocked.join(',')+'&page='+encodeURIComponent(location.pathname));})();</script>`
       )
     })
     await new Promise<void>((resolve) => {
@@ -85,9 +91,9 @@ describe('native embedded browser preview', () => {
         target.click()
       }
       const navigate = async (url: string) => {
-        const input = document.querySelector<HTMLInputElement>(
-          '[data-test-id="browser-preview-dock"] input[type="url"]'
-        )
+        button('Web address')
+        await wait(() => !!document.querySelector('input[type="url"]'), 'address popover')
+        const input = document.querySelector<HTMLInputElement>('input[type="url"]')
         if (!input) throw new Error('Missing address field')
         input.value = url
         input.dispatchEvent(new Event('input', { bubbles: true }))
@@ -110,6 +116,17 @@ describe('native embedded browser preview', () => {
           'dock mounted'
         )
         await navigate(`${origin}/first`)
+        // URL changes precede document commit in WKWebView; wait for fixture execution so
+        // the next navigation creates a real history entry rather than replacing its load.
+        await wait(async () => {
+          const reports: unknown = await (await fetch(`${origin}/reports`)).json()
+          return (
+            Array.isArray(reports) &&
+            reports.some(
+              (report: unknown) => typeof report === 'string' && report.includes('page=%2Ffirst')
+            )
+          )
+        }, 'first page committed')
         await navigate(`${origin}/second`)
         button('Back')
         await wait(
@@ -224,6 +241,7 @@ describe('native embedded browser preview', () => {
     }, origin)
     assert.ok(!('error' in result), JSON.stringify(result))
     if ('error' in result) return
+    console.debug('Embedded native capture evidence:', JSON.stringify(result))
     assert.deepEqual(result.pixel, [34, 170, 85, 255])
     assert.ok(result.rect.x > 0 && result.rect.y > 0)
     assert.equal(result.current.windowLabel, mainHandle)
@@ -234,7 +252,7 @@ describe('native embedded browser preview', () => {
     assert.equal(result.layerHeight, result.height)
     assert.ok(result.bytes && result.bytes > 8)
     assert.ok(ipcReports.length > 0)
-    assert.ok(ipcReports.every((report) => report.endsWith('blocked=true,true,true')))
+    assert.ok(ipcReports.every((report) => report.includes('blocked=true,true,true&')))
     assert.deepEqual(await browser.getWindowHandles(), [mainHandle])
     await browser.keys(['Meta', 'z'])
     await browser.waitUntil(async () =>

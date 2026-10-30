@@ -289,7 +289,15 @@ export interface DragShapeHandle {
   cancel: () => void
 }
 
+export interface DragScale {
+  type: 'scale'
+  move: (x: number, y: number) => void
+  commit: () => void
+  cancel: () => void
+}
+
 export type DragState =
+  | DragScale
   | DragShapeHandle
   | DragDraw
   | DragStickyDraw

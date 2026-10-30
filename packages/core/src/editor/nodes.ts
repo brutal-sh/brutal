@@ -12,6 +12,7 @@ import { applyBoundVisibilityEdit, bindsVisibility } from './components/authorin
 import { createLayoutModeActions } from './layout-mode'
 import { createNodePreviewActions } from './node-preview'
 import { createNudgeActions } from './nudge'
+import { createScaleActions } from './scale'
 import { refitGroupsAroundLayers } from './structure/group/bounds'
 import { pathTextEditChanges } from './text/path-edit'
 import type { EditorContext } from './types'
@@ -31,6 +32,7 @@ export function createNodeActions(ctx: EditorContext) {
   const previewActions = createNodePreviewActions(ctx, updateNode)
   const layoutModeActions = createLayoutModeActions(ctx, previewActions.beginNodePreview)
   const nudgeActions = createNudgeActions(ctx)
+  const scaleActions = createScaleActions(ctx, previewActions.beginNodePreview, updateNode)
   const variableBindingActions = createVariableBindingActions(ctx)
 
   function runChangedLayout(id: string, changes: Partial<SceneNode>) {
@@ -131,6 +133,7 @@ export function createNodeActions(ctx: EditorContext) {
   return {
     updateNode,
     ...previewActions,
+    ...scaleActions,
     updateNodeWithUndo,
     setOpacity,
     ...layoutModeActions,

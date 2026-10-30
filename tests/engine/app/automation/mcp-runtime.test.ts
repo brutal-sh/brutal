@@ -20,6 +20,7 @@ function setup(overrides: Partial<MCPRuntimeDependencies> = {}) {
   const catalogs: ToolDescriptor[][] = []
   const dependencies: MCPRuntimeDependencies = {
     canConnect: () => true,
+    getBrowserURL: () => 'ws://127.0.0.1:7610',
     connect: () => {
       calls.push('connect')
       return () => calls.push('disconnect-bridge')

@@ -1,5 +1,6 @@
 {
   "move": "移动",
+  "scale": "缩放",
   "frame": "画框",
   "section": "分区",
   "rectangle": "矩形",

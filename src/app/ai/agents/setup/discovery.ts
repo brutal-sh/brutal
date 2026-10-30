@@ -12,7 +12,12 @@ import {
   HARNESS_INSTALL_TARGET,
   HARNESS_PACKAGE
 } from '@/app/ai/agents/pi/companion'
-import { MCP_EXECUTABLE, MCP_INSTALL_TARGET, MCP_PACKAGE_NAME } from '@/app/automation/mcp/failure'
+import {
+  MCP_EXECUTABLE,
+  MCP_INSTALL_COMMAND,
+  MCP_INSTALL_TARGET,
+  MCP_PACKAGE_NAME
+} from '@/app/automation/mcp/failure'
 import { detectUserAgent } from '@/app/tauri/command'
 
 import {
@@ -68,6 +73,7 @@ export function createAgentDiscovery(options: {
   install: (agent: ACPAgentDef, searchPath: string) => Promise<void>
   installBridge?: (searchPath: string, manager: PackageManager) => Promise<void>
   restartBridge?: () => Promise<void>
+  manualBridgeSetup?: boolean
   installHarness?: (searchPath: string, manager: PackageManager) => Promise<void>
 }) {
   const snapshot = shallowRef<AgentLookup | null>(null)
@@ -130,15 +136,23 @@ export function createAgentDiscovery(options: {
   const harnessAvailable = computed(hasHarness)
   const harnessOutdatedVersion = computed(harnessOutdated)
   /** Commands to install or update a companion by hand, for the package manager that has it. */
-  const canvasBridgeCommand = computed(() => installCommand(MCP_INSTALL_TARGET, MCP_EXECUTABLE))
+  const canvasBridgeCommand = computed(() =>
+    options.manualBridgeSetup
+      ? MCP_INSTALL_COMMAND
+      : installCommand(MCP_INSTALL_TARGET, MCP_EXECUTABLE)
+  )
   const harnessCommand = computed(() => installCommand(HARNESS_INSTALL_TARGET, HARNESS_EXECUTABLE))
-  const canvasBridgeNeedsAdmin = computed(() => needsAdmin(MCP_EXECUTABLE))
+  const canvasBridgeNeedsAdmin = computed(
+    () => !options.manualBridgeSetup && needsAdmin(MCP_EXECUTABLE)
+  )
   const harnessNeedsAdmin = computed(() => needsAdmin(HARNESS_EXECUTABLE))
   /** One click can install or update it, with the package manager that would run. */
   function installable(executable: string): boolean {
     return canInstallWith(managerFor(executable)) && !needsAdmin(executable)
   }
-  const canvasBridgeInstallable = computed(() => installable(MCP_EXECUTABLE))
+  const canvasBridgeInstallable = computed(
+    () => !options.manualBridgeSetup && installable(MCP_EXECUTABLE)
+  )
   const harnessInstallable = computed(() => installable(HARNESS_EXECUTABLE))
   /** Agent adapters always come from npm. */
   const adapterNeedsAdmin = computed(npmNeedsAdmin)
@@ -196,6 +210,10 @@ export function createAgentDiscovery(options: {
   async function setupCanvasBridge(): Promise<void> {
     if (!options.enabled || installing.value || !snapshot.value) return
     let installed = hasBridge() && !bridgeOutdated()
+    if (!installed && options.manualBridgeSetup) {
+      error.value = 'canvas-install'
+      return
+    }
     const manager = managerFor(MCP_EXECUTABLE)
     if (!installed && !canInstallWith(manager)) {
       // A Bun copy the app cannot update leaves only the command run by hand.
@@ -281,6 +299,7 @@ export function createAgentDiscovery(options: {
 export const agentDiscovery = createAgentDiscovery({
   enabled: IS_TAURI,
   lookup: lookupAgents,
+  manualBridgeSetup: true,
   install: installAgentAdapter,
   installBridge: installCanvasBridge,
   installHarness: installHarnessCompanion,

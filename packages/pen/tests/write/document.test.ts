@@ -10,7 +10,7 @@ import {
 import { SceneGraph, type SceneNode } from '@open-pencil/scene-graph'
 import { getNodeLocalMatrix } from '@open-pencil/scene-graph/coordinate'
 
-import { parseDocument } from './helpers/document'
+import { parseDocument } from '../helpers/document'
 
 function ordinary(type: SceneNode['type'] = 'RECTANGLE') {
   const graph = new SceneGraph()

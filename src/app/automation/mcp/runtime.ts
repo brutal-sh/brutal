@@ -13,6 +13,7 @@ import {
   getAutomationHealthFailure,
   getAutomationStartupFailure,
   getMCPServerURL,
+  getMCPBrowserURL,
   spawnMCPIfNeeded
 } from './spawn'
 
@@ -33,7 +34,8 @@ export interface MCPRuntimeState {
 export type MCPRuntimeResult = { ok: true } | { ok: false; error: Error }
 
 export interface MCPRuntimeDependencies {
-  connect: (getStore: () => EditorStore, authToken: string | null) => () => void
+  connect: (getStore: () => EditorStore, authToken: string | null, browserURL: string) => () => void
+  getBrowserURL: () => string
   canConnect: () => boolean
   readHealth: (authToken?: string | null) => Promise<AutomationHealth | null>
   setToolDescriptors: (tools: NonNullable<AutomationHealth['tools']>) => void
@@ -154,7 +156,11 @@ export function createMCPRuntimeService(dependencies: MCPRuntimeDependencies) {
       if (health) {
         state.externallyManaged = server?.managed === false
         if (activeStore && dependencies.canConnect()) {
-          disconnectAutomation = dependencies.connect(activeStore, server?.authToken ?? null)
+          disconnectAutomation = dependencies.connect(
+            activeStore,
+            server?.authToken ?? null,
+            dependencies.getBrowserURL()
+          )
         }
         applyHealth(health)
         return { ok: true }
@@ -220,7 +226,9 @@ export function localMCPAvailable(): boolean {
 }
 
 const appMCPRuntime = createMCPRuntimeService({
-  connect: (getStore, authToken) => connectAutomation(getStore, authToken).disconnect,
+  connect: (getStore, authToken, browserURL) =>
+    connectAutomation(getStore, authToken, browserURL).disconnect,
+  getBrowserURL: getMCPBrowserURL,
   canConnect: localMCPAvailable,
   readHealth: readAutomationHealth,
   setToolDescriptors: setMCPToolDescriptors,

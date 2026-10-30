@@ -17,6 +17,7 @@ test('runner overrides route health checks and every spawned MCP location to the
   })
   expect(nativeTestMCPRoute(configuration)).toEqual({
     httpURL: 'http://127.0.0.1:49123',
+    browserURL: 'ws://127.0.0.1:49123',
     env: {
       PORT: '49123',
       OPENPENCIL_MCP_DISCOVERY_PATH: '/tmp/openpen-native-test-123/mcp.json',

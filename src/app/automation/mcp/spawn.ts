@@ -22,7 +22,6 @@ import {
   mcpFailure,
   MCP_EXECUTABLE,
   MCP_INSTALL_COMMAND,
-  MCP_INSTALL_TARGET,
   MCP_PACKAGE_NAME,
   MCPStartupError,
   type MCPFailure
@@ -69,6 +68,13 @@ async function configureNativeTestMCP(): Promise<void> {
     DEV_AUTOMATION_HTTP_URL = nativeTestMCPRoute(nativeTestConfiguration).httpURL
   })()
   await nativeTestLoading
+}
+
+/** The editor socket must follow the same runtime route as the agent's HTTP connection. */
+export function getMCPBrowserURL(): string {
+  if (!NATIVE_TEST_MODE) return __OPENPENCIL_LOCAL_AUTOMATION_URL__
+  if (!nativeTestConfiguration) throw new Error('Native MCP test routing is not initialized')
+  return nativeTestMCPRoute(nativeTestConfiguration).browserURL
 }
 
 export function getMCPServerURL(): string {
@@ -137,7 +143,7 @@ function toError(error: unknown): Error {
 
 function missingMCPError(searched: string[] = []): Error {
   return new MCPStartupError(
-    `MCP automation is not installed. Install ${MCP_INSTALL_TARGET} globally with your package manager, then restart OpenPencil.`,
+    `MCP automation is not installed. From the Open Pen checkout, run ${MCP_INSTALL_COMMAND}, then restart Open Pen.`,
     searched.length > 0
       ? mcpFailure('not-installed', searched.join(', '))
       : mcpFailure('not-installed')

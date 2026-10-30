@@ -4,9 +4,11 @@ import { useEditorStore } from '@/app/editor/active-store'
 import { clearRecentFiles, forgetRecentFile, recentLocalFileAt } from '@/app/recent-files'
 import { runFocusedCommand } from '@/app/shell/commands/focused'
 import { createSharedEditorMenuActions } from '@/app/shell/menu/actions/editor'
+import { createExportMenuActions } from '@/app/shell/menu/actions/export'
 import { createSelectionMenuActions } from '@/app/shell/menu/actions/selection'
 import { watchNativeMenuFeatures } from '@/app/shell/menu/features'
 import { openFileDialog, openFileFromPath } from '@/app/shell/menu/files'
+import { importCanvasFileDialog } from '@/app/shell/menu/import'
 import { useNativeMenuEvents } from '@/app/shell/menu/native-events'
 import { OPEN_RECENT_EVENT_PREFIX, watchRecentFilesMenu } from '@/app/shell/menu/recent-files'
 import { createSaveMenuActions } from '@/app/shell/menu/save-actions'
@@ -46,24 +48,8 @@ export function useEditorMenu() {
     'previous-tab': () => switchAdjacentTab(-1),
     'next-tab': () => switchAdjacentTab(1),
     ...createSaveMenuActions(store),
-    'export-selection': () => {
-      if (store.state.selectedIds.size > 0) void store.exportSelection(1, 'png')
-    },
-    'export-png': () => {
-      if (store.state.selectedIds.size > 0) void store.exportSelection(1, 'png')
-    },
-    'export-svg': () => {
-      if (store.state.selectedIds.size > 0) void store.exportSelection(1, 'svg')
-    },
-    'export-pptx': () => {
-      if (store.state.selectedIds.size > 0) void store.exportSelection(1, 'pptx')
-    },
-    'export-drawio': () => {
-      if (store.state.selectedIds.size > 0) void store.exportSelection(1, 'drawio')
-    },
-    'export-fig': () => {
-      if (store.state.selectedIds.size > 0) void store.exportSelection(1, 'fig')
-    },
+    'import-canvas': importCanvasFileDialog,
+    ...createExportMenuActions(store),
     autosave: () => {
       store.state.autosaveEnabled = !store.state.autosaveEnabled
     },

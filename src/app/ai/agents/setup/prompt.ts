@@ -18,24 +18,24 @@ export function codingAgentGuideURL(agentID: ACPAgentID): string {
 
 /**
  * Markdown to paste into a coding agent the person already uses, asking it to install what
- * OpenPencil needs to start it. Written for the agent, so it stays in English.
+ * Open Pen needs to start it. Written for the agent, so it stays in English.
  */
 export function codingAgentSetupPrompt(agentID: ACPAgentID): string {
   const agent = ACP_AGENTS.find((candidate) => candidate.id === agentID)
   if (!agent) return ''
   const install = agent.installCommand ?? `Install ${agent.name}`
   return dedent`
-    Help me connect ${agent.name} to OpenPencil, an open-source design editor. OpenPencil starts ${agent.name} through the Agent Client Protocol and gives it canvas tools through OpenPencil's local MCP server, so both need to be installed on this computer.
+    Help me connect ${agent.name} to Open Pen, an open-source design editor. Open Pen starts ${agent.name} through the Agent Client Protocol and gives it canvas tools through Open Pen's local MCP server, so both need to be installed on this computer.
 
     Please do this for me:
 
     1. If \`${agent.command}\` is not on my PATH, install it: \`${install}\`
-    2. If \`openpencil-mcp-http\` is not on my PATH, install OpenPencil's MCP server: \`${MCP_INSTALL_COMMAND}\`
+    2. If \`openpen-mcp-http\` is not on my PATH, run \`${MCP_INSTALL_COMMAND}\` from the built Open Pen checkout. Setup requires the checkout; normal launch uses the installed standalone bridge. Do not install the upstream @open-pencil/mcp package
     3. If npm fails with a permission error (EACCES), set up a global npm folder in my home directory (for example \`npm config set prefix ~/.npm-global\` and add \`~/.npm-global/bin\` to my PATH) and install again; use sudo only if I agree.
-    4. Confirm both commands are found, for example with \`which ${agent.command}\` and \`which openpencil-mcp-http\` (\`where\` on Windows). If a global npm folder is missing from my PATH, tell me how to add it.
+    4. Confirm both commands are found, for example with \`which ${agent.command}\` and \`which openpen-mcp-http\` (\`where\` on Windows). If a global npm folder is missing from my PATH, tell me how to add it.
     5. ${SIGN_IN[agentID]}
 
-    Then tell me what you installed and anything I still need to do myself. I will press "Check again" in OpenPencil's AI setup afterwards.
+    Then tell me what you installed and anything I still need to do myself. I will press "Check again" in Open Pen's AI setup afterwards.
 
     Setup guide: ${codingAgentGuideURL(agentID)}
   `

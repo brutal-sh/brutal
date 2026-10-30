@@ -1,5 +1,6 @@
 import type { SnappingPreferences } from '@open-pencil/core'
 
+import { NATIVE_MENU_IDS } from '@/app/shell/menu/native-schema'
 import { isTauri } from '@/app/tauri/env'
 
 export const DESIGN_ISSUES_MENU_ID = 'view-design-issues'
@@ -15,24 +16,26 @@ export async function syncNativeSnappingMenu(preferences: SnappingPreferences): 
   if (!isTauri()) return
   const { invoke } = await import('@tauri-apps/api/core')
   await Promise.all(
-    Object.entries(SNAPPING_MENU_IDS).map(([preference, id]) =>
-      invoke('set_native_menu_checked', {
-        id,
-        checked: preferences[preference as keyof SnappingPreferences]
-      })
-    )
+    Object.entries(SNAPPING_MENU_IDS)
+      .filter(([, id]) => NATIVE_MENU_IDS.has(id))
+      .map(([preference, id]) =>
+        invoke('set_native_menu_checked', {
+          id,
+          checked: preferences[preference as keyof SnappingPreferences]
+        })
+      )
   )
 }
 
 export async function syncNativeDesignIssuesMenu(showOnCanvas: boolean): Promise<void> {
-  if (!isTauri()) return
+  if (!isTauri() || !NATIVE_MENU_IDS.has(DESIGN_ISSUES_MENU_ID)) return
   const { invoke } = await import('@tauri-apps/api/core')
   await invoke('set_native_menu_checked', { id: DESIGN_ISSUES_MENU_ID, checked: showOnCanvas })
 }
 
 /** View → Comments, which Shift+C and the comment menus also toggle. */
 export async function syncNativeCommentsMenu(shown: boolean): Promise<void> {
-  if (!isTauri()) return
+  if (!isTauri() || !NATIVE_MENU_IDS.has(COMMENTS_MENU_ID)) return
   const { invoke } = await import('@tauri-apps/api/core')
   await invoke('set_native_menu_checked', { id: COMMENTS_MENU_ID, checked: shown })
 }

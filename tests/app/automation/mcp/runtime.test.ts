@@ -8,6 +8,7 @@ test('a browser without local automation never probes or starts a localhost serv
   const connect = mock(() => () => undefined)
   const runtime = createMCPRuntimeService({
     canConnect: () => false,
+    getBrowserURL: () => 'ws://127.0.0.1:7610',
     spawn,
     readHealth,
     connect,
@@ -26,4 +27,27 @@ test('a browser without local automation never probes or starts a localhost serv
   expect(spawn).not.toHaveBeenCalled()
   expect(readHealth).not.toHaveBeenCalled()
   expect(connect).not.toHaveBeenCalled()
+})
+
+test('connects the editor socket to the route resolved while the MCP server starts', async () => {
+  let browserURL = 'ws://127.0.0.1:7610'
+  const connect = mock((_getStore: unknown, _token: string | null, _url: string) => () => undefined)
+  const runtime = createMCPRuntimeService({
+    canConnect: () => true,
+    getBrowserURL: () => browserURL,
+    connect,
+    spawn: async () => {
+      browserURL = 'ws://127.0.0.1:49123'
+      return { authToken: 'test-only-token', managed: true, disconnect: () => undefined }
+    },
+    readHealth: async () => ({ status: 'no_app', agentSessionEvents: true }),
+    setToolDescriptors: () => undefined,
+    getStartupFailure: () => null,
+    getHealthFailure: () => null
+  })
+  const getStore = () => {
+    throw new Error('The socket connector is inspected before it needs a document')
+  }
+  expect(await runtime.start(getStore)).toEqual({ ok: true })
+  expect(connect).toHaveBeenCalledWith(getStore, 'test-only-token', 'ws://127.0.0.1:49123')
 })

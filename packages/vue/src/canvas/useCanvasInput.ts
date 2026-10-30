@@ -48,6 +48,7 @@ import { handleNodeEditMarqueeMove, handleNodeEditMove } from '#vue/shared/input
 /** Drags Escape abandons, leaving the document as it was before the press. */
 const ESCAPABLE_DRAGS: ReadonlySet<DragState['type']> = new Set<DragState['type']>([
   'draw',
+  'scale',
   'gradient',
   'rotate',
   'connector-draw',
@@ -73,7 +74,10 @@ export function useCanvasInput(
   // layers move, resize, or rotate.
   watch(
     () => drag.value?.type,
-    (type) => editor.setTransforming(type === 'move' || type === 'resize' || type === 'rotate')
+    (type) =>
+      editor.setTransforming(
+        type === 'move' || type === 'resize' || type === 'rotate' || type === 'scale'
+      )
   )
   const canvasLabelEdit = createCanvasLabelEdit(editor)
   const cursorOverride = ref<string | null>(null)
@@ -278,7 +282,10 @@ export function useCanvasInput(
       editor.connectorHover(coords.cx, coords.cy, attachModifiers(e))
     }
 
-    if (!drag.value && editor.state.activeTool === 'SELECT') {
+    if (
+      !drag.value &&
+      (editor.state.activeTool === 'SELECT' || editor.state.activeTool === 'SCALE')
+    ) {
       const { sx, sy, cx, cy } = coords
       const guideCursor = editor.state.readOnly ? null : guideInput.updateHover(sx, sy)
       cursorOverride.value =
@@ -390,6 +397,11 @@ export function useCanvasInput(
 
     if (d.type === 'line-end') {
       editor.lineEndDrag(cx, cy, { shift: e.shiftKey, alt: e.altKey })
+      return
+    }
+
+    if (d.type === 'scale') {
+      d.move(cx, cy)
       return
     }
 
@@ -584,6 +596,7 @@ export function useCanvasInput(
           type === 'sticky-draw' ||
           type === 'rotate' ||
           type === 'shape-handle' ||
+          type === 'scale' ||
           type === 'sticky-scale'
         )
           cancelPointerInteraction()

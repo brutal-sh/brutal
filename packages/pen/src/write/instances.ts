@@ -3,6 +3,7 @@ import { isEqual } from 'es-toolkit'
 import type { SceneGraph, SceneNode } from '@open-pencil/scene-graph'
 import { instanceMainComponent } from '@open-pencil/scene-graph/instances'
 import { copiedComponentLayerId } from '@open-pencil/scene-graph/instances/overrides'
+import { ownsSlotContent, slotPropertyId } from '@open-pencil/scene-graph/slots'
 
 import { fieldsSetBy } from '../nodes'
 import type { PenNode, PenOverride } from '../schema'
@@ -14,7 +15,7 @@ export type WriteProperties = (
   topLevel: boolean,
   copy: boolean
 ) => PenNode
-const IDENTITY = new Set(['id', 'type', 'reusable', 'children', 'descendants'])
+const IDENTITY = new Set(['id', 'type', 'reusable', 'children', 'descendants', 'slot'])
 const PLACEMENT = new Set(['x', 'y', 'rotation', 'flipX', 'flipY'])
 
 function nativeFields(key: string, value: unknown): string[] {
@@ -51,7 +52,8 @@ export function writeInstance(
   path: string,
   topLevel: boolean,
   properties: WriteProperties,
-  diagnostics: PenExportDiagnostic[]
+  diagnostics: PenExportDiagnostic[],
+  write: (node: SceneNode, path: string) => PenNode
 ): PenNode {
   const add = (node: SceneNode, suffix: string, message: string) =>
     diagnostics.push({ nodeId: node.id, path: `${path}/${suffix}`, message })
@@ -110,6 +112,17 @@ export function writeInstance(
     return claims
   }
 
+  function copiesSource(owner: SceneNode, copy: SceneNode, original: SceneNode): boolean {
+    let sourceId = copiedComponentLayerId(owner.instanceOverrides, owner.id, copy)
+    const visited = new Set<string>()
+    while (sourceId && !visited.has(sourceId)) {
+      if (sourceId === original.id) return true
+      visited.add(sourceId)
+      sourceId = graph.getNode(sourceId)?.componentId ?? undefined
+    }
+    return false
+  }
+
   function children(
     from: SceneNode,
     to: SceneNode,
@@ -128,8 +141,7 @@ export function writeInstance(
     for (const [index, original] of originals.entries()) {
       const copy = copies[index]
       const defined = definitions[index]
-      const sourceId = copiedComponentLayerId(owner.instanceOverrides, owner.id, copy)
-      if (sourceId !== original.id || copy.type !== original.type) {
+      if (!copiesSource(owner, copy, original) || copy.type !== original.type) {
         add(
           copy,
           'children',
@@ -145,6 +157,13 @@ export function writeInstance(
       const claims = claimsFor(owner, sourceOwner, copy, original)
       inspectClaims(copy, authored, claims, `descendants/${key}`)
       const override = delta(authored, inherited, claims, false)
+      if (slotPropertyId(defined) && ownsSlotContent(graph, copy)) {
+        override.children = graph
+          .getChildren(copy.id)
+          .map((child, index) => write(child, `${at}/children/${index}`))
+        descendants[key] = override
+        continue
+      }
       if (Object.keys(override).length) descendants[key] = override
       if (copy.type === 'INSTANCE') {
         const main = instanceMainComponent(graph, original)

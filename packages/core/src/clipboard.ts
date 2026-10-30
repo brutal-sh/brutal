@@ -258,3 +258,4 @@ export {
   type OpenPencilClipboardData,
   type TextPictureBuilder
 } from './clipboard/openpencil'
+export { captureClipboardSnapshot } from './editor/clipboard/snapshot'

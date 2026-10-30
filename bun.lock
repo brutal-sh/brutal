@@ -583,6 +583,7 @@
       "dependencies": {
         "es-toolkit": "^1.52.0",
         "js-base64": "^3.9.3",
+        "strip-json-comments": "5.0.3",
         "valibot": "^1.5.0",
       },
       "devDependencies": {
@@ -740,6 +741,12 @@
     },
     "tools/dev/dev-server": {
       "name": "@open-pencil/dev-server-tools",
+    },
+    "tools/dev/local-runtime": {
+      "name": "@open-pencil/local-runtime-tools",
+      "dependencies": {
+        "@open-pencil/package-artifacts-tools": "workspace:*",
+      },
     },
     "tools/dev/navigation-benchmark": {
       "name": "@open-pencil/navigation-benchmark-tools",
@@ -1709,6 +1716,8 @@
     "@open-pencil/landing-posters-tools": ["@open-pencil/landing-posters-tools@workspace:tools/generate/landing-posters"],
 
     "@open-pencil/lint-tools": ["@open-pencil/lint-tools@workspace:tools/checks/lint"],
+
+    "@open-pencil/local-runtime-tools": ["@open-pencil/local-runtime-tools@workspace:tools/dev/local-runtime"],
 
     "@open-pencil/mcp": ["@open-pencil/mcp@workspace:packages/mcp"],
 

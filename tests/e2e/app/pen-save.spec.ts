@@ -14,6 +14,66 @@ const design = JSON.stringify({
   ]
 })
 
+test('a fresh drawing saves as .pen by default and reopens with editable layers', async ({
+  page
+}) => {
+  await page.goto('/?test')
+  const canvas = new CanvasHelper(page)
+  await canvas.waitForInit()
+  await page.evaluate(() => {
+    window.showOpenFilePicker = undefined
+    window.showSaveFilePicker = undefined
+  })
+  await canvas.drawRect(220, 220, 160, 80)
+  page.once('dialog', async (dialog) => {
+    expect(dialog.defaultValue()).toBe('Untitled.pen')
+    await dialog.accept(dialog.defaultValue())
+  })
+  const download = page.waitForEvent('download')
+  await (
+    await openAppMenu(page, 'File')
+  )
+    .getByRole('menuitem', { name: /^Save(?:\s|$)/ })
+    .first()
+    .click()
+  const saved = await download
+  expect(saved.suggestedFilename()).toBe('Untitled.pen')
+  const bytes = await readFile(await saved.path())
+  const imported = await new IORegistry(BUILTIN_IO_FORMATS).readDocument({
+    name: saved.suggestedFilename(),
+    data: bytes
+  })
+  expect(imported.sourceFormat).toBe('pen')
+  expect(imported.graph.getChildren(imported.graph.getPages()[0].id)[0]).toMatchObject({
+    type: 'RECTANGLE',
+    width: 160,
+    height: 80
+  })
+  const chooser = page.waitForEvent('filechooser')
+  await (await openAppMenu(page, 'File')).getByRole('menuitem', { name: /^Open…/ }).click()
+  await (
+    await chooser
+  ).setFiles({
+    name: 'reopened.pen',
+    mimeType: 'application/json',
+    buffer: bytes
+  })
+  await expect(page.getByRole('tab', { name: /reopened/ })).toBeVisible()
+  await canvas.waitForInit()
+  await page
+    .getByRole('tablist', { name: 'Workspace panels' })
+    .getByRole('tab', { name: 'Layers', exact: true })
+    .click()
+  const layers = page.getByTestId('layers-item')
+  await expect(layers).toHaveCount(1)
+  await layers.first().click()
+  await canvas.duplicate()
+  await expect(layers).toHaveCount(2)
+  await canvas.undo()
+  await expect(layers).toHaveCount(1)
+  canvas.assertNoErrors()
+})
+
 test('opening, editing and saving a .pen downloads .pen bytes that can be reopened', async ({
   page
 }) => {

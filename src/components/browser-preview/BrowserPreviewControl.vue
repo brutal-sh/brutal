@@ -5,10 +5,12 @@ import {
   useEventListener,
   useMutationObserver
 } from '@vueuse/core'
-import { onMounted, onScopeDispose, ref, useId, watch } from 'vue'
+import { PopoverContent, PopoverPortal, PopoverRoot, PopoverTrigger } from 'reka-ui'
+import { nextTick, onMounted, onScopeDispose, ref, useId, watch } from 'vue'
 
 import { createBrowserPreviewController } from '@/app/browser-preview/controller'
 import { hasPreviewOverlay, previewDockBounds } from '@/app/browser-preview/dock'
+import { browserImportTarget } from '@/app/browser-preview/dom/placement'
 import { createBrowserPreviewNative } from '@/app/browser-preview/native'
 import { browserCaptureTarget } from '@/app/browser-preview/placement'
 import { useEditorStore } from '@/app/editor/active-store'
@@ -16,11 +18,19 @@ import AppButton from '@/components/ui/button/AppButton.vue'
 import IconButton from '@/components/ui/button/IconButton.vue'
 import AppAlert from '@/components/ui/feedback/AppAlert.vue'
 import AppInput from '@/components/ui/input/AppInput.vue'
+import { usePopoverUI } from '@/components/ui/overlay/popover'
 
 const open = defineModel<boolean>('open', { default: false })
 const store = useEditorStore()
 const surface = ref<HTMLElement | null>(null)
 const inputId = useId()
+const addressOpen = ref(false)
+const popoverStyles = usePopoverUI({ content: 'w-80 p-2' })
+async function navigate() {
+  addressOpen.value = false
+  await nextTick()
+  await preview.navigate()
+}
 let frame = 0
 let lastLayout = ''
 let disposed = false
@@ -34,7 +44,11 @@ const bridge = createBrowserPreviewNative(() => {
     window.innerHeight
   )
 })
-const preview = createBrowserPreviewController(bridge.native, () => browserCaptureTarget(store))
+const preview = createBrowserPreviewController(
+  bridge.native,
+  () => browserCaptureTarget(store),
+  () => browserImportTarget(store, () => open.value)
+)
 const { address, preset, status, busy, error, notice } = preview
 const { pause, resume } = useIntervalFn(preview.refresh, 1000, { immediate: false })
 
@@ -104,28 +118,35 @@ onScopeDispose(() => {
     data-test-id="browser-preview-dock"
     class="flex min-h-0 min-w-0 flex-1 flex-col bg-panel"
   >
-    <div class="flex items-center gap-1 border-b border-border px-3 py-2">
-      <span class="flex-1 text-xs font-medium">Browser</span>
-      <IconButton label="Close browser preview" @click="open = false"
-        ><icon-lucide-x class="size-3.5"
-      /></IconButton>
-    </div>
-    <form
-      class="flex items-center gap-1 border-b border-border p-2"
-      @submit.prevent="preview.navigate"
-    >
-      <label :for="inputId" class="sr-only">Web address</label>
-      <AppInput
-        :id="inputId"
-        v-model="address"
-        type="url"
-        placeholder="https://example.com"
-        class="min-w-0 flex-1"
-        :disabled="busy"
-      />
-      <AppButton type="submit" size="xs" :disabled="busy || !address.trim()">Go</AppButton>
-    </form>
-    <div class="flex flex-wrap items-center gap-1 border-b border-border px-2 py-1">
+    <div class="flex h-12 shrink-0 items-center gap-0.5 border-b border-border px-2">
+      <PopoverRoot v-model:open="addressOpen">
+        <PopoverTrigger as-child>
+          <IconButton label="Web address" :disabled="busy"
+            ><icon-lucide-globe class="size-3.5"
+          /></IconButton>
+        </PopoverTrigger>
+        <PopoverPortal>
+          <PopoverContent
+            side="bottom"
+            align="start"
+            :side-offset="8"
+            :class="popoverStyles.content"
+          >
+            <form class="flex items-center gap-1" @submit.prevent="navigate">
+              <label :for="inputId" class="sr-only">Web address</label>
+              <AppInput
+                :id="inputId"
+                v-model="address"
+                type="url"
+                placeholder="https://example.com"
+                class="min-w-0 flex-1"
+                :disabled="busy"
+              />
+              <AppButton type="submit" size="xs" :disabled="busy || !address.trim()">Go</AppButton>
+            </form>
+          </PopoverContent>
+        </PopoverPortal>
+      </PopoverRoot>
       <IconButton label="Back" :disabled="busy || !status" @click="preview.action('back')"
         ><icon-lucide-arrow-left class="size-3.5"
       /></IconButton>
@@ -151,10 +172,19 @@ onScopeDispose(() => {
         ><icon-lucide-smartphone class="size-3.5"
       /></IconButton>
       <IconButton
+        label="Import editable page"
+        :disabled="busy || !status || store.state.readOnly"
+        @click="preview.importPage"
+        ><icon-lucide-import class="size-3.5"
+      /></IconButton>
+      <IconButton
         label="Capture into this design"
         :disabled="busy || !status?.captureAvailable || store.state.readOnly"
         @click="preview.capture"
         ><icon-lucide-camera class="size-3.5"
+      /></IconButton>
+      <IconButton label="Close browser preview" @click="open = false"
+        ><icon-lucide-x class="size-3.5"
       /></IconButton>
     </div>
     <div
@@ -163,7 +193,12 @@ onScopeDispose(() => {
       aria-live="polite"
     >
       <AppAlert v-if="error" tone="error" heading="Browser action failed" :description="error" />
-      <AppAlert v-else-if="notice" tone="success" heading="Capture added" :description="notice" />
+      <AppAlert
+        v-else-if="notice"
+        tone="success"
+        heading="Browser content added"
+        :description="notice"
+      />
       <AppAlert
         v-else
         heading="Capture requires macOS"

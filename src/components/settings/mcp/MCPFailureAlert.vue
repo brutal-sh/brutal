@@ -195,7 +195,7 @@ async function copyDetails(): Promise<void> {
         :color="installAction ? 'neutral' : 'primary'"
         :variant="installAction ? 'outline' : 'solid'"
         data-test-id="settings-mcp-copy-agent-prompt"
-        @click="copyPrompt(mcpServerSetupPrompt(failure, manualCommand))"
+        @click="copyPrompt(mcpServerSetupPrompt(failure))"
       >
         <template #leading>
           <icon-lucide-check v-if="promptCopied" class="size-3" />

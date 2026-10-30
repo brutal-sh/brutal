@@ -8,7 +8,6 @@ import { ACP_AGENTS } from '@open-pencil/core/constants'
 import { signInScope } from '@/app/ai/agents/acp/auth/terminal'
 import { HARNESS_PACKAGE } from '@/app/ai/agents/pi/companion'
 import { bunInstallArgs, npmInstallArgs } from '@/app/ai/agents/setup/native'
-import { MCP_PACKAGE_NAME } from '@/app/automation/mcp/failure'
 import { resolvePlatformCommand, resolveScopedCommand } from '@/app/tauri/command'
 
 import { repoPath } from '#tests/helpers/paths'
@@ -41,8 +40,8 @@ describe('resolvePlatformCommand', () => {
   })
 
   test('defaults args to an empty array', () => {
-    expect(resolvePlatformCommand('openpencil-mcp-http', undefined, MAC_UA)).toEqual({
-      command: 'openpencil-mcp-http',
+    expect(resolvePlatformCommand('openpen-mcp-http', undefined, MAC_UA)).toEqual({
+      command: 'openpen-mcp-http',
       args: []
     })
   })
@@ -59,8 +58,8 @@ describe('resolvePlatformCommand', () => {
   })
 
   test('passes through when the user agent is unavailable (headless/non-browser)', () => {
-    expect(resolvePlatformCommand('openpencil-mcp-http', ['--stdio'], '')).toEqual({
-      command: 'openpencil-mcp-http',
+    expect(resolvePlatformCommand('openpen-mcp-http', ['--stdio'], '')).toEqual({
+      command: 'openpen-mcp-http',
       args: ['--stdio']
     })
   })
@@ -118,7 +117,6 @@ describe('shell scope', () => {
   // tests stand in for with a placeholder the scope rightly refuses.
   const installs = [
     ...ACP_AGENTS.flatMap((agent) => (agent.adapterPackage ? [agent.adapterPackage] : [])),
-    `${MCP_PACKAGE_NAME}@${rootPackage.version}`,
     `${HARNESS_PACKAGE}@${rootPackage.version}`
   ]
   // Agents' terminal sign-ins run the agent under a scope entry of their own.
@@ -127,14 +125,14 @@ describe('shell scope', () => {
   )
   const spawns: [string, string[]][] = [
     ...ACP_AGENTS.map((agent): [string, string[]] => [agent.command, agent.args]),
-    ['openpencil-mcp-http', []],
+    ['openpen-mcp-http', []],
     ['openpencil-harness', []],
     ...installs.map((target): [string, string[]] => ['npm', npmInstallArgs(target)]),
     // Bun updates the companions it installed; agent adapters always come from npm.
-    ...[
-      `${MCP_PACKAGE_NAME}@${rootPackage.version}`,
-      `${HARNESS_PACKAGE}@${rootPackage.version}`
-    ].map((target): [string, string[]] => ['bun', bunInstallArgs(target)])
+    ...[`${HARNESS_PACKAGE}@${rootPackage.version}`].map((target): [string, string[]] => [
+      'bun',
+      bunInstallArgs(target)
+    ])
   ]
 
   for (const userAgent of [WINDOWS_UA, MAC_UA]) {
@@ -185,6 +183,7 @@ describe('shell scope', () => {
         '@open-pencil/mcp@0.15.1 & calc',
         '@open-pencil/mcp@0.16.0-beta.1 & calc',
         '@open-pencil/mcp@0.16.0-rc.1',
+        '@open-pencil/mcp@0.16.0',
         '@open-pencil/mcp'
       ]) {
         expect(pattern.test(target)).toBe(false)
@@ -193,7 +192,7 @@ describe('shell scope', () => {
   })
 
   test('lets npm install companions pinned to a stable or beta app version', () => {
-    for (const target of ['@open-pencil/harness@0.16.0', '@open-pencil/mcp@0.16.0-beta.1']) {
+    for (const target of ['@open-pencil/harness@0.16.0', '@open-pencil/harness@0.16.0-beta.1']) {
       for (const userAgent of [WINDOWS_UA, MAC_UA]) {
         const resolved = resolvePlatformCommand('npm', npmInstallArgs(target), userAgent)
         const entry = spawnScope().find((candidate) => candidate.name === resolved.command)
@@ -206,7 +205,7 @@ describe('shell scope', () => {
     for (const userAgent of [WINDOWS_UA, MAC_UA]) {
       const allowed = resolvePlatformCommand(
         'bun',
-        bunInstallArgs('@open-pencil/mcp@0.16.0-beta.1'),
+        bunInstallArgs('@open-pencil/harness@0.16.0-beta.1'),
         userAgent
       )
       const entry = spawnScope().find((candidate) => candidate.name === allowed.command)

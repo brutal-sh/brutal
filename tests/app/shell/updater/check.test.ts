@@ -33,7 +33,9 @@ describe('checkForAppUpdate', () => {
     })
 
     scheduleStartupUpdateCheck(messages)
-    await new Promise((resolve) => setTimeout(resolve, 2600))
+    await new Promise((resolve) => {
+      setTimeout(resolve, 2600)
+    })
 
     expect(calls).toEqual([])
     expect(toast.toasts.value).toEqual([])

@@ -344,7 +344,7 @@ export function createSceneNode(pen: PenNode, parentId: string, build: Build): s
     const node = build.graph.createNode(type, parentId, { id: pen.id })
     applyPenProperties(node, fields, build)
     if (instanceOf) {
-      node.componentId = instanceOf.id
+      build.graph.updateNode(node.id, { componentId: instanceOf.id })
       build.instances.set(node.id, pen)
     } else {
       const children = pen.type === 'ref' ? (component?.children ?? []) : (pen.children ?? [])

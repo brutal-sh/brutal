@@ -11,6 +11,7 @@ import { spreadAround } from './layout'
 import { createSceneNode, redrawIconAtLaidOutSize, type Build, type PenIconSource } from './nodes'
 import { placeLayers } from './placement'
 import { penFileSchema, type PenDocument, type PenNode } from './schema'
+import { installPenSlots } from './slots'
 import { buildVarContext } from './variables'
 
 /** Options for reading a document. */
@@ -105,6 +106,7 @@ export function buildPenGraph(doc: PenDocument, options: PenReadOptions = {}): S
 
   const page = graph.addPage(doc.children[0]?.name ?? 'Page 1')
   for (const child of doc.children) createSceneNode(child, page.id, build)
+  installPenSlots(build)
   populateInstances(build)
 
   options.layout?.(graph)

@@ -27,6 +27,7 @@ const homeLocationMenu = tv(homeLocationMenuTheme)
  */
 const {
   active,
+  compact = false,
   account = null,
   workspaces = [],
   sharedCount = 0,
@@ -34,6 +35,7 @@ const {
   cloud = true
 } = defineProps<{
   active: HomeLocation
+  compact?: boolean
   /** The build has Cloud, so its sign-in and workspaces have a place. */
   cloud?: boolean
   account?: HomeCloudAccount | null
@@ -63,13 +65,16 @@ const isActive = (location: HomeLocation) =>
 
 <template>
   <DropdownMenuRoot>
-    <DropdownMenuTrigger :class="ui.trigger()">
+    <DropdownMenuTrigger
+      :class="ui.trigger()"
+      :aria-label="compact ? `Document locations: ${current}` : undefined"
+    >
       <icon-lucide-clock v-if="active.kind === 'recent'" :class="ui.icon()" />
       <icon-lucide-users v-else-if="active.kind === 'shared'" :class="ui.icon()" />
       <icon-lucide-database v-else-if="active.kind === 'storage'" :class="ui.icon()" />
       <icon-lucide-layers v-else :class="ui.icon()" />
-      <span :class="ui.label()">{{ current }}</span>
-      <icon-lucide-chevrons-up-down :class="ui.chevron()" />
+      <span v-if="!compact" :class="ui.label()">{{ current }}</span>
+      <icon-lucide-chevrons-up-down v-if="!compact" :class="ui.chevron()" />
     </DropdownMenuTrigger>
     <DropdownMenuPortal>
       <DropdownMenuContent

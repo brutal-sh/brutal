@@ -21,7 +21,7 @@ const reasons: Record<MCPFailureCode, MCPFailure> = {
   outdated: { code: 'outdated', detail: '0.15.1' },
   'permission-denied': {
     code: 'permission-denied',
-    detail: 'shell command openpencil-mcp-http not allowed by ACL'
+    detail: 'shell command openpen-mcp-http not allowed by ACL'
   },
   exited: {
     code: 'exited',

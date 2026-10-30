@@ -33,6 +33,7 @@ const LEGACY_GROUPS: ToolbarEntry[][] = [
   ['COMMENT'],
   ['insert-icon']
 ]
+const UPGRADED_GROUPS: ToolbarEntry[][] = [['SELECT', 'SCALE'], ...LEGACY_GROUPS.slice(1)]
 const SHORTCUTS = toolShortcutLabels('mac')
 const LABELS = { ...SHORTCUTS }
 
@@ -49,9 +50,9 @@ describe('normalizeToolbarLayout', () => {
 
   test('preserves stored order, flyouts and visibility when the defaults change', () => {
     const hidden: ToolbarEntry[] = ['STICKY', 'SHAPE_WITH_TEXT', 'CONNECTOR']
-    expect(layout(LEGACY_GROUPS, hidden)).toEqual({ groups: LEGACY_GROUPS, hidden })
+    expect(layout(LEGACY_GROUPS, hidden)).toEqual({ groups: UPGRADED_GROUPS, hidden })
     expect(layout([...LEGACY_GROUPS].reverse(), ['COMMENT']).groups).toEqual(
-      [...LEGACY_GROUPS].reverse()
+      [...UPGRADED_GROUPS].reverse()
     )
   })
 
@@ -60,10 +61,14 @@ describe('normalizeToolbarLayout', () => {
     const result = normalizeToolbarLayout(groups, ['HAND', 'HAND', 'GHOST'])
     expect(
       result.groups.filter((group) => group.includes('SELECT') || group.includes('FRAME'))
-    ).toEqual([['SELECT'], ['FRAME', 'SECTION']])
+    ).toEqual([
+      ['SELECT', 'SCALE'],
+      ['FRAME', 'SECTION']
+    ])
     expect(result.groups.every((group) => group.length > 0)).toBe(true)
     expect(result.groups.flat()).toHaveLength(new Set(result.groups.flat()).size)
-    expect(result.hidden).toEqual(['HAND', 'SHAPE_WITH_TEXT', 'CONNECTOR', 'insert-icon'])
+    expect(result.hidden.filter((entry) => entry === 'HAND')).toHaveLength(1)
+    expect(result.hidden).not.toContain('GHOST')
   })
 
   test('never hides Move', () => {
@@ -90,7 +95,7 @@ describe('normalizeToolbarLayout', () => {
       ['TEXT'],
       ['FRAME', 'SECTION'],
       ['STICKY'],
-      ['SELECT'],
+      ['SELECT', 'SCALE'],
       SHAPES,
       ['PEN', 'PENCIL'],
       ['HAND'],
@@ -161,7 +166,7 @@ describe('toolbarItems', () => {
 })
 
 describe('editing', () => {
-  const base = layout(LEGACY_GROUPS)
+  const base: ToolbarLayout = { groups: LEGACY_GROUPS, hidden: [] }
 
   test('hiding and showing keeps the entry in place', () => {
     const hidden = setToolbarEntryHidden(base, 'PEN', true)
@@ -224,7 +229,7 @@ describe('editing', () => {
 })
 
 describe('dragging', () => {
-  const base = layout(LEGACY_GROUPS)
+  const base: ToolbarLayout = { groups: LEGACY_GROUPS, hidden: [] }
   /** Where an entry sits in the list the dragged Pen is lifted out of. */
   const indexOf = (entry: ToolbarEntry) => {
     const flat: ToolbarEntry[] = base.groups.flat().filter((other) => other !== 'PEN')

@@ -15,6 +15,7 @@ import {
 } from './diagnostics'
 import { writeInstance } from './instances'
 import { writePaints } from './paints'
+import { createSlotWriter } from './slots'
 import { writeVariables } from './variables'
 
 const TYPES: Partial<Record<SceneNode['type'], string>> = {
@@ -50,6 +51,7 @@ const STROKE_ALIGNMENT = { INSIDE: 'inner', CENTER: 'center', OUTSIDE: 'outer' }
  */
 export function writePenDocument(graph: SceneGraph): PenDocument {
   const diagnostics = documentDiagnostics(graph)
+  const slots = createSlotWriter(graph, diagnostics)
   const variableContext = writeVariables(graph, diagnostics)
   const add = (node: SceneNode, path: string, message: string) =>
     diagnostics.push({ nodeId: node.id, path, message })
@@ -173,8 +175,18 @@ export function writePenDocument(graph: SceneGraph): PenDocument {
     }
   }
 
-  function properties(node: SceneNode, path: string, topLevel = false, copy = false): PenNode {
-    diagnostics.push(...nodeDiagnostics(node, path, copy))
+  function properties(
+    node: SceneNode,
+    path: string,
+    topLevel = false,
+    copy = false,
+    ownedSlotContent = false
+  ): PenNode {
+    const handled = new Set(slots.handled(node))
+    // Owned slot content may be cloned through a containing component. A plain layer's
+    // componentId is copy provenance, not an instance link; the serialized layer is now owned.
+    if (ownedSlotContent && node.type !== 'INSTANCE') handled.add('componentId')
+    diagnostics.push(...nodeDiagnostics(node, path, copy, handled))
     const type = node.type === 'INSTANCE' ? 'frame' : TYPES[node.type]
     if (!type)
       add(
@@ -212,6 +224,7 @@ export function writePenDocument(graph: SceneGraph): PenDocument {
       clip: node.clipsContent
     }
     if (node.type === 'COMPONENT') result.reusable = true
+    if (!copy && slots.suggestions(node)) result.slot = slots.suggestions(node)
     writeStroke(node, result, path)
     if (node.type === 'POLYGON') result.polygonCount = node.pointCount
     if (node.type === 'ELLIPSE' && node.arcData) {
@@ -225,18 +238,33 @@ export function writePenDocument(graph: SceneGraph): PenDocument {
     return result
   }
 
-  function write(node: SceneNode, path: string, topLevel = false): PenNode {
+  function write(
+    node: SceneNode,
+    path: string,
+    topLevel = false,
+    ownedSlotContent = false
+  ): PenNode {
+    if (node.id.includes('/'))
+      add(node, `${path}/id`, 'IDs containing / cannot be written as .pen node IDs.')
+    if (ownedSlotContent && node.type === 'COMPONENT')
+      add(
+        node,
+        `${path}/reusable`,
+        'Component definitions inside owned slot content are not supported. Insert an instance instead.'
+      )
     if (node.type === 'INSTANCE')
-      return writeInstance(graph, node, path, topLevel, properties, diagnostics)
-    const result = properties(node, path, topLevel)
+      return writeInstance(graph, node, path, topLevel, properties, diagnostics, (child, at) =>
+        write(child, at, false, true)
+      )
+    const result = properties(node, path, topLevel, false, ownedSlotContent)
     if (node.childIds.length)
       result.children = graph
         .getChildren(node.id)
-        .map((child, index) => write(child, `${path}/children/${index}`))
+        .map((child, index) => write(child, `${path}/children/${index}`, false, ownedSlotContent))
     return result
   }
 
-  const page = graph.getPages()[0]
+  const page = graph.getPages().at(0)
   const children = page
     ? graph.getChildren(page.id).map((node, index) => write(node, `/children/${index}`, true))
     : []

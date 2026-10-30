@@ -169,7 +169,9 @@ function closeMenu(event: Event) {
       <slot name="actions" />
       <AppButton
         v-if="docked"
-        size="xs"
+        size="md"
+        variant="outline"
+        :ui="{ base: styles.create() }"
         :aria-label="ai.newChat"
         :disabled="disabled"
         @click="emit('create')"

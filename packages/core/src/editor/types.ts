@@ -36,6 +36,7 @@ import type { FontResolutionEvent, FontResolutionSnapshot } from '#core/text/res
 
 export type Tool =
   | 'SELECT'
+  | 'SCALE'
   | 'FRAME'
   | 'SECTION'
   | 'RECTANGLE'

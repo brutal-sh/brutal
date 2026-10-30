@@ -6,6 +6,7 @@ import { formatShortcut, type ShortcutPlatform } from '@open-pencil/vue/editor/c
 /** Each tool's key in the command registry's notation; empty for tools without one. */
 const TOOL_SHORTCUT_KEYS: Readonly<Record<Tool, string>> = {
   SELECT: 'V',
+  SCALE: 'K',
   FRAME: 'F',
   SECTION: 'SHIFT+S',
   RECTANGLE: 'R',

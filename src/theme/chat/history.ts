@@ -8,6 +8,7 @@ export default {
     trigger:
       'flex min-w-0 flex-1 items-center gap-1 rounded px-1.5 py-1 text-left text-xs text-surface hover:bg-hover disabled:opacity-50',
     title: 'min-w-0 flex-1 truncate',
+    create: 'h-8 gap-1 pl-2 pr-2.5 text-[13px]',
     icon: 'size-3.5 shrink-0',
     content: ['z-50 w-80 max-w-[calc(100vw-1rem)] p-2', floatingSurface, motionStyles.floating],
     input:
@@ -26,9 +27,10 @@ export default {
   variants: {
     docked: {
       true: {
-        root: 'border-b-0',
-        header: 'gap-1.5 px-3 py-2',
-        trigger: 'gap-2 rounded-md px-1 py-1.5 text-muted focus-visible:outline-panel-focus'
+        root: 'border-border/50',
+        header: 'gap-2 px-3 pt-2.5 pb-3.5',
+        trigger:
+          'h-8 gap-2 rounded-md border border-border px-3 text-[13px] text-muted focus-visible:outline-panel-focus'
       }
     }
   }

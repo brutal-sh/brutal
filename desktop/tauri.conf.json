@@ -15,6 +15,9 @@
         "title": "Open Pen",
         "width": 1280,
         "height": 800,
+        "titleBarStyle": "Overlay",
+        "hiddenTitle": true,
+        "trafficLightPosition": { "x": 20, "y": 20 },
         "dragDropEnabled": false
       }
     ],

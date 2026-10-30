@@ -46,6 +46,7 @@ defineSlots<{
   action(props: { action: ToolbarAction }): unknown
   /** Additional desktop commands participate in the rail's keyboard navigation. */
   end?(): unknown
+  afterTool?(props: { tool: Tool }): unknown
   /** Commands outside the tool rail, such as the application menu. */
   after?(): unknown
 }>()
@@ -93,6 +94,7 @@ defineSlots<{
             />
           </Tip>
         </ToolbarItem>
+        <slot v-if="item.kind === 'tool'" name="afterTool" :tool="item.tool.key" />
       </template>
       <slot name="end" />
     </ToolbarRoot>

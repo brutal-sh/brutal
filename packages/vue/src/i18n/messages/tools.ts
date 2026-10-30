@@ -2,6 +2,7 @@ import { i18n } from '#vue/i18n/create'
 
 export const toolMessageDefaults = {
   move: 'Move',
+  scale: 'Scale',
   frame: 'Frame',
   section: 'Section',
   rectangle: 'Rectangle',

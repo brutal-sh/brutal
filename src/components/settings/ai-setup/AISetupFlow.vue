@@ -66,7 +66,7 @@ const goals = computed(() => [
 const header = computed(() => {
   if (phase.value === 'welcome') {
     return {
-      heading: ai.value.aiSetupWelcomeTitle,
+      heading: ai.value.aiSetupWelcomeTitle.replace('OpenPencil', 'Open Pen'),
       description: ai.value.aiSetupWelcomeDescription
     }
   }

@@ -14,22 +14,19 @@ export function needsMCPInstall(failure: MCPFailure): boolean {
  * server that matches this app when OpenPencil cannot do it with one click. Written for the
  * agent, so it stays in English.
  */
-export function mcpServerSetupPrompt(
-  failure: MCPFailure,
-  installCommand: string = MCP_INSTALL_COMMAND
-): string {
+export function mcpServerSetupPrompt(failure: MCPFailure): string {
   const found =
     failure.code === 'outdated'
-      ? `OpenPencil found version ${failure.detail ?? 'an older version'} installed, which does not match the app.`
-      : 'OpenPencil could not find the `openpencil-mcp-http` command.'
+      ? `Open Pen found version ${failure.detail ?? 'an older version'} installed, which does not match the app.`
+      : 'Open Pen could not find the `openpen-mcp-http` command.'
   return dedent`
-    Help me set up OpenPencil's MCP server so you can work on my designs in OpenPencil, an open-source design editor. The server is a separate npm package, kept out of the app to keep its download small, and its version must match the app. ${found}
+    Help me set up the Open Pen fork's local canvas bridge. ${found}
 
-    Please do this for me:
+    From my Open Pen checkout, build its packages with \`bun run build:packages\`, then run \`${MCP_INSTALL_COMMAND}\`.
+    This developer installer builds and verifies a standalone bridge, installs it in my user-local Open Pen runtime, and installs the pinned Codex adapter.
+    Preserve existing conflicting files, shell profiles, and credentials. Do not install the upstream @open-pencil/mcp package: this fork needs its own bridge.
+    Confirm that \`openpen-mcp-http --version\` prints ${APP_VERSION}. The checkout is required for setup and rebuilding; the installed standalone bridge runs independently.
 
-    1. Install the version that matches my app: \`${installCommand}\`. If Node.js or npm is missing, tell me how to install it. If npm fails with a permission error (EACCES), set up a global npm folder in my home directory (for example \`npm config set prefix ~/.npm-global\` and add \`~/.npm-global/bin\` to my PATH) and install again; use sudo only if I agree.
-    2. Confirm that \`openpencil-mcp-http --version\` prints ${APP_VERSION}. If the command is not found, check that the global npm or Bun folder is on my PATH and tell me how to add it.
-
-    Then tell me what you did. I will press "Restart MCP server" in OpenPencil's Settings → MCP afterwards.
+    Then tell me what you did. I will press "Restart MCP server" in Open Pen's Settings → MCP afterwards.
   `
 }

@@ -31,19 +31,19 @@ describe('assertAgentReady', () => {
     const lookup = installed(
       { '@open-pencil/harness': '0.0.2', '@open-pencil/mcp': '0.0.2' },
       'openpencil-harness',
-      'openpencil-mcp-http'
+      'openpen-mcp-http'
     )
     expect(await problem('pi', lookup)).toBeNull()
     expect(await problem('acp', lookup)).toBeNull()
   })
 
   test('names the missing or mismatched companion', async () => {
-    expect(await problem('pi', installed({}, 'openpencil-mcp-http'))).toBe('companion-missing')
+    expect(await problem('pi', installed({}, 'openpen-mcp-http'))).toBe('companion-missing')
     expect(
       await problem('pi', installed({ '@open-pencil/harness': '0.12.0' }, 'openpencil-harness'))
     ).toBe('companion-outdated')
     expect(
-      await problem('acp', installed({ '@open-pencil/mcp': '0.12.0' }, 'openpencil-mcp-http'))
+      await problem('acp', installed({ '@open-pencil/mcp': '0.12.0' }, 'openpen-mcp-http'))
     ).toBe('mcp-outdated')
   })
 

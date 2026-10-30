@@ -8,7 +8,7 @@ export class ChatHarness {
   }
 
   get chatTab() {
-    return this.page.getByRole('tab', { name: 'AI' })
+    return this.page.getByRole('tab', { name: 'Agent', exact: true })
   }
 
   get designTab() {

@@ -22,8 +22,8 @@ const sources = {
   'app-icon': 'app-icon'
 } as const
 const source = computed(() => {
-  // The ivory tile owns its background and always uses the light palette.
-  const suffix = variant !== 'app-icon' && appearance === 'dark' ? '-dark' : ''
+  if (variant === 'app-icon') return '/brand/open-pen-app.png'
+  const suffix = appearance === 'dark' ? '-dark' : ''
   return `/brand/${sources[variant]}${suffix}.svg`
 })
 </script>
@@ -32,7 +32,7 @@ const source = computed(() => {
   <img
     :src="source"
     :class="brandMark({ class: className })"
-    :alt="decorative ? '' : 'OpenPencil'"
+    :alt="decorative ? '' : 'Open Pen'"
     width="16"
     height="16"
   />

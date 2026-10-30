@@ -3,6 +3,10 @@
 import type * as TauriAPI from '@tauri-apps/api'
 import type * as TauriOS from '@tauri-apps/plugin-os'
 
+import type { SnappingPreferences } from '@open-pencil/core'
+
+import type { EditorStore } from '@/app/editor/active-store'
+
 export {}
 
 type NativeTestNode = {
@@ -18,7 +22,10 @@ type NativeTestNode = {
 }
 
 type NativeTestStore = {
+  saveFigFileToPath: EditorStore['saveFigFileToPath']
+  openFigFile: EditorStore['openFigFile']
   state: {
+    snappingPreferences: SnappingPreferences
     currentPageId: string
     editingTextId: string | null
     selectedIds: Set<string>

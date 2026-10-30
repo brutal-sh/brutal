@@ -11,6 +11,7 @@ export function useToolLabels() {
   const { tools } = useI18n()
   return computed<Record<Tool, string>>(() => ({
     SELECT: tools.value.move,
+    SCALE: tools.value.scale,
     FRAME: tools.value.frame,
     SECTION: tools.value.section,
     RECTANGLE: tools.value.rectangle,

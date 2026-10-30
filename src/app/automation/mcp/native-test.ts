@@ -18,6 +18,7 @@ export async function loadNativeTestMCPConfiguration(
 export function nativeTestMCPRoute(configuration: NativeTestMCPConfiguration) {
   return {
     httpURL: `http://127.0.0.1:${configuration.port}`,
+    browserURL: `ws://127.0.0.1:${configuration.port}`,
     env: {
       PORT: String(configuration.port),
       OPENPENCIL_MCP_DISCOVERY_PATH: configuration.discoveryPath,

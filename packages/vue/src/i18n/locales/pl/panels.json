@@ -632,5 +632,8 @@
   "variableModesFromLibraries": "Z bibliotek",
   "variableModeAuto": "Automatycznie ({mode})",
   "variableModeAutoMixed": "Automatycznie",
-  "variableModeHeading": "Tryb"
+  "variableModeHeading": "Tryb",
+  "slides": "Slajdy",
+  "components": "Komponenty",
+  "libraries": "Biblioteki"
 }

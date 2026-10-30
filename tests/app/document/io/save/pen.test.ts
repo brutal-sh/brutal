@@ -71,6 +71,35 @@ test('Save writes an imported .pen in place with the real Core writer and readab
   }
 })
 
+test('a new document defaults to .pen and writes editable geometry on its first Save', async () => {
+  const store = createEditorStore()
+  const written: Uint8Array[] = []
+  const handle = fileHandle('Untitled.pen', written)
+  const picker = spyOn(targets, 'chooseBrowserDocumentSaveHandle').mockResolvedValue(handle)
+  restores.push(() => picker.mockRestore())
+  try {
+    store.graph.createNode('RECTANGLE', store.state.currentPageId, {
+      name: 'First save',
+      width: 160,
+      height: 80
+    })
+    expect(await store.saveFigFile()).toBe(true)
+    expect(picker).toHaveBeenCalledWith('Untitled.pen')
+    expect(written).toHaveLength(1)
+    const reopened = await io.readDocument({ name: handle.name, data: written[0] })
+    expect(reopened.sourceFormat).toBe('pen')
+    expect(reopened.graph.getChildren(reopened.graph.getPages()[0].id)[0]).toMatchObject({
+      type: 'RECTANGLE',
+      name: 'First save',
+      width: 160,
+      height: 80
+    })
+    expect(store.hasUnsavedChanges()).toBe(false)
+  } finally {
+    store.dispose()
+  }
+})
+
 test('a loss refusal leaves the .pen file untouched and the document dirty', async () => {
   const store = createEditorStore()
   const written: Uint8Array[] = []

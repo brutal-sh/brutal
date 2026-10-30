@@ -12,7 +12,7 @@ const EXECUTABLES: &[&str] = &[
     "codex",
     "codex-acp",
     "gemini",
-    "openpencil-mcp-http",
+    "openpen-mcp-http",
     "openpencil-harness",
     "npm",
     "bun",
@@ -20,7 +20,7 @@ const EXECUTABLES: &[&str] = &[
 
 // OpenPencil's own companions, whose installed version must match the app.
 const PACKAGES: &[(&str, &str)] = &[
-    ("openpencil-mcp-http", "@open-pencil/mcp"),
+    ("openpen-mcp-http", "@open-pencil/mcp"),
     ("openpencil-harness", "@open-pencil/harness"),
 ];
 
@@ -217,7 +217,7 @@ mod tests {
         let result = lookup_with(
             "/agents/bin".to_owned(),
             |command| match command {
-                "claude" | "npm" | "openpencil-mcp-http" => {
+                "claude" | "npm" | "openpen-mcp-http" => {
                     Some(PathBuf::from("/agents/bin").join(command))
                 }
                 _ => None,
@@ -277,7 +277,7 @@ mod tests {
         );
         // A release older than `--version` prints its help instead.
         assert_eq!(
-            parse_version("openpencil-mcp-http\n\nStart the server."),
+            parse_version("openpen-mcp-http\n\nStart the server."),
             None
         );
         assert_eq!(parse_version("1.2\n"), None);

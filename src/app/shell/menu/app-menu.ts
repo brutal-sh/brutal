@@ -16,7 +16,6 @@ import IconVariables from '~icons/lucide/variable'
 import IconZoomIn from '~icons/lucide/zoom-in'
 import IconZoomOut from '~icons/lucide/zoom-out'
 
-import type { BuiltinIOFormatId } from '@open-pencil/core/io'
 import { shortcutPlatform, useEditorCommands } from '@open-pencil/vue/editor/commands'
 import type { MenuEntry } from '@open-pencil/vue/editor/menu-model'
 import { useI18n } from '@open-pencil/vue/i18n'
@@ -36,8 +35,10 @@ import {
 } from '@/app/settings/preferences/apply'
 import { appPreferences } from '@/app/settings/preferences/store'
 import { createSharedEditorMenuActions } from '@/app/shell/menu/actions/editor'
+import { createExportMenuActions } from '@/app/shell/menu/actions/export'
 import { createSelectionMenuActions } from '@/app/shell/menu/actions/selection'
 import { menuFeatureAvailable } from '@/app/shell/menu/features'
+import { importCanvasFileDialog } from '@/app/shell/menu/import'
 import { browseFiles } from '@/app/shell/menu/navigation'
 import { createSaveMenuActions } from '@/app/shell/menu/save-actions'
 import type {
@@ -175,10 +176,6 @@ export function useAppMenu() {
     }))
   )
 
-  function exportSelection(format: BuiltinIOFormatId) {
-    if (store.state.selectedIds.size > 0) void store.exportSelection(1, format)
-  }
-
   const actions: Partial<Record<string, () => void>> = {
     new: () => {
       void import('@/app/tabs').then((m) => m.createTab())
@@ -189,7 +186,8 @@ export function useAppMenu() {
       openTour().catch((error: unknown) => console.error('[Tour] Could not open the tour:', error))
     },
     ...createSaveMenuActions(store),
-    'export-selection': () => exportSelection('png'),
+    'import-canvas': importCanvasFileDialog,
+    ...createExportMenuActions(store),
     ...createSelectionMenuActions(store),
     close: () => {
       if (activeTab.value) void closeTab(activeTab.value.id)
@@ -202,11 +200,6 @@ export function useAppMenu() {
     'insert-icon': () => {
       store.state.iconPickerOpen = true
     },
-    'export-png': () => exportSelection('png'),
-    'export-svg': () => exportSelection('svg'),
-    'export-pptx': () => exportSelection('pptx'),
-    'export-drawio': () => exportSelection('drawio'),
-    'export-fig': () => exportSelection('fig'),
     ...createSharedEditorMenuActions(setTheme)
   }
 
@@ -372,14 +365,10 @@ export function useAppMenu() {
     }
   }
 
-  function paletteEntries(
-    entry: MenuEntry,
-    category: string,
-    fallbackIcon?: Component
-  ): CommandPaletteItem[] {
+  function paletteEntries(entry: MenuEntry, fallbackIcon?: Component): CommandPaletteItem[] {
     if ('separator' in entry) return []
     if (!entry.menuId)
-      return entry.sub?.flatMap((child) => paletteEntries(child, category, fallbackIcon)) ?? []
+      return entry.sub?.flatMap((child) => paletteEntries(child, fallbackIcon)) ?? []
 
     const item: CommandPaletteItem = {
       id: entry.menuId,
@@ -395,8 +384,7 @@ export function useAppMenu() {
         entry.action ??
         (entry.onCheckedChange ? () => entry.onCheckedChange?.(!entry.checked) : undefined)
     }
-    const children =
-      entry.sub?.flatMap((child) => paletteEntries(child, category, fallbackIcon)) ?? []
+    const children = entry.sub?.flatMap((child) => paletteEntries(child, fallbackIcon)) ?? []
     return [item, ...children]
   }
 
@@ -408,7 +396,7 @@ export function useAppMenu() {
     topMenus.value.map((group) => ({
       id: group.label.toLowerCase(),
       label: group.label,
-      items: group.items.flatMap((entry) => paletteEntries(entry, group.label, group.paletteIcon))
+      items: group.items.flatMap((entry) => paletteEntries(entry, group.paletteIcon))
     }))
   )
 

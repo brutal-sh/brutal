@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { tv } from 'tailwind-variants'
 import { computed } from 'vue'
 
 import { useViewportKind } from '@open-pencil/vue/editor/viewport-kind'
@@ -10,13 +11,21 @@ import type { RecentFilesWorkspace } from '@/app/recent-files/workspace'
 import DocumentEntry from '@/components/home/document/DocumentEntry.vue'
 import IconButton from '@/components/ui/button/IconButton.vue'
 import SegmentedControl from '@/components/ui/select/SegmentedControl.vue'
+import workspaceTheme from '@/theme/home/workspace'
 
 /** The recent files, as a grid or a list, with the files `documents` keeps of them. */
-const { workspace, documents, query } = defineProps<{
+const {
+  workspace,
+  documents,
+  query,
+  embedded = false
+} = defineProps<{
   workspace: RecentFilesWorkspace
   documents: readonly RecentDocument[]
   query: string
+  embedded?: boolean
 }>()
+const styles = tv(workspaceTheme)()
 const emit = defineEmits<{ open: [document: RecentDocument] }>()
 const view = defineModel<'grid' | 'list'>('view', { required: true })
 const { panels, files, common } = useI18n()
@@ -34,7 +43,10 @@ function formattedDate(updatedAt: string): string {
 
 <template>
   <section>
-    <div class="mb-3 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-3 gap-y-2">
+    <div
+      v-if="!embedded"
+      class="mb-3 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-3 gap-y-2"
+    >
       <div class="col-span-2 min-w-0 sm:col-span-1">
         <h1 class="text-base font-semibold">{{ files.recentFiles }}</h1>
         <p class="mt-0.5 text-pretty text-xs text-muted">{{ files.recentFilesDescription }}</p>
@@ -67,10 +79,7 @@ function formattedDate(updatedAt: string): string {
       </div>
     </div>
 
-    <div
-      v-if="documents.length && view === 'grid'"
-      class="grid grid-cols-1 gap-x-5 gap-y-6 sm:grid-cols-[repeat(auto-fill,minmax(200px,1fr))]"
-    >
+    <div v-if="documents.length && view === 'grid'" :class="styles.grid()">
       <DocumentEntry
         v-for="document in documents"
         :key="document.id"

@@ -625,5 +625,8 @@
   "variableModesFromLibraries": "Des bibliothèques",
   "variableModeAuto": "Auto ({mode})",
   "variableModeAutoMixed": "Auto",
-  "variableModeHeading": "Mode"
+  "variableModeHeading": "Mode",
+  "slides": "Diapositives",
+  "components": "Composants",
+  "libraries": "Bibliothèques"
 }

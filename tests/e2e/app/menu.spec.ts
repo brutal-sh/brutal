@@ -3,15 +3,29 @@ import { openAppMenu } from '#tests/helpers/menu'
 
 const editor = useEditorSetup()
 
-test('menu bar is visible in browser mode', async () => {
-  const menubar = editor.page.locator('[role="menubar"]')
-  await expect(menubar).toBeVisible()
+test('browser commands are reachable from the brand popup', async () => {
+  const trigger = editor.page.getByRole('button', { name: 'Main menu', exact: true })
+  await trigger.click()
+  await editor.page.getByRole('menuitem', { name: 'Commands', exact: true }).click()
+  await expect(editor.page.getByRole('menu', { name: 'Commands', exact: true })).toBeVisible()
+  await editor.page.keyboard.press('Escape')
+  await expect(trigger).toBeFocused()
 })
 
-test('menu bar has all top-level menus', async () => {
-  const triggers = editor.page.locator('[role="menubar"] [role="menuitem"]')
-  const labels = await triggers.allTextContents()
-  expect(labels).toEqual(['File', 'Edit', 'View', 'Object', 'Text', 'Arrange'])
+test('browser command categories open with the keyboard', async () => {
+  const trigger = editor.page.getByRole('button', { name: 'Main menu', exact: true })
+  await trigger.focus()
+  await editor.page.keyboard.press('ArrowDown')
+  await editor.page.keyboard.press('End')
+  await editor.page.keyboard.press('ArrowRight')
+  const file = editor.page
+    .getByRole('menu', { name: 'Commands', exact: true })
+    .getByRole('menuitem', { name: 'File', exact: true })
+  await expect(file).toBeFocused()
+  await editor.page.keyboard.press('ArrowRight')
+  await expect(editor.page.getByRole('menu', { name: 'File', exact: true })).toBeVisible()
+  await editor.page.keyboard.press('Escape')
+  await expect(trigger).toBeFocused()
 })
 
 test('File menu opens and shows items', async () => {
@@ -19,7 +33,7 @@ test('File menu opens and shows items', async () => {
 
   const items = await menu.locator('[role="menuitem"]').allTextContents()
   expect(items.some((t) => t.includes('Open'))).toBe(true)
-  expect(items.some((t) => t.includes('Open storage workspace'))).toBe(true)
+  await expect(menu.getByRole('menuitem', { name: 'Browse files…', exact: true })).toBeEnabled()
   expect(items.some((t) => t.includes('Save'))).toBe(true)
   expect(items.some((t) => t.includes('Save as'))).toBe(true)
 
@@ -156,11 +170,11 @@ test('Zoom to fit via View menu works', async () => {
   expect(zoomAfter).not.toBe(zoomBefore)
 })
 
-test('Open storage workspace navigates from the File menu', async () => {
-  await editor.page.getByRole('menuitem', { name: 'File', exact: true }).click()
-  await editor.page.getByRole('menuitem', { name: 'Open storage workspace…' }).click()
+test('Browse files opens Home from the File menu', async () => {
+  await openAppMenu(editor.page, 'File')
+  await editor.page.getByRole('menuitem', { name: 'Browse files…', exact: true }).click()
 
   await expect(editor.page).toHaveURL(/\/$/)
   await expect(editor.page.getByTestId('recent-files-home')).toBeVisible()
-  await expect(editor.page.getByRole('heading', { name: 'Storage workspace' })).toBeVisible()
+  await expect(editor.page.getByRole('tablist', { name: 'Documents', exact: true })).toBeVisible()
 })

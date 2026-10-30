@@ -132,6 +132,8 @@ fn build_submenu<R: tauri::Runtime>(
                 "copy" => Some(PredefinedMenuItem::copy(app, Some(label))?),
                 "cut" => Some(PredefinedMenuItem::cut(app, Some(label))?),
                 "paste" => Some(PredefinedMenuItem::paste(app, Some(label))?),
+                #[cfg(target_os = "macos")]
+                "toggle-fullscreen" => Some(PredefinedMenuItem::fullscreen(app, Some(label))?),
                 _ => None,
             };
             if let Some(item) = native_edit_item {
@@ -207,7 +209,7 @@ fn build_recent_files_submenu<R: tauri::Runtime>(
     }
     if !recent_files.is_empty() {
         builder = builder.separator().item(
-            &MenuItemBuilder::new("Clear Menu")
+            &MenuItemBuilder::new("Clear Recent Files")
                 .id("clear-recent-files")
                 .build(app)?,
         );
@@ -331,7 +333,7 @@ pub fn install_app_menu<R: tauri::Runtime>(
         if let Some(accelerator) = &items.quit.accelerator {
             quit = quit.accelerator(accelerator);
         }
-        SubmenuBuilder::new(app, tauri::Manager::package_info(app).name.clone())
+        let builder = SubmenuBuilder::new(app, "Open Pen")
             .item(&PredefinedMenuItem::about(
                 app,
                 Some(&items.about.label),
@@ -339,7 +341,14 @@ pub fn install_app_menu<R: tauri::Runtime>(
             )?)
             .item(&check_updates.build(app)?)
             .separator()
-            .item(&settings.build(app)?)
+            .item(&settings.build(app)?);
+        #[cfg(debug_assertions)]
+        let builder = builder.item(
+            &MenuItemBuilder::new("Developer Tools")
+                .id("dev-tools")
+                .build(app)?,
+        );
+        builder
             .separator()
             .item(&PredefinedMenuItem::services(app, None)?)
             .separator()

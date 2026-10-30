@@ -114,7 +114,8 @@ const EDITOR_ONLY = new Set<keyof SceneNode>([
 export function nodeDiagnostics(
   node: SceneNode,
   path: string,
-  copy = false
+  copy = false,
+  handled?: ReadonlySet<keyof SceneNode>
 ): PenExportDiagnostic[] {
   const diagnostics: PenExportDiagnostic[] = []
   const add = (field: string, message: string) =>
@@ -122,7 +123,12 @@ export function nodeDiagnostics(
   const defaults = createDefaultNode(() => node.id, node.type)
   for (const field of Object.keys(defaults) as (keyof SceneNode)[]) {
     if (copy && (field === 'componentId' || field === 'instanceOverrides')) continue
-    if (!WRITTEN.has(field) && !EDITOR_ONLY.has(field) && !isEqual(node[field], defaults[field])) {
+    if (
+      !handled?.has(field) &&
+      !WRITTEN.has(field) &&
+      !EDITOR_ONLY.has(field) &&
+      !isEqual(node[field], defaults[field])
+    ) {
       add(field, `The non-default ${field} property is not supported by .pen export.`)
     }
   }

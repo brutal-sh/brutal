@@ -69,6 +69,82 @@ function setup(
 }
 
 describe('document recovery controller', () => {
+  test('undo to the saved state removes only this document snapshot before clean close', async () => {
+    const editor = createEditor()
+    const changes = createDocumentChanges(editor)
+    const store = createMemoryRecoveryStore()
+    const recovery = createDocumentRecovery({
+      state: { documentName: 'Clean after undo' },
+      version: changes.capture,
+      hasUnsavedChanges: changes.hasUnsavedChanges,
+      store,
+      recoveryId: 'owned',
+      hasWritableSource: () => false,
+      buildFigFile: () => new Uint8Array([changes.capture()])
+    })
+    try {
+      await store.write({ id: 'unrelated', documentName: 'Keep me', figBytes: new Uint8Array([7]) })
+      editor.createShape('RECTANGLE', 0, 0, 100, 100)
+      await recovery.persistNow()
+      expect(await store.read('owned')).not.toBeNull()
+      editor.undoAction()
+      expect(changes.hasUnsavedChanges()).toBe(false)
+      await recovery.persistNow()
+      expect(await store.read('owned')).toBeNull()
+      expect((await store.read('unrelated'))?.figBytes[0]).toBe(7)
+    } finally {
+      recovery.disposeRecovery()
+      changes.dispose()
+      editor.dispose()
+    }
+  })
+
+  test('an edit during clean-snapshot removal is recovered before the flush returns', async () => {
+    const memory = createMemoryRecoveryStore()
+    const version = ref(1)
+    const dirty = ref(true)
+    let entered: () => void = () => undefined
+    let release: () => void = () => undefined
+    const removing = new Promise<void>((resolve) => {
+      entered = resolve
+    })
+    const unblock = new Promise<void>((resolve) => {
+      release = resolve
+    })
+    const recovery = createDocumentRecovery({
+      state: { documentName: 'Editing during close' },
+      version: () => version.value,
+      hasUnsavedChanges: () => dirty.value,
+      hasWritableSource: () => false,
+      recoveryId: 'owned',
+      store: {
+        ...memory,
+        async remove(id) {
+          entered()
+          await unblock
+          await memory.remove(id)
+        }
+      },
+      buildFigFile: () => new Uint8Array([version.value])
+    })
+    try {
+      version.value = 2
+      await recovery.persistNow()
+      dirty.value = false
+      version.value = 3
+      const closing = recovery.persistNow()
+      await removing
+      dirty.value = true
+      version.value = 4
+      release()
+      await closing
+      expect((await memory.read('owned'))?.figBytes[0]).toBe(4)
+    } finally {
+      release()
+      recovery.disposeRecovery()
+    }
+  })
+
   test('persists source-less changes and skips untouched documents', async () => {
     const { version, store, recovery } = setup()
     await recovery.persistNow()

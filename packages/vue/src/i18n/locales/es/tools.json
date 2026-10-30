@@ -1,5 +1,6 @@
 {
   "move": "Mover",
+  "scale": "Escalar",
   "frame": "Marco",
   "section": "Sección",
   "rectangle": "Rectángulo",

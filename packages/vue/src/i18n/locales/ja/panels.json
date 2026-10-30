@@ -618,5 +618,8 @@
   "variableModesFromLibraries": "ライブラリから",
   "variableModeAuto": "自動（{mode}）",
   "variableModeAutoMixed": "自動",
-  "variableModeHeading": "モード"
+  "variableModeHeading": "モード",
+  "slides": "スライド",
+  "components": "コンポーネント",
+  "libraries": "ライブラリ"
 }

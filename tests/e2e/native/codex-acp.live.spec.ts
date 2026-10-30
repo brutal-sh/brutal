@@ -1,5 +1,5 @@
 import { strict as assert } from 'node:assert'
-import { realpath } from 'node:fs/promises'
+import { realpath, writeFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 
 import { invokeNative } from '#tests/helpers/tauri/invoke'
@@ -64,9 +64,33 @@ async function configureCodex() {
   const form = await $('[data-test-id="settings-model-editor"]')
   await form.$('input').setValue(modelName)
   await form.$('button[type="submit"]').click()
+  await form.waitForExist({ reverse: true })
   await $('[data-test-id="settings-model-list"] [data-model-id]').waitForDisplayed()
-  await $('[data-test-id="settings-model-assignment-design"]').click()
-  await $(`[role="option"]=${modelName}`).click()
+  const assignment = await $('[data-test-id="settings-model-assignment-design"]')
+  await assignment.click()
+  // Native WebDriver may focus Reka's trigger without delivering pointerdown; exercise its
+  // supported keyboard path rather than injecting events or changing model settings directly.
+  if ((await assignment.getAttribute('aria-expanded')) !== 'true') await browser.keys('ArrowDown')
+  await $('[role="option"]').waitForDisplayed()
+  const optionLabels = await $$('[role="option"]').map(async (option) =>
+    (await option.getText()).trim()
+  )
+  assert.equal(optionLabels.at(-1), modelName)
+  await browser.waitUntil(
+    async () => browser.execute(() => document.activeElement?.getAttribute('role') === 'option'),
+    { timeout: 5_000, timeoutMsg: 'Select popup did not receive keyboard focus' }
+  )
+  await browser.keys('ArrowDown')
+  await browser.waitUntil(
+    async () =>
+      browser.execute((name) => document.activeElement?.textContent?.trim() === name, modelName),
+    { timeout: 5_000, timeoutMsg: 'Codex option did not receive keyboard focus' }
+  )
+  await browser.keys('Enter')
+  await browser.waitUntil(async () => (await assignment.getText()).trim() === modelName, {
+    timeout: 5_000,
+    timeoutMsg: 'Keyboard selection did not assign the Codex profile'
+  })
   await $('[data-test-id="app-settings-done"]').click()
   await $('[data-test-id="app-settings-dialog"]').waitForExist({ reverse: true })
 }
@@ -95,6 +119,28 @@ async function stopAgent() {
 }
 
 describeLive('live native Codex ACP canvas acceptance', () => {
+  afterEach(async function () {
+    if (this.currentTest?.state === 'failed') {
+      await browser.saveScreenshot('local-evidence/native-codex-acp-failure.png')
+      await browser.keys([process.platform === 'darwin' ? 'Meta' : 'Control', ','])
+      await $('[data-test-id="settings-section-diagnostics"]').waitForDisplayed()
+      await $('[data-test-id="settings-section-diagnostics"]').click()
+      await $('[data-test-id="settings-diagnostics-panel"]').waitForDisplayed()
+      await browser.waitUntil(
+        async () => (await $$('[data-slot="diagnostics-event"]').length) > 0,
+        { timeout: 5_000, timeoutMsg: 'No local diagnostics were recorded' }
+      )
+      for (const event of await $$('[data-slot="diagnostics-event"]')) {
+        await event.$('button').click()
+      }
+      await writeFile(
+        'local-evidence/native-codex-acp-diagnostics.txt',
+        await $('[data-slot="diagnostics-events"]').getText()
+      )
+    }
+    await stopAgent()
+  })
+
   it('uses existing login through native chat and MCP, creates one rectangle, and undoes it', async function () {
     this.timeout(150_000)
     const mainHandle = await browser.getWindowHandle()
@@ -116,14 +162,19 @@ describeLive('live native Codex ACP canvas acceptance', () => {
     const input = await $('[data-test-id="chat-input"]')
     await input.waitForDisplayed()
     await input.click()
-    await browser.keys(
+    await input.addValue(
       'Use only the open-pencil MCP canvas tools. Do not read or write files, run shell commands, ' +
         'browse the web, install anything, or change settings. On the current empty page create ' +
         'exactly one RECTANGLE named "ACP acceptance rectangle", positioned at x=100 y=100, ' +
         'width=160 height=100 with a solid red fill. Do not create a frame or any other nodes. ' +
         'Make this as one undoable canvas edit, then stop and briefly confirm.'
     )
+    await browser.waitUntil(async () => (await input.getText()).includes(rectangleName), {
+      timeout: 5_000,
+      timeoutMsg: 'Native typing did not populate the Codex prompt'
+    })
     await $('[data-test-id="chat-send-button"]').click()
+    await $('[data-test-id="chat-stop-button"]').waitForDisplayed({ timeout: 5_000 })
     let stoppedReason: string | null = null
     try {
       await browser.waitUntil(
@@ -140,7 +191,12 @@ describeLive('live native Codex ACP canvas acceptance', () => {
             await stopAgent()
             return true
           }
-          return nodes.length === 1 && !(await $('[data-test-id="chat-stop-button"]').isExisting())
+          const running = await $('[data-test-id="chat-stop-button"]').isExisting()
+          if (!running && nodes.length === 0) {
+            stoppedReason = 'Codex stopped without editing the canvas; see local diagnostics'
+            return true
+          }
+          return nodes.length === 1 && !running
         },
         {
           timeout: 90_000,

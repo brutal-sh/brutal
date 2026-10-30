@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { TabsList, TabsRoot, TabsTrigger } from 'reka-ui'
 import { tv } from 'tailwind-variants'
-import { computed, useTemplateRef, watch } from 'vue'
+import { computed, normalizeClass, useTemplateRef, watch, type HTMLAttributes } from 'vue'
 
+import { IS_TAURI } from '@open-pencil/core/constants'
+import { shortcutPlatform } from '@open-pencil/vue/editor/commands'
 import { useViewportKind } from '@open-pencil/vue/editor/viewport-kind'
 import { useI18n } from '@open-pencil/vue/i18n'
 
@@ -16,6 +18,7 @@ import tabBarTheme from '@/theme/tab-bar'
 
 const { files } = useI18n()
 const { isMobile } = useViewportKind()
+const { class: className } = defineProps<{ class?: HTMLAttributes['class'] }>()
 
 const { tabs, activeTabId, switchTab, closeTab } = useTabsStore()
 const tabBarStyles = tv(tabBarTheme)
@@ -74,8 +77,10 @@ function onClose(e: MouseEvent, tabId: string) {
     v-if="tabs.length > 0"
     v-model="modelValue"
     data-slot="tab-bar"
+    data-tauri-drag-region
+    :data-macos="(IS_TAURI && shortcutPlatform() === 'mac') || undefined"
     activation-mode="automatic"
-    :class="baseStyles.root()"
+    :class="baseStyles.root({ class: normalizeClass(className) })"
   >
     <WorkspaceMenu v-if="!isMobile" />
     <div

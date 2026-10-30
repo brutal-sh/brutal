@@ -1,5 +1,6 @@
 import type { Editor } from '@open-pencil/core'
 import { layerResizes, layerRotates } from '@open-pencil/scene-graph/generated'
+import { canRescaleNode } from '@open-pencil/scene-graph/scaling'
 
 import { connectorLineCursor } from '#vue/shared/input/connector/line'
 import {
@@ -18,6 +19,8 @@ import { getNodeEditState } from '#vue/shared/input/vector'
 function getResizeCursorForSelection(cx: number, cy: number, editor: Editor): string | null {
   for (const id of editor.state.selectedIds) {
     const node = editor.graph.getNode(id)
+    if (editor.state.activeTool === 'SCALE' && (!node || node.locked || !canRescaleNode(node)))
+      continue
     // As a press does: only a layer its handles resize or scale shows a resize cursor on them.
     if (!node || (!layerResizes(node) && !scalesByHandles(node))) continue
 
@@ -86,6 +89,11 @@ export function updateHoverCursor(
   if (getNodeEditState(editor)) {
     editor.setHoveredNode(null)
     return null
+  }
+
+  if (editor.state.activeTool === 'SCALE') {
+    updateHoveredNode(cx, cy, editor, fns, deep)
+    return editor.state.readOnly ? null : getResizeCursorForSelection(cx, cy, editor)
   }
 
   // As a press does: a line's ends, a connector's line handles, then resizing, then a label, then

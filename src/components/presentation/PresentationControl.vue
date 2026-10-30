@@ -5,6 +5,7 @@ import { useEditorStore } from '@/app/editor/active-store'
 import { createPresentationSession } from '@/app/presentation/session'
 import { collectPresentationSlides } from '@/app/presentation/slides'
 import AppButton from '@/components/ui/button/AppButton.vue'
+import IconButton from '@/components/ui/button/IconButton.vue'
 import AppDialog from '@/components/ui/dialog/AppDialog.vue'
 import AppAlert from '@/components/ui/feedback/AppAlert.vue'
 import AppPlaceholder from '@/components/ui/feedback/AppPlaceholder.vue'
@@ -51,10 +52,9 @@ onScopeDispose(presentation.dispose)
 </script>
 
 <template>
-  <AppButton size="xs" @click="start">
-    <template #leading><icon-lucide-presentation /></template>
-    Present
-  </AppButton>
+  <IconButton label="Present" size="sm" @click="start"
+    ><icon-lucide-play class="size-4"
+  /></IconButton>
   <AppDialog
     :open="open"
     heading="Presentation"

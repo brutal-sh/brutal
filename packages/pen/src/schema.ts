@@ -1,3 +1,4 @@
+import stripJSONComments from 'strip-json-comments'
 import * as v from 'valibot'
 
 /**
@@ -231,4 +232,18 @@ export type PenEffect = v.InferOutput<typeof effectSchema>
 export type PenSides = v.InferOutput<typeof sidesSchema>
 export type PenNumber = v.InferOutput<typeof numSchema>
 
-export const penFileSchema = v.pipe(v.string(), v.parseJson(), penDocumentSchema)
+// pen.dev accepts JSON comments. Keep whitespace/strict JSON parsing so token boundaries,
+// malformed input, unterminated block comments and trailing commas remain errors.
+export const penFileSchema = v.pipe(
+  v.string(),
+  v.transform((source) =>
+    // The library only terminates line comments on LF/CRLF. Raw CR is illegal inside JSON
+    // strings, so normalizing a lone CR preserves valid string values and strict rejection.
+    stripJSONComments(source.replace(/\r(?!\n)/g, '\n'), {
+      whitespace: true,
+      trailingCommas: false
+    })
+  ),
+  v.parseJson(),
+  penDocumentSchema
+)

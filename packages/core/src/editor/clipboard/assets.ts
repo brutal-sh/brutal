@@ -175,11 +175,22 @@ export function createClipboardAssetActions(
     )
   }
 
-  async function placeFiles(files: File[], cx: number, cy: number) {
+  async function placeFiles(
+    files: File[],
+    cx: number,
+    cy: number,
+    validateDestination?: () => void
+  ) {
+    const graph = ctx.graph
+    const pageId = ctx.state.currentPageId
+    validateDestination?.()
     const prepared = (await Promise.all(files.map(prepareAsset))).filter(
       (asset): asset is PreparedAsset => asset !== null
     )
     await loadSVGFonts(prepared)
+    if (ctx.graph !== graph || ctx.state.currentPageId !== pageId || ctx.state.readOnly)
+      throw new Error('The placement destination changed while loading the file. Try again.')
+    validateDestination?.()
     placeAssets(prepared, cx, cy, 'Place files')
   }
 

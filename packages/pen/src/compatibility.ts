@@ -73,10 +73,13 @@ export function inspectPenCompatibility(doc: PenDocument): PenImportDiagnostic[]
     list.forEach((paint, index) => {
       if (typeof paint === 'string') return
       const at = Array.isArray(value) ? `${path}/${index}` : path
+      const gradientType = paint.gradientType ?? 'linear'
       const supported =
         paint.type === 'color' ||
         paint.type === 'image' ||
-        (paint.type === 'gradient' && GRADIENT_TYPES.has(String(paint.gradientType ?? 'linear')))
+        (paint.type === 'gradient' &&
+          typeof gradientType === 'string' &&
+          GRADIENT_TYPES.has(gradientType))
       if (!supported) {
         add(
           'unsupported-paint',
@@ -89,7 +92,62 @@ export function inspectPenCompatibility(doc: PenDocument): PenImportDiagnostic[]
     })
   }
 
-  function visit(node: PenOverride, path: string, inheritedId?: string) {
+  const components = new Set<string>()
+  function collect(nodes: PenOverride[]) {
+    for (const node of nodes) {
+      if (node.reusable && node.type === 'frame' && node.id) components.add(node.id)
+      if (node.children) collect(node.children)
+    }
+  }
+  collect(doc.children)
+
+  function inspectSlots(
+    node: PenOverride,
+    path: string,
+    nodeId: string | undefined,
+    inComponent: boolean,
+    override: boolean
+  ) {
+    if (Array.isArray(node.slot)) {
+      if (
+        override ||
+        !inComponent ||
+        node.type !== 'frame' ||
+        node.reusable ||
+        node.children?.length
+      )
+        add(
+          'unsupported-slot',
+          `${path}/slot`,
+          'Slots must be empty frames inside a component definition.',
+          nodeId
+        )
+      for (const [index, suggestion] of node.slot.entries()) {
+        if (!components.has(suggestion))
+          add(
+            'unsupported-slot',
+            `${path}/slot/${index}`,
+            'Slot suggestions must reference a frame component in this document.',
+            nodeId
+          )
+      }
+    } else if (override && node.slot !== undefined) {
+      add(
+        'unsupported-slot',
+        `${path}/slot`,
+        'Changing slot definitions through instance overrides is not supported.',
+        nodeId
+      )
+    }
+  }
+
+  function visit(
+    node: PenOverride,
+    path: string,
+    inheritedId?: string,
+    inComponent = false,
+    override = false
+  ) {
     const nodeId = node.id ?? inheritedId
     if (node.type !== undefined && !NODE_TYPES.has(node.type)) {
       add(
@@ -107,9 +165,7 @@ export function inspectPenCompatibility(doc: PenDocument): PenImportDiagnostic[]
         nodeId
       )
     }
-    if (Array.isArray(node.slot)) {
-      add('unsupported-slot', `${path}/slot`, 'Pen slot semantics are not imported.', nodeId)
-    }
+    inspectSlots(node, path, nodeId, inComponent, override)
     paints(node.fill, `${path}/fill`, nodeId)
     const stroke = node.stroke
     if (
@@ -118,8 +174,9 @@ export function inspectPenCompatibility(doc: PenDocument): PenImportDiagnostic[]
     ) {
       paints(stroke, `${path}/stroke`, nodeId)
     }
-    const effects =
-      node.effect === undefined ? [] : Array.isArray(node.effect) ? node.effect : [node.effect]
+    const effects = Array.isArray(node.effect)
+      ? node.effect
+      : [node.effect].filter((effect) => effect !== undefined)
     effects.forEach((effect, index) => {
       const at = Array.isArray(node.effect) ? `${path}/effect/${index}` : `${path}/effect`
       if (!EFFECT_TYPES.has(effect.type)) {
@@ -127,9 +184,12 @@ export function inspectPenCompatibility(doc: PenDocument): PenImportDiagnostic[]
       }
       blend(effect.blendMode, `${at}/blendMode`, nodeId)
     })
-    node.children?.forEach((child, index) => visit(child, `${path}/children/${index}`))
+    const childComponent = node.type === 'ref' ? false : inComponent || !!node.reusable
+    node.children?.forEach((child, index) =>
+      visit(child, `${path}/children/${index}`, undefined, childComponent, override)
+    )
     for (const [key, override] of Object.entries(node.descendants ?? {})) {
-      visit(override, `${path}/descendants/${pointerKey(key)}`, nodeId)
+      visit(override, `${path}/descendants/${pointerKey(key)}`, nodeId, false, true)
     }
   }
 

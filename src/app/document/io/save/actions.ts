@@ -71,7 +71,7 @@ export function createSaveActions({
   function currentFormat(): DocumentSaveFormat {
     if (getStorageBinding()) return 'fig'
     return documentSaveFormat(
-      getFileHandle()?.name ?? getDownloadName() ?? getFilePath() ?? 'Untitled.fig'
+      getFileHandle()?.name ?? getDownloadName() ?? getFilePath() ?? 'Untitled.pen'
     )
   }
 
@@ -128,7 +128,7 @@ export function createSaveActions({
   }
 
   async function saveAs() {
-    const suggestedName = getDownloadName() ?? `${state.documentName || 'Untitled'}.fig`
+    const suggestedName = getDownloadName() ?? `${state.documentName || 'Untitled'}.pen`
     if (IS_TAURI) {
       const path = await chooseTauriDocumentSavePath(suggestedName)
       if (!path) return false

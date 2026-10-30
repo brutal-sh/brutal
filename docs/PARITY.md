@@ -2,7 +2,7 @@
 
 # Pen parity audit against OpenPencil
 
-**Current implementation update:** the table below is the initial source audit. The fork now has bounded `.pen` import diagnostics, a writer for ordinary shapes/layout/paints/images/variables/instances, normal `.pen` Save/Save As, presentation navigation, and a native browser preview implementation. See [executed acceptance evidence](ACCEPTANCE.md) for checks and remaining limits. Full parity is still open; a refusal prevents loss but does not satisfy a feature requirement.
+**Current implementation update:** the table below is the initial source audit. The fork now has bounded `.pen` import diagnostics, a writer for ordinary shapes/layout/paints/images/variables/instances, normal `.pen` Save/Save As, strict JSON-with-comments parsing, a bounded linked-component slots bridge, presentation navigation, and a native browser preview implementation. Both an isolated native-test and a normal installed-app Home → Codex → MCP canvas edit → Undo workflow have passed with the authorized existing CLI login. The Home layout now follows the observed composer/import/file-grid structure; an original icon is installed and displayed by Finder. See [executed acceptance evidence](ACCEPTANCE.md) for checks and remaining limits. Full parity is still open; a refusal prevents loss but does not satisfy a feature requirement.
 
 2026-10-29 · source baseline `24461adec7073312d460d76f08f069de18e4fb78` · paths relative to the project root after moving `upstream-editor` into it.
 
@@ -51,3 +51,20 @@
 3. **Then map existing native systems:** slots/library imports and components first; custom mesh/GLSL, persistent scripts and browser nodes require new renderer/runtime contracts. Slides can reuse frame ordering and PDF/PPTX export infrastructure once its actual workflow is specified.
 
 Full parity remains open after all three priorities. The acceptance ledger must separately cover every matrix row with executed outcomes and retain all unsupported cases. No production code changed in this audit.
+
+
+## Executed `.pen` JSONC and slots acceptance — 2026-10-30
+
+The initial audit above predates these changes. The public [format reference](https://docs.pencil.dev/for-developers/the-pen-format) accepts JSON comments; the parser now removes comments while preserving strings and URLs, then applies strict JSON and schema validation. Unterminated comments, malformed input and trailing commas remain errors.
+
+The [slot contract](https://docs.pencil.dev/core-concepts/slots) now maps empty component-origin frames to native slot properties. Same-file component suggestions remain guidance. Each instance retains separate ownership, including explicitly empty content; linked components remain linked through nested paths and inherited slot content. Export writes slot declarations and descendant child replacements, and rejects unsupported native metadata instead of dropping it. Instance creation now registers component links through the shared graph update boundary so `graph.syncInstances` reaches imported instances.
+
+Executed: all **191 package tests passed, with 551 assertions**, including 19 JSONC cases and 14 slot cases. Slot tests import, edit, call component synchronization, write and reopen documents; they cover independent and empty ownership, non-suggested content, nested linked instances, inherited content, duplicate slot names, and unsupported metadata refusal. Package TypeScript and lint checks also passed. These are package-level checks: **Core editor slot insertion/undo, browser/native slot UI and cross-application Pen reopen have not been executed for this bridge**.
+
+Current supported boundary: empty slot origin frames inside reusable frame components and same-file component suggestions. Native min/max restrictions, preferred-only enforcement, automatic stretch/display behavior, custom slot-property metadata, and new component definitions embedded in owned slot content are refused because this writer cannot preserve them. Existing component instances inside slot content are supported. Library imports and the remaining format/visual parity gaps stay open.
+
+## Current shell compatibility gaps, 2026-10-30
+
+The embedded Layers panel hides the Pages pane while the document has one page, matching the observed single-page Pen layout. This also removes the visible Add Page entry for creating a second page. Existing multi-page documents reveal the Pages pane, but a discoverable first-page-add workflow remains an open compatibility gap; the layout check is not evidence that page creation is complete.
+
+The brand popup uses truthful Open Pen links plus theme and UI actions. Browser builds append one Commands submenu backed by the shared File/Edit/View/Object/Text/Arrange action model because browsers have no native menu bar. Native builds omit it and use the native menu bar. The ellipsis command palette remains another command route. This is an intentional browser adaptation, not a claim that the browser popup exactly matches the native reference. The fourteen menu and brand workflows passed on immutable browser build9, including keyboard focus/dismissal, real theme/UI actions and browser command dispatch. Native popup opening and Light/Dark delivery were executed and visually inspected in the installed app; exhaustive item delivery and exact reference comparison remain open. Both Save/Open workflows passed an isolated rerun after concurrent-build timing failures; see ACCEPTANCE.md for the timing limits and exact executed evidence.

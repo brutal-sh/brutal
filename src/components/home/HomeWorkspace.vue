@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { useLocalStorage } from '@vueuse/core'
+import { TabsContent, TabsList, TabsRoot, TabsTrigger } from 'reka-ui'
+import { tv } from 'tailwind-variants'
 import { computed, ref } from 'vue'
 
 import { useDocumentWorkspace } from '@open-pencil/vue/document/workspace'
@@ -29,21 +31,32 @@ import { createStorageWorkspaceSource } from '@/app/storage/workspace/source'
 import { openStorageDocumentInNewTab } from '@/app/tabs'
 import { CloudSharedSection, CloudWorkspaceSection } from '@/components/cloud/integration'
 import DocumentEntry from '@/components/home/document/DocumentEntry.vue'
+import HomeHero from '@/components/home/hero/HomeHero.vue'
+import HomeDesignSystems from '@/components/home/HomeDesignSystems.vue'
+import HomeDrafts from '@/components/home/HomeDrafts.vue'
 import HomeLayout from '@/components/home/HomeLayout.vue'
 import RecentFilesSection from '@/components/home/recent/RecentFilesSection.vue'
 import HomeSearchActions from '@/components/home/search/HomeSearchActions.vue'
 import HomeLocationMenu from '@/components/home/sidebar/HomeLocationMenu.vue'
-import HomeSidebar from '@/components/home/sidebar/HomeSidebar.vue'
 import AppButton from '@/components/ui/button/AppButton.vue'
 import IconButton from '@/components/ui/button/IconButton.vue'
+import SegmentedControl from '@/components/ui/select/SegmentedControl.vue'
+import workspaceTheme from '@/theme/home/workspace'
 
 const emit = defineEmits<{ 'new-document': [] }>()
 const { locale, storage, files, common, settings, credentials } = useI18n()
 const view = useLocalStorage<'grid' | 'list'>('open-pencil:home-files-view', 'grid')
+const homeSection = ref('recent')
+const styles = tv(workspaceTheme)()
 const query = ref('')
 const openError = ref<string | null>(null)
 const storageConfigured = ref(storagePreferencesComplete(activeStorageProviderID.value))
 const places = useHomeLocations()
+
+function selectLocation(value: Parameters<typeof places.select>[0]) {
+  places.select(value)
+  homeSection.value = 'recent'
+}
 
 /** A new design lands in the place Home shows: a Cloud workspace, the bucket, or a local file. */
 function newDocument() {
@@ -180,184 +193,200 @@ function formattedDate(updatedAt: string): string {
 
 <template>
   <HomeLayout data-test-id="recent-files-home">
-    <template #sidebar>
-      <HomeSidebar
-        :cloud="CLOUD_INCLUDED"
-        :active="places.active.value"
-        :account="places.account.value"
-        :workspaces="places.workspaces.value"
-        :storage="sidebarStorage"
-        @select="places.select"
-        @connect="places.connect"
-        @open-account="places.openAccount"
-        @storage-settings="places.storageSettings"
-        @switch-server="places.connect"
-        @new-workspace="places.newWorkspace"
-        @sign-out="places.signOut"
-      />
-    </template>
-    <template #locations>
-      <HomeLocationMenu
-        :cloud="CLOUD_INCLUDED"
-        :active="places.active.value"
-        :account="places.account.value"
-        :workspaces="places.workspaces.value"
-        :storage="sidebarStorage"
-        @select="places.select"
-        @connect="places.connect"
-        @new-workspace="places.newWorkspace"
-      />
-    </template>
-    <HomeSearchActions
-      v-model="query"
-      :destination="newDesignTarget?.label ?? null"
-      @new-document="newDocument"
-    />
-
-    <p v-if="openError" class="mb-4 text-xs text-error" role="alert">{{ openError }}</p>
-    <!-- Nothing until Cloud says which workspace Home opens on. -->
-    <template v-if="places.settling.value" />
-    <CloudWorkspaceSection
-      v-else-if="places.workspace.value && places.serverId.value"
-      :server-id="places.serverId.value"
-      :workspace="places.workspace.value"
-      :query="normalizedQuery"
-    />
-    <CloudSharedSection
-      v-else-if="places.location.value.kind === 'shared' && places.serverId.value"
-      :server-id="places.serverId.value"
-      :query="normalizedQuery"
-    />
-    <template v-else>
-      <p
-        v-if="noSearchMatches"
-        class="rounded-lg border border-dashed border-border px-4 py-8 text-center text-xs text-muted"
-      >
-        {{ files.noMatchingFiles({ query: query.trim() }) }}
-      </p>
-
-      <RecentFilesSection
-        v-if="!noSearchMatches && places.location.value.kind === 'recent'"
-        v-model:view="view"
-        :workspace="workspace"
-        :documents="filteredRecentFiles"
-        :query="normalizedQuery"
-        @open="openRecent"
-      />
-
-      <section v-if="places.location.value.kind === 'storage'">
-        <div class="mb-3 flex items-start gap-3">
-          <div class="min-w-0">
-            <h2 class="text-base font-semibold">{{ storage.workspace }}</h2>
-            <p class="mt-0.5 truncate text-xs text-muted sm:whitespace-normal">
-              {{ storageDescription }}
-            </p>
-          </div>
-          <div class="ml-auto flex shrink-0 items-center gap-1">
-            <IconButton
-              :label="common.refresh"
-              class="size-10 sm:size-7"
-              @click="storageWorkspace.refresh"
-            >
-              <icon-lucide-refresh-cw class="size-3.5" />
-            </IconButton>
-            <IconButton
-              :label="settings.title"
-              class="size-10 sm:size-7"
-              @click="openSettingsDialog('storage')"
-            >
-              <icon-lucide-settings-2 class="size-3.5" />
-            </IconButton>
-          </div>
-        </div>
-
-        <div
-          v-if="storageLoading && storageDocuments.length === 0"
-          class="grid grid-cols-1 gap-x-5 gap-y-6 sm:grid-cols-[repeat(auto-fill,minmax(200px,1fr))]"
-          :aria-label="storage.loadingWorkspace"
-        >
-          <div
-            v-for="index in 3"
-            :key="index"
-            class="min-w-0 animate-pulse motion-reduce:animate-none"
+    <HomeHero />
+    <TabsRoot v-model="homeSection">
+      <div :class="styles.navigation()">
+        <TabsList aria-label="Documents" :class="styles.tabs()">
+          <TabsTrigger value="recent" :class="styles.tab()">Recents</TabsTrigger>
+          <TabsTrigger value="drafts" :class="styles.tab()">Drafts</TabsTrigger>
+          <TabsTrigger value="systems" :class="styles.tab()">Design Systems</TabsTrigger>
+        </TabsList>
+        <div :class="styles.actions()">
+          <HomeSearchActions
+            v-model="query"
+            :destination="newDesignTarget?.label ?? null"
+            @new-document="newDocument"
+          />
+          <HomeLocationMenu
+            compact
+            :cloud="CLOUD_INCLUDED"
+            :active="places.active.value"
+            :account="places.account.value"
+            :workspaces="places.workspaces.value"
+            :storage="sidebarStorage"
+            @select="selectLocation"
+            @connect="places.connect"
+            @new-workspace="places.newWorkspace"
+          />
+          <SegmentedControl
+            v-model="view"
+            required
+            label="Document view"
+            :options="[
+              { value: 'grid', label: 'Grid view' },
+              { value: 'list', label: 'List view' }
+            ]"
           >
-            <div class="aspect-video rounded-lg border border-border bg-panel-field" />
-            <div class="mt-2 h-3 w-2/3 rounded bg-panel-field" />
-            <div class="mt-1.5 h-2.5 w-1/3 rounded bg-panel-field" />
-          </div>
+            <template #option="{ option }"
+              ><icon-lucide-layout-grid
+                v-if="option.value === 'grid'"
+                class="size-3.5" /><icon-lucide-list v-else class="size-3.5"
+            /></template>
+          </SegmentedControl>
         </div>
+      </div>
+      <TabsContent value="drafts"><HomeDrafts :query="normalizedQuery" :view="view" /></TabsContent>
+      <TabsContent value="systems"
+        ><HomeDesignSystems :query="normalizedQuery" :view="view"
+      /></TabsContent>
+      <TabsContent value="recent">
+        <p v-if="openError" class="mb-4 text-xs text-error" role="alert">{{ openError }}</p>
+        <!-- Nothing until Cloud says which workspace Home opens on. -->
+        <template v-if="places.settling.value" />
+        <CloudWorkspaceSection
+          v-else-if="places.workspace.value && places.serverId.value"
+          :server-id="places.serverId.value"
+          :workspace="places.workspace.value"
+          :query="normalizedQuery"
+        />
+        <CloudSharedSection
+          v-else-if="places.location.value.kind === 'shared' && places.serverId.value"
+          :server-id="places.serverId.value"
+          :query="normalizedQuery"
+        />
+        <template v-else>
+          <p
+            v-if="noSearchMatches"
+            class="rounded-lg border border-dashed border-border px-4 py-8 text-center text-xs text-muted"
+          >
+            {{ files.noMatchingFiles({ query: query.trim() }) }}
+          </p>
 
-        <div
-          v-else-if="storageError && storageDocuments.length === 0"
-          class="rounded-lg border border-error/40 px-4 py-6 text-center"
-          role="alert"
-        >
-          <template v-if="credentialAccess.paused.value">
-            <p class="text-xs text-error">{{ credentials.accessPaused }}</p>
-            <AppButton
-              variant="outline"
-              class="mt-3"
-              :loading="credentialAccess.busy.value"
-              data-test-id="home-storage-retry-access"
-              @click="retryCredentialAccess"
+          <RecentFilesSection
+            v-if="!noSearchMatches && places.location.value.kind === 'recent'"
+            v-model:view="view"
+            embedded
+            :workspace="workspace"
+            :documents="filteredRecentFiles"
+            :query="normalizedQuery"
+            @open="openRecent"
+          />
+
+          <section v-if="places.location.value.kind === 'storage'">
+            <div class="mb-3 flex items-start gap-3">
+              <div class="min-w-0">
+                <h2 class="text-base font-semibold">{{ storage.workspace }}</h2>
+                <p class="mt-0.5 truncate text-xs text-muted sm:whitespace-normal">
+                  {{ storageDescription }}
+                </p>
+              </div>
+              <div class="ml-auto flex shrink-0 items-center gap-1">
+                <IconButton
+                  :label="common.refresh"
+                  class="size-10 sm:size-7"
+                  @click="storageWorkspace.refresh"
+                >
+                  <icon-lucide-refresh-cw class="size-3.5" />
+                </IconButton>
+                <IconButton
+                  :label="settings.title"
+                  class="size-10 sm:size-7"
+                  @click="openSettingsDialog('storage')"
+                >
+                  <icon-lucide-settings-2 class="size-3.5" />
+                </IconButton>
+              </div>
+            </div>
+
+            <div
+              v-if="storageLoading && storageDocuments.length === 0"
+              :class="styles.grid()"
+              :aria-label="storage.loadingWorkspace"
             >
-              {{ credentials.retryAccess }}
-            </AppButton>
-          </template>
-          <template v-else>
-            <p class="text-xs text-error">{{ storageError }}</p>
-            <AppButton variant="outline" class="mt-3" @click="storageWorkspace.refresh">
-              {{ common.refresh }}
-            </AppButton>
-          </template>
-        </div>
+              <div
+                v-for="index in 3"
+                :key="index"
+                class="min-w-0 animate-pulse motion-reduce:animate-none"
+              >
+                <div class="aspect-video rounded-lg border border-border bg-panel-field" />
+                <div class="mt-2 h-3 w-2/3 rounded bg-panel-field" />
+                <div class="mt-1.5 h-2.5 w-1/3 rounded bg-panel-field" />
+              </div>
+            </div>
 
-        <div
-          v-else-if="filteredStorageDocuments.length && view === 'grid'"
-          class="grid grid-cols-1 gap-x-5 gap-y-6 sm:grid-cols-[repeat(auto-fill,minmax(200px,1fr))]"
-        >
-          <DocumentEntry
-            v-for="document in filteredStorageDocuments"
-            :key="document.id"
-            v-storage-preview="document.id"
-            :name="document.name"
-            :metadata="formattedDate(document.updatedAt)"
-            :previewURL="storagePreviewURL(document.id)"
-            @open="openStorageDocument(document)"
-          />
-        </div>
+            <div
+              v-else-if="storageError && storageDocuments.length === 0"
+              class="rounded-lg border border-error/40 px-4 py-6 text-center"
+              role="alert"
+            >
+              <template v-if="credentialAccess.paused.value">
+                <p class="text-xs text-error">{{ credentials.accessPaused }}</p>
+                <AppButton
+                  variant="outline"
+                  class="mt-3"
+                  :loading="credentialAccess.busy.value"
+                  data-test-id="home-storage-retry-access"
+                  @click="retryCredentialAccess"
+                >
+                  {{ credentials.retryAccess }}
+                </AppButton>
+              </template>
+              <template v-else>
+                <p class="text-xs text-error">{{ storageError }}</p>
+                <AppButton variant="outline" class="mt-3" @click="storageWorkspace.refresh">
+                  {{ common.refresh }}
+                </AppButton>
+              </template>
+            </div>
 
-        <div
-          v-else-if="filteredStorageDocuments.length"
-          class="overflow-hidden rounded-lg border border-border"
-        >
-          <DocumentEntry
-            v-for="document in filteredStorageDocuments"
-            :key="document.id"
-            view="list"
-            :name="document.name"
-            :metadata="formattedDate(document.updatedAt)"
-            @open="openStorageDocument(document)"
-          />
-        </div>
+            <div
+              v-else-if="filteredStorageDocuments.length && view === 'grid'"
+              :class="styles.grid()"
+            >
+              <DocumentEntry
+                v-for="document in filteredStorageDocuments"
+                :key="document.id"
+                v-storage-preview="document.id"
+                :name="document.name"
+                :metadata="formattedDate(document.updatedAt)"
+                :previewURL="storagePreviewURL(document.id)"
+                @open="openStorageDocument(document)"
+              />
+            </div>
 
-        <div
-          v-else-if="!storageConfigured"
-          class="rounded-lg border border-dashed border-border px-4 py-4 text-center text-xs text-muted sm:py-6"
-        >
-          <p>{{ storage.notConfigured }}</p>
-          <AppButton variant="outline" class="mt-3" @click="openSettingsDialog('storage')">
-            {{ settings.title }}
-          </AppButton>
-        </div>
+            <div
+              v-else-if="filteredStorageDocuments.length"
+              class="overflow-hidden rounded-lg border border-border"
+            >
+              <DocumentEntry
+                v-for="document in filteredStorageDocuments"
+                :key="document.id"
+                view="list"
+                :name="document.name"
+                :metadata="formattedDate(document.updatedAt)"
+                @open="openStorageDocument(document)"
+              />
+            </div>
 
-        <div
-          v-else-if="!normalizedQuery"
-          class="rounded-lg border border-dashed border-border px-4 py-4 text-center text-xs text-muted sm:py-6"
-        >
-          {{ storage.emptyStorageWorkspace }}
-        </div>
-      </section>
-    </template>
+            <div
+              v-else-if="!storageConfigured"
+              class="rounded-lg border border-dashed border-border px-4 py-4 text-center text-xs text-muted sm:py-6"
+            >
+              <p>{{ storage.notConfigured }}</p>
+              <AppButton variant="outline" class="mt-3" @click="openSettingsDialog('storage')">
+                {{ settings.title }}
+              </AppButton>
+            </div>
+
+            <div
+              v-else-if="!normalizedQuery"
+              class="rounded-lg border border-dashed border-border px-4 py-4 text-center text-xs text-muted sm:py-6"
+            >
+              {{ storage.emptyStorageWorkspace }}
+            </div>
+          </section>
+        </template>
+      </TabsContent>
+    </TabsRoot>
   </HomeLayout>
 </template>

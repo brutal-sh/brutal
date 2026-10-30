@@ -3,7 +3,7 @@ import { describe, expect, test } from 'bun:test'
 import { parsePenFile, writePenFile, writePenDocument } from '@open-pencil/pen'
 import type { SceneGraph } from '@open-pencil/scene-graph'
 
-import { parseDocument } from './helpers/document'
+import { parseDocument } from '../helpers/document'
 
 function variable(graph: SceneGraph, name: string) {
   const found = [...graph.variables.values()].find((entry) => entry.name === name)

@@ -2,7 +2,8 @@ import { compact } from 'es-toolkit/array'
 
 import { editorCommandMetadata } from '@open-pencil/vue/editor/commands'
 
-import { APP_MENU_APP_ITEMS, APP_MENU_SCHEMA } from '@/app/shell/menu/schema'
+import { NATIVE_MENU_SCHEMA } from '@/app/shell/menu/native-schema'
+import { APP_MENU_APP_ITEMS } from '@/app/shell/menu/schema'
 import type { AppMenuActionItem, AppMenuEntry, AppMenuGroupSchema } from '@/app/shell/menu/schema'
 import { shortcutTokenToAccelerator } from '@/app/shell/menu/shortcut'
 
@@ -41,7 +42,7 @@ function cleanGroup(group: AppMenuGroupSchema): unknown | null {
 }
 
 export function renderMenu(): string {
-  const menu = compact(APP_MENU_SCHEMA.map(cleanGroup))
+  const menu = compact(NATIVE_MENU_SCHEMA.map(cleanGroup))
   return `${JSON.stringify(menu, null, 2)}\n`
 }
 

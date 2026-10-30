@@ -15,6 +15,7 @@ import IconMousePointer from '~icons/lucide/mouse-pointer'
 import IconPenTool from '~icons/lucide/pen-tool'
 import IconPencil from '~icons/lucide/pencil'
 import IconRows from '~icons/lucide/rows-3'
+import IconScaling from '~icons/lucide/scaling'
 import IconShapes from '~icons/lucide/shapes'
 import IconSmile from '~icons/lucide/smile'
 import IconSpline from '~icons/lucide/spline'
@@ -38,6 +39,7 @@ import { SHAPE_KIND_ICONS } from './shapes'
 
 export const toolIcons: Record<Tool, Component> = {
   SELECT: IconMousePointer,
+  SCALE: IconScaling,
   FRAME: IconFrame,
   SECTION: IconSection,
   RECTANGLE: IconSquare,

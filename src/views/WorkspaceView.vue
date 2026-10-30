@@ -4,6 +4,7 @@ import { useEventListener, whenever } from '@vueuse/core'
 import { computed, onMounted, onUnmounted, provide, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
+import { useViewportKind } from '@open-pencil/vue/editor/viewport-kind'
 import { useI18n } from '@open-pencil/vue/i18n'
 
 import {
@@ -57,6 +58,8 @@ import TabBar from '@/components/TabBar.vue'
 import { IS_BROWSER, IS_CLOUD_SITE } from '@/constants'
 
 const commandPaletteOpen = ref(false)
+const headerWidth = ref(100)
+const { isMobile } = useViewportKind()
 const route = useRoute()
 /**
  * The active tab as it shows: a version of its document being previewed takes the document's
@@ -69,6 +72,17 @@ const shown = computed(() => {
     tab: { ...tab, store: shownEditorStore(tab.store) },
     key: tab.id + versionPreviewKey(tab.store)
   }
+})
+const floatingHeader = computed(() => {
+  const tab = shown.value?.tab
+  return (
+    !!tab &&
+    tab.kind !== 'home' &&
+    !isMobile.value &&
+    appRuntimeConfig.showChrome &&
+    tab.store.state.showUI &&
+    !(tab.store.state.play !== null && tab.store.visiblePaneCount.value <= 1)
+  )
 })
 // Shortcuts, menus, and the clipboard act on what the tab shows.
 watch(
@@ -301,17 +315,24 @@ onUnmounted(() => {
     <FontStatusBanner />
     <RenameSelectionDialog />
     <CommandPalette v-model:open="commandPaletteOpen" />
-    <div class="flex h-14 shrink-0 items-center px-2">
-      <TabBar class="max-w-[55%]" />
+    <div class="relative flex min-h-0 flex-1 flex-col">
+      <div
+        :data-floating="floatingHeader || undefined"
+        class="z-20 flex h-14 shrink-0 items-center px-2 data-[floating=true]:pointer-events-none data-[floating=true]:absolute data-[floating=true]:top-0 data-[floating=true]:left-0"
+        :style="{ width: `${floatingHeader ? headerWidth : 100}%` }"
+      >
+        <TabBar class="pointer-events-auto max-w-[55%]" />
+      </div>
+      <HomeWorkspace v-show="activeTab?.kind === 'home'" @new-document="createTab()" />
+      <CloudVersionDialog />
+      <EditorWorkspace
+        v-if="shown && shown.tab.kind !== 'home'"
+        :key="shown.key"
+        :tab="shown.tab"
+        @open-command-palette="commandPaletteOpen = true"
+        @header-width="headerWidth = $event"
+      />
     </div>
-    <HomeWorkspace v-show="activeTab?.kind === 'home'" @new-document="createTab()" />
-    <CloudVersionDialog />
-    <EditorWorkspace
-      v-if="shown && shown.tab.kind !== 'home'"
-      :key="shown.key"
-      :tab="shown.tab"
-      @open-command-palette="commandPaletteOpen = true"
-    />
     <LoadingScreen v-if="openingCloudLink" />
   </div>
 </template>

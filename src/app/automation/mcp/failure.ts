@@ -7,13 +7,13 @@ import { APP_VERSION } from '@/app/runtime/version'
  * without importing the spawning code.
  */
 export const MCP_PACKAGE_NAME = '@open-pencil/mcp'
-export const MCP_EXECUTABLE = 'openpencil-mcp-http'
+export const MCP_EXECUTABLE = 'openpen-mcp-http'
 
 /** Exact package spec a user should install to match this app. */
 export const MCP_INSTALL_TARGET = `${MCP_PACKAGE_NAME}@${APP_VERSION}`
 
 /** Installs OpenPencil's MCP server at the version that matches the app. */
-export const MCP_INSTALL_COMMAND = `npm i -g ${MCP_INSTALL_TARGET}`
+export const MCP_INSTALL_COMMAND = 'bun run setup:local-runtime'
 
 /**
  * Why the local MCP server is unavailable.

@@ -2,7 +2,7 @@ import { describe, expect, test } from 'bun:test'
 
 import { writePenDocument, parsePenFile, writePenFile } from '@open-pencil/pen'
 
-import { parseDocument } from './helpers/document'
+import { parseDocument } from '../helpers/document'
 
 const stops = [
   { color: '#FF000080', position: 0.1 },

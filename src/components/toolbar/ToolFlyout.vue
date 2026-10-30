@@ -99,7 +99,7 @@ function flyoutItemClass() {
 
       <DropdownMenuPortal>
         <DropdownMenuContent
-          side="top"
+          :side="mobile ? 'top' : 'right'"
           :side-offset="8"
           align="start"
           :class="styles.flyoutContent({ class: ui?.flyoutContent })"
@@ -131,7 +131,10 @@ function flyoutItemClass() {
                 <span :class="styles.flyoutItemLabel({ class: ui?.flyoutItemLabel })">
                   {{ toolLabels[sub] }}
                 </span>
-                <AppShortcutText v-if="!mobile && toolShortcuts[sub]">
+                <AppShortcutText
+                  v-if="!mobile && toolShortcuts[sub]"
+                  :ui="{ base: 'text-[11px] tracking-widest' }"
+                >
                   {{ toolShortcuts[sub] }}
                 </AppShortcutText>
               </DropdownMenuRadioItem>

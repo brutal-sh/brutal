@@ -2,7 +2,8 @@ import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
-import { appArtwork, loadArtwork } from './artwork.ts'
+import sharp from 'sharp'
+
 import { desktopFiles } from './config.ts'
 import { canonicalIcns } from './validate.ts'
 import type { BrandFiles } from './web.ts'
@@ -10,9 +11,11 @@ import type { BrandFiles } from './web.ts'
 export async function generateDesktop(root: string): Promise<BrandFiles> {
   const directory = await mkdtemp(join(tmpdir(), 'open-pencil-icons-'))
   try {
-    const { adapter, main } = await loadArtwork(root)
-    const source = join(directory, 'app.svg')
-    await writeFile(source, appArtwork(main, adapter, 'desktop'))
+    const source = join(directory, 'app.png')
+    await writeFile(
+      source,
+      await sharp(join(root, 'assets/brand/open-pen-app.png')).resize(1024, 1024).png().toBuffer()
+    )
     // Direct native CLI API: no shell, package download, recursive npm script, or Rust build.
     const { run } = await import('@tauri-apps/cli')
     await run(['icon', source, '--output', join(directory, 'icons')], 'tauri')

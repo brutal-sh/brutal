@@ -22,13 +22,32 @@ const RESCALABLE_NODE_TYPES = new Set<SceneNode['type']>([
   'VECTOR'
 ])
 
+export function canRescaleNode(node: SceneNode): boolean {
+  return RESCALABLE_NODE_TYPES.has(node.type)
+}
+
+/** Content dimensions and the units that keep variable bindings and instances proportional. */
+export function rescaleNodeChanges(
+  graph: SceneGraph,
+  node: SceneNode,
+  scale: number,
+  scalePosition: boolean
+): Partial<SceneNode> {
+  return {
+    ...scaleNodeChanges(node, scale, scalePosition),
+    ...scaleVariableBindingUnits(node, scale),
+    componentScale: findInstanceAncestor(graph, node.id)
+      ? node.componentScale * scale
+      : node.componentScale
+  }
+}
+
 /** Scale a node tree from the root node's top-left, matching Figma's Scale tool. */
 export function rescaleNodeTree(graph: SceneGraph, rootId: string, scale: number): void {
   if (!Number.isFinite(scale)) throw new TypeError('Scale must be a finite number')
   if (scale < MIN_SCALE) throw new RangeError(`Scale must be at least ${MIN_SCALE}`)
   const root = graph.getNode(rootId)
-  if (!root || !RESCALABLE_NODE_TYPES.has(root.type))
-    throw new Error('rescale() is not supported on this node')
+  if (!root || !canRescaleNode(root)) throw new Error('rescale() is not supported on this node')
   const nodes: SceneNode[] = [root]
   const collect = (node: SceneNode): void => {
     for (const childId of node.childIds) {
@@ -40,12 +59,6 @@ export function rescaleNodeTree(graph: SceneGraph, rootId: string, scale: number
   }
   collect(root)
   for (const node of nodes) {
-    graph.updateNode(node.id, {
-      ...scaleNodeChanges(node, scale, node.id !== rootId),
-      ...scaleVariableBindingUnits(node, scale),
-      componentScale: findInstanceAncestor(graph, node.id)
-        ? node.componentScale * scale
-        : node.componentScale
-    })
+    graph.updateNode(node.id, rescaleNodeChanges(graph, node, scale, node.id !== rootId))
   }
 }

@@ -1,7 +1,5 @@
 import { strict as assert } from 'node:assert'
 
-import { invokeNative } from '#tests/helpers/tauri/invoke'
-
 function settingsOpen(): Promise<boolean> {
   return browser.execute(() =>
     Boolean(document.querySelector('[data-test-id="app-settings-dialog"]'))
@@ -9,6 +7,10 @@ function settingsOpen(): Promise<boolean> {
 }
 
 describe('native preferences', () => {
+  before(async () => {
+    const mainHandle = await browser.getWindowHandle()
+    await browser.switchToWindow(mainHandle)
+  })
   it('opens Settings with the platform shortcut while an input is focused', async () => {
     await browser.waitUntil(
       async () => browser.execute(() => Boolean(window.openPencil?.getStore?.())),
@@ -28,15 +30,22 @@ describe('native preferences', () => {
     })
 
     assert.equal(await settingsOpen(), true)
+    await browser.keys('Escape')
+    await browser.waitUntil(async () => !(await settingsOpen()))
+    await browser.execute(() =>
+      document.querySelector('[data-test-id="native-settings-shortcut-input"]')?.remove()
+    )
   })
 
-  it('keeps native snapping checkmarks synchronized with preferences', async () => {
+  it('keeps editor snapping synchronized with Settings and retains it when reopened', async () => {
     await browser.waitUntil(
       async () => browser.execute(() => Boolean(window.openPencil?.getStore?.())),
       { timeout: 30_000, timeoutMsg: 'OpenPencil editor did not initialize' }
     )
-    const initial = await invokeNative<boolean>('native_menu_checked', { id: 'snap-objects' })
-    assert.equal(initial, true)
+    const initial = await browser.execute(
+      () => window.openPencil?.getStore?.().state.snappingPreferences.objects
+    )
+    assert.equal(typeof initial, 'boolean')
 
     await browser.keys([process.platform === 'darwin' ? 'Meta' : 'Control', ','])
     await browser.waitUntil(settingsOpen, {
@@ -45,15 +54,36 @@ describe('native preferences', () => {
     })
     // Spec files share one app process, so select the section this test needs
     // instead of assuming the dialog opened on it.
-    await (await $('[data-test-id="settings-section-general"]')).click()
+    await (await $('[data-test-id="settings-section-editor"]')).click()
     await (await $('[data-test-id="settings-snap-objects"]')).waitForDisplayed({ timeout: 10_000 })
     await (await $('[data-test-id="settings-snap-objects"]')).click()
     await browser.waitUntil(
       async () =>
-        (await invokeNative<boolean>('native_menu_checked', { id: 'snap-objects' })) === false,
-      { timeout: 5_000, timeoutMsg: 'Native snapping checkmark did not follow the preference' }
+        (await browser.execute(
+          () => window.openPencil?.getStore?.().state.snappingPreferences.objects
+        )) === !initial,
+      { timeout: 5_000, timeoutMsg: 'Editor snapping did not follow the preference' }
     )
-    const updated = await invokeNative<boolean>('native_menu_checked', { id: 'snap-objects' })
-    assert.equal(updated, false)
+    const updated = await browser.execute(
+      () => window.openPencil?.getStore?.().state.snappingPreferences.objects
+    )
+    assert.equal(updated, !initial)
+    await browser.keys('Escape')
+    await browser.waitUntil(async () => !(await settingsOpen()))
+    await browser.keys([process.platform === 'darwin' ? 'Meta' : 'Control', ','])
+    await browser.waitUntil(settingsOpen)
+    await (await $('[data-test-id="settings-section-editor"]')).click()
+    const control = await $('[data-test-id="settings-snap-objects"]')
+    await control.waitForDisplayed()
+    assert.equal(await control.getAttribute('aria-checked'), String(!initial))
+    // Restore the original preference for later specs sharing this app process.
+    await control.click()
+    await browser.waitUntil(
+      async () =>
+        (await browser.execute(
+          () => window.openPencil?.getStore?.().state.snappingPreferences.objects
+        )) === initial
+    )
+    await browser.keys('Escape')
   })
 })

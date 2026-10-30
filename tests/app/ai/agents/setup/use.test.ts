@@ -261,7 +261,7 @@ describe('agentSetupView', () => {
   test('gives only instructions where agents cannot run', () => {
     const view = agentSetupView(claude, agentState({ supported: false, bridge: false }))
     expect(view.manualAgentCommand).toBe(claude.installCommand ?? null)
-    expect(view.manualBridgeCommand).toMatch(/@open-pencil\/mcp/)
+    expect(view.manualBridgeCommand).toBe(MCP_INSTALL_COMMAND)
   })
 })
 
@@ -540,7 +540,7 @@ describe('useMCPServerSetup', () => {
     const discovery = createAgentDiscovery({
       enabled: true,
       lookup: async (): Promise<AgentLookup> => ({
-        ...lookup('npm', ...(installed ? ['openpencil-mcp-http'] : [])),
+        ...lookup('npm', ...(installed ? ['openpen-mcp-http'] : [])),
         versions: installed ? { '@open-pencil/mcp': '0.0.0-test' } : {}
       }),
       install: async () => undefined,

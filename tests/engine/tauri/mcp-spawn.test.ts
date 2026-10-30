@@ -82,7 +82,7 @@ describe('Tauri MCP spawning', () => {
     await mockTauriIPC((cmd, args) => {
       if (cmd === 'plugin:path|join') return (args as { paths: string[] }).paths.join('/')
       if (cmd === 'mcp_lookup')
-        return { available: true, path: '/mock/bin/openpencil-mcp-http', searched: ['/mock/bin'] }
+        return { available: true, path: '/mock/bin/openpen-mcp-http', searched: ['/mock/bin'] }
       if (cmd === 'plugin:path|resolve_directory') return '/mock/home'
       if (cmd === 'plugin:fs|exists') return false
       if (cmd === 'plugin:shell|spawn') {
@@ -122,7 +122,7 @@ describe('Tauri MCP spawning', () => {
     await mockTauriIPC((cmd, args) => {
       if (cmd === 'plugin:path|join') return (args as { paths: string[] }).paths.join('/')
       if (cmd === 'mcp_lookup')
-        return { available: true, path: '/mock/bin/openpencil-mcp-http', searched: ['/mock/bin'] }
+        return { available: true, path: '/mock/bin/openpen-mcp-http', searched: ['/mock/bin'] }
       if (cmd === 'plugin:path|resolve_directory') return '/mock/home'
       if (cmd === 'plugin:fs|exists') return false
       if (cmd === 'plugin:shell|spawn') throw new Error('shell permission denied')
@@ -190,7 +190,7 @@ describe('Tauri MCP spawning', () => {
     // The old server names its own version; the fix must name this app's.
     const error = await getAutomationAuthToken().catch((reason: unknown) => reason)
     expect(error).toBeInstanceOf(Error)
-    expect(String(error)).toContain('npm i -g @open-pencil/mcp@0.0.0-test')
+    expect(String(error)).toContain('bun run setup:local-runtime')
     expect(String(error)).not.toContain('@open-pencil/mcp@0.15.1')
   })
 
@@ -225,10 +225,10 @@ describe('Tauri MCP spawning', () => {
       if (cmd === 'plugin:path|join') return (args as { paths: string[] }).paths.join('/')
       calls.push({ cmd, args })
       if (cmd === 'mcp_lookup')
-        return { available: true, path: '/mock/bin/openpencil-mcp-http', searched: ['/mock/bin'] }
+        return { available: true, path: '/mock/bin/openpen-mcp-http', searched: ['/mock/bin'] }
       if (cmd === 'plugin:shell|spawn') {
         expect(args).toMatchObject({
-          program: 'openpencil-mcp-http',
+          program: 'openpen-mcp-http',
           args: [],
           options: {
             env: {
@@ -311,7 +311,7 @@ describe('Tauri MCP spawning', () => {
     await mockTauriIPC((cmd, args) => {
       if (cmd === 'plugin:path|join') return (args as { paths: string[] }).paths.join('/')
       if (cmd === 'mcp_lookup')
-        return { available: true, path: '/mock/bin/openpencil-mcp-http', searched: ['/mock/bin'] }
+        return { available: true, path: '/mock/bin/openpen-mcp-http', searched: ['/mock/bin'] }
       if (cmd === 'plugin:shell|spawn') return 77
       const pathArg = (args as { path?: string })?.path
       if (cmd === 'plugin:fs|exists') return pathArg === DISCOVERY_PATH
@@ -342,7 +342,7 @@ describe('Tauri MCP spawning', () => {
     await mockTauriIPC((cmd, args) => {
       if (cmd === 'plugin:path|join') return (args as { paths: string[] }).paths.join('/')
       if (cmd === 'mcp_lookup')
-        return { available: true, path: '/mock/bin/openpencil-mcp-http', searched: ['/mock/bin'] }
+        return { available: true, path: '/mock/bin/openpen-mcp-http', searched: ['/mock/bin'] }
       if (cmd === 'plugin:path|resolve_directory') return '/mock/home'
       if (cmd === 'plugin:fs|exists') return false
       if (cmd === 'plugin:shell|spawn') {

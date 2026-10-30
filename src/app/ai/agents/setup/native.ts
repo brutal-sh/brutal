@@ -3,7 +3,7 @@ import * as v from 'valibot'
 import type { ACPAgentDef } from '@open-pencil/core/constants'
 
 import { HARNESS_INSTALL_TARGET } from '@/app/ai/agents/pi/companion'
-import { MCP_INSTALL_TARGET } from '@/app/automation/mcp/failure'
+import { MCP_INSTALL_COMMAND } from '@/app/automation/mcp/failure'
 import { resolvePlatformCommand } from '@/app/tauri/command'
 
 import type { PackageManager } from './companions'
@@ -37,11 +37,9 @@ export async function installAgentAdapter(agent: ACPAgentDef, searchPath: string
   return installPackage(agent.adapterPackage, searchPath)
 }
 
-export async function installCanvasBridge(
-  searchPath: string,
-  manager: PackageManager = 'npm'
-): Promise<void> {
-  await installPackage(MCP_INSTALL_TARGET, searchPath, manager)
+/** Fork companions are installed from the checkout, never from the upstream npm package. */
+export function installCanvasBridge(): Promise<void> {
+  return Promise.reject(new Error(`From the Open Pen checkout, run ${MCP_INSTALL_COMMAND}.`))
 }
 
 export async function installHarnessCompanion(

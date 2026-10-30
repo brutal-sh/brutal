@@ -4,7 +4,7 @@ import { parsePenFile, writePenFile, writePenDocument, type PenNode } from '@ope
 import type { SceneGraph } from '@open-pencil/scene-graph'
 import { syncInstance } from '@open-pencil/scene-graph/instances'
 
-import { parseDocument } from './helpers/document'
+import { parseDocument } from '../helpers/document'
 
 const component: PenNode = {
   id: 'button',

@@ -23,6 +23,7 @@ export const HAND_GRAB_CURSOR = svgCursor(handGrabCursorSVG, 16, 16, 'grabbing')
 
 const TOOL_CURSORS: Record<Tool, string> = {
   SELECT: 'default',
+  SCALE: 'default',
   FRAME: 'crosshair',
   SECTION: 'crosshair',
   RECTANGLE: 'crosshair',

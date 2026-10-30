@@ -122,6 +122,7 @@ export function createDocumentSourceActions({
   const recovery = createDocumentRecovery({
     state,
     version: changes.capture,
+    hasUnsavedChanges: changes.hasUnsavedChanges,
     isEnabled: () => recoveryEnabled.value,
     buildFigFile: buildRecoveryFigFile,
     hasWritableSource

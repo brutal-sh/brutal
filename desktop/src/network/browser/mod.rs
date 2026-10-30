@@ -1,9 +1,13 @@
 //! An isolated child webview. Visited content has no app commands or plugin capabilities.
 mod capture;
+mod extract;
 pub mod policy;
 
 use policy::{preview_url, require_editor, DockBounds, PREVIEW_LABEL};
+use std::sync::atomic::{AtomicU64, Ordering};
 use tauri::{webview::WebviewBuilder, LogicalPosition, LogicalSize, Manager, Webview, WebviewUrl};
+
+static NAVIGATION_GENERATION: AtomicU64 = AtomicU64::new(0);
 
 #[derive(serde::Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -81,7 +85,13 @@ pub async fn browser_preview_open(
         let builder = WebviewBuilder::new(PREVIEW_LABEL, WebviewUrl::External(target))
             .incognito(true)
             .disable_drag_drop_handler()
-            .on_navigation(move |url| preview_url(url.as_str(), dev_url.as_ref()).is_ok())
+            .on_navigation(move |url| {
+                let allowed = preview_url(url.as_str(), dev_url.as_ref()).is_ok();
+                if allowed {
+                    NAVIGATION_GENERATION.fetch_add(1, Ordering::SeqCst);
+                }
+                allowed
+            })
             .on_new_window(|_, _| tauri::webview::NewWindowResponse::Deny)
             .on_download(|_, _| false)
             .on_permission_request(|_, _| tauri::webview::PermissionResponse::Deny);
@@ -138,9 +148,36 @@ pub async fn browser_preview_action(
         PreviewAction::Forward => view.eval("history.forward()"),
         PreviewAction::Reload => view.reload(),
         PreviewAction::Focus => view.set_focus(),
-        PreviewAction::Close => view.close(),
+        PreviewAction::Close => {
+            NAVIGATION_GENERATION.fetch_add(1, Ordering::SeqCst);
+            view.close()
+        }
     }
     .map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub async fn browser_preview_extract(
+    app: tauri::AppHandle,
+    webview: Webview,
+    url: String,
+    request_id: String,
+) -> Result<serde_json::Value, String> {
+    require_editor(webview.label())?;
+    let target = preview_url(&url, app.config().build.dev_url.as_ref())?;
+    let view = existing(&app)?;
+    let generation = NAVIGATION_GENERATION.load(Ordering::SeqCst);
+    if view.url().map_err(|e| e.to_string())? != target {
+        return Err("The preview navigated. Wait for loading and import again.".into());
+    }
+    let result = extract::page(&view, &request_id).await?;
+    if NAVIGATION_GENERATION.load(Ordering::SeqCst) != generation
+        || view.url().map_err(|e| e.to_string())? != target
+        || result.get("url").and_then(|url| url.as_str()) != Some(target.as_str())
+    {
+        return Err("The preview changed during extraction. Import again.".into());
+    }
+    Ok(result)
 }
 
 #[tauri::command]

@@ -5,22 +5,25 @@ import { CanvasHelper } from '#tests/helpers/canvas'
 for (const deviceScaleFactor of [1, 2]) {
   test.describe(`brand at ${deviceScaleFactor}x`, () => {
     test.use({ deviceScaleFactor })
-    test('the editor keeps its 24px ivory tile in both app themes', async ({ page }) => {
+    test('the canvas return control shows the Open Pen icon in both app themes', async ({
+      page
+    }) => {
       await page.goto('/?test')
       await new CanvasHelper(page).waitForInit()
-      const logo = page.getByTestId('app-logo')
-      await expect(logo).toHaveAttribute('alt', 'OpenPencil')
+      await page.keyboard.press('ControlOrMeta+\\')
+      const logo = page.getByRole('img', { name: 'Open Pen', exact: true })
+      await expect(logo).toBeVisible()
       for (const appearance of ['light', 'dark'] as const) {
-        await page.evaluate(async (appearance) => {
-          const path = '/src/app/shell/theme.ts'
-          const module = await import(path)
-          module.useAppTheme().setTheme(appearance)
-        }, appearance)
-        await expect(logo).toHaveAttribute('src', '/brand/app-icon.svg')
+        if ((await page.locator('html').getAttribute('data-theme')) !== appearance) {
+          await page.getByRole('button', { name: 'Main menu', exact: true }).click()
+          await page.getByRole('menuitem', { name: 'Toggle Light/Dark mode' }).click()
+        }
+        await expect(page.locator('html')).toHaveAttribute('data-theme', appearance)
+        await expect(logo).toHaveAttribute('src', '/brand/open-pen-app.png')
         await expect(logo).toHaveCSS('width', '24px')
         await expect(logo).toHaveCSS('height', '24px')
         await expect(logo).toHaveScreenshot(
-          `brand-header-${appearance}-${deviceScaleFactor}x.png`,
+          `open-pen-app-${appearance}-${deviceScaleFactor}x.png`,
           {
             maxDiffPixels: 0,
             threshold: 0.1,

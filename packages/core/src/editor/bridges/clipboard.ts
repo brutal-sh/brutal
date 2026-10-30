@@ -12,6 +12,7 @@ export function createClipboardBridge(clipboard: ClipboardActions, selection: Se
     prepareCopy: (options?: CopyOptions) =>
       clipboard.prepareCopy(selection.getSelectedNodes(), options),
     pasteSnapshot: clipboard.pasteSnapshot,
+    pastePreparedSnapshot: clipboard.pastePreparedSnapshot,
     pasteFromHTML: clipboard.pasteFromHTML,
     deleteSelected: clipboard.deleteSelected,
     storeImage: clipboard.storeImage,

@@ -11,6 +11,7 @@ interface DocumentRecoveryOptions {
   version: () => number
   buildFigFile: () => Promise<Uint8Array> | Uint8Array
   hasWritableSource: () => boolean
+  hasUnsavedChanges?: () => boolean
   isEnabled?: () => boolean
   store?: RecoveryStore
   recoveryId?: string
@@ -30,6 +31,7 @@ export function createDocumentRecovery({
   version: currentVersion,
   buildFigFile,
   hasWritableSource,
+  hasUnsavedChanges = () => true,
   isEnabled = () => true,
   store = getRecoveryStore(),
   recoveryId = createCanvasId()
@@ -64,6 +66,12 @@ export function createDocumentRecovery({
     await cleanup
     if (disposed || hasWritableSource() || !isEnabled()) return
     requestedVersion = currentVersion()
+    if (!hasUnsavedChanges()) {
+      await markProtectedVersion(requestedVersion)
+      // A new edit may arrive while the old snapshot is being removed.
+      if (hasUnsavedChanges()) await persistNow()
+      return
+    }
     if (requestedVersion === protectedVersion) return
     if (!writing) {
       const generation = lifecycleGeneration
@@ -113,6 +121,16 @@ export function createDocumentRecovery({
     await Promise.all([writing, cleanup])
   }
 
+  async function markProtectedVersion(version: number): Promise<void> {
+    await invalidateActiveWrite()
+    protectedVersion = version
+    requestedVersion = currentVersion()
+    if (persistedVersion == null || persistedVersion <= version) {
+      await store.remove(id)
+      persistedVersion = null
+    }
+  }
+
   return {
     getRecoveryId: () => id,
     async adoptRecoverySnapshot(nextId) {
@@ -128,15 +146,7 @@ export function createDocumentRecovery({
       if (previousId !== nextId) await store.remove(previousId)
     },
     persistNow,
-    async markProtectedVersion(version) {
-      await invalidateActiveWrite()
-      protectedVersion = version
-      requestedVersion = currentVersion()
-      if (persistedVersion == null || persistedVersion <= version) {
-        await store.remove(id)
-        persistedVersion = null
-      }
-    },
+    markProtectedVersion,
     async discardRecovery() {
       await invalidateActiveWrite()
       protectedVersion = currentVersion()
