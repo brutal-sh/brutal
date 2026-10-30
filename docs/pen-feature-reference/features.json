@@ -1,0 +1,1392 @@
+{
+  "reference": "https://docs.pen.dev/",
+  "retrieved": "2026-10-30",
+  "status_meaning": {
+    "open": "not accepted; may already have an implementation",
+    "partial": "some linked execution evidence; complete requirement remains unaccepted"
+  },
+  "chapters": [
+    {
+      "source": "/getting-started/installation",
+      "features": [
+        {
+          "id": "ENV-01",
+          "feature": "Desktop distribution",
+          "behavior": "macOS, Windows and Linux builds; version and update commands.",
+          "acceptance": "Install each supported package; launch, inspect version and update outcomes.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "ENV-02",
+          "feature": "IDE extension",
+          "behavior": "VS Code and Cursor can open .pen visually.",
+          "acceptance": "Open existing/new files and toggle between source and design.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "ENV-03",
+          "feature": "CLI installation",
+          "behavior": "Standalone CLI; documented runtime minimum is Node 22.19.",
+          "acceptance": "Install independently; run version/help outside the repository.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "ENV-04",
+          "feature": "External client setup",
+          "behavior": "Claude Code, Codex, Gemini, Antigravity, OpenCode, Kiro and Claude Desktop integrations.",
+          "acceptance": "Enable/disable each supported client; reconnect and inspect live tool list.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "ENV-05",
+          "feature": "Shared Codex configuration",
+          "behavior": "ChatGPT desktop and Codex IDE use Codex CLI MCP configuration.",
+          "acceptance": "Confirm the intended independent server in each client without replacing Pen's entry.",
+          "status": "open",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "source": "/getting-started/authentication",
+      "features": [
+        {
+          "id": "AUTH-01",
+          "feature": "Editor identity",
+          "behavior": "Vendor email/password/code, account, workspace and plan screens are reference surfaces.",
+          "acceptance": "Provide independent account/workspace equivalents where needed; local editing must require no vendor account.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "AUTH-02",
+          "feature": "Existing CLI login",
+          "behavior": "OpenAI Codex and Claude Code settings are supported provider choices.",
+          "acceptance": "Use Jason's existing CLI login to create and modify a real design; no credential copying.",
+          "status": "partial",
+          "evidence": [
+            "../LOCAL-RUNTIME.md"
+          ],
+          "evidence_limit": "Existing CLI integration evidence is narrower than every provider/model workflow."
+        },
+        {
+          "id": "AUTH-03",
+          "feature": "Provider catalog",
+          "behavior": "OpenAI, Claude, Gemini, Cursor, Copilot, Meta, xAI, Kimi, OpenRouter, Moonshot, Deepseek, Together, Fireworks, Z.AI and OpenCode providers.",
+          "acceptance": "Compare every provider row, setup route and available-model result against installed Pen.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "AUTH-04",
+          "feature": "Claude external configuration",
+          "behavior": "Bedrock, Vertex, Foundry and custom Claude configuration have separate setup/status.",
+          "acceptance": "Check configuration validation and external-config labeling with isolated test configuration.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "AUTH-05",
+          "feature": "Custom endpoints",
+          "behavior": "OpenAI Completions/Responses and Anthropic Messages; optional API key.",
+          "acceptance": "Use a local test endpoint; verify protocol, errors and secret redaction.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "AUTH-06",
+          "feature": "Connection lifecycle",
+          "behavior": "Status, refresh/re-check, missing models and clearing saved keys.",
+          "acceptance": "Exercise disconnected, configured, successful, expired and cleared states without touching existing credentials.",
+          "status": "open",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "source": "/getting-started/ai-integration",
+      "features": [
+        {
+          "id": "MCP-01",
+          "feature": "Integrated agent",
+          "behavior": "Desktop composer edits the active design through a chosen provider.",
+          "acceptance": "Create a node, modify the selected node, inspect the actual resulting document.",
+          "status": "partial",
+          "evidence": [
+            "../LOCAL-RUNTIME.md"
+          ],
+          "evidence_limit": "Earlier executed paths are narrower than this entire requirement; see acceptance log."
+        },
+        {
+          "id": "MCP-02",
+          "feature": "External MCP lifecycle",
+          "behavior": "Client uses stdio; Pen host connection uses Unix socket or Windows named pipe.",
+          "acceptance": "Connect, restart host/client, fail cleanly and reconnect to the intended document.",
+          "status": "partial",
+          "evidence": [
+            "../LOCAL-RUNTIME.md"
+          ],
+          "evidence_limit": "Independent local bridge evidence does not establish Pen public-tool or transport parity."
+        },
+        {
+          "id": "MCP-03",
+          "feature": "Public tools",
+          "behavior": "Standard get_style, read_skill, get_app_state and execute contracts.",
+          "acceptance": "Compare live schemas/results with Pen; exercise read, mutation, screenshot, export and errors.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "MCP-04",
+          "feature": "Conditional tools",
+          "behavior": "browser requires desktop; spawn_agents requires explicit server enablement.",
+          "acceptance": "Confirm availability gates and disabled-state errors; no unsolicited agent spawning.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "MCP-05",
+          "feature": "Document targeting",
+          "behavior": "State/path confirmation precedes external editing.",
+          "acceptance": "Open two documents; target one by path and prove the other remains untouched.",
+          "status": "open",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "source": "/getting-started/create-your-first-design",
+      "features": [
+        {
+          "id": "FIRST-01",
+          "feature": "First AI workflow",
+          "behavior": "Create, select, request a revision and inspect properties.",
+          "acceptance": "Run through the actual provider-backed composer; save and reopen the result.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "FIRST-02",
+          "feature": "Focus-aware history",
+          "behavior": "Canvas Undo/Redo differs from text-field history.",
+          "acceptance": "Edit a numeric field and text, then canvas; verify the correct undo target in each focus state.",
+          "status": "partial",
+          "evidence": [
+            "../ACCEPTANCE.md"
+          ],
+          "evidence_limit": "Earlier executed paths are narrower than this entire requirement; see acceptance log."
+        },
+        {
+          "id": "FIRST-03",
+          "feature": "Draft to project file",
+          "behavior": "Dashboard draft autosaving and explicit Save/Save As have distinct roles.",
+          "acceptance": "Create draft, restart, Save As, edit, Save and reopen the project file.",
+          "status": "open",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "source": "/core-concepts/pen-files",
+      "features": [
+        {
+          "id": "FILE-01",
+          "feature": "Portable document",
+          "behavior": "JSON .pen files with relative external resources and Git workflows.",
+          "acceptance": "Move a fixture folder; reopen its images, libraries and fonts without absolute-path leakage.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "FILE-02",
+          "feature": "Dashboard categories",
+          "behavior": "Recent files, Drafts and Design Systems.",
+          "acceptance": "Compare empty/populated/search/category states with Pen; open the chosen item.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "FILE-03",
+          "feature": "Grid and list views",
+          "behavior": "Previews; list sorting by name, last use and creation; multiselection.",
+          "acceptance": "Change view/order, select several entries and verify each action's targets.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "FILE-04",
+          "feature": "Open and focus",
+          "behavior": "Open/drop .pen; an already-open document receives focus.",
+          "acceptance": "Open the same canonical path twice and check one document/tab.",
+          "status": "partial",
+          "evidence": [
+            "../ACCEPTANCE.md"
+          ],
+          "evidence_limit": "Earlier executed paths are narrower than this entire requirement; see acceptance log."
+        },
+        {
+          "id": "FILE-05",
+          "feature": "Recent removal",
+          "behavior": "Removing a recent entry leaves the source file intact.",
+          "acceptance": "Remove a disposable recent entry; prove its file still opens.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "FILE-06",
+          "feature": "Draft deletion",
+          "behavior": "Deleting a draft removes its stored design.",
+          "acceptance": "Use a synthetic draft; verify confirmation, cancel and deletion states.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "FILE-07",
+          "feature": "Recovery backup",
+          "behavior": "Existing-file edits use a separate recovery copy until explicit Save.",
+          "acceptance": "Edit, interrupt a disposable run, recover, compare original bytes and recovered design.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "FILE-08",
+          "feature": "Recovery decisions",
+          "behavior": "Save/Save As persist recovery; discard removes the backup.",
+          "acceptance": "Exercise each decision with separate synthetic copies; prove no unrelated work loss.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "FILE-09",
+          "feature": "External changes",
+          "behavior": "IDE conflict handling offers reload or keeping work through Save As.",
+          "acceptance": "Change a fixture externally; compare conflict prompts and retained versions.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "FILE-10",
+          "feature": "Git conflicts",
+          "behavior": "Preserve both versions and reapply changes through editor/tools.",
+          "acceptance": "Resolve a synthetic conflict without broken IDs, dependencies or lost content.",
+          "status": "open",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "source": "/core-concepts/design-as-code",
+      "features": [
+        {
+          "id": "GIT-01",
+          "feature": "Text version control",
+          "behavior": "Designs can be committed, diffed, branched and merged with code.",
+          "acceptance": "Commit two synthetic revisions; inspect meaningful text changes and reopen each version.",
+          "status": "open",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "source": "/core-concepts/pencil-interface",
+      "features": [
+        {
+          "id": "UI-01",
+          "feature": "Pan and zoom",
+          "behavior": "Space/middle drag, horizontal wheel, modified scroll and pinch.",
+          "acceptance": "Compare pointer/trackpad navigation and zoom anchoring against Pen.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "UI-02",
+          "feature": "Fit controls",
+          "behavior": "100%, fit all and fit selection have distinct commands.",
+          "acceptance": "Run each with far-apart nodes and multiple selections; compare viewport bounds.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "UI-03",
+          "feature": "Hierarchy selection",
+          "behavior": "Deep click/marquee, multiselect, select all, parent/child navigation.",
+          "acceptance": "Use nested frames and overlapping nodes; compare selected IDs and highlight colors.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "UI-04",
+          "feature": "Frames and groups",
+          "behavior": "Wrapping/grouping, ungrouping and clipping preserve hierarchy.",
+          "acceptance": "Wrap a nested selection, clip overflowing children, Undo/Redo and save/reopen.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "UI-05",
+          "feature": "Flex layout",
+          "behavior": "Axis, alignment, gap, Space Between/Around and padding.",
+          "acceptance": "Compare child geometry after resize, edits, Undo/Redo and .pen reopen.",
+          "status": "partial",
+          "evidence": [
+            "../ACCEPTANCE.md"
+          ],
+          "evidence_limit": "Space Around and four-sided padding native paths executed; full layout states remain open."
+        },
+        {
+          "id": "UI-06",
+          "feature": "Sizing modes",
+          "behavior": "Fixed, Hug and Fill; absolute children escape flow.",
+          "acceptance": "Check empty containers, unsupported-parent fallback, variable bindings and resizing.",
+          "status": "partial",
+          "evidence": [
+            "../ACCEPTANCE.md"
+          ],
+          "evidence_limit": "Deferred Fill and empty Hug paths executed; complete sizing coverage remains open."
+        },
+        {
+          "id": "UI-07",
+          "feature": "Layers",
+          "behavior": "Rename, visibility, reordering, reparenting and instance restrictions.",
+          "acceptance": "Run mouse/keyboard/context-menu paths with nested and mixed selections.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "UI-08",
+          "feature": "Inspector states",
+          "behavior": "Selection-specific properties, minimized panel and export controls.",
+          "acceptance": "Compare no/single/mixed/instance selections, all tabs, disabled controls and dimensions.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "UI-09",
+          "feature": "Canvas settings",
+          "behavior": "Pixel grid, object/pixel snapping, wheel zoom/inversion and nudge amounts.",
+          "acceptance": "Persist settings; test movement and snapping against fixed reference geometry.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "UI-10",
+          "feature": "App preferences",
+          "behavior": "Theme, animation and GPU settings.",
+          "acceptance": "Compare settings screens, restart persistence, visual changes and unsupported hardware handling.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "UI-11",
+          "feature": "Agent panel",
+          "behavior": "Selection context, new conversation and focus-sensitive shortcuts.",
+          "acceptance": "Toggle panel while editing; ensure context and canvas history stay correct.",
+          "status": "open",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "source": "/core-concepts/drawing-and-editing",
+      "features": [
+        {
+          "id": "DRAW-01",
+          "feature": "Shapes",
+          "behavior": "Rectangle, ellipse and polygon creation; dimensions and corners.",
+          "acceptance": "Create/resize each type; compare inspector, rendered geometry and reopened values.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "DRAW-02",
+          "feature": "Scale",
+          "behavior": "Anchor, factor/percentage, dimensions and proportional drag scale contents.",
+          "acceptance": "Scale nested text/strokes/corners/spacing/effects; verify anchor, variables, Fill conversion and instance overrides.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "DRAW-03",
+          "feature": "Path construction",
+          "behavior": "Open/closed paths, curves, cut and smooth/corner points.",
+          "acceptance": "Draw and edit a path through UI; Undo/Redo and compare exported geometry.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "DRAW-04",
+          "feature": "Text geometry",
+          "behavior": "Auto width, auto height and fixed boxes.",
+          "acceptance": "Use multiline text; compare wrapping, overflow, resizing and saved text metrics.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "DRAW-05",
+          "feature": "Typography",
+          "behavior": "Font family/weight/size, line/letter spacing and alignment.",
+          "acceptance": "Compare picker and numeric controls using the same installed font and text.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "DRAW-06",
+          "feature": "Custom fonts",
+          "behavior": "Document-scoped TTF/OTF/WOFF/WOFF2 import and missing-font recovery.",
+          "acceptance": "Import each format, reopen, move resources and recover a missing-font fixture.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "DRAW-07",
+          "feature": "Icons",
+          "behavior": "Library/search picker, fill and size.",
+          "acceptance": "Create and reopen symbols from every advertised family; compare glyphs and picker states.",
+          "status": "partial",
+          "evidence": [
+            "../ACCEPTANCE.md"
+          ],
+          "evidence_limit": "Earlier executed paths are narrower than this entire requirement; see acceptance log."
+        },
+        {
+          "id": "DRAW-08",
+          "feature": "Paint rows",
+          "behavior": "Multiple fills, visibility, removal and object opacity.",
+          "acceptance": "Reorder/edit/hide paints; compare compositing, Undo and serialization.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "DRAW-09",
+          "feature": "Gradients",
+          "behavior": "Linear, radial, angular and mesh editing.",
+          "acceptance": "Move stops/handles/mesh points, change grid/colors and compare render after reopen.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "DRAW-10",
+          "feature": "Image fills",
+          "behavior": "Imported/path/URL images; Fill, Fit and Stretch.",
+          "acceptance": "Use contrasting aspect ratios; compare crops, missing images and network errors.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "DRAW-11",
+          "feature": "Strokes and blends",
+          "behavior": "Width, Inside/Center/Outside and paint blend modes.",
+          "acceptance": "Compare edges and overlapping colors at several zoom levels and export sizes.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "DRAW-12",
+          "feature": "Shaders",
+          "behavior": "File/URL fills, editable inputs, gallery and shader effects.",
+          "acceptance": "Load an independent shader; edit inputs, resize, handle errors and reopen.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "DRAW-13",
+          "feature": "Effects",
+          "behavior": "Drop/inner shadow, layer/background blur and ordered effects.",
+          "acceptance": "Compare every control, compositing, clipping and exported appearance.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "DRAW-14",
+          "feature": "Background removal",
+          "behavior": "Image operation produces a transparent cutout.",
+          "acceptance": "Use an independently authorized provider; inspect alpha, Undo and failure preservation.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "DRAW-15",
+          "feature": "Vectorization",
+          "behavior": "Separate editable-vector frame retains the original image.",
+          "acceptance": "Run real conversion; edit resulting points and verify original, Undo and errors.",
+          "status": "open",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "source": "/core-concepts/ai-agents",
+      "features": [
+        {
+          "id": "AI-01",
+          "feature": "Conversation history",
+          "behavior": "New, previous and removable sessions; tool activity.",
+          "acceptance": "Switch sessions after real edits; verify history, canvas targeting and persisted state.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "AI-02",
+          "feature": "Model and effort",
+          "behavior": "Provider model/effort selection; context-loss warning.",
+          "acceptance": "Change models/providers; verify warning, selected runtime and conversation behavior.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "AI-03",
+          "feature": "Interruptions",
+          "behavior": "Stopping retains completed changes; background completion alerts.",
+          "acceptance": "Interrupt a real multi-step request; inspect retained edits and notification setting.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "AI-04",
+          "feature": "Context attachments",
+          "behavior": "Canvas selection, image/text/source-file picker and drops.",
+          "acceptance": "Send each context type; verify displayed attachments and provider receipt.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "AI-05",
+          "feature": "Permissions",
+          "behavior": "Allow/Deny; supported Claude Auto mode with persistent preference.",
+          "acceptance": "Use harmless permission requests; verify denial, allowed scope and unsupported-model error.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "AI-06",
+          "feature": "Usage",
+          "behavior": "Context/token breakdown and API-rate cost estimates.",
+          "acceptance": "Compare displayed usage with provider results; label estimates and expand response details.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "AI-07",
+          "feature": "Skills",
+          "behavior": "Slash selection; import/reload/remove SKILL.md without deleting files.",
+          "acceptance": "Use an independent temporary skill; verify request instructions and disk preservation.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "AI-08",
+          "feature": "Parallel agents",
+          "behavior": "One to six; Split Work/Side by Side; per-agent model/reset.",
+          "acceptance": "Run explicitly authorized synthetic tasks; inspect separate conversations and resulting frames.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "AI-09",
+          "feature": "Iterations",
+          "behavior": "Layout/Style alternatives; two to six variants or one design.",
+          "acceptance": "Verify variant count, preserved constraints, current/all stop and partial failures.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "AI-10",
+          "feature": "Tool failures",
+          "behavior": "Details and retry retain the current canvas.",
+          "acceptance": "Inject a harmless failing tool; inspect error, retry and duplicate-edit prevention.",
+          "status": "open",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "source": "/core-concepts/variables",
+      "features": [
+        {
+          "id": "VAR-01",
+          "feature": "Variable lifecycle",
+          "behavior": "Color/Number/String/Boolean; create, rename, duplicate and delete.",
+          "acceptance": "Bind each type; rename/duplicate/delete and compare dependent nodes and history.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "VAR-02",
+          "feature": "Typed bindings",
+          "behavior": "Compatible property selection and live propagation.",
+          "acceptance": "Bind geometry, colors, text and flags; edit values and reopen.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "VAR-03",
+          "feature": "Themes",
+          "behavior": "Axes/modes, default first value, frame inheritance and overrides.",
+          "acceptance": "Use two axes and nested frames; switch/remove overrides and compare resolved values.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "VAR-04",
+          "feature": "Aliases",
+          "behavior": "Same-type variable references and diagnostics.",
+          "acceptance": "Resolve chains, missing aliases and cycles without silent wrong values.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "VAR-05",
+          "feature": "Imported tokens",
+          "behavior": "CSS/manual/Figma reference import; AI-mediated CSS synchronization.",
+          "acceptance": "Review actual token values and resulting CSS/design changes, including rename conflicts.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "VAR-06",
+          "feature": "Library variables",
+          "behavior": "Saved source changes load when dependents reopen.",
+          "acceptance": "Update a synthetic library; reopen consumer and verify overrides still win.",
+          "status": "open",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "source": "/core-concepts/components",
+      "features": [
+        {
+          "id": "COMP-01",
+          "feature": "Origins",
+          "behavior": "Create components from ordinary nodes; nested origins.",
+          "acceptance": "Compare shortcut/button paths, magenta selection and serialization.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "COMP-02",
+          "feature": "Insertion",
+          "behavior": "Copy origin or click/drag searched component to create instance.",
+          "acceptance": "Verify violet selection and stable origin identity after save/reopen.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "COMP-03",
+          "feature": "Overrides",
+          "behavior": "Instance properties override selected origin properties.",
+          "acceptance": "Override text; change origin text and font size; only non-overridden property propagates.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "COMP-04",
+          "feature": "Navigation",
+          "behavior": "Local Go to component; imported source through Libraries.",
+          "acceptance": "Navigate both origins and preserve the consumer document.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "COMP-05",
+          "feature": "Detach",
+          "behavior": "Detach outer instance preserves nested links and variables.",
+          "acceptance": "Detach, edit, Undo/Redo and reopen; inspect all remaining references.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "COMP-06",
+          "feature": "Inherited structure",
+          "behavior": "Instance descendants restrict arbitrary reparenting.",
+          "acceptance": "Attempt invalid move; then insert content through an allowed slot.",
+          "status": "open",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "source": "/core-concepts/slots",
+      "features": [
+        {
+          "id": "SLOT-01",
+          "feature": "Slot creation",
+          "behavior": "Only an empty frame inside an origin qualifies; diagonal canvas marker.",
+          "acceptance": "Compare eligible/ineligible selections and resulting appearance.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "SLOT-02",
+          "feature": "Suggestions",
+          "behavior": "Choose same-document reusable components as suggestions.",
+          "acceptance": "Add/remove suggestions; save/reopen and inspect suggested picker.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "SLOT-03",
+          "feature": "Instance content",
+          "behavior": "Drop/paste/one-click suggestion inserts instance-owned content.",
+          "acceptance": "Use suggested and arbitrary content in two instances; verify independent content and Undo.",
+          "status": "open",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "source": "/core-concepts/code-on-canvas",
+      "features": [
+        {
+          "id": "SCRIPT-01",
+          "feature": "Creation and linkage",
+          "behavior": "Script primitive starts at 200\u00d7200; relative JS path.",
+          "acceptance": "Create, save, link an independent file; compare placeholder and missing-path states.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "SCRIPT-02",
+          "feature": "Input controls",
+          "behavior": "Header schema plus number/string/boolean/color/enum/ref controls.",
+          "acceptance": "Change each input; verify clamp/options/component selection and refreshed output.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "SCRIPT-03",
+          "feature": "Live updates",
+          "behavior": "Resize, input edits and watched source saves rerun output.",
+          "acceptance": "Edit an independent file externally; inspect live children without reopening.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "SCRIPT-04",
+          "feature": "Variable inputs",
+          "behavior": "Inputs can follow variables and theme changes.",
+          "acceptance": "Bind color/number inputs; change theme and reopen with source file present.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "SCRIPT-05",
+          "feature": "Conversion",
+          "behavior": "Convert replaces Script with a frame snapshot of editable layers.",
+          "acceptance": "Convert, manually edit children, Undo/Redo, save/reopen.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "SCRIPT-06",
+          "feature": "Derived state",
+          "behavior": "Generated children do not create individual history entries.",
+          "acceptance": "Change inputs repeatedly; compare Undo granularity and regenerated children.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "SCRIPT-07",
+          "feature": "Sandbox contract",
+          "behavior": "Synchronous; no DOM/network/filesystem; deterministic random sequence.",
+          "acceptance": "Run isolated denied-API, random and asynchronous fixtures without host access.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "SCRIPT-08",
+          "feature": "Limits and diagnostics",
+          "behavior": "At most 1,000 generated nodes, two-second execution; no reusable output.",
+          "acceptance": "Exceed each limit; verify safe termination, node error/excerpt and intact document.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "SCRIPT-09",
+          "feature": "Gallery workflow",
+          "behavior": "Reference examples can seed a local linked script.",
+          "acceptance": "Use an original example; compare browsing, saving, linking and error states.",
+          "status": "open",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "source": "/core-concepts/design-libraries",
+      "features": [
+        {
+          "id": "LIB-01",
+          "feature": "Library conversion",
+          "behavior": "Saved component document becomes .lib.pen; conversion is irreversible in Pen.",
+          "acceptance": "Use a synthetic copy; compare warning, suffix and cancel/success behavior.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "LIB-02",
+          "feature": "Library import",
+          "behavior": "Local chooser plus default catalog; browse and search components.",
+          "acceptance": "Import two independent libraries; compare empty/loading/missing/populated states.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "LIB-03",
+          "feature": "Update propagation",
+          "behavior": "Reopen consumers to load saved source edits; instance overrides win.",
+          "acceptance": "Change source and reopen consumer; verify all linked assets and overrides.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "LIB-04",
+          "feature": "Cross-document origin paste",
+          "behavior": "Unimported library offers linked import or independent copies.",
+          "acceptance": "Exercise both decisions on synthetic destinations; verify resulting references.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "LIB-05",
+          "feature": "Variable conflicts",
+          "behavior": "Use existing or add renamed on paste.",
+          "acceptance": "Paste conflicting typed/theme values; verify chosen resolution and Undo.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "LIB-06",
+          "feature": "Resource handling",
+          "behavior": "Fonts need separate installation; image paths must remain resolvable.",
+          "acceptance": "Copy mixed content; compare missing-resource guidance and repaired rendering.",
+          "status": "open",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "source": "/core-concepts/build-a-design-system",
+      "features": [
+        {
+          "id": "DS-01",
+          "feature": "Library acceptance journey",
+          "behavior": "Themed components, variable typography/spacing, slot and consumer overrides.",
+          "acceptance": "Build an original button/card pair; insert into another document with two themes.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "DS-02",
+          "feature": "Source revision journey",
+          "behavior": "Source color/font changes update consumers without losing labels.",
+          "acceptance": "Save library, reopen consumer; inspect both themes and unchanged instance text.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "DS-03",
+          "feature": "Relocation recovery",
+          "behavior": "Missing library Locate reconnects the consumer.",
+          "acceptance": "Move synthetic source; locate it, save consumer and reopen successfully.",
+          "status": "open",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "source": "/core-concepts/import-and-export",
+      "features": [
+        {
+          "id": "IO-01",
+          "feature": "Figma file import",
+          "behavior": "Toolbar, desktop File menu and drop import complete .fig files.",
+          "acceptance": "Import a licensed synthetic fixture with images/components; compare editable result.",
+          "status": "partial",
+          "evidence": [
+            "../ACCEPTANCE.md"
+          ],
+          "evidence_limit": "Earlier executed paths are narrower than this entire requirement; see acceptance log."
+        },
+        {
+          "id": "IO-02",
+          "feature": "Figma clipboard",
+          "behavior": "Individual copied layers; embedded image paste has a documented limitation.",
+          "acceptance": "Paste text/vectors/images separately; compare supported output and failure guidance.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "IO-03",
+          "feature": "Image/SVG input",
+          "behavior": "PNG/JPEG become images; SVG becomes editable layers; picker/drop/clipboard.",
+          "acceptance": "Exercise every entry point with valid, malformed and missing-resource inputs.",
+          "status": "partial",
+          "evidence": [
+            "../ACCEPTANCE.md"
+          ],
+          "evidence_limit": "Earlier executed paths are narrower than this entire requirement; see acceptance log."
+        },
+        {
+          "id": "IO-04",
+          "feature": "Web import",
+          "behavior": "Browser URL, device/zoom and element/page capture to editable layers.",
+          "acceptance": "Import a local fixture; compare fonts/layout/effects, with no promised JS interaction.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "IO-05",
+          "feature": "Screenshots",
+          "behavior": "Selected element, visible area or full page.",
+          "acceptance": "Capture a scrolling local page; inspect dimensions, bounds and saved image.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "IO-06",
+          "feature": "Icon families",
+          "behavior": "Material Symbols Outlined/Rounded/Sharp, Lucide, Feather and Phosphor.",
+          "acceptance": "Search/insert one symbol per family and reopen without substituted glyphs.",
+          "status": "partial",
+          "evidence": [
+            "../ACCEPTANCE.md"
+          ],
+          "evidence_limit": "Earlier executed paths are narrower than this entire requirement; see acceptance log."
+        },
+        {
+          "id": "IO-07",
+          "feature": "HTML output",
+          "behavior": "HTML+Tailwind or HTML+CSS; copy/export and asset/scaffold settings.",
+          "acceptance": "Open generated output locally; inspect assets, scaffold and visual agreement.",
+          "status": "partial",
+          "evidence": [
+            "../ACCEPTANCE.md"
+          ],
+          "evidence_limit": "Earlier executed paths are narrower than this entire requirement; see acceptance log."
+        },
+        {
+          "id": "IO-08",
+          "feature": "Raster output",
+          "behavior": "PNG/JPEG/WEBP at 1\u00d7/2\u00d7/3\u00d7; multiple selections produce ZIP.",
+          "acceptance": "Inspect real files, dimensions, alpha, format signatures, filenames and ZIP contents.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "IO-09",
+          "feature": "PDF output",
+          "behavior": "Selected layers become pages in selection order.",
+          "acceptance": "Export unequal frames; inspect order, page dimensions and rendering.",
+          "status": "partial",
+          "evidence": [
+            "../ACCEPTANCE.md"
+          ],
+          "evidence_limit": "Earlier executed paths are narrower than this entire requirement; see acceptance log."
+        },
+        {
+          "id": "IO-10",
+          "feature": "Clipboard PNG",
+          "behavior": "Selection context-menu image copy.",
+          "acceptance": "Paste into an independent image consumer and compare bounds/transparency.",
+          "status": "open",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "source": "/core-concepts/sharing",
+      "features": [
+        {
+          "id": "SHARE-01",
+          "feature": "Snapshot publication",
+          "behavior": "Upload design plus images and imported libraries; viewers can download.",
+          "acceptance": "Use an independent service with explicit publication; verify dependency inventory and browser view.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "SHARE-02",
+          "feature": "Missing dependencies",
+          "behavior": "Cancel or continue with incomplete snapshot.",
+          "acceptance": "Share a synthetic missing-image fixture; compare warnings and repair/retry.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "SHARE-03",
+          "feature": "Background upload",
+          "behavior": "Dialog may close while upload continues in running app.",
+          "acceptance": "Close/reopen dialog during controlled upload; verify progress and completion.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "SHARE-04",
+          "feature": "Snapshot updates",
+          "behavior": "Same link receives edited snapshot; copied-file location warning.",
+          "acceptance": "Update a disposable share and verify browser reload and wrong-copy warning.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "SHARE-05",
+          "feature": "Failure retry",
+          "behavior": "Upload/download failures offer retry and incomplete-state guidance.",
+          "acceptance": "Interrupt a controlled transfer; retry without publishing an unexpected document.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "SHARE-06",
+          "feature": "Revocation and download",
+          "behavior": "Confirmed link deletion; ZIP download is an independent copy.",
+          "acceptance": "Revoke disposable link; verify inaccessible link and intact prior download.",
+          "status": "open",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "source": "/core-concepts/presentations",
+      "features": [
+        {
+          "id": "SLIDE-01",
+          "feature": "Slide enumeration/order",
+          "behavior": "Visible top-level frames; draggable thumbnail ordering.",
+          "acceptance": "Compare hidden/nested frames, selection and persisted order.",
+          "status": "partial",
+          "evidence": [
+            "../ACCEPTANCE.md"
+          ],
+          "evidence_limit": "Earlier executed paths are narrower than this entire requirement; see acceptance log."
+        },
+        {
+          "id": "SLIDE-02",
+          "feature": "Presenter",
+          "behavior": "Start from selected slide; arrows/Space/Enter advance; Escape returns.",
+          "acceptance": "Run native presentation, compare active slide and focus when returning.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "SLIDE-03",
+          "feature": "Slide PDF",
+          "behavior": "All/selected slides; slide order and individual frame dimensions.",
+          "acceptance": "Open actual PDF; inspect pages, order, sizes and selected-only errors.",
+          "status": "partial",
+          "evidence": [
+            "../ACCEPTANCE.md"
+          ],
+          "evidence_limit": "Earlier executed paths are narrower than this entire requirement; see acceptance log."
+        }
+      ]
+    },
+    {
+      "source": "/core-concepts/keyboard-shortcuts",
+      "features": [
+        {
+          "id": "KEY-01",
+          "feature": "Chat and tool keys",
+          "behavior": "Chat toggles/tabs/history and drawing-tool shortcuts.",
+          "acceptance": "Compare every binding in shortcuts.md with canvas and composer focus.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "KEY-02",
+          "feature": "Edit/arrange/select keys",
+          "behavior": "Clipboard, duplicate, grouping, alignment, stacking and hierarchy.",
+          "acceptance": "Execute each binding on an original nested fixture; compare result and Undo.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "KEY-03",
+          "feature": "Component/navigation keys",
+          "behavior": "Component/detach/replace; pan, fit and pointer zoom.",
+          "acceptance": "Compare origin/instance and all navigation modes with installed Pen.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "KEY-04",
+          "feature": "Path keys",
+          "behavior": "Point/segment/handle selection, connection, cuts and curve manipulation.",
+          "acceptance": "Exercise every path binding on a small open/closed path fixture.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "KEY-05",
+          "feature": "Settings/file keys",
+          "behavior": "Pixel grid/snapping and dashboard/new/open/Save/Save As.",
+          "acceptance": "Verify native menu equivalents, focus handling and persisted output.",
+          "status": "open",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "source": "/design-and-code/design-to-code",
+      "features": [
+        {
+          "id": "CODE-01",
+          "feature": "Design to application code",
+          "behavior": "Agent generates components/pages using the requested stack and library.",
+          "acceptance": "Generate from an original design; run resulting app and compare structure/style.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "CODE-02",
+          "feature": "Code to design",
+          "behavior": "Agent reads workspace source and recreates editable layers.",
+          "acceptance": "Use a local original component; verify hierarchy, geometry and appearance.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "CODE-03",
+          "feature": "Requested synchronization",
+          "behavior": "Agent applies requested changes; no automatic bidirectional-sync promise.",
+          "acceptance": "Change each side in turn, request update and inspect both files and diffs.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "CODE-04",
+          "feature": "Token exchange",
+          "behavior": "Agent copies variables between CSS and design.",
+          "acceptance": "Round-trip typed tokens/themes; inspect names, values and unrelated file preservation.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "CODE-05",
+          "feature": "Workspace and stack context",
+          "behavior": "Design and source share accessible workspace; framework/icon preferences guide output.",
+          "acceptance": "Generate two distinct requested stacks and confirm actual dependencies and runnable output.",
+          "status": "open",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "source": "/for-developers/the-pen-format",
+      "features": [
+        {
+          "id": "FMT-01",
+          "feature": "Version and parsing",
+          "behavior": "Published schema says 2.21; JSON comments and supported-version conversion.",
+          "acceptance": "Open versioned/commented fixtures; reject unsupported content before destructive save.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "FMT-02",
+          "feature": "Entity tree",
+          "behavior": "Unique IDs without slash; nested coordinates, transforms and enabled/context metadata.",
+          "acceptance": "Round-trip every entity kind and common property; compare data and rendered placement.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "FMT-03",
+          "feature": "Layout serialization",
+          "behavior": "Flex, padding forms, distributed alignment, dynamic sizes/fallbacks and absolute position.",
+          "acceptance": "Round-trip variable-bound layout; compare resolved geometry and authored sizing.",
+          "status": "partial",
+          "evidence": [
+            "../ACCEPTANCE.md"
+          ],
+          "evidence_limit": "Earlier executed paths are narrower than this entire requirement; see acceptance log."
+        },
+        {
+          "id": "FMT-04",
+          "feature": "Graphics serialization",
+          "behavior": "Ordered paints/effects, gradients/mesh/images/shaders and stroke geometry.",
+          "acceptance": "Round-trip every paint/effect variant; compare values, order and rendered output.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "FMT-05",
+          "feature": "Text and primitive fields",
+          "behavior": "Typography/growth, ellipse arc/ring, polygon, path/viewBox and icon fields.",
+          "acceptance": "Build one fixture per schema variant; compare inspector, save and reopened result.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "FMT-06",
+          "feature": "Reference semantics",
+          "behavior": "Reusable/ref, nested ID-path overrides, full-node and children replacement.",
+          "acceptance": "Exercise nested overrides/replacements without duplicate IDs or broken origin propagation.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "FMT-07",
+          "feature": "Variables/themes/imports",
+          "behavior": "Typed values/aliases, last matching theme value, default first axis value, relative library aliases.",
+          "acceptance": "Resolve multi-axis aliases across imports; save/reopen and compare fallback behavior.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "FMT-08",
+          "feature": "Special node kinds",
+          "behavior": "Note, Prompt, Context, Script and live Browser nodes.",
+          "acceptance": "Round-trip each type and all fields; compare editing/rendering and resource errors.",
+          "status": "partial",
+          "evidence": [
+            "../ACCEPTANCE.md"
+          ],
+          "evidence_limit": "Context round trip executed; other special nodes remain open."
+        }
+      ]
+    },
+    {
+      "source": "/for-developers/pen-cli",
+      "features": [
+        {
+          "id": "CLI-01",
+          "feature": "Command surface",
+          "behavior": "Version/status/help, provider login commands, interactive and model listing.",
+          "acceptance": "Compare help/schema against command-contract.md; run supported independent equivalents.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "CLI-02",
+          "feature": "Agent documents",
+          "behavior": "Input/output, prompt, repeatable attachments, agent/model/effort and working directory.",
+          "acceptance": "Run real CLI provider on a synthetic design; inspect saved output and selected runtime.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "CLI-03",
+          "feature": "Diagnostics and usage",
+          "behavior": "Usage JSON, preview, verbose/MCP errors and failed-call limit.",
+          "acceptance": "Trigger success/failure; inspect outputs, redaction and termination.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "CLI-04",
+          "feature": "Export",
+          "behavior": "PNG/JPEG/WEBP/PDF with explicit type and scale.",
+          "acceptance": "Check exit status plus actual file signature/dimensions/pages; never trust status alone.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "CLI-05",
+          "feature": "Interactive headless",
+          "behavior": "Tool calls on a local editor; explicit save before exit.",
+          "acceptance": "Create/modify/export/save, exit and reopen output through desktop.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "CLI-06",
+          "feature": "Interactive app connection",
+          "behavior": "Connect to running app and confirm document state before mutations.",
+          "acceptance": "Use two open synthetic documents; prove only the intended file changes.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "CLI-07",
+          "feature": "Tool parity",
+          "behavior": "execute, get_app_state, read_skill, get_style; desktop browser and opt-in agents.",
+          "acceptance": "Compare names, arguments, results, errors and availability to real Pen.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "CLI-08",
+          "feature": "Batch behavior",
+          "behavior": "Docs warn tasks exits after first successful task.",
+          "acceptance": "Record intentional behavior; run each required independent task without silent omission.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "CLI-09",
+          "feature": "Environment/account boundary",
+          "behavior": "Vendor keys/workspaces differ from independent local/provider configuration.",
+          "acceptance": "Document supported variables and precedence; local operations must have no vendor entitlement gate.",
+          "status": "open",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "source": "/troubleshooting",
+      "features": [
+        {
+          "id": "ERR-01",
+          "feature": "Setup diagnostics",
+          "behavior": "Missing IDE visual mode/icon/command and CLI PATH/runtime failures.",
+          "acceptance": "Reproduce isolated setup errors; confirm actionable recovery and version reporting.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "ERR-02",
+          "feature": "Provider diagnostics",
+          "behavior": "Missing model/login/config refresh and safe retry.",
+          "acceptance": "Test disconnected/expired/mock provider failures; retain document and avoid credential disclosure.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "ERR-03",
+          "feature": "MCP diagnostics",
+          "behavior": "Missing tools, connection errors and client config enable/disable.",
+          "acceptance": "Inspect live tool list, minimal failing call and restored independent configuration.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "ERR-04",
+          "feature": "Save/recovery diagnostics",
+          "behavior": "Unsaved original versus backup; recovered-change review.",
+          "acceptance": "Compare disk bytes before/after Save and recovery; preserve unrelated recovery snapshots.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "ERR-05",
+          "feature": "Import/font diagnostics",
+          "behavior": "Figma image clipboard limit and missing resources/fonts.",
+          "acceptance": "Provide accurate recovery route while keeping existing design intact.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "ERR-06",
+          "feature": "CLI output diagnostics",
+          "behavior": "Export may report failure despite successful exit in reference.",
+          "acceptance": "Verify expected file content, errors and safe retry; independent CLI should fail clearly.",
+          "status": "open",
+          "evidence": []
+        },
+        {
+          "id": "ERR-07",
+          "feature": "Support evidence",
+          "behavior": "Exact version, repro, sanitized logs and minimal fixtures.",
+          "acceptance": "Produce a redacted diagnostic report without private designs or credentials.",
+          "status": "open",
+          "evidence": []
+        }
+      ]
+    }
+  ]
+}

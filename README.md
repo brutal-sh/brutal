@@ -19,7 +19,7 @@ The desktop wrapper uses Tauri 2 and requires the Rust/macOS development toolcha
 
 Cloud and feedback are off in the supplied environment example. Core editing requires no account. Optional external AI and image providers retain their own authentication and costs; local model support does not make hosted inference free.
 
-Follow [the parity matrix](docs/PARITY.md), [execution evidence](docs/ACCEPTANCE.md), and [the private tracking board](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor). Supported `.pen` files can be edited and saved; unsupported content is rejected before conversion or writing. New local documents suggest `.pen` on first Save; existing `.fig` documents and remote storage retain `.fig`. See [format limits](packages/pen/README.md).
+Follow [the full feature catalog](docs/pen-feature-reference/README.md), [the parity matrix](docs/PARITY.md), [execution evidence](docs/ACCEPTANCE.md), and [the private tracking board](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor). Supported `.pen` files can be edited and saved; unsupported content is rejected before conversion or writing. New local documents suggest `.pen` on first Save; existing `.fig` documents and remote storage retain `.fig`. See [format limits](packages/pen/README.md).
 
 ## Upstream documentation
 
