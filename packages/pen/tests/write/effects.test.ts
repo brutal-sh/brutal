@@ -11,7 +11,7 @@ for (const [type, shadowType] of [
   ['background_blur', undefined]
 ] as const) {
   test(`roundtrips ${type}/${shadowType ?? ''} blending without losing effect settings`, () => {
-    for (const blendMode of ['multiply', 'screen']) {
+    for (const blendMode of ['multiply', 'screen', 'linearBurn', 'linearDodge']) {
       const graph = parseDocument([
         {
           id: 'r',

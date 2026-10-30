@@ -7,6 +7,8 @@ export function figmaBlendModeToSkia(ck: CanvasKit, mode?: BlendMode): SkBlendMo
     case 'DARKEN':
       return ck.BlendMode.Darken
     case 'MULTIPLY':
+    // Pen 1.2.21 renders linear burn as Multiply and linear dodge as Plus, including alpha.
+    case 'LINEAR_BURN':
       return ck.BlendMode.Multiply
     case 'COLOR_BURN':
       return ck.BlendMode.ColorBurn
@@ -16,6 +18,8 @@ export function figmaBlendModeToSkia(ck: CanvasKit, mode?: BlendMode): SkBlendMo
       return ck.BlendMode.Screen
     case 'COLOR_DODGE':
       return ck.BlendMode.ColorDodge
+    case 'LINEAR_DODGE':
+      return ck.BlendMode.Plus
     case 'OVERLAY':
       return ck.BlendMode.Overlay
     case 'SOFT_LIGHT':

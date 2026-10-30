@@ -12,7 +12,13 @@ describe('roundtrip: layer blend modes', () => {
   test('a layer keeps its blend mode, and an unset one stays pass-through', async () => {
     const graph = new SceneGraph()
     const page = graph.getPages()[0]
-    for (const blendMode of ['MULTIPLY', 'SCREEN', 'PASS_THROUGH'] as const)
+    for (const blendMode of [
+      'MULTIPLY',
+      'SCREEN',
+      'LINEAR_BURN',
+      'LINEAR_DODGE',
+      'PASS_THROUGH'
+    ] as const)
       graph.createNode('ELLIPSE', page.id, { name: blendMode, width: 80, height: 80, blendMode })
 
     const reImported = await parseFigFile((await exportFigFile(graph)).buffer as ArrayBuffer)
@@ -22,6 +28,8 @@ describe('roundtrip: layer blend modes', () => {
     expect(reImported.getChildren(reImportedPage.id).map((node) => node.blendMode)).toEqual([
       'MULTIPLY',
       'SCREEN',
+      'LINEAR_BURN',
+      'LINEAR_DODGE',
       'PASS_THROUGH'
     ])
   })

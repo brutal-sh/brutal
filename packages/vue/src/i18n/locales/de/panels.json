@@ -638,5 +638,7 @@
   "strokeSquareShort": "Quadratisch",
   "effectColor": "Farbe",
   "effectOffset": "Versatz",
-  "effectBlur": "Weichzeichnung"
+  "effectBlur": "Weichzeichnung",
+  "blendModeLinearBurn": "Linear nachbelichten",
+  "blendModeLinearDodge": "Linear abwedeln"
 }

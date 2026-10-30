@@ -117,12 +117,12 @@ Source: [Drawing and editing](https://docs.pen.dev/core-concepts/drawing-and-edi
 | DRAW-05 Typography | Font family/weight/size, line/letter spacing and alignment. | Compare picker and numeric controls using the same installed font and text. | Open |
 | DRAW-06 Custom fonts | Document-scoped TTF/OTF/WOFF/WOFF2 import and missing-font recovery. | Import each format, reopen, move resources and recover a missing-font fixture. | Open |
 | DRAW-07 Icons | Library/search picker, fill and size. | Create and reopen symbols from every advertised family; compare glyphs and picker states. | Partial — [evidence](../ACCEPTANCE.md); Earlier executed paths are narrower than this entire requirement; see acceptance log. |
-| DRAW-08 Paint rows | Multiple fills, visibility, removal and object opacity. | Reorder/edit/hide paints; compare compositing, Undo and serialization. | Open |
+| DRAW-08 Paint rows | Multiple fills, visibility, removal and object opacity. | Reorder/edit/hide paints; compare compositing, Undo and serialization. | Partial |
 | DRAW-09 Gradients | Linear, radial, angular and mesh editing. | Move stops/handles/mesh points, change grid/colors and compare render after reopen. | Partial — [evidence](../PAINT-PARITY.md); nested stop editing and one-stop rendering checked; Mesh and full menu/layout parity remain open. |
 | DRAW-10 Image fills | Imported/path/URL images; Fill, Fit and Stretch. | Use contrasting aspect ratios; compare crops, missing images and network errors. | Open |
-| DRAW-11 Strokes and blends | Width, Inside/Center/Outside and paint blend modes. | Compare edges and overlapping colors at several zoom levels and export sizes. | Open |
+| DRAW-11 Strokes and blends | Width, Inside/Center/Outside and paint blend modes. | Compare edges and overlapping colors at several zoom levels and export sizes. | Partial |
 | DRAW-12 Shaders | File/URL fills, editable inputs, gallery and shader effects. | Load an independent shader; edit inputs, resize, handle errors and reopen. | Open |
-| DRAW-13 Effects | Drop/inner shadow, layer/background blur and ordered effects. | Compare every control, compositing, clipping and exported appearance. | Open |
+| DRAW-13 Effects | Drop/inner shadow, layer/background blur and ordered effects. | Compare every control, compositing, clipping and exported appearance. | Partial |
 | DRAW-14 Background removal | Image operation produces a transparent cutout. | Use an independently authorized provider; inspect alpha, Undo and failure preservation. | Open |
 | DRAW-15 Vectorization | Separate editable-vector frame retains the original image. | Run real conversion; edit resulting points and verify original, Undo and errors. | Open |
 
@@ -331,4 +331,4 @@ Source: [Troubleshooting](https://docs.pen.dev/troubleshooting).
 
 The inventory contains 152 requirements across 23 chapter pages plus the documentation landing page. It covers documented features; it cannot prove discovery of undocumented or account/OS-specific behavior. Every native surface still requires direct comparison. The private HTML cache is research evidence, not shipped documentation or production code.
 
-Re-entry: finish the pending padding-mode/theme delivery, then compare the first open inspector/menu state in the native ledger. Keep this catalog and its JSON in the same change when requirements or acceptance evidence change.
+Re-entry: resolve the paint-row hover overlap, then compare the first open inspector/menu state in the native ledger. Keep this catalog and its JSON in the same change when requirements or acceptance evidence change.

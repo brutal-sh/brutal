@@ -638,5 +638,7 @@
   "strokeSquareShort": "Quadrato",
   "effectColor": "Colore",
   "effectOffset": "Scostamento",
-  "effectBlur": "Sfocatura"
+  "effectBlur": "Sfocatura",
+  "blendModeLinearBurn": "Brucia lineare",
+  "blendModeLinearDodge": "Scherma lineare"
 }

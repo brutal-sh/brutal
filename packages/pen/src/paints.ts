@@ -37,17 +37,18 @@ import {
 type PaintField = 'fills' | 'strokes'
 
 /**
- * pen.dev blend modes by name. Linear burn and linear dodge have no counterpart in the scene
- * graph, so they draw as normal.
+ * Supported pen.dev blend modes by their serialized names.
  */
 const BLEND_MODES: Partial<Record<string, BlendMode>> = {
   normal: 'NORMAL',
   darken: 'DARKEN',
   multiply: 'MULTIPLY',
   colorBurn: 'COLOR_BURN',
+  linearBurn: 'LINEAR_BURN',
   light: 'LIGHTEN',
   screen: 'SCREEN',
   colorDodge: 'COLOR_DODGE',
+  linearDodge: 'LINEAR_DODGE',
   overlay: 'OVERLAY',
   softLight: 'SOFT_LIGHT',
   hardLight: 'HARD_LIGHT',

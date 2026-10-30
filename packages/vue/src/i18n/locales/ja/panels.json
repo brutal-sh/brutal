@@ -631,5 +631,7 @@
   "strokeSquareShort": "スクエア",
   "effectColor": "カラー",
   "effectOffset": "オフセット",
-  "effectBlur": "ぼかし"
+  "effectBlur": "ぼかし",
+  "blendModeLinearBurn": "焼き込み（リニア）",
+  "blendModeLinearDodge": "覆い焼き（リニア）"
 }

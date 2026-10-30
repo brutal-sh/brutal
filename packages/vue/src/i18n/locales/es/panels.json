@@ -638,5 +638,7 @@
   "strokeSquareShort": "Cuadrado",
   "effectColor": "Color",
   "effectOffset": "Desplazamiento",
-  "effectBlur": "Desenfoque"
+  "effectBlur": "Desenfoque",
+  "blendModeLinearBurn": "Subexposición lineal",
+  "blendModeLinearDodge": "Sobreexposición lineal"
 }

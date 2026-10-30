@@ -638,5 +638,7 @@
   "strokeSquareShort": "Carré",
   "effectColor": "Couleur",
   "effectOffset": "Décalage",
-  "effectBlur": "Flou"
+  "effectBlur": "Flou",
+  "blendModeLinearBurn": "Densité linéaire +",
+  "blendModeLinearDodge": "Densité linéaire −"
 }

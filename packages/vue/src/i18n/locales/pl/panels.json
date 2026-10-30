@@ -645,5 +645,7 @@
   "strokeSquareShort": "Kwadratowe",
   "effectColor": "Kolor",
   "effectOffset": "Przesunięcie",
-  "effectBlur": "Rozmycie"
+  "effectBlur": "Rozmycie",
+  "blendModeLinearBurn": "Ściemnianie liniowe",
+  "blendModeLinearDodge": "Rozjaśnianie liniowe"
 }

@@ -631,5 +631,7 @@
   "strokeSquareShort": "方形",
   "effectColor": "颜色",
   "effectOffset": "偏移",
-  "effectBlur": "模糊"
+  "effectBlur": "模糊",
+  "blendModeLinearBurn": "线性加深",
+  "blendModeLinearDodge": "线性减淡"
 }

@@ -457,8 +457,12 @@
           "feature": "Paint rows",
           "behavior": "Multiple fills, visibility, removal and object opacity.",
           "acceptance": "Reorder/edit/hide paints; compare compositing, Undo and serialization.",
-          "status": "open",
-          "evidence": []
+          "status": "partial",
+          "evidence": [
+            "../PAINT-PARITY.md",
+            "../ACCEPTANCE.md"
+          ],
+          "evidence_limit": "Named compact bound/unbound paint and native color/blend Save/reopen paths executed. Hover variable-button overlap, reorder and full compositing/state comparison remain open."
         },
         {
           "id": "DRAW-09",
@@ -484,8 +488,12 @@
           "feature": "Strokes and blends",
           "behavior": "Width, Inside/Center/Outside and paint blend modes.",
           "acceptance": "Compare edges and overlapping colors at several zoom levels and export sizes.",
-          "status": "open",
-          "evidence": []
+          "status": "partial",
+          "evidence": [
+            "../PAINT-PARITY.md",
+            "../ACCEPTANCE.md"
+          ],
+          "evidence_limit": "Native independent/common widths, join/cap, Undo, Pen interoperability and18-mode menus have named evidence. Opaque linear fill/stroke/shadow PNG samples match; one-step half-alpha export difference, every zoom/size and exact visuals remain open."
         },
         {
           "id": "DRAW-12",
@@ -500,8 +508,12 @@
           "feature": "Effects",
           "behavior": "Drop/inner shadow, layer/background blur and ordered effects.",
           "acceptance": "Compare every control, compositing, clipping and exported appearance.",
-          "status": "open",
-          "evidence": []
+          "status": "partial",
+          "evidence": [
+            "../PAINT-PARITY.md",
+            "../ACCEPTANCE.md"
+          ],
+          "evidence_limit": "Named four-type popup/default/order and native Multiply Save/reopen/interchange executed; linear shadow samples checked. Every effect rendering/clipping/control state and Shader remain open."
         },
         {
           "id": "DRAW-14",

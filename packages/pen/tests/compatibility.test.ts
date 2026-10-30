@@ -25,7 +25,7 @@ describe('.pen import compatibility', () => {
             'button/label~1': {
               fill: [
                 { type: 'mesh_gradient' },
-                { type: 'color', color: '#FFFFFF', blendMode: 'linearBurn' }
+                { type: 'color', color: '#FFFFFF', blendMode: 'futureBurn' }
               ],
               effect: { type: 'shader', url: './effect.glsl' }
             }
@@ -116,7 +116,7 @@ describe('.pen import compatibility', () => {
               type: 'text',
               reusable: true,
               stroke: { type: 'gradient', gradientType: 'future' },
-              effect: [{ type: 'future' }, { type: 'shadow', blendMode: 'linearDodge' }]
+              effect: [{ type: 'future' }, { type: 'shadow', blendMode: 'futureDodge' }]
             }
           }
         }

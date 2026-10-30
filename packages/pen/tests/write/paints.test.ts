@@ -10,6 +10,24 @@ const stops = [
 ]
 
 describe('.pen paint export', () => {
+  test.each(['linearBurn', 'linearDodge'])('roundtrips %s on fills and strokes', (blendMode) => {
+    const graph = parseDocument([
+      {
+        id: 'r',
+        type: 'rectangle',
+        fill: { type: 'color', color: '#CC9933', blendMode },
+        stroke: { type: 'color', color: '#9933CC', blendMode },
+        strokeWidth: 4
+      }
+    ])
+    const before = graph.getNode('r')
+    const after = parsePenFile(writePenFile(graph)).getNode('r')
+    expect(before?.fills[0].blendMode).toBe(
+      blendMode === 'linearBurn' ? 'LINEAR_BURN' : 'LINEAR_DODGE'
+    )
+    expect(after?.fills).toEqual(before?.fills)
+    expect(after?.strokes).toEqual(before?.strokes)
+  })
   test.each(['linear', 'radial', 'angular'])(
     'roundtrips %s gradient shape, stops and opacity',
     (gradientType) => {

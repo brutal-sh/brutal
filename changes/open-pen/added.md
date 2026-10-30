@@ -2,3 +2,4 @@
 - Scale selected layers and their contents proportionally with the Scale tool (`K`), including text, strokes, effects, layout spacing and bound values, with one-step Undo and Escape cancellation.
 - Import supported rendered browser pages as editable frames, text and image layers with undo, validated fixed geometry, bounded extraction, and actionable refusals for content that cannot yet be preserved.
 - Installs a verified standalone local canvas bridge so the native app can use an existing Codex CLI login without reading the development checkout at launch.
+- Adds Linear Burn and Linear Dodge to paint/effect blend menus and preserves them through supported `.pen` and FIG round trips.
