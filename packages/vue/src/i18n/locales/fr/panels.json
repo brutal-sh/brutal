@@ -628,5 +628,12 @@
   "variableModeHeading": "Mode",
   "slides": "Diapositives",
   "components": "Composants",
-  "libraries": "Bibliothèques"
+  "libraries": "Bibliothèques",
+  "strokeWeightShort": "Épaisseur",
+  "strokeJoinShort": "Jonction",
+  "strokeCapShort": "Extrémité",
+  "strokeMiterShort": "Onglet",
+  "strokeRoundShort": "Arrondi",
+  "strokeBevelShort": "Biseau",
+  "strokeSquareShort": "Carré"
 }

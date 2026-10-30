@@ -1,7 +1,7 @@
 import { expect, test, type Page } from '@playwright/test'
 
 import { CanvasHelper } from '#tests/helpers/canvas'
-import { propertySection } from '#tests/helpers/properties'
+import { openAdvancedProperties, propertySection } from '#tests/helpers/properties'
 
 let page: Page
 let canvas: CanvasHelper
@@ -13,6 +13,7 @@ test.beforeAll(async ({ browser }) => {
   await page.goto('/')
   canvas = new CanvasHelper(page)
   await canvas.waitForInit()
+  await openAdvancedProperties(page)
 })
 
 test.afterAll(async () => {

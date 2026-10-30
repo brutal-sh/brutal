@@ -56,6 +56,15 @@ export interface StrokeGeometryActions {
 
 export function createStrokeGeometryState({ nodes, merged }: StrokeGeometryStateInput) {
   return {
+    weight: computed(() => {
+      const values = nodes.value.flatMap((node) =>
+        node.independentStrokeWeights
+          ? BORDER_SIDES.map((side) => node[borderKey(side)])
+          : node.strokes.map((stroke) => stroke.weight)
+      )
+      const first = values.at(0) ?? 0
+      return values.every((value) => value === first) ? first : MIXED
+    }),
     advancedActive: computed(
       () => nodes.value.length > 0 && nodes.value.every((node) => node.strokes.length > 0)
     ),
@@ -216,7 +225,39 @@ export function borderWeight(
   const first = nodes.at(0)
   if (!first) return 0
   const key = borderKey(side)
-  return nodes.every((node) => node[key] === first[key]) ? first[key] : MIXED
+  const value = (node: SceneNode) =>
+    node.independentStrokeWeights ? node[key] : (node.strokes.at(0)?.weight ?? node.strokeWeight)
+  const weight = value(first)
+  return nodes.every((node) => value(node) === weight) ? weight : MIXED
+}
+
+/** A common weight sets every paint and every independent side in one history step. */
+export function updateStrokeWeight(editor: Editor, nodes: readonly SceneNode[], value: number) {
+  if (!Number.isFinite(value)) return
+  const weight = Math.max(0, value)
+  editor.undo.runBatch('Change stroke weight', () => {
+    for (const node of nodes) {
+      if (
+        node.strokes.every((stroke) => stroke.weight === weight) &&
+        (!node.independentStrokeWeights ||
+          BORDER_SIDES.every((side) => node[borderKey(side)] === weight))
+      )
+        continue
+      for (const path of ['strokeWeight', ...Object.values(BORDER_KEYS)])
+        editor.unbindVariable(node.id, path)
+      editor.updateNodeWithUndo(
+        node.id,
+        {
+          strokeWeight: weight,
+          strokes: node.strokes.map((stroke) => ({ ...stroke, weight })),
+          ...(node.independentStrokeWeights
+            ? Object.fromEntries(Object.values(BORDER_KEYS).map((key) => [key, weight]))
+            : {})
+        },
+        'Change stroke weight'
+      )
+    }
+  })
 }
 
 export function createStrokeSideActions(editor: Editor, sideMenuOpen: Ref<boolean>) {
@@ -269,8 +310,31 @@ export function createStrokeSideActions(editor: Editor, sideMenuOpen: Ref<boolea
   ) {
     const key = borderKey(side)
     editor.undo.runBatch('Change stroke weight', () => {
-      for (const node of nodes)
-        editor.updateNodeWithUndo(node.id, { [key]: value }, 'Change stroke weight')
+      for (const node of nodes) {
+        const bindings = { ...node.boundVariables }
+        const scales = { ...node.variableBindingScales }
+        if (!node.independentStrokeWeights) {
+          for (const field of Object.values(BORDER_KEYS)) {
+            if (bindings.strokeWeight) bindings[field] = bindings.strokeWeight
+            else Reflect.deleteProperty(bindings, field)
+            if (scales.strokeWeight !== undefined && bindings[field])
+              scales[field] = scales.strokeWeight
+            else Reflect.deleteProperty(scales, field)
+          }
+        }
+        Reflect.deleteProperty(bindings, key)
+        Reflect.deleteProperty(scales, key)
+        editor.updateNodeWithUndo(
+          node.id,
+          {
+            ...sideChanges('CUSTOM', node),
+            [key]: value,
+            boundVariables: bindings,
+            variableBindingScales: scales
+          },
+          'Change stroke weight'
+        )
+      }
     })
   }
 

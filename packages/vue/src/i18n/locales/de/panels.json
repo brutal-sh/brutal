@@ -628,5 +628,12 @@
   "variableModeHeading": "Modus",
   "slides": "Folien",
   "components": "Komponenten",
-  "libraries": "Bibliotheken"
+  "libraries": "Bibliotheken",
+  "strokeWeightShort": "Stärke",
+  "strokeJoinShort": "Ecke",
+  "strokeCapShort": "Ende",
+  "strokeMiterShort": "Gehrung",
+  "strokeRoundShort": "Rund",
+  "strokeBevelShort": "Abgeschrägt",
+  "strokeSquareShort": "Quadratisch"
 }

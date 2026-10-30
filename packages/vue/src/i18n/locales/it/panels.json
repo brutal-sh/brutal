@@ -628,5 +628,12 @@
   "variableModeHeading": "Modalità",
   "slides": "Diapositive",
   "components": "Componenti",
-  "libraries": "Librerie"
+  "libraries": "Librerie",
+  "strokeWeightShort": "Spessore",
+  "strokeJoinShort": "Giunzione",
+  "strokeCapShort": "Estremità",
+  "strokeMiterShort": "Spigolo",
+  "strokeRoundShort": "Arrotondato",
+  "strokeBevelShort": "Smusso",
+  "strokeSquareShort": "Quadrato"
 }

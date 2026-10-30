@@ -45,6 +45,7 @@ const {
   update: updateStyle
 } = useSharedStylePicker('stroke')
 
+import StrokeCompactControls from './StrokeCompactControls.vue'
 import StrokeSettingsPopover from './StrokeSettingsPopover.vue'
 
 const strokeCtx = useStrokeControls()
@@ -110,7 +111,9 @@ function updateStrokeColor(
 function onToggleSides(nodes: readonly SceneNode[]) {
   const next = !expandedSides.value
   expandedSides.value = next
-  if (next && nodes.some((node) => !node.independentStrokeWeights)) strokeCtx.selectSide('CUSTOM')
+  if (compact) return
+  if (next && !compact && nodes.some((node) => !node.independentStrokeWeights))
+    strokeCtx.selectSide('CUSTOM')
   else if (!next && nodes.some((node) => node.independentStrokeWeights)) strokeCtx.selectSide('ALL')
 }
 </script>
@@ -238,10 +241,37 @@ function onToggleSides(nodes: readonly SceneNode[]) {
         </BindableValueRoot>
       </PropertyItemRow>
 
-      <div v-if="!isMixed && items.length > 0" class="mt-1 flex items-center gap-1.5">
+      <StrokeCompactControls
+        v-if="compact && !isMixed && items[0]"
+        :sides-offered="sidesOffered"
+        :sides-shown="sidesShown"
+        @toggle-sides="onToggleSides(selectedNodes)"
+      >
+        <template v-if="sidesShown" #sides>
+          <div class="grid grid-cols-2 gap-1.5">
+            <NumberField
+              v-for="side in ['left', 'top', 'right', 'bottom'] as const"
+              :key="side"
+              :aria-label="`${panels.strokeWeight} ${side}`"
+              :model-value="strokeCtx.borderWeight(side)"
+              :min="0"
+              :data-property="`stroke-${side}-weight`"
+              @update:model-value="strokeCtx.updateBorderWeight(side, $event)"
+            >
+              <template #icon>
+                <icon-lucide-panel-left v-if="side === 'left'" class="size-3.5" />
+                <icon-lucide-panel-top v-else-if="side === 'top'" class="size-3.5" />
+                <icon-lucide-panel-right v-else-if="side === 'right'" class="size-3.5" />
+                <icon-lucide-panel-bottom v-else class="size-3.5" />
+              </template>
+            </NumberField>
+          </div>
+        </template>
+      </StrokeCompactControls>
+      <div v-else-if="!isMixed && items.length > 0" class="mt-1 flex items-center gap-1.5">
         <AppSelect
           :label="panels.strokeType"
-          :ui="{ trigger: 'w-[88px] flex-none' }"
+          :ui="{ trigger: 'w-[72px] flex-none' }"
           :model-value="alignValue"
           :placeholder="panels.mixed"
           :options="strokeCtx.alignOptions"
@@ -280,7 +310,7 @@ function onToggleSides(nodes: readonly SceneNode[]) {
       <StrokeSettingsPopover v-if="isMixed && advancedActive" />
 
       <div
-        v-if="!isMixed && items.length > 0 && sidesShown"
+        v-if="!compact && !isMixed && items.length > 0 && sidesShown"
         class="mt-1.5 grid grid-cols-2 gap-1.5"
       >
         <NumberField

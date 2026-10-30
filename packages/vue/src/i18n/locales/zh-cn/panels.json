@@ -621,5 +621,12 @@
   "variableModeHeading": "模式",
   "slides": "幻灯片",
   "components": "组件",
-  "libraries": "库"
+  "libraries": "库",
+  "strokeWeightShort": "粗细",
+  "strokeJoinShort": "连接",
+  "strokeCapShort": "端点",
+  "strokeMiterShort": "尖角",
+  "strokeRoundShort": "圆角",
+  "strokeBevelShort": "斜角",
+  "strokeSquareShort": "方形"
 }

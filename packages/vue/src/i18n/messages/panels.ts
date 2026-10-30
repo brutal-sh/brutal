@@ -416,6 +416,13 @@ export const panelMessageDefaults = {
 
   strokeType: 'Stroke type',
   strokeWeight: 'Stroke weight',
+  strokeWeightShort: 'Weight',
+  strokeJoinShort: 'Join',
+  strokeCapShort: 'Cap',
+  strokeMiterShort: 'Miter',
+  strokeRoundShort: 'Round',
+  strokeBevelShort: 'Bevel',
+  strokeSquareShort: 'Square',
 
   noSelection: 'No selection',
   noLocalVariables: 'No local variables',

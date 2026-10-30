@@ -19,8 +19,10 @@ import {
   setGap,
   toggleDash,
   updateAlign,
+  updateStrokeWeight,
   type StrokeSides
 } from '#vue/controls/stroke/helpers'
+import { useUndoBatch } from '#vue/controls/undo-batch/use'
 import { useEditor } from '#vue/editor/context'
 import { useI18n } from '#vue/i18n'
 
@@ -55,6 +57,7 @@ export function useStrokeControls() {
   const geometryState = createStrokeGeometryState({ nodes, merged })
   const geometryActions = createStrokeGeometryActions(store, nodes)
   const { selectSide, updateBorderWeight } = createStrokeSideActions(store, sideMenuOpen)
+  const weightBatch = useUndoBatch(store.undo, store.beginInteractiveEdit)
 
   return {
     alignOptions,
@@ -72,6 +75,15 @@ export function useStrokeControls() {
     },
     /** Aligns the strokes of every selected node. */
     updateAlign: (align: Stroke['align']) => updateAlign(store, nodes.value, align),
+    /** Sets every stroke and independent side; a field commits its continuous edit together. */
+    updateWeight: (value: number) => {
+      weightBatch.ensure(
+        `stroke-weight:${nodes.value.map((node) => node.id).join(',')}`,
+        'Change stroke weight'
+      )
+      updateStrokeWeight(store, nodes.value, value)
+    },
+    commitWeight: () => weightBatch.flush(),
     /** The alignment the selected nodes share, or MIXED. */
     currentAlign: () => currentAlign(nodes.value),
     currentSides,

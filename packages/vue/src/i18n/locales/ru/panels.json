@@ -635,5 +635,12 @@
   "variableModeHeading": "Режим",
   "slides": "Слайды",
   "components": "Компоненты",
-  "libraries": "Библиотеки"
+  "libraries": "Библиотеки",
+  "strokeWeightShort": "Толщина",
+  "strokeJoinShort": "Соединение",
+  "strokeCapShort": "Конец",
+  "strokeMiterShort": "Острый",
+  "strokeRoundShort": "Скруглённый",
+  "strokeBevelShort": "Скошенный",
+  "strokeSquareShort": "Квадратный"
 }

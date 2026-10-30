@@ -628,5 +628,12 @@
   "variableModeHeading": "Modo",
   "slides": "Diapositivas",
   "components": "Componentes",
-  "libraries": "Bibliotecas"
+  "libraries": "Bibliotecas",
+  "strokeWeightShort": "Grosor",
+  "strokeJoinShort": "Unión",
+  "strokeCapShort": "Extremo",
+  "strokeMiterShort": "Inglete",
+  "strokeRoundShort": "Redondo",
+  "strokeBevelShort": "Bisel",
+  "strokeSquareShort": "Cuadrado"
 }

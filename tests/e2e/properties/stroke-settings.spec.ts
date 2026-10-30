@@ -1,11 +1,13 @@
 import { expect, test } from '@playwright/test'
 
 import { CanvasHelper } from '#tests/helpers/canvas'
+import { openAdvancedProperties } from '#tests/helpers/properties'
 
 for (const theme of ['light', 'dark']) {
   test(`stroke settings editing and dismissal in ${theme}`, async ({ page }) => {
     await page.goto('/?test')
     await new CanvasHelper(page).waitForInit()
+    await openAdvancedProperties(page)
     const ids = await page.evaluate(async (mode) => {
       const path = '/src/app/shell/theme.ts'
       const module = await import(path)

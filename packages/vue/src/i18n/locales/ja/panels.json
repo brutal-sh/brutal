@@ -621,5 +621,12 @@
   "variableModeHeading": "モード",
   "slides": "スライド",
   "components": "コンポーネント",
-  "libraries": "ライブラリ"
+  "libraries": "ライブラリ",
+  "strokeWeightShort": "太さ",
+  "strokeJoinShort": "結合",
+  "strokeCapShort": "線端",
+  "strokeMiterShort": "マイター",
+  "strokeRoundShort": "ラウンド",
+  "strokeBevelShort": "ベベル",
+  "strokeSquareShort": "スクエア"
 }

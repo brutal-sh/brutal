@@ -635,5 +635,12 @@
   "variableModeHeading": "Tryb",
   "slides": "Slajdy",
   "components": "Komponenty",
-  "libraries": "Biblioteki"
+  "libraries": "Biblioteki",
+  "strokeWeightShort": "Grubość",
+  "strokeJoinShort": "Łączenie",
+  "strokeCapShort": "Zakończenie",
+  "strokeMiterShort": "Ostre",
+  "strokeRoundShort": "Zaokrąglone",
+  "strokeBevelShort": "Ścięte",
+  "strokeSquareShort": "Kwadratowe"
 }
