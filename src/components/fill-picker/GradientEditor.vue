@@ -45,6 +45,7 @@ function listStopClass(active: boolean) {
         <AppSelect
           :model-value="root.subtype"
           :options="root.subtypes"
+          :label="root.subtypes.find((option) => option.value === root.subtype)?.label"
           @update:model-value="root.actions.setSubtype($event)"
         />
       </div>

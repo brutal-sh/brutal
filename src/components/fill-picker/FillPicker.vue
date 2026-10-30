@@ -4,7 +4,7 @@ import type { FocusOutsideEvent, PointerDownOutsideEvent } from 'reka-ui'
 import { tv } from 'tailwind-variants'
 import { computed } from 'vue'
 
-import type { Fill } from '@open-pencil/scene-graph'
+import type { BlendMode, Fill } from '@open-pencil/scene-graph'
 import type { ShaderPaint, ShaderPreset } from '@open-pencil/scene-graph/shaders'
 import { applySolidFillColor, type OkHCLControls } from '@open-pencil/vue/controls/color-model'
 import { DEFAULT_SHADER_PRESET } from '@open-pencil/vue/controls/shader'
@@ -16,9 +16,12 @@ import ColorPickerPanel from '@/components/color-picker-panel/ColorPickerPanel.v
 import GradientEditor from '@/components/fill-picker/GradientEditor.vue'
 import ImageFillPicker from '@/components/fill-picker/ImageFillPicker.vue'
 import ShaderFillPicker from '@/components/fill-picker/shader/ShaderFillPicker.vue'
+import { useBlendModeGroups } from '@/components/inputs/blend-mode'
+import IconButton from '@/components/ui/button/IconButton.vue'
 import { usePopoverUI } from '@/components/ui/overlay/popover'
 import Tip from '@/components/ui/overlay/Tip.vue'
 import FillSwatch from '@/components/ui/paint/FillSwatch.vue'
+import AppSelect from '@/components/ui/select/AppSelect.vue'
 import fillPickerTheme from '@/theme/fill-picker'
 
 import { useImageFill } from './useImageFill'
@@ -59,6 +62,7 @@ const imageBackground = computed(() =>
 const activeStop = defineModel<number>('activeStop')
 const emit = defineEmits<{
   update: [fill: Fill]
+  updateBlendMode: [mode: BlendMode]
   updateShader: [preset: ShaderPreset]
   openChange: [open: boolean]
   cancel: []
@@ -71,6 +75,7 @@ const cls = usePopoverUI({
   content: 'max-h-(--reka-popover-content-available-height) w-[264px] overflow-y-auto'
 })
 const { panels } = useI18n()
+const blendModeGroups = useBlendModeGroups()
 
 /** Dragging a gradient handle on the canvas leaves the picker open, as in Figma. */
 function keepOpenOnPress(event: PointerDownOutsideEvent) {
@@ -118,53 +123,79 @@ function stopEscapePropagation(event: KeyboardEvent) {
           @focus-outside="keepOpenOnFocus"
         >
           <div
-            class="flex items-center gap-0.5"
+            class="flex items-center gap-2"
             :class="compact ? 'border-b border-border p-3' : 'mb-2'"
           >
-            <Tip :label="panels.solid">
-              <button
-                :data-active="root.category === 'SOLID' || undefined"
-                :class="tabClass(root.category === 'SOLID')"
-                :aria-label="panels.solid"
-                data-test-id="fill-picker-tab-solid"
-                @click="root.actions.toSolid"
-              >
-                <icon-lucide-square class="size-3.5" />
-              </button>
-            </Tip>
-            <Tip :label="panels.linearGradient">
-              <button
-                :data-active="root.category === 'GRADIENT' || undefined"
-                :class="tabClass(root.category === 'GRADIENT')"
-                :aria-label="panels.linearGradient"
-                data-test-id="fill-picker-tab-gradient"
-                @click="root.actions.toGradient"
-              >
-                <icon-lucide-blend class="size-3.5" />
-              </button>
-            </Tip>
-            <Tip :label="panels.image">
-              <button
-                :data-active="(root.category === 'IMAGE' && !shader) || undefined"
-                :class="tabClass(root.category === 'IMAGE' && !shader)"
-                :aria-label="panels.image"
-                data-test-id="fill-picker-tab-image"
-                @click="root.actions.toImage"
-              >
-                <icon-lucide-image class="size-3.5" />
-              </button>
-            </Tip>
-            <Tip :label="panels.shader">
-              <button
-                :data-active="shader !== null || undefined"
-                :class="tabClass(shader !== null)"
-                :aria-label="panels.shader"
-                data-test-id="fill-picker-tab-shader"
-                @click="shader || emit('updateShader', DEFAULT_SHADER_PRESET)"
-              >
-                <icon-lucide-sparkles class="size-3.5" />
-              </button>
-            </Tip>
+            <div
+              class="flex min-w-0 flex-1 items-center gap-0.5"
+              :class="compact ? 'rounded-md bg-input' : undefined"
+            >
+              <Tip :label="panels.solid">
+                <button
+                  :data-active="root.category === 'SOLID' || undefined"
+                  :class="tabClass(root.category === 'SOLID')"
+                  :aria-label="panels.solid"
+                  data-test-id="fill-picker-tab-solid"
+                  @click="root.actions.toSolid"
+                >
+                  <icon-lucide-square class="size-3.5" />
+                </button>
+              </Tip>
+              <Tip :label="panels.linearGradient">
+                <button
+                  :data-active="root.category === 'GRADIENT' || undefined"
+                  :class="tabClass(root.category === 'GRADIENT')"
+                  :aria-label="panels.linearGradient"
+                  data-test-id="fill-picker-tab-gradient"
+                  @click="root.actions.toGradient"
+                >
+                  <icon-lucide-blend class="size-3.5" />
+                </button>
+              </Tip>
+              <Tip :label="panels.image">
+                <button
+                  :data-active="(root.category === 'IMAGE' && !shader) || undefined"
+                  :class="tabClass(root.category === 'IMAGE' && !shader)"
+                  :aria-label="panels.image"
+                  data-test-id="fill-picker-tab-image"
+                  @click="root.actions.toImage"
+                >
+                  <icon-lucide-image class="size-3.5" />
+                </button>
+              </Tip>
+              <Tip :label="panels.shader">
+                <button
+                  :data-active="shader !== null || undefined"
+                  :class="tabClass(shader !== null)"
+                  :aria-label="panels.shader"
+                  data-test-id="fill-picker-tab-shader"
+                  @click="shader || emit('updateShader', DEFAULT_SHADER_PRESET)"
+                >
+                  <icon-lucide-sparkles class="size-3.5" />
+                </button>
+              </Tip>
+            </div>
+            <AppSelect
+              v-if="compact"
+              :model-value="fill.blendMode ?? 'NORMAL'"
+              :groups="blendModeGroups"
+              :label="panels.blendMode"
+              :ui="{
+                content: 'w-32 min-w-32 rounded-md',
+                item: 'h-7 pr-7 pl-3 text-xs',
+                indicator: 'right-0 left-auto'
+              }"
+              @update:model-value="emit('updateBlendMode', $event)"
+            >
+              <template #trigger>
+                <IconButton
+                  :label="panels.blendMode"
+                  :active="!!fill.blendMode && fill.blendMode !== 'NORMAL'"
+                >
+                  <icon-lucide-droplet class="size-4" />
+                </IconButton>
+              </template>
+            </AppSelect>
           </div>
 
           <div :class="compact ? 'p-3' : undefined">

@@ -27,6 +27,17 @@ export function commitPaintMutation(actions: BindableValueActions<Color>) {
   actions.commitMutation()
 }
 
+/** Paint settings retain color bindings and commit independently of channel edits. */
+export function commitPaintSetting(
+  actions: BindableValueActions<Color>,
+  flush: () => void,
+  update: () => void
+) {
+  actions.commitMutation()
+  update()
+  flush()
+}
+
 export function cancelPaintMutation(actions: BindableValueActions<Color>) {
   actions.cancelMutation()
 }

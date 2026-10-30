@@ -14,18 +14,19 @@ import {
 
 import { useEditorStore } from '@/app/editor/active-store'
 import FillPicker from '@/components/fill-picker/FillPicker.vue'
-import PaintField from '@/components/inputs/PaintField.vue'
-import VariableBindingPicker from '@/components/properties/binding/VariableBindingPicker.vue'
 import {
   commitDiscretePropertyListChange,
   useBlendModeGroups
-} from '@/components/properties/blend-mode/use'
+} from '@/components/inputs/blend-mode'
+import PaintField from '@/components/inputs/PaintField.vue'
+import VariableBindingPicker from '@/components/properties/binding/VariableBindingPicker.vue'
 import { fillLabel } from '@/components/properties/fill-label'
 import PropertyItemRow from '@/components/properties/item-list/PropertyItemRow.vue'
 import {
   applyPaintMutation,
   cancelPaintMutation,
   commitPaintMutation,
+  commitPaintSetting,
   paintBindingTargets
 } from '@/components/properties/paint/binding'
 import { useGradientEditing } from '@/components/properties/paint/gradient-edit'
@@ -172,6 +173,11 @@ function updateSolidColor(
                     )
                   "
                   @update-shader="store.setShaderPaint(selectedNodeIds, 'fills', index, $event)"
+                  @update-blend-mode="
+                    commitPaintSetting(binding.actions, flush, () =>
+                      actions.patch(index, { blendMode: $event })
+                    )
+                  "
                   @open-change="onPickerOpenChange(selectedNodeIds, index, $event, binding.actions)"
                   @cancel="cancelPaintMutation(binding.actions)"
                 />
@@ -214,7 +220,7 @@ function updateSolidColor(
             </PaintField>
           </BindableValueRoot>
 
-          <template v-if="!compact || (fill.blendMode && fill.blendMode !== 'NORMAL')" #details>
+          <template v-if="!compact" #details>
             <PanelFieldGroup :label="panels.blendMode">
               <AppSelect
                 :model-value="fill.blendMode ?? 'NORMAL'"

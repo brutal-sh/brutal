@@ -25,6 +25,7 @@ import {
   applyPaintMutation,
   cancelPaintMutation,
   commitPaintMutation,
+  commitPaintSetting,
   paintBindingTargets
 } from '@/components/properties/paint/binding'
 import { useGradientEditing } from '@/components/properties/paint/gradient-edit'
@@ -186,6 +187,11 @@ function onToggleSides(nodes: readonly SceneNode[]) {
                 @update="
                   updateStrokePaint(binding.actions, flush, stroke, $event, (next) =>
                     actions.update(index, next)
+                  )
+                "
+                @update-blend-mode="
+                  commitPaintSetting(binding.actions, flush, () =>
+                    actions.patch(index, { blendMode: $event })
                   )
                 "
                 @open-change="onPickerOpenChange(selectedNodeIds, index, $event, binding.actions)"

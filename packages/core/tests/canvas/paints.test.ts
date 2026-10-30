@@ -65,6 +65,23 @@ function colorAt(pixels: Uint8Array | Float32Array, x: number, y: number): numbe
   return Array.from(pixels.slice(offset, offset + 4))
 }
 
+test('stroke blend modes affect pixels and reset between strokes', () => {
+  const paint: Fill = { type: 'SOLID', color: RED, opacity: 1, visible: true }
+  const pixels = draw({
+    width: WIDTH,
+    height: HEIGHT,
+    fills: [paint],
+    strokeWeight: 8,
+    strokes: [
+      { ...paint, color: BLUE, blendMode: 'MULTIPLY', weight: 8, align: 'INSIDE' },
+      { ...paint, color: { r: 0, g: 1, b: 0, a: 1 }, weight: 4, align: 'INSIDE' }
+    ]
+  })
+  expect(colorAt(pixels, 2, 20)).toEqual([0, 255, 0, 255])
+  expect(colorAt(pixels, 6, 20)).toEqual([0, 0, 0, 255])
+  expect(colorAt(pixels, 20, 20)).toEqual([255, 0, 0, 255])
+})
+
 // A layer with no width or height, such as a straight line, used to scale the gradient's unit
 // square to nothing, and a transform that is not a matrix gives NaN. CanvasKit builds no shader
 // for either, and the renderer threw on every frame and stopped the canvas.

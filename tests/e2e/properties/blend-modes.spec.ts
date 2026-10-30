@@ -1,7 +1,7 @@
 import { expect, test, type Page } from '@playwright/test'
 
 import { CanvasHelper } from '#tests/helpers/canvas'
-import { propertySection } from '#tests/helpers/properties'
+import { openAdvancedProperties, propertySection } from '#tests/helpers/properties'
 
 let page: Page
 let canvas: CanvasHelper
@@ -38,6 +38,7 @@ test.beforeAll(async ({ browser }) => {
   await page.goto('/')
   canvas = new CanvasHelper(page)
   await canvas.waitForInit()
+  await openAdvancedProperties(page)
   ;[firstId, secondId] = await page.evaluate(() => {
     const store = window.openPencil?.getStore?.()
     if (!store) throw new Error('OpenPencil store not initialized')
@@ -100,6 +101,7 @@ test('edits fill and effect blend modes with style detachment and undo', async (
   await effects.getByRole('button', { name: 'Expand effect settings' }).click()
   await chooseBlend('Effects', 'Screen')
   expect(await nodeState(firstId)).toMatchObject({ effectBlend: 'SCREEN', effectStyleId: null })
+  await page.mouse.move(0, 0)
   await expect(effects).toHaveScreenshot('effect-blend-mode.png')
 })
 

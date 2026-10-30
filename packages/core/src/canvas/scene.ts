@@ -434,10 +434,15 @@ function forVisibleStrokes(
     if (!stroke.visible) continue
     const draws = applyStrokeShader(r, stroke, index, node, graph)
     try {
+      const blendMode = figmaBlendModeToSkia(r.ck, stroke.blendMode)
+      r.strokePaint.setBlendMode(blendMode)
+      r.fillPaint.setBlendMode(blendMode)
       if (draws) draw(stroke, r.resolveStrokeColor(stroke, index, node, graph))
     } finally {
       r.strokePaint.setShader(null)
       r.fillPaint.setShader(null)
+      r.strokePaint.setBlendMode(r.ck.BlendMode.SrcOver)
+      r.fillPaint.setBlendMode(r.ck.BlendMode.SrcOver)
     }
   }
 }

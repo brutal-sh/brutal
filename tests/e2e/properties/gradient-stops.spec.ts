@@ -59,7 +59,10 @@ test('gradient stops edit in a separate popup, retain Escape changes and render 
     .toEqual([[17, 0, 255, 255]])
   for (const subtype of ['Radial', 'Angular']) {
     await fillSwatch.click()
-    await editor.page.locator('[data-picker-content]').getByRole('combobox').click()
+    await editor.page
+      .locator('[data-picker-content]')
+      .getByRole('combobox', { name: /^(Linear|Radial|Angular|Diamond)$/ })
+      .click()
     await editor.page.getByRole('option', { name: subtype, exact: true }).click()
     await editor.page.keyboard.press('Escape')
     await expect

@@ -4,11 +4,11 @@ import { useEffectsControls } from '@open-pencil/vue/controls/effects'
 import { useI18n } from '@open-pencil/vue/i18n'
 
 import ColorInput from '@/components/ColorPicker/ColorInput.vue'
-import NumberField from '@/components/inputs/NumberField.vue'
 import {
   commitDiscretePropertyListChange,
   useBlendModeGroups
-} from '@/components/properties/blend-mode/use'
+} from '@/components/inputs/blend-mode'
+import NumberField from '@/components/inputs/NumberField.vue'
 import PropertyItemRow from '@/components/properties/item-list/PropertyItemRow.vue'
 import PropertyListRoot from '@/components/properties/PropertyListRoot.vue'
 import { useSharedStylePicker } from '@/components/properties/shared-style/useSharedStylePicker'
