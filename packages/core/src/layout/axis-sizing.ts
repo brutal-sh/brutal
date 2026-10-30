@@ -1,7 +1,11 @@
 import { Align, type Node as YogaNode } from 'yoga-layout'
 
 import type { LayoutSizing, SceneGraph, SceneNode } from '@open-pencil/scene-graph'
-import { layoutSizing } from '@open-pencil/scene-graph/layout'
+import {
+  deferredFillSizingFields,
+  layoutSizing,
+  layoutSizingInParent
+} from '@open-pencil/scene-graph/layout'
 
 type Axis = 'width' | 'height'
 
@@ -10,11 +14,13 @@ type Axis = 'width' | 'height'
  * parent hugs the child as it is, and neither collapses to nothing.
  */
 export function asLaidOutIn(graph: SceneGraph, child: SceneNode, parent: SceneNode): SceneNode {
-  if (child.layoutGrow <= 0) return child
-  if (parent.layoutMode !== 'HORIZONTAL' && parent.layoutMode !== 'VERTICAL') return child
+  const deferred = deferredFillSizingFields(parent, child)
+  const sized = deferred ? { ...child, ...deferred } : child
+  if (sized.layoutGrow <= 0) return sized
+  if (parent.layoutMode !== 'HORIZONTAL' && parent.layoutMode !== 'VERTICAL') return sized
   return layoutSizing(graph, parent, parent.layoutMode) === 'HUG'
-    ? { ...child, layoutGrow: 0 }
-    : child
+    ? { ...sized, layoutGrow: 0 }
+    : sized
 }
 
 /**
@@ -54,8 +60,11 @@ export function heldHugAxis(graph: SceneGraph, frame: SceneNode): 'width' | 'hei
       (child) =>
         child.layoutMode === 'NONE' &&
         child.type !== 'TEXT' &&
-        (child.layoutAlignSelf === 'STRETCH' ||
-          (child.layoutAlignSelf === 'AUTO' && frame.counterAxisAlign === 'STRETCH'))
+        layoutSizingInParent(
+          frame,
+          child,
+          frame.layoutMode === 'VERTICAL' ? 'HORIZONTAL' : 'VERTICAL'
+        ) === 'FILL'
     )
   if (!holds) return null
   return frame.layoutMode === 'HORIZONTAL' ? 'height' : 'width'

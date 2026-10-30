@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
+import { authoredLayoutSizing } from '@open-pencil/scene-graph/layout'
 import { useI18n } from '@open-pencil/vue/i18n'
 import { useLayoutControlsContext } from '@open-pencil/vue/primitives/LayoutControls'
 
@@ -77,13 +78,20 @@ const visibleSizeLimits = computed(() =>
       <AppCheckbox
         neutral
         :ariaLabel="axis === 'width' ? 'Fill Width' : 'Fill Height'"
-        :model-value="(axis === 'width' ? ctx.widthSizing : ctx.heightSizing) === 'FILL'"
+        :model-value="
+          authoredLayoutSizing(
+            ctx.editor.graph,
+            ctx.node,
+            axis === 'width' ? 'HORIZONTAL' : 'VERTICAL'
+          ) === 'FILL'
+        "
         :disabled="
+          ctx.isInAutoLayout &&
           !(axis === 'width' ? ctx.widthSizingOptions : ctx.heightSizingOptions).some(
             (option) => option.value === 'FILL'
           )
         "
-        @update:model-value="ctx.setAxisSizing(axis, $event ? 'FILL' : 'FIXED')"
+        @update:model-value="ctx.setAxisSizing(axis, $event ? 'FILL' : 'FIXED', true)"
       />{{ axis === 'width' ? 'Fill Width' : 'Fill Height' }}
     </label>
     <template v-if="ctx.node.layoutMode !== 'NONE'">
@@ -101,7 +109,7 @@ const visibleSizeLimits = computed(() =>
               (option) => option.value === 'HUG'
             )
           "
-          @update:model-value="ctx.setAxisSizing(axis, $event ? 'HUG' : 'FIXED')"
+          @update:model-value="ctx.setAxisSizing(axis, $event ? 'HUG' : 'FIXED', true)"
         />{{ axis === 'width' ? 'Hug Width' : 'Hug Height' }}
       </label>
     </template>

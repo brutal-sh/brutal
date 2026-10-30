@@ -1,7 +1,110 @@
+import { readFile } from 'node:fs/promises'
+
 import { expect, test } from '@playwright/test'
 
+import { parsePenDocument } from '@open-pencil/pen'
+
 import { CanvasHelper } from '#tests/helpers/canvas'
+import { openAppMenu } from '#tests/helpers/menu'
 import { getSelectedNode } from '#tests/helpers/store'
+
+test('top-level Fill sizing retains geometry, supports Undo and numeric override, and saves and reopens', async ({
+  page
+}) => {
+  await page.addInitScript(() => {
+    window.showOpenFilePicker = undefined
+    window.showSaveFilePicker = undefined
+  })
+  await page.goto('/')
+  const canvas = new CanvasHelper(page)
+  await canvas.waitForInit()
+  await canvas.selectTool('frame')
+  await canvas.drag(150, 150, 270, 230)
+  const inspector = page.getByTestId('properties-panel')
+  const fill = inspector.getByRole('checkbox', { name: 'Fill Width', exact: true })
+  await fill.check()
+  await expect(fill).toBeChecked()
+  expect((await getSelectedNode(page))?.width).toBe(120)
+  await canvas.undo()
+  await expect(fill).not.toBeChecked()
+  await fill.check()
+  const width = inspector.getByRole('spinbutton', { name: 'Width', exact: true })
+  await width.dblclick()
+  await width.fill('140')
+  await width.press('Enter')
+  await expect(fill).not.toBeChecked()
+  expect((await getSelectedNode(page))?.width).toBe(140)
+  await canvas.undo()
+  await expect(fill).toBeChecked()
+  expect((await getSelectedNode(page))?.width).toBe(120)
+  page.once('dialog', (dialog) => dialog.accept('deferred-fill.pen'))
+  const download = page.waitForEvent('download')
+  await (
+    await openAppMenu(page, 'File')
+  )
+    .getByRole('menuitem', { name: /^Save(?:\s|$)/ })
+    .first()
+    .click()
+  const saved = await download
+  const bytes = await readFile(await saved.path())
+  expect(parsePenDocument(bytes.toString()).children[0]).toMatchObject({
+    width: 'fill_container(120)',
+    height: 80
+  })
+  const chooser = page.waitForEvent('filechooser')
+  await (await openAppMenu(page, 'File')).getByRole('menuitem', { name: /^Open…/ }).click()
+  await (
+    await chooser
+  ).setFiles({ name: 'deferred-fill.pen', mimeType: 'application/json', buffer: bytes })
+  await canvas.waitForInit()
+  await page.getByRole('tab', { name: 'Layers', exact: true }).click()
+  await page.getByTestId('layers-item').filter({ hasText: 'Frame 1' }).click()
+  await expect(fill).toBeChecked()
+  expect((await getSelectedNode(page))?.width).toBe(120)
+  await inspector.getByRole('button', { name: 'Vertical layout', exact: true }).click()
+  await inspector.getByRole('checkbox', { name: 'Hug Width', exact: true }).check()
+  expect((await getSelectedNode(page))?.width).toBe(120)
+  await canvas.undo()
+  await expect(fill).toBeChecked()
+  expect((await getSelectedNode(page))?.width).toBe(120)
+  await canvas.undo()
+  await expect(page.getByRole('img', { name: 'Unsaved changes', exact: true })).toHaveCount(0)
+  canvas.assertNoErrors()
+})
+
+test('compact flex direction retains dimensions and keeps Fill and Hug mutually exclusive', async ({
+  page
+}) => {
+  await page.goto('/')
+  const canvas = new CanvasHelper(page)
+  await canvas.waitForInit()
+  await canvas.selectTool('frame')
+  await canvas.drag(150, 150, 350, 270)
+  await canvas.drawRect(170, 170, 90, 30)
+  await page.getByRole('tab', { name: 'Layers', exact: true }).click()
+  await page.getByTestId('layers-item').filter({ hasText: 'Frame 1' }).first().click()
+  const inspector = page.getByTestId('properties-panel')
+  await inspector.getByRole('button', { name: 'Vertical layout', exact: true }).click()
+  await expect.poll(async () => (await getSelectedNode(page))?.width).toBe(200)
+  await expect.poll(async () => (await getSelectedNode(page))?.height).toBe(120)
+  const fill = inspector.getByRole('checkbox', { name: 'Fill Width', exact: true })
+  const hug = inspector.getByRole('checkbox', { name: 'Hug Width', exact: true })
+  await expect(hug).not.toBeChecked()
+  await fill.check()
+  await expect(hug).not.toBeChecked()
+  await hug.check()
+  await expect(fill).not.toBeChecked()
+  await expect.poll(async () => (await getSelectedNode(page))?.width).toBe(90)
+  await inspector.getByRole('button', { name: 'Horizontal layout', exact: true }).click()
+  await expect(hug).toBeChecked()
+  await expect.poll(async () => (await getSelectedNode(page))?.height).toBe(120)
+  await canvas.undo()
+  await expect(
+    inspector.getByRole('button', { name: 'Vertical layout', exact: true })
+  ).toHaveAttribute('aria-pressed', 'true')
+  await expect(hug).toBeChecked()
+  canvas.assertNoErrors()
+})
 
 test('compact frame inspector edits paired dimensions, appearance and clipping with Undo', async ({
   page

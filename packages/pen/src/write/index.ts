@@ -1,7 +1,7 @@
 import type { SceneGraph, SceneNode } from '@open-pencil/scene-graph'
 import { colorToHex8 } from '@open-pencil/scene-graph/color'
 import { getNodeLocalMatrix } from '@open-pencil/scene-graph/coordinate'
-import { layoutSizing } from '@open-pencil/scene-graph/layout'
+import { authoredLayoutSizing } from '@open-pencil/scene-graph/layout'
 import Matrix from '@open-pencil/scene-graph/matrix'
 import { OPEN_PENCIL_PLUGIN_DATA, readPluginData } from '@open-pencil/scene-graph/plugin-data'
 import { textLengthPixels } from '@open-pencil/scene-graph/text'
@@ -95,7 +95,7 @@ export function writePenDocument(graph: SceneGraph): PenDocument {
 
   function size(node: SceneNode, axis: 'HORIZONTAL' | 'VERTICAL'): number | string {
     const value = axis === 'HORIZONTAL' ? node.width : node.height
-    const sizing = layoutSizing(graph, node, axis)
+    const sizing = authoredLayoutSizing(graph, node, axis)
     if (sizing === 'FILL') return `fill_container(${value})`
     if (sizing === 'HUG') return `fit_content(${value})`
     return value

@@ -146,6 +146,19 @@ const sourceLibraryPublicationSchema: v.GenericSchema<unknown, SourceLibraryPubl
  */
 export const OPEN_PENCIL_PLUGIN_DATA = {
   nodeContext: jsonPluginDataField('nodeContext', 'content', v.string()),
+  deferredFill: jsonPluginDataField(
+    'deferredFill',
+    'content',
+    v.object({ HORIZONTAL: v.boolean(), VERTICAL: v.boolean() })
+  ),
+  hugFallback: jsonPluginDataField(
+    'hugFallback',
+    'content',
+    v.object({
+      HORIZONTAL: v.optional(v.pipe(v.number(), v.finite(), v.minValue(0))),
+      VERTICAL: v.optional(v.pipe(v.number(), v.finite(), v.minValue(0)))
+    })
+  ),
   /** A text node's direction, on TEXT nodes. */
   textDirection: textPluginDataField('textDirection', 'format', DIRECTIONS),
   /** An auto-layout frame's direction. */

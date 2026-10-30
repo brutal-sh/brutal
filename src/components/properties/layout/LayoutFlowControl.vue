@@ -41,7 +41,7 @@ const mode = computed(() => {
         :options="layoutModes"
         :label="panels.flow"
         :ui="{ root: 'flex min-w-0 flex-1' }"
-        @change="layout.setLayoutMode($event as LayoutMode)"
+        @change="layout.setLayoutMode($event as LayoutMode, compact)"
       >
         <template #option="{ option }">
           <Tip :label="option.label">

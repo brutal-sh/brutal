@@ -89,9 +89,9 @@ export function useSelectionLayout() {
     })
   }
 
-  function setLayoutMode(mode: LayoutMode) {
+  function setLayoutMode(mode: LayoutMode, preserveSizing = false) {
     editor.undo.runBatch('Set layout', () => {
-      for (const node of containers.value) editor.setLayoutMode(node.id, mode)
+      for (const node of containers.value) editor.setLayoutMode(node.id, mode, preserveSizing)
     })
   }
 

@@ -76,6 +76,46 @@ function layoutState(editor: Editor) {
 }
 
 describe('layout mode history', () => {
+  test('preserving sizing keeps fixed dimensions and per-axis Hug across direction changes', () => {
+    const editor = createEditor()
+    const frame = editor.graph.createNode('FRAME', editor.state.currentPageId, {
+      width: 300,
+      height: 200,
+      paddingLeft: 12,
+      itemSpacing: 8
+    })
+    editor.graph.createNode('RECTANGLE', frame.id, { width: 80, height: 40 })
+    try {
+      editor.setLayoutMode(frame.id, 'VERTICAL', true)
+      expect(frame).toMatchObject({
+        width: 300,
+        height: 200,
+        primaryAxisSizing: 'FIXED',
+        counterAxisSizing: 'FIXED',
+        paddingLeft: 12,
+        itemSpacing: 8
+      })
+      const sizing = editor.beginNodePreview('Hug width')
+      sizing.update(frame.id, { counterAxisSizing: 'HUG' })
+      sizing.commit()
+      expect(frame.width).toBe(92)
+      const vertical = layoutState(editor)
+      editor.setLayoutMode(frame.id, 'HORIZONTAL', true)
+      expect(frame).toMatchObject({
+        width: 92,
+        height: 200,
+        primaryAxisSizing: 'HUG',
+        counterAxisSizing: 'FIXED'
+      })
+      editor.undoAction()
+      expect(layoutState(editor)).toEqual(vertical)
+      editor.undoAction()
+      editor.undoAction()
+      expect(frame).toMatchObject({ layoutMode: 'NONE', width: 300, height: 200 })
+    } finally {
+      editor.dispose()
+    }
+  })
   for (const mode of ['VERTICAL', 'HORIZONTAL', 'GRID'] as const) {
     test(`undo adding ${mode} restores children, descendants, and surrounding Hug layout exactly`, () => {
       const { editor, frame, first } = scene()

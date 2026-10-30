@@ -27,19 +27,30 @@ const { compact = false } = defineProps<{ compact?: boolean }>()
         :label="
           ctx.node.layoutMode === 'NONE' || isGeneratedFrame(ctx.node)
             ? panels.layout
-            : panels.autoLayout
+            : compact
+              ? 'Flex Layout'
+              : panels.autoLayout
         "
       >
         <template v-if="LAYOUT_CONTAINER_TYPES.has(ctx.node.type)" #actions>
           <IconButton
-            :label="ctx.node.layoutMode === 'NONE' ? panels.addAutoLayout : panels.removeAutoLayout"
+            :label="
+              compact
+                ? ctx.node.layoutMode === 'NONE'
+                  ? 'Add flex layout'
+                  : 'Remove flex layout'
+                : ctx.node.layoutMode === 'NONE'
+                  ? panels.addAutoLayout
+                  : panels.removeAutoLayout
+            "
             size="xs"
             :active="ctx.node.layoutMode !== 'NONE'"
             class="data-[state=on]:bg-accent/15"
             @click="
               ctx.editor.setLayoutMode(
                 ctx.node.id,
-                ctx.node.layoutMode === 'NONE' ? 'VERTICAL' : 'NONE'
+                ctx.node.layoutMode === 'NONE' ? 'VERTICAL' : 'NONE',
+                compact
               )
             "
           >
@@ -48,8 +59,9 @@ const { compact = false } = defineProps<{ compact?: boolean }>()
         </template>
 
         <LayoutFlowControl v-if="LAYOUT_CONTAINER_TYPES.has(ctx.node.type)" :compact="compact">
-          <LayoutWrapToggle v-if="ctx.isFlex" />
+          <LayoutWrapToggle v-if="ctx.isFlex && !compact" />
         </LayoutFlowControl>
+        <FlexControls v-if="compact && ctx.isFlex" compact />
         <div v-if="ctx.node.type !== 'TEXT'" class="mt-2 mb-1 text-[11px] text-muted">
           {{ panels.dimensions }}
         </div>
@@ -64,7 +76,7 @@ const { compact = false } = defineProps<{ compact?: boolean }>()
         <template
           v-if="LAYOUT_CONTAINER_TYPES.has(ctx.node.type) && ctx.node.layoutMode !== 'NONE'"
         >
-          <FlexControls v-if="ctx.isFlex" :compact="compact" />
+          <FlexControls v-if="ctx.isFlex && !compact" />
           <template v-if="ctx.isGrid">
             <GridControls />
             <PaddingControls />

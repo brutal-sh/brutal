@@ -155,6 +155,20 @@ test('undoing or redoing back to the saved state saves the document again', asyn
   })
 })
 
+test('a committed node preview belongs to its history step after the task settles', async () => {
+  await withSavedRectangle(async (editor, id, changes) => {
+    const preview = editor.beginNodePreview('Resize')
+    preview.update(id, { width: 30 })
+    preview.commit()
+    await settle()
+    expect(changes.hasUnsavedChanges()).toBe(true)
+    editor.undoAction()
+    await settle()
+    expect(editor.graph.getNode(id)?.width).toBe(20)
+    expect(changes.hasUnsavedChanges()).toBe(false)
+  })
+})
+
 test('a change outside the history keeps the document unsaved after undoing back', async () => {
   await withSavedRectangle(async (editor, id, changes) => {
     // A collaborator's change reaches the graph without a step of this tab's history.

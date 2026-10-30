@@ -8,7 +8,11 @@ import Yoga, {
 } from 'yoga-layout'
 
 import type { GridTrack, SceneGraph, SceneNode } from '@open-pencil/scene-graph'
-import { enforcedAspectRatio, layoutSizingInParent } from '@open-pencil/scene-graph/layout'
+import {
+  emptyHugFallback,
+  enforcedAspectRatio,
+  layoutSizingInParent
+} from '@open-pencil/scene-graph/layout'
 
 const yogaConfig = Yoga.Config.create()
 yogaConfig.setPointScaleFactor(0)
@@ -79,9 +83,13 @@ export function applyLockedAspectRatio(
 }
 
 export function applyMinMaxConstraints(yogaNode: YogaNode, node: SceneNode): void {
-  if (node.minWidth != null) yogaNode.setMinWidth(node.minWidth)
+  const widthFallback = emptyHugFallback(node, 'HORIZONTAL')
+  const heightFallback = emptyHugFallback(node, 'VERTICAL')
+  if (node.minWidth != null || widthFallback !== undefined)
+    yogaNode.setMinWidth(Math.max(node.minWidth ?? 0, widthFallback ?? 0))
   if (node.maxWidth != null) yogaNode.setMaxWidth(node.maxWidth)
-  if (node.minHeight != null) yogaNode.setMinHeight(node.minHeight)
+  if (node.minHeight != null || heightFallback !== undefined)
+    yogaNode.setMinHeight(Math.max(node.minHeight ?? 0, heightFallback ?? 0))
   if (node.maxHeight != null) yogaNode.setMaxHeight(node.maxHeight)
 }
 
@@ -157,8 +165,11 @@ export function parentStretchedAxis(
   if (!parent || frame.layoutPositioning === 'ABSOLUTE') return null
   if (parent.layoutMode !== 'HORIZONTAL' && parent.layoutMode !== 'VERTICAL') return null
   const stretched =
-    frame.layoutAlignSelf === 'STRETCH' ||
-    (frame.layoutAlignSelf === 'AUTO' && parent.counterAxisAlign === 'STRETCH')
+    layoutSizingInParent(
+      parent,
+      frame,
+      parent.layoutMode === 'VERTICAL' ? 'HORIZONTAL' : 'VERTICAL'
+    ) === 'FILL'
   if (!stretched) return null
   return parent.layoutMode === 'VERTICAL' ? 'width' : 'height'
 }

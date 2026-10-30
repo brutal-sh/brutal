@@ -1,4 +1,5 @@
 import type { LayoutMode, SceneNode } from '@open-pencil/scene-graph'
+import { authoredLayoutSizing, autoLayoutSizingFields } from '@open-pencil/scene-graph/layout'
 
 import type { NodePreview } from './node-preview'
 import type { EditorContext } from './types'
@@ -12,11 +13,11 @@ export function createLayoutModeActions(
    * Hug ancestors. A node preview records every layer it changes, so one undo puts them all back
    * where they were; setting the mode a frame already has records nothing.
    */
-  function setLayoutMode(id: string, mode: LayoutMode) {
+  function setLayoutMode(id: string, mode: LayoutMode, preserveSizing = false) {
     const node = ctx.graph.getNode(id)
     if (!node || node.layoutMode === mode) return
     const preview = beginNodePreview(mode === 'NONE' ? 'Remove auto layout' : 'Add auto layout')
-    preview.update(id, layoutModeUpdates(ctx, node, id, mode))
+    preview.update(id, layoutModeUpdates(ctx, node, id, mode, preserveSizing))
     preview.commit()
   }
 
@@ -56,11 +57,21 @@ function layoutModeUpdates(
   ctx: EditorContext,
   node: SceneNode,
   id: string,
-  mode: LayoutMode
+  mode: LayoutMode,
+  preserveSizing: boolean
 ): Partial<SceneNode> {
   const updates: Partial<SceneNode> = { layoutMode: mode }
   if (mode === 'GRID' && node.layoutMode !== 'GRID') {
     applyGridDefaults(ctx, node, id, updates)
+  } else if (preserveSizing && mode !== 'NONE') {
+    Object.assign(
+      updates,
+      autoLayoutSizingFields(
+        mode,
+        authoredLayoutSizing(ctx.graph, node, 'HORIZONTAL') === 'HUG' ? 'HUG' : 'FIXED',
+        authoredLayoutSizing(ctx.graph, node, 'VERTICAL') === 'HUG' ? 'HUG' : 'FIXED'
+      )
+    )
   } else if (mode !== 'NONE' && node.layoutMode === 'NONE') {
     Object.assign(updates, autoLayoutDefaults())
   }

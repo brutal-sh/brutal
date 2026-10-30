@@ -112,9 +112,9 @@ export function createNodePreviewActions(
           }
           ctx.requestRender()
         }
-        ctx.undo.push({ label, forward: () => apply('after'), inverse: () => apply('before') })
-        // Publish the complete preview delta, including layout children and implicit edits.
+        // Publish before the history event so content revisions belong to this step.
         apply('after')
+        ctx.undo.push({ label, forward: () => apply('after'), inverse: () => apply('before') })
       },
       cancel() {
         if (closed) return

@@ -1,4 +1,5 @@
 import type { SceneGraph } from '../graph'
+import { OPEN_PENCIL_PLUGIN_DATA, readPluginData, withPluginData } from '../plugin-data'
 import type { LayoutSizing, SceneNode, TextAutoResize } from '../types'
 
 /**
@@ -30,6 +31,7 @@ function graphParent(graph: SceneGraph, node: SceneNode): SceneNode | undefined 
 
 function fills(parent: SceneNode, node: SceneNode, axis: LayoutSizingAxis): boolean {
   if (parent.layoutMode === 'NONE') return false
+  if (readPluginData(node.pluginData, OPEN_PENCIL_PLUGIN_DATA.deferredFill)?.[axis]) return true
   if (axis === primaryAxis(parent.layoutMode)) return node.layoutGrow > 0
   if (node.layoutAlignSelf === 'STRETCH') return true
   return (
@@ -146,6 +148,8 @@ export function layoutSizingUpdates(
 ): Partial<SceneNode> {
   if (layoutSizingError(graph, node, value) !== undefined) return {}
   const updates: Partial<SceneNode> = {}
+  const deferred = readPluginData(node.pluginData, OPEN_PENCIL_PLUGIN_DATA.deferredFill)
+  if (deferred?.[axis]) updates.pluginData = deferredFillData(node, axis, false)
   const parent = fillingParent(graphParent(graph, node), node)
   if (parent && parent.layoutMode !== 'NONE') {
     const fill = value === 'FILL'
@@ -166,6 +170,80 @@ export function layoutSizingUpdates(
   }
   if (node.type === 'TEXT') Object.assign(updates, textSizingUpdates(graph, node, axis, value))
   return updates
+}
+
+function deferredFillData(node: SceneNode, axis: LayoutSizingAxis, fill: boolean) {
+  const deferred = {
+    HORIZONTAL: false,
+    VERTICAL: false,
+    ...readPluginData(node.pluginData, OPEN_PENCIL_PLUGIN_DATA.deferredFill),
+    [axis]: fill
+  }
+  return withPluginData(
+    node.pluginData,
+    OPEN_PENCIL_PLUGIN_DATA.deferredFill,
+    deferred.HORIZONTAL || deferred.VERTICAL ? deferred : undefined
+  )
+}
+
+/** Pen retains Fill intent outside auto layout, using the current size as its fallback. */
+export function authoredLayoutSizing(
+  graph: SceneGraph,
+  node: SceneNode,
+  axis: LayoutSizingAxis
+): LayoutSizing {
+  return readPluginData(node.pluginData, OPEN_PENCIL_PLUGIN_DATA.deferredFill)?.[axis]
+    ? 'FILL'
+    : layoutSizing(graph, node, axis)
+}
+
+export function authoredLayoutSizingUpdates(
+  graph: SceneGraph,
+  node: SceneNode,
+  axis: LayoutSizingAxis,
+  value: LayoutSizing
+): Partial<SceneNode> {
+  const parent = graphParent(graph, node)
+  let updates: Partial<SceneNode>
+  if ((parent && parent.layoutMode !== 'NONE') || value === 'HUG') {
+    if (layoutSizingError(graph, node, value)) return {}
+    updates = layoutSizingUpdates(graph, node, axis, value)
+  } else {
+    updates = {
+      ...layoutSizingUpdates(graph, node, axis, value === 'FILL' ? 'FIXED' : value),
+      pluginData: deferredFillData(node, axis, value === 'FILL')
+    }
+  }
+  const fallback = { ...readPluginData(node.pluginData, OPEN_PENCIL_PLUGIN_DATA.hugFallback) }
+  const size = axis === 'HORIZONTAL' ? node.width : node.height
+  fallback[axis] = value === 'HUG' ? size : undefined
+  updates.pluginData = withPluginData(
+    updates.pluginData ?? node.pluginData,
+    OPEN_PENCIL_PLUGIN_DATA.hugFallback,
+    fallback.HORIZONTAL !== undefined || fallback.VERTICAL !== undefined ? fallback : undefined
+  )
+  return updates
+}
+
+/** An empty Pen flex frame keeps its fallback; content, when present, determines the Hug size. */
+export function emptyHugFallback(node: SceneNode, axis: LayoutSizingAxis): number | undefined {
+  const field = ownSizingField(node, axis)
+  if (node.childIds.length || !field || node[field] !== 'HUG') return undefined
+  return readPluginData(node.pluginData, OPEN_PENCIL_PLUGIN_DATA.hugFallback)?.[axis]
+}
+
+/** Resolve retained axes against the eventual parent's direction without changing authored state. */
+export function deferredFillSizingFields(
+  parent: SceneNode,
+  node: SceneNode
+): Partial<Pick<SceneNode, 'layoutGrow' | 'layoutAlignSelf'>> | undefined {
+  if (parent.layoutMode === 'NONE' || node.layoutPositioning === 'ABSOLUTE') return undefined
+  const deferred = readPluginData(node.pluginData, OPEN_PENCIL_PLUGIN_DATA.deferredFill)
+  if (!deferred?.HORIZONTAL && !deferred?.VERTICAL) return undefined
+  const fields: Partial<Pick<SceneNode, 'layoutGrow' | 'layoutAlignSelf'>> = {}
+  if (deferred.HORIZONTAL) Object.assign(fields, fillSizingFields(parent.layoutMode, 'HORIZONTAL'))
+  if (deferred.VERTICAL) Object.assign(fields, fillSizingFields(parent.layoutMode, 'VERTICAL'))
+  return fields
 }
 
 /**

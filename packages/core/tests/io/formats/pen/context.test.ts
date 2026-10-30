@@ -13,7 +13,7 @@ test('node context survives Pen to FIG to Pen save and reopen', async () => {
           id: 'annotated',
           type: 'frame',
           name: 'Annotated',
-          width: 200,
+          width: 'fill_container(200)',
           height: 100,
           context: 'Retain design intent.'
         }
@@ -32,6 +32,7 @@ test('node context survives Pen to FIG to Pen save and reopen', async () => {
     'Retain design intent.'
   )
   const pen = await io.writeDocument('pen', reopened.graph)
+  expect(typeof pen.data === 'string' && pen.data.includes('fill_container(200)')).toBe(true)
   const roundTrip = await io.readDocument({
     name: 'roundtrip.pen',
     data: typeof pen.data === 'string' ? new TextEncoder().encode(pen.data) : pen.data

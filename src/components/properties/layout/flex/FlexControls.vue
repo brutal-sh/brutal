@@ -37,7 +37,7 @@ const alignmentCells = computed(() => {
 </script>
 
 <template>
-  <div class="mt-2">
+  <div v-if="!compact" class="mt-2">
     <label class="mb-1 block text-[11px] text-muted">{{ panels.direction }}</label>
     <AppSelect
       :label="panels.direction"

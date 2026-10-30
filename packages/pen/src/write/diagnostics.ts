@@ -135,16 +135,7 @@ export function nodeDiagnostics(
       add(field, `The non-default ${field} property is not supported by .pen export.`)
     }
   }
-  if (
-    hasPluginData(node.pluginData, OPEN_PENCIL_PLUGIN_DATA.nodeContext) &&
-    readPluginData(node.pluginData, OPEN_PENCIL_PLUGIN_DATA.nodeContext) === undefined
-  )
-    add('context', 'Invalid node context metadata cannot be exported.')
-  if (
-    contentPluginData(withoutPluginData(node.pluginData, [OPEN_PENCIL_PLUGIN_DATA.nodeContext]))
-      .length
-  )
-    add('pluginData', 'Plugin content (including shaders, icons and behaviours) is not supported.')
+  inspectPluginContent(node, add)
   inspectNodeFeatures(node, add)
   if (!copy && node.id.includes('/'))
     add('id', 'IDs containing / cannot be written as .pen node IDs.')
@@ -152,6 +143,34 @@ export function nodeDiagnostics(
 }
 
 type NodeProblem = (field: string, message: string) => unknown
+
+function inspectPluginContent(node: SceneNode, add: NodeProblem) {
+  if (
+    hasPluginData(node.pluginData, OPEN_PENCIL_PLUGIN_DATA.nodeContext) &&
+    readPluginData(node.pluginData, OPEN_PENCIL_PLUGIN_DATA.nodeContext) === undefined
+  )
+    add('context', 'Invalid node context metadata cannot be exported.')
+  if (
+    hasPluginData(node.pluginData, OPEN_PENCIL_PLUGIN_DATA.deferredFill) &&
+    readPluginData(node.pluginData, OPEN_PENCIL_PLUGIN_DATA.deferredFill) === undefined
+  )
+    add('sizing', 'Invalid deferred fill metadata cannot be exported.')
+  if (
+    hasPluginData(node.pluginData, OPEN_PENCIL_PLUGIN_DATA.hugFallback) &&
+    readPluginData(node.pluginData, OPEN_PENCIL_PLUGIN_DATA.hugFallback) === undefined
+  )
+    add('sizing', 'Invalid Hug fallback metadata cannot be exported.')
+  if (
+    contentPluginData(
+      withoutPluginData(node.pluginData, [
+        OPEN_PENCIL_PLUGIN_DATA.nodeContext,
+        OPEN_PENCIL_PLUGIN_DATA.deferredFill,
+        OPEN_PENCIL_PLUGIN_DATA.hugFallback
+      ])
+    ).length
+  )
+    add('pluginData', 'Plugin content (including shaders, icons and behaviours) is not supported.')
+}
 
 function inspectNodeFeatures(node: SceneNode, add: NodeProblem) {
   if (node.vectorNetwork && node.type !== 'VECTOR')

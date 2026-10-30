@@ -104,8 +104,8 @@ describe('parsePenFile — Pen layout defaults (#564)', () => {
       counterAxisSizing: 'HUG',
       width: 240,
       height: 120,
-      minWidth: 240,
-      minHeight: 120
+      minWidth: null,
+      minHeight: null
     })
   })
 

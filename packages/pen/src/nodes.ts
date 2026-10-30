@@ -248,7 +248,6 @@ export function redrawIconAtLaidOutSize(node: SceneNode, pen: PenNode, build: Bu
 export function applyPenProperties(node: SceneNode, pen: PenNode, build: Build): void {
   const { graph, ctx } = build
   const { w, h, layout, isTextLike } = resolveSizing(pen, ctx)
-  const hasChildren = (pen.children?.length ?? 0) > 0 || node.childIds.length > 0
   const parentLayout = (node.parentId && graph.getNode(node.parentId)?.layoutMode) || 'NONE'
   // An absolute layer leaves its parent's flow; fill sizing then falls back to its value.
   const absolute = pen.layoutPosition === 'absolute' && parentLayout !== 'NONE'
@@ -263,8 +262,8 @@ export function applyPenProperties(node: SceneNode, pen: PenNode, build: Build):
     flipY: false,
     width: w.value,
     height: h.value,
-    minWidth: !hasChildren && w.fitContentFallback !== undefined ? w.fitContentFallback : null,
-    minHeight: !hasChildren && h.fitContentFallback !== undefined ? h.fitContentFallback : null,
+    minWidth: null,
+    minHeight: null,
     visible: resolveBoolean(pen.enabled, ctx),
     opacity: resolveNumber(pen.opacity, ctx, 1),
     clipsContent: resolveBoolean(pen.clip, ctx, false),
@@ -278,6 +277,13 @@ export function applyPenProperties(node: SceneNode, pen: PenNode, build: Build):
     node.pluginData,
     OPEN_PENCIL_PLUGIN_DATA.nodeContext,
     pen.context
+  )
+  node.pluginData = withPluginData(
+    node.pluginData,
+    OPEN_PENCIL_PLUGIN_DATA.hugFallback,
+    w.fitContentFallback !== undefined || h.fitContentFallback !== undefined
+      ? { HORIZONTAL: w.fitContentFallback, VERTICAL: h.fitContentFallback }
+      : undefined
   )
   bindIfVar(node, 'visible', pen.enabled, ctx)
   bindIfVar(node, 'opacity', pen.opacity, ctx)
@@ -315,6 +321,13 @@ export function applyPenProperties(node: SceneNode, pen: PenNode, build: Build):
     if (w.sizing === 'FILL') Object.assign(node, fillSizingFields(flowLayout, 'HORIZONTAL'))
     if (h.sizing === 'FILL') Object.assign(node, fillSizingFields(flowLayout, 'VERTICAL'))
   }
+  node.pluginData = withPluginData(
+    node.pluginData,
+    OPEN_PENCIL_PLUGIN_DATA.deferredFill,
+    flowLayout === 'NONE' && (w.sizing === 'FILL' || h.sizing === 'FILL')
+      ? { HORIZONTAL: w.sizing === 'FILL', VERTICAL: h.sizing === 'FILL' }
+      : undefined
+  )
   build.effective.set(node.id, pen)
 }
 

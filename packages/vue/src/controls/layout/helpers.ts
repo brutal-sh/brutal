@@ -12,6 +12,8 @@ import type {
   SceneNode
 } from '@open-pencil/scene-graph'
 import {
+  authoredLayoutSizing,
+  authoredLayoutSizingUpdates,
   aspectRatioLockEditable,
   enforcedAspectRatio,
   layoutSizing,
@@ -242,20 +244,23 @@ export function createLayoutActions({
     preview.commit()
   }
 
-  function setAxisSizing(axis: LayoutAxis, sizing: LayoutSizing) {
+  function setAxisSizing(axis: LayoutAxis, sizing: LayoutSizing, authored = false) {
     const n = node.value
     if (!n) return
-    editor.updateNodeWithUndo(
-      n.id,
-      axisSizingPatchForNode(editor.graph, n, axis, sizing),
+    preview.update(
+      [n.id],
+      authored
+        ? authoredLayoutSizingUpdates(editor.graph, n, sizingAxis(axis), sizing)
+        : axisSizingPatchForNode(editor.graph, n, axis, sizing),
       `Set ${axis} sizing`
     )
+    preview.commit()
   }
 
   function fixedAxisPatch(n: SceneNode, axis: LayoutAxis): Partial<SceneNode> {
-    return axisSizingForNode(editor.graph, n, axis) === 'FIXED'
+    return authoredLayoutSizing(editor.graph, n, sizingAxis(axis)) === 'FIXED'
       ? {}
-      : axisSizingPatchForNode(editor.graph, n, axis, 'FIXED')
+      : authoredLayoutSizingUpdates(editor.graph, n, sizingAxis(axis), 'FIXED')
   }
 
   // A locked layer keeps its ratio as either side is typed, as in Figma.
