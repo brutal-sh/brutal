@@ -240,3 +240,10 @@ Actual native review found the hover variable button covered the opacity's final
 Executed:14 existing color/gradient/stroke/unresolved-binding browser workflows; a temporary visual inspection verified the trigger does not overlap opacity and opens its picker, then was removed. The affected unresolved dark baseline was reviewed individually and passed a separate non-update run in light/dark. Source/Vue types, scoped lint, architecture and locale checks passed. Spanish Color and Polish Gradient are intentional identical translations; existing locale-file length warning remains. Vite/native builds and installed signature verified.
 
 Installed native: focused #CC9933 and100% are visible together; Apply variable opens the native WebView picker, Escape returns to the row, and the popup exposes Color selected/Gradient unselected. Switching to Gradient flips those accessible states and displays the gradient editor. Escape→Undo restores #CC9933,X0/Y0 and a clean saved tab. Private capture: native-paint-hover-corrected.png. New actual-Pen Mesh/Shader/Goodies observations are in pen-feature-reference/paint-controls.md; they remain implementation/acceptance gaps.
+
+
+## Screen sampler integration — native result pending,2026-10-30
+
+Six controlled-platform browser workflows execute sample/render/Undo, cancellation, failure, invalid output, stale-result protection and unavailable-API behavior. Rust/source/Vue/test types, architecture/locales/scoped lint and native build/signature checks passed. Two review findings were corrected: macOS-only native availability and main-editor command restriction. The final build is installed.
+
+The real OS pick is NOT accepted: native automation enters pending but has not delivered a color or cancellation result. Repeated input attempts stopped after three paths. A manual pick was requested; work continues independently on Mesh. No original fixture overwrite occurred. Exact scope and re-entry: [EYEDROPPER-PARITY.md](EYEDROPPER-PARITY.md).

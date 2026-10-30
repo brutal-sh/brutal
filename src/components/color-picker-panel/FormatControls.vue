@@ -6,6 +6,8 @@ import HsbFields from '@/components/color-picker-panel/HsbFields.vue'
 import HslFields from '@/components/color-picker-panel/HslFields.vue'
 import OkhclFields from '@/components/color-picker-panel/OkhclFields.vue'
 import RGBFields from '@/components/color-picker-panel/RGBFields.vue'
+import IconButton from '@/components/ui/button/IconButton.vue'
+import AppAlert from '@/components/ui/feedback/AppAlert.vue'
 import AppSelect from '@/components/ui/select/AppSelect.vue'
 
 const ctx = useColorPickerPanelContext()
@@ -13,13 +15,31 @@ const ctx = useColorPickerPanelContext()
 
 <template>
   <div class="flex flex-col gap-2">
-    <AppSelect
-      :ui="{ trigger: ctx.compact ? 'w-20' : 'w-[120px]' }"
-      data-test-id="color-format-select"
-      :model-value="ctx.fieldFormat"
-      :options="ctx.fieldOptions"
-      @update:model-value="ctx.setFieldFormat"
-    />
+    <div class="flex items-center gap-1.5">
+      <IconButton
+        v-if="ctx.compact"
+        :label="
+          ctx.canSampleScreenColor
+            ? ctx.panels.sampleScreenColor
+            : ctx.panels.sampleScreenColorUnavailable
+        "
+        class="rounded-md bg-input"
+        :disabled="ctx.sampling || !ctx.canSampleScreenColor"
+        :active="ctx.sampling"
+        :aria-busy="ctx.sampling || undefined"
+        @click="ctx.pickScreenColor"
+      >
+        <icon-lucide-pipette class="size-3.5" />
+      </IconButton>
+      <AppSelect
+        :ui="{ trigger: ctx.compact ? 'w-20' : 'w-[120px]' }"
+        data-test-id="color-format-select"
+        :model-value="ctx.fieldFormat"
+        :options="ctx.fieldOptions"
+        @update:model-value="ctx.setFieldFormat"
+      />
+    </div>
+    <AppAlert v-if="ctx.samplingError" tone="error" :heading="ctx.panels.sampleScreenColorFailed" />
 
     <div class="min-w-0 flex flex-col gap-2">
       <input

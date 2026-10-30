@@ -56,7 +56,7 @@ tauri-plugin-wdio-webdriver = { version = "1.3.0", optional = true }
 objc2 = "=0.6.4"
 block2 = "=0.6.2"
 objc2-web-kit = { version = "=0.3.2", default-features = false, features = ["std", "WKWebView", "WKSnapshotConfiguration", "objc2-app-kit", "block2"] }
-objc2-app-kit = { version = "=0.3.2", default-features = false, features = ["std", "NSImage", "NSBitmapImageRep", "NSImageRep"] }
+objc2-app-kit = { version = "=0.3.2", default-features = false, features = ["std", "NSImage", "NSBitmapImageRep", "NSImageRep", "NSColor", "NSColorSpace", "NSColorSampler", "block2"] }
 objc2-foundation = { version = "=0.3.2", default-features = false, features = ["std", "NSData", "NSDictionary", "NSError", "NSString", "NSObject"] }
 security-framework = "3"
 swift-rs = "=1.0.9"

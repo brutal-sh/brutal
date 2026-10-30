@@ -6,7 +6,7 @@ Target: installed `/Applications/Pen.app` 1.2.21. Inspection date: 2026-10-30. T
 | --- | --- | --- |
 | Single selected frame | No inherited Selection colors section between Effects and Code | Hidden in compact single inspector; Advanced retains it. Absent in installed compact single inspector; Advanced retains it; mixed-selection editing regression passed |
 | Paint popup width | Shipped measurement includes `w-[264px]`; live popup agrees | Width changed from 240 to 264 CSS pixels; full visual comparison pending |
-| Category controls | Color, Gradient, Image, Shader; separate eyedropper control | Category strip stretched; eyedropper layout/behavior remains open |
+| Category controls | Color, Gradient, Image, Shader; separate eyedropper control | Compact names/pressed states and hover rows are delivered with native evidence. Screen-sampling integration passes six controlled browser paths; actual OS sample/cancel/Save remains open: EYEDROPPER-PARITY.md |
 | Gradient type | Linear, Radial, Angular, Mesh | Linear/Radial/Angular implemented; inherited Diamond differs; Mesh absent |
 | Initial conversion | Gray/red/translucent red become opaque black/white; saved gray gradient runs bottom to top; Gradient→Color resets to opaque D9D9D9 | Source/unit, eight browser paths and installed native conversion/Save/Undo/Redo executed; reference red/alpha serialization remains unverified |
 | Gradient body | Full-width type chooser, ramp and stop rows | Chooser expanded; remaining spacing/borders/type controls need comparison |

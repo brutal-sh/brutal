@@ -512,6 +512,9 @@ export const panelMessageDefaults = {
 
   gap: 'Gap',
 
+  sampleScreenColor: 'Pick color from screen',
+  sampleScreenColorFailed: 'Eyedropper failed',
+  sampleScreenColorUnavailable: 'Screen color sampling is unavailable in this browser.',
   paintColor: 'Color',
   paintGradient: 'Gradient',
   solid: 'Solid',

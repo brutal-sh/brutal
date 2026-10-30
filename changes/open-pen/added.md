@@ -3,3 +3,4 @@
 - Import supported rendered browser pages as editable frames, text and image layers with undo, validated fixed geometry, bounded extraction, and actionable refusals for content that cannot yet be preserved.
 - Installs a verified standalone local canvas bridge so the native app can use an existing Codex CLI login without reading the development checkout at launch.
 - Adds Linear Burn and Linear Dodge to paint/effect blend menus and preserves them through supported `.pen` and FIG round trips.
+- Adds a screen-color sampler control with browser capability detection and a native macOS bridge.

@@ -4,7 +4,7 @@ Reference: actual `/Applications/Pen.app`1.2.21, observed2026-10-30 on the indep
 
 ## Category and row states
 
-Pen names the four paint categories Color, Gradient, Image and Shader, exposes them as toggles, and places the blend control in the popup header. Switching a solid to Gradient creates fresh opaque black/white stops; switching to Shader starts an enabled shader paint with an empty URL. Those category changes reset the paint blend to normal in the inspected reference. Color-format controls and all eighteen grouped blend options are detailed in [PAINT-PARITY.md](../PAINT-PARITY.md).
+Pen names the four paint categories Color, Gradient, Image and Shader, exposes them as toggles, and places the blend control in the popup header. Switching a solid to Gradient creates fresh opaque black/white stops; switching to Shader starts an enabled shader paint with an empty URL. Those category changes reset the paint blend to normal in the inspected reference. Screen-sampling integration and its unresolved native input check are in [EYEDROPPER-PARITY.md](../EYEDROPPER-PARITY.md). Color-format controls and all eighteen grouped blend options are detailed in [PAINT-PARITY.md](../PAINT-PARITY.md).
 
 At100% opacity, Pen's focused paint row displays the full six-digit hex and100% in separate segments. Open Pen's hover variable trigger previously covered the last digit; it now sits before the opacity segment. Unresolved bindings keep a separate visible recovery trigger. The native corrected row and variable-picker open/Escape path were observed. Exact iconography and every row width/state remain unaccepted.
 

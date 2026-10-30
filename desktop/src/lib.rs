@@ -112,7 +112,8 @@ pub fn run() {
                 launch::take_pending_rooms,
                 system::env::sharing_disabled_by_env,
                 launch::take_pending_cloud_links,
-                system::env::webview_version
+                system::env::webview_version,
+                system::color::sample_screen_color
             ];
             move |invoke: tauri::ipc::Invoke| {
                 if !network::browser::policy::permits_app_command(invoke.message.webview().label())

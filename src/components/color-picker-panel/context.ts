@@ -1,11 +1,13 @@
 import { useLocalStorage } from '@vueuse/core'
-import { computed, inject, provide, proxyRefs, ref, watch } from 'vue'
+import { computed, inject, onScopeDispose, provide, proxyRefs, ref, watch } from 'vue'
 import type { InjectionKey, ShallowUnwrapRef } from 'vue'
 
 import { colorToCSSRGBA, tryParseColor } from '@open-pencil/scene-graph/color'
 import type { Color } from '@open-pencil/scene-graph/primitives'
 import { useColorModel, type OkHCLControls } from '@open-pencil/vue/controls/color-model'
 import { useI18n } from '@open-pencil/vue/i18n'
+
+import { canSampleScreenColor, sampleScreenColor } from '@/app/editor/color-sampling'
 
 interface ColorPanelProps {
   color: Color
@@ -22,6 +24,27 @@ function createColorPickerPanelContext(props: ColorPanelProps, emit: ColorPanelE
   const compact = computed(() => props.compact ?? false)
   const savedFormat = useLocalStorage('open-pen-color-picker-format', 'rgb')
   const textError = ref(false)
+  const sampling = ref(false)
+  const samplingError = ref(false)
+  let active = true
+  onScopeDispose(() => {
+    active = false
+  })
+
+  async function pickScreenColor() {
+    if (sampling.value) return
+    samplingError.value = false
+    sampling.value = true
+    const original = color.value
+    try {
+      const sample = await sampleScreenColor()
+      if (active && color.value === original && sample) colorModel.updateColor(sample)
+    } catch {
+      if (active) samplingError.value = true
+    } finally {
+      sampling.value = false
+    }
+  }
   watch(color, () => {
     textError.value = false
   })
@@ -74,6 +97,10 @@ function createColorPickerPanelContext(props: ColorPanelProps, emit: ColorPanelE
 
   return {
     panels,
+    canSampleScreenColor: canSampleScreenColor(),
+    sampling,
+    samplingError,
+    pickScreenColor,
     color,
     compact,
     hex: colorModel.hex,

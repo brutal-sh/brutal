@@ -1,5 +1,6 @@
 import type { OpenPencilWindowAPI } from './app/browser-bridge'
 import type { TurnstileAPI } from './app/cloud/waitlist/turnstile'
+import type { ScreenEyeDropper } from './app/editor/color-sampling'
 
 export {}
 
@@ -21,6 +22,8 @@ declare global {
   }
 
   interface Window {
+    /** Optional Chromium screen sampler; native macOS uses AppKit. */
+    EyeDropper?: new () => ScreenEyeDropper
     openPencil?: OpenPencilWindowAPI
     showOpenFilePicker?(options?: FilePickerOptions): Promise<FileSystemFileHandle[]>
     showSaveFilePicker?(options?: FilePickerOptions): Promise<FileSystemFileHandle>
