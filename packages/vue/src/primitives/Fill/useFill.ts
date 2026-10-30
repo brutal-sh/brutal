@@ -14,6 +14,7 @@ const FILL_CATEGORY: Partial<Record<Fill['type'], FillCategory>> = {
   GRADIENT_RADIAL: 'GRADIENT',
   GRADIENT_ANGULAR: 'GRADIENT',
   GRADIENT_DIAMOND: 'GRADIENT',
+  GRADIENT_MESH: 'GRADIENT',
   IMAGE: 'IMAGE'
 }
 
@@ -33,12 +34,18 @@ export function fillCategory(fill: Fill): FillCategory {
 
 export function fillIsTransparent(fill: Fill): boolean {
   if (fill.opacity < 1) return true
+  if (fill.type === 'GRADIENT_MESH')
+    return fill.meshGradient?.colors.some((color) => color.a < 1) ?? true
   if (fillCategory(fill) === 'GRADIENT')
     return fill.gradientStops?.some((stop) => stop.color.a < 1) ?? fill.color.a < 1
   return fill.color.a < 1
 }
 
 export function fillSwatchBackground(fill: Fill): string {
+  // Pen uses a semantic spectrum icon even when every mesh vertex is the same color.
+  if (fill.type === 'GRADIENT_MESH')
+    return 'linear-gradient(to right, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #8000ff, #ffffff)'
+
   if (fillCategory(fill) === 'GRADIENT' && fill.gradientStops?.length) {
     if (fill.gradientStops.length === 1)
       return colorToCSS(effectiveColor(fill.gradientStops[0].color, fill.opacity))

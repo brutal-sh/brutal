@@ -2,7 +2,7 @@ import { getNodeEditState, handleNodeEditDown } from '#vue/shared/input/vector'
 export { resolveHit } from '#vue/shared/input/select/hit'
 import { hitTestLabel, resolveHit, tinySelectionAt } from '#vue/shared/input/select/hit'
 export { updateHoverCursor } from '#vue/shared/input/select/hover'
-import { editedGradient, type Editor } from '@open-pencil/core'
+import { editedGradient, editedMesh, type Editor } from '@open-pencil/core'
 import type { SceneNode } from '@open-pencil/scene-graph'
 
 import { tryStartConnectorEndDrag } from '#vue/shared/input/connector/end'
@@ -60,7 +60,11 @@ function tryStartHandleDrag(
   }
   if (tryStartGradientDrag(editor, sx, sy, setDrag)) return true
   // An open gradient's handles replace the layer's selection handles, which then do not respond.
-  if (editedGradient(editor.graph, editor.state.gradientEdit)) return false
+  if (
+    editedGradient(editor.graph, editor.state.gradientEdit) ||
+    editedMesh(editor.graph, editor.state.gradientEdit)
+  )
+    return false
   if (tryStartShapeHandleDrag(editor, sx, sy, altKey, setDrag)) return true
   if (tryStartConnectorEndDrag(editor, sx, sy, setDrag)) return true
   if (tryStartConnectorLineDrag(editor, cx, cy, sx, sy, setDrag)) return true

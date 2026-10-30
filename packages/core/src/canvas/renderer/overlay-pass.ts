@@ -11,6 +11,7 @@ import { drawDropTarget, drawEditingText } from '#core/canvas/overlays/feedback'
 import { drawGradientHandles } from '#core/canvas/overlays/gradient-handles'
 import { drawLayoutOutlines } from '#core/canvas/overlays/layout-outlines'
 import { drawMeasurementSegment } from '#core/canvas/overlays/measurement'
+import { drawMeshHandles } from '#core/canvas/overlays/mesh-handles'
 import { drawPixelGrid } from '#core/canvas/overlays/pixel-grid'
 import { drawCodeFocus } from '#core/canvas/overlays/selection'
 import { drawShapeHandles } from '#core/canvas/overlays/shape-handles'
@@ -18,6 +19,7 @@ import { drawSlotOutlines } from '#core/canvas/overlays/slots'
 import type { RenderOverlays, SkiaRenderer } from '#core/canvas/renderer'
 import { RULER_SIZE } from '#core/constants'
 import { editedGradient } from '#core/editor/gradient-edit'
+import { editedMesh } from '#core/editor/mesh-edit'
 
 function measurementVisible(overlays: RenderOverlays): boolean {
   return (
@@ -91,6 +93,23 @@ function updateIssueMarkers(r: SkiaRenderer, graph: SceneGraph, overlays: Render
   })
 }
 
+function drawEditedPaintHandles(
+  r: SkiaRenderer,
+  canvas: Canvas,
+  graph: SceneGraph,
+  overlays: RenderOverlays
+): boolean {
+  const edit = overlays.gradientEdit
+  if (overlays.playing || !edit) return false
+  if (editedMesh(graph, edit)) {
+    drawMeshHandles(r, canvas, graph, edit, overlays.rotationPreview)
+    return true
+  }
+  if (!editedGradient(graph, edit)) return false
+  drawGradientHandles(r, canvas, graph, edit, overlays.rotationPreview)
+  return true
+}
+
 export function drawOverlayPass(
   r: SkiaRenderer,
   canvas: Canvas,
@@ -117,11 +136,7 @@ export function drawOverlayPass(
   drawConnectorTarget(r, canvas, graph, overlays.connectorTarget, overlays.rotationPreview)
   drawEditingText(r, canvas, graph, overlays)
   r.profiler.beginPhase('render:selection')
-  // While a gradient is edited, Figma shows its handles instead of the layer's selection; a
-  // previewing canvas shows neither.
-  if (!overlays.playing && editedGradient(graph, overlays.gradientEdit))
-    drawGradientHandles(r, canvas, graph, overlays.gradientEdit, overlays.rotationPreview)
-  else {
+  if (!drawEditedPaintHandles(r, canvas, graph, overlays)) {
     r.drawSelection(canvas, graph, selectedIds, overlays)
     if (!overlays.transforming && !r.readOnly)
       drawShapeHandles(

@@ -652,5 +652,19 @@
   "effectOffset": "Przesunięcie",
   "effectBlur": "Rozmycie",
   "blendModeLinearBurn": "Ściemnianie liniowe",
-  "blendModeLinearDodge": "Rozjaśnianie liniowe"
+  "blendModeLinearDodge": "Rozjaśnianie liniowe",
+  "meshGrid": "Siatka",
+  "meshGridSize": "Rozmiar siatki",
+  "meshMirroring": "Odbicie",
+  "meshMirroredHandles": "Uchwyty lustrzane",
+  "meshIndependentHandles": "Niezależne uchwyty",
+  "meshOutline": "Obrys",
+  "meshColors": "Kolory",
+  "meshShuffleColors": "Wymieszaj kolory",
+  "meshShuffleSelected": "Wymieszaj wybrane kolory",
+  "meshSelectedPoint": "Wybrany punkt",
+  "meshResetPosition": "Resetuj pozycję",
+  "meshResetCurve": "Resetuj krzywą",
+  "meshPoint": "Punkt",
+  "meshHandles": "Uchwyty"
 }

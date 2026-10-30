@@ -24,6 +24,7 @@ export default defineConfig({
     'generated/index': './src/generated/index.ts',
     geometry: './src/geometry.ts',
     gradient: './src/gradient.ts',
+    'gradient/mesh': './src/gradient/mesh.ts',
     'group-bounds': './src/group-bounds.ts',
     guides: './src/guides.ts',
     'hit-test': './src/hit-test.ts',

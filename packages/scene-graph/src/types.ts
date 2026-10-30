@@ -130,6 +130,7 @@ export type FillType =
   | 'GRADIENT_RADIAL'
   | 'GRADIENT_ANGULAR'
   | 'GRADIENT_DIAMOND'
+  | 'GRADIENT_MESH'
   | 'IMAGE'
   | 'VIDEO'
   | 'PATTERN'
@@ -167,6 +168,21 @@ export interface GradientStop {
 
 export type GradientTransform = Matrix
 
+export interface MeshPoint {
+  position: Vector
+  leftHandle?: Vector
+  rightHandle?: Vector
+  topHandle?: Vector
+  bottomHandle?: Vector
+}
+
+export interface MeshGradient {
+  columns: number
+  rows: number
+  colors: Color[]
+  points: MeshPoint[]
+}
+
 export interface Fill {
   type: FillType
   color: Color
@@ -175,6 +191,7 @@ export interface Fill {
   blendMode?: BlendMode
   gradientStops?: GradientStop[]
   gradientTransform?: GradientTransform
+  meshGradient?: MeshGradient
   imageHash?: string
   imageScaleMode?: ImageScaleMode
   /** A crop's image-space window; Fill, Fit and Tile ignore it. */

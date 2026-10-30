@@ -10,7 +10,7 @@ At100% opacity, Pen's focused paint row displays the full six-digit hex and100% 
 
 ## Mesh
 
-The gradient chooser contains Linear, Radial, Angular and Mesh. Mesh opens with Grid2×2 cells, Mirrored handles selected, Outline On and nine color buttons plus Shuffle Colors. Its grid popup is a5×5 cell selector. The default serialized paint is type `mesh_gradient`, columns3, rows3, nine colors and nine normalized points at0,0.5,1 on each axis: the display's2×2 cells correspond to3×3 points. No explicit handles are present in that default. Per-color editing, dragging, mirroring, outline visibility, grid resize preservation and shuffle Undo still need behavioral probes and independent implementation.
+The gradient chooser contains Linear, Radial, Angular and Mesh. Mesh opens with Grid2×2 cells, Mirrored handles selected, Outline On and nine color buttons plus Shuffle Colors. Its grid popup is a5×5 cell selector. The default serialized paint is type `mesh_gradient`, columns3, rows3, nine colors and nine normalized points at0,0.5,1 on each axis: the display's2×2 cells correspond to3×3 points. No explicit handles are present in that default. Native resize and shuffle probes now establish the reset/repeat/permutation rules. Independent editing, handles and format code are under verification; [Mesh evidence](../MESH-PARITY.md) distinguishes executed paths from remaining native/render/design acceptance.
 
 Observed default colors repeat coral/violet/cyan/gold across the nine points. The mesh canvas draws draggable color handles and connecting lines. Private evidence: pen-mesh-grid-reference.png and the document API read of the synthetic fill. No vendor code or asset is part of Open Pen.
 

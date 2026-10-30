@@ -645,5 +645,19 @@
   "effectOffset": "Décalage",
   "effectBlur": "Flou",
   "blendModeLinearBurn": "Densité linéaire +",
-  "blendModeLinearDodge": "Densité linéaire −"
+  "blendModeLinearDodge": "Densité linéaire −",
+  "meshGrid": "Grille",
+  "meshGridSize": "Taille de la grille",
+  "meshMirroring": "Symétrie",
+  "meshMirroredHandles": "Poignées symétriques",
+  "meshIndependentHandles": "Poignées indépendantes",
+  "meshOutline": "Contour",
+  "meshColors": "Couleurs",
+  "meshShuffleColors": "Mélanger les couleurs",
+  "meshShuffleSelected": "Mélanger les couleurs sélectionnées",
+  "meshSelectedPoint": "Point sélectionné",
+  "meshResetPosition": "Réinitialiser la position",
+  "meshResetCurve": "Réinitialiser la courbe",
+  "meshPoint": "Point",
+  "meshHandles": "Poignées"
 }

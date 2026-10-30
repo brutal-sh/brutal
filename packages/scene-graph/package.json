@@ -379,6 +379,12 @@
       "bun": "./src/vector-network.ts",
       "import": "./dist/vector-network.js",
       "default": "./dist/vector-network.js"
+    },
+    "./gradient/mesh": {
+      "types": "./dist/gradient/mesh.d.ts",
+      "bun": "./src/gradient/mesh.ts",
+      "import": "./dist/gradient/mesh.js",
+      "default": "./dist/gradient/mesh.js"
     }
   },
   "publishConfig": {

@@ -19,10 +19,15 @@ export function safeColor(color: Color | Omit<Color, 'a'>): Color {
   return { r: color.r, g: color.g, b: color.b, a: 'a' in color ? color.a : 1 }
 }
 
+// FIG readers without Open Pen metadata retain the first mesh vertex as a preview.
+function kiwiPaintPreview(fill: Fill): Pick<Paint, 'type' | 'color'> {
+  if (fill.type !== 'GRADIENT_MESH') return { type: fill.type, color: safeColor(fill.color) }
+  return { type: 'SOLID', color: safeColor(fill.meshGradient?.colors[0] ?? fill.color) }
+}
+
 export function fillToKiwiPaint(fill: Fill): Paint {
   const paint: Paint = {
-    type: fill.type,
-    color: safeColor(fill.color),
+    ...kiwiPaintPreview(fill),
     opacity: fill.opacity,
     visible: fill.visible,
     blendMode: fill.blendMode ?? 'NORMAL'

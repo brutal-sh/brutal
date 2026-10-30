@@ -638,5 +638,19 @@
   "effectOffset": "オフセット",
   "effectBlur": "ぼかし",
   "blendModeLinearBurn": "焼き込み（リニア）",
-  "blendModeLinearDodge": "覆い焼き（リニア）"
+  "blendModeLinearDodge": "覆い焼き（リニア）",
+  "meshGrid": "グリッド",
+  "meshGridSize": "グリッドサイズ",
+  "meshMirroring": "対称性",
+  "meshMirroredHandles": "対称ハンドル",
+  "meshIndependentHandles": "独立ハンドル",
+  "meshOutline": "輪郭",
+  "meshColors": "カラー",
+  "meshShuffleColors": "カラーをシャッフル",
+  "meshShuffleSelected": "選択したカラーをシャッフル",
+  "meshSelectedPoint": "選択したポイント",
+  "meshResetPosition": "位置をリセット",
+  "meshResetCurve": "曲線をリセット",
+  "meshPoint": "ポイント",
+  "meshHandles": "ハンドル"
 }

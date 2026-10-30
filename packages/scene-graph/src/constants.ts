@@ -6,3 +6,6 @@ export const TRANSPARENT: Color = { r: 0, g: 0, b: 0, a: 0 }
 export const DEFAULT_FONT_FAMILY = 'Inter'
 export const DEFAULT_STROKE_MITER_LIMIT = 4
 export const DEFAULT_STROKE_WEIGHT = 1
+
+/** Pen's five-cell mesh chooser produces at most six vertices per axis. */
+export const MAX_MESH_DIMENSION = 6

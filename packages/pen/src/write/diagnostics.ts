@@ -169,6 +169,7 @@ function inspectPluginContent(node: SceneNode, add: NodeProblem) {
     contentPluginData(
       withoutPluginData(node.pluginData, [
         OPEN_PENCIL_PLUGIN_DATA.nodeContext,
+        OPEN_PENCIL_PLUGIN_DATA.meshPaints,
         OPEN_PENCIL_PLUGIN_DATA.deferredFill,
         OPEN_PENCIL_PLUGIN_DATA.hugFallback,
         OPEN_PENCIL_PLUGIN_DATA.mainAxisDistribution

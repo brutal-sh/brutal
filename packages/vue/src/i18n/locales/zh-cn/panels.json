@@ -638,5 +638,19 @@
   "effectOffset": "偏移",
   "effectBlur": "模糊",
   "blendModeLinearBurn": "线性加深",
-  "blendModeLinearDodge": "线性减淡"
+  "blendModeLinearDodge": "线性减淡",
+  "meshGrid": "网格",
+  "meshGridSize": "网格大小",
+  "meshMirroring": "镜像",
+  "meshMirroredHandles": "镜像控制柄",
+  "meshIndependentHandles": "独立控制柄",
+  "meshOutline": "轮廓",
+  "meshColors": "颜色",
+  "meshShuffleColors": "打乱颜色",
+  "meshShuffleSelected": "打乱所选颜色",
+  "meshSelectedPoint": "所选点",
+  "meshResetPosition": "重置位置",
+  "meshResetCurve": "重置曲线",
+  "meshPoint": "点",
+  "meshHandles": "控制柄"
 }

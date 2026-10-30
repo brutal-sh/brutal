@@ -645,5 +645,19 @@
   "effectOffset": "Scostamento",
   "effectBlur": "Sfocatura",
   "blendModeLinearBurn": "Brucia lineare",
-  "blendModeLinearDodge": "Scherma lineare"
+  "blendModeLinearDodge": "Scherma lineare",
+  "meshGrid": "Griglia",
+  "meshGridSize": "Dimensione griglia",
+  "meshMirroring": "Simmetria",
+  "meshMirroredHandles": "Maniglie simmetriche",
+  "meshIndependentHandles": "Maniglie indipendenti",
+  "meshOutline": "Contorno",
+  "meshColors": "Colori",
+  "meshShuffleColors": "Mescola colori",
+  "meshShuffleSelected": "Mescola colori selezionati",
+  "meshSelectedPoint": "Punto selezionato",
+  "meshResetPosition": "Ripristina posizione",
+  "meshResetCurve": "Ripristina curva",
+  "meshPoint": "Punto",
+  "meshHandles": "Maniglie"
 }

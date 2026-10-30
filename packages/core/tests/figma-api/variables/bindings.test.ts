@@ -6,6 +6,7 @@ import { FigmaAPI } from '@open-pencil/core/figma-api'
 import { nodeProxyToJSON } from '@open-pencil/core/figma-api/serialization'
 import { OpenPencilAPI } from '@open-pencil/core/openpencil-api'
 import { SceneGraph } from '@open-pencil/scene-graph'
+import { createMeshGradient } from '@open-pencil/scene-graph/gradient/mesh'
 import { setInstanceOverride } from '@open-pencil/scene-graph/instances/overrides'
 
 function pageId(graph: SceneGraph): string {
@@ -568,4 +569,29 @@ test('Figma API copies assigned variable values rather than retaining caller ali
   variable.setValueForMode(collection.defaultModeId, value)
   value.r = 0
   expect(variable.valuesByMode[collection.defaultModeId]).toEqual({ r: 1, g: 0, b: 0, a: 1 })
+})
+
+test('replacing a Mesh through the Figma setter removes vertex aliases without reporting them as solid aliases', () => {
+  const graph = new SceneGraph()
+  const api = new FigmaAPI(graph)
+  const collection = graph.createCollection('Mesh colors')
+  const ink = graph.createVariable('Ink', 'COLOR', collection.id, { r: 1, g: 0, b: 0, a: 1 })
+  const node = graph.createNode('RECTANGLE', pageId(graph), {
+    fills: [
+      {
+        type: 'GRADIENT_MESH',
+        visible: true,
+        opacity: 1,
+        color: { r: 0, g: 0, b: 0, a: 1 },
+        meshGradient: createMeshGradient(2, 2)
+      }
+    ]
+  })
+  graph.bindVariable(node.id, 'fills/0/meshGradient/colors/0', ink.id)
+  const rectangle = api.getNodeById(node.id)
+  if (!rectangle || !('fills' in rectangle)) throw new Error('Expected paintable rectangle')
+  expect(rectangle.boundVariables).not.toHaveProperty('fills')
+  rectangle.fills = [{ type: 'SOLID', color: { r: 0.5, g: 0.5, b: 0.5 } }]
+  expect(graph.getNode(node.id)?.boundVariables).toEqual({})
+  expect(graph.getNode(node.id)?.fills[0].color).toEqual({ r: 0.5, g: 0.5, b: 0.5, a: 1 })
 })

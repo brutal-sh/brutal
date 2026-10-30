@@ -148,7 +148,11 @@ function boundVariableIds(node: SceneNode): string[] {
  * A bound paint takes its whole color from the variable, alpha included, the way Figma stores
  * it: the variable's RGB at full alpha, and its alpha as the paint's opacity.
  */
-function applyBoundColor(paint: Fill | Stroke, color: Color): void {
+function applyBoundColor(paint: Fill | Stroke, color: Color, colorIndex?: number): void {
+  if (colorIndex !== undefined) {
+    if (paint.meshGradient?.colors[colorIndex]) paint.meshGradient.colors[colorIndex] = { ...color }
+    return
+  }
   paint.color = { ...color, a: 1 }
   paint.opacity = color.a
 }
@@ -161,8 +165,7 @@ export function resolvedPaintBindings(
 ): Pick<Partial<SceneNode>, 'fills' | 'strokes'> {
   // Most nodes bind nothing, so no copy is made until a paint binding is actually found.
   const changes: Pick<Partial<SceneNode>, 'fills' | 'strokes'> = {}
-  for (const field in node.boundVariables) {
-    if (!field.endsWith('/color')) continue
+  for (const field of Object.keys(node.boundVariables)) {
     const paint = paintBindingTarget(field)
     if (!paint) continue
     const color = graph.resolveColorVariableForNode(node.id, node.boundVariables[field], fallback)
@@ -171,11 +174,11 @@ export function resolvedPaintBindings(
     if (paint.list === 'fills') {
       if (!node.fills[index]) continue
       changes.fills ??= copyFills(node.fills)
-      applyBoundColor(changes.fills[index], color)
+      applyBoundColor(changes.fills[index], color, paint.colorIndex)
     } else {
       if (!node.strokes[index]) continue
       changes.strokes ??= copyStrokes(node.strokes)
-      applyBoundColor(changes.strokes[index], color)
+      applyBoundColor(changes.strokes[index], color, paint.colorIndex)
     }
   }
   return changes

@@ -5,6 +5,7 @@ import type { Fill, SceneNode, Stroke } from '@open-pencil/scene-graph'
 import { colorToHexRaw } from '@open-pencil/scene-graph/color'
 import { SIDE_STROKE_TYPES } from '@open-pencil/scene-graph/node-defaults'
 import type { Color } from '@open-pencil/scene-graph/primitives'
+import { resolvedPaintBindings } from '@open-pencil/scene-graph/variables'
 import { useColorBindingProvider } from '@open-pencil/vue/controls/binding-provider'
 import { applySolidStrokeColor, applyStrokePaint } from '@open-pencil/vue/controls/color-model'
 import { MIXED, useNodeProps } from '@open-pencil/vue/controls/node-props'
@@ -16,6 +17,7 @@ import {
   type BindableValueActions
 } from '@open-pencil/vue/primitives/BindableValue'
 
+import { useEditorStore } from '@/app/editor/active-store'
 import FillPicker from '@/components/fill-picker/FillPicker.vue'
 import NumberField from '@/components/inputs/NumberField.vue'
 import PaintField from '@/components/inputs/PaintField.vue'
@@ -26,6 +28,7 @@ import {
   cancelPaintMutation,
   commitPaintMutation,
   commitPaintSetting,
+  remapMeshColorBindings,
   paintBindingTargets
 } from '@/components/properties/paint/binding'
 import { useGradientEditing } from '@/components/properties/paint/gradient-edit'
@@ -49,6 +52,7 @@ import StrokeCompactControls from './StrokeCompactControls.vue'
 import StrokeSettingsPopover from './StrokeSettingsPopover.vue'
 
 const strokeCtx = useStrokeControls()
+const store = useEditorStore()
 const { compact = false } = defineProps<{ compact?: boolean }>()
 const { advancedActive } = strokeCtx
 const { nodes: selectedNodes } = useNodeProps()
@@ -82,7 +86,14 @@ const sidesOffered = computed(
 const sidesShown = computed(() => sidesOffered.value && expandedSides.value)
 
 /** A bound variable colours the swatch, but only a solid stroke has one colour to replace. */
-function displayStroke(stroke: Stroke, resolvedColor: Color | undefined): Fill {
+function displayStroke(
+  stroke: Stroke,
+  resolvedColor: Color | undefined,
+  node: SceneNode | null,
+  index: number
+): Fill {
+  if (stroke.type === 'GRADIENT_MESH' && node)
+    return resolvedPaintBindings(store.graph, node).strokes?.[index] ?? stroke
   return stroke.type === 'SOLID' && resolvedColor ? { ...stroke, color: resolvedColor } : stroke
 }
 
@@ -181,18 +192,41 @@ function onToggleSides(nodes: readonly SceneNode[]) {
               <FillPicker
                 :compact="compact"
                 :label="panels.stroke"
-                :fill="displayStroke(stroke, binding.resolvedValue)"
+                :fill="displayStroke(stroke, binding.resolvedValue, activeNode, index)"
                 :okhcl="createStrokeOkhclAdapter(okhcl, activeNode, index)"
                 :layer-size="selectedNodeIds.length === 1 ? activeNode : null"
                 :keep-open="gradients.pressesHandle"
+                :mesh-mirrored="
+                  gradients.meshOptions(gradients.target(selectedNodeIds, 'strokes', index))
+                    .mirrored
+                "
+                :mesh-outline="
+                  gradients.meshOptions(gradients.target(selectedNodeIds, 'strokes', index)).outline
+                "
+                @update:mesh-mirrored="
+                  gradients.setMeshOption(
+                    gradients.target(selectedNodeIds, 'strokes', index),
+                    'meshMirrored',
+                    $event
+                  )
+                "
+                @update:mesh-outline="
+                  gradients.setMeshOption(
+                    gradients.target(selectedNodeIds, 'strokes', index),
+                    'meshOutline',
+                    $event
+                  )
+                "
                 :active-stop="gradients.stop(gradients.target(selectedNodeIds, 'strokes', index))"
                 @update:active-stop="
                   gradients.setStop(gradients.target(selectedNodeIds, 'strokes', index), $event)
                 "
                 @update="
-                  updateStrokePaint(binding.actions, flush, stroke, $event, (next) =>
-                    actions.update(index, next)
-                  )
+                  (next, sources) =>
+                    updateStrokePaint(binding.actions, flush, stroke, next, (paint) => {
+                      actions.update(index, paint)
+                      remapMeshColorBindings(store, selectedNodeIds, 'strokes', index, sources)
+                    })
                 "
                 @update-blend-mode="
                   commitPaintSetting(binding.actions, flush, () =>

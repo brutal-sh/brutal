@@ -32,6 +32,7 @@ import { cloneVectorNetwork } from './vector-network'
 /** Generic over the paint shape so a stroke keeps its own fields while the paint deep-copies. */
 export function copyFill<T extends Fill>(f: T): T {
   const copy: T = { ...f, color: { ...f.color } }
+  if (f.meshGradient) copy.meshGradient = structuredClone(f.meshGradient)
   if (f.gradientStops) copy.gradientStops = f.gradientStops.map(copyGradientStop)
   if (f.gradientTransform) copy.gradientTransform = { ...f.gradientTransform }
   if (f.imageTransform) copy.imageTransform = { ...f.imageTransform }

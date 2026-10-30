@@ -652,5 +652,19 @@
   "effectOffset": "Смещение",
   "effectBlur": "Размытие",
   "blendModeLinearBurn": "Линейный затемнитель",
-  "blendModeLinearDodge": "Линейный осветлитель"
+  "blendModeLinearDodge": "Линейный осветлитель",
+  "meshGrid": "Сетка",
+  "meshGridSize": "Размер сетки",
+  "meshMirroring": "Симметрия",
+  "meshMirroredHandles": "Зеркальные манипуляторы",
+  "meshIndependentHandles": "Независимые манипуляторы",
+  "meshOutline": "Контур",
+  "meshColors": "Цвета",
+  "meshShuffleColors": "Перемешать цвета",
+  "meshShuffleSelected": "Перемешать выбранные цвета",
+  "meshSelectedPoint": "Выбранная точка",
+  "meshResetPosition": "Сбросить положение",
+  "meshResetCurve": "Сбросить кривую",
+  "meshPoint": "Точка",
+  "meshHandles": "Манипуляторы"
 }

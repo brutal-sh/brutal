@@ -7,6 +7,7 @@ import { isExportFormatId, type ExportFormatId } from '../export-format'
 import { clampExportScale } from '../export-scale'
 import { FIG_COMPRESSIONS } from '../fig-compression'
 import { iconSchema, iconTintSchema } from '../icons/schema'
+import { fillSchema } from '../paints/schema'
 import type { Rect } from '../primitives'
 import { shaderPaintSchema } from '../shaders/schema'
 import { nodeStatusSchema, statusWorkflowSchema } from '../statuses/schema'
@@ -145,6 +146,14 @@ const sourceLibraryPublicationSchema: v.GenericSchema<unknown, SourceLibraryPubl
  * it share one schema.
  */
 export const OPEN_PENCIL_PLUGIN_DATA = {
+  meshPaints: jsonPluginDataField(
+    'meshPaints',
+    'format',
+    v.object({
+      fills: v.array(v.nullable(fillSchema)),
+      strokes: v.array(v.nullable(fillSchema))
+    })
+  ),
   paddingMode: textPluginDataField('paddingMode', 'bookkeeping', ['INDIVIDUAL']),
   mainAxisDistribution: textPluginDataField('mainAxisDistribution', 'content', ['SPACE_AROUND']),
   nodeContext: jsonPluginDataField('nodeContext', 'content', v.string()),

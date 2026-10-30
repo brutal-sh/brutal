@@ -27,6 +27,7 @@ import { exportCanvasGuides } from '../canvas-guides'
 import { snapshotInstanceGeometry } from '../instance/geometry'
 import {
   applyExportSettingsPluginData,
+  applyMeshPaintsPluginData,
   applyLibrarySourcePluginData,
   applyTextPathBoxPluginData,
   mergePluginData,
@@ -945,6 +946,10 @@ export function overridableNodeFields(
   applyNodeVisualProps({ ...context, fontDigestMap: undefined }, node, nc)
   context.serializeLayoutProps(node, nc)
   applyVariableModes(context, node, nc)
+  context.serializeVariableBindings(node, nc, context.graph, context.varIdToGuid)
+  applyMeshPaintsPluginData(node)
+  // An empty list clears inherited mesh metadata when this occurrence changes to a solid.
+  nc.pluginData = mergePluginData(node.pluginData)
   return nc
 }
 
@@ -1003,6 +1008,7 @@ export function sceneNodeToKiwiWithContext(
   applyRawFigmaNodeFields(context, node, nc)
   applyVariableModes(context, node, nc)
 
+  applyMeshPaintsPluginData(node)
   applyExportSettingsPluginData(node)
   applyLibrarySourcePluginData(node)
   serializeNodeStatus(node, nc)

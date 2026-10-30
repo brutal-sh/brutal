@@ -1,5 +1,5 @@
-import { editedGradientLayout, type GradientEdit } from '@open-pencil/core'
-import { hitTestGradientHandles } from '@open-pencil/core/geometry'
+import { editedGradientLayout, editedMeshLayout, type GradientEdit } from '@open-pencil/core'
+import { hitTestGradientHandles, hitTestMeshHandles } from '@open-pencil/core/geometry'
 
 import { useEditorStore } from '@/app/editor/active-store'
 
@@ -30,7 +30,14 @@ export function useGradientEditing() {
   }
 
   function setOpen(target: GradientTarget | null, open: boolean) {
-    if (open && target) store.state.gradientEdit = { ...target, stop: 0 }
+    if (open && target)
+      store.state.gradientEdit = {
+        ...target,
+        stop:
+          store.graph.getNode(target.nodeId)?.[target.paint][target.index]?.type === 'GRADIENT_MESH'
+            ? -1
+            : 0
+      }
     else if (!open && editing(target)) store.state.gradientEdit = null
     store.requestRepaint()
   }
@@ -51,15 +58,27 @@ export function useGradientEditing() {
     const canvas = event.target
     if (!(canvas instanceof HTMLCanvasElement)) return false
     const layout = editedGradientLayout(store.graph, store.state.gradientEdit, store.state)
-    if (!layout) return false
+    const mesh = editedMeshLayout(store.graph, store.state.gradientEdit, store.state)
+    if (!layout && !mesh) return false
     const bounds = canvas.getBoundingClientRect()
-    return (
-      hitTestGradientHandles(layout, {
-        x: event.clientX - bounds.left,
-        y: event.clientY - bounds.top
-      }) !== null
-    )
+    const point = { x: event.clientX - bounds.left, y: event.clientY - bounds.top }
+    if (layout) return hitTestGradientHandles(layout, point) !== null
+    return mesh ? hitTestMeshHandles(mesh, point) !== null : false
   }
 
-  return { target, setOpen, stop, setStop, pressesHandle }
+  function meshOptions(target: GradientTarget | null) {
+    const edit = editing(target)
+    return { mirrored: edit?.meshMirrored !== false, outline: edit?.meshOutline !== false }
+  }
+  function setMeshOption(
+    target: GradientTarget | null,
+    option: 'meshMirrored' | 'meshOutline',
+    value: boolean
+  ) {
+    const edit = editing(target)
+    if (!edit) return
+    store.state.gradientEdit = { ...edit, [option]: value }
+    store.requestRepaint()
+  }
+  return { target, setOpen, stop, setStop, pressesHandle, meshOptions, setMeshOption }
 }

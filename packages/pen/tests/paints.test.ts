@@ -100,7 +100,7 @@ describe('parsePenFile — fills', () => {
   })
 
   test('rejects paints it cannot draw instead of silently omitting them', () => {
-    expect(() => fillsOf([{ type: 'mesh_gradient', columns: 2 }, '#FF0000'])).toThrow(
+    expect(() => fillsOf([{ type: 'mesh_gradient', columns: 7 }, '#FF0000'])).toThrow(
       'Paint mesh_gradient'
     )
   })

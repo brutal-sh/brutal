@@ -7,6 +7,7 @@ import {
 } from '@open-pencil/core/geometry'
 import type { Fill } from '@open-pencil/scene-graph'
 
+import { tryStartMeshDrag } from '#vue/shared/input/mesh'
 import type { DragGradient, DragState } from '#vue/shared/input/types'
 
 /**
@@ -20,6 +21,7 @@ export function tryStartGradientDrag(
   sy: number,
   setDrag: (drag: DragState) => void
 ): boolean {
+  if (tryStartMeshDrag(editor, sx, sy, setDrag)) return true
   const edit = editor.state.gradientEdit
   const edited = editedGradient(editor.graph, edit)
   const layout = editedGradientLayout(editor.graph, edit, editor.state)

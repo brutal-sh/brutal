@@ -76,3 +76,5 @@ export type {
   GradientEdit,
   Tool
 } from './types'
+
+export { editedMesh, editedMeshLayout } from './mesh-edit'

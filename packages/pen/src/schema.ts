@@ -1,6 +1,8 @@
 import stripJSONComments from 'strip-json-comments'
 import * as v from 'valibot'
 
+import { MAX_MESH_DIMENSION } from '@open-pencil/scene-graph/constants'
+
 /**
  * The `.pen` document as pen.dev writes it (schema 2.21), plus the older forms still found in
  * files: the object `stroke` of 2.8 and `icon_font` nodes. Properties typed `…OrVariable` hold a
@@ -51,7 +53,43 @@ const imagePaintSchema = v.looseObject({
   )
 })
 
-/** Shader and mesh gradient paints, and any paint type this reader does not draw. */
+const meshDimensionSchema = v.pipe(
+  v.number(),
+  v.integer(),
+  v.minValue(2),
+  v.maxValue(MAX_MESH_DIMENSION)
+)
+const meshVectorSchema = v.tuple([v.pipe(v.number(), v.finite()), v.pipe(v.number(), v.finite())])
+const meshPointSchema = v.union([
+  meshVectorSchema,
+  v.object({
+    position: meshVectorSchema,
+    leftHandle: v.optional(meshVectorSchema),
+    rightHandle: v.optional(meshVectorSchema),
+    topHandle: v.optional(meshVectorSchema),
+    bottomHandle: v.optional(meshVectorSchema)
+  })
+])
+export const penMeshPaintSchema = v.pipe(
+  v.looseObject({
+    type: v.literal('mesh_gradient'),
+    ...paintBase,
+    opacity: v.optional(numSchema),
+    columns: v.optional(meshDimensionSchema),
+    rows: v.optional(meshDimensionSchema),
+    colors: v.optional(v.pipe(v.array(strSchema), v.maxLength(MAX_MESH_DIMENSION ** 2))),
+    points: v.optional(v.pipe(v.array(meshPointSchema), v.maxLength(MAX_MESH_DIMENSION ** 2)))
+  }),
+  v.check((mesh) => {
+    const count = (mesh.columns ?? 3) * (mesh.rows ?? 3)
+    return (
+      (!mesh.colors || mesh.colors.length === count) &&
+      (!mesh.points || mesh.points.length === count)
+    )
+  }, 'Mesh colors and points must match its dimensions.')
+)
+
+/** Shader and any other paint type this reader does not draw. */
 const otherPaintSchema = v.looseObject({ type: strSchema, ...paintBase })
 
 const paintSchema = v.union([
@@ -59,6 +97,7 @@ const paintSchema = v.union([
   colorPaintSchema,
   gradientPaintSchema,
   imagePaintSchema,
+  penMeshPaintSchema,
   otherPaintSchema
 ])
 const paintsSchema = v.union([paintSchema, v.array(paintSchema)])
@@ -226,6 +265,7 @@ export type PenVariableScalar = v.InferOutput<typeof variableScalarSchema>
 export type PenPaint = v.InferOutput<typeof paintSchema>
 export type PenPaints = v.InferOutput<typeof paintsSchema>
 export type PenGradientPaint = v.InferOutput<typeof gradientPaintSchema>
+export type PenMeshPaint = v.InferOutput<typeof penMeshPaintSchema>
 export type PenImagePaint = v.InferOutput<typeof imagePaintSchema>
 export type PenLegacyStroke = v.InferOutput<typeof legacyStrokeSchema>
 export type PenEffect = v.InferOutput<typeof effectSchema>

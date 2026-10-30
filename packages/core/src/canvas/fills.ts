@@ -7,6 +7,7 @@ import type { Color, Rect, Vector } from '@open-pencil/scene-graph/primitives'
 
 import { figmaBlendModeToSkia } from './blend'
 import { makeDiamondGradient } from './gradients/diamond'
+import { applyMeshFill } from './gradients/mesh'
 import { previewEdge } from './images/previews'
 import type { SkiaRenderer } from './renderer'
 import { drawOutline, withNodeOutline } from './shapes'
@@ -91,6 +92,9 @@ export function applyFill(
     r.fillPaint.setColor(r.ck.Color4f(c.r, c.g, c.b, c.a))
     return true
   }
+
+  if (fill.type === 'GRADIENT_MESH')
+    return applyMeshFill(r, fill, node, r.fillPaint, graph, 'fills', fillIndex)
 
   if (fill.type.startsWith('GRADIENT') && fill.gradientStops && fill.gradientTransform) {
     return r.applyGradientFill(fill, node, graph)

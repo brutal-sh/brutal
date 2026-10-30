@@ -1,15 +1,18 @@
-import { omit } from 'es-toolkit/object'
+import { omit, pick } from 'es-toolkit/object'
+import * as v from 'valibot'
 
 import type { NodeChange, PluginData, PluginRelaunchData } from '@open-pencil/kiwi/fig/codec'
 import { guidToString } from '@open-pencil/kiwi/fig/guid'
 import type {
   ExportSetting,
+  Fill,
   PluginDataEntry,
   PluginRelaunchDataEntry,
   SceneNode
 } from '@open-pencil/scene-graph'
 import type { ExportFormatId } from '@open-pencil/scene-graph/export-format'
 import { clampExportScale } from '@open-pencil/scene-graph/export-scale'
+import { fillSchema, meshGradientSchema } from '@open-pencil/scene-graph/paints'
 import {
   hasPluginData,
   OPEN_PENCIL_PLUGIN_DATA,
@@ -95,7 +98,9 @@ export function extractBoundVariables(nc: NodeChange): Record<string, string> {
   // Each paint carries its colour's alias. An instance's copy pairs its component's plugin data
   // with paints an override set, so the plugin data can name a binding those paints dropped.
   const decidedByPaints = (field: string) => {
-    const list = paintBindingTarget(field)?.list
+    const target = paintBindingTarget(field)
+    if (target?.colorIndex !== undefined) return false
+    const list = target?.list
     return list === 'fills'
       ? nc.fillPaints !== undefined
       : list === 'strokes' && nc.strokePaints !== undefined
@@ -199,4 +204,50 @@ export function serializePluginRelaunchData(
     message: entry.message,
     isDeleted: entry.isDeleted
   }))
+}
+
+/** Figma has no mesh paint; native records keep a solid preview and this lossless payload. */
+function meshPaintPayload(fill: Fill) {
+  v.parse(fillSchema, fill)
+  return pick(fill, [
+    'type',
+    'color',
+    'opacity',
+    'visible',
+    'blendMode',
+    'meshGradient'
+  ])
+}
+
+export function applyMeshPaintsPluginData(
+  node: Pick<SceneNode, 'fills' | 'strokes' | 'pluginData'>
+): void {
+  for (const paint of [...node.fills, ...node.strokes])
+    if (paint.type === 'GRADIENT_MESH') v.parse(meshGradientSchema, paint.meshGradient)
+  const fills = node.fills.map((fill) =>
+    fill.type === 'GRADIENT_MESH' ? meshPaintPayload(fill) : null
+  )
+  const strokes = node.strokes.map((fill) =>
+    fill.type === 'GRADIENT_MESH' ? meshPaintPayload(fill) : null
+  )
+  node.pluginData = withPluginData(
+    node.pluginData,
+    OPEN_PENCIL_PLUGIN_DATA.meshPaints,
+    fills.some(Boolean) || strokes.some(Boolean) ? { fills, strokes } : undefined
+  )
+}
+
+export function restoreMeshPaints<T extends Fill>(
+  paints: T[],
+  nc: Pick<NodeChange, 'pluginData'>,
+  field: 'fills' | 'strokes'
+): T[] {
+  const payload = readNodeChangePluginData(nc, OPEN_PENCIL_PLUGIN_DATA.meshPaints)
+  if (!payload) return paints
+  return paints.map((paint, index) => {
+    const mesh = payload[field][index]
+    return mesh?.type === 'GRADIENT_MESH' && mesh.meshGradient
+      ? { ...paint, ...structuredClone(meshPaintPayload(mesh)) }
+      : paint
+  })
 }

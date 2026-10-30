@@ -279,6 +279,11 @@ export function resolveFill(fill: Fill, node: SceneNode, ctx: SVGExportContext):
     return formatSolidColor(fill.color, fill.opacity, ctx.colorSpace)
   }
 
+  if (fill.type === 'GRADIENT_MESH')
+    throw new Error(
+      'SVG mesh gradient export is not yet supported; use PNG or keep the editable .pen file.'
+    )
+
   if (fill.type.startsWith('GRADIENT')) {
     const grad = createGradientDef(fill, node, ctx)
     if (grad) {

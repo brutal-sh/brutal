@@ -1,3 +1,5 @@
+import * as v from 'valibot'
+
 import type {
   SceneGraph,
   SceneNode,
@@ -6,8 +8,15 @@ import type {
   VariableCollection
 } from '@open-pencil/scene-graph'
 import { colorToHex8 } from '@open-pencil/scene-graph/color'
+import { paintBindingTarget } from '@open-pencil/scene-graph/variables'
 
-import type { PenDocument, PenNode, PenVariableScalar } from '../schema'
+import {
+  penMeshPaintSchema,
+  type PenPaint,
+  type PenDocument,
+  type PenNode,
+  type PenVariableScalar
+} from '../schema'
 import type { PenExportDiagnostic } from './diagnostics'
 
 const FIELDS: Record<string, string> = {
@@ -46,6 +55,25 @@ function hasVariableMetadata(variable: Variable): boolean {
     (variable.unit && variable.unit !== 'none') ||
     variable.scopes?.some((scope) => scope !== 'ALL_SCOPES')
   )
+}
+
+function writeMeshColorReference(
+  paint: PenPaint | undefined,
+  index: number | undefined,
+  ref: string
+): boolean {
+  if (index === undefined) return false
+  const mesh = v.safeParse(penMeshPaintSchema, paint)
+  if (
+    !mesh.success ||
+    mesh.output.colors?.[index] === undefined ||
+    !paint ||
+    typeof paint === 'string'
+  )
+    return false
+  mesh.output.colors[index] = ref
+  paint.colors = mesh.output.colors
+  return true
 }
 
 /** Native collections become independent .pen theme axes; aliases remain variable references. */
@@ -155,12 +183,21 @@ export function writeVariables(graph: SceneGraph, diagnostics: PenExportDiagnost
     ref: string,
     path: string
   ) {
-    const match = /^(fills|strokes)\/(\d+)\/color$/.exec(field)
-    const paints = match?.[1] === 'fills' ? pen.fill : pen.stroke
-    const paint = match && Array.isArray(paints) ? paints[Number(match[2])] : undefined
+    const target = paintBindingTarget(field)
+    const paints = target?.list === 'fills' ? pen.fill : pen.stroke
+    const paint = target && Array.isArray(paints) ? paints[target.index] : undefined
+    if (target?.colorIndex !== undefined) {
+      if (!writeMeshColorReference(paint, target.colorIndex, ref))
+        problem(
+          `${path}/boundVariables/${field}`,
+          'A mesh color binding no longer names a mesh vertex.',
+          node.id
+        )
+      return
+    }
     if (paint && typeof paint === 'object' && paint.type === 'color') {
-      const source = match?.[1] === 'fills' ? node.fills : node.strokes
-      const original = match ? source[Number(match[2])] : undefined
+      const source = target?.list === 'fills' ? node.fills : node.strokes
+      const original = target ? source[target.index] : undefined
       if (original && Math.abs(original.opacity - original.color.a) > 1e-8) {
         problem(
           `${path}/boundVariables/${field}`,

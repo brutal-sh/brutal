@@ -153,7 +153,7 @@ type MediaFields = PaintBase & {
 
 /** A paint OpenPencil models that Figma's plugin API has no type for, read as the model holds it. */
 export type OpenPencilPaint = Omit<Fill, 'type' | 'gradientTransform' | 'imageTransform'> & {
-  readonly type: 'NOISE' | 'CUSTOM'
+  readonly type: 'NOISE' | 'CUSTOM' | 'GRADIENT_MESH'
   readonly gradientTransform?: FigmaTransform
   readonly imageTransform?: FigmaTransform
 }
@@ -430,7 +430,8 @@ export function toFigmaPaint(paint: Fill, variableId?: string): FigmaPaint {
   }
   if (type === 'IMAGE' || type === 'VIDEO') return figmaMediaPaint(paint, type, base)
   if (type === 'PATTERN') return figmaPatternPaint(paint, base)
-  if (type === 'NOISE' || type === 'CUSTOM') return openPencilPaint(paint, type)
+  if (type === 'NOISE' || type === 'CUSTOM' || type === 'GRADIENT_MESH')
+    return openPencilPaint(paint, type)
   return {
     type,
     ...base,

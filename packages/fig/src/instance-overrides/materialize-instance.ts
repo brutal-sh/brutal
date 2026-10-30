@@ -1,12 +1,14 @@
+import { uniq } from 'es-toolkit/array'
 import { isEqual } from 'es-toolkit/predicate'
 
-import type { Paint } from '@open-pencil/kiwi/fig/codec'
+import type { NodeChange, Paint } from '@open-pencil/kiwi/fig/codec'
 import type { SceneGraph, SceneNode } from '@open-pencil/scene-graph'
 import {
   bindingOverrideField,
   setInstanceOverride
 } from '@open-pencil/scene-graph/instances/overrides'
 import { createDefaultSourceMetadata } from '@open-pencil/scene-graph/node-defaults'
+import { paintBindingTarget } from '@open-pencil/scene-graph/variables'
 
 import { nodeChangeToProps } from '../node-change'
 import { numericVariableBindingScales } from '../node-change/variable/bindings'
@@ -225,7 +227,7 @@ export function materializeInstance(
     return node
   }
   const root = create(occurrence, parentId)
-  recordPropertyClaims(nodes)
+  recordPropertyClaims(nodes, graph, sourceChildren)
   return { root, nodes }
 }
 
@@ -265,7 +267,45 @@ function recordPaintBindingClaims(
   if (declared) setInstanceOverride(owner.instanceOverrides, owner.id, target.id, 'boundVariables')
 }
 
-function recordPropertyClaims(nodes: ReadonlyMap<InstanceOccurrence, SceneNode>): void {
+function recordMeshBindingClaims(
+  owner: SceneNode,
+  target: SceneNode,
+  properties: NodeChange,
+  source: SceneNode | undefined
+): void {
+  if (
+    !Array.isArray(properties.pluginData) ||
+    (properties.fillPaints === undefined && properties.strokePaints === undefined)
+  )
+    return
+  const fields = uniq([
+    ...Object.keys(target.boundVariables),
+    ...Object.keys(source?.boundVariables ?? {})
+  ])
+  for (const field of fields) {
+    const paint = paintBindingTarget(field)
+    if (paint?.colorIndex === undefined) continue
+    if (
+      paint.list === 'fills'
+        ? properties.fillPaints === undefined
+        : properties.strokePaints === undefined
+    )
+      continue
+    setInstanceOverride(
+      owner.instanceOverrides,
+      owner.id,
+      target.id,
+      bindingOverrideField(field),
+      target.boundVariables[field] ?? null
+    )
+  }
+}
+
+function recordPropertyClaims(
+  nodes: ReadonlyMap<InstanceOccurrence, SceneNode>,
+  graph: SceneGraph,
+  sourceChildren: ReadonlyMap<InstanceOccurrence, string>
+): void {
   for (const [ownerOccurrence, owner] of nodes) {
     if (owner.type !== 'INSTANCE') continue
     for (const claim of ownerOccurrence.propertyClaims) {
@@ -289,6 +329,12 @@ function recordPropertyClaims(nodes: ReadonlyMap<InstanceOccurrence, SceneNode>)
         if (field.kind === 'paint')
           recordPaintBindingClaims(owner, target, field.scene[0], claim.properties[raw])
       }
+      recordMeshBindingClaims(
+        owner,
+        target,
+        claim.properties,
+        graph.getNode(sourceChildren.get(targetOccurrence) ?? '')
+      )
       recordVariableBindingClaims(owner, target, claim.properties)
     }
   }

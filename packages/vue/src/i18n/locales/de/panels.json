@@ -645,5 +645,19 @@
   "effectOffset": "Versatz",
   "effectBlur": "Weichzeichnung",
   "blendModeLinearBurn": "Linear nachbelichten",
-  "blendModeLinearDodge": "Linear abwedeln"
+  "blendModeLinearDodge": "Linear abwedeln",
+  "meshGrid": "Raster",
+  "meshGridSize": "Rastergröße",
+  "meshMirroring": "Spiegelung",
+  "meshMirroredHandles": "Gespiegelte Griffe",
+  "meshIndependentHandles": "Unabhängige Griffe",
+  "meshOutline": "Kontur",
+  "meshColors": "Farben",
+  "meshShuffleColors": "Farben mischen",
+  "meshShuffleSelected": "Ausgewählte Farben mischen",
+  "meshSelectedPoint": "Ausgewählter Punkt",
+  "meshResetPosition": "Position zurücksetzen",
+  "meshResetCurve": "Kurve zurücksetzen",
+  "meshPoint": "Punkt",
+  "meshHandles": "Griffe"
 }

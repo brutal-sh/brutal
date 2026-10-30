@@ -151,8 +151,8 @@ function rawClaim(
       }
     case 'paint':
       return raw === 'fillPaints'
-        ? { fillPaints: createFillPaints(context, target) }
-        : { strokePaints: createStrokePaints(context, target) }
+        ? { fillPaints: createFillPaints(context, target), pluginData: nodeFields().pluginData }
+        : { strokePaints: createStrokePaints(context, target), pluginData: nodeFields().pluginData }
     case 'size':
       return { size: unscaledRootSize(instance, target) }
     case 'layout-distance':
@@ -177,11 +177,14 @@ function paintBindingOverride(
 
 /** A binding override is a paint claim for paint colours and a consumption entry otherwise. */
 function bindingClaim(
-  { context, instance, target }: ClaimInput,
+  { context, instance, target, nodeFields }: ClaimInput,
   bindingField: string
 ): Omit<KiwiSymbolOverridePayload, 'guidPath'> | undefined {
   const paints = paintBindingOverride(context, target, bindingField)
-  if (paints) return paints
+  if (paints)
+    return paintBindingTarget(bindingField)?.colorIndex === undefined
+      ? paints
+      : { ...paints, pluginData: nodeFields().pluginData }
   const entry = overrideVariableBindingEntry(
     bindingField,
     target,

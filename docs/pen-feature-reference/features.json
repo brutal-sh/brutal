@@ -472,9 +472,10 @@
           "status": "partial",
           "evidence": [
             "../PAINT-PARITY.md",
-            "paint-controls.md"
+            "paint-controls.md",
+            "../MESH-PARITY.md"
           ],
-          "evidence_limit": "Nested stop edit/dismissal and one-stop rendered output checked; Mesh and complete menu/layout parity remain open."
+          "evidence_limit": "Named ordinary-gradient and Mesh browser/model/format paths have evidence. Native Mesh Save/reopen, exact render/layout matching, multiple selected vertices, larger external grids and SVG export remain open."
         },
         {
           "id": "DRAW-10",
@@ -763,7 +764,7 @@
         {
           "id": "SCRIPT-01",
           "feature": "Creation and linkage",
-          "behavior": "Script primitive starts at 200\u00d7200; relative JS path.",
+          "behavior": "Script primitive starts at 200×200; relative JS path.",
           "acceptance": "Create, save, link an independent file; compare placeholder and missing-path states.",
           "status": "open",
           "evidence": []
@@ -990,7 +991,7 @@
         {
           "id": "IO-08",
           "feature": "Raster output",
-          "behavior": "PNG/JPEG/WEBP at 1\u00d7/2\u00d7/3\u00d7; multiple selections produce ZIP.",
+          "behavior": "PNG/JPEG/WEBP at 1×/2×/3×; multiple selections produce ZIP.",
           "acceptance": "Inspect real files, dimensions, alpha, format signatures, filenames and ZIP contents.",
           "status": "open",
           "evidence": []

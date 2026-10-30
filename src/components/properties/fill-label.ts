@@ -16,6 +16,7 @@ export function fillLabel(
       .reverse()
       .join(', ')
   if (fill.type === 'SOLID') return colorToHexRaw(fill.color)
+  if (fill.type === 'GRADIENT_MESH') return 'Mesh'
   if (fill.type.startsWith('GRADIENT')) return fill.type.replace('GRADIENT_', '')
   return fill.type
 }

@@ -24,7 +24,7 @@ describe('.pen import compatibility', () => {
           descendants: {
             'button/label~1': {
               fill: [
-                { type: 'mesh_gradient' },
+                { type: 'mesh_gradient', columns: 7 },
                 { type: 'color', color: '#FFFFFF', blendMode: 'futureBurn' }
               ],
               effect: { type: 'shader', url: './effect.glsl' }

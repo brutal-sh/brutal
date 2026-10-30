@@ -65,7 +65,7 @@ export const VISIBILITY_VARIABLE_TYPES = [
 /** The paint lists whose colours bind to variables, one binding field per paint. */
 export type PaintBindingList = 'fills' | 'strokes'
 
-const PAINT_BINDING_FIELD = /^(fills|strokes)\/(\d+)\/color$/
+const PAINT_BINDING_FIELD = /^(fills|strokes)\/(\d+)\/(?:color|meshGradient\/colors\/(\d+))$/
 
 /**
  * The paint a binding field names the colour of, such as the second fill for `fills/1/color`, or
@@ -73,9 +73,12 @@ const PAINT_BINDING_FIELD = /^(fills|strokes)\/(\d+)\/color$/
  */
 export function paintBindingTarget(
   field: string
-): { list: PaintBindingList; index: number } | null {
-  if (!field.endsWith('/color')) return null
+): { list: PaintBindingList; index: number; colorIndex?: number } | null {
   const match = PAINT_BINDING_FIELD.exec(field)
   if (!match) return null
-  return { list: match[1] === 'fills' ? 'fills' : 'strokes', index: Number(match[2]) }
+  return {
+    list: match[1] === 'fills' ? 'fills' : 'strokes',
+    index: Number(match[2]),
+    ...(match[3] && { colorIndex: Number(match[3]) })
+  }
 }

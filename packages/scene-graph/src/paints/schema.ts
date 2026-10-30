@@ -1,8 +1,37 @@
 import * as v from 'valibot'
 
 import { colorSchema } from '../color/schema'
+import { MAX_MESH_DIMENSION } from '../constants'
 import { finiteNumberSchema, matrixSchema, vectorSchema } from '../primitives/schema'
 import type { FillType, GradientTransform } from '../types'
+
+const meshDimensionSchema = v.pipe(
+  v.number(),
+  v.integer(),
+  v.minValue(2),
+  v.maxValue(MAX_MESH_DIMENSION)
+)
+const meshPointSchema = v.object({
+  position: vectorSchema,
+  leftHandle: v.optional(vectorSchema),
+  rightHandle: v.optional(vectorSchema),
+  topHandle: v.optional(vectorSchema),
+  bottomHandle: v.optional(vectorSchema)
+})
+export const meshGradientSchema = v.pipe(
+  v.object({
+    columns: meshDimensionSchema,
+    rows: meshDimensionSchema,
+    colors: v.pipe(v.array(colorSchema), v.maxLength(MAX_MESH_DIMENSION ** 2)),
+    points: v.pipe(v.array(meshPointSchema), v.maxLength(MAX_MESH_DIMENSION ** 2))
+  }),
+  v.check(
+    (mesh) =>
+      mesh.points.length === mesh.columns * mesh.rows &&
+      mesh.colors.length === mesh.columns * mesh.rows,
+    'Mesh colors and points must match its dimensions.'
+  )
+)
 
 export const gradientStopSchema = v.object({ position: finiteNumberSchema, color: colorSchema })
 
@@ -43,6 +72,7 @@ const FILL_TYPES = {
   GRADIENT_RADIAL: true,
   GRADIENT_ANGULAR: true,
   GRADIENT_DIAMOND: true,
+  GRADIENT_MESH: true,
   IMAGE: true,
   VIDEO: true,
   PATTERN: true,
@@ -59,6 +89,7 @@ export const fillSchema = v.looseObject({
   color: colorSchema,
   opacity: finiteNumberSchema,
   visible: v.boolean(),
+  meshGradient: v.optional(meshGradientSchema),
   gradientStops: v.optional(v.array(gradientStopSchema)),
   gradientTransform: v.optional(matrixSchema),
   imageTransform: v.optional(matrixSchema),

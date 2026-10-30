@@ -12,6 +12,7 @@ import {
 import { inputValue } from '@open-pencil/vue/shared/dom-events'
 
 import ColorPicker from '@/components/ColorPicker/ColorPicker.vue'
+import MeshGradientEditor from '@/components/fill-picker/MeshGradientEditor.vue'
 import NumberField from '@/components/inputs/NumberField.vue'
 import PaintField from '@/components/inputs/PaintField.vue'
 import IconButton from '@/components/ui/button/IconButton.vue'
@@ -19,8 +20,10 @@ import AppSelect from '@/components/ui/select/AppSelect.vue'
 import fillPickerTheme from '@/theme/fill-picker'
 
 const { fill, compact = false } = defineProps<{ fill: Fill; compact?: boolean }>()
-const emit = defineEmits<{ update: [fill: Fill] }>()
+const emit = defineEmits<{ update: [fill: Fill, colorSources?: (number | null)[]] }>()
 const activeStop = defineModel<number>('activeStop')
+const meshMirrored = defineModel<boolean>('meshMirrored', { default: true })
+const meshOutline = defineModel<boolean>('meshOutline', { default: true })
 const { panels, editor } = useI18n()
 const fillPicker = tv(fillPickerTheme)
 
@@ -44,123 +47,137 @@ function listStopClass(active: boolean) {
       <div class="mb-2">
         <AppSelect
           :model-value="root.subtype"
-          :options="root.subtypes"
+          :options="
+            compact
+              ? root.subtypes.filter((option) => option.value !== 'GRADIENT_DIAMOND')
+              : root.subtypes
+          "
           :label="root.subtypes.find((option) => option.value === root.subtype)?.label"
           @update:model-value="root.actions.setSubtype($event)"
         />
       </div>
 
-      <GradientEditorBar
-        :stops="root.stops"
-        :active-stop-index="root.activeStopIndex"
-        :bar-background="root.barBackground"
-        :ui="{ bar: 'relative mb-2 h-6 rounded' }"
-        data-test-id="fill-picker-gradient-bar"
-        @select-stop="root.actions.selectStop"
-        @drag-stop="root.actions.dragStop"
-        v-slot="bar"
-      >
-        <GradientEditorStop
-          v-for="(stop, idx) in bar.stops"
-          :key="idx"
-          :stop="stop"
-          :index="idx"
-          :active="idx === bar.activeStopIndex"
-          :dragging="idx === bar.draggingIndex"
-          :removable="bar.stops.length > 1"
-          :class="barStopClass(idx === bar.activeStopIndex, idx === bar.draggingIndex)"
-          :style="{ left: `${stop.position * 100}%`, background: colorToCSS(stop.color) }"
-          @select="root.actions.selectStop"
-          @update-position="root.actions.updateStopPosition"
-          @remove="root.actions.removeStop"
-          @pointerdown.stop="bar.actions.stopPointerDown(idx, $event)"
-        />
-      </GradientEditorBar>
-
-      <div class="mb-2">
-        <div class="mb-1 flex items-center justify-between">
-          <span class="text-[11px] text-muted">{{ panels.stops }}</span>
-          <IconButton
-            :label="panels.addStop"
-            data-test-id="fill-picker-add-stop"
-            @click="root.actions.addStop"
-          >
-            <icon-lucide-plus class="size-3" />
-          </IconButton>
-        </div>
-        <GradientEditorStop
-          v-for="(stop, idx) in root.stops"
-          :key="idx"
-          :stop="stop"
-          :index="idx"
-          :active="idx === root.activeStopIndex"
-          :removable="root.stops.length > 1"
-          :interactive="false"
-          :class="listStopClass(idx === root.activeStopIndex)"
-          @select="root.actions.selectStop"
-          @update-position="root.actions.updateStopPosition"
-          @update-color="root.actions.updateStopColor"
-          @update-opacity="root.actions.updateStopOpacity"
-          @remove="root.actions.removeStop"
-          v-slot="s"
+      <MeshGradientEditor
+        v-if="fill.type === 'GRADIENT_MESH'"
+        v-model:active-point="activeStop"
+        v-model:mirrored="meshMirrored"
+        v-model:outline="meshOutline"
+        :fill="fill"
+        @update="(next, sources) => emit('update', next, sources)"
+      />
+      <template v-else>
+        <GradientEditorBar
+          :stops="root.stops"
+          :active-stop-index="root.activeStopIndex"
+          :bar-background="root.barBackground"
+          :ui="{ bar: 'relative mb-2 h-6 rounded' }"
+          data-test-id="fill-picker-gradient-bar"
+          @select-stop="root.actions.selectStop"
+          @drag-stop="root.actions.dragStop"
+          v-slot="bar"
         >
-          <NumberField
-            class="w-14 flex-none"
-            :ui="{ leading: 'hidden', field: 'pl-1.5', display: 'pl-1.5' }"
-            suffix="%"
-            :model-value="s.positionPercent"
-            :min="0"
-            :max="100"
-            @update:model-value="s.actions.updatePosition(Number($event))"
-            @click.stop
+          <GradientEditorStop
+            v-for="(stop, idx) in bar.stops"
+            :key="idx"
+            :stop="stop"
+            :index="idx"
+            :active="idx === bar.activeStopIndex"
+            :dragging="idx === bar.draggingIndex"
+            :removable="bar.stops.length > 1"
+            :class="barStopClass(idx === bar.activeStopIndex, idx === bar.draggingIndex)"
+            :style="{ left: `${stop.position * 100}%`, background: colorToCSS(stop.color) }"
+            @select="root.actions.selectStop"
+            @update-position="root.actions.updateStopPosition"
+            @remove="root.actions.removeStop"
+            @pointerdown.stop="bar.actions.stopPointerDown(idx, $event)"
           />
-          <PaintField
-            :opacity="s.opacityPercent / 100"
-            :opacity-label="panels.opacity"
-            @update:opacity="s.actions.updateOpacity($event * 100)"
-            @click.stop
+        </GradientEditorBar>
+
+        <div class="mb-2">
+          <div class="mb-1 flex items-center justify-between">
+            <span class="text-[11px] text-muted">{{ panels.stops }}</span>
+            <IconButton
+              :label="panels.addStop"
+              data-test-id="fill-picker-add-stop"
+              @click="root.actions.addStop"
+            >
+              <icon-lucide-plus class="size-3" />
+            </IconButton>
+          </div>
+          <GradientEditorStop
+            v-for="(stop, idx) in root.stops"
+            :key="idx"
+            :stop="stop"
+            :index="idx"
+            :active="idx === root.activeStopIndex"
+            :removable="root.stops.length > 1"
+            :interactive="false"
+            :class="listStopClass(idx === root.activeStopIndex)"
+            @select="root.actions.selectStop"
+            @update-position="root.actions.updateStopPosition"
+            @update-color="root.actions.updateStopColor"
+            @update-opacity="root.actions.updateStopOpacity"
+            @remove="root.actions.removeStop"
+            v-slot="s"
           >
-            <template #preview>
-              <ColorPicker
-                :compact="compact"
-                :color="stop.color"
-                @update="
-                  (color) => {
-                    root.actions.selectStop(idx)
-                    root.actions.updateActiveColor(color)
-                  }
-                "
-              >
-                <template #trigger="{ style }">
-                  <button
-                    type="button"
-                    :aria-label="panels.editColor"
-                    class="size-4 shrink-0 cursor-pointer rounded border border-border p-0"
-                    :style="style"
-                    @click.stop="s.actions.select"
-                  />
-                </template>
-              </ColorPicker>
-            </template>
-            <template #value>
-              <input
-                class="min-w-0 flex-1 border-none bg-transparent font-mono text-[11px] text-surface outline-none"
-                :value="s.hex"
-                maxlength="6"
-                @change="s.actions.updateColor(inputValue($event))"
-                @click.stop
-              />
-            </template>
-          </PaintField>
-          <IconButton
-            v-if="root.stops.length > 1"
-            :label="editor.removeGradientStop"
-            @click.stop="s.actions.remove"
-          >
-            <icon-lucide-minus class="size-3" />
-          </IconButton>
-        </GradientEditorStop>
-      </div>
+            <NumberField
+              class="w-14 flex-none"
+              :ui="{ leading: 'hidden', field: 'pl-1.5', display: 'pl-1.5' }"
+              suffix="%"
+              :model-value="s.positionPercent"
+              :min="0"
+              :max="100"
+              @update:model-value="s.actions.updatePosition(Number($event))"
+              @click.stop
+            />
+            <PaintField
+              :opacity="s.opacityPercent / 100"
+              :opacity-label="panels.opacity"
+              @update:opacity="s.actions.updateOpacity($event * 100)"
+              @click.stop
+            >
+              <template #preview>
+                <ColorPicker
+                  :compact="compact"
+                  :color="stop.color"
+                  @update="
+                    (color) => {
+                      root.actions.selectStop(idx)
+                      root.actions.updateActiveColor(color)
+                    }
+                  "
+                >
+                  <template #trigger="{ style }">
+                    <button
+                      type="button"
+                      :aria-label="panels.editColor"
+                      class="size-4 shrink-0 cursor-pointer rounded border border-border p-0"
+                      :style="style"
+                      @click.stop="s.actions.select"
+                    />
+                  </template>
+                </ColorPicker>
+              </template>
+              <template #value>
+                <input
+                  class="min-w-0 flex-1 border-none bg-transparent font-mono text-[11px] text-surface outline-none"
+                  :value="s.hex"
+                  maxlength="6"
+                  @change="s.actions.updateColor(inputValue($event))"
+                  @click.stop
+                />
+              </template>
+            </PaintField>
+            <IconButton
+              v-if="root.stops.length > 1"
+              :label="editor.removeGradientStop"
+              @click.stop="s.actions.remove"
+            >
+              <icon-lucide-minus class="size-3" />
+            </IconButton>
+          </GradientEditorStop>
+        </div>
+      </template>
     </div>
   </GradientEditorRoot>
 </template>

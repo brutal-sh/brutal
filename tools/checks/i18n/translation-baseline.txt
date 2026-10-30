@@ -542,3 +542,4 @@ it:settings.cloud
 es:panels.effectColor
 es:panels.paintColor
 pl:panels.paintGradient
+fr:panels.meshPoint

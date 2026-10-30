@@ -209,7 +209,7 @@ export function paintBindings(node: SceneNode, key: 'fills' | 'strokes'): Map<nu
   const bindings = new Map<number, string>()
   for (const [field, id] of Object.entries(node.boundVariables)) {
     const paint = paintBindingTarget(field)
-    if (paint?.list === key) bindings.set(paint.index, id)
+    if (paint?.list === key && paint.colorIndex === undefined) bindings.set(paint.index, id)
   }
   return bindings
 }
@@ -224,6 +224,12 @@ export function setPaintBindings(
   key: 'fills' | 'strokes',
   paints: readonly FigmaPaint[]
 ): void {
+  // Figma's accepted setter paints have no mesh vertices to keep aliases on.
+  for (const field of Object.keys(node.boundVariables)) {
+    const target = paintBindingTarget(field)
+    if (target?.list === key && target.colorIndex !== undefined)
+      graph.unbindVariable(node.id, field)
+  }
   const current = paintBindings(node, key)
   const wanted = new Map<number, string>()
   paints.forEach((paint, index) => {

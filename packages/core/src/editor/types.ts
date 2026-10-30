@@ -60,6 +60,8 @@ export interface GradientEdit {
   index: number
   /** The selected stop, shared by the canvas handles and the picker. */
   stop: number
+  meshMirrored?: boolean
+  meshOutline?: boolean
 }
 
 /** The selected shape's radius, point count, and ratio handles, shown while the pointer is over it. */

@@ -1,3 +1,5 @@
+import * as v from 'valibot'
+
 import type {
   BlendMode,
   Fill,
@@ -13,9 +15,11 @@ import {
   ellipticalGradientTransform,
   linearGradientTransformFromAxes
 } from '@open-pencil/scene-graph/gradient'
+import { createMeshGradient } from '@open-pencil/scene-graph/gradient/mesh'
 import type { Vector } from '@open-pencil/scene-graph/primitives'
 
 import { imagePaint, type PenImages } from './images'
+import { penMeshPaintSchema } from './schema'
 import type {
   PenGradientPaint,
   PenImagePaint,
@@ -115,6 +119,44 @@ function gradientStops(paint: PenGradientPaint, ctx: VarContext): GradientStop[]
   }))
 }
 
+function convertMeshPaint(
+  paint: PenPaint,
+  ctx: VarContext,
+  field: PaintField,
+  index: number,
+  node?: SceneNode
+): Fill | null {
+  const parsed = v.safeParse(penMeshPaintSchema, paint)
+  if (!parsed.success) return null
+  const raw = parsed.output
+  const mesh = createMeshGradient(raw.columns ?? 3, raw.rows ?? 3)
+  if (raw.colors)
+    mesh.colors = raw.colors.map((color, colorIndex) => {
+      if (node) bindIfVar(node, `${field}/${index}/meshGradient/colors/${colorIndex}`, color, ctx)
+      return resolveColor(color, ctx)
+    })
+  if (raw.points)
+    mesh.points = raw.points.map((point) => {
+      if (Array.isArray(point)) return { position: { x: point[0], y: point[1] } }
+      const vector = (value: [number, number]) => ({ x: value[0], y: value[1] })
+      return {
+        position: vector(point.position),
+        ...(point.leftHandle && { leftHandle: vector(point.leftHandle) }),
+        ...(point.rightHandle && { rightHandle: vector(point.rightHandle) }),
+        ...(point.topHandle && { topHandle: vector(point.topHandle) }),
+        ...(point.bottomHandle && { bottomHandle: vector(point.bottomHandle) })
+      }
+    })
+  return {
+    type: 'GRADIENT_MESH',
+    color: { ...TRANSPARENT },
+    opacity: resolveNumber(raw.opacity, ctx, 1),
+    visible: resolveBoolean(raw.enabled, ctx),
+    blendMode: mapBlendMode(raw.blendMode),
+    meshGradient: mesh
+  }
+}
+
 function convertPaint(
   paint: PenPaint,
   index: number,
@@ -150,6 +192,7 @@ function convertPaint(
       gradientTransform: gradientTransform(gradient, type, ctx)
     }
   }
+  if (paint.type === 'mesh_gradient') return convertMeshPaint(paint, ctx, field, index, node)
   if (paint.type === 'image') {
     const source = paint as PenImagePaint
     const image = source.url ? images?.get(source.url) : undefined

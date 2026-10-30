@@ -12,6 +12,7 @@ import {
 import type { Color, Vector } from '@open-pencil/scene-graph/primitives'
 
 import { applyGradientFill, applyImageFill } from './fills'
+import { applyMeshFill } from './gradients/mesh'
 import type { SkiaRenderer } from './renderer'
 import {
   drawOutline,
@@ -255,6 +256,27 @@ export function applyStrokeShader(
 ): boolean {
   r.strokePaint.setShader(null)
   r.fillPaint.setShader(null)
+  if (stroke.type === 'GRADIENT_MESH') {
+    const strokeApplied = applyMeshFill(
+      r,
+      stroke,
+      node,
+      r.strokePaint,
+      graph,
+      'strokes',
+      strokeIndex
+    )
+    const outlineApplied = applyMeshFill(
+      r,
+      stroke,
+      node,
+      r.fillPaint,
+      graph,
+      'strokes',
+      strokeIndex
+    )
+    return strokeApplied && outlineApplied
+  }
   if (stroke.type.startsWith('GRADIENT') && stroke.gradientStops && stroke.gradientTransform) {
     let built = true
     for (const paint of [r.strokePaint, r.fillPaint]) {

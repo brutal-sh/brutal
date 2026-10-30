@@ -3,6 +3,7 @@ import type { Fill, SceneNode } from '@open-pencil/scene-graph'
 import { colorToHexRaw } from '@open-pencil/scene-graph/color'
 import type { Color } from '@open-pencil/scene-graph/primitives'
 import { shaderOfPaint } from '@open-pencil/scene-graph/shaders'
+import { resolvedPaintBindings } from '@open-pencil/scene-graph/variables'
 import { useColorBindingProvider } from '@open-pencil/vue/controls/binding-provider'
 import { useFillControls } from '@open-pencil/vue/controls/fill'
 import { useOkHCL } from '@open-pencil/vue/controls/okhcl'
@@ -27,6 +28,7 @@ import {
   cancelPaintMutation,
   commitPaintMutation,
   commitPaintSetting,
+  remapMeshColorBindings,
   paintBindingTargets
 } from '@/components/properties/paint/binding'
 import { useGradientEditing } from '@/components/properties/paint/gradient-edit'
@@ -71,7 +73,14 @@ function fillShader(node: SceneNode | null, fill: Fill) {
   return node ? shaderOfPaint(node, fill) : null
 }
 
-function displayFill(fill: Fill, resolvedColor: Color | undefined): Fill {
+function displayFill(
+  fill: Fill,
+  resolvedColor: Color | undefined,
+  node: SceneNode | null,
+  index: number
+): Fill {
+  if (fill.type === 'GRADIENT_MESH' && node)
+    return resolvedPaintBindings(store.graph, node).fills?.[index] ?? fill
   return fill.type === 'SOLID' && resolvedColor ? { ...fill, color: resolvedColor } : fill
 }
 
@@ -160,19 +169,42 @@ function updateSolidColor(
               <template #preview>
                 <FillPicker
                   :compact="compact"
-                  :fill="displayFill(fill, binding.resolvedValue)"
+                  :fill="displayFill(fill, binding.resolvedValue, activeNode, index)"
                   :okhcl="createFillOkhclAdapter(okhcl, activeNode, index)"
                   :shader="fillShader(activeNode, fill)"
                   :layer-size="selectedNodeIds.length === 1 ? activeNode : null"
                   :keep-open="gradients.pressesHandle"
+                  :mesh-mirrored="
+                    gradients.meshOptions(gradients.target(selectedNodeIds, 'fills', index))
+                      .mirrored
+                  "
+                  :mesh-outline="
+                    gradients.meshOptions(gradients.target(selectedNodeIds, 'fills', index)).outline
+                  "
+                  @update:mesh-mirrored="
+                    gradients.setMeshOption(
+                      gradients.target(selectedNodeIds, 'fills', index),
+                      'meshMirrored',
+                      $event
+                    )
+                  "
+                  @update:mesh-outline="
+                    gradients.setMeshOption(
+                      gradients.target(selectedNodeIds, 'fills', index),
+                      'meshOutline',
+                      $event
+                    )
+                  "
                   :active-stop="gradients.stop(gradients.target(selectedNodeIds, 'fills', index))"
                   @update:active-stop="
                     gradients.setStop(gradients.target(selectedNodeIds, 'fills', index), $event)
                   "
                   @update="
-                    updatePickerFill(binding.actions, flush, $event, (next) =>
-                      actions.update(index, next)
-                    )
+                    (next, sources) =>
+                      updatePickerFill(binding.actions, flush, next, (paint) => {
+                        actions.update(index, paint)
+                        remapMeshColorBindings(store, selectedNodeIds, 'fills', index, sources)
+                      })
                   "
                   @update-shader="store.setShaderPaint(selectedNodeIds, 'fills', index, $event)"
                   @update-blend-mode="

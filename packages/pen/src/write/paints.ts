@@ -1,4 +1,5 @@
 import { fromUint8Array } from 'js-base64'
+import * as v from 'valibot'
 
 import type { Fill, SceneGraph } from '@open-pencil/scene-graph'
 import { colorToHex8 } from '@open-pencil/scene-graph/color'
@@ -7,6 +8,8 @@ import {
   invertGradientTransform
 } from '@open-pencil/scene-graph/gradient'
 import { imageHeader } from '@open-pencil/scene-graph/images'
+import { meshGradientSchema } from '@open-pencil/scene-graph/paints'
+import type { Vector } from '@open-pencil/scene-graph/primitives'
 
 import { penBlendMode } from '../paints'
 import type { PenGradientPaint, PenPaint } from '../schema'
@@ -82,6 +85,32 @@ export function writePaints(
     if (['GRADIENT_LINEAR', 'GRADIENT_RADIAL', 'GRADIENT_ANGULAR'].includes(fill.type)) {
       const paint = gradient(fill, at, problem)
       return paint ? [{ ...paint, ...common }] : []
+    }
+    if (fill.type === 'GRADIENT_MESH') {
+      const result = v.safeParse(meshGradientSchema, fill.meshGradient)
+      if (!result.success) {
+        problem(`${at}/meshGradient`, 'Mesh colors and points must match valid dimensions.')
+        return []
+      }
+      const mesh = result.output
+      const vector = (point: Vector): [number, number] => [point.x, point.y]
+      return [
+        {
+          type: 'mesh_gradient',
+          columns: mesh.columns,
+          rows: mesh.rows,
+          colors: mesh.colors.map((color) => colorToHex8(color)),
+          points: mesh.points.map((point) => ({
+            position: vector(point.position),
+            ...(point.leftHandle && { leftHandle: vector(point.leftHandle) }),
+            ...(point.rightHandle && { rightHandle: vector(point.rightHandle) }),
+            ...(point.topHandle && { topHandle: vector(point.topHandle) }),
+            ...(point.bottomHandle && { bottomHandle: vector(point.bottomHandle) })
+          })),
+          opacity: fill.opacity,
+          ...common
+        }
+      ]
     }
     if (fill.type === 'IMAGE') {
       const bytes = fill.imageHash ? graph.images.get(fill.imageHash) : undefined

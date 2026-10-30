@@ -34,3 +34,23 @@ test('one remaining gradient stop stays editable and has valid solid previews', 
   controls.addStop()
   expect(fill.value.gradientStops).toHaveLength(2)
 })
+
+test('entering Mesh with no selected vertex keeps the shared color model valid', () => {
+  const fill = ref<Fill>({
+    ...colorToFill('#000000'),
+    type: 'GRADIENT_LINEAR',
+    gradientStops: [
+      { position: 0, color: colorToFill('#000000').color },
+      { position: 1, color: colorToFill('#FFFFFF').color }
+    ]
+  })
+  const controls = useGradientStops(fill, (next) => {
+    fill.value = next
+  })
+  controls.setSubtype('GRADIENT_MESH')
+  expect(controls.activeStopIndex.value).toBe(-1)
+  expect(fill.value.meshGradient?.points).toHaveLength(9)
+  expect(controls.activeColor.value).toEqual(colorToFill('#000000').color)
+  controls.setSubtype('GRADIENT_LINEAR')
+  expect(fill.value.gradientStops).toHaveLength(2)
+})

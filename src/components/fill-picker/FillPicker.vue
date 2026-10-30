@@ -60,8 +60,10 @@ const imageBackground = computed(() =>
   image.url.value ? `center / cover no-repeat url("${image.url.value}")` : undefined
 )
 const activeStop = defineModel<number>('activeStop')
+const meshMirrored = defineModel<boolean>('meshMirrored', { default: true })
+const meshOutline = defineModel<boolean>('meshOutline', { default: true })
 const emit = defineEmits<{
-  update: [fill: Fill]
+  update: [fill: Fill, colorSources?: (number | null)[]]
   updateBlendMode: [mode: BlendMode]
   updateShader: [preset: ShaderPreset]
   openChange: [open: boolean]
@@ -219,8 +221,10 @@ function stopEscapePropagation(event: KeyboardEvent) {
               :compact="compact"
               v-if="root.category === 'GRADIENT'"
               v-model:active-stop="activeStop"
+              v-model:mesh-mirrored="meshMirrored"
+              v-model:mesh-outline="meshOutline"
               :fill="root.fill"
-              @update="emit('update', $event)"
+              @update="(next, sources) => emit('update', next, sources)"
             />
 
             <ShaderFillPicker

@@ -1,4 +1,7 @@
+import * as v from 'valibot'
+
 import { mapBlendMode } from './paints'
+import { penMeshPaintSchema } from './schema'
 import type { PenDocument, PenOverride, PenPaints } from './schema'
 
 export interface PenImportDiagnostic {
@@ -77,6 +80,7 @@ export function inspectPenCompatibility(doc: PenDocument): PenImportDiagnostic[]
       const supported =
         paint.type === 'color' ||
         paint.type === 'image' ||
+        (paint.type === 'mesh_gradient' && v.safeParse(penMeshPaintSchema, paint).success) ||
         (paint.type === 'gradient' &&
           typeof gradientType === 'string' &&
           GRADIENT_TYPES.has(gradientType))

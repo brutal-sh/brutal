@@ -6,6 +6,7 @@ import type { SceneGraph } from '../graph'
 import { findInstanceAncestor } from '../instances'
 import { bindingOverrideField, setInstanceOverride } from '../instances/overrides'
 import type {
+  SceneNode,
   Variable,
   VariableCollection,
   VariableCollectionMode,
@@ -228,6 +229,18 @@ export function getVariablesByType(graph: SceneGraph, type: VariableType): Varia
   return [...graph.variables.values()].filter((v) => v.type === type)
 }
 
+function assertMeshColorIndex(
+  node: SceneNode,
+  field: string,
+  target: NonNullable<ReturnType<typeof paintBindingTarget>>
+) {
+  if (target.colorIndex === undefined) return
+  const paint = node[target.list][target.index]
+  const mesh = paint.meshGradient
+  if (paint.type !== 'GRADIENT_MESH' || !mesh || target.colorIndex >= mesh.colors.length)
+    throw new Error(`Mesh color index out of range for "${field}"`)
+}
+
 export function bindVariable(
   graph: SceneGraph,
   nodeId: string,
@@ -256,6 +269,7 @@ export function bindVariable(
         `Index ${paint.index} out of range for ${paint.list} (length ${currentLength})`
       )
     }
+    assertMeshColorIndex(node, field, paint)
     // Auto-remove top-level dead binding (e.g. 'fills') when setting indexed binding
     if (paint.list in node.boundVariables) {
       node.boundVariables = omit(node.boundVariables, [paint.list])

@@ -2,7 +2,9 @@ import { computed, ref, type Ref } from 'vue'
 
 import type { Fill, GradientStop, GradientTransform } from '@open-pencil/scene-graph'
 import { colorToCSS } from '@open-pencil/scene-graph/color'
+import { BLACK, WHITE } from '@open-pencil/scene-graph/constants'
 import { DEFAULT_GRADIENT_TRANSFORM } from '@open-pencil/scene-graph/gradient'
+import { createMeshGradient } from '@open-pencil/scene-graph/gradient/mesh'
 import type { Color } from '@open-pencil/scene-graph/primitives'
 
 import { useColorModel } from '#vue/controls/color-model/use'
@@ -12,12 +14,14 @@ type GradientSubtype =
   | 'GRADIENT_RADIAL'
   | 'GRADIENT_ANGULAR'
   | 'GRADIENT_DIAMOND'
+  | 'GRADIENT_MESH'
 
 const SUBTYPES: { value: GradientSubtype; label: string }[] = [
   { value: 'GRADIENT_LINEAR', label: 'Linear' },
   { value: 'GRADIENT_RADIAL', label: 'Radial' },
   { value: 'GRADIENT_ANGULAR', label: 'Angular' },
-  { value: 'GRADIENT_DIAMOND', label: 'Diamond' }
+  { value: 'GRADIENT_DIAMOND', label: 'Diamond' },
+  { value: 'GRADIENT_MESH', label: 'Mesh' }
 ]
 
 /**
@@ -34,7 +38,7 @@ export function useGradientStops(fill: Ref<Fill>, onUpdate: (fill: Fill) => void
   const activeColor = computed(() => {
     const s = stops.value
     if (!s.length) return fill.value.color
-    return s[Math.min(activeStopIndex.value, s.length - 1)].color
+    return s[Math.max(0, Math.min(activeStopIndex.value, s.length - 1))].color
   })
 
   const barBackground = computed(() => {
@@ -51,10 +55,29 @@ export function useGradientStops(fill: Ref<Fill>, onUpdate: (fill: Fill) => void
   /** Figma keeps the transform across kinds, so a radial gradient grows from the linear line. */
   function setSubtype(type: GradientSubtype) {
     if (type === fill.value.type) return
+    if (type === 'GRADIENT_MESH') {
+      activeStopIndex.value = -1
+      onUpdate({
+        ...fill.value,
+        type,
+        meshGradient: fill.value.meshGradient ?? createMeshGradient()
+      })
+      return
+    }
     const gradientTransform: GradientTransform = fill.value.gradientTransform ?? {
       ...DEFAULT_GRADIENT_TRANSFORM
     }
-    onUpdate({ ...fill.value, type, gradientTransform })
+    onUpdate({
+      ...fill.value,
+      type,
+      gradientTransform,
+      gradientStops: fill.value.gradientStops?.length
+        ? fill.value.gradientStops
+        : [
+            { position: 0, color: { ...BLACK } },
+            { position: 1, color: { ...WHITE } }
+          ]
+    })
   }
 
   function selectStop(index: number) {
@@ -100,7 +123,8 @@ export function useGradientStops(fill: Ref<Fill>, onUpdate: (fill: Fill) => void
 
   function updateActiveColor(color: Color) {
     const s = [...stops.value]
-    const idx = Math.min(activeStopIndex.value, s.length - 1)
+    if (!s.length) return
+    const idx = Math.max(0, Math.min(activeStopIndex.value, s.length - 1))
     s[idx] = { ...s[idx], color }
     emitStops(s)
   }
