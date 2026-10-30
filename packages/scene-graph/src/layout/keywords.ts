@@ -1,4 +1,15 @@
+import { OPEN_PENCIL_PLUGIN_DATA, readPluginData } from '../plugin-data'
 import type { LayoutAlign, LayoutAlignSelf, LayoutCounterAlign, SceneNode } from '../types'
+
+/** Includes authored distribution that the native Figma alignment field cannot express. */
+export function layoutJustification(
+  node: Pick<SceneNode, 'primaryAxisAlign' | 'pluginData'>
+): LayoutAlign | 'SPACE_AROUND' {
+  return (
+    readPluginData(node.pluginData, OPEN_PENCIL_PLUGIN_DATA.mainAxisDistribution) ??
+    node.primaryAxisAlign
+  )
+}
 
 /**
  * Auto layout as the formats that author it spell it: flexbox keywords from CSS, design JSX,

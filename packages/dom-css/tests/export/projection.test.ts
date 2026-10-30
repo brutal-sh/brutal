@@ -6,6 +6,7 @@ import {
   type DesignNode
 } from '@open-pencil/dom-css/export'
 import { SceneGraph } from '@open-pencil/scene-graph'
+import { OPEN_PENCIL_PLUGIN_DATA, withPluginData } from '@open-pencil/scene-graph/plugin-data'
 
 function element(node: DesignNode | undefined): DesignElement {
   if (node?.type !== 'element') throw new Error('Expected an element')
@@ -13,6 +14,15 @@ function element(node: DesignNode | undefined): DesignElement {
 }
 
 describe('DOM projection', () => {
+  test('retains authored Space Around distribution in CSS', () => {
+    const graph = new SceneGraph()
+    const row = graph.createNode('FRAME', graph.getPages()[0].id, {
+      layoutMode: 'HORIZONTAL',
+      pluginData: withPluginData([], OPEN_PENCIL_PLUGIN_DATA.mainAxisDistribution, 'SPACE_AROUND')
+    })
+    const root = element(sceneNodeToDesignDocument(graph, row.id).children[0])
+    expect(root.inlineStyle?.['justify-content']).toBe('space-around')
+  })
   test('a frame without auto layout places its layers at their coordinates', () => {
     const graph = new SceneGraph()
     const page = graph.getPages()[0]

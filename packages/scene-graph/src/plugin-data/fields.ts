@@ -145,6 +145,7 @@ const sourceLibraryPublicationSchema: v.GenericSchema<unknown, SourceLibraryPubl
  * it share one schema.
  */
 export const OPEN_PENCIL_PLUGIN_DATA = {
+  mainAxisDistribution: textPluginDataField('mainAxisDistribution', 'content', ['SPACE_AROUND']),
   nodeContext: jsonPluginDataField('nodeContext', 'content', v.string()),
   deferredFill: jsonPluginDataField(
     'deferredFill',

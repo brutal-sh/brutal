@@ -22,6 +22,7 @@ type LayoutActionKey =
   | 'commitVerticalPadding'
   | 'setAlignment'
   | 'setGapAuto'
+  | 'setGapDistribution'
   | 'setLayoutDirection'
   | 'updateGridTrack'
   | 'addTrack'

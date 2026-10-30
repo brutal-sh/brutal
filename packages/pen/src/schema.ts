@@ -88,8 +88,8 @@ const effectSchema = v.looseObject({
 const sizeSchema = numSchema
 const paddingSchema = v.union([
   numSchema,
-  v.tuple([numSchema, numSchema]),
-  v.tuple([numSchema, numSchema, numSchema, numSchema])
+  v.strictTuple([numSchema, numSchema]),
+  v.strictTuple([numSchema, numSchema, numSchema, numSchema])
 ])
 const cornerRadiusSchema = v.union([numSchema, v.array(numSchema)])
 

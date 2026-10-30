@@ -238,7 +238,6 @@ function inheritCopyFields(build: Build, root: SceneNode): void {
     const placement = source ? placements.get(source) : undefined
     if (placement) placements.set(copy.id, placement)
     if (source && build.groupIds.has(source)) build.groupIds.add(copy.id)
-    if (source && build.aroundIds.has(source)) build.aroundIds.add(copy.id)
     copies.push(...graph.getChildren(copy.id))
   }
 }

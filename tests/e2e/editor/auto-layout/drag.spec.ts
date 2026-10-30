@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test'
 
 import { CanvasHelper } from '#tests/helpers/canvas'
+import { clickDepthDriver } from '#tests/helpers/canvas/click-depth/driver'
 
 test('dragging selected nested instance content reorders its auto-layout item', async ({
   page
@@ -73,7 +74,10 @@ test('dragging selected nested instance content reorders its auto-layout item', 
   })
   await canvas.waitForRender()
 
-  await canvas.drag(310, 140, 170, 140, 12)
+  const driver = clickDepthDriver(() => page)
+  const from = await driver.at(ids.secondText, 40, 12)
+  const to = await driver.at(ids.first, 20, 20)
+  await canvas.drag(from.x, from.y, to.x, to.y, 12)
   await canvas.waitForRender()
 
   const childIds = await page.evaluate((frameId) => {
@@ -139,15 +143,16 @@ test('auto-layout drag does not show an insert indicator before order changes', 
     store.runLayoutForNode(frame.id)
     store.select([secondText.id])
     store.requestRender()
-    return { frame: frame.id, first: first.id, second: second.id }
+    return { frame: frame.id, first: first.id, second: second.id, secondText: secondText.id }
   })
   await canvas.waitForRender()
 
   const box = await canvas.canvas.boundingBox()
   if (!box) throw new Error('Canvas has no bounding box')
-  await page.mouse.move(box.x + 310, box.y + 140)
+  const from = await clickDepthDriver(() => page).at(ids.secondText, 40, 12)
+  await page.mouse.move(box.x + from.x, box.y + from.y)
   await page.mouse.down()
-  await page.mouse.move(box.x + 305, box.y + 140, { steps: 3 })
+  await page.mouse.move(box.x + from.x - 5, box.y + from.y, { steps: 3 })
   await canvas.waitForRender()
 
   const indicator = await page.evaluate(() => {

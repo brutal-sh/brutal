@@ -137,7 +137,7 @@ const { panels } = useI18n()
     </PanelHeader>
     <StatusSection v-if="advanced" />
     <ComponentPropertiesSection />
-    <PositionSection />
+    <PositionSection :compact="!advanced" />
     <ConstraintsSection v-if="advanced" />
     <SelectionLayoutSection />
     <AppearanceSection :compact="!advanced" />
@@ -267,7 +267,7 @@ const { panels } = useI18n()
       <ConnectorSection />
       <!-- A connector is placed and shaped by its ends, and styled by its line. -->
       <template v-if="node.type !== 'CONNECTOR'">
-        <PositionSection />
+        <PositionSection :compact="!advanced" />
         <ConstraintsSection v-if="advanced" />
         <!-- A sticky note's size follows its text and its scale; Figma leaves W and H read-only. -->
         <LayoutSection v-if="layerResizes(node)" :compact="!advanced" />

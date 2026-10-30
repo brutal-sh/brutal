@@ -4,7 +4,7 @@ import type { SceneGraph, SceneNode } from '@open-pencil/scene-graph'
 import { BLACK } from '@open-pencil/scene-graph/constants'
 import { readIcon } from '@open-pencil/scene-graph/icons'
 import { imageMimeType } from '@open-pencil/scene-graph/images'
-import { layoutSizingInParent } from '@open-pencil/scene-graph/layout'
+import { layoutJustification, layoutSizingInParent } from '@open-pencil/scene-graph/layout'
 import { shaderOfPaint } from '@open-pencil/scene-graph/shaders'
 import { resolveNodeTextDirection } from '@open-pencil/scene-graph/text/direction'
 
@@ -60,10 +60,11 @@ function nodeChildren(graph: SceneGraph, node: SceneNode): SceneNode[] {
     .filter((child): child is SceneNode => child !== undefined)
 }
 
-function justifyContentToCSS(value: SceneNode['primaryAxisAlign']): string | undefined {
+function justifyContentToCSS(value: ReturnType<typeof layoutJustification>): string | undefined {
   if (value === 'CENTER') return 'center'
   if (value === 'MAX') return 'flex-end'
   if (value === 'SPACE_BETWEEN') return 'space-between'
+  if (value === 'SPACE_AROUND') return 'space-around'
   return undefined
 }
 
@@ -337,7 +338,7 @@ function styleFromSceneNode(
     style.display = 'flex'
     // Row is the flexbox default.
     if (node.layoutMode === 'VERTICAL') style['flex-direction'] = 'column'
-    const justifyContent = justifyContentToCSS(node.primaryAxisAlign)
+    const justifyContent = justifyContentToCSS(layoutJustification(node))
     const alignItems = alignToCSS(node.counterAxisAlign)
     if (justifyContent) style['justify-content'] = justifyContent
     if (alignItems) style['align-items'] = alignItems

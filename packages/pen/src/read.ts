@@ -7,7 +7,6 @@ import { pathNetwork } from './geometry'
 import { removeUnusedIconComponents } from './icons'
 import { createImageStore } from './images'
 import { inAncestorThemes, populateInstances } from './instances'
-import { spreadAround } from './layout'
 import { createSceneNode, redrawIconAtLaidOutSize, type Build, type PenIconSource } from './nodes'
 import { placeLayers } from './placement'
 import { penFileSchema, type PenDocument, type PenNode } from './schema'
@@ -97,7 +96,6 @@ export function buildPenGraph(doc: PenDocument, options: PenReadOptions = {}): S
     instances: new Map(),
     placements: new Map(),
     groupIds: new Set(),
-    aroundIds: new Set(),
     iconComponents: new Map(),
     iconPageId: null,
     replaced: new Set()
@@ -111,9 +109,8 @@ export function buildPenGraph(doc: PenDocument, options: PenReadOptions = {}): S
 
   options.layout?.(graph)
   drawAtFinalSize(build, options.layout !== undefined)
-  const spread = options.layout ? spreadAround(graph, [...build.aroundIds]) : false
   placeLayers(graph, build.placements, [...build.groupIds])
-  if (options.layout && (spread || groupsInFlow(graph, build.groupIds))) {
+  if (options.layout && groupsInFlow(graph, build.groupIds)) {
     options.layout(graph)
     drawAtFinalSize(build, true)
   }

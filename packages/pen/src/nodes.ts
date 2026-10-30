@@ -62,8 +62,6 @@ export interface Build {
   placements: Map<string, PenPlacement>
   /** Groups in reading order. */
   groupIds: Set<string>
-  /** Frames spreading their children with `space_around`. */
-  aroundIds: Set<string>
   /** The components icons in components are instances of, by glyph and size. */
   iconComponents: Map<string, string>
   /** The page those components are on, added with the first one. */
@@ -296,8 +294,11 @@ export function applyPenProperties(node: SceneNode, pen: PenNode, build: Build):
     const heightSizing = flowLayout === 'NONE' && h.sizing === 'FILL' ? 'FIXED' : h.sizing
     applyAutoLayout(node, layout, pen, widthSizing, heightSizing, ctx)
   }
-  if (layout !== 'NONE' && pen.justifyContent === 'space_around') build.aroundIds.add(node.id)
-  else build.aroundIds.delete(node.id)
+  node.pluginData = withPluginData(
+    node.pluginData,
+    OPEN_PENCIL_PLUGIN_DATA.mainAxisDistribution,
+    pen.justifyContent === 'space_around' ? 'SPACE_AROUND' : undefined
+  )
 
   const placement = penPlacement(pen, ctx)
   if (pen.type === 'group') build.groupIds.add(node.id)

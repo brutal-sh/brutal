@@ -17,12 +17,14 @@ import {
   aspectRatioLockEditable,
   enforcedAspectRatio,
   layoutSizing,
+  layoutJustification,
   layoutSizingOptions,
   layoutSizingUpdates,
   lockedAspectRatioTarget,
   sizeKeepingAspectRatio,
   type LayoutSizingAxis
 } from '@open-pencil/scene-graph/layout'
+import { OPEN_PENCIL_PLUGIN_DATA, withPluginData } from '@open-pencil/scene-graph/plugin-data'
 
 import { useNodePreview } from '#vue/controls/node-preview/use'
 import { useSelectedNodeState } from '#vue/editor/selection-state/nodes'
@@ -77,11 +79,16 @@ export function createLayoutSelectionState(
   )
   const sizingState = createLayoutSizingState(editor, node, panels)
   const gapAuto = computed(() => node.value?.primaryAxisAlign === 'SPACE_BETWEEN')
+  const gapDistribution = computed(() => {
+    const n = node.value
+    const alignment = n ? layoutJustification(n) : 'MIN'
+    return alignment === 'SPACE_AROUND' || alignment === 'SPACE_BETWEEN' ? alignment : 'FIXED'
+  })
   const alignGrid = computed(() =>
     node.value?.layoutMode === 'VERTICAL' ? ALIGN_VERTICAL : ALIGN_HORIZONTAL
   )
 
-  return { node, layoutDirection, gapAuto, alignGrid, ...sizingState }
+  return { node, layoutDirection, gapAuto, gapDistribution, alignGrid, ...sizingState }
 }
 
 export function createTrackSizingOptions(panels: ReturnType<typeof useI18n>['panels']['value']) {
@@ -292,23 +299,47 @@ export function createLayoutActions({
     preview.commit()
   }
 
-  function setAlignment(primary: LayoutAlign, counter: LayoutCounterAlign) {
+  function setAlignment(
+    primary: LayoutAlign,
+    counter: LayoutCounterAlign,
+    preserveDistribution = false
+  ) {
     if (!node.value) return
-    editor.updateNodeWithUndo(
-      node.value.id,
-      { primaryAxisAlign: primary, counterAxisAlign: counter },
+    const n = node.value
+    preview.update(
+      [n.id],
+      {
+        primaryAxisAlign: preserveDistribution ? n.primaryAxisAlign : primary,
+        counterAxisAlign: counter,
+        pluginData: preserveDistribution
+          ? n.pluginData
+          : withPluginData(n.pluginData, OPEN_PENCIL_PLUGIN_DATA.mainAxisDistribution, undefined)
+      },
       'Change alignment'
     )
+    preview.commit()
   }
 
   function setGapAuto(enabled: boolean) {
+    setGapDistribution(enabled ? 'SPACE_BETWEEN' : 'FIXED')
+  }
+
+  function setGapDistribution(mode: 'FIXED' | 'SPACE_BETWEEN' | 'SPACE_AROUND') {
     const n = node.value
     if (!n) return
-    editor.updateNodeWithUndo(
-      n.id,
-      { primaryAxisAlign: enabled ? 'SPACE_BETWEEN' : 'MIN' },
-      enabled ? 'Set gap to auto' : 'Set gap to fixed'
+    preview.update(
+      [n.id],
+      {
+        primaryAxisAlign: mode === 'SPACE_BETWEEN' ? 'SPACE_BETWEEN' : 'MIN',
+        pluginData: withPluginData(
+          n.pluginData,
+          OPEN_PENCIL_PLUGIN_DATA.mainAxisDistribution,
+          mode === 'SPACE_AROUND' ? 'SPACE_AROUND' : undefined
+        )
+      },
+      'Set gap distribution'
     )
+    preview.commit()
   }
 
   function setLayoutDirection(direction: SceneNode['layoutDirection']) {
@@ -335,6 +366,7 @@ export function createLayoutActions({
     toggleAspectRatioLock,
     setAlignment,
     setGapAuto,
+    setGapDistribution,
     setLayoutDirection
   }
 }

@@ -1,15 +1,19 @@
 import { expect, test } from '@playwright/test'
 
 import { CanvasHelper } from '#tests/helpers/canvas'
+import { openAdvancedProperties } from '#tests/helpers/properties'
 
 for (const theme of ['light', 'dark']) {
   test(`auto-layout spacing compositions in ${theme}`, async ({ page }) => {
     await page.goto('/?test')
     await new CanvasHelper(page).waitForInit()
-    const id = await page.evaluate(async (colorMode) => {
-      const path = '/src/app/shell/theme.ts'
-      const module = await import(path)
-      module.useAppTheme().setTheme(colorMode)
+    if ((await page.locator('html').getAttribute('data-theme')) !== theme) {
+      await page.getByRole('button', { name: 'Main menu', exact: true }).click()
+      await page.getByRole('menuitem', { name: 'Toggle Light/Dark mode', exact: true }).click()
+    }
+    await expect(page.locator('html')).toHaveAttribute('data-theme', theme)
+    await openAdvancedProperties(page)
+    const id = await page.evaluate(() => {
       const editor = window.openPencil?.getStore?.()
       if (!editor) throw new Error('Editor unavailable')
       const id = editor.createShape('FRAME', 100, 100, 320, 240)
@@ -23,7 +27,7 @@ for (const theme of ['light', 'dark']) {
       })
       editor.select([id])
       return id
-    }, theme)
+    })
     const section = page.getByRole('region', { name: 'Auto layout', exact: true })
     await page.evaluate(
       (id) =>

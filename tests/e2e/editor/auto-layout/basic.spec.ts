@@ -2,7 +2,7 @@ import { test, expect, type Page } from '@playwright/test'
 
 import { expectDefined } from '#tests/helpers/assert'
 import { CanvasHelper } from '#tests/helpers/canvas'
-import { propertyField, propertySection } from '#tests/helpers/properties'
+import { openAdvancedProperties, propertyField, propertySection } from '#tests/helpers/properties'
 import { getSelectedNode, getNodeById } from '#tests/helpers/store'
 
 let page: Page
@@ -16,6 +16,7 @@ test.beforeAll(async ({ browser }) => {
   await page.goto('/')
   canvas = new CanvasHelper(page)
   await canvas.waitForInit()
+  await openAdvancedProperties(page)
   await canvas.clearCanvas()
 })
 

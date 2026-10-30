@@ -38,7 +38,7 @@ export {
 import type { LayoutSizing, SceneGraph, SceneNode } from '@open-pencil/scene-graph'
 import { connectorSublayers, layoutConnector } from '@open-pencil/scene-graph/connectors'
 import { isGeneratedFrame } from '@open-pencil/scene-graph/generated'
-import { layoutSizing } from '@open-pencil/scene-graph/layout'
+import { layoutJustification, layoutSizing } from '@open-pencil/scene-graph/layout'
 
 import { fitShapeWithTextFrame } from './layout/shape-with-text'
 import { estimateTextSize, getTextMeasurer, measureTextForLayout } from './layout/text-measurement'
@@ -218,7 +218,7 @@ function configureFlexContainer(
     node.layoutMode === 'HORIZONTAL' ? FlexDirection.Row : FlexDirection.Column
   )
   yogaNode.setFlexWrap(node.layoutWrap === 'WRAP' ? Wrap.Wrap : Wrap.NoWrap)
-  yogaNode.setJustifyContent(mapJustify(node.primaryAxisAlign))
+  yogaNode.setJustifyContent(mapJustify(layoutJustification(node)))
   yogaNode.setAlignItems(mapAlign(node.counterAxisAlign))
   if (node.clipsContent) yogaNode.setOverflow(Overflow.Hidden)
 

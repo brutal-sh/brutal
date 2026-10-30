@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+
 import { useI18n } from '@open-pencil/vue/i18n'
 import { useLayoutControlsContext } from '@open-pencil/vue/primitives/LayoutControls'
 
@@ -7,6 +9,7 @@ import VariableNumberField from '@/components/properties/VariableNumberField.vue
 import IconButton from '@/components/ui/button/IconButton.vue'
 
 const ctx = useLayoutControlsContext()
+const { compact = false } = defineProps<{ compact?: boolean }>()
 const { panels } = useI18n()
 
 const paddingSides: Array<{ prop: PaddingProp; icon: string }> = [
@@ -15,9 +18,13 @@ const paddingSides: Array<{ prop: PaddingProp; icon: string }> = [
   { prop: 'paddingBottom', icon: 'bottom' },
   { prop: 'paddingLeft', icon: 'left' }
 ]
+const displayedSides = computed(() =>
+  compact ? [paddingSides[3], paddingSides[1], paddingSides[0], paddingSides[2]] : paddingSides
+)
 </script>
 
 <template>
+  <div v-if="compact" class="mt-1.5 text-[11px] text-muted">Padding</div>
   <div class="flex items-start gap-1.5">
     <div class="min-w-0 flex-1">
       <div
@@ -26,6 +33,9 @@ const paddingSides: Array<{ prop: PaddingProp; icon: string }> = [
       >
         <VariableNumberField
           data-test-id="layout-horizontal-padding-input"
+          :compact="compact"
+          aria-label="Horizontal padding"
+          :class="compact ? 'order-2' : undefined"
           :model-value="Math.round(ctx.node.paddingLeft)"
           :min="0"
           :node-id="ctx.node.id"
@@ -40,6 +50,8 @@ const paddingSides: Array<{ prop: PaddingProp; icon: string }> = [
         </VariableNumberField>
         <VariableNumberField
           data-test-id="layout-vertical-padding-input"
+          :compact="compact"
+          aria-label="Vertical padding"
           :model-value="Math.round(ctx.node.paddingTop)"
           :min="0"
           :node-id="ctx.node.id"
@@ -56,8 +68,9 @@ const paddingSides: Array<{ prop: PaddingProp; icon: string }> = [
 
       <div v-else-if="ctx.isGrid || ctx.isFlex" class="mt-1.5 grid grid-cols-2 gap-1.5">
         <VariableNumberField
-          v-for="side in paddingSides"
+          v-for="side in displayedSides"
           :key="side.prop"
+          :compact="compact"
           :model-value="Math.round(ctx.node[side.prop])"
           :min="0"
           :node-id="ctx.node.id"
@@ -82,7 +95,8 @@ const paddingSides: Array<{ prop: PaddingProp; icon: string }> = [
       class="mt-1.5"
       @click="ctx.toggleIndividualPadding"
     >
-      <icon-lucide-scan class="size-3.5" />
+      <icon-lucide-square v-if="compact" class="size-3.5" />
+      <icon-lucide-scan v-else class="size-3.5" />
     </IconButton>
   </div>
 </template>

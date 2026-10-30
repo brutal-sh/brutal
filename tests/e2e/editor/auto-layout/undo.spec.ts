@@ -1,12 +1,14 @@
 import { expect, test } from '@playwright/test'
 
 import { CanvasHelper } from '#tests/helpers/canvas'
+import { openAdvancedProperties } from '#tests/helpers/properties'
 
 test('wrap clears automatic spacing and restores both properties with one Undo', async ({
   page
 }) => {
   await page.goto('/?test')
   await new CanvasHelper(page).waitForInit()
+  await openAdvancedProperties(page)
   const id = await page.evaluate(() => {
     const editor = window.openPencil?.getStore?.()
     if (!editor) throw new Error('Editor unavailable')
@@ -33,6 +35,7 @@ test('wrap clears automatic spacing and restores both properties with one Undo',
 test('layout guide live numeric edits form one Undo record', async ({ page }) => {
   await page.goto('/?test')
   await new CanvasHelper(page).waitForInit()
+  await openAdvancedProperties(page)
   const id = await page.evaluate(() => {
     const editor = window.openPencil?.getStore?.()
     if (!editor) throw new Error('Editor unavailable')
@@ -58,6 +61,7 @@ test('layout guide live numeric edits form one Undo record', async ({ page }) =>
       id
     )
   const field = page.getByRole('spinbutton', { name: 'Count', exact: true })
+  await page.getByRole('button', { name: 'Layout guide settings', exact: true }).click()
   await field.dblclick()
   await field.fill('12')
   await field.fill('18')

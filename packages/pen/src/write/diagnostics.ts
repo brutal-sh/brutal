@@ -146,6 +146,11 @@ type NodeProblem = (field: string, message: string) => unknown
 
 function inspectPluginContent(node: SceneNode, add: NodeProblem) {
   if (
+    hasPluginData(node.pluginData, OPEN_PENCIL_PLUGIN_DATA.mainAxisDistribution) &&
+    readPluginData(node.pluginData, OPEN_PENCIL_PLUGIN_DATA.mainAxisDistribution) === undefined
+  )
+    add('layout', 'Invalid distribution metadata cannot be exported.')
+  if (
     hasPluginData(node.pluginData, OPEN_PENCIL_PLUGIN_DATA.nodeContext) &&
     readPluginData(node.pluginData, OPEN_PENCIL_PLUGIN_DATA.nodeContext) === undefined
   )
@@ -165,7 +170,8 @@ function inspectPluginContent(node: SceneNode, add: NodeProblem) {
       withoutPluginData(node.pluginData, [
         OPEN_PENCIL_PLUGIN_DATA.nodeContext,
         OPEN_PENCIL_PLUGIN_DATA.deferredFill,
-        OPEN_PENCIL_PLUGIN_DATA.hugFallback
+        OPEN_PENCIL_PLUGIN_DATA.hugFallback,
+        OPEN_PENCIL_PLUGIN_DATA.mainAxisDistribution
       ])
     ).length
   )

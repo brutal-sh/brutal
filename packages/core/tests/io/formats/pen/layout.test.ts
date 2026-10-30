@@ -1,7 +1,13 @@
 import { describe, expect, test } from 'bun:test'
 
 import { layoutAuthoredNodes } from '@open-pencil/core/layout'
-import { parsePenFile, type PenDocument, type PenIconSource, type PenNode } from '@open-pencil/pen'
+import {
+  parsePenFile,
+  writePenDocument,
+  type PenDocument,
+  type PenIconSource,
+  type PenNode
+} from '@open-pencil/pen'
 import { getNodeLocalMatrix } from '@open-pencil/scene-graph/coordinate'
 import Matrix from '@open-pencil/scene-graph/matrix'
 
@@ -311,6 +317,14 @@ describe('parsePenFile — space around', () => {
     ])
     // 210 of free space: 70 per child, 35 on each side of each.
     expect(['a', 'b', 'c'].map((id) => graph.getNode(id)?.x)).toEqual([35, 135, 235])
+    expect(graph.getNode('row')).toMatchObject({ itemSpacing: 0, paddingLeft: 0, paddingRight: 0 })
+    graph.updateNode('row', { width: 600 })
+    layoutAuthoredNodes(graph, ['row'])
+    expect(['a', 'b', 'c'].map((id) => graph.getNode(id)?.x)).toEqual([85, 285, 485])
+    const saved = writePenDocument(graph)
+    expect(saved.children[0]).toMatchObject({ justifyContent: 'space_around', gap: 0, padding: 0 })
+    const reopened = parseLayoutDocument(saved.children)
+    expect(['a', 'b', 'c'].map((id) => reopened.getNode(id)?.x)).toEqual([85, 285, 485])
   })
 })
 

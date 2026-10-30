@@ -26,6 +26,7 @@ const actions = {
   commitVerticalPadding: ctx.commitVerticalPadding,
   setAlignment: ctx.setAlignment,
   setGapAuto: ctx.setGapAuto,
+  setGapDistribution: ctx.setGapDistribution,
   setLayoutDirection: ctx.setLayoutDirection,
   updateGridTrack: ctx.updateGridTrack,
   addTrack: ctx.addTrack,
@@ -45,6 +46,7 @@ provideLayoutControls(
     :node="ctx.node.value"
     :layout-direction="ctx.layoutDirection.value"
     :gap-auto="ctx.gapAuto.value"
+    :gap-distribution="ctx.gapDistribution.value"
     :is-in-auto-layout="ctx.isInAutoLayout.value"
     :is-grid="ctx.isGrid.value"
     :is-flex="ctx.isFlex.value"

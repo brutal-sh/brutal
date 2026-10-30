@@ -1,7 +1,7 @@
 import type { SceneGraph, SceneNode } from '@open-pencil/scene-graph'
 import { colorToHex8 } from '@open-pencil/scene-graph/color'
 import { getNodeLocalMatrix } from '@open-pencil/scene-graph/coordinate'
-import { authoredLayoutSizing } from '@open-pencil/scene-graph/layout'
+import { authoredLayoutSizing, layoutJustification } from '@open-pencil/scene-graph/layout'
 import Matrix from '@open-pencil/scene-graph/matrix'
 import { OPEN_PENCIL_PLUGIN_DATA, readPluginData } from '@open-pencil/scene-graph/plugin-data'
 import { textLengthPixels } from '@open-pencil/scene-graph/text'
@@ -35,6 +35,7 @@ const ALIGN = {
   CENTER: 'center',
   MAX: 'end',
   SPACE_BETWEEN: 'space_between',
+  SPACE_AROUND: 'space_around',
   STRETCH: 'start'
 } as const
 const TEXT_GROWTH = {
@@ -99,6 +100,14 @@ export function writePenDocument(graph: SceneGraph): PenDocument {
     if (sizing === 'FILL') return `fill_container(${value})`
     if (sizing === 'HUG') return `fit_content(${value})`
     return value
+  }
+
+  function compactPadding(value: PenNode['padding']): PenNode['padding'] {
+    if (!Array.isArray(value) || value.length !== 4) return value
+    const [top, right, bottom, left] = value
+    if (top === right && top === bottom && top === left) return top
+    if (top === bottom && right === left) return [top, right]
+    return [top, right, bottom, left]
   }
 
   function writeStroke(node: SceneNode, result: PenNode, path: string) {
@@ -220,7 +229,7 @@ export function writePenDocument(graph: SceneGraph): PenDocument {
       layoutPosition: node.layoutPositioning.toLowerCase(),
       gap: node.itemSpacing,
       padding: [node.paddingTop, node.paddingRight, node.paddingBottom, node.paddingLeft],
-      justifyContent: ALIGN[node.primaryAxisAlign],
+      justifyContent: ALIGN[layoutJustification(node)],
       alignItems: node.counterAxisAlign === 'BASELINE' ? 'start' : ALIGN[node.counterAxisAlign],
       layoutIncludeStroke: node.strokesIncludedInLayout,
       clip: node.clipsContent
@@ -237,6 +246,7 @@ export function writePenDocument(graph: SceneGraph): PenDocument {
     writeText(node, result)
     writeVector(node, result, path)
     variableContext.apply(node, result, path, topLevel)
+    result.padding = compactPadding(result.padding)
     return result
   }
 

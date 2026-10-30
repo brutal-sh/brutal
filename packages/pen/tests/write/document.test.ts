@@ -9,6 +9,10 @@ import {
 } from '@open-pencil/pen'
 import { SceneGraph, type SceneNode } from '@open-pencil/scene-graph'
 import { getNodeLocalMatrix } from '@open-pencil/scene-graph/coordinate'
+import {
+  OPEN_PENCIL_PLUGIN_DATA,
+  OPEN_PENCIL_PLUGIN_ID
+} from '@open-pencil/scene-graph/plugin-data'
 
 import { parseDocument } from '../helpers/document'
 
@@ -20,6 +24,42 @@ function ordinary(type: SceneNode['type'] = 'RECTANGLE') {
 }
 
 describe('bounded .pen writer', () => {
+  test('rejects invalid distribution metadata instead of silently exporting another alignment', () => {
+    const { graph, node } = ordinary('FRAME')
+    graph.updateNode(node.id, {
+      pluginData: [
+        {
+          pluginId: OPEN_PENCIL_PLUGIN_ID,
+          key: OPEN_PENCIL_PLUGIN_DATA.mainAxisDistribution.key,
+          value: 'invalid'
+        }
+      ]
+    })
+    expect(() => writePenDocument(graph)).toThrow('Invalid distribution metadata')
+  })
+  test.each([[], [1], [1, 2, 3], [1, 2, 3, 4, 5]].map((padding) => ({ padding })))(
+    'rejects malformed padding length instead of truncating %j',
+    ({ padding }) => {
+      expect(() =>
+        parsePenFile(
+          JSON.stringify({ version: '2.21', children: [{ type: 'frame', id: 'bad', padding }] })
+        )
+      ).toThrow()
+    }
+  )
+  test.each([
+    { sides: [0, 0, 0, 0], serialized: 0 },
+    { sides: [10, 20, 10, 20], serialized: [10, 20] },
+    { sides: [1, 2, 3, 4], serialized: [1, 2, 3, 4] }
+  ])('writes canonical padding $serialized and preserves every side', ({ sides, serialized }) => {
+    const { graph, node } = ordinary('FRAME')
+    const [paddingTop, paddingRight, paddingBottom, paddingLeft] = sides
+    const fields = { paddingTop, paddingRight, paddingBottom, paddingLeft }
+    graph.updateNode(node.id, { layoutMode: 'VERTICAL', ...fields })
+    const saved = writePenDocument(graph)
+    expect<unknown>(saved.children[0].padding).toEqual(serialized)
+    expect(parsePenFile(JSON.stringify(saved)).getNode(node.id)).toMatchObject(fields)
+  })
   test('ignores an empty internal FIG canvas but rejects hidden content or paint', () => {
     const { graph } = ordinary()
     const internal = graph.addPage('Internal Only Canvas')
