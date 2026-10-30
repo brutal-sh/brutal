@@ -31,6 +31,7 @@ const store = useEditorStore()
 const path = ref(shader.url)
 const error = ref('')
 const loading = ref(false)
+const sourceError = computed(() => store.shaderSourceErrors.get(shader.url))
 let request: AbortController | null = null
 watch(
   () => shader.url,
@@ -58,8 +59,12 @@ async function apply(load: (signal: AbortSignal) => Promise<FragmentShader>) {
   error.value = ''
   try {
     const next = await load(current.signal)
+    if (next.url === shader.url) next.uniforms = structuredClone(shader.uniforms)
     await validateFragmentSource(next)
-    if (!current.signal.aborted) emit('update', fragmentShaderPreset(next))
+    if (!current.signal.aborted) {
+      emit('update', fragmentShaderPreset(next))
+      store.watchShaderSource(next)
+    }
   } catch (failure) {
     if (!current.signal.aborted)
       error.value = failure instanceof Error ? failure.message : String(failure)
@@ -152,10 +157,10 @@ function setNumber(control: FragmentUniform, at: number, next: number) {
       /></IconButton>
     </div>
     <AppAlert
-      v-if="error || metadata.error"
+      v-if="error || metadata.error || sourceError"
       tone="error"
       :heading="panels.shaderLoadFailed"
-      :description="error || metadata.error"
+      :description="error || metadata.error || sourceError"
     />
     <template v-for="control in metadata.controls" :key="control.name">
       <PanelFieldGroup v-if="control.color" :label="control.label">

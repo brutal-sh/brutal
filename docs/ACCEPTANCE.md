@@ -2,6 +2,10 @@
 
 Full parity is open. A source implementation, unit check, build, and user workflow establish different things. This ledger records only observed outcomes and the scope of each observation.
 
+## GLSL source watching — 2026-10-30
+
+Actual Pen reloaded ordinary and atomic source-file writes while preserving Size24 and a saved document tab. Invalid GLSL displayed a compiler message and red diagonal canvas stripes; restoring the file recovered the original checks. Open Pen's watcher and source reload passed65 model/I/O checks (265 assertions) and10 browser shader workflows, including retained uniforms, compiler-error retention, real changed pixels and Undo. Native parent-folder notifications remain unverified, and Open Pen's last-valid-image behavior still differs from Pen's error stripes. See [shader evidence](SHADER-PARITY.md). The pending macOS Documents permission still blocks the installed-app acceptance path; no recovery drafts were discarded.
+
 ## 2026-10-29
 
 | Behavior/check                           | Result                                                                                                                                                                                                                                                                                                                                   | Limit                                                                                                                                                                                                                                                                                                                                  |

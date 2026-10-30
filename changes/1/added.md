@@ -7,4 +7,4 @@
 - Adds Mesh fill and stroke editing with grid and vertex colors, canvas point and curve handles, Undo, and supported editable format persistence.
 
 - Export selected layers directly as PNG, JPEG, WEBP or a PDF with one layer per page, including Mesh PDF pages and a native lossless WEBP fallback.
-- Load local or HTTP GLSL fill and stroke sources, edit annotated numeric, vector and color uniforms, animate time uniforms in the editor, and retain source snapshots through supported editable formats.
+- Load local or HTTP GLSL fill and stroke sources, edit annotated numeric, vector and color uniforms, animate time uniforms in the editor, and retain source snapshots through supported editable formats. Explicit reload keeps uniform edits; native file watching follows source changes and atomic replacement without adding document edits.

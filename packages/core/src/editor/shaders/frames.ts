@@ -120,17 +120,19 @@ export function createShaderFrames(
     const now = graph === ctx.graph ? graph.getNode(id) : undefined
     const current = now && shownShaders(now).find((item) => item.image === requested.image)
     if (!bytes || !now || !current || !isEqual(current.preset, requested.preset)) return
-    const shader = independentFrame(now, current)
+    const shader = graph.applyImportedStateDuring(() => independentFrame(now, current))
     graph.images.set(shader.image, bytes)
     drawn.set(shader.image, frameKey(shader, size))
     for (const renderer of ctx.getRenderers()) renderer.forgetImage(shader.image)
     // Not an edit of its own: the frame follows the preset and size an edit set.
-    graph.updateNode(id, {
-      pluginData: withShaderPaints(
-        now,
-        [...now.fills, ...now.strokes],
-        [{ ...shader, frame: { ...size, preset: shaderPresetKey(shader.preset) } }]
-      )
+    graph.applyImportedStateDuring(() => {
+      graph.updateNode(id, {
+        pluginData: withShaderPaints(
+          now,
+          [...now.fills, ...now.strokes],
+          [{ ...shader, frame: { ...size, preset: shaderPresetKey(shader.preset) } }]
+        )
+      })
     })
     ctx.requestRender()
   }

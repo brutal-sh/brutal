@@ -502,11 +502,13 @@
           "feature": "Shaders",
           "behavior": "File/URL fills, editable inputs, gallery and shader effects.",
           "acceptance": "Load an independent shader; edit inputs, resize, handle errors and reopen.",
-          "status": "open",
+          "status": "partial",
           "evidence": [
             "../PAINT-PARITY.md",
-            "paint-controls.md"
-          ]
+            "paint-controls.md",
+            "../SHADER-PARITY.md"
+          ],
+          "evidence_limit": "Independent GLSL loading, uniforms, editor animation, time-zero export, source reload and identity have model/browser evidence against native Pen samples. Installed native shader acceptance is blocked by the pending Documents permission; source-error canvas, textures, effects, complete gallery and exact design remain open."
         },
         {
           "id": "DRAW-13",

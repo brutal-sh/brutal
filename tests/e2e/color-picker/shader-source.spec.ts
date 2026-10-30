@@ -84,6 +84,39 @@ test('invalid source reports its compiler failure and retains the previous paint
   editor.canvas.assertNoErrors()
 })
 
+test('reloading the same GLSL URL keeps uniform edits and rejects invalid replacements', async () => {
+  await openShader()
+  let source = await readFile(testPath('fixtures/shaders', 'checks.glsl'), 'utf8')
+  const url = 'https://shader.test/reload.glsl'
+  await editor.page.route(url, (route) =>
+    route.fulfill({ body: source, contentType: 'text/plain' })
+  )
+  const path = editor.page.getByRole('textbox', { name: 'Shader path or URL', exact: true })
+  await path.fill(url)
+  await path.press('Enter')
+  const size = editor.page.getByRole('spinbutton', { name: 'Size', exact: true })
+  await size.focus()
+  await size.fill('24')
+  await size.press('Tab')
+  await expect.poll(async () => (await shader.read())?.fragment?.uniforms).toEqual({ u_size: 24 })
+  source = source.replace('#336699', '#669933')
+  await editor.page.getByRole('button', { name: 'Reload shader', exact: true }).click()
+  await expect
+    .poll(async () => (await shader.read())?.pixels)
+    .toEqual([white, [102, 153, 51, 255], [102, 153, 51, 255]])
+  expect((await shader.read())?.fragment?.uniforms).toEqual({ u_size: 24 })
+  const valid = (await shader.read())?.fragment
+  source = 'void main(){ gl_FragColor = invalid; }'
+  await editor.page.getByRole('button', { name: 'Reload shader', exact: true }).click()
+  await expect(editor.page.getByRole('alert')).toBeVisible()
+  expect((await shader.read())?.fragment).toEqual(valid)
+  await editor.page.keyboard.press('Escape')
+  await editor.canvas.undo()
+  await expect.poll(async () => (await shader.read())?.pixels).toEqual([white, blue, blue])
+  expect((await shader.read())?.fragment?.uniforms).toEqual({ u_size: 24 })
+  editor.canvas.assertNoErrors()
+})
+
 test('changing selection aborts a pending shader load before it can paint another layer', async () => {
   await editor.canvas.drawRect(700, 300, 64, 64)
   const other = expectDefined(await getSelectedNode(editor.page), 'other layer')

@@ -12,22 +12,30 @@ import { readBoundedFile } from '@/app/tauri/files'
 export function documentAssetReader(path: string | undefined): ReadDocumentInput['readAsset'] {
   if (!IS_TAURI || !path) return undefined
   return async (relative, options) => {
-    const [{ dirname, join, resolve, sep }, { lstat, readFile }] = await Promise.all([
-      import('@tauri-apps/api/path'),
-      import('@tauri-apps/plugin-fs')
-    ])
-    const folder = await dirname(path)
-    const target = await resolve(folder, relative)
-    if (!target.startsWith(folder + sep())) return null
-    // A link inside the folder could still lead out of it, so no step of the path may be one.
-    let step = folder
-    for (const part of target.slice(folder.length + 1).split(sep())) {
-      step = await join(step, part)
-      const info = await lstat(step).catch(() => null)
-      if (!info || info.isSymlink) return null
-    }
+    const target = await documentAssetPath(path, relative)
+    if (!target) return null
+    const { readFile } = await import('@tauri-apps/plugin-fs')
     const read =
       options?.maxBytes === undefined ? readFile(target) : readBoundedFile(target, options.maxBytes)
     return read.catch(() => null)
   }
+}
+
+/** Resolve a document's local asset with the same folder/link boundary for reads and watches. */
+export async function documentAssetPath(path: string, relative: string): Promise<string | null> {
+  const [{ dirname, join, resolve, sep }, { lstat }] = await Promise.all([
+    import('@tauri-apps/api/path'),
+    import('@tauri-apps/plugin-fs')
+  ])
+  const folder = await dirname(path)
+  const target = await resolve(folder, relative)
+  if (!target.startsWith(folder + sep())) return null
+  // A link inside the folder could still lead out of it, so no step of the path may be one.
+  let step = folder
+  for (const part of target.slice(folder.length + 1).split(sep())) {
+    step = await join(step, part)
+    const info = await lstat(step).catch(() => null)
+    if (!info || info.isSymlink) return null
+  }
+  return target
 }

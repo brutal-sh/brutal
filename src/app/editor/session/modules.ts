@@ -7,6 +7,7 @@ import { createSelectedNodeState } from '@open-pencil/vue/editor/selection-state
 import { createDocumentExportActions } from '@/app/document/export'
 import { createDocumentIOActions } from '@/app/document/io'
 import type { ViewportSize } from '@/app/document/io/types'
+import { createShaderSourceWatcher } from '@/app/document/shaders/watcher'
 import { createDesignCheck } from '@/app/editor/design-check/session'
 import { createFlashActions } from '@/app/editor/flash'
 import { createMobileClipboardActions } from '@/app/editor/mobile-clipboard'
@@ -63,6 +64,10 @@ export function createEditorStoreModules(
   const pen = createPenActions(editor, state)
   const vectorEdit = createVectorEditActions(editor, state)
   const documentIO = createDocumentIOActions(editor, state, viewportSize, preparationController, io)
+  const shaderSources = createShaderSourceWatcher(editor, {
+    getDocumentPath: documentIO.getDocumentFilePath,
+    adoptChanges: (apply) => documentIO.adoptChanges(apply)
+  })
   const documentExport = createDocumentExportActions(editor, state, io, documentIO.downloadBlob)
   const mobileClipboard = createMobileClipboardActions(editor)
   const profiler = createProfilerActions(editor)
@@ -72,6 +77,8 @@ export function createEditorStoreModules(
     ...flash,
     ...pen,
     ...vectorEdit,
+    watchShaderSource: shaderSources.watchShaderSource,
+    shaderSourceErrors: shaderSources.shaderSourceErrors,
     /** Going read-only keeps a vector edit in progress, as the editor keeps edited text. */
     setReadOnly(readOnly: boolean) {
       if (readOnly) vectorEdit.exitNodeEditMode(true)
@@ -110,6 +117,7 @@ export function createEditorStoreModules(
     startWatchingCurrentFile: documentIO.startWatchingCurrentFile,
     designCheck,
     dispose: () => {
+      shaderSources.dispose()
       designCheck.dispose()
       editor.releaseGraphResources()
       editor.dispose()
