@@ -2,8 +2,8 @@ import { computed } from 'vue'
 import type { Ref } from 'vue'
 
 import type { Fill, GradientStop } from '@open-pencil/scene-graph'
-import { colorToCSS } from '@open-pencil/scene-graph/color'
-import { DEFAULT_GRADIENT_TRANSFORM, defaultGradientStops } from '@open-pencil/scene-graph/gradient'
+import { colorToCSS, colorToFill } from '@open-pencil/scene-graph/color'
+import { linearGradientTransformFromAxes } from '@open-pencil/scene-graph/gradient'
 import type { Color } from '@open-pencil/scene-graph/primitives'
 
 import type { FillCategory } from './types'
@@ -55,20 +55,24 @@ export function useFill(fill: Ref<Fill>, onUpdate: (fill: Fill) => void) {
 
   function toSolid() {
     if (category.value === 'SOLID') return
-    const color = fill.value.gradientStops?.[0]?.color ?? fill.value.color
-    onUpdate({ ...fill.value, type: 'SOLID', color: { ...color } })
+    onUpdate(colorToFill('#D9D9D9'))
   }
 
   function toGradient() {
     if (category.value === 'GRADIENT') return
-    const gradientStops = fill.value.gradientStops?.length
-      ? structuredClone(fill.value.gradientStops)
-      : defaultGradientStops(fill.value.color)
+    const paint = colorToFill('#000000')
     onUpdate({
-      ...fill.value,
+      ...paint,
       type: 'GRADIENT_LINEAR',
-      gradientStops,
-      gradientTransform: fill.value.gradientTransform ?? { ...DEFAULT_GRADIENT_TRANSFORM }
+      gradientStops: [
+        { color: paint.color, position: 0 },
+        { color: colorToFill('#FFFFFF').color, position: 1 }
+      ],
+      gradientTransform: linearGradientTransformFromAxes(
+        { x: 0.5, y: 1 },
+        { x: 0.5, y: 0 },
+        { x: 1, y: 0 }
+      )
     })
   }
 
