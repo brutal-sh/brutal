@@ -8,7 +8,7 @@ test('language can be changed from General settings and persists', async ({ page
   const canvas = new CanvasHelper(page)
   await canvas.waitForInit()
 
-  await page.getByTestId('app-settings-trigger').click()
+  await page.keyboard.press(process.platform === 'darwin' ? 'Meta+,' : 'Control+,')
   await page.getByRole('combobox', { name: 'Theme', exact: true }).click()
   await page.getByRole('option', { name: 'Dark', exact: true }).click()
   await page.getByTestId('settings-language').click()
@@ -19,7 +19,7 @@ test('language can be changed from General settings and persists', async ({ page
 
   await page.reload()
   await canvas.waitForInit()
-  await page.getByTestId('app-settings-trigger').click()
+  await page.keyboard.press(process.platform === 'darwin' ? 'Meta+,' : 'Control+,')
   await expect(page.getByTestId('settings-language')).toContainText('Русский')
 
   await page.getByTestId('settings-language').click()
@@ -34,7 +34,7 @@ test('general snapping preferences persist and apply to editor sessions', async 
   const canvas = new CanvasHelper(page)
   await canvas.waitForInit()
 
-  await page.getByTestId('app-settings-trigger').click()
+  await page.keyboard.press(process.platform === 'darwin' ? 'Meta+,' : 'Control+,')
   await page.getByTestId('settings-section-editor').click()
   await expect(page.getByTestId('settings-editor-panel')).toBeVisible()
   const geometry = page.getByRole('switch', { name: 'Snap to geometry' })
@@ -56,7 +56,7 @@ test('general snapping preferences persist and apply to editor sessions', async 
   await page.getByTestId('app-settings-done').click()
   await page.reload()
   await canvas.waitForInit()
-  await page.getByTestId('app-settings-trigger').click()
+  await page.keyboard.press(process.platform === 'darwin' ? 'Meta+,' : 'Control+,')
   await page.getByTestId('settings-section-editor').click()
   await expect(geometry).not.toBeChecked()
   await expect(objects).not.toBeChecked()
@@ -77,7 +77,7 @@ test('progressive tiled rendering preference persists and URL overrides take pre
   const canvas = new CanvasHelper(page)
   await canvas.waitForInit()
 
-  await page.getByTestId('app-settings-trigger').click()
+  await page.keyboard.press(process.platform === 'darwin' ? 'Meta+,' : 'Control+,')
   await page.getByTestId('settings-section-editor').click()
   const tiled = page.getByRole('switch', { name: 'Progressive rendering' })
   await expect(tiled).not.toBeChecked()
@@ -86,7 +86,7 @@ test('progressive tiled rendering preference persists and URL overrides take pre
 
   await page.reload()
   await canvas.waitForInit()
-  await page.getByTestId('app-settings-trigger').click()
+  await page.keyboard.press(process.platform === 'darwin' ? 'Meta+,' : 'Control+,')
   await page.getByTestId('settings-section-editor').click()
   await expect(tiled).toBeChecked()
   await expect(
@@ -101,7 +101,7 @@ test('progressive tiled rendering preference persists and URL overrides take pre
 
   await page.goto('/?test&renderer=retained')
   await canvas.waitForInit()
-  await page.getByTestId('app-settings-trigger').click()
+  await page.keyboard.press(process.platform === 'darwin' ? 'Meta+,' : 'Control+,')
   await page.getByTestId('settings-section-editor').click()
   await expect(tiled).toBeChecked()
   await expect(
@@ -135,7 +135,7 @@ test('Preferences menu snapping controls use the same preferences', async ({ pag
   await expect(pixelGrid).toBeChecked()
   await objects.click()
 
-  await page.getByTestId('app-settings-trigger').click()
+  await page.keyboard.press(process.platform === 'darwin' ? 'Meta+,' : 'Control+,')
   await page.getByTestId('settings-section-editor').click()
   await expect(page.getByRole('switch', { name: 'Snap to objects' })).not.toBeChecked()
   await page.getByRole('switch', { name: 'Snap to objects' }).click()
@@ -146,7 +146,7 @@ test('settings shortcut preserves the last visited section', async ({ page }) =>
   const canvas = new CanvasHelper(page)
   await canvas.waitForInit()
 
-  await page.getByTestId('app-settings-trigger').click()
+  await page.keyboard.press(process.platform === 'darwin' ? 'Meta+,' : 'Control+,')
   await page.getByTestId('settings-section-services').click()
   await page.getByTestId('app-settings-done').click()
 

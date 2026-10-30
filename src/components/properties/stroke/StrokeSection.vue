@@ -29,6 +29,7 @@ import {
   commitPaintMutation,
   commitPaintSetting,
   remapMeshColorBindings,
+  meshPaintWithSourceColors,
   paintBindingTargets
 } from '@/components/properties/paint/binding'
 import { useGradientEditing } from '@/components/properties/paint/gradient-edit'
@@ -196,6 +197,15 @@ function onToggleSides(nodes: readonly SceneNode[]) {
                 :okhcl="createStrokeOkhclAdapter(okhcl, activeNode, index)"
                 :layer-size="selectedNodeIds.length === 1 ? activeNode : null"
                 :keep-open="gradients.pressesHandle"
+                :mesh-points="
+                  gradients.meshOptions(gradients.target(selectedNodeIds, 'strokes', index)).points
+                "
+                @update:mesh-points="
+                  gradients.setMeshPoints(
+                    gradients.target(selectedNodeIds, 'strokes', index),
+                    $event
+                  )
+                "
                 :mesh-mirrored="
                   gradients.meshOptions(gradients.target(selectedNodeIds, 'strokes', index))
                     .mirrored
@@ -224,7 +234,7 @@ function onToggleSides(nodes: readonly SceneNode[]) {
                 @update="
                   (next, sources) =>
                     updateStrokePaint(binding.actions, flush, stroke, next, (paint) => {
-                      actions.update(index, paint)
+                      actions.update(index, meshPaintWithSourceColors(paint, stroke, sources))
                       remapMeshColorBindings(store, selectedNodeIds, 'strokes', index, sources)
                     })
                 "

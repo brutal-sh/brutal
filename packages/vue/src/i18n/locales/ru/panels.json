@@ -663,6 +663,7 @@
   "meshShuffleColors": "Перемешать цвета",
   "meshShuffleSelected": "Перемешать выбранные цвета",
   "meshSelectedPoint": "Выбранная точка",
+  "meshSelectedPoints": "Выбранные точки",
   "meshResetPosition": "Сбросить положение",
   "meshResetCurve": "Сбросить кривую",
   "meshPoint": "Точка",

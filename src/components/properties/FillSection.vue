@@ -29,6 +29,7 @@ import {
   commitPaintMutation,
   commitPaintSetting,
   remapMeshColorBindings,
+  meshPaintWithSourceColors,
   paintBindingTargets
 } from '@/components/properties/paint/binding'
 import { useGradientEditing } from '@/components/properties/paint/gradient-edit'
@@ -174,6 +175,15 @@ function updateSolidColor(
                   :shader="fillShader(activeNode, fill)"
                   :layer-size="selectedNodeIds.length === 1 ? activeNode : null"
                   :keep-open="gradients.pressesHandle"
+                  :mesh-points="
+                    gradients.meshOptions(gradients.target(selectedNodeIds, 'fills', index)).points
+                  "
+                  @update:mesh-points="
+                    gradients.setMeshPoints(
+                      gradients.target(selectedNodeIds, 'fills', index),
+                      $event
+                    )
+                  "
                   :mesh-mirrored="
                     gradients.meshOptions(gradients.target(selectedNodeIds, 'fills', index))
                       .mirrored
@@ -202,7 +212,7 @@ function updateSolidColor(
                   @update="
                     (next, sources) =>
                       updatePickerFill(binding.actions, flush, next, (paint) => {
-                        actions.update(index, paint)
+                        actions.update(index, meshPaintWithSourceColors(paint, fill, sources))
                         remapMeshColorBindings(store, selectedNodeIds, 'fills', index, sources)
                       })
                   "

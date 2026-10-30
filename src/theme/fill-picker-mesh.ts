@@ -18,6 +18,8 @@ export default {
     selectedRow:
       'flex h-6 items-center justify-between gap-2 rounded-md bg-input pl-2 text-xs text-muted',
     selectedColor: 'flex items-center justify-between gap-2 text-xs text-muted',
+    selectedSwatch:
+      'size-4 rounded-sm border border-border data-[mixed]:bg-[conic-gradient(from_180deg,#ef4444,#eab308,#22c55e,#06b6d4,#3b82f6,#a855f7,#ef4444)]',
     action: 'h-6 bg-input text-surface'
   }
 }

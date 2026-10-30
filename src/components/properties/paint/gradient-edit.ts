@@ -49,7 +49,7 @@ export function useGradientEditing() {
   function setStop(target: GradientTarget | null, stop: number | undefined) {
     const edit = editing(target)
     if (!edit || stop === undefined || edit.stop === stop) return
-    store.state.gradientEdit = { ...edit, stop }
+    store.state.gradientEdit = { ...edit, stop, ...(stop < 0 ? { meshPoints: [] } : {}) }
     store.requestRepaint()
   }
 
@@ -68,7 +68,17 @@ export function useGradientEditing() {
 
   function meshOptions(target: GradientTarget | null) {
     const edit = editing(target)
-    return { mirrored: edit?.meshMirrored !== false, outline: edit?.meshOutline !== false }
+    return {
+      mirrored: edit?.meshMirrored !== false,
+      outline: edit?.meshOutline !== false,
+      points: edit?.meshPoints ?? (edit && edit.stop >= 0 ? [edit.stop] : [])
+    }
+  }
+  function setMeshPoints(target: GradientTarget | null, points: number[]) {
+    const edit = editing(target)
+    if (!edit) return
+    store.state.gradientEdit = { ...edit, meshPoints: points, stop: points.at(-1) ?? -1 }
+    store.requestRepaint()
   }
   function setMeshOption(
     target: GradientTarget | null,
@@ -80,5 +90,14 @@ export function useGradientEditing() {
     store.state.gradientEdit = { ...edit, [option]: value }
     store.requestRepaint()
   }
-  return { target, setOpen, stop, setStop, pressesHandle, meshOptions, setMeshOption }
+  return {
+    target,
+    setOpen,
+    stop,
+    setStop,
+    pressesHandle,
+    meshOptions,
+    setMeshOption,
+    setMeshPoints
+  }
 }

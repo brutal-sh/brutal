@@ -663,6 +663,7 @@
   "meshShuffleColors": "Wymieszaj kolory",
   "meshShuffleSelected": "Wymieszaj wybrane kolory",
   "meshSelectedPoint": "Wybrany punkt",
+  "meshSelectedPoints": "Wybrane punkty",
   "meshResetPosition": "Resetuj pozycję",
   "meshResetCurve": "Resetuj krzywą",
   "meshPoint": "Punkt",

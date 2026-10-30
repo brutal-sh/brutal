@@ -85,3 +85,57 @@ test('canceling a mesh vertex preview restores the point and selection', () => {
     editor.dispose()
   }
 })
+
+test('Shift toggles Mesh vertices while a plain drag selects only its target', () => {
+  const { editor, node, mesh } = setup()
+  try {
+    const holder: { drag?: DragState } = {}
+    expect(
+      tryStartMeshDrag(
+        editor,
+        0,
+        0,
+        (drag) => {
+          holder.drag = drag
+        },
+        true
+      )
+    ).toBe(true)
+    expect(editor.state.gradientEdit?.meshPoints).toEqual([4, 0])
+    if (holder.drag?.type !== 'gradient') throw new Error('Expected Mesh drag')
+    holder.drag.commit()
+    expect(
+      tryStartMeshDrag(
+        editor,
+        0,
+        0,
+        () => {
+          throw new Error('Removing a vertex must not start a drag')
+        },
+        true
+      )
+    ).toBe(true)
+    expect(editor.state.gradientEdit?.meshPoints).toEqual([4])
+    editor.state.gradientEdit = {
+      nodeId: node.id,
+      paint: 'fills',
+      index: 0,
+      stop: 4,
+      meshPoints: [0, 4]
+    }
+    expect(
+      tryStartMeshDrag(editor, 100, 50, (drag) => {
+        holder.drag = drag
+      })
+    ).toBe(true)
+    expect(editor.state.gradientEdit?.meshPoints).toEqual([4])
+    if (holder.drag?.type !== 'gradient') throw new Error('Expected Mesh drag')
+    holder.drag.update(120, 70, false)
+    expect(editor.graph.getNode(node.id)?.fills[0].meshGradient?.points[0]).toEqual(mesh.points[0])
+    holder.drag.cancel()
+    expect(editor.state.gradientEdit?.meshPoints).toEqual([0, 4])
+    expect(editor.graph.getNode(node.id)?.fills[0].meshGradient).toEqual(mesh)
+  } finally {
+    editor.dispose()
+  }
+})

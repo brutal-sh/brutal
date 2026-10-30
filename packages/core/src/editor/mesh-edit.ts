@@ -31,6 +31,6 @@ export function editedMeshLayout(
     edited.node.width,
     edited.node.height,
     (local) => geometry.toScreen(edited.node, local, viewport),
-    edit.stop
+    edit.meshPoints ?? edit.stop
   )
 }

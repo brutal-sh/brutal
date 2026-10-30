@@ -649,6 +649,7 @@
   "meshShuffleColors": "打乱颜色",
   "meshShuffleSelected": "打乱所选颜色",
   "meshSelectedPoint": "所选点",
+  "meshSelectedPoints": "所选点",
   "meshResetPosition": "重置位置",
   "meshResetCurve": "重置曲线",
   "meshPoint": "点",

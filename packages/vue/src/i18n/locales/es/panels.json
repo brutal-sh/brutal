@@ -656,6 +656,7 @@
   "meshShuffleColors": "Mezclar colores",
   "meshShuffleSelected": "Mezclar colores seleccionados",
   "meshSelectedPoint": "Punto seleccionado",
+  "meshSelectedPoints": "Puntos seleccionados",
   "meshResetPosition": "Restablecer posición",
   "meshResetCurve": "Restablecer curva",
   "meshPoint": "Punto",

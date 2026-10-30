@@ -62,6 +62,8 @@ export interface GradientEdit {
   stop: number
   meshMirrored?: boolean
   meshOutline?: boolean
+  /** Mesh vertices selected together; `stop` remains the primary vertex. */
+  meshPoints?: number[]
 }
 
 /** The selected shape's radius, point count, and ratio handles, shown while the pointer is over it. */

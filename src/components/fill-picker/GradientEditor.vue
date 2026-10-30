@@ -22,6 +22,7 @@ import fillPickerTheme from '@/theme/fill-picker'
 const { fill, compact = false } = defineProps<{ fill: Fill; compact?: boolean }>()
 const emit = defineEmits<{ update: [fill: Fill, colorSources?: (number | null)[]] }>()
 const activeStop = defineModel<number>('activeStop')
+const meshPoints = defineModel<number[]>('meshPoints', { default: () => [] })
 const meshMirrored = defineModel<boolean>('meshMirrored', { default: true })
 const meshOutline = defineModel<boolean>('meshOutline', { default: true })
 const { panels, editor } = useI18n()
@@ -60,6 +61,7 @@ function listStopClass(active: boolean) {
       <MeshGradientEditor
         v-if="fill.type === 'GRADIENT_MESH'"
         v-model:active-point="activeStop"
+        v-model:selected-points="meshPoints"
         v-model:mirrored="meshMirrored"
         v-model:outline="meshOutline"
         :fill="fill"

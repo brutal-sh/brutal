@@ -19,9 +19,10 @@ export function tryStartGradientDrag(
   editor: Editor,
   sx: number,
   sy: number,
-  setDrag: (drag: DragState) => void
+  setDrag: (drag: DragState) => void,
+  shiftKey = false
 ): boolean {
-  if (tryStartMeshDrag(editor, sx, sy, setDrag)) return true
+  if (tryStartMeshDrag(editor, sx, sy, setDrag, shiftKey)) return true
   const edit = editor.state.gradientEdit
   const edited = editedGradient(editor.graph, edit)
   const layout = editedGradientLayout(editor.graph, edit, editor.state)

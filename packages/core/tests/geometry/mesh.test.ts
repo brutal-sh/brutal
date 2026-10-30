@@ -23,3 +23,14 @@ test('mesh handles include both ends of selected edges and keep canvas hit targe
   })
   expect(hitTestMeshHandles(layout, { x: 900, y: 900 })).toBeNull()
 })
+
+test('multiple Mesh vertices expose the union of their incident edge handles', () => {
+  const layout = meshHandleLayout(createMeshGradient(), 200, 100, (point) => point, [0, 4])
+  expect(layout.handles).toHaveLength(12)
+  expect(layout.handles.some((handle) => handle.index === 0 && handle.side === 'rightHandle')).toBe(
+    true
+  )
+  expect(
+    layout.handles.some((handle) => handle.index === 4 && handle.side === 'bottomHandle')
+  ).toBe(true)
+})

@@ -5,6 +5,7 @@ import { computed, ref } from 'vue'
 
 import type { Fill, MeshGradient } from '@open-pencil/scene-graph'
 import { colorToCSS, colorToHexRaw } from '@open-pencil/scene-graph/color'
+import { BLACK } from '@open-pencil/scene-graph/constants'
 import { createMeshGradient, resizeMeshGradient } from '@open-pencil/scene-graph/gradient/mesh'
 import type { Color } from '@open-pencil/scene-graph/primitives'
 import { randomIndex } from '@open-pencil/scene-graph/random'
@@ -19,6 +20,7 @@ import theme from '@/theme/fill-picker-mesh'
 const { fill } = defineProps<{ fill: Fill }>()
 const emit = defineEmits<{ update: [fill: Fill, colorSources?: (number | null)[]] }>()
 const activePoint = defineModel<number>('activePoint')
+const selectedPoints = defineModel<number[]>('selectedPoints', { default: () => [] })
 const mirrored = defineModel<boolean>('mirrored', { default: true })
 const outline = defineModel<boolean>('outline', { default: true })
 const { panels } = useI18n()
@@ -27,12 +29,22 @@ const popup = usePopoverUI({ content: 'w-36 p-2' })
 const gridOpen = ref(false)
 const gridChoice = ref({ columns: 1, rows: 1 })
 const mesh = computed(() => fill.meshGradient)
-const selected = computed(() =>
-  activePoint.value === undefined ? undefined : mesh.value?.points[activePoint.value]
+const selectedIndices = computed(() =>
+  [
+    ...new Set(selectedPoints.value.length ? selectedPoints.value : [activePoint.value ?? -1])
+  ].filter((index) => mesh.value?.points[index])
 )
+const selected = computed(() => mesh.value?.points[selectedIndices.value[0]])
 const selectedColor = computed(() =>
-  selected.value ? mesh.value?.colors[activePoint.value ?? -1] : undefined
+  selected.value ? mesh.value?.colors[selectedIndices.value[0]] : undefined
 )
+const mixedColor = computed(() => {
+  const current = mesh.value
+  const first = selectedColor.value
+  return current && first
+    ? selectedIndices.value.some((index) => colorToCSS(current.colors[index]) !== colorToCSS(first))
+    : false
+})
 const gridStyle = computed(() => ({
   gridTemplateColumns: `repeat(${(mesh.value?.columns ?? 2) - 1}, 1fr)`
 }))
@@ -51,38 +63,50 @@ function resize(columns: number, rows: number) {
     Array.from({ length: columns * rows }, (_, index) => index % previousCount)
   )
   activePoint.value = -1
+  selectedPoints.value = []
   gridOpen.value = false
 }
 function shuffle() {
-  if (!mesh.value || selected.value) return
+  if (!mesh.value) return
   const next = structuredClone(mesh.value)
   const sources = next.colors.map((_, index) => index)
-  for (let index = next.colors.length - 1; index > 0; index--) {
-    const other = randomIndex(index + 1)
-    ;[next.colors[index], next.colors[other]] = [next.colors[other], next.colors[index]]
-    ;[sources[index], sources[other]] = [sources[other], sources[index]]
+  const indices = selectedIndices.value.length ? selectedIndices.value : sources
+  if (indices.length < 2) return
+  for (let index = indices.length - 1; index > 0; index--) {
+    const a = indices[index]
+    const b = indices[randomIndex(index + 1)]
+    ;[next.colors[a], next.colors[b]] = [next.colors[b], next.colors[a]]
+    ;[sources[a], sources[b]] = [sources[b], sources[a]]
   }
   update(next, sources)
 }
 function reset(curve: boolean) {
-  const index = activePoint.value
-  if (!mesh.value || index === undefined || !selected.value) return
+  if (!mesh.value || !selected.value) return
   const next = structuredClone(mesh.value)
   const defaults = createMeshGradient(next.columns, next.rows)
-  next.points[index] = curve
-    ? { position: { ...selected.value.position } }
-    : { ...next.points[index], position: defaults.points[index].position }
+  for (const index of selectedIndices.value)
+    next.points[index] = curve
+      ? { position: { ...next.points[index].position } }
+      : { ...next.points[index], position: defaults.points[index].position }
   update(next)
 }
 function setColor(color: Color) {
-  const index = activePoint.value
-  if (!mesh.value || index === undefined || !selected.value) return
+  if (!mesh.value || !selected.value) return
   const next = structuredClone(mesh.value)
-  next.colors[index] = color
+  for (const index of selectedIndices.value) next.colors[index] = { ...color }
   update(
     next,
-    next.colors.map((_, source) => (source === index ? null : source))
+    next.colors.map((_, source) => (selectedIndices.value.includes(source) ? null : source))
   )
+}
+function selectPoint(index: number, event: MouseEvent) {
+  let points = [index]
+  if (event.shiftKey)
+    points = selectedIndices.value.includes(index)
+      ? selectedIndices.value.filter((point) => point !== index)
+      : [...selectedIndices.value, index]
+  selectedPoints.value = points
+  activePoint.value = points.at(-1) ?? -1
 }
 </script>
 
@@ -178,9 +202,9 @@ function setColor(color: Color) {
           :class="cls.color()"
           :style="{ background: colorToCSS(color) }"
           :aria-label="`${panels.meshColors} ${index + 1}`"
-          :aria-pressed="activePoint === index"
-          :data-active="activePoint === index || undefined"
-          @click="activePoint = index"
+          :aria-pressed="selectedIndices.includes(index)"
+          :data-active="selectedIndices.includes(index) || undefined"
+          @click="selectPoint(index, $event)"
         />
       </div>
       <AppButton :class="cls.action({ class: 'mt-2 w-full' })" @click="shuffle">{{
@@ -188,7 +212,9 @@ function setColor(color: Color) {
       }}</AppButton>
     </div>
     <div v-if="selected && selectedColor" :class="cls.selected()">
-      <span :class="cls.label()">{{ panels.meshSelectedPoint }}</span>
+      <span :class="cls.label()">{{
+        selectedIndices.length > 1 ? panels.meshSelectedPoints : panels.meshSelectedPoint
+      }}</span>
       <div :class="cls.selectedRow()">
         <span>{{ panels.meshPoint }}</span
         ><AppButton :class="cls.action()" @click="reset(false)">{{
@@ -203,12 +229,17 @@ function setColor(color: Color) {
       </div>
       <div :class="cls.selectedColor()">
         <span>{{ panels.paintColor }}</span>
-        <ColorPicker :color="selectedColor" compact @update="setColor">
+        <ColorPicker :color="mixedColor ? BLACK : selectedColor" compact @update="setColor">
           <template #trigger="{ style }"
             ><AppButton :class="cls.action({ class: 'flex-1' })" :aria-label="panels.editColor"
-              ><span class="size-4 rounded-sm border border-border" :style="style" />{{
-                colorToHexRaw(selectedColor)
-              }}<span class="ml-auto">{{ Math.round(selectedColor.a * 100) }}%</span></AppButton
+              ><span
+                :class="cls.selectedSwatch()"
+                :data-mixed="mixedColor || undefined"
+                :style="mixedColor ? undefined : style"
+              />{{ mixedColor ? panels.mixed : colorToHexRaw(selectedColor)
+              }}<span v-if="!mixedColor" class="ml-auto"
+                >{{ Math.round(selectedColor.a * 100) }}%</span
+              ></AppButton
             ></template
           >
         </ColorPicker>

@@ -47,6 +47,7 @@ function tryStartHandleDrag(
   sx: number,
   sy: number,
   altKey: boolean,
+  shiftKey: boolean,
   editor: Editor,
   fns: HitTestFns,
   tryStartRotation: (cx: number, cy: number) => boolean,
@@ -58,7 +59,7 @@ function tryStartHandleDrag(
     if (drag) setDrag(drag)
     return drag !== null
   }
-  if (tryStartGradientDrag(editor, sx, sy, setDrag)) return true
+  if (tryStartGradientDrag(editor, sx, sy, setDrag, shiftKey)) return true
   // An open gradient's handles replace the layer's selection handles, which then do not respond.
   if (
     editedGradient(editor.graph, editor.state.gradientEdit) ||
@@ -116,7 +117,10 @@ export function handleSelectDown(
 
   if (editor.state.editingTextId) editor.commitTextEdit()
 
-  if (tryStartHandleDrag(cx, cy, sx, sy, e.altKey, editor, fns, tryStartRotation, setDrag)) return
+  if (
+    tryStartHandleDrag(cx, cy, sx, sy, e.altKey, e.shiftKey, editor, fns, tryStartRotation, setDrag)
+  )
+    return
 
   const hit =
     tinySelectionAt(cx, cy, editor) ?? resolveHit(cx, cy, editor, fns, e.metaKey || e.ctrlKey)

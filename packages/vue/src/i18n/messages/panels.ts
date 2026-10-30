@@ -527,6 +527,7 @@ export const panelMessageDefaults = {
   meshShuffleColors: 'Shuffle Colors',
   meshShuffleSelected: 'Shuffle Selected Colors',
   meshSelectedPoint: 'Selected Point',
+  meshSelectedPoints: 'Selected Points',
   meshPoint: 'Point',
   meshHandles: 'Handles',
   meshResetPosition: 'Reset Position',

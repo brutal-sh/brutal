@@ -1,0 +1,54 @@
+diff --git a/dist/FocusScope/FocusScope.cjs b/dist/FocusScope/FocusScope.cjs
+index 061aa6f83aff4e46ff1080b3d1e46e9cc6ad8785..076c66c3b1be8458c7f354a0368b87a03d5252d4 100644
+--- a/dist/FocusScope/FocusScope.cjs
++++ b/dist/FocusScope/FocusScope.cjs
+@@ -117,10 +117,10 @@ var FocusScope_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */ (0,
+ 				container.addEventListener(require_FocusScope_utils.AUTOFOCUS_ON_UNMOUNT, unmountEventHandler);
+ 				container.dispatchEvent(unmountEvent);
+ 				container.setAttribute("data-focus-scope-unmounting", "");
++				focusScopesStack.remove(focusScope);
+ 				setTimeout(() => {
+ 					if (!unmountEvent.defaultPrevented) require_FocusScope_utils.focus(previouslyFocusedElement ?? document.body, { select: true });
+ 					container.removeEventListener(require_FocusScope_utils.AUTOFOCUS_ON_UNMOUNT, unmountEventHandler);
+-					focusScopesStack.remove(focusScope);
+ 					container.removeAttribute("data-focus-scope-unmounting");
+ 				}, 0);
+ 			});
+diff --git a/dist/FocusScope/FocusScope.js b/dist/FocusScope/FocusScope.js
+index 85e6ff091de43dc83fcf53db454e58ec2511c8c7..69adeac2be06dc87db4a9935386aa8ab5ef1703b 100644
+--- a/dist/FocusScope/FocusScope.js
++++ b/dist/FocusScope/FocusScope.js
+@@ -116,10 +116,10 @@ var FocusScope_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */ def
+ 				container.addEventListener(AUTOFOCUS_ON_UNMOUNT, unmountEventHandler);
+ 				container.dispatchEvent(unmountEvent);
+ 				container.setAttribute("data-focus-scope-unmounting", "");
++				focusScopesStack.remove(focusScope);
+ 				setTimeout(() => {
+ 					if (!unmountEvent.defaultPrevented) focus(previouslyFocusedElement ?? document.body, { select: true });
+ 					container.removeEventListener(AUTOFOCUS_ON_UNMOUNT, unmountEventHandler);
+-					focusScopesStack.remove(focusScope);
+ 					container.removeAttribute("data-focus-scope-unmounting");
+ 				}, 0);
+ 			});
+diff --git a/src/FocusScope/FocusScope.vue b/src/FocusScope/FocusScope.vue
+index 23851d60274b5908050ef629a0842dc315e1123a..664e2701effdc3b0d37bc089df1a5503795b9117 100644
+--- a/src/FocusScope/FocusScope.vue
++++ b/src/FocusScope/FocusScope.vue
+@@ -233,6 +233,9 @@ watchEffect(async (cleanupFn) => {
+     // cleanup), not user-initiated. Consumers can use this to skip validation.
+     container.setAttribute('data-focus-scope-unmounting', '')
+ 
++    // Resume the parent before another keypress can reach an already unmounted scope.
++    focusScopesStack.remove(focusScope)
++
+     setTimeout(() => {
+       if (!unmountEvent.defaultPrevented)
+         focus(previouslyFocusedElement ?? document.body, { select: true })
+@@ -240,7 +243,6 @@ watchEffect(async (cleanupFn) => {
+       // we need to remove the listener after we `dispatchEvent`
+       container.removeEventListener(AUTOFOCUS_ON_UNMOUNT, unmountEventHandler)
+ 
+-      focusScopesStack.remove(focusScope)
+       container.removeAttribute('data-focus-scope-unmounting')
+     }, 0)
+   })

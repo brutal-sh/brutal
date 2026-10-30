@@ -15,7 +15,8 @@ export function tryStartMeshDrag(
   editor: Editor,
   sx: number,
   sy: number,
-  setDrag: (drag: DragState) => void
+  setDrag: (drag: DragState) => void,
+  shiftKey = false
 ): boolean {
   const edit = editor.state.gradientEdit
   const edited = editedMesh(editor.graph, edit)
@@ -24,8 +25,16 @@ export function tryStartMeshDrag(
   const hit = hitTestMeshHandles(layout, { x: sx, y: sy })
   if (!hit) return false
   const originalStop = edit.stop
-  editor.state.gradientEdit = { ...edit, stop: hit.index }
+  const originalPoints = edit.meshPoints
+  const previous = originalPoints ?? (originalStop >= 0 ? [originalStop] : [])
+  let points = [hit.index]
+  if (hit.kind === 'point' && shiftKey)
+    points = previous.includes(hit.index)
+      ? previous.filter((index) => index !== hit.index)
+      : [...previous, hit.index]
+  editor.state.gradientEdit = { ...edit, stop: points.at(-1) ?? -1, meshPoints: points }
   editor.requestRepaint()
+  if (!points.includes(hit.index)) return true
   const original = structuredClone(edited.paint)
   const preview = editor.beginNodePreview('Edit mesh gradient')
   setDrag({
@@ -59,7 +68,11 @@ export function tryStartMeshDrag(
     cancel: () => {
       preview.cancel()
       if (editor.state.gradientEdit)
-        editor.state.gradientEdit = { ...editor.state.gradientEdit, stop: originalStop }
+        editor.state.gradientEdit = {
+          ...editor.state.gradientEdit,
+          stop: originalStop,
+          meshPoints: originalPoints
+        }
     }
   })
   return true

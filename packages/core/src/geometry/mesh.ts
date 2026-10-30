@@ -26,8 +26,9 @@ export function meshHandleLayout(
   width: number,
   height: number,
   toScreen: (point: Vector) => Vector,
-  selected: number
+  selected: number | readonly number[]
 ): MeshHandleLayout {
+  const selection = new Set(typeof selected === 'number' ? [selected] : selected)
   const screen = (point: Vector) => toScreen({ x: point.x * width, y: point.y * height })
   const points = mesh.points.map((point) => screen(point.position))
   const tangent = (index: number, side: MeshHandleSide) => {
@@ -43,7 +44,7 @@ export function meshHandleLayout(
       if (!center) continue
       const neighbor = meshHandleNeighbor(mesh, index, side)
       if (neighbor === undefined) continue
-      if (index === selected || neighbor === selected)
+      if (selection.has(index) || selection.has(neighbor))
         handles.push({ index, side, center, origin: point })
       if (side !== 'rightHandle' && side !== 'bottomHandle') continue
       const control2 = tangent(neighbor, side === 'rightHandle' ? 'leftHandle' : 'topHandle')

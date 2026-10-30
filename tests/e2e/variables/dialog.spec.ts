@@ -1,4 +1,5 @@
 import { expect, test, useEditorSetup } from '#tests/e2e/fixtures'
+import { openAppMenu } from '#tests/helpers/menu'
 import { variablesAddTestId } from '#tests/helpers/test-ids'
 
 const editor = useEditorSetup()
@@ -20,9 +21,7 @@ function variableRows() {
 }
 
 function openVariables() {
-  return editor.page
-    .getByRole('region', { name: 'Variables' })
-    .getByRole('button', { name: 'Open variables' })
+  return editor.page.getByRole('button', { name: 'Variables', exact: true })
 }
 
 test('empty variables dialog offers to create a collection', async () => {
@@ -213,8 +212,8 @@ test('the View menu opens the variables dialog', async () => {
   await dialog.getByRole('button', { name: 'Close', exact: true }).click()
   await expect(dialog).toBeHidden()
 
-  await editor.page.locator('[role="menubar"] [role="menuitem"]', { hasText: 'View' }).click()
-  await editor.page.locator('[role="menu"] [role="menuitem"]', { hasText: 'Variables…' }).click()
+  await openAppMenu(editor.page, 'View')
+  await editor.page.getByRole('menuitem', { name: 'Variables…', exact: true }).click()
 
   await expect(dialog).toBeVisible()
   editor.canvas.assertNoErrors()
@@ -222,7 +221,10 @@ test('the View menu opens the variables dialog', async () => {
 
 /** The first mode's variable picker in the inspector. */
 function useVariable() {
-  return editor.page.getByTestId('token-inspector').getByTestId('variables-use-variable').first()
+  return editor.page
+    .getByTestId('token-inspector')
+    .getByRole('button', { name: /Use a variable$/ })
+    .first()
 }
 
 test('a value points at another variable and detaches to what it showed', async () => {

@@ -63,7 +63,7 @@ export function drawMeshHandles(
     resolvedPaintBindings(graph, edited.node)[edit.paint]?.[edit.index]?.meshGradient ?? edited.mesh
   for (const [index, point] of layout.points.entries()) {
     const color = mesh.colors[index]
-    const selected = index === edit.stop
+    const selected = edit.meshPoints?.includes(index) ?? index === edit.stop
     const radius = selected ? MESH_HANDLE.selectedPointRadius : MESH_HANDLE.pointRadius
     fill.setColor(r.ck.Color4f(color.r, color.g, color.b, color.a))
     canvas.drawCircle(point.x, point.y, radius, fill)
