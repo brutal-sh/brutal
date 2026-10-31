@@ -87,5 +87,9 @@
   "browseFiles": "ファイルを表示…",
   "saveTo": "保存先を選んで保存…",
   "showVersionHistory": "バージョン履歴を表示",
-  "saveToVersionHistory": "バージョン履歴に保存…"
+  "saveToVersionHistory": "バージョン履歴に保存…",
+  "agentChatTextSize": "エージェントチャットの文字サイズ",
+  "agentTextSmall": "小",
+  "agentTextMedium": "中",
+  "agentTextLarge": "大"
 }

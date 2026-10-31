@@ -47,6 +47,9 @@
 }
 
 @theme {
+  --text-3xs: 9px;
+  --text-2xs: 10px;
+  --text-xxs: 11px;
   --font-sans:
     ui-sans-serif, -apple-system, system-ui, 'Segoe UI', Helvetica, 'Apple Color Emoji', Arial,
     sans-serif, 'Segoe UI Emoji', 'Segoe UI Symbol';
@@ -183,4 +186,14 @@ html[data-theme='light'] {
   --v-charts-tooltip-border: var(--color-border);
   --v-charts-tooltip-foreground: var(--color-surface);
   --v-charts-label-foreground: var(--color-surface);
+}
+
+/* Scale transcript type without scaling the composer, controls, icons or canvas. */
+@utility chat-text-scale {
+  --text-3xs: calc(9px * var(--chat-scale, 1));
+  --text-2xs: calc(10px * var(--chat-scale, 1));
+  --text-xxs: calc(11px * var(--chat-scale, 1));
+  --text-xs: calc(0.75rem * var(--chat-scale, 1));
+  --text-sm: calc(0.875rem * var(--chat-scale, 1));
+  --text-base: calc(1rem * var(--chat-scale, 1));
 }

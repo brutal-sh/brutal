@@ -87,5 +87,9 @@
   "browseFiles": "浏览文件…",
   "saveTo": "保存到…",
   "showVersionHistory": "显示版本历史",
-  "saveToVersionHistory": "保存到版本历史…"
+  "saveToVersionHistory": "保存到版本历史…",
+  "agentChatTextSize": "智能体聊天文字大小",
+  "agentTextSmall": "小",
+  "agentTextMedium": "中",
+  "agentTextLarge": "大"
 }

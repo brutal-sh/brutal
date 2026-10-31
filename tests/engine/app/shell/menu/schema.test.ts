@@ -59,7 +59,10 @@ describe('APP_MENU_SCHEMA', () => {
       'theme-auto',
       'snap-geometry',
       'snap-objects',
-      'snap-pixel-grid'
+      'snap-pixel-grid',
+      'agent-text-small',
+      'agent-text-medium',
+      'agent-text-large'
     ])
   })
 

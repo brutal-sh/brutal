@@ -87,5 +87,9 @@
   "browseFiles": "Przeglądaj pliki…",
   "saveTo": "Zapisz w…",
   "showVersionHistory": "Pokaż historię wersji",
-  "saveToVersionHistory": "Zapisz w historii wersji…"
+  "saveToVersionHistory": "Zapisz w historii wersji…",
+  "agentChatTextSize": "Rozmiar tekstu czatu agenta",
+  "agentTextSmall": "Mały",
+  "agentTextMedium": "Średni",
+  "agentTextLarge": "Duży"
 }

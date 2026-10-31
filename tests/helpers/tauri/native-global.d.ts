@@ -5,6 +5,7 @@ import type * as TauriOS from '@tauri-apps/plugin-os'
 
 import type { SnappingPreferences } from '@open-pencil/core'
 
+import type { OpenPencilWindowAPI } from '@/app/browser-bridge'
 import type { EditorStore } from '@/app/editor/active-store'
 
 export {}
@@ -50,9 +51,10 @@ type NativeTestStore = {
 
 declare global {
   interface Window {
-    __TAURI__?: Pick<typeof TauriAPI, 'core'> & { os?: typeof TauriOS }
+    __TAURI__?: Pick<typeof TauriAPI, 'core' | 'event'> & { os?: typeof TauriOS }
     openPencil?: {
       getStore?: () => NativeTestStore
+      setChatTransport?: OpenPencilWindowAPI['setChatTransport']
     }
   }
 }

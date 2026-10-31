@@ -1,5 +1,6 @@
 import type { SnappingPreferences } from '@open-pencil/core'
 
+import { CHAT_TEXT_SIZES, type ChatTextSize } from '@/app/settings/preferences/store'
 import { NATIVE_MENU_IDS } from '@/app/shell/menu/native-schema'
 import { isTauri } from '@/app/tauri/env'
 
@@ -38,4 +39,15 @@ export async function syncNativeCommentsMenu(shown: boolean): Promise<void> {
   if (!isTauri() || !NATIVE_MENU_IDS.has(COMMENTS_MENU_ID)) return
   const { invoke } = await import('@tauri-apps/api/core')
   await invoke('set_native_menu_checked', { id: COMMENTS_MENU_ID, checked: shown })
+}
+
+/** Keep the mutually exclusive native text-size choices in sync with the stored preference. */
+export async function syncNativeChatTextSize(size: ChatTextSize): Promise<void> {
+  if (!isTauri()) return
+  const { invoke } = await import('@tauri-apps/api/core')
+  await Promise.all(
+    CHAT_TEXT_SIZES.filter((value) => NATIVE_MENU_IDS.has(`agent-text-${value}`)).map((value) =>
+      invoke('set_native_menu_checked', { id: `agent-text-${value}`, checked: size === value })
+    )
+  )
 }

@@ -13,7 +13,7 @@ test('completed responses release streaming parser history', async ({ configured
 test('code blocks follow light and dark themes', async ({ configuredChat: chat }) => {
   await chat.submit('Show a code block')
   const code = chat.assistantMessage().locator('.shiki').first()
-  await expect(code).toHaveCSS('background-color', 'rgb(30, 30, 30)')
+  await expect(code).toHaveCSS('background-color', 'rgb(63, 63, 70)')
   await expect(code.locator('span').filter({ hasText: 'const' }).first()).not.toHaveCSS(
     'color',
     'rgb(240, 240, 240)'

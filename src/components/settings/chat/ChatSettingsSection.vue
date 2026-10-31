@@ -3,7 +3,12 @@ import { computed } from 'vue'
 
 import { useI18n } from '@open-pencil/vue/i18n'
 
-import { changePreviewSize, maxAgentSteps, reasoningDisplay } from '@/app/ai/chat/preferences'
+import {
+  chatTextSize,
+  changePreviewSize,
+  maxAgentSteps,
+  reasoningDisplay
+} from '@/app/ai/chat/preferences'
 import { AGENT_STEP_LIMIT_MIN, AGENT_STEP_LIMIT_MAX } from '@/app/ai/reply/schema'
 import { openToolAccessSettings } from '@/app/automation/tool-access/settings/use'
 import SettingsGroup from '@/components/settings/layout/SettingsGroup.vue'
@@ -13,7 +18,7 @@ import AppButton from '@/components/ui/button/AppButton.vue'
 import PresetNumberField from '@/components/ui/input/PresetNumberField.vue'
 import AppSelect from '@/components/ui/select/AppSelect.vue'
 
-const { ai, automation, settings } = useI18n()
+const { ai, automation, settings, menu } = useI18n()
 const stepPresets = [25, 50, 100, 200]
 const limitMessage = computed(() =>
   ai.value.maxAgentStepsRange({ min: AGENT_STEP_LIMIT_MIN, max: AGENT_STEP_LIMIT_MAX })
@@ -22,6 +27,11 @@ const options = computed(() => [
   { value: 'collapsed' as const, label: ai.value.reasoningCollapsed },
   { value: 'while-thinking' as const, label: ai.value.reasoningWhileThinking },
   { value: 'expanded' as const, label: ai.value.reasoningExpanded }
+])
+const textOptions = computed(() => [
+  { value: 'small' as const, label: menu.value.agentTextSmall },
+  { value: 'medium' as const, label: menu.value.agentTextMedium },
+  { value: 'large' as const, label: menu.value.agentTextLarge }
 ])
 const previewOptions = computed(() => [
   { value: 'off' as const, label: ai.value.changePreviewOff },
@@ -35,6 +45,14 @@ const previewOptions = computed(() => [
   <SettingsSection>
     <template #title>{{ ai.chatSettings }}</template>
     <SettingsGroup>
+      <SettingsRow :label="menu.agentChatTextSize" class="max-sm:flex-col max-sm:items-stretch">
+        <AppSelect
+          v-model="chatTextSize"
+          :label="menu.agentChatTextSize"
+          :options="textOptions"
+          :ui="{ trigger: 'w-full sm:w-52' }"
+        />
+      </SettingsRow>
       <SettingsRow :label="ai.reasoningDisplay" class="max-sm:flex-col max-sm:items-stretch">
         <AppSelect
           v-model="reasoningDisplay"

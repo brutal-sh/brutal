@@ -63,3 +63,18 @@ test('chat step limit validates, persists and preserves reasoning preferences', 
   await reloadAndOpenChatSettings(page)
   await expect(limit).toHaveText('200')
 })
+
+test('chat text size persists without replacing other chat preferences', async ({ page }) => {
+  await page.goto('/?test')
+  await new CanvasHelper(page).waitForInit()
+  await openChatSettings(page)
+  const size = page.getByRole('combobox', { name: 'Agent Chat Text Size', exact: true })
+  await expect(size).toHaveText('Small')
+  await size.click()
+  await page.getByRole('option', { name: 'Large', exact: true }).click()
+  await reloadAndOpenChatSettings(page)
+  await expect(size).toHaveText('Large')
+  await expect(page.getByRole('combobox', { name: 'Reasoning display' })).toHaveText(
+    'Collapsed by default'
+  )
+})

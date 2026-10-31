@@ -54,6 +54,8 @@ export const NATIVE_MENU_SCHEMA: AppMenuGroupSchema[] = [
     label: 'View',
     items: [
       command('toggle-ui', 'Show/Hide UI'),
+      command('agent-chat-text-size'),
+      { type: 'separator' },
       { id: 'toggle-fullscreen', label: 'Toggle Full Screen' }
     ]
   }

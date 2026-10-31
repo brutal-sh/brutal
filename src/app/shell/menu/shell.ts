@@ -1,15 +1,19 @@
+import { watch } from 'vue'
+
 import { useI18n } from '@open-pencil/vue/i18n'
 
+import { chatTextSize } from '@/app/ai/chat/preferences'
 import { openTour } from '@/app/demo/document'
 import { requestAppExit } from '@/app/document/close/exit'
 import { openSettingsDialog } from '@/app/settings/dialog'
 import { setDesignIssuesOnCanvas, setSnappingPreference } from '@/app/settings/preferences/apply'
 import {
+  syncNativeChatTextSize,
   syncNativeCommentsMenu,
   syncNativeDesignIssuesMenu,
   syncNativeSnappingMenu
 } from '@/app/settings/preferences/native-menu'
-import { appPreferences } from '@/app/settings/preferences/store'
+import { appPreferences, type ChatTextSize } from '@/app/settings/preferences/store'
 import { useNativeMenuEvents } from '@/app/shell/menu/native-events'
 import { browseFiles } from '@/app/shell/menu/navigation'
 import { APP_MENU_SCHEMA, type AppMenuEntry } from '@/app/shell/menu/schema'
@@ -35,6 +39,18 @@ export const SHELL_MENU_IDS = new Set([
 export function useShellMenu() {
   if (!isTauri()) return
 
+  function syncChatSize(size: ChatTextSize) {
+    void syncNativeChatTextSize(size).catch((error: unknown) => {
+      console.error('[Menu] Failed to synchronize native chat text size:', error)
+    })
+  }
+  watch(chatTextSize, syncChatSize, { immediate: true })
+  function chooseChatSize(size: ChatTextSize) {
+    // Native check items toggle before dispatch, including the already-selected choice.
+    if (chatTextSize.value === size) syncChatSize(size)
+    else chatTextSize.value = size
+  }
+
   void syncNativeSnappingMenu(appPreferences.value.editing.snapping).catch((error: unknown) => {
     console.error('[Menu] Failed to synchronize native snapping preferences:', error)
   })
@@ -53,6 +69,9 @@ export function useShellMenu() {
   const { setTheme } = useAppTheme()
   const { updates } = useI18n()
   const actions: Partial<Record<string, () => void>> = {
+    'agent-text-small': () => chooseChatSize('small'),
+    'agent-text-medium': () => chooseChatSize('medium'),
+    'agent-text-large': () => chooseChatSize('large'),
     'browse-files': () => {
       void import('@/router').then(({ default: router }) => browseFiles(router))
     },

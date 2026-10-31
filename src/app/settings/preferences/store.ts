@@ -22,6 +22,9 @@ export type AnimationPreference = (typeof ANIMATION_PREFERENCES)[number]
 export const REASONING_DISPLAYS = ['collapsed', 'while-thinking', 'expanded'] as const
 export type ReasoningDisplay = (typeof REASONING_DISPLAYS)[number]
 
+export const CHAT_TEXT_SIZES = ['small', 'medium', 'large'] as const
+export type ChatTextSize = (typeof CHAT_TEXT_SIZES)[number]
+
 export const CHANGE_PREVIEW_SIZES = ['off', 'small', 'medium', 'large'] as const
 /** How large the before/after images kept for each AI edit are; `off` keeps only the JSX diff. */
 export type ChangePreviewSize = (typeof CHANGE_PREVIEW_SIZES)[number]
@@ -74,6 +77,7 @@ export type AISetupState = (typeof AI_SETUP_STATES)[number]
 export interface AppPreferences {
   appearance: { animations: AnimationPreference; accent: AccentPreference }
   chat: {
+    textSize: ChatTextSize
     reasoningDisplay: ReasoningDisplay
     maxAgentSteps: number
     changePreviewSize: ChangePreviewSize
@@ -106,6 +110,7 @@ export interface AppPreferences {
 export const DEFAULT_APP_PREFERENCES: Readonly<AppPreferences> = {
   appearance: { animations: 'system', accent: { ...DEFAULT_ACCENT } },
   chat: {
+    textSize: 'small',
     reasoningDisplay: 'collapsed',
     maxAgentSteps: DEFAULT_AGENT_STEPS,
     changePreviewSize: 'medium',
@@ -150,6 +155,7 @@ const appPreferencesSchema = section({
     accent: v.fallback(accentPreferenceSchema, () => ({ ...DEFAULT_ACCENT }))
   }),
   chat: section({
+    textSize: v.fallback(v.picklist(CHAT_TEXT_SIZES), defaults.chat.textSize),
     reasoningDisplay: v.fallback(v.picklist(REASONING_DISPLAYS), defaults.chat.reasoningDisplay),
     maxAgentSteps: v.fallback(
       v.pipe(v.unknown(), v.transform(resolveAgentStepLimit)),

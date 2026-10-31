@@ -24,6 +24,7 @@ import type {
   CommandPaletteItem
 } from '@open-pencil/vue/primitives/CommandPalette'
 
+import { chatTextSize } from '@/app/ai/chat/preferences'
 import { openTour } from '@/app/demo/document'
 import { useEditorStore } from '@/app/editor/active-store'
 import { openVariablesDialog } from '@/app/editor/tokens/dialog'
@@ -146,6 +147,10 @@ export function useAppMenu() {
     'snap-pixel-grid': 'snapToPixelGrid',
     profiler: 'profiler',
     'toggle-ui': 'toggleUI',
+    'agent-chat-text-size': 'agentChatTextSize',
+    'agent-text-small': 'agentTextSmall',
+    'agent-text-medium': 'agentTextMedium',
+    'agent-text-large': 'agentTextLarge',
     'toggle-preview': 'togglePreview',
     theme: 'theme',
     'theme-light': 'themeLight',
@@ -177,6 +182,15 @@ export function useAppMenu() {
   )
 
   const actions: Partial<Record<string, () => void>> = {
+    'agent-text-small': () => {
+      chatTextSize.value = 'small'
+    },
+    'agent-text-medium': () => {
+      chatTextSize.value = 'medium'
+    },
+    'agent-text-large': () => {
+      chatTextSize.value = 'large'
+    },
     new: () => {
       void import('@/app/tabs').then((m) => m.createTab())
     },
@@ -209,6 +223,12 @@ export function useAppMenu() {
 
   function checked(item: AppMenuActionItem): boolean | undefined {
     switch (item.id) {
+      case 'agent-text-small':
+        return chatTextSize.value === 'small'
+      case 'agent-text-medium':
+        return chatTextSize.value === 'medium'
+      case 'agent-text-large':
+        return chatTextSize.value === 'large'
       case 'autosave':
         return store.state.autosaveEnabled
       case 'profiler':
@@ -270,6 +290,9 @@ export function useAppMenu() {
         return (value: boolean) => setSnappingPreference('objects', value)
       case 'snap-pixel-grid':
         return (value: boolean) => setSnappingPreference('pixelGrid', value)
+      case 'agent-text-small':
+      case 'agent-text-medium':
+      case 'agent-text-large':
       case 'theme-light':
       case 'theme-dark':
       case 'theme-auto':

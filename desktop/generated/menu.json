@@ -118,6 +118,30 @@
         "accelerator": "CmdOrCtrl+\\"
       },
       {
+        "id": "agent-chat-text-size",
+        "label": "Agent Chat Text Size",
+        "sub": [
+          {
+            "id": "agent-text-small",
+            "label": "Small",
+            "checkbox": true
+          },
+          {
+            "id": "agent-text-medium",
+            "label": "Medium",
+            "checkbox": true
+          },
+          {
+            "id": "agent-text-large",
+            "label": "Large",
+            "checkbox": true
+          }
+        ]
+      },
+      {
+        "type": "separator"
+      },
+      {
         "id": "toggle-fullscreen",
         "label": "Toggle Full Screen"
       }

@@ -292,6 +292,15 @@ export const APP_MENU_SCHEMA = [
       },
       { type: 'separator' },
       { id: 'toggle-ui', label: 'Toggle UI', shortcut: 'MOD+\\' },
+      {
+        id: 'agent-chat-text-size',
+        label: 'Agent Chat Text Size',
+        sub: [
+          { id: 'agent-text-small', label: 'Small', checkbox: true, handler: 'shell' },
+          { id: 'agent-text-medium', label: 'Medium', checkbox: true, handler: 'shell' },
+          { id: 'agent-text-large', label: 'Large', checkbox: true, handler: 'shell' }
+        ]
+      },
       { id: 'toggle-preview', label: 'Preview', shortcut: 'MOD+ALT+↩' },
       { type: 'separator' },
       { id: 'profiler', label: 'Profiler', checkbox: true, target: 'browser' },

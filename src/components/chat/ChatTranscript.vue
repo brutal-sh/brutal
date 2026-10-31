@@ -7,6 +7,7 @@ import { useI18n } from '@open-pencil/vue/i18n'
 
 import { attachmentsForMessage } from '@/app/ai/attachment/presentation/store'
 import type { AttachmentPresentation } from '@/app/ai/attachment/presentation/types'
+import { chatTextScale } from '@/app/ai/chat/preferences'
 import type { QueuedMessage } from '@/app/ai/chat/queue'
 import type { ReasoningDisplay } from '@/app/settings/preferences/store'
 import { CHAT_NODES_LIVE } from '@/components/chat/tool/context'
@@ -94,7 +95,11 @@ const { arrivedState, resumeFollowing } = useScrollFollowing(
 </script>
 
 <template>
-  <ScrollAreaRoot class="relative min-h-0 flex-1">
+  <ScrollAreaRoot
+    class="chat-text-scale relative min-h-0 flex-1"
+    data-slot="chat-transcript"
+    :style="{ '--chat-scale': chatTextScale }"
+  >
     <ScrollAreaViewport ref="viewportComponent" class="h-full px-3 py-3 [&>div]:h-full">
       <AppPlaceholder
         v-if="messages.length === 0"
@@ -128,7 +133,7 @@ const { arrivedState, resumeFollowing } = useScrollFollowing(
         <!-- Thinking indicator: shown when AI is working but no visible activity -->
         <div v-if="isThinking" data-test-id="chat-typing-indicator" class="flex gap-2">
           <div
-            class="flex size-6 shrink-0 items-center justify-center rounded-full bg-muted/20 text-[10px] font-bold text-muted"
+            class="flex size-6 shrink-0 items-center justify-center rounded-full bg-muted/20 text-2xs font-bold text-muted"
           >
             AI
           </div>

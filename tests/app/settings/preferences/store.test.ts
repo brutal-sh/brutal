@@ -3,6 +3,19 @@ import { describe, expect, test } from 'bun:test'
 import { DEFAULT_APP_PREFERENCES, parseAppPreferences } from '@/app/settings/preferences/store'
 
 describe('parseAppPreferences', () => {
+  test('chat text size defaults independently and preserves existing chat preferences', () => {
+    expect(parseAppPreferences({ chat: { reasoningDisplay: 'expanded' } }).chat).toMatchObject({
+      textSize: 'small',
+      reasoningDisplay: 'expanded'
+    })
+    for (const textSize of ['small', 'medium', 'large'] as const)
+      expect(parseAppPreferences({ chat: { textSize } }).chat.textSize).toBe(textSize)
+    for (const textSize of ['giant', '', 2, null])
+      expect(
+        parseAppPreferences({ chat: { textSize, changePreviewSize: 'large' } }).chat
+      ).toMatchObject({ textSize: 'small', changePreviewSize: 'large' })
+  })
+
   test('starts from the defaults when nothing usable is stored', () => {
     for (const stored of [undefined, null, 'preferences', [], {}]) {
       expect(parseAppPreferences(stored)).toEqual(DEFAULT_APP_PREFERENCES)
