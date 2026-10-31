@@ -26,7 +26,7 @@ The CLI SVG export path was executed against an original unrendered Script fixtu
 
 ## Integration and design
 
-Scripts use a frame with typed authored metadata. The existing generated-content ownership path locks and hides derived children. `.pen` saves source URI and raw scalar inputs, omitting generated children. Core conversion requires current successful output, makes those children editable, and Undo restores the authored Script. Failed regeneration retains prior visual layers but invalidates export/conversion readiness. Conversion currently retains the parent ID; actual Pen creates a new frame ID, so exact conversion identity parity remains open.
+Scripts use a frame with typed authored metadata. The existing generated-content ownership path locks and hides derived children. `.pen` saves source URI and raw scalar inputs, omitting generated children. Core conversion requires current successful output, makes those children editable, and Undo restores the authored Script. Failed regeneration retains prior visual layers but invalidates export/conversion readiness. Conversion now replaces the Script with a fresh frame snapshot at its original sibling position. The followup identity/history evidence below supersedes the initial in-place implementation.
 
 The runtime uses document-local or explicitly selected bounded UTF-8 files, per-node uploaded sources, ordinary/atomic file watches, abortable workers, owner/definition/size/lifetime guards and shared `.pen` layout conversion. Generated changes add no history or dirty state. Number/string/color gestures reuse SDK node previews; retained deactivation cancels them. Native/browser choosers recheck their captured owner after each await. The source text field captures the same graph/node/document identity, cancels stale drafts, and supports Escape.
 
@@ -44,4 +44,15 @@ The native field check also exposed the compact variable-aware radius branch omi
 
 ## Remaining acceptance
 
-Native physical converted-child editing, all scalar controls and broader history/persistence variants remain. Ref/component context, variable/theme inputs and regeneration, Script Gallery and its examples, browser source dependency identity, JS snapshots, headless generation, error canvas/excerpts and remaining visual/keyboard states are open. Ref is currently a text fallback and output references are refused, which is not ref parity. The existing sandbox/input/node/time limits are explicit. No proprietary assets or code are shipped. Full Script and full-app parity are not accepted.
+All scalar native controls and broader history/persistence variants remain. Ref/component context, variable/theme inputs and regeneration, Script Gallery and its examples, browser source dependency identity, JS snapshots, headless generation, error canvas/excerpts and remaining visual/keyboard states are open. Ref is currently a text fallback and output references are refused, which is not ref parity. The existing sandbox/input/node/time limits are explicit. No proprietary assets or code are shipped. Full Script and full-app parity are not accepted.
+
+
+## Replacement conversion followup —2026-10-31
+
+An independent named probe was copied in actual Pen with x100/y0,200×200,rotation15°,opacity0.5,Clip Content and Context. Conversion replaced Scriptw6dz8 with framepSz5Q, preserving name, geometry, opacity, clipping and Context. Undo restoredw6dz8; Redo restoredpSz5Q and the same serialized child IDs. The temporary probe was deleted and the private reference was saved clean with its original Script intact.
+
+The independent implementation reuses graph cloning and structural history to create a new frame and editable children, preserve sibling position and custom metadata, select the new frame and remove the Script. Undo restores the Script; Redo restores the converted snapshot IDs. Structural instance rules use the existing slot preparation inside the same history batch: fixed instance content refuses conversion, while an inherited slot is claimed and one Undo restores its Script and ownership.
+
+Executed:28 focused action/slot/header/output/runtime cases with179 assertions; ten browser journeys across Chromium/WebKit, including disabled conversion for fixed instance content and unchanged exact canvas baselines. Two additional actual-save/download/reparse/open journeys retained quoted multiline Context, three ordinary children and the frame ID with no Script URI, input fields or worker required. Their initial filename prompt was unhandled by the test and automatically dismissed; the corrected test accepts the real prompt. No save implementation change followed that probe.
+
+The final isolated native63.9s physical sequence executed Convert, Cmd+Z, Cmd+Shift+Z, canvas double-click into a child, Width100→42 and Cmd+Z→100. Native state assertions confirmed removal of the Script ID, fresh frame/child IDs, original Script restoration and stable Redo IDs. The same slot-guard candidate was used. Source review found and then verified the structural ownership correction; it is not an exhaustive review of remaining Script features.

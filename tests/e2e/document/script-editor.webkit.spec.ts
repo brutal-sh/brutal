@@ -125,7 +125,13 @@ test('Script creates, links, edits inputs, converts to editable layers and undoe
     threshold: 0
   })
   await page.screenshot({ path: testInfo.outputPath('script-inputs-rendered.png') })
+  const originalScript = await generated(page)
   await section.getByRole('button', { name: 'Convert to layers', exact: true }).click()
+  const convertedFrame = await generated(page)
+  expect(convertedFrame?.id).not.toBe(originalScript?.id)
+  expect(convertedFrame?.children.map((child) => child.id)).not.toEqual(
+    originalScript?.children.map((child) => child.id)
+  )
   await expect(section).toHaveCount(0)
   await canvas.dblclick(310, 260)
   await expect.poll(async () => (await generated(page))?.type).toBe('RECTANGLE')
@@ -276,5 +282,73 @@ test('source-path Escape and graph replacement discard the original owner draft'
   await expect(path).toHaveValue('probe.js')
   await path.press('Enter')
   await expect(path).toHaveValue('probe.js')
+  canvas.assertNoErrors()
+})
+
+test('Script conversion is disabled for fixed component-instance content', async ({ page }) => {
+  const canvas = await create(page)
+  await page.evaluate(() => {
+    const store = window.openPencil?.getStore?.()
+    const script = store?.getSelectedNodes()[0]
+    if (!store || !script) throw new Error('No Script fixture')
+    const component = store.graph.createNode('COMPONENT', store.state.currentPageId, {
+      name: 'Script component'
+    })
+    store.graph.insertChildAt(script.id, component.id, 0)
+    const instance = store.graph.createInstance(component.id, store.state.currentPageId)
+    const inherited = instance && store.graph.getChildren(instance.id)[0]
+    if (!inherited) throw new Error('No inherited Script fixture')
+    store.select([inherited.id])
+    store.requestRender()
+  })
+  await expect(page.getByRole('region', { name: 'Script', exact: true })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Convert to layers', exact: true })).toBeDisabled()
+  canvas.assertNoErrors()
+})
+
+test('converted Script saves and reopens its Context and editable layers without a linked source', async ({
+  page
+}) => {
+  const canvas = await create(page)
+  await chooseSource(page)
+  await expect.poll(async () => (await generated(page))?.children.length).toBe(3)
+  await page.getByRole('button', { name: 'Context', exact: true }).click()
+  const context = page.getByRole('textbox', { name: 'Context information', exact: true })
+  await context.fill('Independent conversion context: "quoted" & editable.\nSecond line.')
+  await context.press('Tab')
+  await page.getByRole('button', { name: 'Convert to layers', exact: true }).click()
+  const converted = await generated(page)
+  page.once('dialog', (dialog) => dialog.accept('converted.pen'))
+  const downloading = page.waitForEvent('download')
+  await (
+    await openAppMenu(page, 'File')
+  )
+    .getByRole('menuitem', { name: /^Save(?:\s|$)/ })
+    .first()
+    .click()
+  const saved = await readFile(await (await downloading).path())
+  const authored = parsePenDocument(saved.toString()).children[0]
+  expect(authored).toMatchObject({
+    type: 'frame',
+    id: converted?.id,
+    context: 'Independent conversion context: "quoted" & editable.\nSecond line.'
+  })
+  expect(authored.scriptUri).toBeUndefined()
+  expect(authored.inputs).toBeUndefined()
+  expect(authored.children).toHaveLength(3)
+  const opening = page.waitForEvent('filechooser')
+  await (await openAppMenu(page, 'File')).getByRole('menuitem', { name: /^Open…/ }).click()
+  await (
+    await opening
+  ).setFiles({ name: 'converted.pen', mimeType: 'application/json', buffer: saved })
+  await canvas.waitForInit()
+  await canvas.selectAll()
+  await expect.poll(async () => (await generated(page))?.id).toBe(converted?.id)
+  await expect.poll(async () => (await generated(page))?.children.length).toBe(3)
+  await expect(page.getByRole('region', { name: 'Script', exact: true })).toHaveCount(0)
+  await expect(context).toHaveValue(
+    'Independent conversion context: "quoted" & editable.\nSecond line.'
+  )
+  await expect(page.locator('iframe[sandbox="allow-scripts"]')).toHaveCount(0)
   canvas.assertNoErrors()
 })

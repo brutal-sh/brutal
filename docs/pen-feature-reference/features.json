@@ -772,7 +772,7 @@
           "acceptance": "Convert, manually edit children, Undo/Redo, save/reopen.",
           "status": "partial",
           "evidence": ["docs/SCRIPT-PARITY.md"],
-          "evidence_note": "Browser converted child edit/Undo and native conversion/restoration executed; new frame identity and all persistence states remain."
+          "evidence_note": "Browser/native replacement IDs/history and converted Context/layer save/reopen executed; broader nested-component, layout and export/persistence variants remain."
         },
         {
           "id": "SCRIPT-06",

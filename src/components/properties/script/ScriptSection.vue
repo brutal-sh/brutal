@@ -50,7 +50,8 @@ const canConvert = computed(() => {
     editable.value &&
     !state.value?.loading &&
     !state.value?.error &&
-    !!node &&
+    !!node?.parentId &&
+    store.acceptsChildren(node.parentId) &&
     (!definition.value?.uri || hasCurrentScriptOutput(store.graph, node))
   )
 })

@@ -12,6 +12,7 @@ import {
 } from '@open-pencil/scene-graph/scripts'
 
 import { assertNodeEditable } from './capabilities'
+import { prepareSlotEdits } from './components/slots'
 import { recordEdit } from './history/edit'
 import type { EditorContext } from './types'
 
@@ -50,21 +51,33 @@ export function createScriptActions(ctx: EditorContext, nodes: ScriptNodeActions
     nodes.updateNodeWithUndo(id, { pluginData: withScript(node, definition) }, 'Set script')
   }
 
-  function convertScriptToLayers(id: string): void {
+  function convertScriptToLayers(id: string): string | undefined {
     const node = ctx.graph.getNode(id)
-    if (!node || !scriptOfNode(node)) return
+    if (!node?.parentId || !scriptOfNode(node)) return undefined
     assertNodeEditable(ctx.graph, id)
     if (scriptOfNode(node)?.uri && !hasCurrentScriptOutput(ctx.graph, node))
       throw new Error('Regenerate the current script successfully before converting to layers.')
-    recordEdit(ctx, { label: 'Convert script to layers' }, () => {
-      if (!scriptOfNode(node)?.uri)
-        for (const childId of Array.from(node.childIds)) ctx.graph.deleteNode(childId)
-      ctx.graph.updateNode(id, {
-        name: node.name === 'Script' ? 'Frame' : node.name,
-        pluginData: withScript(node, undefined)
+    const parentId = node.parentId
+    const index = ctx.graph.getNode(parentId)?.childIds.indexOf(id) ?? 0
+    const converted = ctx.undo.runBatch('Convert script to layers', () =>
+      recordEdit(ctx, { label: 'Convert script to layers' }, () => {
+        if (!prepareSlotEdits(ctx, [parentId])) return undefined
+        const frame = ctx.graph.cloneTree(id, parentId, {
+          name: node.name === 'Script' ? 'Frame' : node.name,
+          pluginData: withScript(node, undefined),
+          status: node.status
+        })
+        if (!frame) return undefined
+        if (!scriptOfNode(node)?.uri)
+          for (const childId of Array.from(frame.childIds)) ctx.graph.deleteNode(childId)
+        ctx.graph.insertChildAt(frame.id, parentId, index)
+        ctx.graph.deleteNode(id)
+        ctx.setSelectedIds(new Set([frame.id]))
+        return frame.id
       })
-    })
+    )
     ctx.requestRender()
+    return converted
   }
 
   function replaceScriptOutput(
