@@ -24,6 +24,9 @@ test('brand menu uses keyboard navigation and restores trigger focus on Escape',
   await expect(menu.getByRole('menuitem', { name: 'Commands', exact: true })).toBeFocused()
   await page.keyboard.press('ArrowUp')
   await expect(menu.getByRole('menuitem', { name: 'Open Pen CLI docs', exact: true })).toBeFocused()
+  await expect(
+    menu.getByRole('menuitem', { name: 'Open Pen CLI docs', exact: true })
+  ).toHaveAttribute('href', 'https://github.com/jpoindexter/open-pen#cli')
   await page.screenshot({ path: testInfo.outputPath('brand-menu.png') })
   await page.keyboard.press('Escape')
   await expect(menu).toBeHidden()

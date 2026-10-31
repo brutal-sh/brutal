@@ -16,14 +16,17 @@ import IconLifeBuoy from '~icons/lucide/life-buoy'
 import { createSharedEditorMenuActions } from '@/app/shell/menu/actions/editor'
 import { useAppMenu } from '@/app/shell/menu/app-menu'
 import { appMenuShortcutLabel } from '@/app/shell/menu/shortcut'
+import { popupWorkspaceMenu } from '@/app/shell/menu/workspace'
 import { useAppTheme } from '@/app/shell/theme'
+import { toast } from '@/app/shell/ui'
 import WorkspaceCommandItems from '@/components/editor/WorkspaceCommandItems.vue'
 import ExternalLink from '@/components/links/ExternalLink.vue'
 import AppShortcutText from '@/components/ui/menu/AppShortcutText.vue'
 import { useMenuUI } from '@/components/ui/menu/menu'
-import { IS_TAURI, OPEN_PEN_REPOSITORY_URL } from '@/constants'
+import { IS_TAURI, OPEN_PEN_CLI_GUIDE_URL, OPEN_PEN_REPOSITORY_URL } from '@/constants'
 
 const open = ref(false)
+const nativeOpen = ref(false)
 const { topMenus } = useAppMenu()
 const browserCommands = computed(() => [
   {
@@ -49,11 +52,43 @@ const styles = useMenuUI({
   item: 'h-6 w-full justify-start gap-2 px-2 py-0 text-xs leading-4 font-normal no-underline',
   separator: 'mx-1 my-1 h-px bg-border'
 })
+
+async function openNativeMenu(event: MouseEvent | KeyboardEvent) {
+  if (nativeOpen.value || !(event.currentTarget instanceof HTMLButtonElement)) return
+  const trigger = event.currentTarget
+  const rect = trigger.getBoundingClientRect()
+  nativeOpen.value = true
+  try {
+    await popupWorkspaceMenu({ x: rect.left, y: rect.bottom + 2 }, links, {
+      toggleTheme,
+      toggleUI: actions['toggle-ui']
+    })
+  } catch (error) {
+    console.error('[Menu] Failed to open the native workspace menu:', error)
+    toast.error('Could not open the application menu.')
+  } finally {
+    nativeOpen.value = false
+    if (trigger.isConnected) trigger.focus()
+  }
+}
 </script>
 
 <template>
   <DropdownMenuRoot v-model:open="open">
-    <DropdownMenuTrigger as-child>
+    <button
+      v-if="IS_TAURI"
+      type="button"
+      aria-label="Main menu"
+      aria-haspopup="menu"
+      :aria-expanded="nativeOpen"
+      class="flex h-8 shrink-0 items-center gap-2 rounded-full px-3 text-sm font-semibold text-surface hover:bg-hover focus-visible:outline-panel-focus"
+      @click="openNativeMenu"
+      @keydown.down.prevent="openNativeMenu"
+    >
+      <icon-lucide-pen-line class="size-4" />
+      Open Pen
+    </button>
+    <DropdownMenuTrigger v-else as-child>
       <button
         aria-label="Main menu"
         class="flex h-8 shrink-0 items-center gap-2 rounded-full px-3 text-sm font-semibold text-surface hover:bg-hover focus-visible:outline-panel-focus"
@@ -62,7 +97,7 @@ const styles = useMenuUI({
         Open Pen
       </button>
     </DropdownMenuTrigger>
-    <DropdownMenuPortal>
+    <DropdownMenuPortal v-if="!IS_TAURI">
       <DropdownMenuContent
         aria-label="Open Pen menu"
         side="bottom"
@@ -88,10 +123,7 @@ const styles = useMenuUI({
         </DropdownMenuItem>
         <DropdownMenuSeparator :class="styles.separator" />
         <DropdownMenuItem as-child>
-          <ExternalLink
-            :href="`${repository}/blob/HEAD/packages/docs/reference/cli.md`"
-            :ui="{ base: styles.item, icon: 'hidden' }"
-          >
+          <ExternalLink :href="OPEN_PEN_CLI_GUIDE_URL" :ui="{ base: styles.item, icon: 'hidden' }">
             <icon-lucide-terminal class="size-3.5 shrink-0 text-muted" aria-hidden="true" />
             Open Pen CLI docs
           </ExternalLink>

@@ -9,3 +9,4 @@
 - Removes a document’s recovery snapshot when Undo returns it to a clean state, while preserving unrelated drafts and edits arriving during cleanup.
 
 - Use compact paint category and Mesh tangent glyphs with separate point labels and regular-weight actions.
+- The desktop brand popup uses native platform menu presentation, with working links, theme and UI actions and keyboard focus return; browser commands remain in the web menu.
