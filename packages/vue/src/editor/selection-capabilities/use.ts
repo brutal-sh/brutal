@@ -78,10 +78,13 @@ export function useSelectionCapabilities() {
     canSelectAll: useSceneComputed(
       () => editor.graph.getChildren(editor.state.currentPageId).length > 0
     ),
-    // In vector edit mode, undo/redo route to the session-local history —
-    // keep the commands enabled so the shortcut reaches them.
+    // Pending text is recorded by Undo itself; vector edits have session-local history.
     canUndo: useSceneComputed(
-      () => historyVersion.value >= 0 && (editor.state.nodeEditState != null || editor.undo.canUndo)
+      () =>
+        historyVersion.value >= 0 &&
+        (editor.state.nodeEditState != null ||
+          editor.state.editingTextId !== null ||
+          editor.undo.canUndo)
     ),
     canRedo: useSceneComputed(
       () => historyVersion.value >= 0 && (editor.state.nodeEditState != null || editor.undo.canRedo)

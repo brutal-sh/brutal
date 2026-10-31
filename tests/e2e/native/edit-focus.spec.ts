@@ -57,3 +57,16 @@ it('deletes selected canvas text through native menu events without deleting the
   assert.equal(snapshot.editingNodeExists, true)
   assert.equal(snapshot.editingTextId, id)
 })
+
+it('restores a pending native text edit when the document history starts empty', async () => {
+  const id = await createNativeTextFixture('abcdef')
+  await browser.execute(() => window.openPencil?.getStore?.().undo.clear())
+  assert.equal(await browser.execute(() => window.openPencil?.getStore?.().undo.canUndo), false)
+  await $('textarea[data-canvas-text-input]').addValue('uvwxyz')
+  await browser.waitUntil(async () => (await readNativeEditorSnapshot()).editingText === 'uvwxyz')
+  await emitNativeMenuAction('edit.undo')
+  await browser.waitUntil(async () => (await readNativeEditorSnapshot()).editingText === 'abcdef')
+  await emitNativeMenuAction('edit.redo')
+  await browser.waitUntil(async () => (await readNativeEditorSnapshot()).editingText === 'uvwxyz')
+  assert.equal((await readNativeEditorSnapshot()).editingTextId, id)
+})

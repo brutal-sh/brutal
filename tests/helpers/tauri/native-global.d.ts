@@ -23,6 +23,7 @@ type NativeTestNode = {
 }
 
 type NativeTestStore = {
+  undo: { clear: () => void; readonly canUndo: boolean }
   getDocumentFilePath: EditorStore['getDocumentFilePath']
   hasUnsavedChanges: EditorStore['hasUnsavedChanges']
   saveFigFileToPath: EditorStore['saveFigFileToPath']

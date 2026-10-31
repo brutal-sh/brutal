@@ -12,3 +12,4 @@
 - Show the resolved local MCP endpoint after server startup.
 
 - Route native Edit → Delete to focused inspector text or canvas text selection, preserving the layer and separating the menu edit from preceding typing for Undo.
+- Canvas text Undo and Redo work while typing, including pending changes on an existing layer with empty document history; Escape exits text editing after using a menu.

@@ -76,6 +76,10 @@ export function createKeyboardActions({
       store.stopPlay()
       return
     }
+    if (store.state.editingTextId) {
+      store.commitTextEdit()
+      return
+    }
     if (store.state.rotationPreview) {
       store.setRotationPreview(null)
       return
