@@ -42,7 +42,7 @@ function setDistribution(value: unknown) {
           compact
           class="data-[disabled]:text-muted data-[disabled]:opacity-50"
           aria-label="Fixed gap amount"
-          :model-value="Math.round(ctx.node.itemSpacing)"
+          :model-value="ctx.node.itemSpacing"
           :min="0"
           :disabled="ctx.gapDistribution !== 'FIXED'"
           :node-id="ctx.node.id"

@@ -58,7 +58,7 @@ function setMode(value: string) {
         v-else
         :data-test-id="axis === 'primary' ? 'layout-gap-input' : 'layout-cross-gap-input'"
         :aria-label="label"
-        :model-value="Math.round(ctx.node[prop])"
+        :model-value="ctx.node[prop]"
         :min="0"
         :node-id="ctx.node.id"
         :binding-path="prop"
@@ -85,7 +85,7 @@ function setMode(value: string) {
     </div>
     <AppSelectContent v-if="allowAuto && portalActive" align="end">
       <AppSelectItem v-for="mode in ['FIXED', 'AUTO']" :key="mode" :value="mode">
-        {{ mode === 'AUTO' ? panels.auto : Math.round(ctx.node.itemSpacing) }}
+        {{ mode === 'AUTO' ? panels.auto : ctx.node.itemSpacing }}
       </AppSelectItem>
     </AppSelectContent>
   </SelectRoot>

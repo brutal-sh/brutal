@@ -41,3 +41,9 @@ Executed:18 Chromium/WebKit text-history/focused-command workflows, including ca
 Retained failures: `text-history-shortcut-before.log`, `text-history-capability-before.log`, `text-history-native-before.log`. The first combined browser run also exposed the blocked Escape path after menu focus; `text-history-browser-final.log` records the corrected18 passing workflows. Native event results are in `text-history-native.log` and remain distinct from the physical menu/shortcut run.
 
 Source/Vue/test/native types, full lint (existing warnings), architecture, test placement/changelog, normal frontend/native bundle, deep strict signature and native-driver exclusion passed for this unit. The normal candidate was not installed over the stalled main profile.
+
+## Native system menu inventory — 2026-10-31
+
+An isolated native Context field now has an executed accessibility inventory: Undo, Redo, Cut, Copy, Paste, Delete, Select All, AutoFill→Contact…/Passwords…/Credit Card…, Start Dictation… and Emoji & Symbols. The three AutoFill children were disabled in this state. These are already supplied by AppKit; no duplicate product items were added. Private observation: `edit-native-inventory-before.txt`. Apple documents the automatic Dictation and Emoji entries in its [menu-bar guidance](https://developer.apple.com/design/human-interface-guidelines/the-menu-bar).
+
+Selecting Emoji & Symbols returned focus to Context but produced no visible picker in either the app accessibility tree or screenshot. Its insertion/cancel journey remains unverified. Dictation recording and credential/contact AutoFill were not exercised. Presence and matching order do not establish those services' behavior.

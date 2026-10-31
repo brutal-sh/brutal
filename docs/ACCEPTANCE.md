@@ -348,3 +348,9 @@ Executed:12 Chromium/WebKit focused-command workflows;28 text/history/paragraph 
 Actual Pen’s controlled paste→Cmd+Z→Cmd+Shift+Z→Cmd+Z restored original/replacement/original in the owned fixture, which was restored, saved and closed. Open Pen now routes canvas keyboard history to the editor, enables Undo for pending text even with empty document history, and commits text on Escape after in-app menu focus. Existing text-step history and ordinary field Undo are reused.
 
 Executed:18 combined Chromium/WebKit text-history/focused-command workflows; four bundled native Edit/tab regressions; physical macOS Edit Undo→Redo→Cmd+Z with exact text/node assertions (32.4s). Independent source review found no concrete regression. These checks do not establish exact typing groups, real IME behavior, OS services or whole-app parity. Detailed failures and evidence are in EDIT-PARITY.md; the installed main profile and recovery data are unchanged.
+
+## Fractional layout fields — 2026-10-31
+
+Actual Pen displays fractional gap and padding unchanged. Open Pen's display rounded them before the number field, also supplying a rounded prior value for editing/history. The compact/advanced flex and paired/individual padding fields now retain their actual values. The advanced variable-creation label also retains the fraction, following a source-review finding.
+
+Executed: four browser workflows including Chromium/WebKit fractional edit→Undo/Redo→save/download inspection→reopen→paired collapse/history→create a bound variable from7.25 (32.1s). Adjacent live Space Around/HTML and padding-mode regressions pass. Isolated native display shows the expected12.5 and20.5/10.5/5.5/15.5 values. Physical native numeric input remains unverified after accessibility/pointer/focus targeting failures; operator barriers expired and the product was not patched around them. LAYOUT-PARITY.md retains these limits. The main installed app and recovery data are unchanged.
