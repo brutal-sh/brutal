@@ -2,7 +2,7 @@ import { expect, test } from 'bun:test'
 
 import type { WatchEventKind } from '@tauri-apps/plugin-fs'
 
-import { shouldReloadFile } from '@/app/document/io/watch/targets'
+import { sameWatchDirectory, shouldReloadFile } from '@/app/document/io/watch/targets'
 
 test('native file notifications include atomic saves without reloading on sibling access or recent self-writes', () => {
   const path = '/design/checks.glsl'
@@ -22,4 +22,17 @@ test('native file notifications include atomic saves without reloading on siblin
   expect(shouldReloadFile(event({ access: { kind: 'open', mode: 'read' } }), path, 0)).toBe(false)
   expect(shouldReloadFile(event('any', ['/design/other.glsl']), path, 0)).toBe(false)
   expect(shouldReloadFile(event('any'), path, Date.now())).toBe(false)
+})
+
+test('watch aliases require the same directory with available, precise filesystem identities', () => {
+  const directory = { dev: 1, ino: 42, isDirectory: true }
+  expect(sameWatchDirectory(directory, { ...directory })).toBe(true)
+  expect(sameWatchDirectory(directory, { ...directory, dev: 2 })).toBe(false)
+  expect(sameWatchDirectory(directory, { ...directory, ino: 43 })).toBe(false)
+  expect(sameWatchDirectory(directory, { ...directory, isDirectory: false })).toBe(false)
+  expect(sameWatchDirectory({ ...directory, ino: null }, { ...directory, ino: null })).toBe(false)
+  expect(sameWatchDirectory({ ...directory, ino: 0 }, { ...directory, ino: 0 })).toBe(false)
+  expect(sameWatchDirectory({ ...directory, dev: null }, { ...directory, dev: null })).toBe(false)
+  const imprecise = { ...directory, ino: Number.MAX_SAFE_INTEGER + 1 }
+  expect(sameWatchDirectory(imprecise, imprecise)).toBe(false)
 })

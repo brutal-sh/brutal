@@ -38,6 +38,7 @@ pub fn run() {
     {
         builder = builder
             .manage(system::opener::OpenedExternalUrls::default())
+            .plugin(tauri_plugin_wdio::init())
             .plugin(tauri_plugin_wdio_webdriver::init());
     }
 

@@ -22,6 +22,7 @@ type NativeTestNode = {
 }
 
 type NativeTestStore = {
+  hasUnsavedChanges: EditorStore['hasUnsavedChanges']
   saveFigFileToPath: EditorStore['saveFigFileToPath']
   openFigFile: EditorStore['openFigFile']
   state: {

@@ -26,6 +26,8 @@
           "identifier": "native-test-mcp",
           "webviews": ["main"],
           "permissions": [
+            "wdio:default",
+            "wdio-webdriver:default",
             {
               "identifier": "fs:allow-read-text-file",
               "allow": [

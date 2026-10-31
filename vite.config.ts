@@ -25,6 +25,7 @@ import { cloudSitePlugin } from './vite/cloud-site'
 import { aiIconCollection } from './vite/icons'
 import { inlineScriptPlugin } from './vite/inline-script'
 import { metricsBrandPlugin } from './vite/metrics'
+import { nativeTestPlugin } from './vite/native-test'
 import { openPencilPwaPlugin } from './vite/pwa'
 import { rawMarkdownPlugin } from './vite/raw-markdown'
 import { createDevServerOptions } from './vite/server'
@@ -69,6 +70,7 @@ export default defineConfig(async ({ command, mode }) => {
     // Dynamic browser fixtures must not trigger a dependency-optimizer reload mid-test.
     optimizeDeps: { include: ['ai/test'] },
     plugins: [
+      mode === 'native-test' ? nativeTestPlugin() : undefined,
       rawMarkdownPlugin(),
       inlineScriptPlugin(),
       bootSplashPlugin({

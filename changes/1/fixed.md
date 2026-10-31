@@ -7,3 +7,4 @@
 - Composite transparent JPEG artwork over white while retaining transparency in PNG exports.
 - Preserve independent shader paints through duplication, resizing, component updates and supported FIG/clipboard transfers, including image resources used by strokes and vector paths.
 - Release numeric-field keyboard focus when an edited control is replaced so document shortcuts remain available.
+- Reload watched local files when native filesystem events use an equivalent parent-folder alias, including atomic saves.
