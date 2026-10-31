@@ -599,3 +599,5 @@ ja:ai.skillsDescription
 zh-cn:ai.skillsDescription
 ja:panels.exportPDFPages
 zh-cn:panels.exportPDFPages
+ja:files.snapshotDescription
+zh-cn:files.snapshotDescription

@@ -84,6 +84,7 @@ export const APP_MENU_SCHEMA = [
       { id: 'open', label: 'Open…', shortcut: 'MOD+O' },
       { id: 'open-recent', label: 'Open Recent', target: 'native' },
       { id: 'import-canvas', label: 'Import Image/SVG/Figma…' },
+      { id: 'export-snapshot', label: 'Export Snapshot…', palette: { icon: 'download' } },
       { id: 'browse-files', label: 'Browse Files…', handler: 'shell' },
       { id: 'open-tour', label: 'Open the Tour', handler: 'shell' },
       {

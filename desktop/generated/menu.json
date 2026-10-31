@@ -48,6 +48,10 @@
         ]
       },
       {
+        "id": "export-snapshot",
+        "label": "Export Snapshot…"
+      },
+      {
         "id": "save",
         "label": "Save",
         "accelerator": "CmdOrCtrl+S"

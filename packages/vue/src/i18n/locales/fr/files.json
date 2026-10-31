@@ -28,5 +28,11 @@
   "noMatchingFiles": "Aucun fichier ne correspond à « {query} ».",
   "saveAsPrompt": "Enregistrer sous :",
   "browserFileAPINotSupported": "Votre navigateur ne prend pas en charge l’API de fichiers locaux. Les fichiers seront téléchargés au lieu d’être enregistrés sur place.",
-  "newDesignIn": "Nouveau design dans {place}"
+  "newDesignIn": "Nouveau design dans {place}",
+  "snapshotTitle": "Exporter un instantané",
+  "snapshotDescription": "Un instantané regroupe ce design, ses images et ses shaders dans un ZIP pour un autre ordinateur.",
+  "snapshotDependencies": "Dépendances",
+  "snapshotImages": "{count} images",
+  "snapshotShaders": "{count} shaders",
+  "snapshotFailed": "Impossible d’exporter l’instantané. Réessayez."
 }

@@ -1,6 +1,7 @@
 import { i18n } from '#vue/i18n/create'
 
 export const menuMessageDefaults = {
+  exportSnapshot: 'Export Snapshot…',
   file: 'File',
   edit: 'Edit',
   view: 'View',

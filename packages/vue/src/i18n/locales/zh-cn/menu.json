@@ -91,5 +91,6 @@
   "agentChatTextSize": "智能体聊天文字大小",
   "agentTextSmall": "小",
   "agentTextMedium": "中",
-  "agentTextLarge": "大"
+  "agentTextLarge": "大",
+  "exportSnapshot": "导出快照…"
 }

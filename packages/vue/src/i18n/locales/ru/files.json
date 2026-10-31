@@ -28,5 +28,11 @@
   "noMatchingFiles": "Нет файлов по запросу «{query}».",
   "saveAsPrompt": "Сохранить как:",
   "browserFileAPINotSupported": "Ваш браузер не поддерживает API локальных файлов. Вместо сохранения на месте файлы будут скачиваться.",
-  "newDesignIn": "Новый дизайн в {place}"
+  "newDesignIn": "Новый дизайн в {place}",
+  "snapshotTitle": "Экспортировать снимок",
+  "snapshotDescription": "Снимок объединяет дизайн, изображения и шейдеры в ZIP для другого компьютера.",
+  "snapshotDependencies": "Зависимости",
+  "snapshotImages": "Изображения: {count}",
+  "snapshotShaders": "Шейдеры: {count}",
+  "snapshotFailed": "Не удалось экспортировать снимок. Повторите попытку."
 }

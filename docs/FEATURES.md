@@ -16,3 +16,5 @@ The inventory distinguishes documented behavior from executed acceptance. No com
 Subscriptions, vendor activation and vendor account gates are outside the target. Open Pen still needs independent working equivalents for applicable provider, sharing and workspace capabilities. Third-party credentials/costs are separate from editor licensing.
 
 Documentation coverage does not establish full product coverage: undocumented menus, platform differences, error states and dynamic layouts still require comparison against the installed application.
+
+The ongoing [snapshot export acceptance](SNAPSHOT-PARITY.md) adds observed native behavior beyond the documentation catalog and distinguishes model, browser and native delivered-state evidence.

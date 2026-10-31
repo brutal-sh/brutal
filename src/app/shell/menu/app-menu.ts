@@ -26,6 +26,7 @@ import type {
 
 import { chatTextSize } from '@/app/ai/chat/preferences'
 import { openTour } from '@/app/demo/document'
+import { requestSnapshotExport } from '@/app/document/export/snapshot'
 import { useEditorStore } from '@/app/editor/active-store'
 import { openVariablesDialog } from '@/app/editor/tokens/dialog'
 import { openSettingsDialog } from '@/app/settings/dialog'
@@ -121,6 +122,7 @@ export function useAppMenu() {
     'save-version': 'saveToVersionHistory',
     'version-history': 'showVersionHistory',
     'export-selection': 'exportSelection',
+    'export-snapshot': 'exportSnapshot',
     autosave: 'autosave',
     close: 'closeTab',
     'previous-tab': 'selectPreviousTab',
@@ -182,6 +184,7 @@ export function useAppMenu() {
   )
 
   const actions: Partial<Record<string, () => void>> = {
+    'export-snapshot': () => requestSnapshotExport(store),
     'agent-text-small': () => {
       chatTextSize.value = 'small'
     },

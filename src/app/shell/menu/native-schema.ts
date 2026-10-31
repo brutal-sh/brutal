@@ -31,6 +31,7 @@ export const NATIVE_MENU_SCHEMA: AppMenuGroupSchema[] = [
         ...command('export-selection', 'Export Selection to…'),
         sub: ['pdf', 'png', 'jpeg', 'webp'].map((format) => command(`export-${format}`))
       },
+      command('export-snapshot'),
       command('save'),
       command('save-as'),
       command('close'),

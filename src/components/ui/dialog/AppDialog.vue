@@ -29,13 +29,18 @@ defineOptions({ inheritAttrs: false })
 const attrs = useAttrs()
 const open = defineModel<boolean>('open', { default: false })
 const slots = useSlots()
+const dialogAttrs = computed(() =>
+  description || slots.description || slots.header || attrs['aria-describedby'] !== undefined
+    ? attrs
+    : { ...attrs, 'aria-describedby': undefined }
+)
 const hasHeader = computed(() =>
   Boolean(heading || description || slots.header || slots.title || slots.description)
 )
 </script>
 
 <template>
-  <AppDialogRoot v-bind="attrs" v-model:open="open" :size="size" :height="height" :ui="ui">
+  <AppDialogRoot v-bind="dialogAttrs" v-model:open="open" :size="size" :height="height" :ui="ui">
     <slot v-if="slots.header" name="header" />
     <AppDialogHeader
       v-else-if="hasHeader"
@@ -46,7 +51,7 @@ const hasHeader = computed(() =>
       :ui="ui"
     >
       <template #title><slot name="title" /></template>
-      <template #description><slot name="description" /></template>
+      <template v-if="slots.description" #description><slot name="description" /></template>
       <template #actions><slot name="header-actions" /></template>
       <template #close-icon><slot name="close-icon" /></template>
     </AppDialogHeader>

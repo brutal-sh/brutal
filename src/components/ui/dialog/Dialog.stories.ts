@@ -71,7 +71,7 @@ export const Confirmation: Story = {
 
 export const SemanticWrapper: Story = {
   render: () => ({
-    components: { AppButton, AppDialog },
+    components: { AppButton, AppDialog, AppDialogHeader },
     setup() {
       const open = ref(false)
       return { open }

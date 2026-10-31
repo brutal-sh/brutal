@@ -7,7 +7,15 @@ export type NativeLayerFixture = {
 // Home has an editor store too, but no mounted canvas or text-input session.
 async function ensureNativeEditorReady(): Promise<void> {
   await browser.waitUntil(
-    async () => browser.execute(() => Boolean(window.openPencil?.getStore?.())),
+    async () =>
+      browser.execute(() => {
+        const store = window.openPencil?.getStore?.()
+        return Boolean(
+          store &&
+          ((document.querySelector('canvas') && store.textEditor) ||
+            document.querySelector('[data-test-id="home-new-document"]'))
+        )
+      }),
     { timeout: 30_000, timeoutMsg: 'OpenPencil store did not initialize' }
   )
   await browser.execute(() => {

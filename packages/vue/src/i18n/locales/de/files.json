@@ -28,5 +28,11 @@
   "noMatchingFiles": "Keine Dateien entsprechen „{query}“.",
   "saveAsPrompt": "Speichern unter:",
   "browserFileAPINotSupported": "Dein Browser unterstützt die lokale Datei-API nicht. Dateien werden heruntergeladen, statt direkt gespeichert zu werden.",
-  "newDesignIn": "Neues Design in {place}"
+  "newDesignIn": "Neues Design in {place}",
+  "snapshotTitle": "Snapshot exportieren",
+  "snapshotDescription": "Ein Snapshot bündelt dieses Design und seine Bild- und Shader-Abhängigkeiten als ZIP für einen anderen Computer.",
+  "snapshotDependencies": "Abhängigkeiten",
+  "snapshotImages": "{count} Bilder",
+  "snapshotShaders": "{count} Shader",
+  "snapshotFailed": "Der Snapshot konnte nicht exportiert werden. Bitte erneut versuchen."
 }

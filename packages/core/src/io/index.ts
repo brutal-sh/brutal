@@ -1,5 +1,6 @@
 export { IORegistry } from './registry'
 export { extractExportGraph, findPageId } from './subgraph'
+export { exportPenSnapshot, type PenSnapshotResult } from './formats/pen/snapshot'
 export {
   BUILTIN_IO_FORMATS,
   type BuiltinIOFormatId,

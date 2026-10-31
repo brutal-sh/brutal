@@ -91,5 +91,6 @@
   "agentChatTextSize": "Rozmiar tekstu czatu agenta",
   "agentTextSmall": "Mały",
   "agentTextMedium": "Średni",
-  "agentTextLarge": "Duży"
+  "agentTextLarge": "Duży",
+  "exportSnapshot": "Eksportuj migawkę…"
 }

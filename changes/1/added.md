@@ -12,3 +12,4 @@
 - Add absolute shader-uniform range bars with live paint previews, direct numeric editing, gesture cancellation and a single Undo step.
 
 - Add persistent Small, Medium and Large agent transcript text sizes through View and chat settings.
+- Adds snapshot ZIP export for supported editable designs with relocated image and GLSL dependencies, dependency preview and cancellation-safe delivery.

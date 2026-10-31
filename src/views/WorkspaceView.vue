@@ -48,6 +48,7 @@ import { offerUsageStatsPrompt, startSharing } from '@/app/telemetry'
 import ColorSpaceBanner from '@/components/canvas/ColorSpaceBanner.vue'
 import { CloudVersionDialog } from '@/components/cloud/integration'
 import CommandPalette from '@/components/commands/CommandPalette.vue'
+import SnapshotExportDialog from '@/components/document/SnapshotExportDialog.vue'
 import EditorWorkspace from '@/components/editor/EditorWorkspace.vue'
 import FileApiBanner from '@/components/FileApiBanner.vue'
 import FontStatusBanner from '@/components/font-status/FontStatusBanner.vue'
@@ -314,6 +315,7 @@ onUnmounted(() => {
     <ColorSpaceBanner />
     <FontStatusBanner />
     <RenameSelectionDialog />
+    <SnapshotExportDialog />
     <CommandPalette v-model:open="commandPaletteOpen" />
     <div class="relative flex min-h-0 flex-1 flex-col">
       <div

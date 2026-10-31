@@ -91,5 +91,6 @@
   "agentChatTextSize": "エージェントチャットの文字サイズ",
   "agentTextSmall": "小",
   "agentTextMedium": "中",
-  "agentTextLarge": "大"
+  "agentTextLarge": "大",
+  "exportSnapshot": "スナップショットをエクスポート…"
 }

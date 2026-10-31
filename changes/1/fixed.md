@@ -8,3 +8,4 @@
 - Preserve independent shader paints through duplication, resizing, component updates and supported FIG/clipboard transfers, including image resources used by strokes and vector paths.
 - Release numeric-field keyboard focus when an edited control is replaced so document shortcuts remain available.
 - Reload watched local files when native filesystem events use an equivalent parent-folder alias, including atomic saves.
+- Omit an empty dialog description slot so dialogs without a description do not reserve a blank description row.

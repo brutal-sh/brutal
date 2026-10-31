@@ -28,5 +28,11 @@
   "noMatchingFiles": "Nessun file corrisponde a «{query}».",
   "saveAsPrompt": "Salva con nome:",
   "browserFileAPINotSupported": "Il browser non supporta l’API dei file locali. I file verranno scaricati anziché salvati nella posizione corrente.",
-  "newDesignIn": "Nuovo design in {place}"
+  "newDesignIn": "Nuovo design in {place}",
+  "snapshotTitle": "Esporta istantanea",
+  "snapshotDescription": "Un’istantanea raccoglie questo progetto, le immagini e gli shader in uno ZIP per un altro computer.",
+  "snapshotDependencies": "Dipendenze",
+  "snapshotImages": "{count} immagini",
+  "snapshotShaders": "{count} shader",
+  "snapshotFailed": "Impossibile esportare l’istantanea. Riprova."
 }

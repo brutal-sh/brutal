@@ -91,5 +91,6 @@
   "agentChatTextSize": "Размер текста чата агента",
   "agentTextSmall": "Маленький",
   "agentTextMedium": "Средний",
-  "agentTextLarge": "Большой"
+  "agentTextLarge": "Большой",
+  "exportSnapshot": "Экспортировать снимок…"
 }

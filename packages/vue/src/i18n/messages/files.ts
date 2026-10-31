@@ -3,6 +3,13 @@ import { params } from '@nanostores/i18n'
 import { i18n } from '#vue/i18n/create'
 
 export const filesMessageDefaults = {
+  snapshotTitle: 'Export snapshot',
+  snapshotDescription:
+    'A snapshot bundles this design and its image and shader dependencies into a ZIP for another machine.',
+  snapshotDependencies: 'Dependencies',
+  snapshotImages: params('{count} images'),
+  snapshotShaders: params('{count} shaders'),
+  snapshotFailed: 'The snapshot could not be exported. Try again.',
   importLabel: 'Import',
   importHTMLCSS: 'Import HTML/CSS',
   importHTMLCSSDescription: 'Paste HTML plus optional CSS or compiled Tailwind CSS.',

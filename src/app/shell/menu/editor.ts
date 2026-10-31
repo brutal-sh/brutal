@@ -1,5 +1,6 @@
 import { useEditorCommands, type EditorCommandId } from '@open-pencil/vue/editor/commands'
 
+import { requestSnapshotExport } from '@/app/document/export/snapshot'
 import { useEditorStore } from '@/app/editor/active-store'
 import { clearRecentFiles, forgetRecentFile, recentLocalFileAt } from '@/app/recent-files'
 import { runFocusedCommand } from '@/app/shell/commands/focused'
@@ -40,6 +41,7 @@ export function useEditorMenu() {
   const { runCommand } = useEditorCommands()
 
   const actions: Partial<Record<string, () => void>> = {
+    'export-snapshot': () => requestSnapshotExport(store),
     new: () => createTab(),
     open: () => void openFileDialog(),
     close: () => {

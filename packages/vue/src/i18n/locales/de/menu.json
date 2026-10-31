@@ -91,5 +91,6 @@
   "agentChatTextSize": "Textgröße im Agenten-Chat",
   "agentTextSmall": "Klein",
   "agentTextMedium": "Mittel",
-  "agentTextLarge": "Groß"
+  "agentTextLarge": "Groß",
+  "exportSnapshot": "Snapshot exportieren…"
 }

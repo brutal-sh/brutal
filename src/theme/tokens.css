@@ -59,6 +59,8 @@
   --color-black: #000000;
   --color-panel: #27272a;
   --color-panel-secondary: #222126;
+  --color-dialog-surface: #18171c;
+  --color-dialog-border: #27262c;
   --color-home-card-footer: #111111;
   --color-number-range-track: #141414;
   --color-number-range-progress: #37363b;
@@ -120,6 +122,8 @@
 }
 
 html[data-theme='light'] {
+  --color-dialog-surface: #ffffff;
+  --color-dialog-border: #d4d4d8;
   --color-home-card-footer: #ffffff;
   --color-panel: #ffffff;
   --color-panel-secondary: #f7f8fa;

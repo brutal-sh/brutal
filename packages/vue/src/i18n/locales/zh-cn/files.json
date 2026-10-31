@@ -28,5 +28,11 @@
   "noMatchingFiles": "没有与“{query}”匹配的文件。",
   "saveAsPrompt": "另存为：",
   "browserFileAPINotSupported": "你的浏览器不支持本地文件 API。文件将被下载，而不是保存在原位置。",
-  "newDesignIn": "在 {place} 中新建设计"
+  "newDesignIn": "在 {place} 中新建设计",
+  "snapshotTitle": "导出快照",
+  "snapshotDescription": "快照将此设计及其图像和着色器依赖文件打包为 ZIP，以便在另一台电脑上打开。",
+  "snapshotDependencies": "依赖文件",
+  "snapshotImages": "{count} 张图像",
+  "snapshotShaders": "{count} 个着色器",
+  "snapshotFailed": "无法导出快照。请重试。"
 }
