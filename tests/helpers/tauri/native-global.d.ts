@@ -28,6 +28,7 @@ type NativeTestStore = {
   hasUnsavedChanges: EditorStore['hasUnsavedChanges']
   saveFigFileToPath: EditorStore['saveFigFileToPath']
   createScript: EditorStore['createScript']
+  createInstanceFromComponent: EditorStore['createInstanceFromComponent']
   attachScriptSource: EditorStore['attachScriptSource']
   openFigFile: EditorStore['openFigFile']
   state: {

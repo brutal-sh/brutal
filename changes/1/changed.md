@@ -12,3 +12,5 @@
 - The desktop brand popup uses native platform menu presentation, with working links, theme and UI actions and keyboard focus return; browser commands remain in the web menu.
 
 - Converting a Script now replaces it with a new editable frame at the same sibling position, preserving Context and geometry, restoring the original Script on Undo and the same converted IDs on Redo. Fixed component-instance structure is protected; slot ownership changes share the conversion history step.
+
+- Reusable Scripts retain linked instances with independent source and input overrides; detaching or converting the main preserves standalone instance Scripts, including Undo/Redo and uploaded-source regeneration.

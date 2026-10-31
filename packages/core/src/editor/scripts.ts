@@ -2,6 +2,7 @@ import { isEqual } from 'es-toolkit/predicate'
 
 import type { SceneGraph, SceneNode } from '@open-pencil/scene-graph'
 import { cloneNodeProps } from '@open-pencil/scene-graph/copy'
+import { createInstanceOverrideState } from '@open-pencil/scene-graph/instances/overrides'
 import type { Size } from '@open-pencil/scene-graph/primitives'
 import {
   hasCurrentScriptOutput,
@@ -51,6 +52,26 @@ export function createScriptActions(ctx: EditorContext, nodes: ScriptNodeActions
     nodes.updateNodeWithUndo(id, { pluginData: withScript(node, definition) }, 'Set script')
   }
 
+  function detachScriptInstances(id: string) {
+    for (const instance of ctx.graph.getInstances(id))
+      ctx.graph.updateNode(instance.id, {
+        type: 'FRAME',
+        componentId: null,
+        instanceOverrides: createInstanceOverrideState()
+      })
+  }
+
+  function detachScriptComponent(id: string): void {
+    const node = ctx.graph.getNode(id)
+    if (node?.type !== 'COMPONENT' || !scriptOfNode(node)) return
+    assertNodeEditable(ctx.graph, id)
+    recordEdit(ctx, { label: 'Detach component' }, () => {
+      detachScriptInstances(id)
+      ctx.graph.updateNode(id, { type: 'FRAME' })
+    })
+    ctx.requestRender()
+  }
+
   function convertScriptToLayers(id: string): string | undefined {
     const node = ctx.graph.getNode(id)
     if (!node?.parentId || !scriptOfNode(node)) return undefined
@@ -63,6 +84,9 @@ export function createScriptActions(ctx: EditorContext, nodes: ScriptNodeActions
       recordEdit(ctx, { label: 'Convert script to layers' }, () => {
         if (!prepareSlotEdits(ctx, [parentId])) return undefined
         const frame = ctx.graph.cloneTree(id, parentId, {
+          type: 'FRAME',
+          componentId: null,
+          instanceOverrides: createInstanceOverrideState(),
           name: node.name === 'Script' ? 'Frame' : node.name,
           pluginData: withScript(node, undefined),
           status: node.status
@@ -71,6 +95,7 @@ export function createScriptActions(ctx: EditorContext, nodes: ScriptNodeActions
         if (!scriptOfNode(node)?.uri)
           for (const childId of Array.from(frame.childIds)) ctx.graph.deleteNode(childId)
         ctx.graph.insertChildAt(frame.id, parentId, index)
+        if (node.type === 'COMPONENT') detachScriptInstances(id)
         ctx.graph.deleteNode(id)
         ctx.setSelectedIds(new Set([frame.id]))
         return frame.id
@@ -109,5 +134,11 @@ export function createScriptActions(ctx: EditorContext, nodes: ScriptNodeActions
     return true
   }
 
-  return { createScript, setScriptDefinition, convertScriptToLayers, replaceScriptOutput }
+  return {
+    createScript,
+    setScriptDefinition,
+    detachScriptComponent,
+    convertScriptToLayers,
+    replaceScriptOutput
+  }
 }

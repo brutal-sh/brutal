@@ -3,6 +3,7 @@ import { pick } from 'es-toolkit/object'
 import type { SceneNode } from '@open-pencil/scene-graph'
 import { findInstanceAncestor, recordInstanceOverride } from '@open-pencil/scene-graph/instances'
 import { cloneInstanceOverrideState } from '@open-pencil/scene-graph/instances/overrides'
+import { scriptChangedFields } from '@open-pencil/scene-graph/scripts'
 import { styleDetachmentChanges } from '@open-pencil/scene-graph/shared-styles'
 
 import { textAutoResizeChanges } from '#core/layout/text-auto-resize'
@@ -52,8 +53,9 @@ export function createNodeActions(ctx: EditorContext) {
       ...textAutoResizeChanges(node, changes),
       ...pathTextEditChanges(node, changes)
     })
+    const fields = [...Object.keys(nextChanges), ...scriptChangedFields(node, nextChanges)]
     ctx.graph.updateNode(id, nextChanges)
-    recordInstanceOverride(ctx.graph, id, Object.keys(nextChanges))
+    recordInstanceOverride(ctx.graph, id, fields)
     runChangedLayout(id, nextChanges)
   }
 
@@ -89,14 +91,15 @@ export function createNodeActions(ctx: EditorContext) {
       node,
       Object.keys(nextChanges) as (keyof SceneNode)[]
     ) as Partial<SceneNode>
+    const fields = [...Object.keys(nextChanges), ...scriptChangedFields(node, nextChanges)]
     ctx.graph.updateNode(id, nextChanges)
-    recordInstanceOverride(ctx.graph, id, Object.keys(nextChanges))
+    recordInstanceOverride(ctx.graph, id, fields)
     runChangedLayout(id, nextChanges)
     ctx.undo.push({
       label,
       forward: () => {
         ctx.graph.updateNode(id, nextChanges)
-        recordInstanceOverride(ctx.graph, id, Object.keys(nextChanges))
+        recordInstanceOverride(ctx.graph, id, fields)
         runChangedLayout(id, nextChanges)
       },
       inverse: () => {

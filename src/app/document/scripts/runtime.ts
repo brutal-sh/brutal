@@ -54,6 +54,7 @@ export function createScriptRuntime(editor: Editor, io: IORegistry, options: Scr
   const sources = new Map<string, ScriptSource>()
   const selectedFiles = new Set<string>()
   const uploads = new Map<string, Map<string, string>>()
+  const inheritedUploads = new Map<string, Map<string, string>>()
   let disposed = false
   const keyFor = (uri: string) => JSON.stringify([options.getDocumentPath(), uri])
 
@@ -68,6 +69,8 @@ export function createScriptRuntime(editor: Editor, io: IORegistry, options: Scr
     if (disposed) throw new Error('Script runtime is closed.')
     const own = uploads.get(id)?.get(uri)
     if (own !== undefined) return own
+    const inherited = inheritedUploads.get(id)?.get(uri)
+    if (inherited !== undefined) return inherited
     const candidates = new Set(
       [...uploads.entries()].flatMap(([owner, files]) => {
         const source = files.get(uri)
@@ -233,6 +236,16 @@ export function createScriptRuntime(editor: Editor, io: IORegistry, options: Scr
       states.delete(id)
       return
     }
+    if (node.componentId) {
+      const inherited =
+        uploads.get(node.componentId)?.get(definition.uri) ??
+        inheritedUploads.get(node.componentId)?.get(definition.uri)
+      if (inherited !== undefined) {
+        const files = inheritedUploads.get(id) ?? new Map<string, string>()
+        files.set(definition.uri, inherited)
+        inheritedUploads.set(id, files)
+      }
+    }
     const key = JSON.stringify([options.getDocumentPath(), definition, node.width, node.height])
     if (!force && runs.get(id)?.key === key) return
     cancel(id)
@@ -266,7 +279,8 @@ export function createScriptRuntime(editor: Editor, io: IORegistry, options: Scr
   }
   const stopCreated = editor.onEditorEvent('node:created', (node) => schedule(node.id))
   const stopUpdated = editor.onEditorEvent('node:updated', (id, changes) => {
-    if ('pluginData' in changes || 'width' in changes || 'height' in changes) schedule(id)
+    if ('pluginData' in changes || 'width' in changes || 'height' in changes || 'type' in changes)
+      schedule(id)
   })
   const stopPreview = editor.onEditorEvent('node:previewUpdated', (id, changes) => {
     if ('width' in changes || 'height' in changes || 'pluginData' in changes) schedule(id)
@@ -277,6 +291,7 @@ export function createScriptRuntime(editor: Editor, io: IORegistry, options: Scr
   })
   const stopGraph = editor.onEditorEvent('graph:replaced', () => {
     uploads.clear()
+    inheritedUploads.clear()
     selectedFiles.clear()
     reset()
   })
@@ -303,6 +318,8 @@ export function createScriptRuntime(editor: Editor, io: IORegistry, options: Scr
     previous?.stop?.()
     sources.delete(keyFor(uri))
     schedule(id, true)
+    for (const node of editor.graph.getAllNodes())
+      if (node.componentId === id && scriptOfNode(node)) schedule(node.id, true)
   }
 
   return {
@@ -332,6 +349,7 @@ export function createScriptRuntime(editor: Editor, io: IORegistry, options: Scr
       states.clear()
       selectedFiles.clear()
       uploads.clear()
+      inheritedUploads.clear()
     }
   }
 }

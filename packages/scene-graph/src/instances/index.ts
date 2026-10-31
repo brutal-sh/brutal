@@ -1,5 +1,11 @@
 import type { NodeCloneMode } from '../copy'
 import type { SceneGraph } from '../graph'
+import {
+  SCRIPT_OVERRIDE_FIELDS,
+  scriptOfNode,
+  syncScriptFields,
+  withSyncedScript
+} from '../scripts/model'
 import { hasShaderPaint, withSyncedShaderPaints } from '../shaders/model'
 import { detachOwnedSlotContent, restoreOwnedSlotContent } from '../slots/frames'
 import type { SceneNode } from '../types'
@@ -43,6 +49,12 @@ export function copyInstanceComponentProps(component: SceneNode): Partial<SceneN
       { fills: [], strokes: [], pluginData: [] },
       component,
       props
+    )
+  if (scriptOfNode(component))
+    props.pluginData = withSyncedScript(
+      { type: 'INSTANCE', pluginData: props.pluginData ?? [] },
+      component,
+      () => false
     )
   return props
 }
@@ -143,6 +155,10 @@ export function swapInstanceComponent(
   if (hasShaderPaint(instance) || hasShaderPaint(source))
     updates.pluginData = withSyncedShaderPaints(instance, source, updates)
 
+  syncScriptFields(instance, source, updates, (field) =>
+    hasNodeInstanceOverride(instance.instanceOverrides, instance.id, instance.id, field)
+  )
+
   const childIds = Array.from(instance.childIds)
   const slotContent = detachOwnedSlotContent(graph, instance)
   for (const childId of childIds) graph.deleteNode(childId)
@@ -204,6 +220,7 @@ function syncInstancesOf(
         }
         if (hasShaderPaint(instance) || hasShaderPaint(source))
           updates.pluginData = withSyncedShaderPaints(instance, source, updates)
+        syncScriptFields(instance, source, updates, protectedField)
         // An instance that hugs its layers sizes to what it shows, not to the component.
         keepOwnContentSize(graph, updates, instance, source)
         updateSyncedProps(graph, instance, updates)
@@ -272,8 +289,10 @@ export function recordInstanceOverride(
   const instance = findInstanceAncestor(graph, nodeId)
   if (!instance) return
 
-  const relevant = [...fields].filter((field) =>
-    (INSTANCE_OVERRIDE_FIELDS as readonly string[]).includes(field)
+  const relevant = [...fields].filter(
+    (field) =>
+      (INSTANCE_OVERRIDE_FIELDS as readonly string[]).includes(field) ||
+      (SCRIPT_OVERRIDE_FIELDS as readonly string[]).includes(field)
   )
 
   if (relevant.length === 0) return

@@ -547,6 +547,16 @@ export class SceneGraph {
     if (node) this.applyNodeChanges(node, changes, absent)
   }
 
+  private updateInstanceIndex(node: SceneNode, changes: Partial<SceneNode>): void {
+    if (!('type' in changes) && !('componentId' in changes)) return
+    const before = node.type === 'INSTANCE' ? node.componentId : null
+    const componentId = 'componentId' in changes ? changes.componentId : node.componentId
+    const after = (changes.type ?? node.type) === 'INSTANCE' ? componentId : null
+    if (before === after) return
+    if (before) this.unindexInstance(before, node.id)
+    if (after) this.indexInstance(after, node.id)
+  }
+
   private applyNodeChanges(
     node: SceneNode,
     changes: Partial<SceneNode>,
@@ -564,14 +574,7 @@ export class SceneGraph {
     // Fills, strokes, effects, plugin data changes do NOT affect absolute position.
     const affectsLayout = Object.keys(changes).some((k) => LAYOUT_AFFECTING_KEYS.has(k))
     if (affectsLayout) this.absPosCache.clear()
-    if (
-      node.type === 'INSTANCE' &&
-      'componentId' in changes &&
-      changes.componentId !== node.componentId
-    ) {
-      if (node.componentId) this.unindexInstance(node.componentId, id)
-      if (changes.componentId) this.indexInstance(changes.componentId, id)
-    }
+    this.updateInstanceIndex(node, changes)
     if (node.type === 'TEXT') invalidateTextCaches(node, changes)
     if (this.scopeDepths.sourceMetadata === 0 && !this.isApplyingLayout) {
       markSourceFieldsEdited(node, Object.keys(changes))

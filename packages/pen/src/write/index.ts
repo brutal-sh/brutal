@@ -247,8 +247,8 @@ export function writePenDocument(graph: SceneGraph): PenDocument {
       clip: node.clipsContent
     }
     if (script) {
-      result.scriptUri = script.uri || undefined
-      result.inputs = Object.keys(script.inputs).length ? script.inputs : undefined
+      result.scriptUri = script.uri
+      result.inputs = script.inputs
       delete result.fill
       delete result.stroke
       delete result.cornerRadius

@@ -374,3 +374,10 @@ Ref/component inputs, variables/themes, gallery, JS dependency snapshots, headle
 ## Script replacement conversion —2026-10-31
 
 Actual Pen conversion preserves custom name, position, dimensions, rotation, opacity, clipping and Context while replacing the Script ID. The followup implements a fresh editable frame snapshot with stable Redo IDs and the existing instance/slot ownership guard.28 model cases/179 assertions and ten browser journeys passed. Two additional browser file round trips preserved quoted multiline Context and ordinary child layers with no linked source/worker. The final63.9s native physical Convert/Undo/Redo/child Width100→42/Undo sequence passed with explicit identity assertions. Full Script design and functionality parity remains open. See [Script evidence](SCRIPT-PARITY.md).
+
+
+### 2026-10-31 — reusable Script component workflows
+
+Actual Pen reference: Create Component preserves Script identity/source/raw inputs; refs replace the input object; Detach Component preserves standalone Scripts; main conversion creates a non-reusable frame and detaches instances with original IDs/inputs. Disposable probes were removed and the private reference saved clean. Open Pen now retains those links and independent URI/input claims in its existing component model and `.pen` reader/writer. Script output is derived, and source inheritance survives browser-upload detachment. Shared instance indexing now restores type transitions through Undo.
+
+Executed:339 related model/I/O/runtime cases/1,238 assertions;14 Chromium/WebKit Script editor workflows;75.6s isolated physical native Create Component→instance count3→2→Detach Component→Cmd+Z→Convert to layers, with link/type/output assertions. Native instance creation/reselection used test APIs; named controls/shortcut used CUA. Exact component UI and reusable native save/reopen remain unqualified. Full Script and product parity remain OPEN. See SCRIPT-PARITY.md; private log:script-components-native-physical.log.

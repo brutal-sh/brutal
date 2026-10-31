@@ -6,6 +6,25 @@ import { expectDefined, getNodeOrThrow } from '../helpers/assert'
 import { pageId, rect } from './helpers'
 
 describe('SceneGraph', () => {
+  test('type changes keep the instance index correct through restoration and component changes', () => {
+    const graph = new SceneGraph()
+    const page = pageId(graph)
+    const first = graph.createNode('COMPONENT', page)
+    const second = graph.createNode('COMPONENT', page)
+    const instance = expectDefined(graph.createInstance(first.id, page))
+    graph.updateNode(instance.id, { type: 'FRAME', componentId: null })
+    expect(graph.getInstances(first.id)).toEqual([])
+    graph.restoreNodeProperties(instance.id, { type: 'INSTANCE', componentId: first.id }, [])
+    expect(graph.getInstances(first.id).map((node) => node.id)).toEqual([instance.id])
+    graph.updateNode(instance.id, { componentId: second.id })
+    expect(graph.getInstances(first.id)).toEqual([])
+    expect(graph.getInstances(second.id).map((node) => node.id)).toEqual([instance.id])
+    graph.updateNode(instance.id, { type: 'FRAME' })
+    expect(graph.getInstances(second.id)).toEqual([])
+    graph.updateNode(instance.id, { type: 'INSTANCE' })
+    expect(graph.getInstances(second.id).map((node) => node.id)).toEqual([instance.id])
+  })
+
   test('create rectangle', () => {
     const graph = new SceneGraph()
     const id = rect(graph, 'Rect', 100, 100, 200, 150)

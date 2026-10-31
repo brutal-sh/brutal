@@ -47,7 +47,7 @@ describe('.pen import compatibility', () => {
     expect(inspectPenCompatibility(doc)[2]?.nodeId).toBe('browser')
   })
 
-  test.each(['script', 'browser', 'prompt', 'note', 'context', 'future-node'])(
+  test.each(['browser', 'prompt', 'note', 'context', 'future-node'])(
     'refuses %s instead of producing a generic frame or dropping it',
     (type) => {
       expect(() => parsePenFile(JSON.stringify({ children: [{ id: 'node', type }] }))).toThrow(
@@ -133,8 +133,8 @@ describe('.pen import compatibility', () => {
   test('keeps every structured issue while bounding the displayed error', () => {
     const doc: PenDocument = {
       children: Array.from({ length: 10 }, (_, i) => ({
-        id: `script-${i}`,
-        type: 'script'
+        id: `browser-${i}`,
+        type: 'browser'
       }))
     }
     const error = new PenImportError(inspectPenCompatibility(doc))

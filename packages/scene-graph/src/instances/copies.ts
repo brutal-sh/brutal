@@ -1,5 +1,6 @@
 // How an instance's copies follow the component's layers when its structure changes.
 import type { SceneGraph } from '../graph'
+import { scriptOfNode } from '../scripts/model'
 import { ownsSlotContent, slotPropertyId } from '../slots/frames'
 import type { SceneNode } from '../types'
 import { DEFAULT_HISTORY_LIMIT } from '../undo'
@@ -38,7 +39,7 @@ function copiedLayerId(node: SceneNode, context: InstanceSyncContext): string | 
 
 /** Whether sync goes inside a copy: not into slot content, a swapped instance, or an instance. */
 function syncsInside(graph: SceneGraph, node: SceneNode, context: InstanceSyncContext): boolean {
-  if (node.type === 'INSTANCE') return false
+  if (node.type === 'INSTANCE' || scriptOfNode(node)) return false
   if (hasNodeInstanceOverride(context.overrides, context.instanceId, node.id, 'componentId')) {
     return false
   }

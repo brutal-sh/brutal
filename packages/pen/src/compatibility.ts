@@ -175,11 +175,11 @@ export function inspectPenCompatibility(doc: PenDocument): PenImportDiagnostic[]
       )
     }
     inspectScript(node, path, nodeId)
-    if (node.reusable && node.type !== 'frame') {
+    if (node.reusable && node.type !== 'frame' && node.type !== 'script') {
       add(
         'unsupported-component',
         `${path}/reusable`,
-        'Only frame components retain linked instances; this component would become plain copies.',
+        'Only frame and Script components retain linked instances; this component would become plain copies.',
         nodeId
       )
     }

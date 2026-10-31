@@ -300,12 +300,12 @@ describe('parsePenFile — instances', () => {
     expect(copyOf(graph, 'hidden', 'dot').visible).toBe(false)
   })
 
-  test('rejects a non-frame component instead of losing its instance links', () => {
+  test('rejects an unsupported shape component instead of losing its instance links', () => {
     expect(() =>
       parseDocument([
         { id: 'swatch', type: 'rectangle', reusable: true, width: 20, height: 20, fill: '#FF0000' },
         { id: 'use', type: 'ref', ref: 'swatch', x: 40 }
       ])
-    ).toThrow('Only frame components')
+    ).toThrow('Only frame and Script components')
   })
 })

@@ -3,6 +3,7 @@ import { isEqual } from 'es-toolkit'
 import type { SceneGraph, SceneNode } from '@open-pencil/scene-graph'
 import { instanceMainComponent } from '@open-pencil/scene-graph/instances'
 import { copiedComponentLayerId } from '@open-pencil/scene-graph/instances/overrides'
+import { scriptOfNode } from '@open-pencil/scene-graph/scripts'
 import { ownsSlotContent, slotPropertyId } from '@open-pencil/scene-graph/slots'
 
 import { fieldsSetBy } from '../nodes'
@@ -131,6 +132,7 @@ export function writeInstance(
     sourceOwner?: SceneNode,
     prefix = ''
   ) {
+    if (scriptOfNode(from)) return
     const originals = graph.getChildren(from.id)
     const copies = graph.getChildren(to.id)
     const definitions = graph.getChildren(definition.id)

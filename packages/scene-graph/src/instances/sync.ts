@@ -5,6 +5,7 @@ import { cloneNodeProps, copyEffects, copyFills, copyStrokes, copyStyleRuns } fr
 import type { NodeCloneMode } from '../copy'
 import type { SceneGraph } from '../graph'
 import { scaleNodeChanges } from '../scaling/node'
+import { scriptOfNode, syncScriptFields } from '../scripts/model'
 import { hasShaderPaint, withSyncedShaderPaints } from '../shaders/model'
 import { ownsSlotContent, slotPropertyId } from '../slots/frames'
 import type { SceneNode } from '../types'
@@ -175,6 +176,7 @@ function copySyncedFields(
     copyProp(updates, from, key)
   }
   followPaints(updates, copy, source, skip)
+  syncScriptFields(copy, source, updates, skip)
   followVectorGeometry(updates, copy, source)
   remeasureChangedText(updates, copy)
   return { placed, x: !placedByLayout && !skip('x'), y: !placedByLayout && !skip('y') }
@@ -220,7 +222,7 @@ export function cloneChildrenWithMapping(
 
   const sourceParent = graph.nodes.get(sourceParentId)
   const targetParent = graph.nodes.get(destParentId)
-  if (!sourceParent || !targetParent) return
+  if (!sourceParent || !targetParent || scriptOfNode(sourceParent)) return
 
   for (const childId of sourceParent.childIds) {
     const src = graph.nodes.get(childId)
@@ -429,7 +431,7 @@ export function syncChildren(
 
   const compParent = graph.nodes.get(compParentId)
   const instParent = graph.nodes.get(instParentId)
-  if (!compParent || !instParent) return
+  if (!compParent || !instParent || scriptOfNode(compParent)) return
 
   const instChildMap = new Map<string, SceneNode>()
   const usedInstChildIds = new Set<string>()

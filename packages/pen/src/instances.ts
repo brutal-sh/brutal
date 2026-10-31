@@ -12,7 +12,13 @@ import {
 import { claimSlotContent, slotScope } from '@open-pencil/scene-graph/slots'
 
 import { PenImportError } from './compatibility'
-import { applyPenProperties, createSceneNode, fieldsSetBy, type Build } from './nodes'
+import {
+  applyPenProperties,
+  createSceneNode,
+  fieldsSetBy,
+  isLinkedComponent,
+  type Build
+} from './nodes'
 import type { PenNode, PenOverride } from './schema'
 
 /** Fills an instance read from `.pen`, after the instances inside its component. */
@@ -108,7 +114,7 @@ function swapLayer(
   const { graph, effective, instances } = build
   const component =
     typeof replacement.ref === 'string' ? build.components.get(replacement.ref) : undefined
-  if (target.type !== 'INSTANCE' || replacement.type !== 'ref' || component?.type !== 'frame')
+  if (target.type !== 'INSTANCE' || replacement.type !== 'ref' || !isLinkedComponent(component))
     return false
   for (const nested of instances.keys()) {
     if (graph.isDescendant(nested, component.id)) populate(nested)

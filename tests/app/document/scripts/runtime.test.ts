@@ -142,3 +142,36 @@ test('a watched source supersedes delayed output, failures refuse stale conversi
     editor.dispose()
   }
 })
+
+test('uploaded reusable Scripts regenerate independent instances and survive source detachment', async () => {
+  const editor = createEditor()
+  const changes = createDocumentChanges(editor)
+  const runtime = createScriptRuntime(editor, io(), {
+    getDocumentPath: () => null,
+    adoptChanges: changes.adopt,
+    evaluate: async (source, width, _height, inputs) => result(`${source}:${inputs?.count}`, width)
+  })
+  try {
+    const main = editor.createScript(0, 0)
+    runtime.attachScriptSource(main, 'grid.js', code('original'))
+    editor.setScriptDefinition(main, { uri: 'grid.js', inputs: { count: 3 } })
+    editor.select([main])
+    editor.createComponentFromSelection()
+    const id = editor.createInstanceFromComponent(main)
+    if (!id) throw new Error('Missing Script instance.')
+    editor.setScriptDefinition(id, { uri: 'grid.js', inputs: { count: 2 } })
+    const child = () => editor.graph.getChildren(id)[0]
+    await until(() => child()?.name === `${code('original')}:2`)
+    runtime.attachScriptSource(main, 'grid.js', code('revised'))
+    await until(() => child()?.name === `${code('revised')}:2`)
+    editor.detachScriptComponent(main)
+    editor.updateNodeWithUndo(id, { width: 260 })
+    await until(() => child()?.width === 260)
+    expect(child().name).toBe(`${code('revised')}:2`)
+    expect(editor.graph.getNode(id)?.type).toBe('FRAME')
+  } finally {
+    runtime.dispose()
+    changes.dispose()
+    editor.dispose()
+  }
+})

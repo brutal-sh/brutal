@@ -200,7 +200,9 @@ const { panels } = useI18n()
         </span>
         <template #actions>
           <IconButton
-            v-if="node.type === 'COMPONENT' || node.type === 'COMPONENT_SET'"
+            v-if="
+              (node.type === 'COMPONENT' && !scriptOfNode(node)) || node.type === 'COMPONENT_SET'
+            "
             :label="panels.addVariant"
             data-test-id="add-variant"
             :disabled="!canAddVariant"
@@ -237,7 +239,21 @@ const { panels } = useI18n()
         </template>
       </PanelHeader>
 
-      <div v-if="!isComponentType" class="border-b border-border px-3 pb-2">
+      <div
+        v-if="node.type === 'COMPONENT' && scriptOfNode(node)"
+        class="border-b border-border px-3 pb-2"
+      >
+        <AppButton
+          variant="soft"
+          size="xs"
+          class="w-full justify-center font-normal"
+          :disabled="!canAddVariant"
+          @click="store.detachScriptComponent(node.id)"
+        >
+          <icon-lucide-unlink class="size-3.5" />Detach Component
+        </AppButton>
+      </div>
+      <div v-else-if="!isComponentType" class="border-b border-border px-3 pb-2">
         <AppButton
           variant="soft"
           size="xs"
@@ -263,7 +279,9 @@ const { panels } = useI18n()
       <ComponentPropertyListSection />
       <SlotAuthoringSection />
       <ContextSection :key="node.id" :node-id="node.id" />
-      <BehaviourPanel v-if="node.type === 'COMPONENT' || node.type === 'COMPONENT_SET'" />
+      <BehaviourPanel
+        v-if="(node.type === 'COMPONENT' && !scriptOfNode(node)) || node.type === 'COMPONENT_SET'"
+      />
 
       <!-- Presets size artboards; an icon is a glyph. -->
       <FramePresetSelect v-if="advanced && node.type === 'FRAME' && !readIcon(node)" />

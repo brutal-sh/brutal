@@ -81,8 +81,14 @@ function penPlacement(pen: PenOverride, ctx: VarContext): PenPlacement {
   }
 }
 
+export function isLinkedComponent(
+  pen: PenNode | undefined
+): pen is PenNode & { type: 'frame' | 'script' } {
+  return pen?.type === 'frame' || pen?.type === 'script'
+}
+
 function sceneType(pen: PenNode): NodeType {
-  if (pen.type === 'frame') return pen.reusable ? 'COMPONENT' : 'FRAME'
+  if (isLinkedComponent(pen)) return pen.reusable ? 'COMPONENT' : 'FRAME'
   if (pen.type === 'rectangle') return 'RECTANGLE'
   if (pen.type === 'ellipse') return 'ELLIPSE'
   if (pen.type === 'polygon') return 'POLYGON'
@@ -210,10 +216,10 @@ const PROPERTY_FIELDS = {
   weight: [],
   iconFontName: [],
   iconFontFamily: [],
-  scriptUri: ['pluginData'],
-  inputs: ['pluginData'],
+  scriptUri: ['script/uri'],
+  inputs: ['script/inputs'],
   ref: []
-} satisfies Record<keyof NodeFields, readonly (keyof SceneNode)[]>
+} satisfies Record<keyof NodeFields, readonly string[]>
 
 const isProperty = (key: string): key is keyof typeof PROPERTY_FIELDS => key in PROPERTY_FIELDS
 
@@ -222,7 +228,7 @@ const isProperty = (key: string): key is keyof typeof PROPERTY_FIELDS => key in 
  * an instance sets even when it equals its component's, so a later change to the component does
  * not reach it.
  */
-export function fieldsSetBy(pen: PenOverride): (keyof SceneNode)[] {
+export function fieldsSetBy(pen: PenOverride): string[] {
   return Object.keys(pen).flatMap((key) => (isProperty(key) ? PROPERTY_FIELDS[key] : []))
 }
 
@@ -367,8 +373,7 @@ function instanceFields(ref: PenNode, component: PenNode | undefined): PenNode {
 export function createSceneNode(pen: PenNode, parentId: string, build: Build): string | null {
   if (pen.type === 'prompt') return null
   const component = pen.type === 'ref' && pen.ref ? build.components.get(pen.ref) : undefined
-  // A component that is not a frame has no instances; its uses are plain copies.
-  const instanceOf = pen.type === 'ref' && component?.type === 'frame' ? component : undefined
+  const instanceOf = pen.type === 'ref' && isLinkedComponent(component) ? component : undefined
   const fields = pen.type === 'ref' ? instanceFields(pen, component) : pen
   const iconInstance = fields.type === 'icon' && insideComponent(build.graph, parentId)
   const leaveTheme = fields.theme ? build.ctx.enterTheme(fields.theme) : undefined
