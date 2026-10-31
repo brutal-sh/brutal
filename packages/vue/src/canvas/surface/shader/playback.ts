@@ -71,7 +71,7 @@ function shadersOnPage(editor: Editor, pageId: string, preview: boolean) {
       const shader = shaderOfPaint(node, paint)
       if (!shader || !paint.visible) continue
       const fragment = fragmentShaderOf(shader.preset)
-      if (fragment?.error) continue
+      if (fragment && (fragment.error || !fragment.source.trim())) continue
       if (!preview && (!fragment || !/@time\b/.test(fragment.source))) continue
       const entry = found.get(shader.image) ?? {
         preset: shader.preset,

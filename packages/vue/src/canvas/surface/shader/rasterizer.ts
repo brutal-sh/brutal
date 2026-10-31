@@ -1,8 +1,8 @@
 import type { ShaderRasterizer } from '@open-pencil/core'
 import { fragmentShaderOf, shaderFrameEncoding } from '@open-pencil/scene-graph/shaders'
 
-import { renderShaderError } from './error'
 import { createFragmentRenderer } from './fragment'
+import { renderEmptyShader, renderShaderError } from './placeholder'
 
 /** Whether this browser supports the inherited WebGPU preset renderer. */
 export function canDrawShaders(): boolean {
@@ -45,11 +45,14 @@ export function createShaderRasterizer(): ShaderRasterizer | null {
   return {
     async render(preset, size, logicalSize) {
       const fragment = fragmentShaderOf(preset)
-      if (fragment?.error) {
+      if (fragment && (fragment.error || (fragment.url.trim() && !fragment.source.trim()))) {
         const bytes = await renderShaderError(size, logicalSize)
         return isDestroyed() ? null : bytes
       }
-      if (fragment && !fragment.source.trim()) return null
+      if (fragment && !fragment.source.trim()) {
+        const bytes = await renderEmptyShader(size, logicalSize)
+        return isDestroyed() ? null : bytes
+      }
       if (!fragment && !canDrawShaders()) return null
       if (isDestroyed()) return null
       const canvas = document.createElement('canvas')

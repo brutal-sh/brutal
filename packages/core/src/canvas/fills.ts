@@ -4,6 +4,7 @@ import type { SceneNode, SceneGraph, Fill } from '@open-pencil/scene-graph'
 import { invertGradientTransform } from '@open-pencil/scene-graph/gradient'
 import Matrix from '@open-pencil/scene-graph/matrix'
 import type { Color, Rect, Vector } from '@open-pencil/scene-graph/primitives'
+import { fragmentShaderOf, shaderOfPaint } from '@open-pencil/scene-graph/shaders'
 
 import { figmaBlendModeToSkia } from './blend'
 import { makeDiamondGradient } from './gradients/diamond'
@@ -414,14 +415,18 @@ function setImageShader(
     preview && { width: preview.originalWidth, height: preview.originalHeight }
   )
   const tileMode = scaleMode === 'FIT' ? r.ck.TileMode.Decal : r.ck.TileMode.Clamp
+  const entry = shaderOfPaint(node, fill)
+  const fragment = entry && fragmentShaderOf(entry.preset)
+  // The measured placeholder's checker/border must retain its hard pixel boundaries on export.
+  const nearest = !!fragment && !fragment.url.trim() && !fragment.source.trim() && !fragment.error
   const shader =
     scaleMode === 'TILE'
       ? img.makeShaderCubic(r.ck.TileMode.Repeat, r.ck.TileMode.Repeat, 1 / 3, 1 / 3, localMatrix)
       : img.makeShaderOptions(
           tileMode,
           tileMode,
-          r.ck.FilterMode.Linear,
-          r.ck.MipmapMode.Linear,
+          nearest ? r.ck.FilterMode.Nearest : r.ck.FilterMode.Linear,
+          nearest ? r.ck.MipmapMode.None : r.ck.MipmapMode.Linear,
           localMatrix
         )
   try {

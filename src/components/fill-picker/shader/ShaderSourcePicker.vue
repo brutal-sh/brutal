@@ -79,7 +79,13 @@ const metadata = computed(() => {
     return { controls: [], error: failure instanceof Error ? failure.message : String(failure) }
   }
 })
-const sourceDiagnostic = computed(() => shader.error || metadata.value.error || sourceError.value)
+const sourceDiagnostic = computed(
+  () =>
+    shader.error ||
+    metadata.value.error ||
+    sourceError.value ||
+    (shader.url.trim() && !shader.source.trim() ? panels.value.shaderLoadFailed : '')
+)
 const displayError = computed(() => error.value || sourceDiagnostic.value)
 
 async function apply(load: (signal: AbortSignal) => Promise<FragmentShader>) {
@@ -131,6 +137,13 @@ async function apply(load: (signal: AbortSignal) => Promise<FragmentShader>) {
   }
 }
 function loadPath() {
+  if (!path.value.trim()) {
+    request?.abort()
+    loading.value = false
+    error.value = ''
+    emit('update', fragmentShaderPreset({ url: '', source: '', uniforms: {} }))
+    return
+  }
   return apply((signal) => loadFragmentSource(path.value, store.getDocumentFilePath(), signal))
 }
 function useSource(source: FragmentShader) {
@@ -307,7 +320,10 @@ function setNumber(control: FragmentUniform, at: number, next: number) {
         />
       </template>
     </div>
-    <p v-if="!shader.source && !sourceDiagnostic" class="m-0 text-xs text-muted">
+    <p
+      v-if="!shader.source && !sourceDiagnostic && !usedSources.length"
+      class="m-0 text-xs text-muted"
+    >
       {{ panels.shaderSourceTip }}
     </p>
   </div>

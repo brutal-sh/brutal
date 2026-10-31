@@ -56,6 +56,31 @@ describe('shader paints', () => {
     graph.updateNode(node.id, { visible: false })
     expect(() => assertFragmentFrames(graph, [node.id])).not.toThrow()
   })
+  test('an empty shader must render its placeholder before visual export', () => {
+    const { graph, node } = rectangle()
+    const preset = fragmentShaderPreset({ url: '', source: '', uniforms: {} })
+    const { paint, shader } = createShaderPaint(preset)
+    graph.updateNode(node.id, {
+      fills: [paint],
+      pluginData: withShaderPaints(node, [paint], [shader])
+    })
+    expect(() => assertFragmentFrames(graph, [node.id])).toThrow('Render the GLSL shader')
+    graph.images.set(shader.image, new Uint8Array([1]))
+    expect(() => assertFragmentFrames(graph, [node.id])).toThrow('Render the GLSL shader')
+    graph.updateNode(node.id, {
+      pluginData: withShaderPaints(
+        node,
+        [paint],
+        [
+          {
+            ...shader,
+            frame: { width: node.width, height: node.height, preset: shaderPresetKey(preset) }
+          }
+        ]
+      )
+    })
+    expect(() => assertFragmentFrames(graph, [node.id])).not.toThrow()
+  })
   test('an image paint draws the shader whose frame it shows', () => {
     const { graph, node } = rectangle()
     const { paint, shader } = createShaderPaint(AURORA)

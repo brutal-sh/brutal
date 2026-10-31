@@ -129,7 +129,7 @@ export function assertFragmentPaintFrame(
   if (!node.visible || node.opacity <= 0 || !paint.visible || paint.opacity <= 0) return
   const shader = shaderOfPaint(node, paint)
   const fragment = shader && fragmentShaderOf(shader.preset)
-  if (!shader || !fragment || (!fragment.source && !fragment.url)) return
+  if (!shader || !fragment) return
   if (!graph.images.get(shader.image)?.length || !isShaderFrameCurrent(shader, node))
     throw new Error(
       'Render the GLSL shader before exporting. Choose or reload its source in the editor.'

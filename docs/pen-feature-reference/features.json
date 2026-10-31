@@ -478,7 +478,7 @@
           "acceptance": "Load an independent shader; edit inputs, resize, handle errors and reopen.",
           "status": "partial",
           "evidence": ["../PAINT-PARITY.md", "paint-controls.md", "../SHADER-PARITY.md"],
-          "evidence_limit": "Independent GLSL loading, uniforms, editor animation, time-zero export, source reload and identity have model/browser evidence against native Pen samples. Diagnostic hatch samples, error PNG export, Undo and retry have model/browser evidence; complete diagnostic shape/scale and installed native shader acceptance remain open, alongside textures, effects, complete gallery and exact design."
+          "evidence_limit": "Independent GLSL loading, uniforms, editor animation, time-zero export, source reload and identity have model/browser evidence against native Pen samples. Diagnostic hatch samples, empty-source checker/border, error/empty PNG exports, Undo and retry have model/browser evidence; complete diagnostic shape/scale and installed native shader acceptance remain open, alongside textures, effects, complete gallery and exact design."
         },
         {
           "id": "DRAW-13",

@@ -145,6 +145,81 @@ test('the used-source picker follows document references and resets defaults onl
   editor.canvas.assertNoErrors()
 })
 
+test('clearing a shader source draws its placeholder and Undo restores its controls and pixels', async () => {
+  await openShader()
+  await chooseSource()
+  const size = editor.page.getByRole('spinbutton', { name: 'Size', exact: true })
+  await size.focus()
+  await size.fill('24')
+  await size.press('Tab')
+  await expect.poll(async () => (await shader.read())?.pixels).toEqual([white, blue, blue])
+  const before = (await shader.read())?.fragment
+  const path = editor.page.getByRole('textbox', { name: 'Shader path or URL', exact: true })
+  await path.fill('')
+  await path.press('Enter')
+  await expect(size).toHaveCount(0)
+  await expect(editor.page.getByRole('alert')).toHaveCount(0)
+  await expect(editor.page.locator('[data-slot="shader-used-sources"]')).toHaveCount(0)
+  await expect
+    .poll(async () => (await shader.read())?.fragment)
+    .toEqual({
+      url: '',
+      source: '',
+      uniforms: {}
+    })
+  await expect
+    .poll(async () => (await shader.read())?.pixels)
+    .toEqual([
+      [255, 255, 255, 26],
+      [0, 0, 0, 26],
+      [0, 0, 0, 26]
+    ])
+  await editor.page.keyboard.press('Escape')
+  expect(await editor.canvas.screenshotCanvasRegion(650, 600)).toMatchSnapshot(
+    'shader-empty-canvas.png',
+    { maxDiffPixelRatio: 0, threshold: 0 }
+  )
+  await editor.page.evaluate(() => {
+    window.showSaveFilePicker = undefined
+  })
+  const panel = propertySection(editor.page, 'Export')
+  await panel.getByRole('combobox', { name: 'Export scale' }).click()
+  await editor.page.getByRole('option', { name: '2x', exact: true }).click()
+  const downloading = editor.page.waitForEvent('download')
+  await panel.getByRole('button', { name: 'Export layer', exact: true }).click()
+  const saved = test.info().outputPath('shader-empty.png')
+  await (await downloading).saveAs(saved)
+  const image = expectDefined(
+    createCanvasKitRasterCodec(await initCanvasKit()).decode(await readFile(saved)),
+    'downloaded empty shader PNG'
+  )
+  expect([image.width, image.height]).toEqual([640, 480])
+  expect(Array.from(image.data.slice(0, 4))).toEqual([128, 128, 128, 255])
+  const at = (x: number, y: number) =>
+    Array.from(image.data.slice((y * image.width + x) * 4, (y * image.width + x) * 4 + 4))
+  expect(at(4, 4)).toEqual([255, 255, 255, 26])
+  expect(at(16, 4)).toEqual([0, 0, 0, 26])
+  await editor.canvas.undo()
+  await expect.poll(async () => (await shader.read())?.fragment).toEqual(before)
+  await expect.poll(async () => (await shader.read())?.pixels).toEqual([white, blue, blue])
+  editor.canvas.assertNoErrors()
+})
+
+test('an unresolved imported shader URI displays a diagnostic instead of an empty-source placeholder', async () => {
+  await openShader()
+  await chooseSource()
+  await expect.poll(async () => (await shader.read())?.pixels).toEqual([white, white, blue])
+  const selected = expectDefined(await getSelectedNode(editor.page), 'shader layer')
+  await shader.replaceSource(selected.id, 'unavailable-companion.glsl', '')
+  await expect(editor.page.getByRole('alert')).toBeVisible()
+  await expect(editor.page.getByRole('spinbutton', { name: 'Size', exact: true })).toHaveCount(0)
+  await expect.poll(async () => (await shader.read())?.pixels?.[0]).toEqual([0, 0, 0, 0])
+  await editor.page.keyboard.press('Escape')
+  await editor.canvas.undo()
+  await expect.poll(async () => (await shader.read())?.pixels).toEqual([white, white, blue])
+  editor.canvas.assertNoErrors()
+})
+
 test('same-URI reloads retain uniform history and recover from diagnostics', async () => {
   await openShader()
   let source = await readFile(testPath('fixtures/shaders', 'checks.glsl'), 'utf8')

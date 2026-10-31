@@ -3,7 +3,21 @@ import { expect, test } from 'bun:test'
 import { getCanvasKit } from '@open-pencil/core/canvaskit'
 import { createCanvasKitRasterCodec } from '@open-pencil/core/io/formats/raster'
 
-import { renderShaderError } from '#vue/canvas/surface/shader/error'
+import { renderEmptyShader, renderShaderError } from '#vue/canvas/surface/shader/placeholder'
+
+test('an empty source renders the native eight-pixel checkerboard and one-pixel gray border', async () => {
+  const image = createCanvasKitRasterCodec(await getCanvasKit()).decode(
+    await renderEmptyShader({ width: 640, height: 480 }, { width: 320, height: 240 })
+  )
+  if (!image) throw new Error('Placeholder PNG did not decode')
+  const at = (x: number, y: number) =>
+    Array.from(image.data.slice((y * image.width + x) * 4, (y * image.width + x) * 4 + 4))
+  expect(at(0, 100)).toEqual([128, 128, 128, 255])
+  expect(at(1, 100)).toEqual([128, 128, 128, 255])
+  expect(at(4, 4)).toEqual([255, 255, 255, 26])
+  expect(at(16, 4)).toEqual([0, 0, 0, 26])
+  expect(at(16, 16)).toEqual([255, 255, 255, 26])
+})
 
 test('the diagnostic frame preserves native red, transparent interior and measured two-times edge coverage', async () => {
   const image = createCanvasKitRasterCodec(await getCanvasKit()).decode(
