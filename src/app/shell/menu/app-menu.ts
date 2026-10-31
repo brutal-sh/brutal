@@ -36,6 +36,7 @@ import {
   setSnappingPreference
 } from '@/app/settings/preferences/apply'
 import { appPreferences } from '@/app/settings/preferences/store'
+import { guideMenuActions } from '@/app/shell/guides'
 import { createSharedEditorMenuActions } from '@/app/shell/menu/actions/editor'
 import { createExportMenuActions } from '@/app/shell/menu/actions/export'
 import { createSelectionMenuActions } from '@/app/shell/menu/actions/selection'
@@ -123,6 +124,9 @@ export function useAppMenu() {
     'version-history': 'showVersionHistory',
     'export-selection': 'exportSelection',
     'export-snapshot': 'exportSnapshot',
+    'guide-export-code': 'guideExportCode',
+    'guide-import-figma': 'guideImportFigma',
+    'install-cli': 'installCLI',
     autosave: 'autosave',
     close: 'closeTab',
     'previous-tab': 'selectPreviousTab',
@@ -184,6 +188,7 @@ export function useAppMenu() {
   )
 
   const actions: Partial<Record<string, () => void>> = {
+    ...guideMenuActions,
     'export-snapshot': () => requestSnapshotExport(store),
     'agent-text-small': () => {
       chatTextSize.value = 'small'

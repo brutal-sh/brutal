@@ -10,7 +10,7 @@ export type ToastUI = ComponentUI<typeof toastTheme>
 export type ToastProgressState = VariantProps<typeof toast>['progress']
 
 /** Selects the toast treatment; non-default tones are dismissible and copyable. */
-export type ToastVariant = 'default' | 'warning' | 'error'
+export type ToastVariant = 'default' | 'info' | 'warning' | 'error'
 
 export function toastProgressState(progress?: ProgressAmount | null): ToastProgressState {
   if (!progress) return 'none'

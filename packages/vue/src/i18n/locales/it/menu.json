@@ -92,5 +92,8 @@
   "agentTextSmall": "Piccolo",
   "agentTextMedium": "Medio",
   "agentTextLarge": "Grande",
-  "exportSnapshot": "Esporta istantanea…"
+  "exportSnapshot": "Esporta istantanea…",
+  "guideExportCode": "Guida: Esportare il design in codice…",
+  "guideImportFigma": "Guida: Importare da Figma…",
+  "installCLI": "Installa CLI Open Pen…"
 }

@@ -34,5 +34,21 @@
   "snapshotDependencies": "Abhängigkeiten",
   "snapshotImages": "{count} Bilder",
   "snapshotShaders": "{count} Shader",
-  "snapshotFailed": "Der Snapshot konnte nicht exportiert werden. Bitte erneut versuchen."
+  "snapshotFailed": "Der Snapshot konnte nicht exportiert werden. Bitte erneut versuchen.",
+  "codeGuideTitle": "Design als Code exportieren",
+  "codeGuideDescription": "Verbinde einen Programmieragenten mit dem lokalen MCP-Server von Open Pen, um deine Designs in deinem Projekt in Code umzusetzen.",
+  "codeGuideServer": "Lokaler MCP-Server",
+  "codeGuideSteps": "So exportierst du dein Design als Code",
+  "codeGuideLaunch": "Öffne dein Design in Open Pen und lasse die App geöffnet.",
+  "codeGuideConnect": "Öffne die MCP-Einstellungen, prüfe den Server und verbinde deinen Programmierclient. Prüfe vor dem Fortfahren, ob seine MCP-Werkzeuge im Client verfügbar sind.",
+  "codeGuideGenerate": "Wähle einen Frame aus, starte deinen Programmieragenten im Zielprojekt und bitte ihn, die Auswahl mit deinen bevorzugten Technologien umzusetzen.",
+  "codeGuideExamples": "Beispielaufträge für deinen Programmieragenten",
+  "codeGuidePagePrompt": "Setze den ausgewählten Frame als React-Seite mit Tailwind CSS um.",
+  "codeGuideVariablesPrompt": "Aktualisiere die Stile dieses Projekts anhand der Designvariablen.",
+  "codeGuideComponentPrompt": "Erstelle aus dem ausgewählten Frame eine wiederverwendbare Komponente.",
+  "codeGuideSettings": "MCP-Einstellungen öffnen",
+  "figmaGuideTitle": "Aus Figma importieren",
+  "figmaGuideClipboard": "Kopiere eine Ebene oder einen Frame in Figma und füge sie auf der Open Pen-Zeichenfläche ein.",
+  "figmaGuideFile": "Speichere für eingebettete Bilder eine lokale .fig-Kopie aus Figma und öffne sie oder ziehe sie in Open Pen.",
+  "figmaGuideLimits": "Prüfe erweiterte Grafiken nach dem Import. Öffnen erhält mehrere Seiten; Import auf die Zeichenfläche akzeptiert eine einseitige Datei."
 }

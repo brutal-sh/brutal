@@ -92,5 +92,8 @@
   "agentTextSmall": "Mały",
   "agentTextMedium": "Średni",
   "agentTextLarge": "Duży",
-  "exportSnapshot": "Eksportuj migawkę…"
+  "exportSnapshot": "Eksportuj migawkę…",
+  "guideExportCode": "Poradnik: Eksport projektu do kodu…",
+  "guideImportFigma": "Poradnik: Importowanie z Figmy…",
+  "installCLI": "Zainstaluj CLI Open Pen…"
 }

@@ -92,5 +92,8 @@
   "agentTextSmall": "小",
   "agentTextMedium": "中",
   "agentTextLarge": "大",
-  "exportSnapshot": "スナップショットをエクスポート…"
+  "exportSnapshot": "スナップショットをエクスポート…",
+  "guideExportCode": "ガイド：デザインをコードに書き出す…",
+  "guideImportFigma": "ガイド：Figma からインポートする…",
+  "installCLI": "Open Pen CLI をインストール…"
 }

@@ -92,5 +92,8 @@
   "agentTextSmall": "Маленький",
   "agentTextMedium": "Средний",
   "agentTextLarge": "Большой",
-  "exportSnapshot": "Экспортировать снимок…"
+  "exportSnapshot": "Экспортировать снимок…",
+  "guideExportCode": "Руководство: Экспорт дизайна в код…",
+  "guideImportFigma": "Руководство: Импорт из Figma…",
+  "installCLI": "Установить CLI Open Pen…"
 }

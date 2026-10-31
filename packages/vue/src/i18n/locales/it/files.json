@@ -34,5 +34,21 @@
   "snapshotDependencies": "Dipendenze",
   "snapshotImages": "{count} immagini",
   "snapshotShaders": "{count} shader",
-  "snapshotFailed": "Impossibile esportare l’istantanea. Riprova."
+  "snapshotFailed": "Impossibile esportare l’istantanea. Riprova.",
+  "codeGuideTitle": "Esporta il design in codice",
+  "codeGuideDescription": "Collega un agente di programmazione al server MCP locale di Open Pen per trasformare i tuoi design in codice nel tuo progetto.",
+  "codeGuideServer": "Server MCP locale",
+  "codeGuideSteps": "Come esportare il design in codice",
+  "codeGuideLaunch": "Apri il design in Open Pen e lascia aperta l’app.",
+  "codeGuideConnect": "Apri le impostazioni MCP per controllare il server e collegare il client di programmazione. Prima di continuare, verifica che i suoi strumenti MCP siano disponibili nel client.",
+  "codeGuideGenerate": "Seleziona un riquadro, avvia l’agente di programmazione nel progetto di destinazione e chiedigli di realizzare la selezione con le tecnologie che preferisci.",
+  "codeGuideExamples": "Esempi di richieste per l’agente di programmazione",
+  "codeGuidePagePrompt": "Realizza il riquadro selezionato come pagina React con Tailwind CSS.",
+  "codeGuideVariablesPrompt": "Usa le variabili del design per aggiornare gli stili di questo progetto.",
+  "codeGuideComponentPrompt": "Trasforma il riquadro selezionato in un componente riutilizzabile.",
+  "codeGuideSettings": "Apri impostazioni MCP",
+  "figmaGuideTitle": "Come importare da Figma",
+  "figmaGuideClipboard": "Copia un livello o un riquadro in Figma e incollalo nell’area di disegno di Open Pen.",
+  "figmaGuideFile": "Per includere le immagini incorporate, salva una copia locale .fig da Figma, poi aprila o trascinala in Open Pen.",
+  "figmaGuideLimits": "Controlla la grafica avanzata dopo l’importazione. Apri conserva più pagine; Importa nell’area di disegno accetta un file con una sola pagina."
 }

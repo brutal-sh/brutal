@@ -3,6 +3,27 @@ import { params } from '@nanostores/i18n'
 import { i18n } from '#vue/i18n/create'
 
 export const filesMessageDefaults = {
+  codeGuideTitle: 'Export Design to Code',
+  codeGuideDescription:
+    'Connect a coding agent to Open Pen’s local MCP server to turn your designs into code in your own project.',
+  codeGuideServer: 'Local MCP server',
+  codeGuideSteps: 'How to export your design to code',
+  codeGuideLaunch: 'Open your design in Open Pen and keep the app running.',
+  codeGuideConnect:
+    'Open MCP settings to check the server and connect your coding client. Confirm that its MCP tools are available in the client before continuing.',
+  codeGuideGenerate:
+    'Select a frame, start your coding agent in the destination project, and ask it to build the selection with your preferred stack.',
+  codeGuideExamples: 'Example prompts for your coding agent',
+  codeGuidePagePrompt: 'Build the selected frame as a React page with Tailwind CSS.',
+  codeGuideVariablesPrompt: 'Use the design variables to update the styles in this project.',
+  codeGuideComponentPrompt: 'Turn the selected frame into a reusable component.',
+  codeGuideSettings: 'Open MCP settings',
+  figmaGuideTitle: 'How to import from Figma',
+  figmaGuideClipboard: 'Copy a layer or frame in Figma, then paste it onto the Open Pen canvas.',
+  figmaGuideFile:
+    'For embedded images, save a local .fig copy from Figma, then open or drop it into Open Pen.',
+  figmaGuideLimits:
+    'Check advanced graphics after importing. Open preserves multiple pages; Import to canvas accepts a single-page file.',
   snapshotTitle: 'Export snapshot',
   snapshotDescription:
     'A snapshot bundles this design and its image and shader dependencies into a ZIP for another machine.',

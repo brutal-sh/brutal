@@ -18,3 +18,5 @@ Subscriptions, vendor activation and vendor account gates are outside the target
 Documentation coverage does not establish full product coverage: undocumented menus, platform differences, error states and dynamic layouts still require comparison against the installed application.
 
 The ongoing [snapshot export acceptance](SNAPSHOT-PARITY.md) adds observed native behavior beyond the documentation catalog and distinguishes model, browser and native delivered-state evidence.
+
+The [File-guide acceptance](GUIDES-PARITY.md) records the actual code-export dialog, Figma information toast and CLI documentation action, with independent Open Pen routes and explicit client/visual/CLI gaps.

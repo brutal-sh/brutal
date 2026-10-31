@@ -21,6 +21,8 @@ import { kickSyncEngine } from '@/app/storage/sync'
 import { prepareForReload } from '@/app/tabs'
 import { CloudHosts } from '@/components/cloud/integration'
 import UnsavedChangesDialog from '@/components/document/UnsavedChangesDialog.vue'
+import DesignCodeGuide from '@/components/guides/DesignCodeGuide.vue'
+import FigmaImportGuide from '@/components/guides/FigmaImportGuide.vue'
 import PublishLibraryDialog from '@/components/libraries/PublishLibraryDialog.vue'
 import LibraryUpdateReviewDialog from '@/components/libraries/review/LibraryUpdateReviewDialog.vue'
 import RecoveryDialog from '@/components/recovery/RecoveryDialog.vue'
@@ -68,6 +70,8 @@ onMounted(() => {
         <RouterView />
       </AppShell>
       <SettingsDialog />
+      <DesignCodeGuide />
+      <FigmaImportGuide />
       <AISetupDialog />
       <SaveToHost />
       <CloudHosts />

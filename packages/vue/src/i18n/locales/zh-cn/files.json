@@ -34,5 +34,21 @@
   "snapshotDependencies": "依赖文件",
   "snapshotImages": "{count} 张图像",
   "snapshotShaders": "{count} 个着色器",
-  "snapshotFailed": "无法导出快照。请重试。"
+  "snapshotFailed": "无法导出快照。请重试。",
+  "codeGuideTitle": "将设计导出为代码",
+  "codeGuideDescription": "将编程智能体连接到 Open Pen 的本地 MCP 服务器，在自己的项目中将设计转换为代码。",
+  "codeGuideServer": "本地 MCP 服务器",
+  "codeGuideSteps": "如何将设计导出为代码",
+  "codeGuideLaunch": "在 Open Pen 中打开设计，并保持应用运行。",
+  "codeGuideConnect": "打开 MCP 设置以检查服务器并连接编程客户端。继续之前，请确认客户端中的 MCP 工具可用。",
+  "codeGuideGenerate": "选择一个画框，在目标项目中启动编程智能体，并要求它使用你选择的技术实现所选内容。",
+  "codeGuideExamples": "编程智能体提示词示例",
+  "codeGuidePagePrompt": "使用 Tailwind CSS 将选中的画框实现为 React 页面。",
+  "codeGuideVariablesPrompt": "使用设计变量更新此项目的样式。",
+  "codeGuideComponentPrompt": "将选中的画框转换为可复用组件。",
+  "codeGuideSettings": "打开 MCP 设置",
+  "figmaGuideTitle": "如何从 Figma 导入",
+  "figmaGuideClipboard": "在 Figma 中复制图层或画框，然后粘贴到 Open Pen 画布上。",
+  "figmaGuideFile": "如需包含嵌入的图片，请从 Figma 保存本地 .fig 副本，然后在 Open Pen 中打开或拖入。",
+  "figmaGuideLimits": "导入后请检查高级图形。「打开」会保留多个页面；「导入到画布」接受单页文件。"
 }

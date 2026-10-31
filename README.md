@@ -70,10 +70,15 @@ Official builds send one anonymous ping a day and share usage stats only if you 
 
 ## CLI
 
+This fork runs its CLI from the checkout. Install dependencies and build its packages first:
+
 ```sh
-npm install -g @open-pencil/cli
-# or: bun add -g @open-pencil/cli
+bun install
+bun run build:packages
+bun open-pencil --help
 ```
+
+The executable currently keeps the inherited `openpencil` name. Run the examples below with `bun open-pencil` from this checkout; the upstream npm package does not include this fork's changes. This CLI is separate from Pen's proprietary `pen` agent CLI; its public contract is still being implemented independently.
 
 ### Inspect design files
 

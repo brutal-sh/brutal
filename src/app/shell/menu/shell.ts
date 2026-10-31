@@ -14,6 +14,7 @@ import {
   syncNativeSnappingMenu
 } from '@/app/settings/preferences/native-menu'
 import { appPreferences, type ChatTextSize } from '@/app/settings/preferences/store'
+import { guideMenuActions } from '@/app/shell/guides'
 import { useNativeMenuEvents } from '@/app/shell/menu/native-events'
 import { browseFiles } from '@/app/shell/menu/navigation'
 import { APP_MENU_SCHEMA, type AppMenuEntry } from '@/app/shell/menu/schema'
@@ -69,6 +70,7 @@ export function useShellMenu() {
   const { setTheme } = useAppTheme()
   const { updates } = useI18n()
   const actions: Partial<Record<string, () => void>> = {
+    ...guideMenuActions,
     'agent-text-small': () => chooseChatSize('small'),
     'agent-text-medium': () => chooseChatSize('medium'),
     'agent-text-large': () => chooseChatSize('large'),

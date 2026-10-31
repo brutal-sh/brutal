@@ -34,5 +34,21 @@
   "snapshotDependencies": "依存ファイル",
   "snapshotImages": "画像 {count} 個",
   "snapshotShaders": "シェーダー {count} 個",
-  "snapshotFailed": "スナップショットをエクスポートできませんでした。もう一度お試しください。"
+  "snapshotFailed": "スナップショットをエクスポートできませんでした。もう一度お試しください。",
+  "codeGuideTitle": "デザインをコードに書き出す",
+  "codeGuideDescription": "コーディングエージェントを Open Pen のローカル MCP サーバーに接続し、自分のプロジェクト内でデザインをコードに変換します。",
+  "codeGuideServer": "ローカル MCP サーバー",
+  "codeGuideSteps": "デザインをコードに書き出す方法",
+  "codeGuideLaunch": "Open Pen でデザインを開き、アプリを起動したままにします。",
+  "codeGuideConnect": "MCP 設定を開いてサーバーを確認し、コーディングクライアントを接続します。続行する前に、クライアントで MCP ツールが使用できることを確認してください。",
+  "codeGuideGenerate": "フレームを選択し、出力先のプロジェクトでコーディングエージェントを起動して、希望する技術で選択内容を実装するよう依頼します。",
+  "codeGuideExamples": "コーディングエージェントへの依頼例",
+  "codeGuidePagePrompt": "選択したフレームを Tailwind CSS を使った React ページとして実装してください。",
+  "codeGuideVariablesPrompt": "デザイン変数を使って、このプロジェクトのスタイルを更新してください。",
+  "codeGuideComponentPrompt": "選択したフレームを再利用可能なコンポーネントに変換してください。",
+  "codeGuideSettings": "MCP 設定を開く",
+  "figmaGuideTitle": "Figma からインポートする方法",
+  "figmaGuideClipboard": "Figma でレイヤーまたはフレームをコピーし、Open Pen のキャンバスに貼り付けます。",
+  "figmaGuideFile": "埋め込み画像を含めるには、Figma からローカルの .fig コピーを保存し、Open Pen で開くかドラッグしてください。",
+  "figmaGuideLimits": "インポート後に高度なグラフィックを確認してください。「開く」は複数ページを保持します。「キャンバスにインポート」は単一ページのファイルに対応します。"
 }

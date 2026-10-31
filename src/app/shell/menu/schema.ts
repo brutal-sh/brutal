@@ -85,6 +85,9 @@ export const APP_MENU_SCHEMA = [
       { id: 'open-recent', label: 'Open Recent', target: 'native' },
       { id: 'import-canvas', label: 'Import Image/SVG/Figma…' },
       { id: 'export-snapshot', label: 'Export Snapshot…', palette: { icon: 'download' } },
+      { id: 'guide-export-code', label: 'Guide: How to Export Design to Code…', handler: 'shell' },
+      { id: 'guide-import-figma', label: 'Guide: How to Import from Figma…', handler: 'shell' },
+      { id: 'install-cli', label: 'Install Open Pen CLI…', handler: 'shell' },
       { id: 'browse-files', label: 'Browse Files…', handler: 'shell' },
       { id: 'open-tour', label: 'Open the Tour', handler: 'shell' },
       {

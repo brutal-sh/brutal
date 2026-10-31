@@ -9,3 +9,4 @@
 - Release numeric-field keyboard focus when an edited control is replaced so document shortcuts remain available.
 - Reload watched local files when native filesystem events use an equivalent parent-folder alias, including atomic saves.
 - Omit an empty dialog description slot so dialogs without a description do not reserve a blank description row.
+- Show the resolved local MCP endpoint after server startup.

@@ -52,6 +52,18 @@
         "label": "Export Snapshot…"
       },
       {
+        "id": "guide-export-code",
+        "label": "Guide: How to Export Design to Code…"
+      },
+      {
+        "id": "guide-import-figma",
+        "label": "Guide: How to Import from Figma…"
+      },
+      {
+        "id": "install-cli",
+        "label": "Install Open Pen CLI…"
+      },
+      {
         "id": "save",
         "label": "Save",
         "accelerator": "CmdOrCtrl+S"

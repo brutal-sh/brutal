@@ -40,6 +40,13 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {}
 
+export const Information: Story = {
+  args: {
+    message: 'Import a local design file to include its embedded images.',
+    variant: 'info'
+  }
+}
+
 export const Warning: Story = {
   args: {
     message: 'Storage workspace is offline. Changes are queued locally.',

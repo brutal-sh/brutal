@@ -92,5 +92,8 @@
   "agentTextSmall": "小",
   "agentTextMedium": "中",
   "agentTextLarge": "大",
-  "exportSnapshot": "导出快照…"
+  "exportSnapshot": "导出快照…",
+  "guideExportCode": "指南：将设计导出为代码…",
+  "guideImportFigma": "指南：从 Figma 导入…",
+  "installCLI": "安装 Open Pen CLI…"
 }

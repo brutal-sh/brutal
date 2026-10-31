@@ -99,6 +99,7 @@ export function createMCPRuntimeService(dependencies: MCPRuntimeDependencies) {
   }
 
   function applyHealth(health: AutomationHealth): void {
+    state.endpoint = getMCPServerURL()
     state.version = health.version ?? null
     state.agentSessionEvents = health.agentSessionEvents ?? false
     dependencies.setToolDescriptors(health.tools ?? [])
