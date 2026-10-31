@@ -85,6 +85,34 @@ test('the CLI setup action opens this fork’s documentation', async () => {
   }
 })
 
+test('Help reaches this fork’s documentation, setup and support without editing selection', async () => {
+  const { page, canvas } = editor
+  await canvas.drawRect(350, 300, 160, 100)
+  const before = await getSelectedNode(page)
+  for (const [label, path] of [
+    ['Open Pen Documentation', '/blob/HEAD/README.md'],
+    ['Prompt Gallery & Tips', '/blob/HEAD/docs/PROMPTS.md'],
+    ['Open Pen Website', ''],
+    ['Cursor Setup…', '/blob/HEAD/docs/EDITOR-INTEGRATIONS.md#cursor'],
+    ['VS Code Setup…', '/blob/HEAD/docs/EDITOR-INTEGRATIONS.md#vs-code'],
+    ['Support & Feedback', '/issues']
+  ]) {
+    const opening = page.waitForEvent('popup')
+    await (
+      await openAppMenu(page, 'Help')
+    )
+      .getByRole('menuitem', { name: label, exact: true })
+      .click()
+    const popup = await opening
+    try {
+      await expect(popup).toHaveURL(`https://github.com/jpoindexter/open-pen${path}`)
+    } finally {
+      await popup.close()
+    }
+    expect(await getSelectedNode(page)).toEqual(before)
+  }
+})
+
 test('the light guide keeps its final example and settings action reachable in a narrow window', async () => {
   const { page } = editor
   const viewport = page.viewportSize()

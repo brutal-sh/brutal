@@ -220,5 +220,34 @@
         "label": "Window"
       }
     ]
+  },
+  {
+    "label": "Help",
+    "items": [
+      {
+        "id": "help-documentation",
+        "label": "Open Pen Documentation"
+      },
+      {
+        "id": "help-prompts",
+        "label": "Prompt Gallery & Tips"
+      },
+      {
+        "id": "help-website",
+        "label": "Open Pen Website"
+      },
+      {
+        "id": "help-cursor",
+        "label": "Cursor Setup…"
+      },
+      {
+        "id": "help-vscode",
+        "label": "VS Code Setup…"
+      },
+      {
+        "id": "help-support",
+        "label": "Support & Feedback"
+      }
+    ]
   }
 ]

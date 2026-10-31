@@ -81,6 +81,17 @@ export const NATIVE_MENU_SCHEMA: AppMenuGroupSchema[] = [
       { type: 'separator' },
       { id: 'window-focus', label: 'Window' }
     ]
+  },
+  {
+    label: 'Help',
+    items: [
+      'help-documentation',
+      'help-prompts',
+      'help-website',
+      'help-cursor',
+      'help-vscode',
+      'help-support'
+    ].map((id) => command(id))
   }
 ]
 

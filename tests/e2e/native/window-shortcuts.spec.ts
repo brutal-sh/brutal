@@ -16,6 +16,13 @@ async function selectDocument(digit: string, name: string) {
 }
 
 it('selects desktop documents by number while retaining zoom, Home and input state', async () => {
+  // Numbered tabs need their own document sequence when the native process is reused.
+  const pageOrigin = await browser.execute(() => performance.timeOrigin)
+  await browser.refresh()
+  await browser.waitUntil(
+    async () => browser.execute((origin) => performance.timeOrigin !== origin, pageOrigin),
+    { timeoutMsg: 'Native reload did not replace the document' }
+  )
   let secondLayer = ''
   for (const name of ['Shortcut A', 'Shortcut B', 'Shortcut C']) {
     if (name !== 'Shortcut A') await $('button[aria-label="New design"]').click()

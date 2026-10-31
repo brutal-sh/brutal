@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 
 import { openExternalLink } from '@/app/shell/ui'
-import { OPEN_PEN_CLI_GUIDE_URL } from '@/constants'
+import { OPEN_PEN_CLI_GUIDE_URL, OPEN_PEN_REPOSITORY_URL } from '@/constants'
 
 export const designCodeGuideOpen = ref(false)
 export const figmaImportGuideOpen = ref(false)
@@ -14,5 +14,19 @@ export const guideMenuActions = {
   'guide-import-figma': () => {
     figmaImportGuideOpen.value = true
   },
-  'install-cli': () => void openExternalLink(OPEN_PEN_CLI_GUIDE_URL)
+  'install-cli': () => void openExternalLink(OPEN_PEN_CLI_GUIDE_URL),
+  'help-documentation': () =>
+    void openExternalLink(`${OPEN_PEN_REPOSITORY_URL}/blob/HEAD/README.md`),
+  'help-prompts': () =>
+    void openExternalLink(`${OPEN_PEN_REPOSITORY_URL}/blob/HEAD/docs/PROMPTS.md`),
+  'help-website': () => void openExternalLink(OPEN_PEN_REPOSITORY_URL),
+  'help-cursor': () =>
+    void openExternalLink(
+      `${OPEN_PEN_REPOSITORY_URL}/blob/HEAD/docs/EDITOR-INTEGRATIONS.md#cursor`
+    ),
+  'help-vscode': () =>
+    void openExternalLink(
+      `${OPEN_PEN_REPOSITORY_URL}/blob/HEAD/docs/EDITOR-INTEGRATIONS.md#vs-code`
+    ),
+  'help-support': () => void openExternalLink(`${OPEN_PEN_REPOSITORY_URL}/issues`)
 }

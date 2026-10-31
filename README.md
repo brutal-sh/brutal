@@ -21,6 +21,8 @@ Cloud and feedback are off in the supplied environment example. Core editing req
 
 Follow [the full feature catalog](docs/pen-feature-reference/README.md), [the parity matrix](docs/PARITY.md), [execution evidence](docs/ACCEPTANCE.md), and [the private tracking board](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor). Supported `.pen` files can be edited and saved; unsupported content is rejected before conversion or writing. New local documents suggest `.pen` on first Save; existing `.fig` documents and remote storage retain `.fig`. See [format limits](packages/pen/README.md).
 
+Start with the [prompt gallery](docs/PROMPTS.md), [Cursor/VS Code setup](docs/EDITOR-INTEGRATIONS.md), or [local Codex runtime guide](docs/LOCAL-RUNTIME.md). These guides state their verification limits; visual IDE extensions remain open.
+
 ## Upstream documentation
 
 The following describes the upstream project. Its download links, hosted services and published packages are OpenPencil, rather than releases of this private fork.

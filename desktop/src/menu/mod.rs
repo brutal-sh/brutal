@@ -103,7 +103,7 @@ fn build_submenu<R: tauri::Runtime>(
     items: &[MenuEntry],
     build: &MenuBuild,
 ) -> tauri::Result<Submenu<R>> {
-    let mut builder = SubmenuBuilder::new(app, label);
+    let mut builder = SubmenuBuilder::new(app, label.replace('&', "&&"));
 
     for entry in platform_entries(items, &build.inputs.features) {
         if entry.r#type.as_deref() == Some("separator") {
@@ -122,6 +122,8 @@ fn build_submenu<R: tauri::Runtime>(
             builder = builder.item(&submenu);
             continue;
         }
+        // The catalog holds literal labels; muda treats a single ampersand as a mnemonic.
+        let label = label.replace('&', "&&");
 
         // Ordinary menu accelerators emit a frontend command without preserving the
         // WebView's focused editing control. Native edit items let WebKit/WebView2
@@ -131,17 +133,17 @@ fn build_submenu<R: tauri::Runtime>(
         #[cfg(any(target_os = "macos", target_os = "windows"))]
         if let Some(id) = entry.id.as_deref() {
             let native_edit_item = match id {
-                "copy" => Some(PredefinedMenuItem::copy(app, Some(label))?),
-                "cut" => Some(PredefinedMenuItem::cut(app, Some(label))?),
-                "paste" => Some(PredefinedMenuItem::paste(app, Some(label))?),
+                "copy" => Some(PredefinedMenuItem::copy(app, Some(&label))?),
+                "cut" => Some(PredefinedMenuItem::cut(app, Some(&label))?),
+                "paste" => Some(PredefinedMenuItem::paste(app, Some(&label))?),
                 #[cfg(target_os = "macos")]
-                "toggle-fullscreen" => Some(PredefinedMenuItem::fullscreen(app, Some(label))?),
+                "toggle-fullscreen" => Some(PredefinedMenuItem::fullscreen(app, Some(&label))?),
                 #[cfg(target_os = "macos")]
-                "window-minimize" => Some(PredefinedMenuItem::minimize(app, Some(label))?),
+                "window-minimize" => Some(PredefinedMenuItem::minimize(app, Some(&label))?),
                 #[cfg(target_os = "macos")]
-                "window-zoom" => Some(PredefinedMenuItem::maximize(app, Some(label))?),
+                "window-zoom" => Some(PredefinedMenuItem::maximize(app, Some(&label))?),
                 #[cfg(target_os = "macos")]
-                "window-front" => Some(PredefinedMenuItem::bring_all_to_front(app, Some(label))?),
+                "window-front" => Some(PredefinedMenuItem::bring_all_to_front(app, Some(&label))?),
                 _ => None,
             };
             if let Some(item) = native_edit_item {
@@ -157,7 +159,7 @@ fn build_submenu<R: tauri::Runtime>(
                 .as_ref()
                 .and_then(|id| build.checked.get(id).copied())
                 .unwrap_or(true);
-            let mut item = CheckMenuItemBuilder::new(label).checked(checked);
+            let mut item = CheckMenuItemBuilder::new(&label).checked(checked);
             if let Some(id) = &entry.id {
                 item = item.id(id);
             }
@@ -168,7 +170,7 @@ fn build_submenu<R: tauri::Runtime>(
             continue;
         }
 
-        let mut item = MenuItemBuilder::new(label);
+        let mut item = MenuItemBuilder::new(&label);
         if let Some(id) = &entry.id {
             item = item.id(id);
         }
@@ -207,10 +209,10 @@ fn build_recent_files_submenu<R: tauri::Runtime>(
     label: &str,
     recent_files: &[String],
 ) -> tauri::Result<Submenu<R>> {
-    let mut builder =
-        SubmenuBuilder::with_id(app, "open-recent", label).enabled(!recent_files.is_empty());
+    let mut builder = SubmenuBuilder::with_id(app, "open-recent", label.replace('&', "&&"))
+        .enabled(!recent_files.is_empty());
     for (index, path) in recent_files.iter().enumerate() {
-        let item = MenuItemBuilder::new(recent_file_label(path))
+        let item = MenuItemBuilder::new(recent_file_label(path).replace('&', "&&"))
             .id(format!("open-recent:{index}"))
             .build(app)?;
         builder = builder.item(&item);
@@ -382,6 +384,12 @@ pub fn install_app_menu<R: tauri::Runtime>(
     }
 
     app.set_menu(builder.build()?)?;
+    #[cfg(target_os = "macos")]
+    for menu in &schema_menus {
+        if menu.text()? == "Help" {
+            menu.set_as_help_menu_for_nsapp()?;
+        }
+    }
     Ok(())
 }
 

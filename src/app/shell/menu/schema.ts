@@ -593,6 +593,17 @@ export const APP_MENU_SCHEMA = [
         ]
       }
     ]
+  },
+  {
+    label: 'Help',
+    items: [
+      { id: 'help-documentation', label: 'Open Pen Documentation', handler: 'shell' },
+      { id: 'help-prompts', label: 'Prompt Gallery & Tips', handler: 'shell' },
+      { id: 'help-website', label: 'Open Pen Website', handler: 'shell' },
+      { id: 'help-cursor', label: 'Cursor Setup…', handler: 'shell' },
+      { id: 'help-vscode', label: 'VS Code Setup…', handler: 'shell' },
+      { id: 'help-support', label: 'Support & Feedback', handler: 'shell' }
+    ]
   }
 ] satisfies AppMenuGroupSchema[]
 

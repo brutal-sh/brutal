@@ -70,7 +70,13 @@ describe('APP_MENU_SCHEMA', () => {
       'snap-pixel-grid',
       'agent-text-small',
       'agent-text-medium',
-      'agent-text-large'
+      'agent-text-large',
+      'help-documentation',
+      'help-prompts',
+      'help-website',
+      'help-cursor',
+      'help-vscode',
+      'help-support'
     ])
   })
 

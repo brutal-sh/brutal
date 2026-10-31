@@ -58,3 +58,30 @@ it('delivers the native guide UI and this fork’s CLI setup link without changi
     before
   )
 })
+
+it('routes native Help events from Home without creating a document', async () => {
+  await $('[role="tab"][aria-label="Home"]').click()
+  const before = await $$('[data-slot="tab-bar"] [role="tab"]').length
+  for (const [id, path] of [
+    ['help-documentation', '/blob/HEAD/README.md'],
+    ['help-prompts', '/blob/HEAD/docs/PROMPTS.md'],
+    ['help-website', ''],
+    ['help-cursor', '/blob/HEAD/docs/EDITOR-INTEGRATIONS.md#cursor'],
+    ['help-vscode', '/blob/HEAD/docs/EDITOR-INTEGRATIONS.md#vs-code'],
+    ['help-support', '/issues']
+  ]) {
+    await invokeNative('take_native_test_opened_urls')
+    await browser.execute(async (id) => {
+      const event = window.__TAURI__?.event
+      if (!event) throw new Error('Native event API unavailable')
+      await event.emit('menu-event', id)
+    }, id)
+    await browser.waitUntil(async () =>
+      (await invokeNative<string[]>('take_native_test_opened_urls')).includes(
+        `https://github.com/jpoindexter/open-pen${path}`
+      )
+    )
+    assert.equal(await $('[role="tab"][aria-label="Home"]').getAttribute('aria-selected'), 'true')
+    assert.equal(await $$('[data-slot="tab-bar"] [role="tab"]').length, before)
+  }
+})

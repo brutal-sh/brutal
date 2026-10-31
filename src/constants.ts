@@ -101,7 +101,8 @@ export const NODE_DOWNLOAD_URL = 'https://nodejs.org/en/download'
  * at the end of the section description; alerts link only to the fix, never to docs.
  */
 const DOCS_ORIGIN = 'https://openpencil.dev'
-export const OPEN_PEN_CLI_GUIDE_URL = 'https://github.com/jpoindexter/open-pen#cli'
+export const OPEN_PEN_REPOSITORY_URL = 'https://github.com/jpoindexter/open-pen'
+export const OPEN_PEN_CLI_GUIDE_URL = `${OPEN_PEN_REPOSITORY_URL}#cli`
 export const MCP_SERVER_DOCS_URL = `${DOCS_ORIGIN}/programmable/mcp-server`
 /** The guide to OpenPencil Cloud, linked from the Cloud server's own pages. */
 export const CLOUD_DOCS_URL = `${DOCS_ORIGIN}/user-guide/openpencil-cloud`
