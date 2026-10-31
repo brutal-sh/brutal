@@ -4,6 +4,7 @@ import type { ShallowRef } from 'vue'
 import type { Editor } from '@open-pencil/core'
 
 const CANVAS_TEXT_INPUT = 'data-canvas-text-input'
+export const CANVAS_TEXT_DELETE = 'open-pencil:delete-canvas-text'
 
 /**
  * Whether `element` is the hidden textarea the canvas text editor types through. Focus can leave
@@ -12,6 +13,11 @@ const CANVAS_TEXT_INPUT = 'data-canvas-text-input'
  */
 export function isCanvasTextInput(element: Element | null): boolean {
   return element?.hasAttribute(CANVAS_TEXT_INPUT) ?? false
+}
+
+/** Routes a native menu edit to the canvas's text model, not its empty input buffer. */
+export function deleteCanvasTextInput(element: Element | null): void {
+  if (isCanvasTextInput(element)) element?.dispatchEvent(new Event(CANVAS_TEXT_DELETE))
 }
 
 export function createHiddenTextArea() {

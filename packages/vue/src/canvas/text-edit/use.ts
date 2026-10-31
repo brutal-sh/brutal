@@ -8,7 +8,11 @@ import { createCaretBlink, createTextCompositionHandlers, createTextEditActions 
 import { createTextFormattingActions } from './formatting'
 import { createTextKeyDownHandler } from './keyboard'
 import { createTextListActions } from './paragraphs'
-import { focusTextAreaOnCanvasPointerDown, useTextEditingSession } from './textarea'
+import {
+  CANVAS_TEXT_DELETE,
+  focusTextAreaOnCanvasPointerDown,
+  useTextEditingSession
+} from './textarea'
 
 /**
  * Bridges DOM text input and the editor's canvas text-editing model.
@@ -81,6 +85,14 @@ export function useTextEdit(
   useEventListener(textareaRef, 'compositionupdate', onCompositionUpdate)
   useEventListener(textareaRef, 'compositionend', onCompositionEnd)
   useEventListener(textareaRef, 'keydown', onKeyDown)
+  useEventListener(textareaRef, CANVAS_TEXT_DELETE, () => {
+    const node = getEditingNode()
+    if (!node || isComposing()) return
+    // Keep a menu deletion's Undo separate from the typing that preceded it.
+    store.runTextEditStep(() => undefined)
+    deleteText(node, false)
+    resetBlink()
+  })
   useEventListener(canvasRef, 'mousedown', () =>
     focusTextAreaOnCanvasPointerDown(textareaRef, store)
   )

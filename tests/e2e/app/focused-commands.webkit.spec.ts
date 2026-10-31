@@ -3,6 +3,8 @@ import type { EditorCommandId } from '@open-pencil/vue/editor/commands'
 import type { runFocusedCommand } from '@/app/shell/commands/focused'
 
 import { expect, test, useEditorSetup } from '#tests/e2e/fixtures'
+import { openAppMenu } from '#tests/helpers/menu'
+import { getSelectedNode } from '#tests/helpers/store'
 
 const editor = useEditorSetup()
 
@@ -52,6 +54,42 @@ test('Select All and Undo from the menu edit a focused text field', async () => 
   await expect(field).toHaveValue('')
   expect(await runAsNativeMenu('edit.redo')).toEqual([])
   await expect(field).toHaveValue('hello world')
+})
+
+test('Delete edits a focused field range and retains its native Undo history', async () => {
+  const field = await focusTextField('abcdef')
+  await field.evaluate((input: HTMLInputElement) => input.setSelectionRange(1, 4))
+  expect(await runAsNativeMenu('selection.delete')).toEqual([])
+  await expect(field).toHaveValue('aef')
+  expect(await runAsNativeMenu('edit.undo')).toEqual([])
+  await expect(field).toHaveValue('abcdef')
+})
+
+test('Delete edits selected canvas text instead of dispatching layer deletion', async () => {
+  await editor.canvas.selectTool('text')
+  await editor.canvas.click(300, 300)
+  await editor.page.keyboard.type('Edit text sample')
+  const before = await getSelectedNode(editor.page)
+  expect(before?.type).toBe('TEXT')
+  await editor.page.keyboard.press('ControlOrMeta+a')
+  await editor.page.keyboard.press('ArrowLeft')
+  for (let index = 0; index < 5; index++) await editor.page.keyboard.press('ArrowRight')
+  for (let index = 0; index < 4; index++) await editor.page.keyboard.press('Shift+ArrowRight')
+
+  const input = editor.page.locator('textarea[data-canvas-text-input]')
+  await input.dispatchEvent('compositionstart')
+  expect(await runAsNativeMenu('selection.delete')).toEqual([])
+  expect((await getSelectedNode(editor.page))?.text).toBe('Edit text sample')
+  await input.dispatchEvent('compositionend', { data: '' })
+  expect(await runAsNativeMenu('selection.delete')).toEqual([])
+  await expect.poll(async () => (await getSelectedNode(editor.page))?.text).toBe('Edit  sample')
+  expect((await getSelectedNode(editor.page))?.id).toBe(before?.id)
+  await (
+    await openAppMenu(editor.page, 'Edit')
+  )
+    .getByRole('menuitem', { name: /^Undo\b/ })
+    .click()
+  await expect.poll(async () => (await getSelectedNode(editor.page))?.text).toBe('Edit text sample')
 })
 
 test('canvas commands wait while a text field has focus, view commands do not', async () => {

@@ -50,7 +50,11 @@ type NativeTestStore = {
   zoomToLevel: EditorStore['zoomToLevel']
   select: (ids: string[]) => void
   startTextEditing: (id: string) => void
-  textEditor?: { selectAll: () => void }
+  textEditor?: {
+    selectAll: () => void
+    selectWord: (position: number) => void
+    getSelectedText: () => string
+  }
 }
 
 declare global {

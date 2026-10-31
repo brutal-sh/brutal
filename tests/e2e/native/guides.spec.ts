@@ -3,7 +3,7 @@ import { strict as assert } from 'node:assert'
 import * as v from 'valibot'
 
 import { createNativeLayerFixture } from '#tests/helpers/tauri/editor-snapshot'
-import { invokeNative } from '#tests/helpers/tauri/invoke'
+import { emitNativeMenuAction, invokeNative } from '#tests/helpers/tauri/invoke'
 
 async function chooseCommand(search: string) {
   await $('button[aria-label="Command palette"]').click()
@@ -71,11 +71,7 @@ it('routes native Help events from Home without creating a document', async () =
     ['help-support', '/issues']
   ]) {
     await invokeNative('take_native_test_opened_urls')
-    await browser.execute(async (id) => {
-      const event = window.__TAURI__?.event
-      if (!event) throw new Error('Native event API unavailable')
-      await event.emit('menu-event', id)
-    }, id)
+    await emitNativeMenuAction(id)
     await browser.waitUntil(async () =>
       (await invokeNative<string[]>('take_native_test_opened_urls')).includes(
         `https://github.com/jpoindexter/open-pen${path}`

@@ -15,6 +15,15 @@ export async function invokeNative<T>(command: string, args?: InvokeArguments): 
   )
 }
 
+/** Exercises the WebView subscriber separately from physical operating-system menu clicks. */
+export async function emitNativeMenuAction(id: string): Promise<void> {
+  await browser.execute(async (id) => {
+    const event = window.__TAURI__?.event
+    if (!event) throw new Error('Native event API unavailable')
+    await event.emit('menu-event', id)
+  }, id)
+}
+
 /** Invoke a command that returns raw bytes; WebDriver cannot serialize an ArrayBuffer. */
 export async function invokeNativeBytes(
   command: string,

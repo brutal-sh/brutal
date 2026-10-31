@@ -10,3 +10,5 @@
 - Reload watched local files when native filesystem events use an equivalent parent-folder alias, including atomic saves.
 - Omit an empty dialog description slot so dialogs without a description do not reserve a blank description row.
 - Show the resolved local MCP endpoint after server startup.
+
+- Route native Edit → Delete to focused inspector text or canvas text selection, preserving the layer and separating the menu edit from preceding typing for Undo.

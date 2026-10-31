@@ -115,3 +115,14 @@ export async function createNativeTextFixture(text = ''): Promise<string> {
     return id
   }, text)
 }
+
+/** Sets a text-model precondition; native key-range selection is a separate acceptance path. */
+export async function selectNativeTextWord(position: number): Promise<string> {
+  return browser.execute((position) => {
+    const store = window.openPencil?.getStore?.()
+    if (!store?.textEditor) throw new Error('Native text editor unavailable')
+    store.textEditor.selectWord(position)
+    store.requestRender()
+    return store.textEditor.getSelectedText()
+  }, position)
+}

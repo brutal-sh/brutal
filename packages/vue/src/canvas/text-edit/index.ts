@@ -1,2 +1,2 @@
 export { useTextEdit } from './use'
-export { isCanvasTextInput } from './textarea'
+export { isCanvasTextInput, deleteCanvasTextInput } from './textarea'
