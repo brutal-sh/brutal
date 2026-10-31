@@ -4,6 +4,7 @@ import { createEditor } from '@open-pencil/core'
 import { SceneGraph } from '@open-pencil/scene-graph'
 import {
   createShaderPaint,
+  fragmentShaderPreset,
   shaderOfPaint,
   shaderPresetKey,
   withShaderPaints,
@@ -37,6 +38,16 @@ function setup() {
 }
 
 describe('shader paints', () => {
+  test('an absent diagnostic does not add a phantom source-edit history step', () => {
+    const { editor, id, read } = setup()
+    const shader = { url: 'checks.glsl', source: 'void main(){}', uniforms: {} }
+    editor.setShaderPaint([id], 'fills', 0, fragmentShaderPreset(shader))
+    const history = editor.undo.peekUndo()
+    const image = read().fills[0].imageHash
+    editor.setShaderPaint([id], 'fills', 0, fragmentShaderPreset({ ...shader, error: undefined }))
+    expect(editor.undo.peekUndo()).toBe(history)
+    expect(read().fills[0].imageHash).toBe(image)
+  })
   test('a fill becomes a shader as one undo step', () => {
     const { editor, id, read } = setup()
     const before = read().fills

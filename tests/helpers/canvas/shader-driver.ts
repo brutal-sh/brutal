@@ -5,6 +5,23 @@ import type * as Shaders from '@open-pencil/scene-graph/shaders'
 /** Read the selected shader and its real, current rendered still frame. */
 export function shaderDriver(page: () => Page) {
   return {
+    replaceSource(nodeId: string, url: string, source: string) {
+      return page().evaluate(
+        async ({ nodeId, url, source }) => {
+          const store = window.openPencil?.getStore?.()
+          if (!store) throw new Error('Editor unavailable')
+          const moduleURL = '/packages/scene-graph/src/shaders/index.ts'
+          const shaders: typeof Shaders = await import(moduleURL)
+          store.setShaderPaint(
+            [nodeId],
+            'fills',
+            0,
+            shaders.fragmentShaderPreset({ url, source, uniforms: {} })
+          )
+        },
+        { nodeId, url, source }
+      )
+    },
     resetViewport() {
       return page().evaluate(() => {
         const store = window.openPencil?.getStore?.()

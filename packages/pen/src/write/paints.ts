@@ -157,6 +157,7 @@ export function writePaints(
           uniforms: fragment.uniforms,
           opacity: fill.opacity,
           openPenSource: fragment.source,
+          openPenShaderError: fragment.error,
           ...common
         }
       ]

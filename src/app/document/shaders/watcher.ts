@@ -1,11 +1,13 @@
+import { isEqual } from 'es-toolkit/predicate'
 import { shallowReactive, watch } from 'vue'
 
 import type { Editor } from '@open-pencil/core'
+import type { SceneNode } from '@open-pencil/scene-graph'
 import {
   fragmentShaderOf,
   fragmentShaderPreset,
   readShaderPaints,
-  shaderPresetKey,
+  MAX_FRAGMENT_ERROR_LENGTH,
   withShaderPaints,
   type FragmentShader
 } from '@open-pencil/scene-graph/shaders'
@@ -37,6 +39,14 @@ interface SourceWatcherOptions {
   validateSource: (shader: FragmentShader) => Promise<void>
 }
 
+function activeShaderPaints(node: SceneNode) {
+  return readShaderPaints(node).filter((shader) =>
+    [...node.fills, ...node.strokes].some(
+      (paint) => paint.type === 'IMAGE' && paint.imageHash === shader.image
+    )
+  )
+}
+
 /** Keep external GLSL changes out of edit history, including when Undo restores an older preset. */
 export function createShaderSourceWatcher(
   editor: Editor,
@@ -53,7 +63,7 @@ export function createShaderSourceWatcher(
   const sources = new Map<string, SourceWatch>()
   const errors = shallowReactive(new Map<string, string>())
   const sourceOrder = shallowReactive(new Set<string>())
-  const chosen = new Set<string>()
+  const chosen = new Map<string, string | undefined>()
   let disposed = false
   let scheduled = false
   const keyFor = (url: string) => JSON.stringify([ports.getDocumentPath(), url])
@@ -63,13 +73,23 @@ export function createShaderSourceWatcher(
     sources.get(key) === entry &&
     keyFor(url) === key
 
-  function apply(url: string, source: string) {
+  function apply(url: string, source: string | undefined, error?: string) {
     ports.adoptChanges(() => {
       for (const node of editor.graph.getAllNodes()) {
-        const shaders = readShaderPaints(node).flatMap((paint) => {
+        const shaders = activeShaderPaints(node).flatMap((paint) => {
           const shader = fragmentShaderOf(paint.preset)
-          return shader?.url === url && shader.source !== source
-            ? [{ ...paint, preset: fragmentShaderPreset({ ...shader, source }) }]
+          return shader?.url === url &&
+            (shader.source !== (source ?? shader.source) || shader.error !== error)
+            ? [
+                {
+                  ...paint,
+                  preset: fragmentShaderPreset({
+                    ...shader,
+                    source: source ?? shader.source,
+                    error
+                  })
+                }
+              ]
             : []
         })
         if (shaders.length)
@@ -89,28 +109,27 @@ export function createShaderSourceWatcher(
       isActive(key, url, entry) &&
       !request.signal.aborted &&
       (cached === undefined || entry.source === cached)
+    const graph = editor.graph
+    const bindings = () =>
+      [...editor.graph.getAllNodes()].flatMap((node) =>
+        activeShaderPaints(node).flatMap((paint) => {
+          const fragment = fragmentShaderOf(paint.preset)
+          return fragment?.url === url ? [{ nodeId: node.id, image: paint.image, fragment }] : []
+        })
+      )
+    const candidates = bindings()
+    const canApply = () => {
+      if (!isCurrent()) return false
+      if (graph === editor.graph && isEqual(candidates, bindings())) return true
+      void reload(key, url, entry, cached)
+      return false
+    }
     try {
       const shader =
         cached === undefined
           ? await ports.loadSource(url, ports.getDocumentPath(), request.signal)
           : { url, source: cached, uniforms: {} }
       await ports.validateSource(shader)
-      const graph = editor.graph
-      const candidates = [...graph.getAllNodes()].flatMap((node) =>
-        readShaderPaints(node).flatMap((paint) => {
-          const fragment = fragmentShaderOf(paint.preset)
-          return fragment?.url === url
-            ? [
-                {
-                  nodeId: node.id,
-                  image: paint.image,
-                  preset: shaderPresetKey(paint.preset),
-                  fragment
-                }
-              ]
-            : []
-        })
-      )
       const validated = new Set<string>()
       for (const { fragment } of candidates) {
         const overrides = JSON.stringify(fragment.uniforms)
@@ -118,31 +137,21 @@ export function createShaderSourceWatcher(
         await ports.validateSource({ ...shader, uniforms: fragment.uniforms })
         validated.add(overrides)
       }
-      if (!isCurrent() || graph !== editor.graph) return
-      const count = [...graph.getAllNodes()].reduce(
-        (total, node) =>
-          total +
-          readShaderPaints(node).filter((paint) => fragmentShaderOf(paint.preset)?.url === url)
-            .length,
-        0
-      )
-      if (
-        count !== candidates.length ||
-        candidates.some(({ nodeId, image, preset }) => {
-          const node = graph.getNode(nodeId)
-          const paint = node && readShaderPaints(node).find((item) => item.image === image)
-          return !paint || shaderPresetKey(paint.preset) !== preset
-        })
-      ) {
-        void reload(key, url, entry, cached)
-        return
-      }
+      if (!canApply()) return
       entry.source = shader.source
       if (cached === undefined) errors.delete(url)
-      apply(url, shader.source)
+      apply(url, shader.source, errors.get(url))
     } catch (failure) {
       // Partial writes and compile failures keep the last valid source; the next write retries.
-      if (isCurrent()) errors.set(url, failure instanceof Error ? failure.message : String(failure))
+      if (canApply()) {
+        const message =
+          (failure instanceof Error ? failure.message : String(failure)).slice(
+            0,
+            MAX_FRAGMENT_ERROR_LENGTH
+          ) || 'Shader source could not be loaded.'
+        errors.set(url, message)
+        apply(url, undefined, message)
+      }
     }
   }
 
@@ -160,7 +169,7 @@ export function createShaderSourceWatcher(
     } catch (failure) {
       // An unavailable file stays editable/reloadable through its source picker.
       if (!entry.controller.signal.aborted && sources.get(key) === entry && !disposed)
-        errors.set(url, failure instanceof Error ? failure.message : String(failure))
+        console.warn('Could not watch shader source', failure)
     }
   }
 
@@ -168,7 +177,7 @@ export function createShaderSourceWatcher(
     if (disposed) return
     const urls = new Set(
       [...editor.graph.getAllNodes()].flatMap((node) =>
-        readShaderPaints(node).flatMap((paint) => {
+        activeShaderPaints(node).flatMap((paint) => {
           const shader = fragmentShaderOf(paint.preset)
           return shader?.url ? [shader.url] : []
         })
@@ -189,20 +198,25 @@ export function createShaderSourceWatcher(
       const key = keyFor(url)
       const entry = sources.get(key)
       if (entry) {
+        const failure = errors.get(url)
+        if (failure) apply(url, undefined, failure)
         if (
           entry.source !== undefined &&
           [...editor.graph.getAllNodes()].some((node) =>
-            readShaderPaints(node).some((paint) => {
+            activeShaderPaints(node).some((paint) => {
               const shader = fragmentShaderOf(paint.preset)
-              return shader?.url === url && shader.source !== entry.source
+              return (
+                shader?.url === url && (shader.source !== entry.source || shader.error !== failure)
+              )
             })
           )
         )
           void reload(key, url, entry, entry.source)
       } else {
-        const next = { controller: new AbortController() }
+        const next = { controller: new AbortController(), source: chosen.get(url) }
         sources.set(key, next)
         void start(key, url, next)
+        if (next.source !== undefined) schedule()
       }
     }
   }
@@ -243,17 +257,20 @@ export function createShaderSourceWatcher(
     shaderSourceOrder: sourceOrder,
     watchShaderSource: (shader: FragmentShader) => {
       const { url } = shader
-      chosen.add(url)
-      errors.delete(url)
       const key = keyFor(url)
       const entry = sources.get(key)
+      const source = shader.error ? (entry?.source ?? chosen.get(url)) : shader.source
+      chosen.set(url, source)
+      if (shader.error) errors.set(url, shader.error)
+      else errors.delete(url)
+      if (shader.error) apply(url, undefined, shader.error)
       if (entry && !entry.stop) {
         entry.controller.abort()
         entry.request?.abort()
         sources.delete(key)
       } else if (entry) {
         entry.request?.abort()
-        entry.source = shader.source
+        entry.source = source
       }
       schedule()
     },

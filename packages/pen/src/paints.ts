@@ -176,7 +176,8 @@ function convertShaderPaint(
     fragmentShaderPreset({
       url: raw.url,
       source: images?.shader(raw.url) ?? raw.openPenSource ?? '',
-      uniforms: raw.uniforms ?? {}
+      uniforms: raw.uniforms ?? {},
+      error: raw.openPenShaderError
     })
   )
   node.pluginData = withShaderPaints(

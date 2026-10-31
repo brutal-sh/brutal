@@ -68,7 +68,7 @@ test('shader file controls render logical pixels, edit uniforms and retain the s
   editor.canvas.assertNoErrors()
 })
 
-test('invalid source reports its compiler failure and retains the previous paint', async () => {
+test('invalid source renders an undoable diagnostic paint while retaining the previous source snapshot', async () => {
   await openShader()
   await chooseSource()
   await expect.poll(async () => (await shader.read())?.pixels).toEqual([white, white, blue])
@@ -80,6 +80,40 @@ test('invalid source reports its compiler failure and retains the previous paint
   await path.fill('https://shader.test/broken.glsl')
   await path.press('Enter')
   await expect(editor.page.getByRole('alert')).toBeVisible()
+  await expect.poll(async () => (await shader.read())?.fragment?.error).toBeTruthy()
+  expect((await shader.read())?.fragment).toMatchObject({
+    url: 'https://shader.test/broken.glsl',
+    source: before?.source
+  })
+  await expect(editor.page.getByRole('spinbutton', { name: 'Size', exact: true })).toHaveCount(0)
+  await expect.poll(async () => (await shader.read())?.pixels?.[0]).toEqual([0, 0, 0, 0])
+  await editor.page.keyboard.press('Escape')
+  expect(await editor.canvas.screenshotCanvasRegion(650, 600)).toMatchSnapshot(
+    'shader-error-canvas.png',
+    { maxDiffPixelRatio: 0, threshold: 0 }
+  )
+  await editor.page.evaluate(() => {
+    window.showSaveFilePicker = undefined
+  })
+  const panel = propertySection(editor.page, 'Export')
+  await panel.getByRole('combobox', { name: 'Export scale' }).click()
+  await editor.page.getByRole('option', { name: '2x', exact: true }).click()
+  const downloading = editor.page.waitForEvent('download')
+  await panel.getByRole('button', { name: 'Export layer', exact: true }).click()
+  const download = await downloading
+  const saved = test.info().outputPath('shader-error.png')
+  await download.saveAs(saved)
+  const image = expectDefined(
+    createCanvasKitRasterCodec(await initCanvasKit()).decode(await readFile(saved)),
+    'downloaded diagnostic PNG'
+  )
+  expect([image.width, image.height]).toEqual([640, 480])
+  expect(Array.from(image.data.slice(0, 4))).toEqual([255, 0, 0, 255])
+  expect(Array.from(image.data.slice((4 * 640 + 4) * 4, (4 * 640 + 4) * 4 + 4))).toEqual([
+    0, 0, 0, 0
+  ])
+  await editor.canvas.undo()
+  await expect.poll(async () => (await shader.read())?.pixels).toEqual([white, white, blue])
   expect((await shader.read())?.fragment).toEqual(before)
   editor.canvas.assertNoErrors()
 })
@@ -111,7 +145,7 @@ test('the used-source picker follows document references and resets defaults onl
   editor.canvas.assertNoErrors()
 })
 
-test('reloading the same GLSL URL keeps uniform edits and rejects invalid replacements', async () => {
+test('same-URI reloads retain uniform history and recover from diagnostics', async () => {
   await openShader()
   let source = await readFile(testPath('fixtures/shaders', 'checks.glsl'), 'utf8')
   const url = 'https://shader.test/reload.glsl'
@@ -136,11 +170,23 @@ test('reloading the same GLSL URL keeps uniform edits and rejects invalid replac
   source = 'void main(){ gl_FragColor = invalid; }'
   await path.press('Enter')
   await expect(editor.page.getByRole('alert')).toBeVisible()
-  expect((await shader.read())?.fragment).toEqual(valid)
+  await expect.poll(async () => (await shader.read())?.fragment?.error).toBeTruthy()
+  expect((await shader.read())?.fragment?.source).toBe(valid?.source)
   await editor.page.keyboard.press('Escape')
   await editor.canvas.undo()
-  await expect.poll(async () => (await shader.read())?.pixels).toEqual([white, blue, blue])
-  expect((await shader.read())?.fragment?.uniforms).toEqual({ u_size: 24 })
+  await expect.poll(async () => (await shader.read())?.fragment?.uniforms).toEqual({})
+  expect((await shader.read())?.fragment?.error).toBeTruthy()
+  source = expectDefined(valid?.source, 'last valid shader')
+  await propertyItems(editor.page, 'fills')
+    .first()
+    .getByRole('button', { name: 'Fill', exact: true })
+    .click()
+  await path.press('Enter')
+  await expect.poll(async () => (await shader.read())?.fragment?.error).toBeUndefined()
+  await expect
+    .poll(async () => (await shader.read())?.pixels)
+    .toEqual([white, white, [102, 153, 51, 255]])
+  await expect(size).toHaveAttribute('aria-valuenow', '32')
   editor.canvas.assertNoErrors()
 })
 
@@ -164,6 +210,40 @@ test('changing selection aborts a pending shader load before it can paint anothe
   await route.fulfill({ body: 'void main(){gl_FragColor=vec4(1.);}', contentType: 'text/plain' })
   expect((await getSelectedNode(editor.page))?.fills).toEqual(other.fills)
   await expect(path).toHaveCount(0)
+  editor.canvas.assertNoErrors()
+})
+
+test('a pending load cannot replace a newer source on the same paint', async () => {
+  await openShader()
+  await chooseSource()
+  const node = expectDefined(await getSelectedNode(editor.page), 'source layer')
+  const url = 'https://shader.test/old-pending.glsl'
+  const pending = new Promise<Route>((resolve) => {
+    void editor.page.route(url, (route) => resolve(route))
+  })
+  const path = editor.page.getByRole('textbox', { name: 'Shader path or URL', exact: true })
+  await path.fill(url)
+  await path.press('Enter')
+  const route = await pending
+  const canceled = editor.page.waitForEvent('requestfailed', {
+    predicate: (request) => request.url() === url
+  })
+  await shader.replaceSource(
+    node.id,
+    'replacement.glsl',
+    'precision mediump float; void main(){gl_FragColor=vec4(1.,0.,0.,1.);}'
+  )
+  await canceled
+  await route.fulfill({ body: 'void main(){gl_FragColor=vec4(1.);}', contentType: 'text/plain' })
+  await expect
+    .poll(async () => (await shader.read())?.pixels)
+    .toEqual([
+      [255, 0, 0, 255],
+      [255, 0, 0, 255],
+      [255, 0, 0, 255]
+    ])
+  expect((await shader.read())?.fragment?.url).toBe('replacement.glsl')
+  await expect(path).toHaveValue('replacement.glsl')
   editor.canvas.assertNoErrors()
 })
 

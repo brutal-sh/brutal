@@ -7,8 +7,9 @@ import {
   fragmentShaderPreset,
   fragmentShaderOf,
   fragmentUniforms,
-  readShaderPaints,
+  shaderOfPaint,
   MAX_FRAGMENT_SOURCE_LENGTH,
+  MAX_FRAGMENT_ERROR_LENGTH,
   type FragmentShader,
   type FragmentUniform,
   type ShaderPreset,
@@ -43,8 +44,9 @@ const usedSources = computed(() => {
   void store.state.sceneVersion
   const sources = new Map<string, FragmentShader>()
   for (const node of store.graph.getAllNodes())
-    for (const paint of readShaderPaints(node)) {
-      const source = fragmentShaderOf(paint.preset)
+    for (const paint of [...node.fills, ...node.strokes]) {
+      const shaderPaint = shaderOfPaint(node, paint)
+      const source = shaderPaint && fragmentShaderOf(shaderPaint.preset)
       if (source?.url) sources.set(source.url, source)
     }
   return [...store.shaderSourceOrder].flatMap((url) => sources.get(url) ?? [])
@@ -56,12 +58,16 @@ const numberUI = {
   value: 'text-right'
 }
 let request: AbortController | null = null
-watch(
-  () => shader.url,
-  (url) => {
-    path.value = url
-  }
-)
+let requestPath = ''
+const shaderKey = () => JSON.stringify([shader.url, shader.source, shader.error, shader.uniforms])
+watch(shaderKey, () => {
+  request?.abort()
+  path.value = shader.url
+  error.value = ''
+})
+watch(path, (value) => {
+  if (value.trim() !== requestPath) request?.abort()
+})
 onScopeDispose(() => request?.abort())
 const metadata = computed(() => {
   try {
@@ -73,10 +79,22 @@ const metadata = computed(() => {
     return { controls: [], error: failure instanceof Error ? failure.message : String(failure) }
   }
 })
+const sourceDiagnostic = computed(() => shader.error || metadata.value.error || sourceError.value)
+const displayError = computed(() => error.value || sourceDiagnostic.value)
 
 async function apply(load: (signal: AbortSignal) => Promise<FragmentShader>) {
   request?.abort()
   const current = new AbortController()
+  const expected = shaderKey()
+  const graph = store.graph
+  const documentPath = store.getDocumentFilePath()
+  const target = path.value.trim()
+  requestPath = target
+  const ownsPaint = () =>
+    !current.signal.aborted &&
+    store.graph === graph &&
+    store.getDocumentFilePath() === documentPath &&
+    shaderKey() === expected
   request = current
   loading.value = true
   error.value = ''
@@ -84,13 +102,30 @@ async function apply(load: (signal: AbortSignal) => Promise<FragmentShader>) {
     const next = await load(current.signal)
     if (next.url === shader.url) next.uniforms = structuredClone(shader.uniforms)
     await validateFragmentSource(next)
-    if (!current.signal.aborted) {
-      emit('update', fragmentShaderPreset(next))
+    if (ownsPaint()) {
+      path.value = next.url
+      if (next.url !== shader.url) emit('update', fragmentShaderPreset(next))
       store.watchShaderSource(next)
     }
   } catch (failure) {
-    if (!current.signal.aborted)
-      error.value = failure instanceof Error ? failure.message : String(failure)
+    if (ownsPaint()) {
+      const message =
+        (failure instanceof Error ? failure.message : String(failure)).slice(
+          0,
+          MAX_FRAGMENT_ERROR_LENGTH
+        ) || 'Shader source could not be loaded.'
+      error.value = message
+      if (target && target.length <= 16384) {
+        const failed: FragmentShader = {
+          url: target,
+          source: shader.source,
+          uniforms: target === shader.url ? structuredClone(shader.uniforms) : {},
+          error: message
+        }
+        if (failed.url !== shader.url) emit('update', fragmentShaderPreset(failed))
+        store.watchShaderSource(failed)
+      }
+    }
   } finally {
     if (request === current) loading.value = false
   }
@@ -122,6 +157,7 @@ const dialog = useFileDialog({
 dialog.onChange((files) => {
   const file = files?.[0]
   if (!file) return
+  path.value = file.name
   void apply(async () => {
     if (file.size > MAX_FRAGMENT_SOURCE_LENGTH) throw new Error('Shader source is too large.')
     const source = new TextDecoder('utf-8', { fatal: true }).decode(await file.arrayBuffer())
@@ -214,58 +250,64 @@ function setNumber(control: FragmentUniform, at: number, next: number) {
       >
     </div>
     <p
-      v-if="error || metadata.error || sourceError"
+      v-if="displayError"
       role="alert"
       :aria-label="panels.shaderLoadFailed"
-      class="m-0 text-xs text-error"
+      class="m-0 break-words whitespace-pre-wrap text-xs text-error"
     >
-      {{ error || metadata.error || sourceError }}
+      {{ displayError }}
     </p>
-    <template v-for="control in metadata.controls" :key="control.name">
-      <PanelFieldGroup
-        v-if="control.color"
-        :label="control.label"
-        :ui="{ label: 'text-xs leading-4' }"
-      >
-        <ColorInput
-          class="h-6 rounded bg-panel-field px-1"
-          :color="parseColor(String(value(control)))"
-          editable
-          @update="set(control, colorToHex8($event))"
-        />
-      </PanelFieldGroup>
-      <PanelFieldGroup
-        v-else-if="control.size > 1"
-        :label="control.label"
-        :ui="{ label: 'text-xs leading-4' }"
-      >
-        <div class="flex gap-1">
-          <NumberField
-            v-for="at in control.size"
-            :key="at"
-            :model-value="numbers(control)[at - 1] ?? 0"
-            :icon="['X', 'Y', 'Z', 'W'][at - 1]"
-            :aria-label="`${control.label} ${['X', 'Y', 'Z', 'W'][at - 1]}`"
-            :step="control.integer ? 1 : 0.01"
-            :inherit-binding="false"
-            :ui="numberUI"
-            @commit="setNumber(control, at - 1, $event)"
+    <div
+      v-if="metadata.controls.length && !sourceDiagnostic"
+      class="mt-1 flex flex-col gap-2 border-t border-border pt-2"
+      :inert="loading || undefined"
+    >
+      <template v-for="control in metadata.controls" :key="control.name">
+        <PanelFieldGroup
+          v-if="control.color"
+          :label="control.label"
+          :ui="{ label: 'text-xs leading-4' }"
+        >
+          <ColorInput
+            class="h-6 rounded bg-panel-field px-1"
+            :color="parseColor(String(value(control)))"
+            editable
+            @update="set(control, colorToHex8($event))"
           />
-        </div>
-      </PanelFieldGroup>
-      <NumberField
-        v-else
-        :model-value="numbers(control)[0]"
-        :label="control.label"
-        :min="control.min"
-        :max="control.max"
-        :step="control.integer ? 1 : 0.1"
-        :inherit-binding="false"
-        :ui="numberUI"
-        @commit="setNumber(control, 0, $event)"
-      />
-    </template>
-    <p v-if="!shader.source" class="m-0 text-xs text-muted">
+        </PanelFieldGroup>
+        <PanelFieldGroup
+          v-else-if="control.size > 1"
+          :label="control.label"
+          :ui="{ label: 'text-xs leading-4' }"
+        >
+          <div class="flex gap-1">
+            <NumberField
+              v-for="at in control.size"
+              :key="at"
+              :model-value="numbers(control)[at - 1] ?? 0"
+              :icon="['X', 'Y', 'Z', 'W'][at - 1]"
+              :aria-label="`${control.label} ${['X', 'Y', 'Z', 'W'][at - 1]}`"
+              :step="control.integer ? 1 : 0.01"
+              :inherit-binding="false"
+              :ui="numberUI"
+              @commit="setNumber(control, at - 1, $event)"
+            />
+          </div>
+        </PanelFieldGroup>
+        <NumberField
+          v-else
+          :model-value="numbers(control)[0]"
+          :label="control.label"
+          :min="control.min"
+          :max="control.max"
+          :step="control.integer ? 1 : 0.1"
+          :inherit-binding="false"
+          :ui="numberUI"
+          @commit="setNumber(control, 0, $event)"
+        />
+      </template>
+    </div>
+    <p v-if="!shader.source && !sourceDiagnostic" class="m-0 text-xs text-muted">
       {{ panels.shaderSourceTip }}
     </p>
   </div>

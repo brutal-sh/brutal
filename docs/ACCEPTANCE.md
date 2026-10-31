@@ -229,7 +229,6 @@ Executed:38 paint/stroke/binding/Advanced browser workflows; five final compact/
 
 Native .pen Save As discovered a genuine effect-blend export restriction. Edits were preserved to FIG before installing the writer fix. Actual Pen's own saved reference confirms multiply serialization; the writer now reuses supported blend spelling and still refuses unsupported pass-through. Installed retry saved #33669940, Multiply, X0/Y4 and Blur16 while preserving X0/Y0,300×100 geometry, stroke sides and paint bindings. Close→Recents→reopen retained settings. Actual Pen opened that saved file and displayed the same color/alpha/blend/offset/blur values. Private evidence: native-effects-popup-recovery.fig, native-effects-popup-acceptance.pen, native-effects-popup-reopened.png and pen-openpen-effects-popup-interchange.png. Full Shader effects, exact effect icons, multi-selection and all-mode rendered comparisons remain open.
 
-
 ## Linear blend menus, rendering and file interoperability — 2026-10-30
 
 The18-mode compact menus now include Linear Burn/Dodge. Actual Pen exports established Multiply/Plus semantics, including additive alpha. Shared mapping and existing rendering paths implement these semantics; no custom shader/cache was added. All paint/effect format and API boundaries were extended.
@@ -237,7 +236,6 @@ The18-mode compact menus now include Linear Burn/Dodge. Actual Pen exports estab
 Executed:268 targeted tests/847 assertions; four browser workflows including fill/stroke/shadow menu changes, geometry-safe Undo and SVG layer alpha output; six reviewed canvas baselines passed a separate non-update run. Source/Vue/test types, scoped lint, architecture/test placement/i18n and package/Vite/native builds passed; installed signature verified. Independent review found no defensible new defect and confirmed remaining layer .pen/SVG paint-effect limits.
 
 Installed native Save As→close→Recents→reopen retained a menu-driven Linear Burn→Linear Dodge fill change at X0/Y0,64×64. Actual Pen opened that saved file and read both modes on fills/strokes/shadows. Native File→Export Selection→PNG matched opaque reference samples exactly. Comparing its240×300 frame with actual Pen's export found a one-red-channel-step difference on the4096 half-alpha patch pixels; the other67,904 pixels and all other channels match. This quantization mismatch is open, not exact pixel parity. Native hover review also exposed an opacity/variable-button overlap, now the next correction. Detailed evidence/limits: PAINT-PARITY.md. Full design/functionality parity remains open.
-
 
 ## Paint hover correction and category accessibility — 2026-10-30
 
@@ -247,13 +245,11 @@ Executed:14 existing color/gradient/stroke/unresolved-binding browser workflows;
 
 Installed native: focused #CC9933 and100% are visible together; Apply variable opens the native WebView picker, Escape returns to the row, and the popup exposes Color selected/Gradient unselected. Switching to Gradient flips those accessible states and displays the gradient editor. Escape→Undo restores #CC9933,X0/Y0 and a clean saved tab. Private capture: native-paint-hover-corrected.png. New actual-Pen Mesh/Shader/Goodies observations are in pen-feature-reference/paint-controls.md; they remain implementation/acceptance gaps.
 
-
 ## Screen sampler integration — native result pending,2026-10-30
 
 Six controlled-platform browser workflows execute sample/render/Undo, cancellation, failure, invalid output, stale-result protection and unavailable-API behavior. Rust/source/Vue/test types, architecture/locales/scoped lint and native build/signature checks passed. Two review findings were corrected: macOS-only native availability and main-editor command restriction. The final build is installed.
 
 The real OS pick is NOT accepted: native automation enters pending but has not delivered a color or cancellation result. Repeated input attempts stopped after three paths. A manual pick was requested; work continues independently on Mesh. No original fixture overwrite occurred. Exact scope and re-entry: [EYEDROPPER-PARITY.md](EYEDROPPER-PARITY.md).
-
 
 ## Independent Mesh paint implementation — 2026-10-30
 
@@ -263,7 +259,6 @@ Review found and corrected ordinary-node FIG alias loss, stale Mesh→Solid alia
 
 This is partial evidence, not parity acceptance: [MESH-PARITY.md](MESH-PARITY.md) tracks exact render differences, external-grid limits, SVG refusal, multiple-point behavior and native Save/reopen/interchange. Installed Open Pen now executed fill grid/Undo, point drag and literal color editing, Save As → close → Recents → reopen. Actual Pen read the saved geometry, Mesh values, edited color and surviving vertex alias. Native stroke grid resizing/Undo also restored the clean saved state. The grid chooser/selected-control presentation was subsequently corrected from actual Pen measurements; installed inspection confirmed Point/Handles,24px actions and compact chooser dimensions; the chooser placement was subsequently corrected to above the trigger. A later scaled-instance FIG regression exposed and corrected8→16px stroke geometry loss; six focused FIG tests passed after paint-only metadata projection. A late #9933CC sampler result was preserved by Save As and read by actual Pen, but the OS picking action was not observed and remains unaccepted.
 
-
 ## Multiple Mesh vertices and nested picker focus — 2026-10-30
 
 Actual Pen probes establish Shift multi-selection, Mixed/Selected Points, black mixed-picker seed, subset shuffle, plain-drag collapse and independent position/curve resets. Open Pen implements these shared fill/stroke paths and preserves untouched aliases/fallback colors. A disconnected format-menu scope delayed until a timer caused HEX→Tab to escape both pickers; a registered Reka2.10.5 patch removes only the scope synchronously while retaining deferred focus restoration. The deterministic delayed-timer test fails on the original dependency and passes with the patch.
@@ -272,13 +267,11 @@ Executed:16 targeted unit tests/64 assertions,24 repeated Mesh/browser/snapshot 
 
 The user supplied real screen-pick feedback: purple #9933CC becomes pink on the square. The saved square/background both read #9933CC and the square has Linear Dodge; actual Pen reproduces that pink rendering. Native OS cancellation and independent automated observation of the sampler remain open. Full product parity remains open.
 
-
 ## Native paint glyphs and Mesh export reference — 2026-10-30
 
 Compact paint category and Mesh tangent glyphs are independently drawn using the existing mask-icon helper. Mesh action weights, separate label/action rows and Mixed swatch alignment follow the observed Pen controls. Twelve Mesh/nested-focus browser paths, Vue types, scoped lint and architecture passed; Vite/native builds and installed signature verified. Final native visual inspection/capture confirms delivery. Native two-color shuffle changed the first vertex to #AA4488 and Undo restored the clean saved state. This does not establish exact whole-app visual parity.
 
 Pen’s native Mesh export menu offers PNG/JPEG/WEBP/PDF; PDF disables scale and describes selected-layer page ordering. Its executed single-layer export produced a256×256pt PDF with a512×512 image. Open Pen currently requires adding export-setting rows, unlike Pen’s immediate controls; its PDF goes through SVG and therefore refuses Mesh. Correcting those two concrete gaps is next.
-
 
 ## Direct image/PDF export and native codecs — 2026-10-30
 
@@ -311,3 +304,11 @@ Replacing a focused numeric shader control could prevent its queued focus-clear 
 Executed:664 model/I/O tests,3217 assertions,24 existing gated skips; source/Vue/test types; full lint with existing warnings; architecture, test placement and changelog; package/Vite/native bundle builds and bundle signature. Independent review found no remaining defensible defect in this unit. Whole-archive reader digests, including diagnostics, match d4b9928c4 for gold-preview.fig (2357 nodes,320 variables,3 images) and material3.fig (78426 nodes,336 variables,89 images). This is structural preservation evidence, not full rendered/archive/native Figma equivalence.
 
 Native installed-app acceptance still requires resolving the macOS Documents-folder permission prompt. Recovery drafts remain preserved. Full Pen.app design/functionality parity, source watching, texture/effect/gallery behavior and remaining screens/menus remain open; continue from PARITY-STATE-MATRIX.md.
+
+## Shader diagnostics, stale validation and resource history — 2026-10-31
+
+Actual Pen's invalid GLSL export establishes a transparent red diagonal hatch and one-logical-pixel border. A missing-source action commits the failed URI, clears overrides, marks the document edited and hides controls; Undo restores the old source and Size24. The synthetic reference's original GLSL was restored byte-for-byte, blue checks observed and its tab saved clean.
+
+The independent diagnostic renderer now supplies error frames to the canvas/export path and preserves a last-valid source snapshot for recovery. Measured native2× rectangle comparison has410 alpha-byte differences out of307200, maximum one, with sampled border/red/transparent pixels equal. This is close measured output, not full pixel parity across shapes/transforms/scales. Different-URL errors are Undoable edits; same-URL reloads remain derived resource state and do not consume an Undo step.
+
+A common applicability guard covers successful and rejected validation against the whole active-paint snapshot. Tests execute a delayed scalar failure after correction to a vector, a consumer added during validation, orphaned metadata after solid replacement, diagnostic persistence and recovery. Pending picker reads also check paint, graph and document identity.30 focused model tests/127 assertions and12 shader browser workflows passed, including a real diagnostic PNG download, Undo and retry; source/Vue/test types passed. Full lint (existing warnings), architecture, test placement, changelog, Vite/native debug build and installed signature passed. Independent source review found no further concrete defect. The installed app now accepts clicks, and its recovery notice was closed without deleting drafts; the diagnostic candidate is now installed with a retained prior-build backup. Opening the fixture stalls in the synchronous native filesystem open command, captured in shader-diagnostics-native-stall.sample.txt. Current TCC logs do not independently prove the reason for this wait. Native source/edit/save/reopen/export acceptance remains open.

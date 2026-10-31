@@ -48,6 +48,7 @@ export const shaderPaintSchema = v.object({
 export type ShaderPaint = v.InferOutput<typeof shaderPaintSchema>
 
 export const MAX_FRAGMENT_SOURCE_LENGTH = 1024 * 1024
+export const MAX_FRAGMENT_ERROR_LENGTH = 4096
 const finiteUniformSchema = v.pipe(v.number(), v.finite())
 export const shaderUniformValueSchema = v.union([
   finiteUniformSchema,
@@ -59,6 +60,8 @@ export type ShaderUniformValue = v.InferOutput<typeof shaderUniformValueSchema>
 export const fragmentShaderSchema = v.object({
   url: v.pipe(v.string(), v.maxLength(16384)),
   source: v.pipe(v.string(), v.maxLength(MAX_FRAGMENT_SOURCE_LENGTH)),
-  uniforms: v.record(v.string(), shaderUniformValueSchema)
+  uniforms: v.record(v.string(), shaderUniformValueSchema),
+  /** The last failed source load; source retains its last valid snapshot for recovery. */
+  error: v.optional(v.pipe(v.string(), v.nonEmpty(), v.maxLength(MAX_FRAGMENT_ERROR_LENGTH)))
 })
 export type FragmentShader = v.InferOutput<typeof fragmentShaderSchema>

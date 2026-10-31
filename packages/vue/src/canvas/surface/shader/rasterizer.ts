@@ -1,6 +1,7 @@
 import type { ShaderRasterizer } from '@open-pencil/core'
 import { fragmentShaderOf, shaderFrameEncoding } from '@open-pencil/scene-graph/shaders'
 
+import { renderShaderError } from './error'
 import { createFragmentRenderer } from './fragment'
 
 /** Whether this browser supports the inherited WebGPU preset renderer. */
@@ -44,6 +45,10 @@ export function createShaderRasterizer(): ShaderRasterizer | null {
   return {
     async render(preset, size, logicalSize) {
       const fragment = fragmentShaderOf(preset)
+      if (fragment?.error) {
+        const bytes = await renderShaderError(size, logicalSize)
+        return isDestroyed() ? null : bytes
+      }
       if (fragment && !fragment.source.trim()) return null
       if (!fragment && !canDrawShaders()) return null
       if (isDestroyed()) return null

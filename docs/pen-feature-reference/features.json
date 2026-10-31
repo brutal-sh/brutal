@@ -68,9 +68,7 @@
           "behavior": "OpenAI Codex and Claude Code settings are supported provider choices.",
           "acceptance": "Use Jason's existing CLI login to create and modify a real design; no credential copying.",
           "status": "partial",
-          "evidence": [
-            "../LOCAL-RUNTIME.md"
-          ],
+          "evidence": ["../LOCAL-RUNTIME.md"],
           "evidence_limit": "Existing CLI integration evidence is narrower than every provider/model workflow."
         },
         {
@@ -116,9 +114,7 @@
           "behavior": "Desktop composer edits the active design through a chosen provider.",
           "acceptance": "Create a node, modify the selected node, inspect the actual resulting document.",
           "status": "partial",
-          "evidence": [
-            "../LOCAL-RUNTIME.md"
-          ],
+          "evidence": ["../LOCAL-RUNTIME.md"],
           "evidence_limit": "Earlier executed paths are narrower than this entire requirement; see acceptance log."
         },
         {
@@ -127,9 +123,7 @@
           "behavior": "Client uses stdio; Pen host connection uses Unix socket or Windows named pipe.",
           "acceptance": "Connect, restart host/client, fail cleanly and reconnect to the intended document.",
           "status": "partial",
-          "evidence": [
-            "../LOCAL-RUNTIME.md"
-          ],
+          "evidence": ["../LOCAL-RUNTIME.md"],
           "evidence_limit": "Independent local bridge evidence does not establish Pen public-tool or transport parity."
         },
         {
@@ -175,9 +169,7 @@
           "behavior": "Canvas Undo/Redo differs from text-field history.",
           "acceptance": "Edit a numeric field and text, then canvas; verify the correct undo target in each focus state.",
           "status": "partial",
-          "evidence": [
-            "../ACCEPTANCE.md"
-          ],
+          "evidence": ["../ACCEPTANCE.md"],
           "evidence_limit": "Earlier executed paths are narrower than this entire requirement; see acceptance log."
         },
         {
@@ -223,9 +215,7 @@
           "behavior": "Open/drop .pen; an already-open document receives focus.",
           "acceptance": "Open the same canonical path twice and check one document/tab.",
           "status": "partial",
-          "evidence": [
-            "../ACCEPTANCE.md"
-          ],
+          "evidence": ["../ACCEPTANCE.md"],
           "evidence_limit": "Earlier executed paths are narrower than this entire requirement; see acceptance log."
         },
         {
@@ -332,9 +322,7 @@
           "behavior": "Axis, alignment, gap, Space Between/Around and padding.",
           "acceptance": "Compare child geometry after resize, edits, Undo/Redo and .pen reopen.",
           "status": "partial",
-          "evidence": [
-            "../ACCEPTANCE.md"
-          ],
+          "evidence": ["../ACCEPTANCE.md"],
           "evidence_limit": "Space Around and four-sided padding native paths executed; full layout states remain open."
         },
         {
@@ -343,9 +331,7 @@
           "behavior": "Fixed, Hug and Fill; absolute children escape flow.",
           "acceptance": "Check empty containers, unsupported-parent fallback, variable bindings and resizing.",
           "status": "partial",
-          "evidence": [
-            "../ACCEPTANCE.md"
-          ],
+          "evidence": ["../ACCEPTANCE.md"],
           "evidence_limit": "Deferred Fill and empty Hug paths executed; complete sizing coverage remains open."
         },
         {
@@ -447,9 +433,7 @@
           "behavior": "Library/search picker, fill and size.",
           "acceptance": "Create and reopen symbols from every advertised family; compare glyphs and picker states.",
           "status": "partial",
-          "evidence": [
-            "../ACCEPTANCE.md"
-          ],
+          "evidence": ["../ACCEPTANCE.md"],
           "evidence_limit": "Earlier executed paths are narrower than this entire requirement; see acceptance log."
         },
         {
@@ -458,10 +442,7 @@
           "behavior": "Multiple fills, visibility, removal and object opacity.",
           "acceptance": "Reorder/edit/hide paints; compare compositing, Undo and serialization.",
           "status": "partial",
-          "evidence": [
-            "../PAINT-PARITY.md",
-            "../ACCEPTANCE.md"
-          ],
+          "evidence": ["../PAINT-PARITY.md", "../ACCEPTANCE.md"],
           "evidence_limit": "Named compact paint and native color/blend paths, hover width, variable access and category Undo executed. Reorder, every width/state and full compositing comparison remain open."
         },
         {
@@ -470,11 +451,7 @@
           "behavior": "Linear, radial, angular and mesh editing.",
           "acceptance": "Move stops/handles/mesh points, change grid/colors and compare render after reopen.",
           "status": "partial",
-          "evidence": [
-            "../PAINT-PARITY.md",
-            "paint-controls.md",
-            "../MESH-PARITY.md"
-          ],
+          "evidence": ["../PAINT-PARITY.md", "paint-controls.md", "../MESH-PARITY.md"],
           "evidence_limit": "Named ordinary-gradient and Mesh browser/model/format paths have evidence. Native Mesh Save/reopen, exact render/layout matching, multiple selected vertices, larger external grids and SVG export remain open."
         },
         {
@@ -491,10 +468,7 @@
           "behavior": "Width, Inside/Center/Outside and paint blend modes.",
           "acceptance": "Compare edges and overlapping colors at several zoom levels and export sizes.",
           "status": "partial",
-          "evidence": [
-            "../PAINT-PARITY.md",
-            "../ACCEPTANCE.md"
-          ],
+          "evidence": ["../PAINT-PARITY.md", "../ACCEPTANCE.md"],
           "evidence_limit": "Native independent/common widths, join/cap, Undo, Pen interoperability and18-mode menus have named evidence. Opaque linear fill/stroke/shadow PNG samples match; one-step half-alpha export difference, every zoom/size and exact visuals remain open."
         },
         {
@@ -503,12 +477,8 @@
           "behavior": "File/URL fills, editable inputs, gallery and shader effects.",
           "acceptance": "Load an independent shader; edit inputs, resize, handle errors and reopen.",
           "status": "partial",
-          "evidence": [
-            "../PAINT-PARITY.md",
-            "paint-controls.md",
-            "../SHADER-PARITY.md"
-          ],
-          "evidence_limit": "Independent GLSL loading, uniforms, editor animation, time-zero export, source reload and identity have model/browser evidence against native Pen samples. Installed native shader acceptance is blocked by the pending Documents permission; source-error canvas, textures, effects, complete gallery and exact design remain open."
+          "evidence": ["../PAINT-PARITY.md", "paint-controls.md", "../SHADER-PARITY.md"],
+          "evidence_limit": "Independent GLSL loading, uniforms, editor animation, time-zero export, source reload and identity have model/browser evidence against native Pen samples. Diagnostic hatch samples, error PNG export, Undo and retry have model/browser evidence; complete diagnostic shape/scale and installed native shader acceptance remain open, alongside textures, effects, complete gallery and exact design."
         },
         {
           "id": "DRAW-13",
@@ -516,10 +486,7 @@
           "behavior": "Drop/inner shadow, layer/background blur and ordered effects.",
           "acceptance": "Compare every control, compositing, clipping and exported appearance.",
           "status": "partial",
-          "evidence": [
-            "../PAINT-PARITY.md",
-            "../ACCEPTANCE.md"
-          ],
+          "evidence": ["../PAINT-PARITY.md", "../ACCEPTANCE.md"],
           "evidence_limit": "Named four-type popup/default/order and native Multiply Save/reopen/interchange executed; linear shadow samples checked. Every effect rendering/clipping/control state and Shader remain open."
         },
         {
@@ -928,9 +895,7 @@
           "behavior": "Toolbar, desktop File menu and drop import complete .fig files.",
           "acceptance": "Import a licensed synthetic fixture with images/components; compare editable result.",
           "status": "partial",
-          "evidence": [
-            "../ACCEPTANCE.md"
-          ],
+          "evidence": ["../ACCEPTANCE.md"],
           "evidence_limit": "Earlier executed paths are narrower than this entire requirement; see acceptance log."
         },
         {
@@ -947,9 +912,7 @@
           "behavior": "PNG/JPEG become images; SVG becomes editable layers; picker/drop/clipboard.",
           "acceptance": "Exercise every entry point with valid, malformed and missing-resource inputs.",
           "status": "partial",
-          "evidence": [
-            "../ACCEPTANCE.md"
-          ],
+          "evidence": ["../ACCEPTANCE.md"],
           "evidence_limit": "Earlier executed paths are narrower than this entire requirement; see acceptance log."
         },
         {
@@ -974,9 +937,7 @@
           "behavior": "Material Symbols Outlined/Rounded/Sharp, Lucide, Feather and Phosphor.",
           "acceptance": "Search/insert one symbol per family and reopen without substituted glyphs.",
           "status": "partial",
-          "evidence": [
-            "../ACCEPTANCE.md"
-          ],
+          "evidence": ["../ACCEPTANCE.md"],
           "evidence_limit": "Earlier executed paths are narrower than this entire requirement; see acceptance log."
         },
         {
@@ -985,9 +946,7 @@
           "behavior": "HTML+Tailwind or HTML+CSS; copy/export and asset/scaffold settings.",
           "acceptance": "Open generated output locally; inspect assets, scaffold and visual agreement.",
           "status": "partial",
-          "evidence": [
-            "../ACCEPTANCE.md"
-          ],
+          "evidence": ["../ACCEPTANCE.md"],
           "evidence_limit": "Earlier executed paths are narrower than this entire requirement; see acceptance log."
         },
         {
@@ -1004,9 +963,7 @@
           "behavior": "Selected layers become pages in selection order.",
           "acceptance": "Export unequal frames; inspect order, page dimensions and rendering.",
           "status": "partial",
-          "evidence": [
-            "../ACCEPTANCE.md"
-          ],
+          "evidence": ["../ACCEPTANCE.md"],
           "evidence_limit": "Earlier executed paths are narrower than this entire requirement; see acceptance log."
         },
         {
@@ -1081,9 +1038,7 @@
           "behavior": "Visible top-level frames; draggable thumbnail ordering.",
           "acceptance": "Compare hidden/nested frames, selection and persisted order.",
           "status": "partial",
-          "evidence": [
-            "../ACCEPTANCE.md"
-          ],
+          "evidence": ["../ACCEPTANCE.md"],
           "evidence_limit": "Earlier executed paths are narrower than this entire requirement; see acceptance log."
         },
         {
@@ -1100,9 +1055,7 @@
           "behavior": "All/selected slides; slide order and individual frame dimensions.",
           "acceptance": "Open actual PDF; inspect pages, order, sizes and selected-only errors.",
           "status": "partial",
-          "evidence": [
-            "../ACCEPTANCE.md"
-          ],
+          "evidence": ["../ACCEPTANCE.md"],
           "evidence_limit": "Earlier executed paths are narrower than this entire requirement; see acceptance log."
         }
       ]
@@ -1222,9 +1175,7 @@
           "behavior": "Flex, padding forms, distributed alignment, dynamic sizes/fallbacks and absolute position.",
           "acceptance": "Round-trip variable-bound layout; compare resolved geometry and authored sizing.",
           "status": "partial",
-          "evidence": [
-            "../ACCEPTANCE.md"
-          ],
+          "evidence": ["../ACCEPTANCE.md"],
           "evidence_limit": "Earlier executed paths are narrower than this entire requirement; see acceptance log."
         },
         {
@@ -1265,9 +1216,7 @@
           "behavior": "Note, Prompt, Context, Script and live Browser nodes.",
           "acceptance": "Round-trip each type and all fields; compare editing/rendering and resource errors.",
           "status": "partial",
-          "evidence": [
-            "../ACCEPTANCE.md"
-          ],
+          "evidence": ["../ACCEPTANCE.md"],
           "evidence_limit": "Context round trip executed; other special nodes remain open."
         }
       ]

@@ -7,6 +7,16 @@ import {
 } from '@open-pencil/scene-graph/shaders'
 
 describe('fragment shader controls', () => {
+  test('bounds durable diagnostics and preserves the recoverable source behind them', () => {
+    const shader = {
+      url: 'missing.glsl',
+      source: 'void main(){}',
+      uniforms: {},
+      error: 'File not found.'
+    }
+    expect(fragmentShaderOf(fragmentShaderPreset(shader))).toEqual(shader)
+    expect(() => fragmentShaderPreset({ ...shader, error: 'x'.repeat(4097) })).toThrow()
+  })
   test('ignores commented declarations and annotations separated by code', () => {
     const controls = fragmentUniforms(`
 // uniform float ignored;

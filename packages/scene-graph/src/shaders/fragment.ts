@@ -11,11 +11,13 @@ import {
 export const FRAGMENT_SHADER_COMPONENT = 'OpenPenFragmentShader'
 /** GLSL uses the existing shader-preset/frame lifecycle, independently of the preset library. */
 export function fragmentShaderPreset(shader: FragmentShader): ShaderPreset {
+  const props = v.parse(fragmentShaderSchema, shader)
+  if (props.error === undefined) delete props.error
   return {
     components: [
       {
         type: FRAGMENT_SHADER_COMPONENT,
-        props: v.parse(fragmentShaderSchema, shader)
+        props
       }
     ]
   }

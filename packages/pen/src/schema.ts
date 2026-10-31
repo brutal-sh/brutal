@@ -4,6 +4,7 @@ import * as v from 'valibot'
 import { MAX_MESH_DIMENSION } from '@open-pencil/scene-graph/constants'
 import {
   MAX_FRAGMENT_SOURCE_LENGTH,
+  MAX_FRAGMENT_ERROR_LENGTH,
   shaderUniformValueSchema
 } from '@open-pencil/scene-graph/shaders'
 
@@ -100,7 +101,10 @@ export const penShaderPaintSchema = v.looseObject({
   url: v.pipe(v.string(), v.maxLength(16384)),
   uniforms: v.optional(v.record(v.string(), shaderUniformValueSchema)),
   /** Open Pen source snapshot; Pen uses the ordinary URL beside it. */
-  openPenSource: v.optional(v.pipe(v.string(), v.maxLength(MAX_FRAGMENT_SOURCE_LENGTH)))
+  openPenSource: v.optional(v.pipe(v.string(), v.maxLength(MAX_FRAGMENT_SOURCE_LENGTH))),
+  openPenShaderError: v.optional(
+    v.pipe(v.string(), v.nonEmpty(), v.maxLength(MAX_FRAGMENT_ERROR_LENGTH))
+  )
 })
 
 /** Any paint type this reader does not draw. */

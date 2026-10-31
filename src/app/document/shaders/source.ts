@@ -24,6 +24,7 @@ export async function fragmentSourceFilePath(
 
 /** Compile before replacing the current paint, keeping diagnostics beside the source field. */
 export async function validateFragmentSource(shader: FragmentShader) {
+  if (shader.error) throw new Error(shader.error)
   const renderer = createFragmentRenderer(shader)
   try {
     const canvas = document.createElement('canvas')

@@ -77,3 +77,24 @@ test('rejects non-finite shader overrides instead of replacing a shader with a b
   invalid.children[0].fill[0].uniforms.size = Infinity
   expect(() => buildPenGraph(invalid)).toThrow('Paint shader')
 })
+
+test('an errored source preserves its diagnostic and last valid snapshot through Pen saves', () => {
+  const invalid = structuredClone(document)
+  const errored = {
+    ...paint,
+    url: 'missing.glsl',
+    openPenSource: source,
+    openPenShaderError: 'Shader file not found.'
+  }
+  const graph = parsePenFile(
+    JSON.stringify({ ...invalid, children: [{ ...invalid.children[0], fill: errored }] })
+  )
+  const reopened = parsePenFile(writePenFile(graph))
+  const fragment = fragmentShaderOf(readShaderPaints(getNodeOrThrow(reopened, 'shader'))[0].preset)
+  expect(fragment).toMatchObject({
+    url: 'missing.glsl',
+    source,
+    error: 'Shader file not found.',
+    uniforms: paint.uniforms
+  })
+})

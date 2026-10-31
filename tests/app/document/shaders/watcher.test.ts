@@ -97,6 +97,10 @@ test('an external GLSL change preserves uniforms, clean state, redo and the last
     await settled()
     expect(current()?.source).toBe('green')
     expect(watcher.shaderSourceErrors.get(original.url)).toBe('compile error')
+    expect(current()?.error).toBe('compile error')
+    watcher.watchShaderSource({ ...original, source: 'green', error: 'compile error' })
+    await settled()
+    expect(current()?.error).toBe('compile error')
     expect(editor.graph.images.get(node.fills[0].imageHash ?? '')).toEqual(
       new Uint8Array([1, 2, 3])
     )
@@ -144,6 +148,33 @@ test('serialized absolute source paths need an explicit choice, and removed pain
     editor.graph.deleteNode(node.id)
     await settled()
     expect(watchers.size).toBe(0)
+  } finally {
+    session.dispose()
+  }
+})
+
+test('explicit same-URI reloads update shared source data without adding document history', async () => {
+  const session = setup()
+  const { editor, changes, watcher, current } = session
+  try {
+    await settled()
+    const saved = editor.undo.peekUndo()
+    watcher.watchShaderSource({ ...original, source: 'green' })
+    await settled()
+    expect(current()?.source).toBe('green')
+    expect(current()?.uniforms).toEqual({ u_size: 24 })
+    expect(editor.undo.peekUndo()).toBe(saved)
+    expect(changes.hasUnsavedChanges()).toBe(false)
+    watcher.watchShaderSource({ ...original, source: 'green', error: 'compile error' })
+    await settled()
+    expect(current()?.error).toBe('compile error')
+    expect(editor.undo.peekUndo()).toBe(saved)
+    watcher.watchShaderSource({ ...original, source: 'purple' })
+    await settled()
+    expect(current()?.source).toBe('purple')
+    expect(current()?.error).toBeUndefined()
+    expect(editor.undo.peekUndo()).toBe(saved)
+    expect(changes.hasUnsavedChanges()).toBe(false)
   } finally {
     session.dispose()
   }
@@ -200,6 +231,59 @@ test('a changed uniform type validates every paint override before replacing any
     expect(current()?.source).toBe('vector')
     expect(current()?.uniforms).toEqual({ u_size: [8, 16] })
     expect(watcher.shaderSourceErrors.size).toBe(0)
+  } finally {
+    session.dispose()
+  }
+})
+
+test('a rejected validation cannot mark corrected uniforms as an error', async () => {
+  const gate = createDeferred<undefined>()
+  let waiting = false
+  const session = setup(async (shader) => {
+    if (shader.source === 'vector' && typeof shader.uniforms.u_size === 'number') {
+      waiting = true
+      await gate.promise
+      throw new Error('stale scalar error')
+    }
+  })
+  const { editor, node, current, watcher } = session
+  try {
+    await settled()
+    session.write('vector')
+    await settled()
+    expect(waiting).toBe(true)
+    editor.setShaderPaint(
+      [node.id],
+      'fills',
+      0,
+      fragmentShaderPreset({ ...original, uniforms: { u_size: [8, 16] } })
+    )
+    gate.resolve(undefined)
+    await settled()
+    expect(current()?.source).toBe('vector')
+    expect(current()?.uniforms).toEqual({ u_size: [8, 16] })
+    expect(current()?.error).toBeUndefined()
+    expect(watcher.shaderSourceErrors.size).toBe(0)
+  } finally {
+    gate.resolve(undefined)
+    session.dispose()
+  }
+})
+
+test('retained shader metadata is not watched after its last image paint is replaced', async () => {
+  const session = setup()
+  const { editor, node, watcher, watchers } = session
+  try {
+    await settled()
+    const before = [...node.fills]
+    editor.graph.updateNode(node.id, { fills: [colorToFill({ r: 1, g: 0, b: 0, a: 1 })] })
+    await settled()
+    expect(watcher.shaderSourceOrder.size).toBe(0)
+    expect(watchers.size).toBe(0)
+    editor.graph.updateNode(node.id, { fills: before })
+    await settled()
+    expect([...watcher.shaderSourceOrder]).toEqual([original.url])
+    expect(watchers.size).toBe(1)
   } finally {
     session.dispose()
   }
