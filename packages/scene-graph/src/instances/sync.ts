@@ -5,7 +5,7 @@ import { cloneNodeProps, copyEffects, copyFills, copyStrokes, copyStyleRuns } fr
 import type { NodeCloneMode } from '../copy'
 import type { SceneGraph } from '../graph'
 import { scaleNodeChanges } from '../scaling/node'
-import { scriptOfNode, syncScriptFields } from '../scripts/model'
+import { scriptOfNode, syncScriptFields, SCRIPT_INPUT_BINDING_PREFIX } from '../scripts/model'
 import { hasShaderPaint, withSyncedShaderPaints } from '../shaders/model'
 import { ownsSlotContent, slotPropertyId } from '../slots/frames'
 import type { SceneNode } from '../types'
@@ -95,7 +95,11 @@ export function syncBindingFields(
     ...Object.keys(target.boundVariables),
     ...Object.keys(target.variableBindingScales)
   ])) {
-    if (!protectedField(bindingOverrideField(field))) continue
+    if (
+      !protectedField(bindingOverrideField(field)) &&
+      !(field.startsWith(SCRIPT_INPUT_BINDING_PREFIX) && protectedField('script/inputs'))
+    )
+      continue
     if (!Object.hasOwn(target.boundVariables, field)) Reflect.deleteProperty(bindings, field)
     else bindings[field] = target.boundVariables[field]
     if (target.variableBindingScales[field] === undefined) Reflect.deleteProperty(scales, field)

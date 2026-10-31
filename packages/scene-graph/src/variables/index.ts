@@ -5,6 +5,7 @@ import { BLACK } from '../constants'
 import type { SceneGraph } from '../graph'
 import { findInstanceAncestor } from '../instances'
 import { bindingOverrideField, setInstanceOverride } from '../instances/overrides'
+import { SCRIPT_INPUT_BINDING_PREFIX } from '../scripts/model'
 import type {
   SceneNode,
   Variable,
@@ -45,13 +46,18 @@ export function removeVariable(graph: SceneGraph, id: string): void {
     collection.variableIds = collection.variableIds.filter((vid) => vid !== id)
   }
   for (const node of graph.nodes.values()) {
-    const hadBinding = Object.values(node.boundVariables).includes(id)
-    if (!hadBinding) continue
+    const removed = Object.entries(node.boundVariables)
+      .filter(
+        ([field, variableId]) => variableId === id && !field.startsWith(SCRIPT_INPUT_BINDING_PREFIX)
+      )
+      .map(([field]) => field)
+    if (!removed.length) continue
     graph.willChangeNode(node)
-    node.boundVariables = omitBy(node.boundVariables, (varId) => varId === id) as Record<
-      string,
-      string
-    >
+    // Script authored references retain unresolved identity for repair and Undo.
+    node.boundVariables = omitBy(
+      node.boundVariables,
+      (varId, field) => varId === id && !field.startsWith(SCRIPT_INPUT_BINDING_PREFIX)
+    ) as Record<string, string>
     node.variableBindingScales = omitBy(
       node.variableBindingScales,
       (_, field) => !(field in node.boundVariables)
@@ -60,7 +66,7 @@ export function removeVariable(graph: SceneGraph, id: string): void {
       boundVariables: { ...node.boundVariables },
       variableBindingScales: { ...node.variableBindingScales }
     })
-    markBoundVariablesOverrideOnInstance(graph, node.id)
+    for (const field of removed) markBoundVariablesOverrideOnInstance(graph, node.id, field)
   }
 }
 

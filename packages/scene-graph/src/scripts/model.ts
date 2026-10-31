@@ -4,6 +4,8 @@ import { OPEN_PENCIL_PLUGIN_DATA, readPluginData, withPluginData } from '../plug
 import type { SceneNode } from '../types'
 import type { ScriptDefinition } from './schema'
 
+export const SCRIPT_INPUT_BINDING_PREFIX = 'script/inputs/'
+
 /** A Script uses a frame for geometry and its own authored source/inputs in plugin data. */
 export function scriptOfNode(
   node: Pick<SceneNode, 'type'> & Partial<Pick<SceneNode, 'pluginData'>>
@@ -24,11 +26,20 @@ export function withScript(
 export const SCRIPT_OVERRIDE_FIELDS = ['script/uri', 'script/inputs'] as const
 
 export function scriptChangedFields(node: SceneNode, changes: Partial<SceneNode>): string[] {
-  if (!changes.pluginData) return []
+  if (!changes.pluginData && !changes.boundVariables) return []
   const before = scriptOfNode(node)
   const after = scriptOfNode({ ...node, ...changes })
+  const bindings = (values: SceneNode['boundVariables']) =>
+    Object.fromEntries(
+      Object.entries(values).filter(([field]) => field.startsWith(SCRIPT_INPUT_BINDING_PREFIX))
+    )
+  const inputBindingChanged =
+    !!(before || after) &&
+    !isEqual(bindings(node.boundVariables), bindings(changes.boundVariables ?? node.boundVariables))
   return SCRIPT_OVERRIDE_FIELDS.filter((field) =>
-    field === 'script/uri' ? before?.uri !== after?.uri : !isEqual(before?.inputs, after?.inputs)
+    field === 'script/uri'
+      ? before?.uri !== after?.uri
+      : !isEqual(before?.inputs, after?.inputs) || inputBindingChanged
   )
 }
 

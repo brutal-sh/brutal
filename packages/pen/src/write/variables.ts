@@ -8,6 +8,7 @@ import type {
   VariableCollection
 } from '@open-pencil/scene-graph'
 import { colorToHex8 } from '@open-pencil/scene-graph/color'
+import { SCRIPT_INPUT_BINDING_PREFIX, scriptOfNode } from '@open-pencil/scene-graph/scripts'
 import { paintBindingTarget } from '@open-pencil/scene-graph/variables'
 
 import {
@@ -238,7 +239,10 @@ export function writeVariables(graph: SceneGraph, diagnostics: PenExportDiagnost
         continue
       }
       const ref = `$${name}`
-      if (FIELDS[field]) pen[FIELDS[field]] = ref
+      if (field.startsWith(SCRIPT_INPUT_BINDING_PREFIX) && scriptOfNode(node)) {
+        if (pen.inputs)
+          pen.inputs = { ...pen.inputs, [field.slice(SCRIPT_INPUT_BINDING_PREFIX.length)]: ref }
+      } else if (FIELDS[field]) pen[FIELDS[field]] = ref
       else if (SIDES.includes(field) && Array.isArray(pen.padding))
         pen.padding[SIDES.indexOf(field)] = ref
       else if (CORNERS.includes(field) && Array.isArray(pen.cornerRadius))

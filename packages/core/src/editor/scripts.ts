@@ -8,6 +8,8 @@ import {
   markScriptOutputCurrent,
   scriptOfNode,
   withScript,
+  scriptDefinitionChanges,
+  SCRIPT_INPUT_BINDING_PREFIX,
   type ScriptDefinition
 } from '@open-pencil/scene-graph/scripts'
 
@@ -47,8 +49,30 @@ export function createScriptActions(ctx: EditorContext, nodes: ScriptNodeActions
     const node = ctx.graph.getNode(id)
     if (!node || !scriptOfNode(node)) return
     assertNodeEditable(ctx.graph, id)
-    if (isEqual(scriptOfNode(node), definition)) return
-    nodes.updateNodeWithUndo(id, { pluginData: withScript(node, definition) }, 'Set script')
+    const changes = scriptDefinitionChanges(ctx.graph, node, definition)
+    if (isEqual(scriptOfNode(node), definition) && !changes.boundVariables) return
+    nodes.updateNodeWithUndo(id, changes, 'Set script')
+  }
+
+  function setScriptInputVariable(id: string, name: string, variableId: string): void {
+    const node = ctx.graph.getNode(id)
+    const definition = node && scriptOfNode(node)
+    const variable = ctx.graph.variables.get(variableId)
+    if (!node || !definition || !variable) return
+    assertNodeEditable(ctx.graph, id)
+    const next = { ...definition, inputs: { ...definition.inputs, [name]: `$${variable.name}` } }
+    const changes = scriptDefinitionChanges(ctx.graph, node, next)
+    nodes.updateNodeWithUndo(
+      id,
+      {
+        ...changes,
+        boundVariables: {
+          ...(changes.boundVariables ?? node.boundVariables),
+          [`${SCRIPT_INPUT_BINDING_PREFIX}${name}`]: variableId
+        }
+      },
+      'Set script input variable'
+    )
   }
 
   function detachScriptInstances(id: string) {
@@ -88,6 +112,11 @@ export function createScriptActions(ctx: EditorContext, nodes: ScriptNodeActions
           instanceOverrides: createInstanceOverrideState(),
           name: node.name === 'Script' ? 'Frame' : node.name,
           pluginData: withScript(node, undefined),
+          boundVariables: Object.fromEntries(
+            Object.entries(node.boundVariables).filter(
+              ([field]) => !field.startsWith(SCRIPT_INPUT_BINDING_PREFIX)
+            )
+          ),
           status: node.status
         })
         if (!frame) return undefined
@@ -133,6 +162,7 @@ export function createScriptActions(ctx: EditorContext, nodes: ScriptNodeActions
   return {
     createScript,
     setScriptDefinition,
+    setScriptInputVariable,
     detachScriptComponent,
     convertScriptToLayers,
     replaceScriptOutput

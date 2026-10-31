@@ -762,8 +762,11 @@
           "feature": "Variable inputs",
           "behavior": "Inputs can follow variables and theme changes.",
           "acceptance": "Bind color/number inputs; change theme and reopen with source file present.",
-          "status": "open",
-          "evidence": []
+          "status": "partial",
+          "evidence": [
+            "docs/SCRIPT-PARITY.md"
+          ],
+          "evidence_note": "Number/color binding, theme regeneration, history and .pen/FIG identity have model/browser evidence plus a physical native binding/theme/save/reopen/detach/convert journey. Exact reference color/theme design and remaining variable/ref cases stay open."
         },
         {
           "id": "SCRIPT-05",

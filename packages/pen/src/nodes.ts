@@ -10,7 +10,7 @@ import { CORNER_FIELDS } from '@open-pencil/scene-graph/fields'
 import { fillSizingFields } from '@open-pencil/scene-graph/layout'
 import { OPEN_PENCIL_PLUGIN_DATA, withPluginData } from '@open-pencil/scene-graph/plugin-data'
 import type { Color } from '@open-pencil/scene-graph/primitives'
-import { withScript } from '@open-pencil/scene-graph/scripts'
+import { SCRIPT_INPUT_BINDING_PREFIX, withScript } from '@open-pencil/scene-graph/scripts'
 
 import { convertEffects } from './effects'
 import { ellipseArc } from './geometry'
@@ -284,6 +284,8 @@ export function applyPenProperties(node: SceneNode, pen: PenNode, build: Build):
   } satisfies Partial<SceneNode>)
   if (pen.type === 'script') {
     node.pluginData = withScript(node, { uri: pen.scriptUri ?? '', inputs: pen.inputs ?? {} })
+    for (const [name, value] of Object.entries(pen.inputs ?? {}))
+      bindIfVar(node, `${SCRIPT_INPUT_BINDING_PREFIX}${name}`, value, ctx)
   }
   node.pluginData = withPluginData(
     node.pluginData,

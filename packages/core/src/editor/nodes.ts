@@ -3,7 +3,7 @@ import { pick } from 'es-toolkit/object'
 import type { SceneNode } from '@open-pencil/scene-graph'
 import { findInstanceAncestor, recordInstanceOverride } from '@open-pencil/scene-graph/instances'
 import { cloneInstanceOverrideState } from '@open-pencil/scene-graph/instances/overrides'
-import { scriptChangedFields } from '@open-pencil/scene-graph/scripts'
+import { scriptChangedFields, SCRIPT_INPUT_BINDING_PREFIX } from '@open-pencil/scene-graph/scripts'
 import { styleDetachmentChanges } from '@open-pencil/scene-graph/shared-styles'
 
 import { textAutoResizeChanges } from '#core/layout/text-auto-resize'
@@ -26,6 +26,24 @@ export function opacityFromBuffer(buffer: string): number {
   if (!Number.isFinite(n)) return 1
   const percent = buffer.length === 1 ? n * 10 : n
   return Math.min(100, Math.max(0, percent)) / 100
+}
+
+function nodeOverrideFields(node: SceneNode, changes: Partial<SceneNode>) {
+  const scriptFields = scriptChangedFields(node, changes)
+  let fields = Object.keys(changes)
+  if (scriptFields.includes('script/inputs') && changes.boundVariables) {
+    const next = changes.boundVariables
+    const keys = new Set([...Object.keys(node.boundVariables), ...Object.keys(next)])
+    if (
+      [...keys].every(
+        (field) =>
+          field.startsWith(SCRIPT_INPUT_BINDING_PREFIX) ||
+          node.boundVariables[field] === next[field]
+      )
+    )
+      fields = fields.filter((field) => field !== 'boundVariables')
+  }
+  return [...fields, ...scriptFields]
 }
 
 export function createNodeActions(ctx: EditorContext) {
@@ -53,7 +71,7 @@ export function createNodeActions(ctx: EditorContext) {
       ...textAutoResizeChanges(node, changes),
       ...pathTextEditChanges(node, changes)
     })
-    const fields = [...Object.keys(nextChanges), ...scriptChangedFields(node, nextChanges)]
+    const fields = nodeOverrideFields(node, nextChanges)
     ctx.graph.updateNode(id, nextChanges)
     recordInstanceOverride(ctx.graph, id, fields)
     runChangedLayout(id, nextChanges)
@@ -91,7 +109,7 @@ export function createNodeActions(ctx: EditorContext) {
       node,
       Object.keys(nextChanges) as (keyof SceneNode)[]
     ) as Partial<SceneNode>
-    const fields = [...Object.keys(nextChanges), ...scriptChangedFields(node, nextChanges)]
+    const fields = nodeOverrideFields(node, nextChanges)
     ctx.graph.updateNode(id, nextChanges)
     recordInstanceOverride(ctx.graph, id, fields)
     runChangedLayout(id, nextChanges)

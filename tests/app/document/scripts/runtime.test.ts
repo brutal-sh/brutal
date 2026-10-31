@@ -144,6 +144,8 @@ test('a watched source supersedes delayed output, failures refuse stale conversi
 })
 
 test('uploaded reusable Scripts regenerate independent instances and survive source detachment', async () => {
+  const countedCode = (name: string) =>
+    `/** @schema 2.21\n * @input count: number = 3\n */\nreturn []; // ${name}`
   const editor = createEditor()
   const changes = createDocumentChanges(editor)
   const runtime = createScriptRuntime(editor, io(), {
@@ -153,7 +155,7 @@ test('uploaded reusable Scripts regenerate independent instances and survive sou
   })
   try {
     const main = editor.createScript(0, 0)
-    runtime.attachScriptSource(main, 'grid.js', code('original'))
+    runtime.attachScriptSource(main, 'grid.js', countedCode('original'))
     editor.setScriptDefinition(main, { uri: 'grid.js', inputs: { count: 3 } })
     editor.select([main])
     editor.createComponentFromSelection()
@@ -161,13 +163,13 @@ test('uploaded reusable Scripts regenerate independent instances and survive sou
     if (!id) throw new Error('Missing Script instance.')
     editor.setScriptDefinition(id, { uri: 'grid.js', inputs: { count: 2 } })
     const child = () => editor.graph.getChildren(id)[0]
-    await until(() => child()?.name === `${code('original')}:2`)
-    runtime.attachScriptSource(main, 'grid.js', code('revised'))
-    await until(() => child()?.name === `${code('revised')}:2`)
+    await until(() => child()?.name === `${countedCode('original')}:2`)
+    runtime.attachScriptSource(main, 'grid.js', countedCode('revised'))
+    await until(() => child()?.name === `${countedCode('revised')}:2`)
     editor.detachScriptComponent(main)
     editor.updateNodeWithUndo(id, { width: 260 })
     await until(() => child()?.width === 260)
-    expect(child().name).toBe(`${code('revised')}:2`)
+    expect(child().name).toBe(`${countedCode('revised')}:2`)
     expect(editor.graph.getNode(id)?.type).toBe('FRAME')
   } finally {
     runtime.dispose()
@@ -263,6 +265,117 @@ test('a reference rejected on first render recovers automatically when its sourc
     const instance = editor.graph.getChildren(owner)[0]
     expect(editor.graph.getChildren(instance.id)[0].text).toBe('Repaired reference')
     expect(runtime.scriptRuntimeStates.get(owner)?.error).toBeUndefined()
+  } finally {
+    runtime.dispose()
+    changes.dispose()
+    editor.dispose()
+  }
+})
+
+test('Script variable inputs regenerate across inherited themes, values, Undo and deleted-variable repair', async () => {
+  const graph = parsePenFile(
+    JSON.stringify({
+      version: '2.21',
+      themes: { mode: ['light', 'dark'] },
+      variables: {
+        count: { type: 'number', value: 2 },
+        ink: {
+          type: 'color',
+          value: [
+            { value: '#2E6FF2', theme: { mode: 'light' } },
+            { value: '#F97316', theme: { mode: 'dark' } }
+          ]
+        }
+      },
+      children: [
+        {
+          type: 'frame',
+          id: 'theme-parent',
+          name: 'Theme parent',
+          width: 400,
+          height: 300,
+          children: [
+            {
+              type: 'script',
+              id: 'theme-script',
+              name: 'Themed Script',
+              scriptUri: 'grid.js',
+              inputs: { count: '$count', ink: '$ink' },
+              width: 200,
+              height: 200
+            }
+          ]
+        }
+      ]
+    })
+  )
+  const editor = createEditor({ graph })
+  const changes = createDocumentChanges(editor)
+  let calls = 0
+  const runtime = createScriptRuntime(editor, io(), {
+    getDocumentPath: () => '/project/design.pen',
+    adoptChanges: changes.adopt,
+    watchSource: async () => () => {
+      /* This model fixture has no native file watcher. */
+    },
+    loadSource: async () => ({
+      path: '/project/grid.js',
+      source:
+        '/** @schema 2.21\n * @input count: number = 2\n * @input ink: color = #2E6FF2\n */\nreturn [];'
+    }),
+    evaluate: async (_source, _width, _height, values = {}) => {
+      calls++
+      return {
+        ok: true,
+        definitions: [],
+        input: { ...values },
+        nodes: [
+          {
+            type: 'rectangle',
+            id: 'derived',
+            name: JSON.stringify(values),
+            width: Number(values.count) * 20,
+            height: 40,
+            fill: String(values.ink)
+          }
+        ]
+      }
+    }
+  })
+  try {
+    const child = () => graph.getChildren('theme-script')[0]
+    const script = graph.getNode('theme-script')
+    if (!script) throw new Error('Missing Script fixture')
+    await until(() => child()?.name === JSON.stringify({ count: 2, ink: '#2E6FF2' }))
+    const variable = [...graph.variables.values()].find((v) => v.name === 'count')
+    if (!variable) throw new Error('Missing count fixture')
+    const collection = graph.variableCollections.get(variable.collectionId)
+    if (!collection) throw new Error('Missing collection fixture')
+    editor.updateNodeWithUndo('theme-parent', {
+      variableModes: { [collection.id]: collection.modes[1].modeId }
+    })
+    await until(() => child()?.name === JSON.stringify({ count: 2, ink: '#F97316' }))
+    editor.undo.undo()
+    await until(() => child()?.name === JSON.stringify({ count: 2, ink: '#2E6FF2' }))
+    editor.updateVariableValue(variable.id, collection.defaultModeId, 3)
+    await until(() => child()?.width === 60)
+    editor.removeVariable(variable.id)
+    await until(() => !!runtime.scriptRuntimeStates.get('theme-script')?.error)
+    expect(hasCurrentScriptOutput(graph, script)).toBe(false)
+    expect(child()?.width).toBe(60)
+    editor.undo.undo()
+    await until(
+      () =>
+        !runtime.scriptRuntimeStates.get('theme-script')?.error &&
+        hasCurrentScriptOutput(graph, script)
+    )
+    expect(child()?.width).toBe(60)
+    const before = calls
+    editor.updateNodeWithUndo('theme-parent', { x: 20 })
+    await new Promise((resolve) => {
+      setTimeout(resolve, 140)
+    })
+    expect(calls).toBe(before)
   } finally {
     runtime.dispose()
     changes.dispose()

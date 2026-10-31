@@ -17,3 +17,5 @@
 
 - Pick Script component references from keyboard-accessible thumbnails, regenerate bounded linked output when dependencies change, and preserve links through conversion and save/reopen. Keep sandbox validation strict while accepting absent optional internal paint fields after reopen.
 - Preserve the icon picker when a closing workspace menu returns focus, and omit unrelated Figma component controls from Script inspectors.
+
+- Bind Script number/color inputs to variables, regenerate with inherited themes and aliases, preserve input variable identities through rename, interchange and instance sync, and keep independent input claims separate from geometry bindings.

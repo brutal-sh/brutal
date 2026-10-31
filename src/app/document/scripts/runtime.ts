@@ -8,6 +8,7 @@ import { scriptReferenceDocument } from '@open-pencil/core/scripts/references'
 import {
   markScriptOutputCurrent,
   scriptOfNode,
+  resolveScriptInputVariables,
   type ScriptDefinition
 } from '@open-pencil/scene-graph/scripts'
 
@@ -121,11 +122,26 @@ export function createScriptRuntime(editor: Editor, io: IORegistry, options: Scr
     return active.promise
   }
 
+  function inputKey(id: string, definition: ScriptDefinition) {
+    const node = editor.graph.getNode(id)
+    if (!node) return ''
+    return JSON.stringify(
+      Object.entries(definition.inputs).map(([name, value]) => {
+        try {
+          return [name, resolveScriptInputVariables(editor.graph, node, { [name]: value })[name]]
+        } catch (error) {
+          return [name, String(error)]
+        }
+      })
+    )
+  }
+
   async function render(id: string, definition: ScriptDefinition, run: ScriptRun) {
     const graph = editor.graph
     const node = graph.getNode(id)
     if (!node) return
     const size = { width: node.width, height: node.height }
+    const variables = inputKey(id, definition)
     const current = () =>
       !disposed &&
       !run.controller.signal.aborted &&
@@ -133,7 +149,8 @@ export function createScriptRuntime(editor: Editor, io: IORegistry, options: Scr
       editor.graph === graph &&
       isEqual(scriptOfNode(graph.getNode(id) ?? node), definition) &&
       graph.getNode(id)?.width === size.width &&
-      graph.getNode(id)?.height === size.height
+      graph.getNode(id)?.height === size.height &&
+      inputKey(id, definition) === variables
     let definitions: ScriptInput[] = []
     try {
       const source = await sourceFor(definition.uri, id)
@@ -144,7 +161,15 @@ export function createScriptRuntime(editor: Editor, io: IORegistry, options: Scr
         source,
         size.width,
         size.height,
-        definition.inputs,
+        resolveScriptInputVariables(
+          graph,
+          node,
+          Object.fromEntries(
+            Object.entries(definition.inputs).filter(([name]) =>
+              definitions.some((input) => input.name === name)
+            )
+          )
+        ),
         run.controller.signal,
         true
       )
@@ -248,7 +273,13 @@ export function createScriptRuntime(editor: Editor, io: IORegistry, options: Scr
         inheritedUploads.set(id, files)
       }
     }
-    const key = JSON.stringify([options.getDocumentPath(), definition, node.width, node.height])
+    const key = JSON.stringify([
+      options.getDocumentPath(),
+      definition,
+      node.width,
+      node.height,
+      inputKey(id, definition)
+    ])
     if (!force && runs.get(id)?.key === key) return
     cancel(id)
     markScriptOutputCurrent(editor.graph, id, false)
@@ -326,6 +357,8 @@ export function createScriptRuntime(editor: Editor, io: IORegistry, options: Scr
     selectedFiles.clear()
     reset()
   })
+  const stopVariables = editor.onEditorEvent('render:requested', refresh)
+  const stopHistory = editor.onEditorEvent('history:changed', refresh)
   const stopPath = watch(options.getDocumentPath, reset)
   refresh()
 
@@ -376,6 +409,8 @@ export function createScriptRuntime(editor: Editor, io: IORegistry, options: Scr
       stopDeleted()
       stopGraph()
       stopPath()
+      stopVariables()
+      stopHistory()
       for (const id of runs.keys()) cancel(id)
       for (const source of sources.values()) source.stop?.()
       sources.clear()
