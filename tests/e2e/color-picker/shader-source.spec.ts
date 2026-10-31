@@ -68,6 +68,59 @@ test('shader file controls render logical pixels, edit uniforms and retain the s
   editor.canvas.assertNoErrors()
 })
 
+test('a ranged uniform follows absolute clicks and live dragging, with one Undo and Escape cancellation', async () => {
+  await openShader()
+  await chooseSource()
+  const size = editor.page.getByRole('spinbutton', { name: 'Size', exact: true })
+  await shader.settle()
+  const bounds = expectDefined(await size.boundingBox(), 'shader range bounds')
+  const source = editor.page.getByRole('textbox', { name: 'Shader path or URL', exact: true })
+  await source.focus()
+  await editor.page.mouse.click(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2)
+  await expect.poll(async () => (await shader.read())?.fragment?.uniforms.u_size).toBe(32.5)
+  await expect(source).not.toBeFocused()
+  await editor.canvas.undo()
+  await expect.poll(async () => (await shader.read())?.fragment?.uniforms).toEqual({})
+  await shader.settle()
+  await editor.page.mouse.move(bounds.x + bounds.width / 4, bounds.y + bounds.height / 2)
+  await editor.page.mouse.down()
+  await expect.poll(async () => (await shader.read())?.fragment?.uniforms.u_size).toBe(16.8)
+  await expect
+    .poll(() =>
+      readScenePixels(editor.page, [
+        { x: 304, y: 304 },
+        { x: 328, y: 304 }
+      ])
+    )
+    .toEqual([blue, white])
+  await editor.page.mouse.move(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2)
+  await expect.poll(async () => (await shader.read())?.fragment?.uniforms.u_size).toBe(32.5)
+  await expect
+    .poll(() =>
+      readScenePixels(editor.page, [
+        { x: 304, y: 304 },
+        { x: 328, y: 304 }
+      ])
+    )
+    .toEqual([white, white])
+  await editor.page.mouse.up()
+  await editor.canvas.undo()
+  await expect.poll(async () => (await shader.read())?.fragment?.uniforms).toEqual({})
+  await editor.page.mouse.move(bounds.x + bounds.width / 4, bounds.y + bounds.height / 2)
+  await editor.page.mouse.down()
+  await expect.poll(async () => (await shader.read())?.fragment?.uniforms.u_size).toBe(16.8)
+  await editor.page.keyboard.press('Escape')
+  await editor.page.mouse.up()
+  await expect.poll(async () => (await shader.read())?.fragment?.uniforms).toEqual({})
+  await expect(size).toHaveAttribute('aria-valuenow', '32')
+  await size.locator('[data-slot="value"]').click()
+  await size.fill('24')
+  await size.press('Enter')
+  await expect.poll(async () => (await shader.read())?.fragment?.uniforms.u_size).toBe(24)
+  await editor.page.screenshot({ path: test.info().outputPath('shader-range-controls.png') })
+  editor.canvas.assertNoErrors()
+})
+
 test('invalid source renders an undoable diagnostic paint while retaining the previous source snapshot', async () => {
   await openShader()
   await chooseSource()

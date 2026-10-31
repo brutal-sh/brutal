@@ -49,6 +49,7 @@ async function shaderPixels(id: string) {
   }, id)
 }
 
+// shortcut: the embedded driver sends mouse-only events; check range gestures with native UI automation.
 describe('native GLSL source controls', () => {
   const server = createServer()
   let url = ''

@@ -32,6 +32,7 @@ const {
   max = Infinity,
   step = 1,
   sensitivity = 1,
+  scrubMode = 'relative',
   inheritBinding = true,
   placeholder = 'Mixed',
   ariaLabel,
@@ -61,7 +62,9 @@ const numericValue = computed(() => {
 })
 const displayValue = computed(() => {
   if (binding?.state.value === 'unresolved') return '—'
-  return isMixed.value ? '' : String(normalizeNumberValue(numericValue.value))
+  return isMixed.value
+    ? ''
+    : String(normalizeNumberValue(scrubbing.value ? workingValue.value : numericValue.value))
 })
 const disabled = computed(() => disabledProp)
 const bound = computed(() =>
@@ -89,6 +92,7 @@ let absoluteDraft: string | null = null
 let stopMove: (() => void) | undefined
 let stopUp: (() => void) | undefined
 let stopCancel: (() => void) | undefined
+let stopEscape: (() => void) | undefined
 let scrubTarget: Element | undefined
 let scrubPointerId: number | undefined
 
@@ -219,9 +223,11 @@ function stopScrubListeners() {
   stopMove?.()
   stopUp?.()
   stopCancel?.()
+  stopEscape?.()
   stopMove = undefined
   stopUp = undefined
   stopCancel = undefined
+  stopEscape = undefined
   if (scrubTarget && scrubPointerId != null && scrubTarget.hasPointerCapture(scrubPointerId)) {
     scrubTarget.releasePointerCapture(scrubPointerId)
   }
@@ -241,6 +247,27 @@ function startScrub(event: PointerEvent) {
   let accumulated = startValue
   let hasMoved = false
   const target = event.currentTarget instanceof Element ? event.currentTarget : undefined
+  const bounds = target?.getBoundingClientRect()
+  const range =
+    scrubMode === 'range' &&
+    Number.isFinite(min) &&
+    Number.isFinite(max) &&
+    max > min &&
+    bounds &&
+    bounds.width > 0
+  function updateRange(x: number) {
+    if (!bounds) return
+    const fraction = Math.max(0, Math.min(1, (x - bounds.left) / bounds.width))
+    updateValue(min + Math.round((fraction * (max - min)) / stepValue.value) * stepValue.value)
+  }
+  if (range) {
+    if (document.activeElement instanceof HTMLElement && document.activeElement !== target)
+      document.activeElement.blur()
+    if (!requestMutation('scrub')) return
+    hasMoved = true
+    scrubbing.value = true
+    updateRange(event.clientX)
+  }
   scrubTarget = target
   scrubPointerId = event.pointerId
   target?.setPointerCapture(event.pointerId)
@@ -248,6 +275,10 @@ function startScrub(event: PointerEvent) {
 
   stopMove = useEventListener(listenerTarget, 'pointermove', (moveEvent: PointerEvent) => {
     if (moveEvent.pointerId !== event.pointerId) return
+    if (range) {
+      updateRange(moveEvent.clientX)
+      return
+    }
     const dx = moveEvent.clientX - lastX
     lastX = moveEvent.clientX
     if (!hasMoved && Math.abs(moveEvent.clientX - startX) > 2) {
@@ -280,6 +311,17 @@ function startScrub(event: PointerEvent) {
     binding?.actions.commitMutation()
   }
 
+  stopEscape = useEventListener(
+    document,
+    'keydown',
+    (keyEvent: KeyboardEvent) => {
+      if (keyEvent.code !== 'Escape') return
+      keyEvent.preventDefault()
+      keyEvent.stopPropagation()
+      finish(true)
+    },
+    { capture: true }
+  )
   stopUp = useEventListener(listenerTarget, 'pointerup', (upEvent: PointerEvent) => {
     if (upEvent.pointerId === event.pointerId) finish(false)
   })

@@ -74,6 +74,9 @@ const emit = defineEmits<{
   update: [fill: Fill, colorSources?: (number | null)[]]
   updateBlendMode: [mode: BlendMode]
   updateShader: [preset: ShaderPreset]
+  previewShader: [preset: ShaderPreset]
+  commitShader: []
+  cancelShader: []
   openChange: [open: boolean]
   cancel: []
 }>()
@@ -254,11 +257,15 @@ function stopEscapePropagation(event: KeyboardEvent) {
               @update="(next, sources) => emit('update', next, sources)"
             />
 
+            <!-- Detaching a shared image during a gesture must keep its numeric controls mounted. -->
             <ShaderSourcePicker
               v-if="fragment"
-              :key="shader?.image"
+              :image="shader?.image ?? ''"
               :shader="fragment"
               @update="emit('updateShader', $event)"
+              @preview="emit('previewShader', $event)"
+              @commit="emit('commitShader')"
+              @cancel="emit('cancelShader')"
             />
             <ShaderFillPicker
               v-else-if="shader"

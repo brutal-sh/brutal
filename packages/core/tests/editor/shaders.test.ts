@@ -38,6 +38,42 @@ function setup() {
 }
 
 describe('shader paints', () => {
+  for (const list of ['fills', 'strokes'] as const) {
+    test(`live ${list} shader edits commit once and cancel on selection change`, async () => {
+      const { editor, id, read, drawn } = setup()
+      if (list === 'strokes')
+        editor.graph.updateNode(id, {
+          strokes: [{ ...read().fills[0], weight: 12, align: 'INSIDE' }]
+        })
+      editor.select([id])
+      editor.setShaderPaint([id], list, 0, AURORA)
+      await editor.settleShaderFrames()
+      const before = editor.undo.peekUndo()
+      const edit = editor.beginShaderPaintEdit([id], list, 0)
+      edit.update(SWIRL)
+      await editor.settleShaderFrames()
+      expect(shaderOfPaint(read(), read()[list][0])?.preset).toEqual(SWIRL)
+      expect(drawn.at(-1)?.preset).toEqual(SWIRL)
+      expect(editor.undo.peekUndo()).toBe(before)
+      edit.update(AURORA)
+      edit.update(SWIRL)
+      edit.commit()
+      expect(editor.undo.peekUndo()).not.toBe(before)
+      editor.undoAction()
+      expect(shaderOfPaint(read(), read()[list][0])?.preset).toEqual(AURORA)
+      expect(editor.undo.peekUndo()).toBe(before)
+      const cancelled = editor.beginShaderPaintEdit([id], list, 0)
+      cancelled.update(SWIRL)
+      editor.select([])
+      cancelled.update(SWIRL)
+      cancelled.commit()
+      expect(shaderOfPaint(read(), read()[list][0])?.preset).toEqual(AURORA)
+      expect(editor.undo.peekUndo()).toBe(before)
+      if (list === 'strokes')
+        expect(read().strokes[0]).toMatchObject({ weight: 12, align: 'INSIDE' })
+    })
+  }
+
   test('an absent diagnostic does not add a phantom source-edit history step', () => {
     const { editor, id, read } = setup()
     const shader = { url: 'checks.glsl', source: 'void main(){}', uniforms: {} }

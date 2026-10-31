@@ -65,14 +65,17 @@ export function createShaderFrames(
     return isShaderFrameCurrent(shader, size) && ctx.graph.images.has(shader.image)
   }
 
-  function schedule(id: string) {
+  function schedule(id: string, preview = false) {
     if (!rasterizer) return
     pending.add(id)
     if (timer) clearTimeout(timer)
-    timer = setTimeout(() => {
-      timer = null
-      void drain()
-    }, SETTLE_MS)
+    timer = setTimeout(
+      () => {
+        timer = null
+        void drain()
+      },
+      preview ? 0 : SETTLE_MS
+    )
   }
 
   /** The shaders on `pageId` whose frames are missing or out of date. */
@@ -207,6 +210,11 @@ export function createShaderFrames(
     if (!FRAME_FIELDS.some((field) => field in changes)) return
     const node = ctx.graph.getNode(id)
     if (node && readShaderPaints(node).length > 0) schedule(id)
+  })
+  ctx.onEditorEvent('node:previewUpdated', (id, changes) => {
+    if (!FRAME_FIELDS.some((field) => field in changes)) return
+    const node = ctx.graph.getNode(id)
+    if (node && readShaderPaints(node).length > 0) schedule(id, true)
   })
   // A new document's frames are drawn page by page as each is prepared.
   ctx.onEditorEvent('graph:replaced', () => {

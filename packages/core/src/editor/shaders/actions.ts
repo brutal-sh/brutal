@@ -9,6 +9,7 @@ import {
   type ShaderPreset
 } from '@open-pencil/scene-graph/shaders'
 
+import type { NodePreview } from '#core/editor/node-preview'
 import type { EditorContext } from '#core/editor/types'
 
 import { isSharedShaderFrame } from './ownership'
@@ -29,6 +30,7 @@ const replaceAt = <T>(items: readonly T[], index: number, item: T) =>
 export type ShaderPaintList = 'fills' | 'strokes'
 
 interface NodeActions {
+  beginNodePreview(label: string): NodePreview
   updateNodeWithUndo(id: string, changes: Partial<SceneNode>, label?: string): void
 }
 
@@ -37,17 +39,17 @@ interface NodeActions {
  * in plugin data, so each command records both together, as one undo step.
  */
 export function createShaderActions(ctx: EditorContext, nodes: NodeActions) {
-  function setNodeShader(
+  function shaderChanges(
     nodeId: string,
     list: ShaderPaintList,
     index: number,
     preset: ShaderPreset
-  ): void {
+  ): Partial<SceneNode> | null {
     const node = ctx.graph.getNode(nodeId)
     const previous = node?.[list].at(index)
-    if (!node || !previous) return
+    if (!node || !previous) return null
     const existing = shaderOfPaint(node, previous)
-    if (existing && isEqual(existing.preset, preset)) return
+    if (existing && isEqual(existing.preset, preset)) return null
     const next =
       existing && !isSharedShaderFrame(ctx.graph, existing.image)
         ? { paint: previous, shader: { image: existing.image, preset: structuredClone(preset) } }
@@ -67,10 +69,10 @@ export function createShaderActions(ctx: EditorContext, nodes: NodeActions) {
             at === index ? { ...pick(item, STROKE_FIELDS), ...shown } : item
           )
         : node.strokes
-    nodes.updateNodeWithUndo(nodeId, {
+    return {
       [list]: list === 'fills' ? fills : strokes,
       pluginData: withShaderPaints(node, [...fills, ...strokes], [shader])
-    })
+    }
   }
 
   /**
@@ -86,11 +88,36 @@ export function createShaderActions(ctx: EditorContext, nodes: NodeActions) {
   ): void {
     ctx.undo.beginBatch('Set shader')
     try {
-      for (const id of nodeIds) setNodeShader(id, list, index, preset)
+      for (const id of nodeIds) {
+        const changes = shaderChanges(id, list, index, preset)
+        if (changes) nodes.updateNodeWithUndo(id, changes)
+      }
     } finally {
       ctx.undo.commitBatch()
     }
   }
 
-  return { setShaderPaint }
+  /** A live shader edit owns its original targets and commits one history step. */
+  function beginShaderPaintEdit(nodeIds: readonly string[], list: ShaderPaintList, index: number) {
+    const graph = ctx.graph
+    const targets = [...nodeIds]
+    const preview = nodes.beginNodePreview('Set shader')
+    return {
+      update(preset: ShaderPreset) {
+        if (preview.closed || graph !== ctx.graph) return
+        try {
+          for (const id of targets) {
+            const changes = shaderChanges(id, list, index, preset)
+            if (changes) preview.update(id, changes)
+          }
+        } catch (error) {
+          preview.cancel()
+          throw error
+        }
+      },
+      commit: preview.commit,
+      cancel: preview.cancel
+    }
+  }
+  return { setShaderPaint, beginShaderPaintEdit }
 }

@@ -5,6 +5,13 @@ import type * as Shaders from '@open-pencil/scene-graph/shaders'
 /** Read the selected shader and its real, current rendered still frame. */
 export function shaderDriver(page: () => Page) {
   return {
+    settle() {
+      return page().evaluate(async () => {
+        const store = window.openPencil?.getStore?.()
+        if (!store) throw new Error('Editor unavailable')
+        await store.settleShaderFrames()
+      })
+    },
     replaceSource(nodeId: string, url: string, source: string) {
       return page().evaluate(
         async ({ nodeId, url, source }) => {

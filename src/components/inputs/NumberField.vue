@@ -20,6 +20,7 @@ export interface NumberFieldProps {
   icon?: string
   label?: string
   suffix?: string
+  scrubMode?: 'relative' | 'range'
   sensitivity?: number
   placeholder?: string
   disabled?: boolean
@@ -67,6 +68,7 @@ const {
   label,
   suffix,
   sensitivity,
+  scrubMode,
   placeholder,
   disabled,
   inheritBinding = true,
@@ -79,7 +81,14 @@ const accessibleLabel = computed(() => {
   const ariaLabel = attrs['aria-label']
   return typeof ariaLabel === 'string' ? ariaLabel : (label ?? icon)
 })
-const styles = computed(() => tv(theme)({ suffix: Boolean(slots.suffix) }))
+const ranged = computed(
+  () =>
+    scrubMode === 'range' && Number.isFinite(min) && Number.isFinite(max) && (max ?? 0) > (min ?? 0)
+)
+const styles = computed(() => tv(theme)({ suffix: Boolean(slots.suffix), range: ranged.value }))
+function rangeWidth(value: string) {
+  return `${Math.max(0, Math.min(1, (Number(value) - (min ?? 0)) / ((max ?? 0) - (min ?? 0)))) * 100}%`
+}
 
 const emit = defineEmits<{
   'update:modelValue': [value: number, unit?: string]
@@ -95,12 +104,13 @@ defineOptions({ inheritAttrs: false })
 
 <template>
   <NumberFieldRoot
-    v-slot="{ editing, actions, attrs: rootAttrs, placeholder: ph }"
+    v-slot="{ editing, actions, attrs: rootAttrs, placeholder: ph, displayValue }"
     :model-value="modelValue"
     :min="min"
     :max="max"
     :step="step"
     :sensitivity="sensitivity"
+    :scrub-mode="scrubMode"
     :placeholder="placeholder ?? panels.mixed"
     :aria-label="accessibleLabel"
     :disabled="disabled"
@@ -133,6 +143,14 @@ defineOptions({ inheritAttrs: false })
       "
     >
       <span
+        v-if="ranged"
+        :class="styles.range()"
+        :style="{ width: rangeWidth(displayValue) }"
+        aria-hidden="true"
+      >
+        <span :class="styles.rangeHandle()" />
+      </span>
+      <span
         v-if="editing || !slots.bound || rootAttrs['data-bound'] === undefined"
         :class="styles.leading({ class: ui?.leading })"
       >
@@ -142,7 +160,18 @@ defineOptions({ inheritAttrs: false })
         <span v-if="label" class="text-[11px] leading-none">{{ label }}</span>
       </span>
       <NumberFieldInput :class="styles.field({ class: ui?.field })" />
-      <NumberFieldValue :class="styles.display({ class: ui?.display })">
+      <NumberFieldValue
+        :class="styles.display({ class: ui?.display })"
+        @pointerdown="
+          (event: PointerEvent) => {
+            if (ranged) {
+              event.preventDefault()
+              event.stopPropagation()
+              actions.startEdit()
+            }
+          }
+        "
+      >
         <template #default="display">
           <slot name="display" v-bind="display">
             <slot v-if="display.bound" name="bound" v-bind="display">

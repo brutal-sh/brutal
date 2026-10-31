@@ -7,6 +7,7 @@ import { resolvedPaintBindings } from '@open-pencil/scene-graph/variables'
 import { useColorBindingProvider } from '@open-pencil/vue/controls/binding-provider'
 import { useFillControls } from '@open-pencil/vue/controls/fill'
 import { useOkHCL } from '@open-pencil/vue/controls/okhcl'
+import { useShaderPaintEditing } from '@open-pencil/vue/controls/shader'
 import { useI18n } from '@open-pencil/vue/i18n'
 import {
   BindableValueRoot,
@@ -45,6 +46,7 @@ import AppSelect from '@/components/ui/select/AppSelect.vue'
 const fillCtx = useFillControls()
 const { compact = false } = defineProps<{ compact?: boolean }>()
 const store = useEditorStore()
+const shaderEditing = useShaderPaintEditing(store)
 const okhcl = useOkHCL()
 const gradients = useGradientEditing()
 
@@ -218,6 +220,9 @@ function updateSolidColor(
                       })
                   "
                   @update-shader="store.setShaderPaint(selectedNodeIds, 'fills', index, $event)"
+                  @preview-shader="shaderEditing.update(selectedNodeIds, 'fills', index, $event)"
+                  @commit-shader="shaderEditing.commit"
+                  @cancel-shader="shaderEditing.cancel"
                   @update-blend-mode="
                     commitPaintSetting(binding.actions, flush, () =>
                       actions.patch(index, { blendMode: $event })

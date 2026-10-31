@@ -32,8 +32,13 @@ import AppInput from '@/components/ui/input/AppInput.vue'
 import Tip from '@/components/ui/overlay/Tip.vue'
 import PanelFieldGroup from '@/components/ui/panel/PanelFieldGroup.vue'
 
-const { shader } = defineProps<{ shader: FragmentShader }>()
-const emit = defineEmits<{ update: [preset: ShaderPreset] }>()
+const { shader, image } = defineProps<{ shader: FragmentShader; image: string }>()
+const emit = defineEmits<{
+  update: [preset: ShaderPreset]
+  preview: [preset: ShaderPreset]
+  commit: []
+  cancel: []
+}>()
 const { panels } = useI18n()
 const store = useEditorStore()
 const path = ref(shader.url)
@@ -59,7 +64,8 @@ const numberUI = {
 }
 let request: AbortController | null = null
 let requestPath = ''
-const shaderKey = () => JSON.stringify([shader.url, shader.source, shader.error, shader.uniforms])
+const shaderKey = () =>
+  JSON.stringify([image, shader.url, shader.source, shader.error, shader.uniforms])
 watch(shaderKey, () => {
   request?.abort()
   path.value = shader.url
@@ -203,23 +209,22 @@ function numbers(control: FragmentUniform): number[] {
   const current = value(control)
   return Array.isArray(current) ? current : [typeof current === 'number' ? current : 0]
 }
-function set(control: FragmentUniform, next: ShaderUniformValue) {
-  emit(
-    'update',
-    fragmentShaderPreset({
-      ...shader,
-      uniforms: { ...shader.uniforms, [control.name]: next }
-    })
-  )
+function set(control: FragmentUniform, next: ShaderUniformValue, preview = false) {
+  const preset = fragmentShaderPreset({
+    ...shader,
+    uniforms: { ...shader.uniforms, [control.name]: next }
+  })
+  if (preview) emit('preview', preset)
+  else emit('update', preset)
 }
 function setNumber(control: FragmentUniform, at: number, next: number) {
   if (control.size === 1) {
-    set(control, control.integer ? Math.round(next) : next)
+    set(control, control.integer ? Math.round(next) : next, true)
     return
   }
   const vector = [...numbers(control)]
   vector[at] = control.integer ? Math.round(next) : next
-  set(control, vector)
+  set(control, vector, true)
 }
 </script>
 
@@ -298,12 +303,14 @@ function setNumber(control: FragmentUniform, at: number, next: number) {
               v-for="at in control.size"
               :key="at"
               :model-value="numbers(control)[at - 1] ?? 0"
-              :icon="['X', 'Y', 'Z', 'W'][at - 1]"
+              :icon="['x', 'y', 'z', 'w'][at - 1]"
               :aria-label="`${control.label} ${['X', 'Y', 'Z', 'W'][at - 1]}`"
               :step="control.integer ? 1 : 0.01"
               :inherit-binding="false"
               :ui="numberUI"
-              @commit="setNumber(control, at - 1, $event)"
+              @update:model-value="setNumber(control, at - 1, $event)"
+              @commit="emit('commit')"
+              @cancel="emit('cancel')"
             />
           </div>
         </PanelFieldGroup>
@@ -313,11 +320,22 @@ function setNumber(control: FragmentUniform, at: number, next: number) {
           :label="control.label"
           :min="control.min"
           :max="control.max"
+          :scrub-mode="
+            control.min !== undefined && control.max !== undefined ? 'range' : 'relative'
+          "
           :step="control.integer ? 1 : 0.1"
           :inherit-binding="false"
           :ui="numberUI"
-          @commit="setNumber(control, 0, $event)"
-        />
+          @update:model-value="setNumber(control, 0, $event)"
+          @commit="emit('commit')"
+          @cancel="emit('cancel')"
+        >
+          <template #display="display">
+            <span class="min-w-0 flex-1 text-right">{{
+              Number(display.value).toFixed(control.integer ? 0 : 1)
+            }}</span>
+          </template>
+        </NumberField>
       </template>
     </div>
     <p

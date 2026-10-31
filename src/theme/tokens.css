@@ -57,6 +57,9 @@
   --color-panel: #27272a;
   --color-panel-secondary: #222126;
   --color-home-card-footer: #111111;
+  --color-number-range-track: #141414;
+  --color-number-range-progress: #37363b;
+  --color-number-range-handle: #ababad;
   --color-panel-field: #333239;
   --color-panel-field-hover: #3d3c43;
   --color-panel-focus: #3b82f6;
@@ -117,6 +120,9 @@ html[data-theme='light'] {
   --color-home-card-footer: #ffffff;
   --color-panel: #ffffff;
   --color-panel-secondary: #f7f8fa;
+  --color-number-range-track: #e4e7ea;
+  --color-number-range-progress: #c4c6cb;
+  --color-number-range-handle: #666970;
   --color-panel-field: #f0f1f3;
   --color-panel-field-hover: #e4e7ea;
   --color-panel-focus: #2563eb;

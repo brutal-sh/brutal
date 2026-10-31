@@ -11,3 +11,4 @@ export {
   setShaderEffectProp,
   shaderPresetJSON
 } from './preset'
+export { useShaderPaintEditing } from './edit'

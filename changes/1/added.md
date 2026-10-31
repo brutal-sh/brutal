@@ -8,3 +8,5 @@
 
 - Export selected layers directly as PNG, JPEG, WEBP or a PDF with one layer per page, including Mesh PDF pages and a native lossless WEBP fallback.
 - Load local or HTTP GLSL fill and stroke sources, edit annotated numeric, vector and color uniforms, animate time uniforms in the editor, and retain source snapshots through supported editable formats. Reuse sources already referenced in a document, choose a local file or reveal it in the native file manager. Explicit reload keeps uniform edits; native file watching follows source changes and atomic replacement without adding document edits. Invalid sources display a recoverable diagnostic paint in the canvas and exported PNGs. Clearing a source draws its checkerboard placeholder and remains Undoable.
+
+- Add absolute shader-uniform range bars with live paint previews, direct numeric editing, gesture cancellation and a single Undo step.

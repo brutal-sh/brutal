@@ -11,6 +11,7 @@ import { useColorBindingProvider } from '@open-pencil/vue/controls/binding-provi
 import { applySolidStrokeColor, applyStrokePaint } from '@open-pencil/vue/controls/color-model'
 import { MIXED, useNodeProps } from '@open-pencil/vue/controls/node-props'
 import { useOkHCL } from '@open-pencil/vue/controls/okhcl'
+import { useShaderPaintEditing } from '@open-pencil/vue/controls/shader'
 import { useStrokeControls } from '@open-pencil/vue/controls/stroke'
 import { useI18n } from '@open-pencil/vue/i18n'
 import {
@@ -56,6 +57,7 @@ import StrokeSettingsPopover from './StrokeSettingsPopover.vue'
 
 const strokeCtx = useStrokeControls()
 const store = useEditorStore()
+const shaderEditing = useShaderPaintEditing(store)
 const { compact = false } = defineProps<{ compact?: boolean }>()
 const { advancedActive } = strokeCtx
 const { nodes: selectedNodes } = useNodeProps()
@@ -243,6 +245,9 @@ function onToggleSides(nodes: readonly SceneNode[]) {
                     })
                 "
                 @update-shader="store.setShaderPaint(selectedNodeIds, 'strokes', index, $event)"
+                @preview-shader="shaderEditing.update(selectedNodeIds, 'strokes', index, $event)"
+                @commit-shader="shaderEditing.commit"
+                @cancel-shader="shaderEditing.cancel"
                 @update-blend-mode="
                   commitPaintSetting(binding.actions, flush, () =>
                     actions.patch(index, { blendMode: $event })

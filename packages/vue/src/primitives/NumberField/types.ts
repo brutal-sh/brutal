@@ -16,6 +16,8 @@ export interface NumberFieldRootProps {
   step?: number
   /** Multiplier applied to pointer-scrub movement. */
   sensitivity?: number
+  /** Selects an absolute position between finite min/max instead of relative movement. */
+  scrubMode?: 'relative' | 'range'
   /** Text shown when modelValue is mixed. */
   placeholder?: string
   /** Accessible name for the spinbutton. */
