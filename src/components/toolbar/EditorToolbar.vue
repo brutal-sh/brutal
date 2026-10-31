@@ -52,7 +52,7 @@ const actionItems = computed(() =>
 )
 
 const flyoutMenuCls = useMenuUI({
-  content: 'min-w-32 rounded-md border border-menu-border shadow-lg'
+  content: 'min-w-32 rounded-md border border-menu-border shadow-lg md:rounded-lg'
 })
 const toolbarUI = { flyoutContent: flyoutMenuCls.content }
 const { editActions, arrangeActions } = useToolbarActions({ store, getCommand, menu })

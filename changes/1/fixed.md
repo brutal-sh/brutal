@@ -14,3 +14,4 @@
 - Route native Edit → Delete to focused inspector text or canvas text selection, preserving the layer and separating the menu edit from preceding typing for Undo.
 - Canvas text Undo and Redo work while typing, including pending changes on an existing layer with empty document history; Escape exits text editing after using a menu.
 - Gap and padding fields preserve fractional values when displaying and editing layout, including paired and individual padding.
+- Desktop tool flyouts focus the selected tool when opened and use the measured spacing, checks and corners; Primitives import labels follow the reference menu.

@@ -12,7 +12,7 @@ const toolbarTheme = {
       'flex h-8 w-3 cursor-pointer items-center justify-center border-none bg-transparent text-muted transition-colors outline-none data-[state=open]:bg-hover data-[state=open]:text-surface focus-visible:ring-1 focus-visible:ring-panel-focus',
     flyoutTriggerIcon: 'size-2.5',
     flyoutContent: '',
-    flyoutItem: 'h-7 pr-2 pl-1.5 py-0 text-xs',
+    flyoutItem: 'h-7 pr-2 pl-1.5 py-0 text-xs md:cursor-default md:rounded-md',
     flyoutItemIndicator: 'flex size-3 shrink-0 items-center justify-center',
     flyoutItemIcon: 'size-4 text-muted',
     flyoutItemLabel: 'flex-1',
@@ -38,7 +38,8 @@ const toolbarTheme = {
       false: {
         button: 'size-7 shrink-0 rounded-full border border-transparent text-surface',
         flyoutGroup: 'shrink-0 flex-col',
-        flyoutTrigger: 'h-3 w-7 shrink-0 rounded-full hover:bg-hover hover:text-surface'
+        flyoutTrigger: 'h-3 w-7 shrink-0 rounded-full hover:bg-hover hover:text-surface',
+        flyoutItemIndicator: '-mr-1'
       }
     },
     disabled: {

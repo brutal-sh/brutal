@@ -75,6 +75,16 @@ function flyoutItemClass() {
     class: toolbar().flyoutItem({ class: ui?.flyoutItem })
   })
 }
+
+function focusSelectedTool(event: Event) {
+  if (mobile || !(event.target instanceof HTMLElement)) return
+  const selected = event.target.querySelector<HTMLElement>(
+    '[role="menuitemradio"][aria-checked="true"]'
+  )
+  if (!selected) return
+  event.preventDefault()
+  selected.focus({ preventScroll: true })
+}
 </script>
 
 <template>
@@ -108,9 +118,10 @@ function flyoutItemClass() {
       <DropdownMenuPortal>
         <DropdownMenuContent
           :side="mobile ? 'top' : 'right'"
-          :side-offset="8"
+          :side-offset="mobile ? 8 : 10"
           align="start"
           :class="styles.flyoutContent({ class: ui?.flyoutContent })"
+          @open-auto-focus="focusSelectedTool"
           @close-auto-focus="
             (event) => {
               if (store.state.iconPickerOpen) event.preventDefault()
@@ -134,7 +145,7 @@ function flyoutItemClass() {
                   aria-hidden="true"
                 >
                   <DropdownMenuItemIndicator>
-                    <icon-lucide-check class="size-3.5" />
+                    <icon-lucide-check :class="mobile ? 'size-3.5' : 'size-3'" />
                   </DropdownMenuItemIndicator>
                 </span>
                 <component
@@ -146,7 +157,7 @@ function flyoutItemClass() {
                 </span>
                 <AppShortcutText
                   v-if="!mobile && toolShortcuts[sub]"
-                  :ui="{ base: 'text-[11px] tracking-widest' }"
+                  :ui="{ base: 'pl-4 text-[11px] tracking-widest' }"
                 >
                   {{ toolShortcuts[sub] }}
                 </AppShortcutText>
@@ -162,7 +173,7 @@ function flyoutItemClass() {
                 <icon-lucide-smile :class="styles.flyoutItemIcon()" />
                 <span :class="styles.flyoutItemLabel()">Icon</span>
               </DropdownMenuItem>
-              <DropdownMenuSeparator class="my-1 h-px bg-border" />
+              <DropdownMenuSeparator v-if="mobile" class="my-1 h-px bg-border" />
               <DropdownMenuItem
                 :class="flyoutItemClass()"
                 :disabled="store.state.readOnly"
@@ -179,7 +190,7 @@ function flyoutItemClass() {
               >
                 <span :class="styles.flyoutItemIndicator()" aria-hidden="true" />
                 <icon-lucide-figma :class="styles.flyoutItemIcon()" />
-                <span :class="styles.flyoutItemLabel()">Import Figma…</span>
+                <span :class="styles.flyoutItemLabel()">Import Figma</span>
               </DropdownMenuItem>
             </template>
           </MenuScrollArea>

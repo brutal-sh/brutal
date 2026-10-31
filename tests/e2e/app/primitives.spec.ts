@@ -90,7 +90,7 @@ test('Primitives image and Figma imports insert editable layers and preserve Und
       accept: 'image/svg+xml'
     },
     {
-      action: 'Import Figma…',
+      action: 'Import Figma',
       name: 'import.fig',
       mimeType: 'application/octet-stream',
       buffer: fig,

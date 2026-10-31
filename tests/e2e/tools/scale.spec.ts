@@ -55,11 +55,16 @@ test('the Move flyout selects Scale without changing the document', async ({}, t
   await editor.canvas.pressKey('v')
   await editor.page.getByRole('button', { name: 'Move options', exact: true }).click()
   await expect(editor.page.getByRole('menuitemradio', { name: /Scale/ })).toBeVisible()
+  await expect(editor.page.getByRole('menuitemradio', { name: /^Move\b/ })).toBeFocused()
   await editor.page.screenshot({ path: testInfo.outputPath('move-scale-flyout.png') })
   await editor.page.getByRole('menuitemradio', { name: /Scale/ }).click()
   await expect
     .poll(() => scale.state())
     .toMatchObject({ tool: 'SCALE', width: 120, canUndo: false })
+  await editor.page.getByRole('button', { name: 'Move options', exact: true }).click()
+  await expect(editor.page.getByRole('menuitemradio', { name: /^Scale\b/ })).toBeFocused()
+  await editor.page.keyboard.press('Escape')
+  await expect(editor.page.getByRole('button', { name: 'Move options', exact: true })).toBeFocused()
 })
 
 test('Escape during scaling restores the document without an Undo entry', async () => {
