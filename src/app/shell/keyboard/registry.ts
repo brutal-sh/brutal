@@ -28,6 +28,7 @@ import type {
   KeyboardShortcutRunOptions
 } from '@/app/shell/keyboard/types'
 import { appMenuTinykeysShortcut } from '@/app/shell/menu/shortcut'
+import { IS_TAURI } from '@/constants'
 
 type ShortcutAction = (options: KeyboardShortcutRunOptions) => void
 
@@ -51,6 +52,10 @@ function commandShortcut(
 function commandShortcuts(...commands: EditorCommandId[]): ShortcutDefinition[] {
   return commands.flatMap((command) => {
     const shortcut = commandShortcut(command)
+    // Pen's desktop document shortcuts own Cmd/Ctrl+1 and +2; Shift+1/+2 still zoom.
+    if (IS_TAURI && shortcut && (command === 'view.zoomFit' || command === 'view.zoomSelection')) {
+      shortcut.keys = [shortcut.keys].flat().filter((key) => !key.startsWith('$mod+'))
+    }
     return shortcut ? [shortcut] : []
   })
 }
@@ -293,6 +298,15 @@ export function registerKeyboardShortcuts(options: KeyboardShortcutOptions) {
       run: ({ switchAdjacentTab }) => switchAdjacentTab(-1),
       global: true
     },
+    ...(IS_TAURI
+      ? Array.from({ length: 9 }, (_, index) => ({
+          id: `show-document-tab-${index + 1}`,
+          keys: `$mod+Digit${index + 1}`,
+          run: ({ selectDocumentTab }: KeyboardShortcutRunOptions) =>
+            selectDocumentTab(index === 8 ? 'last' : index),
+          global: true
+        }))
+      : []),
     {
       id: 'rename-selection',
       keys: appMenuTinykeysShortcut('selection.rename') ?? '$mod+KeyR',

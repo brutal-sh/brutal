@@ -28,6 +28,8 @@ type NativeTestStore = {
   saveFigFileToPath: EditorStore['saveFigFileToPath']
   openFigFile: EditorStore['openFigFile']
   state: {
+    documentName: string
+    zoom: EditorStore['state']['zoom']
     snappingPreferences: SnappingPreferences
     currentPageId: string
     editingTextId: string | null
@@ -45,6 +47,7 @@ type NativeTestStore = {
   }
   createShape: (type: string, x: number, y: number, width: number, height: number) => string
   requestRender: () => void
+  zoomToLevel: EditorStore['zoomToLevel']
   select: (ids: string[]) => void
   startTextEditing: (id: string) => void
   textEditor?: { selectAll: () => void }

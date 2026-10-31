@@ -14,3 +14,4 @@
 - Add persistent Small, Medium and Large agent transcript text sizes through View and chat settings.
 - Adds snapshot ZIP export for supported editable designs with relocated image and GLSL dependencies, dependency preview and cancellation-safe delivery.
 - Open native File guides for design-to-code and Figma import, check the local MCP server, and reach Open Pen’s CLI setup documentation.
+- Add the macOS Window menu, document-only tab navigation and reordering, and numbered desktop document shortcuts while preserving Shift zoom.

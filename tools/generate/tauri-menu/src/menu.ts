@@ -37,6 +37,7 @@ function cleanGroup(group: AppMenuGroupSchema): unknown | null {
   if (!isNativeVisible(group)) return null
   return {
     label: group.label,
+    macosOnly: group.macosOnly,
     items: compact(group.items.map(cleanEntry))
   }
 }

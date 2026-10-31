@@ -14,10 +14,13 @@ import {
   createTab,
   getActiveStore,
   getTabsSnapshot,
+  moveActiveTab,
   openFileInNewTab,
   showNewTab,
   restoreRecoverySnapshot,
+  selectDocumentTab,
   switchAdjacentTab,
+  switchAdjacentDocumentTab,
   switchTab,
   tabCount,
   withHomePinned,
@@ -214,6 +217,65 @@ describe('openFileInNewTab deduplication', () => {
     const pinned = [home, design]
     expect(withHomePinned(pinned, () => createTab())).toBe(pinned)
     expect(ids(withHomePinned([design, home], () => createTab()))).toEqual([home.id, design.id])
+  })
+
+  test('Window navigation wraps through documents and leaves Home in either direction', () => {
+    createTab()
+    const home = createHomeTab()
+    const documents = getTabsSnapshot().filter((tab) => tab.kind === 'document')
+    const first = expectDefined(documents[0], 'first document')
+    const last = expectDefined(documents.at(-1), 'last document')
+    switchTab(last.id)
+    switchAdjacentDocumentTab(1)
+    expect(getActiveStore()).toBe(first.store)
+    switchAdjacentDocumentTab(-1)
+    expect(getActiveStore()).toBe(last.store)
+    switchTab(home.id)
+    switchAdjacentDocumentTab(1)
+    expect(getActiveStore()).toBe(first.store)
+    switchTab(home.id)
+    switchAdjacentDocumentTab(-1)
+    expect(getActiveStore()).toBe(last.store)
+  })
+
+  test('moves a document without changing its active store and stops at Home and row edges', () => {
+    const first = createTab()
+    const second = createTab()
+    const home = createHomeTab()
+    switchTab(second.id)
+    const before = getTabsSnapshot()
+    moveActiveTab(1)
+    expect(getTabsSnapshot()).toEqual(before)
+    moveActiveTab(-1)
+    expect(getTabsSnapshot().slice(-2)).toEqual([second, first])
+    expect(getActiveStore()).toBe(second.store)
+    moveActiveTab(1)
+    expect(getTabsSnapshot()).toEqual(before)
+    switchTab(home.id)
+    moveActiveTab(1)
+    expect(getTabsSnapshot()).toEqual(before)
+    const firstDocument = expectDefined(before[1], 'document beside Home')
+    switchTab(firstDocument.id)
+    moveActiveTab(-1)
+    expect(getTabsSnapshot()).toEqual(before)
+  })
+
+  test('selects document positions independently of Home and ignores missing positions', () => {
+    const last = createTab()
+    const home = createHomeTab()
+    const first = expectDefined(
+      getTabsSnapshot().find((tab) => tab.kind === 'document'),
+      'first document'
+    )
+    selectDocumentTab(0)
+    expect(getActiveStore()).toBe(first.store)
+    selectDocumentTab('last')
+    expect(getActiveStore()).toBe(last.store)
+    switchTab(home.id)
+    selectDocumentTab(100_000)
+    expect(getActiveStore()).toBe(home.store)
+    selectDocumentTab(-1)
+    expect(getActiveStore()).toBe(home.store)
   })
 
   test('a failed recovery restore closes its tab and keeps the snapshot', async () => {

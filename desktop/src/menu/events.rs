@@ -4,6 +4,11 @@ use tauri::Emitter;
 use tauri::Manager;
 
 pub fn handle_menu_event<R: tauri::Runtime>(app: &tauri::AppHandle<R>, event_id: &str) {
+    #[cfg(target_os = "macos")]
+    if event_id == "window-focus" {
+        crate::system::window::show_main_window(app);
+        return;
+    }
     #[cfg(debug_assertions)]
     if event_id == "dev-tools" {
         if let Some(window) = app.get_webview("main") {

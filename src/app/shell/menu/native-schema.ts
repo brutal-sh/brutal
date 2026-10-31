@@ -62,6 +62,25 @@ export const NATIVE_MENU_SCHEMA: AppMenuGroupSchema[] = [
       { type: 'separator' },
       { id: 'toggle-fullscreen', label: 'Toggle Full Screen' }
     ]
+  },
+  {
+    label: 'Window',
+    macosOnly: true,
+    items: [
+      { id: 'window-minimize', label: 'Minimize' },
+      { id: 'window-zoom', label: 'Zoom' },
+      { type: 'separator' },
+      command('toggle-theme'),
+      { type: 'separator' },
+      command('window-previous-tab'),
+      command('window-next-tab'),
+      command('move-tab-left'),
+      command('move-tab-right'),
+      { type: 'separator' },
+      { id: 'window-front', label: 'Bring All to Front' },
+      { type: 'separator' },
+      { id: 'window-focus', label: 'Window' }
+    ]
   }
 ]
 

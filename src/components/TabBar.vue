@@ -36,7 +36,7 @@ const { overflowing, overflowStart, overflowEnd, scrollTowardHidden } = useScrol
 // or stops overflowing, since the chevron that appears then narrows the visible row. Scrolling
 // alone never triggers it.
 watch(
-  [activeTabId, overflowing],
+  [activeTabId, () => tabs.value.findIndex((tab) => tab.isActive), overflowing],
   () => {
     scroller.value?.querySelector('[data-slot="tab-item"][data-active]')?.scrollIntoView({
       block: 'nearest',

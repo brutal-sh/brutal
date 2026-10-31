@@ -162,5 +162,63 @@
         "label": "Toggle Full Screen"
       }
     ]
+  },
+  {
+    "label": "Window",
+    "macosOnly": true,
+    "items": [
+      {
+        "id": "window-minimize",
+        "label": "Minimize"
+      },
+      {
+        "id": "window-zoom",
+        "label": "Zoom"
+      },
+      {
+        "type": "separator"
+      },
+      {
+        "id": "toggle-theme",
+        "label": "Toggle Light/Dark Mode"
+      },
+      {
+        "type": "separator"
+      },
+      {
+        "id": "window-previous-tab",
+        "label": "Show Previous Tab",
+        "accelerator": "Cmd+Shift+["
+      },
+      {
+        "id": "window-next-tab",
+        "label": "Show Next Tab",
+        "accelerator": "Cmd+Shift+]"
+      },
+      {
+        "id": "move-tab-left",
+        "label": "Move Tab Left",
+        "accelerator": "Ctrl+Shift+PageUp"
+      },
+      {
+        "id": "move-tab-right",
+        "label": "Move Tab Right",
+        "accelerator": "Ctrl+Shift+PageDown"
+      },
+      {
+        "type": "separator"
+      },
+      {
+        "id": "window-front",
+        "label": "Bring All to Front"
+      },
+      {
+        "type": "separator"
+      },
+      {
+        "id": "window-focus",
+        "label": "Window"
+      }
+    ]
   }
 ]

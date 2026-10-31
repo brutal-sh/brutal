@@ -67,10 +67,17 @@ export function useShellMenu() {
     }
   )
 
-  const { setTheme } = useAppTheme()
+  const { setTheme, toggleTheme } = useAppTheme()
   const { updates } = useI18n()
   const actions: Partial<Record<string, () => void>> = {
     ...guideMenuActions,
+    'window-previous-tab': () =>
+      void import('@/app/tabs').then((tabs) => tabs.switchAdjacentDocumentTab(-1)),
+    'window-next-tab': () =>
+      void import('@/app/tabs').then((tabs) => tabs.switchAdjacentDocumentTab(1)),
+    'move-tab-left': () => void import('@/app/tabs').then((tabs) => tabs.moveActiveTab(-1)),
+    'move-tab-right': () => void import('@/app/tabs').then((tabs) => tabs.moveActiveTab(1)),
+    'toggle-theme': toggleTheme,
     'agent-text-small': () => chooseChatSize('small'),
     'agent-text-medium': () => chooseChatSize('medium'),
     'agent-text-large': () => chooseChatSize('large'),

@@ -26,6 +26,7 @@ export type KeyboardShortcutOptions = {
   createTab: () => void
   showHome: () => void
   switchAdjacentTab: (step: 1 | -1) => void
+  selectDocumentTab: (index: number | 'last') => void
 }
 
 export type KeyboardShortcutRunOptions = KeyboardShortcutOptions & {

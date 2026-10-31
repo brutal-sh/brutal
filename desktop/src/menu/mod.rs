@@ -14,6 +14,8 @@ use tauri::menu::PredefinedMenuItem;
 #[derive(Deserialize)]
 struct MenuGroup {
     label: String,
+    #[serde(default, rename = "macosOnly")]
+    macos_only: bool,
     items: Vec<MenuEntry>,
 }
 
@@ -134,6 +136,12 @@ fn build_submenu<R: tauri::Runtime>(
                 "paste" => Some(PredefinedMenuItem::paste(app, Some(label))?),
                 #[cfg(target_os = "macos")]
                 "toggle-fullscreen" => Some(PredefinedMenuItem::fullscreen(app, Some(label))?),
+                #[cfg(target_os = "macos")]
+                "window-minimize" => Some(PredefinedMenuItem::minimize(app, Some(label))?),
+                #[cfg(target_os = "macos")]
+                "window-zoom" => Some(PredefinedMenuItem::maximize(app, Some(label))?),
+                #[cfg(target_os = "macos")]
+                "window-front" => Some(PredefinedMenuItem::bring_all_to_front(app, Some(label))?),
                 _ => None,
             };
             if let Some(item) = native_edit_item {
@@ -224,6 +232,7 @@ fn build_schema_menus<R: tauri::Runtime>(
     let groups: Vec<MenuGroup> = serde_json::from_str(include_str!("../../generated/menu.json"))?;
     groups
         .iter()
+        .filter(|group| !group.macos_only || cfg!(target_os = "macos"))
         .map(|group| build_submenu(app, &group.label, &group.items, build))
         .collect()
 }

@@ -62,6 +62,7 @@ export type AppMenuEntry = AppMenuActionItem | AppMenuSeparatorItem
 
 export interface AppMenuGroupSchema {
   label: string
+  macosOnly?: true
   target?: AppMenuTarget
   paletteIcon?: AppMenuIcon
   items: AppMenuEntry[]
@@ -150,6 +151,35 @@ export const APP_MENU_SCHEMA = [
       // ⌃Tab on every platform, as in Figma's desktop app, so it is not a MOD shortcut.
       { id: 'previous-tab', label: 'Select Previous Tab', accelerator: 'Ctrl+Shift+Tab' },
       { id: 'next-tab', label: 'Select Next Tab', accelerator: 'Ctrl+Tab' },
+      {
+        id: 'window-previous-tab',
+        label: 'Show Previous Tab',
+        target: 'native',
+        handler: 'shell',
+        accelerator: 'Cmd+Shift+['
+      },
+      {
+        id: 'window-next-tab',
+        label: 'Show Next Tab',
+        target: 'native',
+        handler: 'shell',
+        accelerator: 'Cmd+Shift+]'
+      },
+      {
+        id: 'move-tab-left',
+        label: 'Move Tab Left',
+        target: 'native',
+        handler: 'shell',
+        accelerator: 'Ctrl+Shift+PageUp'
+      },
+      {
+        id: 'move-tab-right',
+        label: 'Move Tab Right',
+        target: 'native',
+        handler: 'shell',
+        accelerator: 'Ctrl+Shift+PageDown'
+      },
+      { id: 'toggle-theme', label: 'Toggle Light/Dark Mode', target: 'native', handler: 'shell' },
       // Windows, Linux, and the browser menu; macOS shows it in the application menu instead.
       { type: 'separator' },
       { ...SETTINGS_MENU_ITEM, handler: 'shell' }

@@ -177,6 +177,35 @@ export function switchAdjacentTab(step: 1 | -1): void {
   activateTab(tabs[(index + step + tabs.length) % tabs.length])
 }
 
+/** Window menu navigation wraps between documents; Home is outside that sequence. */
+export function switchAdjacentDocumentTab(step: 1 | -1): void {
+  const documents = tabsRef.value.filter((tab) => tab.kind === 'document')
+  if (!documents.length) return
+  const index = documents.findIndex((tab) => tab.id === activeTabId.value)
+  let next = (index + step + documents.length) % documents.length
+  if (index === -1) next = step === 1 ? 0 : documents.length - 1
+  activateTab(documents[next])
+}
+
+export function selectDocumentTab(index: number | 'last'): void {
+  const documents = tabsRef.value.filter((tab) => tab.kind === 'document')
+  const tab = index === 'last' ? documents.at(-1) : documents[index]
+  if (tab) activateTab(tab)
+}
+
+export function moveActiveTab(step: 1 | -1): void {
+  const tabs = [...tabsRef.value]
+  const index = tabs.findIndex((tab) => tab.id === activeTabId.value)
+  const neighborIndex = index + step
+  if (index === -1 || neighborIndex < 0 || neighborIndex >= tabs.length) return
+  const tab = tabs[index]
+  const neighbor = tabs[neighborIndex]
+  if (tab.kind !== 'document' || neighbor.kind !== 'document') return
+  tabs[index] = neighbor
+  tabs[neighborIndex] = tab
+  tabsRef.value = tabs
+}
+
 function disposeTabStore(store: EditorStore): void {
   coverThumbnailListeners.get(store)?.()
   coverThumbnailListeners.delete(store)

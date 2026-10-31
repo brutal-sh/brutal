@@ -17,6 +17,7 @@ import {
   createHomeTab,
   createTab,
   switchAdjacentTab,
+  selectDocumentTab,
   activeTab as activeTabRef
 } from '@/app/tabs'
 
@@ -52,6 +53,7 @@ export function useKeyboard() {
     },
     createTab: () => createTab(),
     showHome: () => createHomeTab(),
-    switchAdjacentTab
+    switchAdjacentTab,
+    selectDocumentTab
   })
 }
