@@ -170,10 +170,25 @@
       "import": "./dist/node/fs.js",
       "default": "./dist/node/fs.js"
     },
+    "./validation/structured-data": {
+      "types": "./dist/validation/structured-data.d.ts",
+      "import": "./dist/validation/structured-data.js",
+      "default": "./dist/validation/structured-data.js"
+    },
+    "./scripts/limits": {
+      "types": "./dist/scripts/limits.d.ts",
+      "import": "./dist/scripts/limits.js",
+      "default": "./dist/scripts/limits.js"
+    },
     "./scripts/header": {
       "types": "./dist/scripts/header.d.ts",
       "import": "./dist/scripts/header.js",
       "default": "./dist/scripts/header.js"
+    },
+    "./scripts/references": {
+      "types": "./dist/scripts/references.d.ts",
+      "import": "./dist/scripts/references.js",
+      "default": "./dist/scripts/references.js"
     },
     "./scripts/syntax": {
       "types": "./dist/scripts/syntax.d.ts",

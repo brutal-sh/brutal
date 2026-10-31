@@ -207,6 +207,9 @@ function syncInstancesOf(
   try {
     groupCopyRemovals(graph, (removals) => {
       for (const instance of instances) {
+        // Derived reference instances are replaced only after the Script validates its new output.
+        if (instance.parentId && graph.closest(instance.parentId, (node) => !!scriptOfNode(node)))
+          continue
         const enclosing = enclosingInstanceOverrideFields(graph, instance)
         enclosing.push(new Set(instance.instanceOverrides.self.keys()))
         const protectedField = bindingProtection(enclosing)

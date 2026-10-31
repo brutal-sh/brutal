@@ -18,6 +18,7 @@ import { withGeneratedFrameSize } from './generated'
 import * as HitTest from './hit-test'
 import { generateId } from './ids'
 import * as Instances from './instances'
+import { remapInstanceOverrideState } from './instances/overrides'
 import { LayoutWrites } from './layout/writes'
 import Matrix from './matrix'
 import { CONTAINER_TYPES, createDefaultNode } from './node-defaults'
@@ -729,24 +730,40 @@ export class SceneGraph {
   cloneTree(
     sourceId: string,
     parentId: string,
-    overrides: Partial<SceneNode> = {}
+    overrides: Partial<SceneNode> = {},
+    sourceGraph: SceneGraph = this
   ): SceneNode | null {
-    const src = this.nodes.get(sourceId)
-    if (!src) return null
-
-    const props = cloneNodeProps(src, null)
-    // Null out Figma source identifiers so the clone is treated as local.
-    if (props.source) props.source = { ...props.source, id: null, orderKey: null }
-    // A copy is a new design nobody has reviewed: Figma's duplicate and clone() drop the status.
-    props.status = null
-    const clone = this.createNode(src.type, parentId, { ...props, ...overrides })
-    if (src.status) markSourceFieldsEdited(clone, ['status'])
-
-    for (const childId of src.childIds) {
-      this.cloneTree(childId, clone.id)
+    if (sourceGraph === this && this.isDescendant(parentId, sourceId)) return null
+    const copies = new Map<string, SceneNode>()
+    const copy = (
+      id: string,
+      parent: string,
+      changes: Partial<SceneNode> = {}
+    ): SceneNode | null => {
+      const src = sourceGraph.nodes.get(id)
+      if (!src) return null
+      const props = cloneNodeProps(src, null)
+      // A clone is local and has not been reviewed.
+      if (props.source) props.source = { ...props.source, id: null, orderKey: null }
+      props.status = null
+      const clone = this.createNode(src.type, parent, { ...props, ...changes })
+      if (src.status) markSourceFieldsEdited(clone, ['status'])
+      copies.set(id, clone)
+      for (const childId of src.childIds) copy(childId, clone.id)
+      return clone
     }
-
-    return clone
+    const root = copy(sourceId, parentId, overrides)
+    for (const node of copies.values()) {
+      if (!node.instanceOverrides.self.size && !node.instanceOverrides.descendants.size) continue
+      this.updateNode(node.id, {
+        instanceOverrides: remapInstanceOverrideState(node.instanceOverrides, {
+          node: (id) => copies.get(id)?.id ?? id,
+          component: (id) => id,
+          variable: (id) => id
+        })
+      })
+    }
+    return root
   }
 
   createInstance(

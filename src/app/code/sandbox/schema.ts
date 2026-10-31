@@ -22,6 +22,7 @@ export const SANDBOX_RESULT = 'open-pencil-design-jsx-result'
 const runRequestEntries = {
   id: v.string(),
   code: v.string(),
+  allowScriptReferences: v.optional(v.boolean()),
   canvasScript: v.optional(
     v.object({
       width: v.pipe(v.number(), v.finite(), v.minValue(0)),

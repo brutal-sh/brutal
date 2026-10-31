@@ -266,7 +266,7 @@ const { panels } = useI18n()
 
       <TextContentSection v-if="node.type === 'TEXT'" :node-id="node.id" />
       <StatusSection v-if="advanced" />
-      <ComponentPropertiesSection v-if="node.type === 'INSTANCE'" />
+      <ComponentPropertiesSection v-if="node.type === 'INSTANCE' && !scriptOfNode(node)" />
       <VariantAuthoringSection
         v-if="
           node.type === 'COMPONENT_SET' ||
@@ -276,8 +276,8 @@ const { panels } = useI18n()
         "
       />
 
-      <ComponentPropertyListSection />
-      <SlotAuthoringSection />
+      <ComponentPropertyListSection v-if="!scriptOfNode(node)" />
+      <SlotAuthoringSection v-if="!scriptOfNode(node)" />
       <ContextSection :key="node.id" :node-id="node.id" />
       <BehaviourPanel
         v-if="(node.type === 'COMPONENT' && !scriptOfNode(node)) || node.type === 'COMPONENT_SET'"

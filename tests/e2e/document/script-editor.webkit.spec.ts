@@ -409,3 +409,147 @@ test('reusable Script inspector edits, detachment and conversion preserve linked
   await page.evaluate((id) => window.openPencil?.getStore?.().select([id]), instanceId)
   await expect.poll(async () => (await generated(page))?.children.length).toBe(2)
 })
+
+test('Script reference input chooses component thumbnails, supports keys and restores through Undo', async ({
+  page
+}, testInfo) => {
+  const canvas = await create(page)
+  const targets = await page.evaluate(() => {
+    const store = window.openPencil?.getStore?.()
+    if (!store) throw new Error('Missing editor')
+    return ['Reference blue', 'Reference green'].map(
+      (name, index) =>
+        store.graph.createNode('COMPONENT', store.state.currentPageId, {
+          name,
+          x: 20 + index * 70,
+          y: 20,
+          width: 60,
+          height: 40,
+          fills: [
+            { type: 'SOLID', color: { r: 0, g: index, b: 1, a: 1 }, opacity: 1, visible: true }
+          ]
+        }).id
+    )
+  })
+  await chooseSource(
+    page,
+    `/** @schema 2.21\n * @input target: ref\n */\nreturn [{type:'rectangle',name:pencil.input.target || 'No reference',width:120,height:80,fill:'#2E6FF2'}];`
+  )
+  await expect.poll(async () => (await generated(page))?.children[0]?.name).toBe('No reference')
+  const field = page
+    .getByRole('region', { name: 'Script', exact: true })
+    .getByRole('combobox', { name: 'target', exact: true })
+  await expect(field).toHaveText('None')
+  await field.click()
+  const blue = page.getByRole('option', { name: 'Reference blue', exact: true })
+  await expect(blue).toBeVisible()
+  await expect(blue).toBeFocused()
+  await expect(blue.locator('img')).toBeVisible()
+  await expect(page.getByRole('dialog', { name: 'target', exact: true })).toHaveCSS('opacity', '1')
+  await page.screenshot({ path: testInfo.outputPath('script-reference-picker.png') })
+  await page.keyboard.press('ArrowRight')
+  await page.keyboard.press('Enter')
+  await expect(field).toHaveText('Reference green')
+  await expect.poll(async () => (await generated(page))?.children[0]?.name).toBe(targets[1])
+  await canvas.undo()
+  await expect(field).toHaveText('None')
+  await expect.poll(async () => (await generated(page))?.children[0]?.name).toBe('No reference')
+  await canvas.redo()
+  await expect(field).toHaveText('Reference green')
+  await field.click()
+  await page.keyboard.press('Escape')
+  await expect(page.getByRole('option', { name: 'Reference green', exact: true })).toHaveCount(0)
+  await expect(field).toBeFocused()
+})
+
+test('returned Script reference renders its component, follows source edits and converts with its link', async ({
+  page
+}) => {
+  const canvas = await create(page)
+  const script = (await generated(page))?.id
+  if (!script) throw new Error('Missing Script')
+  const target = await page.evaluate(() => {
+    const store = window.openPencil?.getStore?.()
+    if (!store) throw new Error('Missing editor')
+    return store.graph.createNode('COMPONENT', store.state.currentPageId, {
+      name: 'Reference render target',
+      x: 20,
+      y: 20,
+      width: 60,
+      height: 40,
+      fills: [
+        {
+          type: 'SOLID',
+          color: { r: 46 / 255, g: 111 / 255, b: 242 / 255, a: 1 },
+          opacity: 1,
+          visible: true
+        }
+      ]
+    }).id
+  })
+  await chooseSource(
+    page,
+    `/** @schema 2.21\n * @input target: ref\n */\nreturn pencil.input.target ? [{type:'ref',name:'Generated reference',ref:pencil.input.target,x:12,y:20,width:120,height:80}] : [];`
+  )
+  const field = page
+    .getByRole('region', { name: 'Script', exact: true })
+    .getByRole('combobox', { name: 'target', exact: true })
+  await field.click()
+  await page.getByRole('option', { name: 'Reference render target', exact: true }).click()
+  await expect
+    .poll(async () => (await generated(page))?.children[0])
+    .toMatchObject({
+      type: 'INSTANCE',
+      width: 120,
+      height: 80,
+      x: 12,
+      y: 20,
+      color: { r: 46 / 255, g: 111 / 255, b: 242 / 255 }
+    })
+  expect(await canvas.screenshotCanvasRegion(650, 500)).toMatchSnapshot(
+    'script-reference-render.png',
+    { maxDiffPixelRatio: 0, threshold: 0 }
+  )
+  await page.evaluate((id) => {
+    const store = window.openPencil?.getStore?.()
+    store?.updateNodeWithUndo(id, {
+      fills: [{ type: 'SOLID', color: { r: 1, g: 0, b: 0, a: 1 }, opacity: 1, visible: true }]
+    })
+  }, target)
+  await expect
+    .poll(async () => (await generated(page))?.children[0]?.color)
+    .toMatchObject({ r: 1, g: 0, b: 0 })
+  await expect(page.getByRole('region', { name: 'Script', exact: true })).toHaveAttribute(
+    'aria-busy',
+    'false'
+  )
+  const beforeExport = await page.evaluate(async (id) => {
+    const store = window.openPencil?.getStore?.()
+    const bytes = await store?.renderExportImage([id], 1, 'PNG', store.state.currentPageId)
+    return bytes ? Array.from(bytes) : null
+  }, script)
+  await page.getByRole('button', { name: 'Convert to layers', exact: true }).click()
+  await expect(page.getByRole('textbox', { name: 'Script file', exact: true })).toHaveCount(0)
+  const converted = await generated(page)
+  expect(converted?.children[0]).toMatchObject({ type: 'INSTANCE', width: 120, height: 80 })
+  if (!converted) throw new Error('Missing converted frame')
+  const afterExport = await page.evaluate(async (id) => {
+    const store = window.openPencil?.getStore?.()
+    const bytes = await store?.renderExportImage([id], 1, 'PNG', store.state.currentPageId)
+    return bytes ? Array.from(bytes) : null
+  }, converted.id)
+  expect(beforeExport).not.toBeNull()
+  expect(afterExport).toEqual(beforeExport)
+  const instance = converted?.children[0].id
+  if (!instance) throw new Error('Missing converted reference')
+  await page.evaluate((id) => window.openPencil?.getStore?.().select([id]), instance)
+  await page.getByTestId('instance-go-to-main').click()
+  await expect.poll(async () => (await generated(page))?.id).toBe(target)
+  await canvas.undo()
+  await page.evaluate((id) => window.openPencil?.getStore?.().select([id]), script)
+  await expect(field).toHaveText('Reference render target')
+  await expect
+    .poll(async () => (await generated(page))?.children[0]?.color)
+    .toMatchObject({ r: 1, g: 0, b: 0 })
+  canvas.assertNoErrors()
+})

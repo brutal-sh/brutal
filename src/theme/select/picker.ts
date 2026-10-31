@@ -43,6 +43,17 @@ const appPickerTheme = {
     },
     layout: {
       list: {},
+      cards: {
+        content: 'w-60',
+        header: 'hidden',
+        list: 'p-4',
+        group: 'grid grid-cols-2 gap-4',
+        item: 'flex-col items-start gap-1.5 p-0',
+        leading: 'size-24 border-0 bg-transparent',
+        text: 'w-24 flex-none',
+        label: 'text-[10px]',
+        check: 'hidden'
+      },
       /** Thumbnails alone, named in the footer as they are highlighted, for browsing many. */
       grid: {
         // A fixed height keeps the picker still while results arrive and leaves room below its

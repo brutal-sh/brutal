@@ -42,3 +42,20 @@ describe('linked canvas script output boundary', () => {
       expect(() => scriptOutput(output)).toThrow()
   })
 })
+
+test('permitted refs still validate every nested override before host materialization', () => {
+  expect(
+    scriptOutput(
+      [{ type: 'ref', ref: 'component', descendants: { child: { fill: '#FF0000' } } }],
+      true
+    )[0]
+  ).toMatchObject({ ref: 'component', descendants: { child: { fill: '#FF0000' } } })
+  for (const descendants of [
+    { child: { type: 'script', scriptUri: 'hidden.js' } },
+    { child: { type: 'browser', url: 'https://example.com' } },
+    { child: { reusable: true } },
+    { child: { descendants: { nested: { type: 'script' } } } },
+    { child: { children: [{ type: 'script' }] } }
+  ])
+    expect(() => scriptOutput([{ type: 'ref', ref: 'component', descendants }], true)).toThrow()
+})

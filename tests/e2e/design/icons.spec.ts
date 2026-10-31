@@ -66,7 +66,8 @@ function layerRow(page: Page, name: string) {
 }
 
 async function insertSquare(page: Page) {
-  await page.getByRole('button', { name: 'Insert icon' }).click()
+  await page.getByRole('button', { name: 'Primitives', exact: true }).click()
+  await page.getByRole('menuitem', { name: 'Icon', exact: true }).click()
   await pick(page, 'Insert icon', 'shape', 'square')
   await expect(propertyField(page, 'icon-name')).toContainText('square')
 }
@@ -137,7 +138,8 @@ test('the Icon section recolors the icon', async () => {
 
 test('a chosen set is browsed without a query, and a query searches only it', async () => {
   const { page } = ctx
-  await page.getByRole('button', { name: 'Insert icon' }).click()
+  await page.getByRole('button', { name: 'Primitives', exact: true }).click()
+  await page.getByRole('menuitem', { name: 'Icon', exact: true }).click()
   const dialog = page.getByRole('dialog', { name: 'Insert icon' })
   await dialog.getByRole('button', { name: 'Icon set' }).click()
   await page.getByRole('option', { name: /Test Icons/ }).click()
@@ -157,7 +159,8 @@ test('a chosen set is browsed without a query, and a query searches only it', as
 test('icons in the file and picked lately come first', async () => {
   const { page, canvas } = ctx
   await insertSquare(page)
-  await page.getByRole('button', { name: 'Insert icon' }).click()
+  await page.getByRole('button', { name: 'Primitives', exact: true }).click()
+  await page.getByRole('menuitem', { name: 'Icon', exact: true }).click()
   const dialog = page.getByRole('dialog', { name: 'Insert icon' })
   await expect(
     dialog.getByRole('group', { name: 'In this file' }).getByRole('option', { name: 'square' })
@@ -169,7 +172,8 @@ test('icons in the file and picked lately come first', async () => {
   // With the icon gone from the file, it is still among the recent ones.
   await canvas.clearCanvas()
   expect(await getPageChildren(page)).toEqual([])
-  await page.getByRole('button', { name: 'Insert icon' }).click()
+  await page.getByRole('button', { name: 'Primitives', exact: true }).click()
+  await page.getByRole('menuitem', { name: 'Icon', exact: true }).click()
   await expect(
     dialog.getByRole('group', { name: 'Recent' }).getByRole('option', { name: 'square' })
   ).toBeVisible()
@@ -180,6 +184,7 @@ test('icons in the file and picked lately come first', async () => {
 test('an edited icon says so, asks before a swap discards the edit, and resets or detaches', async () => {
   const { page } = ctx
   await insertSquare(page)
+  await page.getByRole('tab', { name: 'Layers', exact: true }).click()
   // Rotate the icon's path, as someone editing its artwork would, then select the icon again.
   const iconRow = layerRow(page, 'square')
   await iconRow.locator('[data-slot="disclosure"]').click()

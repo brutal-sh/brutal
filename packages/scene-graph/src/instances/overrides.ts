@@ -109,6 +109,8 @@ export function cloneInstanceOverrideState(state: InstanceOverrideState): Instan
 export interface InstanceOverrideReferenceMapper {
   node: (id: string) => string
   variable: (id: string) => string
+  /** Clones can retain their original component links while remapping copied layer targets. */
+  component?: (id: string) => string
 }
 
 /** Remap runtime identities only; ordinary strings and source-format payloads stay opaque. */
@@ -118,7 +120,8 @@ export function remapInstanceOverrideState(
 ): InstanceOverrideState {
   const remapValue = (field: string, value: unknown): unknown => {
     if (typeof value !== 'string') return structuredClone(value)
-    if (field === 'componentId' || field === 'sourceComponentId') return references.node(value)
+    if (field === 'componentId' || field === 'sourceComponentId')
+      return (references.component ?? references.node)(value)
     if (overriddenBindingField(field) !== null) return references.variable(value)
     return value
   }

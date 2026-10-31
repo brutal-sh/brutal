@@ -14,3 +14,6 @@
 - Converting a Script now replaces it with a new editable frame at the same sibling position, preserving Context and geometry, restoring the original Script on Undo and the same converted IDs on Redo. Fixed component-instance structure is protected; slot ownership changes share the conversion history step.
 
 - Reusable Scripts retain linked instances with independent source and input overrides; detaching or converting the main preserves standalone instance Scripts, including Undo/Redo and uploaded-source regeneration.
+
+- Pick Script component references from keyboard-accessible thumbnails, regenerate bounded linked output when dependencies change, and preserve links through conversion and save/reopen. Keep sandbox validation strict while accepting absent optional internal paint fields after reopen.
+- Preserve the icon picker when a closing workspace menu returns focus, and omit unrelated Figma component controls from Script inspectors.

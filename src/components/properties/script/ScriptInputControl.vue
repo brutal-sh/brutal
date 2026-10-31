@@ -16,6 +16,8 @@ import PanelFieldGroup from '@/components/ui/panel/PanelFieldGroup.vue'
 import AppSelect from '@/components/ui/select/AppSelect.vue'
 import AppCheckbox from '@/components/ui/toggle/AppCheckbox.vue'
 
+import ScriptReferenceInput from './ScriptReferenceInput.vue'
+
 const { nodeId, input } = defineProps<{ nodeId: string; input: ScriptInput }>()
 const store = useEditorStore()
 const preview = useNodePreview(store)
@@ -145,6 +147,14 @@ function cancel() {
         @cancel="cancel"
       />
     </div>
+    <ScriptReferenceInput
+      v-else-if="input.type === 'ref'"
+      :node-id="nodeId"
+      :label="input.name"
+      :model-value="String(value)"
+      :disabled="!editable"
+      @update:model-value="setValue"
+    />
     <AppTextarea
       v-else
       :model-value="String(value)"

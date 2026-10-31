@@ -1,6 +1,7 @@
+import { validateStructuredData } from '@open-pencil/core/validation/structured-data'
+
 import type { SandboxRunRequest, SandboxRunResult } from '@/app/code/sandbox/schema'
 import type { DesignJSXHelperDescriptor } from '@/app/code/sandbox/types'
-import { validateStructuredData } from '@/app/code/sandbox/validate'
 import { runCanvasScript } from '@/app/document/scripts/run'
 
 type Element = {
@@ -107,9 +108,19 @@ export function runDesignJSX({
   elements,
   helpers,
   limits,
-  canvasScript
+  canvasScript,
+  allowScriptReferences
 }: SandboxRunRequest): SandboxRunResult {
-  if (canvasScript) return runCanvasScript({ id, code, canvasScript, elements, helpers, limits })
+  if (canvasScript)
+    return runCanvasScript({
+      id,
+      code,
+      canvasScript,
+      allowScriptReferences,
+      elements,
+      helpers,
+      limits
+    })
   try {
     const tags = elementTags(elements)
     const names = Object.keys(tags)

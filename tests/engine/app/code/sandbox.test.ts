@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'bun:test'
 
+import { validateDesignJSXOutput } from '@open-pencil/core/validation/structured-data'
 import { isLayerRef, isMode, isVariable } from '@open-pencil/design-jsx'
 
 import { convertDesignJSXRoots } from '@/app/code/sandbox/convert'
@@ -13,7 +14,6 @@ import {
   DESIGN_JSX_MAX_STRING_LENGTH,
   resolveDesignJSXValidationLimits
 } from '@/app/code/sandbox/types'
-import { validateDesignJSXOutput } from '@/app/code/sandbox/validate'
 import { runDesignJSX } from '@/app/code/sandbox/worker/run'
 
 const limits = resolveDesignJSXValidationLimits({})
@@ -65,6 +65,15 @@ describe('Design JSX sandbox output', () => {
     Object.defineProperty(blocked, 'constructor', { value: 'blocked', enumerable: true })
     expect(() => validateDesignJSXOutput(frame(blocked), limits)).toThrow('blocked key')
     expect(() => validateDesignJSXOutput(frame({ value: new Date() }), limits)).toThrow(
+      'plain structured data only'
+    )
+  })
+
+  test('rejects undefined record properties and array entries from sandbox output', () => {
+    expect(() => validateDesignJSXOutput(frame({ optional: undefined }), limits)).toThrow(
+      'plain structured data only'
+    )
+    expect(() => validateDesignJSXOutput(frame({}, [undefined]), limits)).toThrow(
       'plain structured data only'
     )
   })

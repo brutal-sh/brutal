@@ -4,6 +4,7 @@ import { shallowReactive, watch } from 'vue'
 import type { Editor } from '@open-pencil/core'
 import type { IORegistry } from '@open-pencil/core/io'
 import { parseScriptHeader, type ScriptInput } from '@open-pencil/core/scripts/header'
+import { scriptReferenceDocument } from '@open-pencil/core/scripts/references'
 import {
   markScriptOutputCurrent,
   scriptOfNode,
@@ -51,6 +52,7 @@ export function createScriptRuntime(editor: Editor, io: IORegistry, options: Scr
     options.watchSource ?? ((path, changed) => watchTauriFile(path, () => 0, changed))
   const states = shallowReactive(new Map<string, ScriptRuntimeState>())
   const runs = new Map<string, ScriptRun>()
+  const references = new Map<string, Set<string>>()
   const sources = new Map<string, ScriptSource>()
   const selectedFiles = new Set<string>()
   const uploads = new Map<string, Map<string, string>>()
@@ -143,20 +145,20 @@ export function createScriptRuntime(editor: Editor, io: IORegistry, options: Scr
         size.width,
         size.height,
         definition.inputs,
-        run.controller.signal
+        run.controller.signal,
+        true
       )
       if (!current()) return
       if (!result.ok) throw new Error(result.error)
+      const dependencies = new Set<string>()
+      references.set(id, dependencies)
+      const context = scriptReferenceDocument(graph, id, result.nodes, dependencies)
       const document = await io.readDocument({
         name: 'script-output.pen',
-        data: new TextEncoder().encode(
-          JSON.stringify({
-            version: '2.21',
-            children: result.nodes
-          })
-        )
+        data: new TextEncoder().encode(JSON.stringify(context.penDocument))
       })
       if (!current()) return
+      if (context.dependencyId) document.graph.deleteNode(context.dependencyId)
       options.adoptChanges(() => editor.replaceScriptOutput(id, definition, size, document.graph))
       states.set(id, { loading: false, definitions: result.definitions })
     } catch (error) {
@@ -253,6 +255,7 @@ export function createScriptRuntime(editor: Editor, io: IORegistry, options: Scr
     const run: ScriptRun = { controller: new AbortController(), key }
     runs.set(id, run)
     if (!definition.uri) {
+      references.delete(id)
       states.set(id, { loading: false, definitions: [] })
       void renderEmpty(id, definition, run).catch((error) => {
         if (!disposed && runs.get(id) === run)
@@ -277,21 +280,49 @@ export function createScriptRuntime(editor: Editor, io: IORegistry, options: Scr
     states.clear()
     refresh()
   }
-  const stopCreated = editor.onEditorEvent('node:created', (node) => schedule(node.id))
+  function refreshReferences(id: string) {
+    if (editor.graph.isApplyingImportedState) return
+    for (const [owner, dependencies] of references)
+      if (
+        owner !== id &&
+        (dependencies.has(id) || editor.graph.closest(id, (node) => dependencies.has(node.id)))
+      )
+        schedule(owner, true)
+  }
+  const stopCreated = editor.onEditorEvent('node:created', (node) => {
+    schedule(node.id)
+    refreshReferences(node.id)
+    if (node.parentId) refreshReferences(node.parentId)
+  })
   const stopUpdated = editor.onEditorEvent('node:updated', (id, changes) => {
+    refreshReferences(id)
     if ('pluginData' in changes || 'width' in changes || 'height' in changes || 'type' in changes)
       schedule(id)
   })
+  const refreshStructure = (id: string, oldParent: string | null, newParent: string) => {
+    refreshReferences(id)
+    if (oldParent) refreshReferences(oldParent)
+    refreshReferences(newParent)
+  }
+  const stopReparented = editor.onEditorEvent('node:reparented', refreshStructure)
+  const stopReordered = editor.onEditorEvent('node:reordered', (id, parent, _index, previous) =>
+    refreshStructure(id, previous, parent)
+  )
   const stopPreview = editor.onEditorEvent('node:previewUpdated', (id, changes) => {
+    refreshReferences(id)
     if ('width' in changes || 'height' in changes || 'pluginData' in changes) schedule(id)
   })
-  const stopDeleted = editor.onEditorEvent('node:deleted', (id) => {
+  const stopDeleted = editor.onEditorEvent('node:deleted', (id, parentId) => {
+    refreshReferences(id)
+    if (parentId) refreshReferences(parentId)
+    references.delete(id)
     cancel(id)
     states.delete(id)
   })
   const stopGraph = editor.onEditorEvent('graph:replaced', () => {
     uploads.clear()
     inheritedUploads.clear()
+    references.clear()
     selectedFiles.clear()
     reset()
   })
@@ -340,6 +371,8 @@ export function createScriptRuntime(editor: Editor, io: IORegistry, options: Scr
       stopCreated()
       stopUpdated()
       stopPreview()
+      stopReparented()
+      stopReordered()
       stopDeleted()
       stopGraph()
       stopPath()
@@ -350,6 +383,7 @@ export function createScriptRuntime(editor: Editor, io: IORegistry, options: Scr
       selectedFiles.clear()
       uploads.clear()
       inheritedUploads.clear()
+      references.clear()
     }
   }
 }

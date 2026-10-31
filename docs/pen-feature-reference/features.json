@@ -746,7 +746,7 @@
           "acceptance": "Change each input; verify clamp/options/component selection and refreshed output.",
           "status": "partial",
           "evidence": ["docs/SCRIPT-PARITY.md"],
-          "evidence_note": "Five scalar controls have browser evidence, native numeric edit/Undo executed; ref/component input remains."
+          "evidence_note": "Scalar controls and ref thumbnail selection have Chromium/WebKit evidence; physical native ref pick/save/reopen/convert/main-component navigation passed. Variable/theme binding and exact visual states remain open."
         },
         {
           "id": "SCRIPT-03",

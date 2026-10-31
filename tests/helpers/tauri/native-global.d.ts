@@ -15,6 +15,7 @@ type NativeTestNode = {
   id: string
   name?: string
   parentId?: string | null
+  componentId?: string | null
   type: string
   text?: string
   width?: number

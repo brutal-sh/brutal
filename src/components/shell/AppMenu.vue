@@ -135,7 +135,16 @@ const { overflowStart, overflowEnd, scrollTowardHidden } = useScrollOverflow(men
             </MenubarTrigger>
 
             <MenubarPortal>
-              <MenubarContent :side-offset="4" align="start" :class="mainMenuCls.content">
+              <MenubarContent
+                :side-offset="4"
+                align="start"
+                :class="mainMenuCls.content"
+                @close-auto-focus="
+                  (event) => {
+                    if (store.state.iconPickerOpen) event.preventDefault()
+                  }
+                "
+              >
                 <MenuScrollArea>
                   <template v-for="(item, i) in menu.items" :key="i">
                     <MenubarSeparator v-if="isMenuSeparator(item)" :class="menuCls.separator" />

@@ -1,4 +1,11 @@
-import type { DesignJSXValidationLimits } from '@/app/code/sandbox/schema'
+export interface StructuredDataLimits {
+  outputBytes: number
+  elements: number
+  depth: number
+  arrayLength: number
+  objectKeys: number
+  stringLength: number
+}
 
 const BLOCKED_KEYS = new Set(['__proto__', 'prototype', 'constructor'])
 
@@ -15,14 +22,14 @@ function isPlainRecord(value: unknown): value is PlainRecord {
   return prototype === Object.prototype || prototype === null
 }
 
-function addBytes(state: ValidationState, limits: DesignJSXValidationLimits, bytes: number): void {
+function addBytes(state: ValidationState, limits: StructuredDataLimits, bytes: number): void {
   state.bytes += bytes
   if (state.bytes > limits.outputBytes) throw new Error('Design JSX output is too large.')
 }
 
 function validatePrimitive(
   value: unknown,
-  limits: DesignJSXValidationLimits,
+  limits: StructuredDataLimits,
   state: ValidationState
 ): boolean {
   if (value === null) {
@@ -50,9 +57,10 @@ function validatePrimitive(
 
 function validateRecord(
   record: PlainRecord,
-  limits: DesignJSXValidationLimits,
+  limits: StructuredDataLimits,
   state: ValidationState,
-  depth: number
+  depth: number,
+  allowUndefinedProperties: boolean
 ): void {
   const keys = Object.keys(record)
   addBytes(state, limits, 2 + Math.max(0, keys.length - 1))
@@ -68,16 +76,18 @@ function validateRecord(
       throw new Error('Design JSX output has too many elements.')
   }
   for (const [key, item] of Object.entries(record)) {
+    if (item === undefined && allowUndefinedProperties) continue
     addBytes(state, limits, key.length)
-    validateValue(item, limits, state, depth + 1)
+    validateValue(item, limits, state, depth + 1, allowUndefinedProperties)
   }
 }
 
 function validateValue(
   value: unknown,
-  limits: DesignJSXValidationLimits,
+  limits: StructuredDataLimits,
   state: ValidationState,
-  depth: number
+  depth: number,
+  allowUndefinedProperties: boolean
 ): void {
   if (depth > limits.depth) throw new Error('Design JSX output is too deeply nested.')
   if (validatePrimitive(value, limits, state)) return
@@ -86,29 +96,31 @@ function validateValue(
     if (value.length > limits.arrayLength) {
       throw new Error('Design JSX output contains an array that is too long.')
     }
-    for (const item of value) validateValue(item, limits, state, depth + 1)
+    for (const item of value)
+      validateValue(item, limits, state, depth + 1, allowUndefinedProperties)
     return
   }
   if (!isPlainRecord(value)) {
     throw new Error('Design JSX output must contain plain structured data only.')
   }
-  validateRecord(value, limits, state, depth)
+  validateRecord(value, limits, state, depth, allowUndefinedProperties)
 }
 
 /** Check that `value` is plain structured data within `limits`, counting it toward `state`. */
 export function validateStructuredData(
   value: unknown,
-  limits: DesignJSXValidationLimits,
-  state: ValidationState = { elements: 0, bytes: 0 }
+  limits: StructuredDataLimits,
+  state: ValidationState = { elements: 0, bytes: 0 },
+  allowUndefinedProperties = false
 ): ValidationState {
-  validateValue(value, limits, state, 0)
+  validateValue(value, limits, state, 0, allowUndefinedProperties)
   return state
 }
 
 /** The roots a run returned, checked with the collections its `defineVars` calls wrote. */
 export function validateDesignJSXOutput(
   value: unknown,
-  limits: DesignJSXValidationLimits,
+  limits: StructuredDataLimits,
   collections: unknown = []
 ): unknown[] {
   if (value === undefined) throw new Error('Design JSX must return an OpenPencil element.')

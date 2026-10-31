@@ -30,7 +30,7 @@ export interface AppPickerProps {
    * `grid` shows each item's thumbnail alone, eight to a row, with the highlighted item's label
    * passed to the footer; for browsing many items by sight, such as icons.
    */
-  layout?: 'list' | 'grid'
+  layout?: 'list' | 'grid' | 'cards'
   /** More items follow the shown ones; scrolling near the end emits `loadMore`. */
   hasMore?: boolean
   /** The items are on their way: placeholders stand in for them, and `emptyLabel` is announced. */
@@ -159,11 +159,12 @@ const listbox = useTemplateRef<{ highlightItem: (value: AcceptableValue) => void
 // start at the first item.
 function moveRow(event: KeyboardEvent) {
   const rows = ROW_KEYS.get(event.key)
-  if (layout !== 'grid' || !rows) return
+  if (layout === 'list' || !rows) return
   event.preventDefault()
   const current = highlighted.value?.value
   const index = matches.value.findIndex((item) => item.value === current)
-  const target = index === -1 ? 0 : index + rows * APP_PICKER_GRID_COLUMNS
+  const target =
+    index === -1 ? 0 : index + rows * (layout === 'cards' ? 2 : APP_PICKER_GRID_COLUMNS)
   const next = matches.value[clamp(target, 0, matches.value.length - 1)]
   if (next) listbox.value?.highlightItem(next.value)
 }
@@ -177,6 +178,16 @@ useInfiniteScroll(
     canLoadMore: () => open.value && hasMore
   }
 )
+
+function focusOnOpen(event: Event) {
+  event.preventDefault()
+  if (layout === 'cards') {
+    const first =
+      matches.value.find((item) => item.value === selected && !item.disabled) ??
+      matches.value.find((item) => !item.disabled)
+    if (first) listbox.value?.highlightItem(first.value)
+  }
+}
 
 function close() {
   open.value = false
@@ -207,7 +218,7 @@ function select(value: AcceptableValue) {
         :collision-padding="8"
         :aria-label="heading"
         :class="styles.content({ class: ui?.content })"
-        @open-auto-focus.prevent
+        @open-auto-focus="focusOnOpen"
         @close-auto-focus="emit('closeAutoFocus', $event)"
       >
         <div :class="styles.header({ class: ui?.header })">
@@ -222,12 +233,12 @@ function select(value: AcceptableValue) {
           ref="listboxRoot"
           class="flex min-h-0 flex-1 flex-col"
           highlight-on-hover
-          :orientation="layout === 'grid' ? 'horizontal' : 'vertical'"
+          :orientation="layout === 'list' ? 'vertical' : 'horizontal'"
           @update:model-value="select"
           @highlight="highlight"
           @keydown="moveRow"
         >
-          <div :class="styles.search({ class: ui?.search })">
+          <div v-if="layout !== 'cards'" :class="styles.search({ class: ui?.search })">
             <icon-lucide-search :class="styles.searchIcon({ class: ui?.searchIcon })" />
             <ListboxFilter
               v-model="query"

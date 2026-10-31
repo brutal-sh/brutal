@@ -1,4 +1,5 @@
 import { IS_BROWSER } from '@open-pencil/core/constants'
+import { validateDesignJSXOutput } from '@open-pencil/core/validation/structured-data'
 import {
   DESIGN_JSX_ELEMENTS,
   DESIGN_JSX_HELPERS,
@@ -15,7 +16,6 @@ import {
   type DesignJSXSandboxLimits,
   type DesignJSXSandboxResult
 } from '@/app/code/sandbox/types'
-import { validateDesignJSXOutput } from '@/app/code/sandbox/validate'
 
 function sourceByteLength(source: string): number {
   return new TextEncoder().encode(source).byteLength

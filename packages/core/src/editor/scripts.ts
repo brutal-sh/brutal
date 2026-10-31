@@ -1,7 +1,6 @@
 import { isEqual } from 'es-toolkit/predicate'
 
 import type { SceneGraph, SceneNode } from '@open-pencil/scene-graph'
-import { cloneNodeProps } from '@open-pencil/scene-graph/copy'
 import { createInstanceOverrideState } from '@open-pencil/scene-graph/instances/overrides'
 import type { Size } from '@open-pencil/scene-graph/primitives'
 import {
@@ -119,14 +118,11 @@ export function createScriptActions(ctx: EditorContext, nodes: ScriptNodeActions
       node.height !== size.height
     )
       return false
-    const copy = (source: SceneNode, parentId: string) => {
-      const created = ctx.graph.createNode(source.type, parentId, cloneNodeProps(source, null))
-      for (const child of output.getChildren(source.id)) copy(child, created.id)
-    }
     ctx.graph.applyImportedStateDuring(() => {
       for (const childId of Array.from(node.childIds)) ctx.graph.deleteNode(childId)
       for (const page of output.getPages())
-        for (const child of output.getChildren(page.id)) copy(child, id)
+        for (const child of output.getChildren(page.id))
+          ctx.graph.cloneTree(child.id, id, {}, output)
       for (const [hash, bytes] of output.images) ctx.graph.images.set(hash, bytes)
     })
     markScriptOutputCurrent(ctx.graph, id, true)

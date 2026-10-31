@@ -13,6 +13,7 @@ import IconGithub from '~icons/lucide/github'
 import IconGlobe from '~icons/lucide/globe'
 import IconLifeBuoy from '~icons/lucide/life-buoy'
 
+import { useEditorStore } from '@/app/editor/active-store'
 import { createSharedEditorMenuActions } from '@/app/shell/menu/actions/editor'
 import { useAppMenu } from '@/app/shell/menu/app-menu'
 import { appMenuShortcutLabel } from '@/app/shell/menu/shortcut'
@@ -25,6 +26,7 @@ import AppShortcutText from '@/components/ui/menu/AppShortcutText.vue'
 import { useMenuUI } from '@/components/ui/menu/menu'
 import { IS_TAURI, OPEN_PEN_CLI_GUIDE_URL, OPEN_PEN_REPOSITORY_URL } from '@/constants'
 
+const store = useEditorStore()
 const open = ref(false)
 const nativeOpen = ref(false)
 const { topMenus } = useAppMenu()
@@ -104,6 +106,11 @@ async function openNativeMenu(event: MouseEvent | KeyboardEvent) {
         align="start"
         :side-offset="8"
         :class="styles.content"
+        @close-auto-focus="
+          (event) => {
+            if (store.state.iconPickerOpen) event.preventDefault()
+          }
+        "
       >
         <DropdownMenuItem v-for="link in links" :key="link.href" as-child>
           <ExternalLink :href="link.href" :ui="{ base: styles.item, icon: 'hidden' }">

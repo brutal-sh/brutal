@@ -175,3 +175,97 @@ test('uploaded reusable Scripts regenerate independent instances and survive sou
     editor.dispose()
   }
 })
+
+test('reparent/reorder invalidates reference output before component sync can expand it', async () => {
+  const editor = createEditor()
+  const changes = createDocumentChanges(editor)
+  let target = ''
+  const runtime = createScriptRuntime(editor, io(), {
+    getDocumentPath: () => null,
+    adoptChanges: changes.adopt,
+    evaluate: async () => ({
+      ok: true,
+      definitions: [],
+      input: {},
+      nodes: [{ type: 'ref', id: 'ref', ref: target }]
+    })
+  })
+  try {
+    const page = editor.state.currentPageId
+    target = editor.graph.createNode('COMPONENT', page, { name: 'Referenced component' }).id
+    const owner = editor.createScript(0, 0)
+    runtime.attachScriptSource(owner, 'reference.js', code('ref'))
+    const current = () => {
+      const node = editor.graph.getNode(owner)
+      return !!node && hasCurrentScriptOutput(editor.graph, node)
+    }
+    await until(() => current())
+    const nestedScript = editor.createScript(0, 0)
+    editor.graph.reparentNode(nestedScript, target)
+    expect(current()).toBe(false)
+    await until(() => !!runtime.scriptRuntimeStates.get(owner)?.error)
+    expect(editor.graph.getChildren(editor.graph.getChildren(owner)[0].id)).toHaveLength(0)
+    editor.graph.reparentNode(nestedScript, page)
+    await until(() => current())
+    const previewText = editor.graph.createNode('TEXT', target, { text: 'Before preview' })
+    await until(
+      () =>
+        editor.graph.getChildren(editor.graph.getChildren(owner)[0].id)[0]?.text ===
+        'Before preview'
+    )
+    editor.graph.updateNodePreview(previewText.id, { text: 'Live preview' })
+    await until(
+      () =>
+        editor.graph.getChildren(editor.graph.getChildren(owner)[0].id)[0]?.text === 'Live preview'
+    )
+    editor.graph.deleteNode(previewText.id)
+    await until(() => editor.graph.getChildren(editor.graph.getChildren(owner)[0].id).length === 0)
+    const huge = editor.graph.createNode('FRAME', page)
+    for (let i = 0; i < 1000; i++) editor.graph.createNode('RECTANGLE', huge.id)
+    editor.graph.insertChildAt(huge.id, target, 0)
+    expect(current()).toBe(false)
+    await until(() => !!runtime.scriptRuntimeStates.get(owner)?.error)
+    expect(editor.graph.getChildren(editor.graph.getChildren(owner)[0].id)).toHaveLength(0)
+    editor.graph.insertChildAt(huge.id, page, 0)
+    await until(() => current())
+  } finally {
+    runtime.dispose()
+    changes.dispose()
+    editor.dispose()
+  }
+})
+
+test('a reference rejected on first render recovers automatically when its source is repaired', async () => {
+  const editor = createEditor()
+  const changes = createDocumentChanges(editor)
+  const page = editor.state.currentPageId
+  const target = editor.graph.createNode('COMPONENT', page, { name: 'Initially invalid reference' })
+  const text = editor.graph.createNode('TEXT', target.id, { text: 'x'.repeat(100_001) })
+  const runtime = createScriptRuntime(editor, io(), {
+    getDocumentPath: () => null,
+    adoptChanges: changes.adopt,
+    evaluate: async () => ({
+      ok: true,
+      definitions: [],
+      input: {},
+      nodes: [{ type: 'ref', id: 'ref', ref: target.id }]
+    })
+  })
+  try {
+    const owner = editor.createScript(0, 0)
+    runtime.attachScriptSource(owner, 'reference.js', code('invalid first'))
+    await until(() => !!runtime.scriptRuntimeStates.get(owner)?.error)
+    editor.graph.updateNode(text.id, { text: 'Repaired reference' })
+    await until(() => {
+      const node = editor.graph.getNode(owner)
+      return !!node && hasCurrentScriptOutput(editor.graph, node)
+    })
+    const instance = editor.graph.getChildren(owner)[0]
+    expect(editor.graph.getChildren(instance.id)[0].text).toBe('Repaired reference')
+    expect(runtime.scriptRuntimeStates.get(owner)?.error).toBeUndefined()
+  } finally {
+    runtime.dispose()
+    changes.dispose()
+    editor.dispose()
+  }
+})
