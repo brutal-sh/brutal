@@ -1,6 +1,7 @@
 import type { SandboxRunRequest, SandboxRunResult } from '@/app/code/sandbox/schema'
 import type { DesignJSXHelperDescriptor } from '@/app/code/sandbox/types'
 import { validateStructuredData } from '@/app/code/sandbox/validate'
+import { runCanvasScript } from '@/app/document/scripts/run'
 
 type Element = {
   type: unknown
@@ -105,8 +106,10 @@ export function runDesignJSX({
   code,
   elements,
   helpers,
-  limits
+  limits,
+  canvasScript
 }: SandboxRunRequest): SandboxRunResult {
+  if (canvasScript) return runCanvasScript({ id, code, canvasScript, elements, helpers, limits })
   try {
     const tags = elementTags(elements)
     const names = Object.keys(tags)

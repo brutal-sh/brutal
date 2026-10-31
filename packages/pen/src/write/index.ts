@@ -4,6 +4,7 @@ import { getNodeLocalMatrix } from '@open-pencil/scene-graph/coordinate'
 import { authoredLayoutSizing, layoutJustification } from '@open-pencil/scene-graph/layout'
 import Matrix from '@open-pencil/scene-graph/matrix'
 import { OPEN_PENCIL_PLUGIN_DATA, readPluginData } from '@open-pencil/scene-graph/plugin-data'
+import { scriptOfNode } from '@open-pencil/scene-graph/scripts'
 import { textLengthPixels } from '@open-pencil/scene-graph/text'
 import { vectorNetworkPaths } from '@open-pencil/scene-graph/vector-network'
 
@@ -47,6 +48,12 @@ const TEXT_GROWTH = {
 } as const
 const CAPS = { NONE: 'butt', ROUND: 'round', SQUARE: 'square' } as const
 const STROKE_ALIGNMENT = { INSIDE: 'inner', CENTER: 'center', OUTSIDE: 'outer' } as const
+
+function penNodeType(node: SceneNode): string | undefined {
+  if (scriptOfNode(node)) return 'script'
+  if (node.type === 'INSTANCE') return 'frame'
+  return TYPES[node.type]
+}
 
 /**
  * A bounded editable .pen 2.21 interchange document, not a native save replacement.
@@ -201,7 +208,8 @@ export function writePenDocument(graph: SceneGraph): PenDocument {
     // componentId is copy provenance, not an instance link; the serialized layer is now owned.
     if (ownedSlotContent && node.type !== 'INSTANCE') handled.add('componentId')
     diagnostics.push(...nodeDiagnostics(node, path, copy, handled))
-    const type = node.type === 'INSTANCE' ? 'frame' : TYPES[node.type]
+    const script = scriptOfNode(node)
+    const type = penNodeType(node)
     if (!type)
       add(
         node,
@@ -238,6 +246,19 @@ export function writePenDocument(graph: SceneGraph): PenDocument {
       layoutIncludeStroke: node.strokesIncludedInLayout,
       clip: node.clipsContent
     }
+    if (script) {
+      result.scriptUri = script.uri || undefined
+      result.inputs = Object.keys(script.inputs).length ? script.inputs : undefined
+      delete result.fill
+      delete result.stroke
+      delete result.cornerRadius
+      delete result.layout
+      delete result.gap
+      delete result.padding
+      delete result.justifyContent
+      delete result.alignItems
+      delete result.layoutIncludeStroke
+    }
     if (node.type === 'COMPONENT') result.reusable = true
     if (!copy && slots.suggestions(node)) result.slot = slots.suggestions(node)
     writeStroke(node, result, path)
@@ -273,7 +294,7 @@ export function writePenDocument(graph: SceneGraph): PenDocument {
         write(child, at, false, true)
       )
     const result = properties(node, path, topLevel, false, ownedSlotContent)
-    if (node.childIds.length)
+    if (node.childIds.length && !scriptOfNode(node))
       result.children = graph
         .getChildren(node.id)
         .map((child, index) => write(child, `${path}/children/${index}`, false, ownedSlotContent))

@@ -3,6 +3,7 @@ import { defineConfig } from 'tsdown'
 export default defineConfig({
   entry: {
     index: './src/index.ts',
+    'scripts/index': './src/scripts/index.ts',
     'arrow-caps': './src/arrow-caps.ts',
     'asset-keys': './src/asset-keys.ts',
     'behaviours/index': './src/behaviours/index.ts',

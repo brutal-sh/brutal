@@ -43,6 +43,7 @@ const emit = defineEmits<{ update: [color: Color]; openChange: [open: boolean] }
           v-if="isEditable"
           data-test-id="color-hex-input"
           class="min-w-0 flex-1 border-none bg-transparent font-mono text-xs text-surface outline-none"
+          :aria-label="attrs['aria-label'] ? String(attrs['aria-label']) : 'Hex color'"
           :value="hex"
           maxlength="6"
           @change="actions.updateFromHex(inputValue($event))"

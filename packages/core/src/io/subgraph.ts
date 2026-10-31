@@ -1,5 +1,6 @@
 import { SceneGraph } from '@open-pencil/scene-graph'
 import { nodeImageHashes } from '@open-pencil/scene-graph/images'
+import { copyScriptOutputState } from '@open-pencil/scene-graph/scripts'
 import { styleRunReferences } from '@open-pencil/scene-graph/text'
 import { variableValueReferences } from '@open-pencil/scene-graph/variables'
 
@@ -109,6 +110,7 @@ function cloneIntoGraph(
   } else copyReferencedTables(source, graph)
 
   graph.clearAbsPosCache()
+  copyScriptOutputState(source, graph, ids)
   return graph
 }
 

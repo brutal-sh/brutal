@@ -4,6 +4,7 @@ import { computed } from 'vue'
 import { getNodeEditCapability } from '@open-pencil/core'
 import { layerResizes, layerStrokesAndEffects } from '@open-pencil/scene-graph/generated'
 import { readIcon } from '@open-pencil/scene-graph/icons'
+import { scriptOfNode } from '@open-pencil/scene-graph/scripts'
 import { useEditorCommands } from '@open-pencil/vue/editor/commands'
 import { useInlineRename } from '@open-pencil/vue/editor/inline-rename'
 import { useSelectionState } from '@open-pencil/vue/editor/selection-state'
@@ -49,6 +50,7 @@ import MaskSection from './properties/MaskSection.vue'
 import PageSection from './properties/PageSection.vue'
 import RetainedPanel from './properties/panel/RetainedPanel.vue'
 import PositionSection from './properties/PositionSection.vue'
+import ScriptSection from './properties/script/ScriptSection.vue'
 import SelectionColorsSection from './properties/selection/SelectionColorsSection.vue'
 import SelectionLayoutSection from './properties/selection/SelectionLayoutSection.vue'
 import SelectionActionsControl from './properties/SelectionActionsControl.vue'
@@ -171,7 +173,11 @@ const { panels } = useI18n()
             :icon="selectedIcon"
           />
           <Tip v-else :label="node.type">
-            <span role="img" :aria-label="node.type" class="contents">
+            <span
+              role="img"
+              :aria-label="scriptOfNode(node) ? 'Script' : node.type"
+              class="contents"
+            >
               <component :is="selectedIcon" class="size-3.5" />
             </span>
           </Tip>
@@ -274,13 +280,14 @@ const { panels } = useI18n()
         <LayoutSection v-if="layerResizes(node)" :compact="!advanced" />
       </template>
       <AppearanceSection :compact="!advanced" />
+      <ScriptSection v-if="scriptOfNode(node)" :key="node.id" :node-id="node.id" />
       <template v-if="node.type !== 'CONNECTOR'">
         <MaskSection />
         <!-- A shape with text's typography is its label's, as in Figma. -->
         <TypographySection v-if="node.type === 'TEXT' || node.type === 'SHAPE_WITH_TEXT'" />
-        <FillSection :compact="!advanced" />
+        <FillSection v-if="!scriptOfNode(node)" :compact="!advanced" />
         <template v-if="strokesAndEffects">
-          <StrokeSection :compact="!advanced" />
+          <StrokeSection v-if="!scriptOfNode(node)" :compact="!advanced" />
           <EffectsSection :compact="!advanced" />
         </template>
       </template>

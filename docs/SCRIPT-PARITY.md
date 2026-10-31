@@ -1,0 +1,47 @@
+# Script parity
+
+Target: installed `/Applications/Pen.app`1.2.21, independently implemented behavior. This workflow is open; no inert menu entry counts as delivery.
+
+## Observed reference
+
+A new disposable document was created through actual Primitives → Script → canvas click. It created a200×200 Script with no source. Inspector has Context, position/dimensions, disabled radius, Clip Content, source path/chooser, Convert to layers, empty-source tip/Script Gallery, Effects, Code and Export. `.pen` metadata from MCP: type `script`, `scriptUri` and scalar `inputs`; generated output is not returned as authored children. The reference was saved privately as `pen-script-reference.pen`; an initial Save As put an absolute path into the filename, which macOS converted to colons. A second Save As navigated the folder explicitly and saved the correct private path. Original reference documents were not edited.
+
+An independently written `independent-script-probe.js` with schema2.21, number/color/string/boolean/enum controls rendered three green columns and a caption. Its native input panel showed the defaults. Output and inspector evidence remain private. With authored columns9 and max5, the inspector retained9 while conversion produced five34×170 columns; conversion Undo restored original Script ID/source/inputs and Redo restored the same frame/child IDs. An atomic source edit changed the output height170→150 without reopening; conversion verified all five new heights and the same random corner sequence2/0/2/1/4. The original source was restored afterward. A separate original Script emitted all five floating-point values through actual Pen HTML export:0.26642920868471265,0.0003297457005828619,0.2232720274478197,0.1462021479383111,0.46732782293111086. The independent runner now uses the public Mulberry32 algorithm with zero seed to match them; both Chromium and WebKit reproduced those exact values. The temporary measurement Script was deleted; private export:pen-script-random.html. Public algorithm reference:[Mulberry32](https://github.com/cprosche/mulberry32). Official contract: [Code on Canvas](https://docs.pen.dev/core-concepts/code-on-canvas).
+
+## Implementation scope
+
+Reuse existing opaque-origin iframe/CSP plus a fresh Worker for each execution; terminate on result or the two-second limit. The Script runner must accept only bounded plain data, deny DOM/network/filesystem/async services, seed random per run, validate source header/inputs and reject reusable or more than1,000 generated nodes before a live graph is changed. Existing unrestricted agent/Figma eval is a separate API and must not run linked untrusted scripts.
+
+Now: execute the independent runner boundary, then connect generated frame ownership, `.pen` persistence, source watches, inspector inputs and conversion/history. Later: ref/variable/theme/gallery and all visual/error states. Done: actual create→link→inputs/resize→external source change→save/reopen→convert/edit→Undo/Redo plus denied-API/limit diagnostics and matching observed design. Every subclaim requires its own executed evidence.
+
+## Executed browser and model evidence
+
+Fourteen Script model cases passed with110 assertions: header/syntax/output validation, generated ownership, raw input persistence, no-op/history/readonly/stale conversion rules, current-output export guards, same-name source ownership, ordinary/atomic source replacement, manual reload, disposal and document clean-state preservation. Another53 adjacent slot/generated/selection/read-only/snapshot checks passed with182 assertions.
+
+Six Script boundary workflows and ten existing JSX sandbox workflows passed in Chromium/WebKit. They exercised typed inputs/clamping, all five exact random floats, denied DOM/network/filesystem/async services and prototype constructors, no outgoing requests, the two-second infinite-loop termination, bounded output, abort cleanup and recovery. Source review found no remaining concrete boundary bypass; that does not establish an exhaustive security proof.
+
+The three browser editor journeys passed in both engines: Primitives→Script→canvas, actual file selection, five scalar controls including color opacity, raw9/runtime5 numeric clamp, Undo/Redo, conversion, editing converted child geometry and conversion Undo; `.pen` download/reparse and actual reopen/reselect/relink; invalid/infinite source cancellation and recovery. Committed canvas baselines were generated, inspected and then matched without update mode. The added source-field test initially exposed same-field editing after Escape; the field now recaptures its owner on new input. Focused Chromium/WebKit checks passed for Escape and same-ID graph replacement. All eight editor journeys then passed together in44.6s, including exact canvas baselines and the disabled-radius assertion.
+
+The CLI SVG export path was executed against an original unrendered Script fixture and refused with an actionable current-output error (exit1). Authored `.pen` saves remain available. Snapshot export now explicitly refuses a linked Script rather than claim a relocatable archive without its JS dependency; this guard is model-tested. Headless generation and JS snapshot bundling remain feature gaps.
+
+## Integration and design
+
+Scripts use a frame with typed authored metadata. The existing generated-content ownership path locks and hides derived children. `.pen` saves source URI and raw scalar inputs, omitting generated children. Core conversion requires current successful output, makes those children editable, and Undo restores the authored Script. Failed regeneration retains prior visual layers but invalidates export/conversion readiness. Conversion currently retains the parent ID; actual Pen creates a new frame ID, so exact conversion identity parity remains open.
+
+The runtime uses document-local or explicitly selected bounded UTF-8 files, per-node uploaded sources, ordinary/atomic file watches, abortable workers, owner/definition/size/lifetime guards and shared `.pen` layout conversion. Generated changes add no history or dirty state. Number/string/color gestures reuse SDK node previews; retained deactivation cancels them. Native/browser choosers recheck their captured owner after each await. The source text field captures the same graph/node/document identity, cancels stale drafts, and supports Escape.
+
+Fresh actual Pen native evidence is private in pen-script-controls-2026-10-31.{txt,png}; the screenshot API returns JPEG bytes despite that historical filename. Inputs use60px labels,24px controls, neutral boolean state, a color hex/opacity row and a disabled radius. Independent controls follow those measurements. Full pixel/hover/light/native comparison remains open, including Script-green selection, source-action mapping and exact error presentation.
+
+The actual empty Script export was measured at200×200:1px green border,10% green interior, centered code glyph and small status text. The independent placeholder follows those measurements; exact pixel acceptance has not run. Temporary measurement Scripts were deleted from the private fixture, and the original source was restored.
+
+## Native executed evidence
+
+The isolated native candidate passed an83.9s physical journey: Primitives→Script→canvas, disabled radius, actual OS file picker, source read/render, raw9 producing five34px columns, keyboard Undo to3, native Convert to layers and Undo/reselection, disk save, ordinary and atomic source replacement, failed-source diagnostics with conversion disabled, repair and preserved clean state. Evidence:private script-native-physical-delivery.log and script-native-controls-accepted.png. Setup/selector/phase-order mistakes in earlier attempts are not product acceptance; the successful run has its own result.
+
+A separate native2.7s regression used test-owned setup, actual close/Home/Recents reopening and filesystem changes. The initial run exposed refusal of an absolute source beside the newly saved document. Automatic local-source resolution now applies the existing document-folder/no-symlink check to that path. Reopen and both watch modes passed afterward. Saving into a nested folder and reopening explicitly refused the source outside that folder and disabled conversion. This establishes path-boundary behavior, not permission to read arbitrary linked paths. Native APIs supplied test setup and the disk-save call; those steps are not physical-menu claims.
+
+The native field check also exposed the compact variable-aware radius branch omitting its disabled state. It now uses the ordinary disabled field; both browser assertions and the successful native tree show disabled radius0.
+
+## Remaining acceptance
+
+Native physical converted-child editing, all scalar controls and broader history/persistence variants remain. Ref/component context, variable/theme inputs and regeneration, Script Gallery and its examples, browser source dependency identity, JS snapshots, headless generation, error canvas/excerpts and remaining visual/keyboard states are open. Ref is currently a text fallback and output references are refused, which is not ref parity. The existing sandbox/input/node/time limits are explicit. No proprietary assets or code are shipped. Full Script and full-app parity are not accepted.

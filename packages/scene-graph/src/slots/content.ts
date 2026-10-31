@@ -1,4 +1,4 @@
-import { isGeneratedFrame } from '../generated'
+import { hasGeneratedContent } from '../generated'
 import type { SceneGraph } from '../graph'
 import { getInstanceOverride, setInstanceOverride } from '../instances/overrides'
 import { cloneChildrenWithMapping } from '../instances/sync'
@@ -35,7 +35,7 @@ export function slotScope(graph: SceneGraph, parentId: string): SlotScope {
       const instance = nearestInstance(graph, current)
       return instance ? { kind: 'slot', frame: current, instance, propertyId } : { kind: 'free' }
     }
-    if (current.type === 'INSTANCE' || isGeneratedFrame(current))
+    if (current.type === 'INSTANCE' || hasGeneratedContent(current))
       return { kind: 'locked', owner: current }
     current = parentOf(graph, current)
   }

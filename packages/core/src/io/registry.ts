@@ -1,4 +1,5 @@
 import type { SceneGraph } from '@open-pencil/scene-graph'
+import { assertScriptOutputs } from '@open-pencil/scene-graph/scripts'
 
 import type { ExportRequest, IOContext, IOFormatAdapter, ReadDocumentInput } from './types'
 
@@ -74,6 +75,14 @@ export class IORegistry {
     const adapter = this.getFormat(formatId)
     if (!adapter?.exportContent) {
       throw new Error(`Format does not support exportContent: ${formatId}`)
+    }
+    if (formatId !== 'pen' && formatId !== 'fig') {
+      const target = request.target
+      let ids = [request.graph.rootId]
+      if (target.scope === 'selection') ids = target.nodeIds
+      else if (target.scope === 'node') ids = [target.nodeId]
+      else if (target.scope === 'page') ids = [target.pageId]
+      assertScriptOutputs(request.graph, ids)
     }
     return adapter.exportContent(request, options, context)
   }

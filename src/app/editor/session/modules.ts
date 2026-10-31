@@ -7,6 +7,7 @@ import { createSelectedNodeState } from '@open-pencil/vue/editor/selection-state
 import { createDocumentExportActions } from '@/app/document/export'
 import { createDocumentIOActions } from '@/app/document/io'
 import type { ViewportSize } from '@/app/document/io/types'
+import { createScriptRuntime } from '@/app/document/scripts/runtime'
 import { createShaderSourceWatcher } from '@/app/document/shaders/watcher'
 import { createDesignCheck } from '@/app/editor/design-check/session'
 import { createFlashActions } from '@/app/editor/flash'
@@ -68,6 +69,10 @@ export function createEditorStoreModules(
     getDocumentPath: documentIO.getDocumentFilePath,
     adoptChanges: (apply) => documentIO.adoptChanges(apply)
   })
+  const scriptRuntime = createScriptRuntime(editor, io, {
+    getDocumentPath: documentIO.getDocumentFilePath,
+    adoptChanges: (apply) => documentIO.adoptChanges(apply)
+  })
   const documentExport = createDocumentExportActions(editor, state, io, documentIO.downloadBlob)
   const mobileClipboard = createMobileClipboardActions(editor)
   const profiler = createProfilerActions(editor)
@@ -77,6 +82,9 @@ export function createEditorStoreModules(
     ...flash,
     ...pen,
     ...vectorEdit,
+    attachScriptSource: scriptRuntime.attachScriptSource,
+    reloadScript: scriptRuntime.reloadScript,
+    scriptRuntimeStates: scriptRuntime.scriptRuntimeStates,
     watchShaderSource: shaderSources.watchShaderSource,
     shaderSourceErrors: shaderSources.shaderSourceErrors,
     shaderSourceOrder: shaderSources.shaderSourceOrder,
@@ -118,6 +126,7 @@ export function createEditorStoreModules(
     startWatchingCurrentFile: documentIO.startWatchingCurrentFile,
     designCheck,
     dispose: () => {
+      scriptRuntime.dispose()
       shaderSources.dispose()
       designCheck.dispose()
       editor.releaseGraphResources()

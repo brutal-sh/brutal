@@ -6,7 +6,8 @@ import { startPenInput } from '#vue/canvas/pen/input'
 import { startPencilInput } from '#vue/canvas/pencil/input'
 import { HAND_GRAB_CURSOR } from '#vue/editor/tool-cursor'
 import { attachModifiers, startConnectorDraw } from '#vue/shared/input/connector/draw'
-import { startShapeDraw, startTextDraw } from '#vue/shared/input/draw'
+import { parentSpace, startShapeDraw, startTextDraw } from '#vue/shared/input/draw'
+import { findDrawParent } from '#vue/shared/input/drop-target'
 import { startPanDrag } from '#vue/shared/input/pan/drag'
 import { handleSelectDown } from '#vue/shared/input/select'
 import type { HitTestFns } from '#vue/shared/input/select'
@@ -86,6 +87,15 @@ export function handleToolMouseDown({
 
   if (tool === 'CONNECTOR') {
     startConnectorDraw(cx, cy, sx, sy, editor, setDrag, attachModifiers(event))
+    return
+  }
+
+  if (tool === 'SCRIPT') {
+    const parentId = findDrawParent(cx, cy, 'FRAME', editor)
+    const point = parentSpace(editor, parentId)(cx, cy)
+    const id = editor.createScript(point.x, point.y, parentId)
+    editor.select([id])
+    editor.setTool('SELECT')
     return
   }
 

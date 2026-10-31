@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { isGeneratedFrame } from '@open-pencil/scene-graph/generated'
+import { hasGeneratedContent } from '@open-pencil/scene-graph/generated'
 import { LAYOUT_CONTAINER_TYPES } from '@open-pencil/vue/controls/selection-layout'
 import { useI18n } from '@open-pencil/vue/i18n'
 import { LayoutControlsRoot } from '@open-pencil/vue/primitives/LayoutControls'
@@ -25,7 +25,7 @@ const { compact = false } = defineProps<{ compact?: boolean }>()
       <!-- A generated frame, such as a shape with text, lays out its own sublayers; its auto layout is not offered. -->
       <PanelSection
         :label="
-          ctx.node.layoutMode === 'NONE' || isGeneratedFrame(ctx.node)
+          ctx.node.layoutMode === 'NONE' || hasGeneratedContent(ctx.node)
             ? panels.layout
             : compact
               ? 'Flex Layout'

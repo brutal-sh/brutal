@@ -1,5 +1,6 @@
 import type { Component } from 'vue'
 import IconCircle from '~icons/lucide/circle'
+import IconCode from '~icons/lucide/code-xml'
 import IconColumns from '~icons/lucide/columns-3'
 import IconComponentSet from '~icons/lucide/component'
 import IconComponent from '~icons/lucide/diamond'
@@ -30,6 +31,7 @@ import IconType from '~icons/lucide/type'
 import type { Tool } from '@open-pencil/core'
 import type { SceneNode } from '@open-pencil/scene-graph'
 import { readIcon } from '@open-pencil/scene-graph/icons'
+import { scriptOfNode } from '@open-pencil/scene-graph/scripts'
 import type { ShapeWithTextType } from '@open-pencil/scene-graph/shape-with-text'
 import { slotPropertyId } from '@open-pencil/scene-graph/slots'
 import type { LayerOutline } from '@open-pencil/vue/primitives/LayerTree'
@@ -51,6 +53,7 @@ export const toolIcons: Record<Tool, Component> = {
   PENCIL: IconPencil,
   TEXT: IconType,
   STICKY: IconStickyNote,
+  SCRIPT: IconCode,
   SHAPE_WITH_TEXT: IconShapes,
   CONNECTOR: IconSpline,
   HAND: IconHand,
@@ -70,6 +73,7 @@ export const NODE_ICONS: Partial<Record<string, typeof IconSquare>> = {
   VECTOR: IconPenTool,
   RECTANGLE: IconSquare,
   STICKY: IconStickyNote,
+  SCRIPT: IconCode,
   CONNECTOR: IconSpline
 }
 
@@ -117,5 +121,6 @@ export function nodeIcon(node: {
 
 /** `nodeIcon` for a scene node, which carries slot and icon identity in its data. */
 export function sceneNodeIcon(node: SceneNode) {
+  if (scriptOfNode(node)) return IconCode
   return nodeIcon({ ...node, slot: !!slotPropertyId(node), icon: !!readIcon(node) })
 }

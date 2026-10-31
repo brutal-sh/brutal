@@ -215,6 +215,10 @@ const nodeFields = {
   iconFontName: v.optional(strSchema),
   iconFontFamily: v.optional(strSchema),
 
+  scriptUri: v.optional(v.string()),
+  inputs: v.optional(
+    v.record(v.string(), v.union([v.string(), v.pipe(v.number(), v.finite()), v.boolean()]))
+  ),
   ref: v.optional(strSchema)
 }
 

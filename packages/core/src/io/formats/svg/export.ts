@@ -1,4 +1,5 @@
 import type { RenderColorSpace } from '@open-pencil/scene-graph/color'
+import { assertScriptOutputs } from '@open-pencil/scene-graph/scripts'
 import { assertFragmentFrames } from '@open-pencil/scene-graph/shaders'
 
 import { normalizeDashPattern } from '#core/canvas/strokes'
@@ -504,6 +505,7 @@ export function renderNodesToSVG(
   nodeIds: string[],
   options: SVGExportOptions = {}
 ): string | null {
+  assertScriptOutputs(graph, nodeIds)
   assertFragmentFrames(graph, nodeIds)
   const bounds = computeContentBounds(graph, nodeIds)
   if (!bounds) return null

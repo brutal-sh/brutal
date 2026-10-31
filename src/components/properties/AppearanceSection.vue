@@ -147,7 +147,14 @@ function blendModeGroups(value: BlendMode | typeof MIXED) {
           </NumberField>
         </PanelFieldGroup>
         <VariableNumberField
-          v-if="compact && hasCornerRadius && !showIndependentCorners && node && !isMulti"
+          v-if="
+            compact &&
+            hasCornerRadius &&
+            !showIndependentCorners &&
+            node &&
+            !isMulti &&
+            !cornerRadiusDisabled
+          "
           compact
           :aria-label="panels.radius"
           :model-value="cornerRadiusValue"
@@ -188,7 +195,7 @@ function blendModeGroups(value: BlendMode | typeof MIXED) {
       >
         <PanelFieldGroup :label="panels.radius">
           <VariableNumberField
-            v-if="node && !isMulti"
+            v-if="node && !isMulti && !cornerRadiusDisabled"
             :aria-label="panels.radius"
             :model-value="cornerRadiusValue"
             :min="0"

@@ -1,6 +1,7 @@
 import { IS_TAURI } from '@open-pencil/core/constants'
 import type { ReadDocumentInput } from '@open-pencil/core/io'
 
+import { isTauri } from '@/app/tauri/env'
 import { readBoundedFile } from '@/app/tauri/files'
 
 /**
@@ -38,4 +39,24 @@ export async function documentAssetPath(path: string, relative: string): Promise
     if (!info || info.isSymlink) return null
   }
   return target
+}
+
+/** Automatic watches only follow document-local references or files explicitly chosen here. */
+export async function documentSourceFilePath(
+  url: string,
+  documentPath: string | null,
+  chosen: boolean
+) {
+  if (!isTauri() || /^https?:/i.test(url)) return null
+  if (url.startsWith('/') || /^file:/i.test(url)) {
+    let path = url
+    if (/^file:/i.test(url)) {
+      const file = new URL(url)
+      if (file.hostname) return null
+      path = decodeURIComponent(file.pathname)
+    }
+    if (chosen) return path
+    return documentPath ? documentAssetPath(documentPath, path) : null
+  }
+  return documentPath ? documentAssetPath(documentPath, decodeURIComponent(url)) : null
 }

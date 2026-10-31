@@ -4,6 +4,7 @@ import type { ComputedRef, Ref } from 'vue'
 
 import type { Editor } from '@open-pencil/core'
 import type { BlendMode, SceneNode } from '@open-pencil/scene-graph'
+import { scriptOfNode } from '@open-pencil/scene-graph/scripts'
 import { independentCornerChanges } from '@open-pencil/scene-graph/variables'
 
 import type { CornerGeometryKey, CornerRadiusKey } from '#vue/controls/appearance/types'
@@ -85,15 +86,19 @@ export function createAppearanceState({
 }: AppearanceStateOptions) {
   // Figma shows the radius for any multi-selection and edits only the layers that have one; with
   // none among them the field is disabled.
-  const cornerNodes = computed(() => nodes.value.filter(supportsCornerRadius))
+  const cornerNodes = computed(() =>
+    nodes.value.filter((target) => supportsCornerRadius(target) && !scriptOfNode(target))
+  )
   const hasCornerRadius = computed(() => {
     if (isMulti.value) return true
     return node.value ? supportsCornerRadius(node.value) : false
   })
-  const cornerRadiusDisabled = computed(() => isMulti.value && cornerNodes.value.length === 0)
+  const cornerRadiusDisabled = computed(() =>
+    isMulti.value ? cornerNodes.value.length === 0 : !!node.value && !!scriptOfNode(node.value)
+  )
   const splitsCorners = computed(() => {
     const targets = isMulti.value ? cornerNodes.value : compact([node.value])
-    return targets.every((target) => !SHARED_RADIUS_TYPES.has(target.type))
+    return targets.every((target) => !scriptOfNode(target) && !SHARED_RADIUS_TYPES.has(target.type))
   })
 
   const independentCorners = computed(() => {
@@ -304,9 +309,10 @@ export function createAppearanceActions({
   }
 
   function cornerTargets() {
-    if (isMulti.value) return nodes.value.filter(supportsCornerRadius)
+    if (isMulti.value)
+      return nodes.value.filter((target) => supportsCornerRadius(target) && !scriptOfNode(target))
     const selected = node.value
-    return selected ? [selected] : []
+    return selected && !scriptOfNode(selected) ? [selected] : []
   }
 
   function updateCornerProp(key: CornerGeometryKey, value: number) {

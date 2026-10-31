@@ -49,6 +49,10 @@ export function exportPenSnapshot(graph: SceneGraph): PenSnapshotResult {
     }
   }
   function visit(node: PenOverride) {
+    if (node.type === 'script' && node.scriptUri)
+      throw new Error(
+        'Snapshot cannot bundle linked Script sources yet. Save the document beside its JavaScript files instead.'
+      )
     paints(node.fill)
     if (!(typeof node.stroke === 'object' && 'thickness' in node.stroke)) paints(node.stroke)
     for (const child of node.children ?? []) visit(child)

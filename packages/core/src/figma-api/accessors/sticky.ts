@@ -1,7 +1,7 @@
 import type { SceneGraph, SceneNode } from '@open-pencil/scene-graph'
 import {
   generatedFrameText,
-  isGeneratedFrame,
+  hasGeneratedContent,
   isWideSticky,
   stickyScale,
   stickySublayers,
@@ -23,7 +23,7 @@ import type { FigmaNodeProxy, NodeProxyHost } from '#core/figma-api/proxy'
  */
 export function pluginChildren(sceneGraph: SceneGraph, id: string): SceneNode[] {
   const node = sceneGraph.getNode(id)
-  return node && isGeneratedFrame(node) ? [] : sceneGraph.getChildren(id)
+  return node && hasGeneratedContent(node) ? [] : sceneGraph.getChildren(id)
 }
 
 function sublayers(target: ProxyThis, internals: NodeProxyInternals) {

@@ -17,11 +17,8 @@ import {
 } from '@open-pencil/scene-graph/shaders'
 import { useI18n } from '@open-pencil/vue/i18n'
 
-import {
-  fragmentSourceFilePath,
-  loadFragmentSource,
-  validateFragmentSource
-} from '@/app/document/shaders/source'
+import { documentSourceFilePath } from '@/app/document/io/assets'
+import { loadFragmentSource, validateFragmentSource } from '@/app/document/shaders/source'
 import { useEditorStore } from '@/app/editor/active-store'
 import { isTauri } from '@/app/tauri/env'
 import ColorInput from '@/components/ColorPicker/ColorInput.vue'
@@ -161,7 +158,7 @@ function useSource(source: FragmentShader) {
 }
 async function revealSource() {
   try {
-    const local = await fragmentSourceFilePath(shader.url, store.getDocumentFilePath(), true)
+    const local = await documentSourceFilePath(shader.url, store.getDocumentFilePath(), true)
     if (!local) throw new Error('This shader has no local file to reveal.')
     const { revealItemInDir } = await import('@tauri-apps/plugin-opener')
     await revealItemInDir(local)

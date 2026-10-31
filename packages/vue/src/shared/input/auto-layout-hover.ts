@@ -5,7 +5,7 @@ import {
   AUTO_LAYOUT_HOVER_TICK_HIT_TOLERANCE
 } from '@open-pencil/core/constants'
 import type { SceneNode } from '@open-pencil/scene-graph'
-import { isGeneratedFrame } from '@open-pencil/scene-graph/generated'
+import { hasGeneratedContent } from '@open-pencil/scene-graph/generated'
 import type { Vector } from '@open-pencil/scene-graph/primitives'
 
 type AutoLayoutHover = NonNullable<Editor['state']['autoLayoutHover']>
@@ -146,7 +146,7 @@ export function resolveAutoLayoutHover(
   const node = editor.graph.getNode(nodeId)
   if (!node || (node.layoutMode !== 'HORIZONTAL' && node.layoutMode !== 'VERTICAL')) return null
   // A generated frame, such as a sticky note, lays itself out; its spacing is not the user's.
-  if (isGeneratedFrame(node)) return null
+  if (hasGeneratedContent(node)) return null
 
   const abs = editor.graph.getAbsolutePosition(node.id)
   const localX = cx - abs.x

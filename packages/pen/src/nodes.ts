@@ -10,6 +10,7 @@ import { CORNER_FIELDS } from '@open-pencil/scene-graph/fields'
 import { fillSizingFields } from '@open-pencil/scene-graph/layout'
 import { OPEN_PENCIL_PLUGIN_DATA, withPluginData } from '@open-pencil/scene-graph/plugin-data'
 import type { Color } from '@open-pencil/scene-graph/primitives'
+import { withScript } from '@open-pencil/scene-graph/scripts'
 
 import { convertEffects } from './effects'
 import { ellipseArc } from './geometry'
@@ -93,7 +94,9 @@ function sceneType(pen: PenNode): NodeType {
 
 function resolveSizing(pen: PenNode, ctx: VarContext) {
   const isTextLike = pen.type === 'text' || pen.type === 'icon_font'
-  const defaultSize = isTextLike ? 20 : 100
+  let defaultSize = 100
+  if (isTextLike) defaultSize = 20
+  else if (pen.type === 'script') defaultSize = 200
   const defaultW = isTextLike && pen.width === undefined ? 0 : defaultSize
   const w = parseSize(pen.width, defaultW, ctx)
   const h = parseSize(pen.height, defaultSize, ctx)
@@ -207,6 +210,8 @@ const PROPERTY_FIELDS = {
   weight: [],
   iconFontName: [],
   iconFontFamily: [],
+  scriptUri: ['pluginData'],
+  inputs: ['pluginData'],
   ref: []
 } satisfies Record<keyof NodeFields, readonly (keyof SceneNode)[]>
 
@@ -271,6 +276,9 @@ export function applyPenProperties(node: SceneNode, pen: PenNode, build: Build):
     boundVariables: {},
     variableModes: pen.theme ? { [ctx.collectionId]: ctx.modeId() } : {}
   } satisfies Partial<SceneNode>)
+  if (pen.type === 'script') {
+    node.pluginData = withScript(node, { uri: pen.scriptUri ?? '', inputs: pen.inputs ?? {} })
+  }
   node.pluginData = withPluginData(
     node.pluginData,
     OPEN_PENCIL_PLUGIN_DATA.nodeContext,

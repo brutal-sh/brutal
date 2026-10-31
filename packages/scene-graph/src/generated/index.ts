@@ -1,5 +1,6 @@
 import { CONNECTOR_KIND } from '../connectors/sublayers'
 import type { SceneGraph } from '../graph'
+import { scriptOfNode } from '../scripts'
 import type { NodeType, SceneNode } from '../types'
 import type { GeneratedFrameKind } from './kind'
 import { SHAPE_WITH_TEXT_KIND } from './shape-with-text'
@@ -27,8 +28,25 @@ export const GENERATED_FRAME_TYPES: ReadonlySet<NodeType> = new Set(
   Object.keys(GENERATED_FRAME_KINDS) as GeneratedFrameType[]
 )
 
+const SCRIPT_KIND: GeneratedFrameKind = {
+  complete: () => true,
+  text: () => undefined,
+  rotates: true,
+  resizes: true,
+  strokesAndEffects: true,
+  namedByText: false
+}
+
+type GeneratedCandidate = Pick<SceneNode, 'type'> & Partial<Pick<SceneNode, 'pluginData'>>
+
+/** Whether a layer owns derived children, including a linked Script stored on a frame. */
+export function hasGeneratedContent(node: GeneratedCandidate): boolean {
+  return isGeneratedFrame(node) || scriptOfNode(node) !== undefined
+}
+
 /** What a generated frame's type says about it, or undefined for any other layer. */
-export function generatedFrameKind(node: Pick<SceneNode, 'type'>): GeneratedFrameKind | undefined {
+export function generatedFrameKind(node: GeneratedCandidate): GeneratedFrameKind | undefined {
+  if (scriptOfNode(node)) return SCRIPT_KIND
   return isGeneratedFrame(node) ? GENERATED_FRAME_KINDS[node.type] : undefined
 }
 
@@ -40,7 +58,7 @@ export function isGeneratedFrame<N extends Pick<SceneNode, 'type'>>(
 
 /** The generated frame a layer belongs to, if it is one of its sublayers. */
 export function generatedFrameOwner(graph: SceneGraph, node: SceneNode): SceneNode | undefined {
-  return node.parentId ? graph.closest(node.parentId, isGeneratedFrame) : undefined
+  return node.parentId ? graph.closest(node.parentId, hasGeneratedContent) : undefined
 }
 
 /** The text a generated frame edits in place: a sticky note's body or a connector's label. */

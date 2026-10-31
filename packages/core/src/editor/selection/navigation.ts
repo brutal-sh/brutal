@@ -1,4 +1,4 @@
-import { generatedFrameOwner, isGeneratedFrame } from '@open-pencil/scene-graph/generated'
+import { generatedFrameOwner, hasGeneratedContent } from '@open-pencil/scene-graph/generated'
 
 import type { EditorContext } from '#core/editor/types'
 
@@ -19,7 +19,7 @@ export function createSelectionNavigationActions(ctx: EditorContext, select: Sel
    */
   function selectChildren() {
     const children = selectedNodes().flatMap((node) =>
-      isGeneratedFrame(node) ? [] : node.childIds
+      hasGeneratedContent(node) ? [] : node.childIds
     )
     if (children.length > 0) select(children)
   }

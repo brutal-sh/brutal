@@ -9,6 +9,7 @@ import {
   readPluginData,
   withoutPluginData
 } from '@open-pencil/scene-graph/plugin-data'
+import { scriptOfNode } from '@open-pencil/scene-graph/scripts'
 import { fragmentShaderOf, readShaderPaints } from '@open-pencil/scene-graph/shaders'
 
 export interface PenExportDiagnostic {
@@ -167,6 +168,8 @@ function inspectPluginContent(node: SceneNode, add: NodeProblem) {
     readPluginData(node.pluginData, OPEN_PENCIL_PLUGIN_DATA.hugFallback) === undefined
   )
     add('sizing', 'Invalid Hug fallback metadata cannot be exported.')
+  if (hasPluginData(node.pluginData, OPEN_PENCIL_PLUGIN_DATA.script) && !scriptOfNode(node))
+    add('script', 'Invalid Script metadata cannot be exported.')
   if (
     contentPluginData(
       withoutPluginData(node.pluginData, [
@@ -174,6 +177,7 @@ function inspectPluginContent(node: SceneNode, add: NodeProblem) {
           ? [OPEN_PENCIL_PLUGIN_DATA.shader]
           : []),
         OPEN_PENCIL_PLUGIN_DATA.nodeContext,
+        ...(scriptOfNode(node) ? [OPEN_PENCIL_PLUGIN_DATA.script] : []),
         OPEN_PENCIL_PLUGIN_DATA.meshPaints,
         OPEN_PENCIL_PLUGIN_DATA.deferredFill,
         OPEN_PENCIL_PLUGIN_DATA.hugFallback,

@@ -185,14 +185,14 @@ Source: [Code on Canvas](https://docs.pen.dev/core-concepts/code-on-canvas).
 
 | ID / feature | Required behavior | Observable acceptance | State |
 | --- | --- | --- | --- |
-| SCRIPT-01 Creation and linkage | Script primitive starts at 200×200; relative JS path. | Create, save, link an independent file; compare placeholder and missing-path states. | Open |
-| SCRIPT-02 Input controls | Header schema plus number/string/boolean/color/enum/ref controls. | Change each input; verify clamp/options/component selection and refreshed output. | Open |
-| SCRIPT-03 Live updates | Resize, input edits and watched source saves rerun output. | Edit an independent file externally; inspect live children without reopening. | Open |
+| SCRIPT-01 Creation and linkage | Script primitive starts at 200×200; relative JS path. | Create, save, link an independent file; compare placeholder and missing-path states. | Partial — [Script evidence](../SCRIPT-PARITY.md). |
+| SCRIPT-02 Input controls | Header schema plus number/string/boolean/color/enum/ref controls. | Change each input; verify clamp/options/component selection and refreshed output. | Partial — [Script evidence](../SCRIPT-PARITY.md). |
+| SCRIPT-03 Live updates | Resize, input edits and watched source saves rerun output. | Edit an independent file externally; inspect live children without reopening. | Partial — [Script evidence](../SCRIPT-PARITY.md). |
 | SCRIPT-04 Variable inputs | Inputs can follow variables and theme changes. | Bind color/number inputs; change theme and reopen with source file present. | Open |
-| SCRIPT-05 Conversion | Convert replaces Script with a frame snapshot of editable layers. | Convert, manually edit children, Undo/Redo, save/reopen. | Open |
-| SCRIPT-06 Derived state | Generated children do not create individual history entries. | Change inputs repeatedly; compare Undo granularity and regenerated children. | Open |
-| SCRIPT-07 Sandbox contract | Synchronous; no DOM/network/filesystem; deterministic random sequence. | Run isolated denied-API, random and asynchronous fixtures without host access. | Open |
-| SCRIPT-08 Limits and diagnostics | At most 1,000 generated nodes, two-second execution; no reusable output. | Exceed each limit; verify safe termination, node error/excerpt and intact document. | Open |
+| SCRIPT-05 Conversion | Convert replaces Script with a frame snapshot of editable layers. | Convert, manually edit children, Undo/Redo, save/reopen. | Partial — [Script evidence](../SCRIPT-PARITY.md). |
+| SCRIPT-06 Derived state | Generated children do not create individual history entries. | Change inputs repeatedly; compare Undo granularity and regenerated children. | Partial — [Script evidence](../SCRIPT-PARITY.md). |
+| SCRIPT-07 Sandbox contract | Synchronous; no DOM/network/filesystem; deterministic random sequence. | Run isolated denied-API, random and asynchronous fixtures without host access. | Partial — [Script evidence](../SCRIPT-PARITY.md). |
+| SCRIPT-08 Limits and diagnostics | At most 1,000 generated nodes, two-second execution; no reusable output. | Exceed each limit; verify safe termination, node error/excerpt and intact document. | Partial — [Script evidence](../SCRIPT-PARITY.md). |
 | SCRIPT-09 Gallery workflow | Reference examples can seed a local linked script. | Use an original example; compare browsing, saving, linking and error states. | Open |
 
 ## Design Libraries

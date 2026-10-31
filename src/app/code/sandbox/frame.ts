@@ -18,6 +18,7 @@ import workerSource from './worker/index.ts?script'
 const workerURL = URL.createObjectURL(new Blob([workerSource], { type: 'text/javascript' }))
 
 addEventListener('message', (event: MessageEvent<unknown>) => {
+  if (event.source !== parent) return
   const message = v.safeParse(sandboxHostMessageSchema, event.data)
   if (!message.success) return
   const { type: _type, ...request } = message.output

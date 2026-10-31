@@ -5,6 +5,8 @@
  * later is refused until it is listed here (`packages/core/tests/editor/read-only.test.ts`).
  */
 export const READ_ONLY_ACTIONS: ReadonlySet<string> = new Set([
+  // Regenerates derived output while preserving authored state and history.
+  'replaceScriptOutput',
   // Reads
   'acceptingParent',
   'acceptsChildren',

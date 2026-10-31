@@ -735,24 +735,27 @@
           "feature": "Creation and linkage",
           "behavior": "Script primitive starts at 200×200; relative JS path.",
           "acceptance": "Create, save, link an independent file; compare placeholder and missing-path states.",
-          "status": "open",
-          "evidence": []
+          "status": "partial",
+          "evidence": ["docs/SCRIPT-PARITY.md"],
+          "evidence_note": "Native create/link/first save/close/reopen executed; exact placeholder and all path states remain."
         },
         {
           "id": "SCRIPT-02",
           "feature": "Input controls",
           "behavior": "Header schema plus number/string/boolean/color/enum/ref controls.",
           "acceptance": "Change each input; verify clamp/options/component selection and refreshed output.",
-          "status": "open",
-          "evidence": []
+          "status": "partial",
+          "evidence": ["docs/SCRIPT-PARITY.md"],
+          "evidence_note": "Five scalar controls have browser evidence, native numeric edit/Undo executed; ref/component input remains."
         },
         {
           "id": "SCRIPT-03",
           "feature": "Live updates",
           "behavior": "Resize, input edits and watched source saves rerun output.",
           "acceptance": "Edit an independent file externally; inspect live children without reopening.",
-          "status": "open",
-          "evidence": []
+          "status": "partial",
+          "evidence": ["docs/SCRIPT-PARITY.md"],
+          "evidence_note": "Native ordinary/atomic source watches after reopening preserve clean state; all resize/theme states remain."
         },
         {
           "id": "SCRIPT-04",
@@ -767,32 +770,36 @@
           "feature": "Conversion",
           "behavior": "Convert replaces Script with a frame snapshot of editable layers.",
           "acceptance": "Convert, manually edit children, Undo/Redo, save/reopen.",
-          "status": "open",
-          "evidence": []
+          "status": "partial",
+          "evidence": ["docs/SCRIPT-PARITY.md"],
+          "evidence_note": "Browser converted child edit/Undo and native conversion/restoration executed; new frame identity and all persistence states remain."
         },
         {
           "id": "SCRIPT-06",
           "feature": "Derived state",
           "behavior": "Generated children do not create individual history entries.",
           "acceptance": "Change inputs repeatedly; compare Undo granularity and regenerated children.",
-          "status": "open",
-          "evidence": []
+          "status": "partial",
+          "evidence": ["docs/SCRIPT-PARITY.md"],
+          "evidence_note": "Model/browser/native input and conversion history executed; full gesture/mixed input history remains."
         },
         {
           "id": "SCRIPT-07",
           "feature": "Sandbox contract",
           "behavior": "Synchronous; no DOM/network/filesystem; deterministic random sequence.",
           "acceptance": "Run isolated denied-API, random and asynchronous fixtures without host access.",
-          "status": "open",
-          "evidence": []
+          "status": "partial",
+          "evidence": ["docs/SCRIPT-PARITY.md"],
+          "evidence_note": "Browser worker denials, exact deterministic random and native delivery executed; exhaustive containment is not established."
         },
         {
           "id": "SCRIPT-08",
           "feature": "Limits and diagnostics",
           "behavior": "At most 1,000 generated nodes, two-second execution; no reusable output.",
           "acceptance": "Exceed each limit; verify safe termination, node error/excerpt and intact document.",
-          "status": "open",
-          "evidence": []
+          "status": "partial",
+          "evidence": ["docs/SCRIPT-PARITY.md"],
+          "evidence_note": "Browser limits/termination/bounded error recovery and native source error recovery executed; reference error canvas/excerpts remain."
         },
         {
           "id": "SCRIPT-09",

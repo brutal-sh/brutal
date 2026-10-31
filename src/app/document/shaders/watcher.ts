@@ -12,12 +12,9 @@ import {
   type FragmentShader
 } from '@open-pencil/scene-graph/shaders'
 
+import { documentSourceFilePath } from '@/app/document/io/assets'
 import { watchTauriFile } from '@/app/document/io/watch/targets'
-import {
-  fragmentSourceFilePath,
-  loadFragmentSource,
-  validateFragmentSource
-} from '@/app/document/shaders/source'
+import { loadFragmentSource, validateFragmentSource } from '@/app/document/shaders/source'
 
 interface SourceWatch {
   controller: AbortController
@@ -55,7 +52,7 @@ export function createShaderSourceWatcher(
 ) {
   const ports: SourceWatcherOptions = {
     watchSource: (path, changed) => watchTauriFile(path, () => 0, changed),
-    resolveSource: fragmentSourceFilePath,
+    resolveSource: documentSourceFilePath,
     loadSource: loadFragmentSource,
     validateSource: validateFragmentSource,
     ...options

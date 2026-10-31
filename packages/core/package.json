@@ -169,6 +169,16 @@
       "types": "./dist/node/fs.d.ts",
       "import": "./dist/node/fs.js",
       "default": "./dist/node/fs.js"
+    },
+    "./scripts/header": {
+      "types": "./dist/scripts/header.d.ts",
+      "import": "./dist/scripts/header.js",
+      "default": "./dist/scripts/header.js"
+    },
+    "./scripts/syntax": {
+      "types": "./dist/scripts/syntax.d.ts",
+      "import": "./dist/scripts/syntax.js",
+      "default": "./dist/scripts/syntax.js"
     }
   },
   "publishConfig": {

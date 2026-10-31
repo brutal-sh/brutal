@@ -20,3 +20,5 @@ Documentation coverage does not establish full product coverage: undocumented me
 The ongoing [snapshot export acceptance](SNAPSHOT-PARITY.md) adds observed native behavior beyond the documentation catalog and distinguishes model, browser and native delivered-state evidence.
 
 The [File-guide acceptance](GUIDES-PARITY.md) records the actual code-export dialog, Figma information toast and CLI documentation action, with independent Open Pen routes and explicit client/visual/CLI gaps.
+
+The [Script acceptance](SCRIPT-PARITY.md) records scalar input, worker, history, native source-watch and first-save/reopen evidence. Component references, variables/themes, gallery, JS snapshot dependencies, headless generation and exact remaining visual states stay open.

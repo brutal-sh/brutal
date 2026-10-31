@@ -22,6 +22,16 @@ export const SANDBOX_RESULT = 'open-pencil-design-jsx-result'
 const runRequestEntries = {
   id: v.string(),
   code: v.string(),
+  canvasScript: v.optional(
+    v.object({
+      width: v.pipe(v.number(), v.finite(), v.minValue(0)),
+      height: v.pipe(v.number(), v.finite(), v.minValue(0)),
+      input: v.record(
+        v.string(),
+        v.union([v.string(), v.pipe(v.number(), v.finite()), v.boolean()])
+      )
+    })
+  ),
   /** Element names, such as `Frame` or `Button.Root`, by the runtime type they create. */
   elements: v.record(v.string(), v.string()),
   helpers: v.array(v.string()),

@@ -385,6 +385,12 @@
       "bun": "./src/gradient/mesh.ts",
       "import": "./dist/gradient/mesh.js",
       "default": "./dist/gradient/mesh.js"
+    },
+    "./scripts": {
+      "types": "./dist/scripts/index.d.ts",
+      "bun": "./src/scripts/index.ts",
+      "import": "./dist/scripts/index.js",
+      "default": "./dist/scripts/index.js"
     }
   },
   "publishConfig": {

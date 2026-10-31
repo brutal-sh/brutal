@@ -646,7 +646,7 @@
     },
     {
       "files": [
-        "src/app/code/sandbox/evaluate.ts",
+        "src/app/code/sandbox/execute.ts",
         "src/app/code/sandbox/frame.ts"
       ],
       "rules": {

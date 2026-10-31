@@ -30,7 +30,8 @@ const NODE_TYPES = new Set([
   'icon_font',
   'path',
   'icon',
-  'ref'
+  'ref',
+  'script'
 ])
 const GRADIENT_TYPES = new Set(['linear', 'radial', 'angular'])
 const EFFECT_TYPES = new Set(['blur', 'background_blur', 'shadow'])
@@ -146,6 +147,17 @@ export function inspectPenCompatibility(doc: PenDocument): PenImportDiagnostic[]
     }
   }
 
+  function inspectScript(node: PenOverride, path: string, nodeId?: string) {
+    if (node.type === 'script' && node.children?.length) {
+      add(
+        'unsupported-node',
+        `${path}/children`,
+        'Script output is derived; authored children are not supported.',
+        nodeId
+      )
+    }
+  }
+
   function visit(
     node: PenOverride,
     path: string,
@@ -162,6 +174,7 @@ export function inspectPenCompatibility(doc: PenDocument): PenImportDiagnostic[]
         nodeId
       )
     }
+    inspectScript(node, path, nodeId)
     if (node.reusable && node.type !== 'frame') {
       add(
         'unsupported-component',

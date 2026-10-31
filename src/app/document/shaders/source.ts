@@ -1,26 +1,10 @@
 import { MAX_FRAGMENT_SOURCE_LENGTH, type FragmentShader } from '@open-pencil/scene-graph/shaders'
 import { createFragmentRenderer } from '@open-pencil/vue/canvas/surface'
 
-import { documentAssetPath, documentAssetReader } from '@/app/document/io/assets'
+import { documentAssetReader } from '@/app/document/io/assets'
 import { readBoundedBody } from '@/app/document/io/browser'
 import { isTauri } from '@/app/tauri/env'
 import { readBoundedFile } from '@/app/tauri/files'
-
-/** Automatic watches only follow document-local references or files explicitly chosen here. */
-export async function fragmentSourceFilePath(
-  url: string,
-  documentPath: string | null,
-  chosen: boolean
-) {
-  if (!isTauri() || /^https?:/i.test(url)) return null
-  if (url.startsWith('/') || /^file:/i.test(url)) {
-    if (!chosen) return null
-    if (!/^file:/i.test(url)) return url
-    const file = new URL(url)
-    return file.hostname ? null : decodeURIComponent(file.pathname)
-  }
-  return documentPath ? documentAssetPath(documentPath, decodeURIComponent(url)) : null
-}
 
 /** Compile before replacing the current paint, keeping diagnostics beside the source field. */
 export async function validateFragmentSource(shader: FragmentShader) {

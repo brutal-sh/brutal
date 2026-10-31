@@ -52,6 +52,7 @@ import { createNodeActions } from './nodes'
 import { createPageActions } from './pages'
 import { createPlayActions } from './play/actions'
 import { createReadOnlyActions, guardReadOnly, guardUndo, READ_ONLY_TOOLS } from './read-only'
+import { createScriptActions } from './scripts'
 import { createSelectionActions } from './selection'
 import { createShaderActions } from './shaders/actions'
 import { createShaderFrames } from './shaders/frames'
@@ -319,6 +320,10 @@ export function createEditor(options?: EditorOptions) {
   const connectorStyles = createConnectorStyleActions(ctx)
   const lineEnds = createLineEndActions(ctx, nodes.beginNodePreview)
   const shaders = createShaderActions(ctx, nodes)
+  const scripts = createScriptActions(ctx, {
+    createShape: shapes.createShape,
+    updateNodeWithUndo: nodes.updateNodeWithUndo
+  })
   const alignment = createAlignmentActions(ctx)
   const preview = createPlayActions(ctx)
   const clipboardBridge = createClipboardBridge(clipboard, selection)
@@ -497,6 +502,7 @@ export function createEditor(options?: EditorOptions) {
     ...lineEnds,
     ...connectorStyles,
     ...shaders,
+    ...scripts,
     ...shaderFrames,
 
     // Variables
