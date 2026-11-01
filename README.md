@@ -4,6 +4,8 @@ Private local-first design editor, built on the MIT-licensed [OpenPencil](https:
 
 The implementation baseline is OpenPencil `24461adec7073312d460d76f08f069de18e4fb78`. Its attribution and MIT license remain intact. Pen's proprietary code and assets are not part of this repository.
 
+The Script Gallery bundles eleven MIT examples from [High Agency's public pencil-scripts repository](https://github.com/highagency/pencil-scripts), with its [license notice](public/licenses/pencil-scripts.txt). Gallery previews are rendered by Open Pen; bundled example fonts retain their OFL notices.
+
 ## Run this fork
 
 Use Bun 1.4.2 or newer. Install Git LFS and retrieve fixtures before running fixture-dependent tests.

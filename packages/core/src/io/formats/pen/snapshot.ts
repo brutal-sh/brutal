@@ -1,6 +1,6 @@
 import { toUint8Array } from 'js-base64'
 
-import { writePenDocument, type PenOverride } from '@open-pencil/pen'
+import { isLegacyStroke, writePenDocument, type PenOverride } from '@open-pencil/pen'
 import type { SceneGraph } from '@open-pencil/scene-graph'
 
 import type { ExportAsset, ExportResult, IOData } from '#core/io/types'
@@ -54,7 +54,7 @@ export function exportPenSnapshot(graph: SceneGraph): PenSnapshotResult {
         'Snapshot cannot bundle linked Script sources yet. Save the document beside its JavaScript files instead.'
       )
     paints(node.fill)
-    if (!(typeof node.stroke === 'object' && 'thickness' in node.stroke)) paints(node.stroke)
+    paints(isLegacyStroke(node.stroke) ? node.stroke.fill : node.stroke)
     for (const child of node.children ?? []) visit(child)
     for (const override of Object.values(node.descendants ?? {})) visit(override)
   }

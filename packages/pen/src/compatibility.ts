@@ -1,6 +1,6 @@
 import * as v from 'valibot'
 
-import { mapBlendMode } from './paints'
+import { isLegacyStroke, mapBlendMode } from './paints'
 import { penMeshPaintSchema, penShaderPaintSchema } from './schema'
 import type { PenDocument, PenOverride, PenPaints } from './schema'
 
@@ -29,6 +29,7 @@ const NODE_TYPES = new Set([
   'text',
   'icon_font',
   'path',
+  'line',
   'icon',
   'ref',
   'script'
@@ -186,12 +187,8 @@ export function inspectPenCompatibility(doc: PenDocument): PenImportDiagnostic[]
     inspectSlots(node, path, nodeId, inComponent, override)
     paints(node.fill, `${path}/fill`, nodeId)
     const stroke = node.stroke
-    if (
-      stroke !== undefined &&
-      !(typeof stroke === 'object' && !Array.isArray(stroke) && 'thickness' in stroke)
-    ) {
-      paints(stroke, `${path}/stroke`, nodeId)
-    }
+    if (isLegacyStroke(stroke)) paints(stroke.fill, `${path}/stroke/fill`, nodeId)
+    else paints(stroke, `${path}/stroke`, nodeId)
     const effects = Array.isArray(node.effect)
       ? node.effect
       : [node.effect].filter((effect) => effect !== undefined)

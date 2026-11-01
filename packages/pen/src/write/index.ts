@@ -30,7 +30,8 @@ const TYPES: Partial<Record<SceneNode['type'], string>> = {
   POLYGON: 'polygon',
   GROUP: 'group',
   TEXT: 'text',
-  VECTOR: 'path'
+  VECTOR: 'path',
+  LINE: 'line'
 }
 const ALIGN = {
   MIN: 'start',

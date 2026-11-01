@@ -12,7 +12,7 @@ describe('penFormat import loss preflight', () => {
         version: '2.21',
         children: [
           { id: 'image', type: 'rectangle', fill: { type: 'image', url: './image.png' } },
-          { id: 'script', type: 'script', scriptUri: './chart.js' }
+          { id: 'unsupported', type: 'future-node' }
         ]
       })
     )

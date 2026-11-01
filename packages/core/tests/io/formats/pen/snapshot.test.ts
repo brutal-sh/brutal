@@ -48,12 +48,14 @@ test('snapshot relocates images and shader fills/strokes without source-file acc
                   uniforms: { size: 0.6 }
                 },
                 stroke: {
-                  type: 'shader',
-                  url: '/old/computer/checks.glsl',
-                  openPenSource: source,
-                  uniforms: { size: 0.2 }
-                },
-                strokeWidth: 2
+                  thickness: 2,
+                  fill: {
+                    type: 'shader',
+                    url: '/old/computer/checks.glsl',
+                    openPenSource: source,
+                    uniforms: { size: 0.2 }
+                  }
+                }
               }
             ]
           }

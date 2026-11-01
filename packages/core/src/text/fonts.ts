@@ -58,6 +58,16 @@ const INTER_WEIGHTS = [
 ]
 
 const BUNDLED_FONTS: Record<string, string> = {
+  ...Object.fromEntries(
+    INTER_WEIGHTS.map((weight) => [`Geist Mono|${weight}`, '/GeistMonoVariable.ttf'])
+  ),
+  ...Object.fromEntries(
+    INTER_WEIGHTS.slice(0, -1).map((weight) => [
+      `JetBrains Mono|${weight}`,
+      '/JetBrainsMonoVariable.ttf'
+    ])
+  ),
+  'Anton|Regular': '/Anton-Regular.ttf',
   ...Object.fromEntries(INTER_WEIGHTS.map((weight) => [`Inter|${weight}`, '/InterVariable.ttf'])),
   ...Object.fromEntries(
     INTER_WEIGHTS.map((weight) => [`Inter|${weight} Italic`, '/InterVariable-Italic.ttf'])

@@ -36,6 +36,7 @@ describe('linked canvas script output boundary', () => {
       [{ type: 'unknown' }],
       [{ type: 'rectangle', width: () => 1 }],
       [{ type: 'rectangle', fill: { type: 'unsupported' } }],
+      [{ type: 'path', stroke: { thickness: 2, fill: { type: 'unsupported' } } }],
       [{ type: 'frame', children: Array.from({ length: 1000 }, () => ({ type: 'rectangle' })) }],
       JSON.parse('[{"type":"rectangle","__proto__":{}}]')
     ])

@@ -2,7 +2,6 @@ import { expect, test } from 'bun:test'
 import { join } from 'node:path'
 
 import { FIXTURES } from '#core-tests/helpers/paths'
-
 import type { CanvasKit, TypefaceFontProvider } from 'canvaskit-wasm'
 
 import { FontManager } from '@open-pencil/core/text'
@@ -13,6 +12,17 @@ function offlineManager() {
   manager.setOnlineFontProviders({})
   return manager
 }
+
+test.each([
+  ['Geist Mono', 'SemiBold'],
+  ['JetBrains Mono', 'Regular'],
+  ['Anton', 'Regular']
+])('loads the gallery font %s %s without a web provider', async (family, style) => {
+  const manager = offlineManager()
+  const bytes = await manager.loadLocalFont(family, style)
+  expect(bytes?.byteLength).toBeGreaterThan(100_000)
+  expect(manager.loadedData(family, style)).toBe(bytes)
+})
 
 /** Records what it registers, so a second registration of a face's bytes shows up. */
 function countingProvider() {

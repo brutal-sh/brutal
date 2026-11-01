@@ -124,7 +124,7 @@ const paintsSchema = v.union([paintSchema, v.array(paintSchema)])
 /** The 2.8 stroke: one colour with its weight and placement in one object. */
 const legacyStrokeSchema = v.looseObject({
   thickness: v.union([numSchema, sidesSchema]),
-  fill: v.optional(strSchema),
+  fill: v.optional(paintsSchema),
   align: v.optional(strSchema),
   join: v.optional(strSchema),
   cap: v.optional(strSchema)

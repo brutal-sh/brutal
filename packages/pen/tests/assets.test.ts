@@ -21,6 +21,35 @@ const PNG =
   'iVBORw0KGgoAAAANSUhEUgAAAAIAAAABCAIAAAB7QOjdAAAADElEQVR4nGP8zwACAAYIAQFazwZIAAAAAElFTkSuQmCC'
 
 describe('penAssets', () => {
+  test('discovers images and local shaders inside object stroke paint lists', () => {
+    const doc = parsePenDocument(
+      JSON.stringify({
+        version: '2.21',
+        children: [
+          {
+            id: 'line',
+            type: 'line',
+            width: 100,
+            height: 0,
+            stroke: {
+              thickness: 3,
+              dashPattern: [4, 2],
+              fill: [
+                { type: 'image', url: './stroke.png' },
+                { type: 'shader', url: './stroke.glsl' },
+                { type: 'image', url: `data:image/png;base64,${PNG}` },
+                { type: 'image', url: '../private.png' }
+              ]
+            }
+          }
+        ]
+      })
+    )
+    expect(penAssets(doc)).toMatchObject({
+      images: ['./stroke.png', `data:image/png;base64,${PNG}`],
+      shaders: ['./stroke.glsl']
+    })
+  })
   test('lists icons with how they are drawn, images in the document folder, and data URLs', () => {
     const doc = parsePenDocument(
       JSON.stringify({

@@ -44,6 +44,17 @@ export async function generated(page: Page) {
   })
 }
 
+export async function exportScript(page: Page) {
+  return page.evaluate(async () => {
+    const store = window.openPencil?.getStore?.()
+    const node = store?.getSelectedNodes()[0]
+    if (!store || !node) throw new Error('No Script selected')
+    const bytes = await store.renderExportImage([node.id], 1, 'PNG')
+    if (!bytes) throw new Error('Script export did not produce an image')
+    return Array.from(bytes)
+  })
+}
+
 export async function chooseSource(page: Page, code = source) {
   const choosing = page.waitForEvent('filechooser')
   await page.getByRole('button', { name: 'Choose script file', exact: true }).click()

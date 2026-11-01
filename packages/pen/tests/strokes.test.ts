@@ -84,6 +84,34 @@ describe('parsePenFile — strokes (#1324)', () => {
     expect(node.borderBottomWeight).toBe(1)
   })
 
+  test('reads stacked and gradient paints inside a Script stroke object', () => {
+    const node = strokeOf({
+      stroke: {
+        thickness: 3,
+        align: 'outside',
+        cap: 'round',
+        fill: [
+          { type: 'color', color: '#FF0000' },
+          {
+            type: 'gradient',
+            colors: [
+              { color: '#000000', position: 0 },
+              { color: '#FFFFFF', position: 1 }
+            ]
+          }
+        ]
+      }
+    })
+    expect(node.strokes).toHaveLength(2)
+    expect(node.strokes[0]).toMatchObject({ color: RED, weight: 3, align: 'OUTSIDE', cap: 'ROUND' })
+    expect(node.strokes[1]).toMatchObject({
+      type: 'GRADIENT_LINEAR',
+      weight: 3,
+      align: 'OUTSIDE',
+      cap: 'ROUND'
+    })
+  })
+
   test('resolves and binds a variable width', () => {
     const graph = parseDocument([rectangle({ stroke: '#F00', strokeWidth: '$w' })], {
       variables: { w: { type: 'number', value: 3 } }
@@ -91,6 +119,37 @@ describe('parsePenFile — strokes (#1324)', () => {
     const node = getNodeOrThrow(graph, 'shape')
     expect(node.strokes[0]?.weight).toBe(3)
     expect(node.boundVariables.strokeWeight).toBeDefined()
+  })
+
+  test('keeps horizontal and vertical lines solid like Pen when a legacy dashPattern is present', () => {
+    const graph = parseDocument([
+      {
+        id: 'horizontal',
+        type: 'line',
+        x: 4,
+        y: 8,
+        width: 100,
+        height: 0,
+        stroke: { thickness: 2, fill: '#FF0000', dashPattern: [4, 4] }
+      },
+      {
+        id: 'vertical',
+        type: 'line',
+        width: 0,
+        height: 80,
+        stroke: { thickness: 1, fill: '#000000', dashPattern: [3, 2] }
+      }
+    ])
+    expect(getNodeOrThrow(graph, 'horizontal')).toMatchObject({
+      type: 'LINE',
+      x: 4,
+      y: 8,
+      width: 100,
+      height: 0
+    })
+    expect(getNodeOrThrow(graph, 'horizontal').strokes[0]?.dashPattern).toEqual([])
+    expect(getNodeOrThrow(graph, 'vertical')).toMatchObject({ type: 'LINE', width: 0, height: 80 })
+    expect(getNodeOrThrow(graph, 'vertical').strokes[0]?.dashPattern).toEqual([])
   })
 
   test('lets an instance replace its component stroke field by field', () => {

@@ -10,6 +10,41 @@ const stops = [
 ]
 
 describe('.pen paint export', () => {
+  test('roundtrips line strokes with bound width and paint identity', () => {
+    const graph = parseDocument(
+      [
+        {
+          id: 'line',
+          type: 'line',
+          width: 90,
+          height: 0,
+          stroke: {
+            thickness: '$weight',
+            fill: [{ type: 'color', color: '$ink' }],
+            align: 'center',
+            cap: 'round'
+          }
+        }
+      ],
+      {
+        variables: {
+          weight: { type: 'number', value: 3 },
+          ink: { type: 'color', value: '#3366FF' }
+        }
+      }
+    )
+    const written = writePenDocument(graph)
+    expect(written.children[0]).toMatchObject({
+      strokeWidth: '$weight',
+      stroke: [{ color: '$ink' }]
+    })
+    const reopened = parsePenFile(writePenFile(graph)).getNode('line')
+    expect(reopened).toMatchObject({ type: 'LINE', width: 90, height: 0 })
+    expect(reopened?.strokes).toEqual(graph.getNode('line')?.strokes)
+    expect(Object.keys(reopened?.boundVariables ?? {})).toEqual(
+      Object.keys(graph.getNode('line')?.boundVariables ?? {})
+    )
+  })
   test.each(['linearBurn', 'linearDodge'])('roundtrips %s on fills and strokes', (blendMode) => {
     const graph = parseDocument([
       {

@@ -1,12 +1,22 @@
-import { readFile } from 'node:fs/promises'
+import { readFile, writeFile } from 'node:fs/promises'
 
 import { expect, test } from '@playwright/test'
 
 import { parsePenDocument } from '@open-pencil/pen'
 
 import { CanvasHelper } from '#tests/helpers/canvas'
-import { create, chooseSource, generated } from '#tests/helpers/document/scripts'
+import { create, chooseSource, generated, exportScript } from '#tests/helpers/document/scripts'
 import { openAppMenu } from '#tests/helpers/menu'
+
+test('empty Script exports its translucent placeholder and full-opacity border', async ({
+  page
+}, testInfo) => {
+  await create(page)
+  await expect.poll(async () => (await generated(page))?.children.length).toBe(3)
+  const image = Buffer.from(await exportScript(page))
+  await writeFile(testInfo.outputPath('empty-script.png'), image)
+  expect(image).toMatchSnapshot('empty-script.png', { threshold: 0, maxDiffPixels: 0 })
+})
 
 test('Script creates, links, edits inputs, converts to editable layers and undoes', async ({
   page

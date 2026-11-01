@@ -24,3 +24,4 @@ export {
 export type { PenDocument, PenNode, PenOverride } from './schema'
 
 export { writePenDocument, writePenFile, PenExportError, type PenExportDiagnostic } from './write'
+export { isLegacyStroke } from './paints'

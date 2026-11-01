@@ -1,8 +1,11 @@
 import harfBuzzSubset from 'harfbuzzjs/dist/harfbuzz-subset.wasm?url'
 
+import anton from '@open-pencil/core/assets/Anton-Regular.ttf?url'
+import geistMono from '@open-pencil/core/assets/GeistMonoVariable.ttf?url'
 import interSemiBold from '@open-pencil/core/assets/Inter-SemiBold.ttf?url'
 import interVariableItalic from '@open-pencil/core/assets/InterVariable-Italic.ttf?url'
 import interVariable from '@open-pencil/core/assets/InterVariable.ttf?url'
+import jetBrainsMono from '@open-pencil/core/assets/JetBrainsMonoVariable.ttf?url'
 import notoNaskhArabic from '@open-pencil/core/assets/NotoNaskhArabic-Regular.ttf?url'
 import emojiMetrics from '@open-pencil/core/assets/OpenPencilEmojiMetrics-Regular.ttf?url'
 import { fontManager, setHarfBuzzSubsetLocator } from '@open-pencil/core/text'
@@ -14,6 +17,9 @@ import { fontManager, setHarfBuzzSubsetLocator } from '@open-pencil/core/text'
  * in a Vite build, not in the Bun test runner.
  */
 const BUNDLED_FONT_URLS: Record<string, string> = {
+  'Anton-Regular.ttf': anton,
+  'GeistMonoVariable.ttf': geistMono,
+  'JetBrainsMonoVariable.ttf': jetBrainsMono,
   'InterVariable.ttf': interVariable,
   'InterVariable-Italic.ttf': interVariableItalic,
   'Inter-SemiBold.ttf': interSemiBold,

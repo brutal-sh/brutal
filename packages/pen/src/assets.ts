@@ -1,3 +1,4 @@
+import { isLegacyStroke } from './paints'
 import type { PenDocument, PenNode, PenOverride, PenPaint, PenPaints } from './schema'
 import { possibleValues } from './variables'
 
@@ -149,9 +150,7 @@ function collect(node: PenOverride, assets: Found) {
     }
   }
   paintFiles(node.fill, assets)
-  if (!(typeof node.stroke === 'object' && 'thickness' in node.stroke)) {
-    paintFiles(node.stroke, assets)
-  }
+  paintFiles(isLegacyStroke(node.stroke) ? node.stroke.fill : node.stroke, assets)
   for (const child of node.children ?? []) collect(child, assets)
   for (const override of Object.values(node.descendants ?? {})) collect(override, assets)
 }

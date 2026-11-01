@@ -113,35 +113,35 @@ function cancel() {
       container: 'min-h-6 justify-center'
     }"
   >
-    <NumberField
-      v-if="input.type === 'number'"
-      :model-value="Number(resolvedValue)"
-      :bound="bound"
-      :aria-label="input.name"
-      icon="#"
-      :disabled="!editable"
-      @editing-change="edit"
-      @update:model-value="setValue"
-      @commit="
-        (next) => {
-          setValue(next)
-          edit(false)
-        }
-      "
-      @cancel="cancel"
-    >
-      <template v-if="bound" #bound>
-        <BindingPill :label="variable?.name ?? String(value).slice(1)" :unresolved="!variable" />
-      </template>
-      <template #suffix>
-        <ScriptVariablePicker
-          :node-id="nodeId"
-          :input="input"
-          :disabled="!editable"
-          @detach="setValue"
-        />
-      </template>
-    </NumberField>
+    <div v-if="input.type === 'number'" class="flex min-w-0 items-center rounded bg-panel-field">
+      <NumberField
+        :model-value="Number(resolvedValue)"
+        :bound="bound"
+        :aria-label="input.name"
+        icon="#"
+        :disabled="!editable"
+        :ui="{ root: 'min-w-0 rounded-r-none', display: 'pr-0.5' }"
+        @editing-change="edit"
+        @update:model-value="setValue"
+        @commit="
+          (next) => {
+            setValue(next)
+            edit(false)
+          }
+        "
+        @cancel="cancel"
+      >
+        <template v-if="bound" #bound>
+          <BindingPill :label="variable?.name ?? String(value).slice(1)" :unresolved="!variable" />
+        </template>
+      </NumberField>
+      <ScriptVariablePicker
+        :node-id="nodeId"
+        :input="input"
+        :disabled="!editable"
+        @detach="setValue"
+      />
+    </div>
     <AppCheckbox
       v-else-if="input.type === 'boolean'"
       neutral

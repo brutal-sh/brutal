@@ -201,6 +201,12 @@ export function createScriptRuntime(editor: Editor, io: IORegistry, options: Scr
     const node = graph.getNode(id)
     if (!node) return
     const size = { width: node.width, height: node.height }
+    const scale = Math.min(
+      1,
+      Math.max(0, size.width - 16) / 200,
+      Math.max(0, size.height - 16) / 38
+    )
+    const top = (size.height - 38 * scale) / 2
     const document = await io.readDocument({
       name: 'script-placeholder.pen',
       data: new TextEncoder().encode(
@@ -212,32 +218,35 @@ export function createScriptRuntime(editor: Editor, io: IORegistry, options: Scr
               id: 'background',
               width: size.width,
               height: size.height,
-              fill: { type: 'color', color: '#36B25F', opacity: 0.1 },
+              fill: '#36B25F1A',
               stroke: '#36B25F',
               strokeWidth: 1,
               strokeAlignment: 'inner'
             },
             {
-              type: 'icon',
+              type: 'path',
               id: 'code',
-              library: 'lucide',
-              icon: 'code-xml',
-              width: 14,
-              height: 14,
-              x: size.width / 2 - 7,
-              y: size.height / 2 - 14,
-              fill: '#1F9947'
+              width: 16 * scale,
+              height: 16 * scale,
+              x: (size.width - 16 * scale) / 2,
+              y: top + 4 * scale,
+              viewBox: [0, 0, 24, 24],
+              geometry: 'M 16 6 L 22 12 L 16 18 M 8 6 L 2 12 L 8 18',
+              stroke: { thickness: scale, fill: '#1F9947', cap: 'round', join: 'round' }
             },
             {
               type: 'text',
               id: 'message',
               content: 'No script file selected',
+              textGrowth: 'fixed-width-height',
               fontFamily: 'Inter',
-              fontSize: 9,
+              fontSize: 10 * scale,
+              fontWeight: 500,
+              lineHeight: 1,
               x: 0,
-              y: size.height / 2 + 4,
+              y: top + 24 * scale,
               width: size.width,
-              height: 16,
+              height: 10 * scale,
               textAlign: 'center',
               fill: '#1F9947'
             }

@@ -62,6 +62,39 @@ function penBytes(children: unknown[]) {
 }
 
 describe('penFormat.readDocument — assets', () => {
+  test('reads and reopens an object image stroke without losing its image bytes', async () => {
+    const asked: string[] = []
+    const { graph } = await io.readDocument({
+      name: 'stroke.pen',
+      data: penBytes([
+        {
+          id: 'line',
+          type: 'line',
+          width: 80,
+          height: 0,
+          stroke: {
+            thickness: 3,
+            fill: { type: 'image', url: './stroke.png' }
+          }
+        }
+      ]),
+      readAsset: async (path) => {
+        asked.push(path)
+        return PNG
+      }
+    })
+    expect(asked).toEqual(['./stroke.png'])
+    const first = getNodeOrThrow(graph, 'line').strokes[0]
+    expect(first.type).toBe('IMAGE')
+    const saved = await io.writeDocument('pen', graph)
+    const reopened = await io.readDocument({
+      name: 'reopened.pen',
+      data: typeof saved.data === 'string' ? new TextEncoder().encode(saved.data) : saved.data
+    })
+    const stroke = getNodeOrThrow(reopened.graph, 'line').strokes[0]
+    expect(stroke.dashPattern).toEqual([])
+    expect(reopened.graph.images.get(stroke.imageHash ?? '')).toEqual(PNG)
+  })
   test('draws every library from its set, Material Symbols at their weight', async () => {
     const requested: IconRequest[] = []
     const icons = iconProvider(['lucide:house', 'material-symbols-outlined:home'], requested)

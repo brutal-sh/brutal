@@ -9,8 +9,10 @@ import { hasCurrentScriptOutput, scriptOfNode } from '@open-pencil/scene-graph/s
 import { useRetainedActivity } from '@open-pencil/vue/lifecycle/retention'
 
 import { documentSourceFilePath } from '@/app/document/io/assets'
+import { GALLERY_SCRIPT_PREFIX } from '@/app/document/scripts/gallery/catalog'
 import { useEditorStore } from '@/app/editor/active-store'
 import { isTauri } from '@/app/tauri/env'
+import GoodiesDialog from '@/components/goodies/GoodiesDialog.vue'
 import AppButton from '@/components/ui/button/AppButton.vue'
 import IconButton from '@/components/ui/button/IconButton.vue'
 import AppAlert from '@/components/ui/feedback/AppAlert.vue'
@@ -57,6 +59,7 @@ const canConvert = computed(() => {
 })
 const path = ref('')
 const error = ref('')
+const galleryOpen = ref(false)
 const editingId = ref<string | null>(null)
 let pathTarget: ReturnType<typeof pickTarget> | null = null
 function beginPath() {
@@ -201,7 +204,11 @@ async function reveal() {
       <IconButton label="Choose script file" :disabled="!editable" @click="chooseFile">
         <icon-lucide-folder-open class="size-3.5" />
       </IconButton>
-      <IconButton v-if="definition.uri && isTauri()" label="Reveal script file" @click="reveal">
+      <IconButton
+        v-if="definition.uri && !definition.uri.startsWith(GALLERY_SCRIPT_PREFIX) && isTauri()"
+        label="Reveal script file"
+        @click="reveal"
+      >
         <icon-lucide-file-search class="size-3.5" />
       </IconButton>
     </div>
@@ -221,8 +228,12 @@ async function reveal() {
         Convert to layers
       </AppButton>
       <p v-if="!definition.uri" class="text-[11px] text-muted">
-        Ask the agent to create a script, or choose a JavaScript file.
+        Tip: You can ask the agent to generate a script based on your description or find more
+        scripts in Goodies...
       </p>
+      <AppButton v-if="!definition.uri" variant="outline" size="xs" @click="galleryOpen = true">
+        Script Gallery...
+      </AppButton>
       <AppAlert
         v-if="error || state?.error"
         tone="error"
@@ -231,4 +242,5 @@ async function reveal() {
       />
     </div>
   </PanelSection>
+  <GoodiesDialog v-model:open="galleryOpen" />
 </template>

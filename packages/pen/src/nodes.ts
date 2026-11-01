@@ -95,6 +95,7 @@ function sceneType(pen: PenNode): NodeType {
   if (pen.type === 'group') return 'GROUP'
   if (pen.type === 'text' || pen.type === 'icon_font') return 'TEXT'
   if (pen.type === 'path') return 'VECTOR'
+  if (pen.type === 'line') return 'LINE'
   return 'FRAME'
 }
 
