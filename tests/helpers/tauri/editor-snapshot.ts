@@ -1,3 +1,5 @@
+import { invokeNative } from './invoke'
+
 export type NativeLayerFixture = {
   first: string
   second: string
@@ -6,6 +8,11 @@ export type NativeLayerFixture = {
 
 // Home has an editor store too, but no mounted canvas or text-input session.
 async function ensureNativeEditorReady(): Promise<void> {
+  await invokeNative('plugin:window|set_focus', { label: 'main' })
+  await browser.waitUntil(() => browser.execute(() => !document.hidden), {
+    timeout: 30_000,
+    timeoutMsg: 'Native test window remained hidden'
+  })
   await browser.waitUntil(
     async () =>
       browser.execute(() => {

@@ -1,8 +1,9 @@
-function isEditableTarget(target: EventTarget | null | undefined): boolean {
+export function isInputElement(target: EventTarget | null | undefined): boolean {
   return (
     target instanceof HTMLInputElement ||
     target instanceof HTMLTextAreaElement ||
-    (target instanceof HTMLElement && target.isContentEditable)
+    (target instanceof HTMLElement && target.isContentEditable) ||
+    (target instanceof Element && target.closest('[data-editor-input-surface]') !== null)
   )
 }
 
@@ -19,7 +20,7 @@ export function isButtonActivation(event: KeyboardEvent): boolean {
 }
 
 export function isEditing(event: Event) {
-  return event.composedPath().some(isEditableTarget)
+  return event.composedPath().some(isInputElement)
 }
 
 /** Open overlays own navigation keys; history may still reach a paint picker. */
@@ -46,12 +47,4 @@ export function overlayHandlesKeyboard(event: KeyboardEvent, allowPickers = fals
 export function hasDocumentTextSelection(): boolean {
   const selection = window.getSelection()
   return selection !== null && !selection.isCollapsed && selection.toString().length > 0
-}
-
-export function isInputElement(element: EventTarget | null | undefined): boolean {
-  return (
-    element instanceof HTMLInputElement ||
-    element instanceof HTMLTextAreaElement ||
-    (element instanceof HTMLElement && element.isContentEditable)
-  )
 }

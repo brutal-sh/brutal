@@ -456,3 +456,8 @@ Native actual Pen single/multi collapse, selection changes and clear/reselect be
 ### Inspector browser entry continuation — 2026-11-02
 
 The missing native desktop Code action now toggles the existing browser. Three preview checks and one editable-import native journey execute through it, including real navigation/history/capture/Undo and editable import/refusal/text editing/FIG save/reopen. A separate physical open/close preserves selection and document version. Code measures y695/h136 in the calibrated rectangle fixture. Actual Pen's mode is a retained preference, defaulting to split view; earlier observations with saved Coding Mode enabled do not establish a forced entry mode. Open Pen's browser modes, remembered page, landing/toolbar/dock/header design and responsive import layout remain open. The14-workflow browser regression, source/Vue/canonical test types, lint(existing warnings), architecture, normal79.34MiB package/signature/hook checks pass; see BROWSER.md.
+
+
+### Browser keyboard ownership continuation — 2026-11-02
+
+The native before-fix regression demonstrates toolbar-focused ArrowRight/Delete/R editing the design and changing tools. The shared input-surface guard preserves document/layers/selection/tool while browser-focused. Four native preview checks, one editable-import journey and a separate physical keyboard journey pass; canvas Delete→Undo remains available after closing. Native clipboard and other browser modes remain untested by this unit. The68-workflow browser run, two clipboard-cut model checks, scoped static and normal package/signature/hook checks pass; see BROWSER.md. Full parity remains open.

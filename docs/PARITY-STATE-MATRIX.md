@@ -84,3 +84,6 @@ Inspector collapse continuation2026-11-02: actual native Pen confirms single/mul
 
 
 Inspector browser-entry continuation2026-11-02: Code now opens/closes the native desktop browser and measures y695/h136 in the calibrated rectangle fixture. Four native preview/import checks and a separate physical toggle execute through the entry. Actual Pen retains its page/mode and defaults to split view; Coding Mode is not forced by the inspector action. Open Pen's modes, remembered page, landing/toolbar/dock/header and responsive import layout remain open. The14-workflow browser regression, source/Vue/canonical test types, lint(existing warnings), architecture, normal79.34MiB package/signature/hook checks pass; see BROWSER.md.
+
+
+Browser keyboard continuation2026-11-02: a real native regression reproduces toolbar-focused nudge/delete/tool edits. Four native preview checks, editable-import acceptance and a physical Right/Delete/R journey now preserve the focused browser's document state, with canvas Delete/Undo available after closing. The68-workflow browser run, two clipboard-cut model checks, scoped static and normal package/signature/hook checks pass; native clipboard and remaining modes/visual/layout states stay open. See BROWSER.md.

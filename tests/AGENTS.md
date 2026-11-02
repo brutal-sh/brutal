@@ -36,5 +36,6 @@
 
 - Native checks live under `tests/e2e/native/**` and run through WebdriverIO against an explicit test-only Tauri binary: `bun run test:native` builds and runs, `bun run build:native-test` only builds. The binary uses a separate application identifier, an ephemeral WebView data store, and process-memory credentials.
 - Never run UI smoke tests against production Keychain entries or clear user recovery data to unblock tests. Persistence across restarts needs a dedicated test-owned persistent profile.
+- Native editor fixtures focus the main window and assert it is visible before initializing canvas input; fully occluded WKWebViews can pause graphics initialization (`tests/helpers/tauri/editor-snapshot.ts`).
 - Native tests answer only whether the real WebView and Tauri shell deliver an interaction; engine tests cover state contracts and Playwright covers app integration. Platform-limited checks skip rather than claim coverage. Synthetic composition does not prove IME behavior; native clipboard remains a separate acceptance gap without trusted OS clipboard events.
 - Centralize native invocation in a guarded helper using vendor-derived types; do not import packages inside serialized WebView callbacks or repeat direct Tauri-global access in specs.

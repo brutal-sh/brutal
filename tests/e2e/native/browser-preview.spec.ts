@@ -91,6 +91,44 @@ describe('native embedded browser preview', () => {
     )
   })
 
+  it('keeps canvas edit keys out of the focused browser toolbar', async () => {
+    const snapshot = () =>
+      browser.execute(() => {
+        const store = window.openPencil?.getStore?.()
+        if (!store) throw new Error('No editor')
+        return {
+          version: store.state.sceneVersion,
+          selected: [...store.state.selectedIds],
+          tool: store.state.activeTool,
+          layers: store.graph
+            .getChildren(store.state.currentPageId)
+            .map(({ id, x, y }) => ({ id, x, y }))
+        }
+      })
+    const before = await snapshot()
+    await $('button=Import Web via Browser').click()
+    try {
+      const desktop = await $('button[aria-label="Desktop"]')
+      await desktop.waitForDisplayed()
+      await desktop.execute((button) => button.focus())
+      await browser.keys('ArrowRight')
+      await browser.keys('Delete')
+      await browser.keys('r')
+      assert.deepEqual(await snapshot(), before)
+    } finally {
+      await $('button[aria-label="Close browser preview"]').click()
+    }
+    await browser.execute(() => {
+      if (document.activeElement instanceof HTMLElement) document.activeElement.blur()
+    })
+    await browser.keys('Delete')
+    await browser.waitUntil(
+      async () => (await snapshot()).layers.length === before.layers.length - 1
+    )
+    await browser.keys([process.platform === 'darwin' ? 'Meta' : 'Control', 'z'])
+    await browser.waitUntil(async () => (await snapshot()).layers.length === before.layers.length)
+  })
+
   it('embeds responsive pixels, denies remote IPC, captures to a layer, and undoes it', async function () {
     if (process.platform !== 'darwin') this.skip()
     // The test driver only resolves standalone windows. Keep its existing main executor while

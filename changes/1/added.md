@@ -1,6 +1,6 @@
 - Export editable `.pen` 2.21 documents for supported shapes, text, paths, frames, stack layouts, gradients, embedded images, themes and linked instances, with actionable errors for content the writer cannot preserve.
 - Scale selected layers and their contents proportionally with the Scale tool (`K`), including text, strokes, effects, layout spacing and bound values, with one-step Undo and Escape cancellation.
-- Open the native browser from the selected layer’s Code section and import supported rendered pages as editable frames, text and image layers with undo, validated fixed geometry, bounded extraction, and actionable refusals for content that cannot yet be preserved.
+- Open the native browser from the selected layer’s Code section and import supported rendered pages as editable frames, text and image layers with undo, validated fixed geometry, bounded extraction, browser-owned keyboard input, and actionable refusals for content that cannot yet be preserved.
 - Installs a verified standalone local canvas bridge so the native app can use an existing Codex CLI login without reading the development checkout at launch.
 - Adds Linear Burn and Linear Dodge to paint/effect blend menus and preserves them through supported `.pen` and FIG round trips.
 - Adds a screen-color sampler control with browser capability detection and a native macOS bridge.
