@@ -19,7 +19,11 @@ test('closing a still-opening dock precedes another document opening its preview
   const callNative: typeof invoke = async <T>(command: string): Promise<T> => {
     commands.push(command)
     if (commands.length === 1) return (await pending.promise) as T
-    return (command === 'browser_preview_open' ? status : undefined) as T
+    return (
+      command === 'browser_preview_open' || command === 'browser_preview_status'
+        ? status
+        : undefined
+    ) as T
   }
   const bounds = () => ({ x: 800, y: 100, width: 390, height: 600 })
   const first = createBrowserPreviewNative(bounds, callNative)
@@ -34,8 +38,48 @@ test('closing a still-opening dock precedes another document opening its preview
   await Promise.all([opening, closing, reopened])
   expect(commands).toEqual([
     'browser_preview_open',
+    'browser_preview_status',
     'browser_preview_action',
     'browser_preview_open'
   ])
+  expect(await closing).toEqual(status)
   await second.dispose()
+})
+
+test('a failed closing snapshot still destroys the child', async () => {
+  const commands: string[] = []
+  const callNative: typeof invoke = async <T>(command: string): Promise<T> => {
+    commands.push(command)
+    if (command === 'browser_preview_open')
+      return {
+        url: 'https://example.test/',
+        title: '',
+        width: 390,
+        height: 600,
+        captureAvailable: true
+      } as T
+    return undefined as T
+  }
+  const bridge = createBrowserPreviewNative(
+    () => ({ x: 0, y: 0, width: 390, height: 600 }),
+    callNative
+  )
+  await bridge.native.open('https://example.test/', PREVIEW_PRESETS[0])
+  await expect(bridge.dispose()).rejects.toThrow()
+  expect(commands).toEqual([
+    'browser_preview_open',
+    'browser_preview_status',
+    'browser_preview_action'
+  ])
+})
+
+test('an unopened dock never adopts another document’s native page', async () => {
+  const commands: string[] = []
+  const callNative: typeof invoke = async <T>(command: string): Promise<T> => {
+    commands.push(command)
+    throw new Error('Foreign page must not be read')
+  }
+  const bridge = createBrowserPreviewNative(() => null, callNative)
+  expect(await bridge.native.status()).toBeNull()
+  expect(commands).toEqual([])
 })

@@ -23,6 +23,7 @@ export function createBrowserPreviewNative(
   callNative: typeof invoke = invoke
 ) {
   let disposed = false
+  let opened = false
   const enqueue = <T>(operation: () => Promise<T>): Promise<T> => {
     const next = pendingPreviewOperation.catch(() => undefined).then(operation)
     pendingPreviewOperation = next
@@ -35,14 +36,18 @@ export function createBrowserPreviewNative(
   }
   const native: BrowserPreviewNative = {
     open: (url) =>
-      enqueue(async () =>
-        v.parse(
+      enqueue(async () => {
+        const status = v.parse(
           previewStatusSchema,
           await callNative('browser_preview_open', { url, bounds: requireBounds() })
         )
-      ),
+        opened = true
+        return status
+      }),
     status: async () =>
-      v.parse(v.nullable(previewStatusSchema), await callNative('browser_preview_status')),
+      opened
+        ? v.parse(v.nullable(previewStatusSchema), await callNative('browser_preview_status'))
+        : null,
     action: (action) => enqueue(() => callNative('browser_preview_action', { action })),
     resize: () => enqueue(() => callNative('browser_preview_resize', { bounds: requireBounds() })),
     capture: (url) =>
@@ -65,7 +70,13 @@ export function createBrowserPreviewNative(
       }),
     dispose: () => {
       disposed = true
-      return enqueue(() => callNative('browser_preview_action', { action: 'close' }))
+      return enqueue(async () => {
+        try {
+          return await native.status()
+        } finally {
+          await callNative('browser_preview_action', { action: 'close' })
+        }
+      })
     }
   }
 }

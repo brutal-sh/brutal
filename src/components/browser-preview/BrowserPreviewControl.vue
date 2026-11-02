@@ -8,6 +8,7 @@ import {
 import { PopoverContent, PopoverPortal, PopoverRoot, PopoverTrigger } from 'reka-ui'
 import { nextTick, onMounted, onScopeDispose, ref, useId, watch } from 'vue'
 
+import type { BrowserPreviewSession } from '@/app/browser-preview/context'
 import { createBrowserPreviewController } from '@/app/browser-preview/controller'
 import { hasPreviewOverlay, previewDockBounds } from '@/app/browser-preview/dock'
 import { browserImportTarget } from '@/app/browser-preview/dom/placement'
@@ -22,6 +23,7 @@ import { usePopoverUI } from '@/components/ui/overlay/popover'
 
 const open = defineModel<boolean>('open', { default: false })
 const codingMode = defineModel<boolean>('codingMode', { default: false })
+const { session } = defineProps<{ session: BrowserPreviewSession }>()
 const store = useEditorStore()
 const surface = ref<HTMLElement | null>(null)
 const inputId = useId()
@@ -51,7 +53,10 @@ const preview = createBrowserPreviewController(
   () => browserImportTarget(store, () => open.value)
 )
 const { address, preset, status, busy, error, notice } = preview
-const { pause, resume } = useIntervalFn(preview.refresh, 1000, { immediate: false })
+preset.value = session.preset
+const { pause, resume } = useIntervalFn(preview.refresh, 1000, {
+  immediate: false
+})
 
 function syncSurface() {
   if (frame || disposed) return
@@ -86,6 +91,9 @@ watch(
   },
   { immediate: true }
 )
+watch(preset, (value) => {
+  session.preset = value
+})
 watch([preset, status], syncSurface)
 watch(
   codingMode,
@@ -113,14 +121,28 @@ useMutationObserver(document.body, syncSurface, {
   attributes: true,
   attributeFilter: ['data-state']
 })
-onMounted(syncSurface)
+onMounted(async () => {
+  syncSurface()
+  await session.closing
+  if (disposed || !session.url) return
+  address.value = session.url
+  await navigate()
+  if (!disposed && codingMode.value && status.value) await preview.action('focus')
+})
 onScopeDispose(() => {
   disposed = true
   if (frame) cancelAnimationFrame(frame)
   preview.dispose()
-  void bridge
+  session.url = status.value?.url ?? session.url
+  session.closing = bridge
     .dispose()
-    .catch((reason: unknown) => console.warn('[Browser preview] Close failed', reason))
+    .then((snapshot) => {
+      if (snapshot) session.url = snapshot.url
+      return undefined
+    })
+    .catch((reason: unknown) =>
+      console.warn('[Browser preview] Could not retain or close page', reason)
+    )
 })
 </script>
 

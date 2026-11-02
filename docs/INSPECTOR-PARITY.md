@@ -56,3 +56,5 @@ Import Web via Browser now toggles the existing native desktop browser from Code
 
 
 Coding Mode continuation2026-11-02: the inspector browser entry now participates in qualified split/expanded transitions, retained mode choice and real loaded-page history across Mode changes. Six native preview/import checks, physical mode geometry and39 browser regressions execute; see BROWSER.md for the corrected sidebar quantization/inset evidence and limits. Remembered page after closing, landing/toolbar design and other states remain open.
+
+Remembered-browser continuation2026-11-02: the inspector entry now reloads its last loaded page and viewport after closing, with native child teardown and unchanged document state. Six preview checks, separate editable-import/FIG reopen and physical close/reopen/final-close execute; see BROWSER.md. This does not establish exact landing/toolbar design, cross-close page state or full inspector parity.

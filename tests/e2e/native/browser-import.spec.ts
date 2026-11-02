@@ -97,6 +97,12 @@ describe('native editable browser import', () => {
           element.click()
         }
         const navigate = async (path: string) => {
+          await wait(() => {
+            const address = document.querySelector<HTMLButtonElement>(
+              'button[aria-label="Web address"]'
+            )
+            return !!address && !address.disabled
+          }, 'address button ready')
           button('Web address')
           await wait(() => !!document.querySelector('input[type="url"]'), 'address popup')
           const input = document.querySelector<HTMLInputElement>('input[type="url"]')

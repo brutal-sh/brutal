@@ -10,7 +10,7 @@ import { useViewportKind } from '@open-pencil/vue/editor/viewport-kind'
 import { useI18n } from '@open-pencil/vue/i18n'
 
 import { useAIChat } from '@/app/ai/chat/use'
-import { toggleBrowserPreviewKey } from '@/app/browser-preview/context'
+import { toggleBrowserPreviewKey, type BrowserPreviewSession } from '@/app/browser-preview/context'
 import { isVersionHistoryOpen } from '@/app/cloud/integration'
 import { provideTabEditorStore } from '@/app/editor/active-store'
 import { openVariablesDialog } from '@/app/editor/tokens/dialog'
@@ -41,7 +41,10 @@ import splitterTheme from '@/theme/splitter'
 
 import WorkspacePill from './WorkspacePill.vue'
 
-const emit = defineEmits<{ openCommandPalette: []; headerWidth: [width: number] }>()
+const emit = defineEmits<{
+  openCommandPalette: []
+  headerWidth: [width: number]
+}>()
 const showChrome = appRuntimeConfig.showChrome
 /**
  * The document tab this workspace edits. WorkspaceView keys the workspace by tab, so the tab and
@@ -56,6 +59,11 @@ const initialEditorLayout = loadEditorLayout()
 const inspectorPinned = ref(false)
 const inspectorCollapsed = ref(false)
 const browserOpen = ref(consumeHomeBrowserRequest(store))
+const browserSession: BrowserPreviewSession = {
+  url: '',
+  preset: 'desktop',
+  closing: Promise.resolve()
+}
 const codingMode = useLocalStorage('open-pen:browser-coding-mode', false)
 const splitBrowser = computed(() => browserOpen.value && !codingMode.value)
 const expandedBrowser = computed(() => browserOpen.value && codingMode.value)
@@ -280,6 +288,7 @@ const { pending: roomPending } = useRoomActions()
           <BrowserPreviewControl
             v-model:open="browserOpen"
             v-model:coding-mode="codingMode"
+            :session="browserSession"
             :class="
               codingMode
                 ? 'absolute top-[50px] right-0 bottom-0 left-2 z-20 overflow-hidden rounded-[20px] border border-island-border'

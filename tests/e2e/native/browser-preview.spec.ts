@@ -11,7 +11,7 @@ let origin: string
 let mainHandle: string
 const ipcReports: string[] = []
 type EmbeddedResult =
-  | { error: string }
+  | { failure: string }
   | {
       id: string
       pixel: number[]
@@ -226,7 +226,7 @@ describe('native embedded browser preview', () => {
     // exercising the child, then close it before returning. No production test bridge is added.
     const result = await browser.executeAsync<EmbeddedResult, [string]>(async (origin, done) => {
       const invoke = window.__TAURI__?.core.invoke
-      if (!invoke) return done({ error: 'Missing native invoke' })
+      if (!invoke) return done({ failure: 'Missing native invoke' })
       const wait = async (condition: () => boolean | Promise<boolean>, label: string) => {
         const end = Date.now() + 12000
         while (Date.now() < end) {
@@ -243,6 +243,12 @@ describe('native embedded browser preview', () => {
         target.click()
       }
       const navigate = async (url: string) => {
+        await wait(() => {
+          const address = document.querySelector<HTMLButtonElement>(
+            'button[aria-label="Web address"]'
+          )
+          return !!address && !address.disabled
+        }, 'address button ready')
         button('Web address')
         await wait(() => !!document.querySelector('input[type="url"]'), 'address popover')
         const input = document.querySelector<HTMLInputElement>('input[type="url"]')
@@ -333,6 +339,34 @@ describe('native embedded browser preview', () => {
             (await invoke<{ width: number }>('browser_preview_status')).width === expectedWidth,
           'dock restored'
         )
+        const reopen = async () => {
+          const beforeReopen = {
+            version: modeStore?.state.sceneVersion,
+            selected: [...(modeStore?.state.selectedIds ?? [])]
+          }
+          button('Close browser preview')
+          await wait(async () => (await invoke('browser_preview_status')) === null, 'closed child')
+          button('Import Web via Browser')
+          await wait(async () => {
+            const reopened = await invoke<{
+              url: string
+              width: number
+            } | null>('browser_preview_status')
+            return reopened?.url === `${origin}/second` && reopened.width === expectedWidth
+          }, 'restored page and phone viewport')
+          await wait(
+            () =>
+              !document.querySelector<HTMLButtonElement>('button[aria-label="Reload page"]')
+                ?.disabled,
+            'restoration settled'
+          )
+          if (
+            modeStore?.state.sceneVersion !== beforeReopen.version ||
+            [...(modeStore?.state.selectedIds ?? [])].join(',') !== beforeReopen.selected.join(',')
+          )
+            throw new Error('Reopening the browser changes the document')
+        }
+        await reopen()
         button('Reload page')
         await new Promise((resolve) => {
           setTimeout(resolve, 400)
@@ -345,7 +379,16 @@ describe('native embedded browser preview', () => {
           height: number
           windowLabel: string
         }>('browser_preview_status')
-        const png = await invoke<ArrayBuffer>('browser_preview_capture', { url: current.url })
+        let png = new ArrayBuffer(0)
+        await wait(async () => {
+          try {
+            png = await invoke<ArrayBuffer>('browser_preview_capture', { url: current.url })
+            return true
+          } catch (reason) {
+            if (String(reason).includes('Wait for the page to finish loading')) return false
+            throw reason
+          }
+        }, 'capturable committed page')
         const image = new Image()
         const objectURL = URL.createObjectURL(new Blob([png], { type: 'image/png' }))
         try {
@@ -400,11 +443,11 @@ describe('native embedded browser preview', () => {
         })
       } catch (reason) {
         await invoke('browser_preview_action', { action: 'close' }).catch(() => undefined)
-        done({ error: String(reason) })
+        done({ failure: String(reason) })
       }
     }, origin)
-    assert.ok(!('error' in result), JSON.stringify(result))
-    if ('error' in result) return
+    assert.ok(!('failure' in result), JSON.stringify(result))
+    if ('failure' in result) return
     console.debug('Embedded native capture evidence:', JSON.stringify(result))
     assert.deepEqual(result.pixel, [34, 170, 85, 255])
     assert.ok(result.rect.x > 0 && result.rect.y > 0)
@@ -424,14 +467,54 @@ describe('native embedded browser preview', () => {
     )
   })
 
+  it('reads status safely while pages start and close repeatedly', async () => {
+    const result = await browser.executeAsync<{ failure?: string; cycles?: number }, [string]>(
+      async (origin, done) => {
+        const invoke = window.__TAURI__?.core.invoke
+        if (!invoke) return done({ failure: 'Missing native invoke' })
+        try {
+          for (let index = 0; index < 16; index++) {
+            const opening = invoke('browser_preview_open', {
+              url: `${origin}/startup?cycle=${index}`,
+              bounds: { x: 800, y: 100, width: 390, height: 500 }
+            })
+            await invoke('browser_preview_status')
+            await opening
+            await invoke('browser_preview_status')
+            await invoke('browser_preview_action', { action: 'close' })
+            if ((await invoke('browser_preview_status')) !== null)
+              throw new Error('Closed browser remains attached')
+          }
+          done({ cycles: 16 })
+        } catch (reason) {
+          await invoke('browser_preview_action', { action: 'close' }).catch(() => undefined)
+          done({ failure: String(reason) })
+        }
+      },
+      origin
+    )
+    assert.ok(!result.failure, JSON.stringify(result))
+    assert.equal(result.cycles, 16)
+  })
+
   it('rejects privileged URLs and bounds outside the editor', async () => {
     const bounds = { x: 800, y: 100, width: 390, height: 500 }
-    await assert.rejects(invokeNative('browser_preview_open', { url: 'file:///etc/hosts', bounds }))
     await assert.rejects(
-      invokeNative('browser_preview_open', { url: 'https://tauri.localhost/', bounds })
+      invokeNative('browser_preview_open', {
+        url: 'file:///etc/hosts',
+        bounds
+      })
     )
     await assert.rejects(
-      invokeNative('browser_preview_resize', { bounds: { ...bounds, width: 100000 } })
+      invokeNative('browser_preview_open', {
+        url: 'https://tauri.localhost/',
+        bounds
+      })
+    )
+    await assert.rejects(
+      invokeNative('browser_preview_resize', {
+        bounds: { ...bounds, width: 100000 }
+      })
     )
     await assert.rejects(
       invokeNative('browser_preview_open', {
