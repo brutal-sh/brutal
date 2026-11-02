@@ -30,10 +30,14 @@
   "browserFileAPINotSupported": "このブラウザはローカルファイルAPIに対応していません。ファイルは同じ場所に保存されず、ダウンロードされます。",
   "newDesignIn": "{place} に新規デザイン",
   "snapshotTitle": "スナップショットをエクスポート",
-  "snapshotDescription": "デザインと画像・シェーダーの依存ファイルを、別のコンピューター用の ZIP にまとめます。",
+  "snapshotDescription": "デザインと画像・シェーダー・スクリプトの依存ファイルを、別のコンピューター用の ZIP にまとめます。",
   "snapshotDependencies": "依存ファイル",
-  "snapshotImages": "画像 {count} 個",
-  "snapshotShaders": "シェーダー {count} 個",
+  "snapshotImages": {
+    "many": "画像 {count} 個"
+  },
+  "snapshotShaders": {
+    "many": "シェーダー {count} 個"
+  },
   "snapshotFailed": "スナップショットをエクスポートできませんでした。もう一度お試しください。",
   "codeGuideTitle": "デザインをコードに書き出す",
   "codeGuideDescription": "コーディングエージェントを Open Pen のローカル MCP サーバーに接続し、自分のプロジェクト内でデザインをコードに変換します。",
@@ -50,5 +54,8 @@
   "figmaGuideTitle": "Figma からインポートする方法",
   "figmaGuideClipboard": "Figma でレイヤーまたはフレームをコピーし、Open Pen のキャンバスに貼り付けます。",
   "figmaGuideFile": "埋め込み画像を含めるには、Figma からローカルの .fig コピーを保存し、Open Pen で開くかドラッグしてください。",
-  "figmaGuideLimits": "インポート後に高度なグラフィックを確認してください。「開く」は複数ページを保持します。「キャンバスにインポート」は単一ページのファイルに対応します。"
+  "figmaGuideLimits": "インポート後に高度なグラフィックを確認してください。「開く」は複数ページを保持します。「キャンバスにインポート」は単一ページのファイルに対応します。",
+  "snapshotScripts": {
+    "many": "スクリプト {count} 個"
+  }
 }

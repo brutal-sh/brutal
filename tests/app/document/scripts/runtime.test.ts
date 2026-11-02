@@ -54,6 +54,12 @@ test('same-name uploads stay owned by their Scripts across resize and source-pat
     await until(
       () => child(first)?.name === code('first') && child(second)?.name === code('second')
     )
+    expect(await runtime.collectScriptSources()).toEqual(
+      new Map([
+        [first, code('first')],
+        [second, code('second')]
+      ])
+    )
     editor.updateNodeWithUndo(first, { width: 240 })
     await until(() => child(first)?.width === 240)
     expect(child(first).name).toBe(code('first'))
@@ -67,6 +73,73 @@ test('same-name uploads stay owned by their Scripts across resize and source-pat
     await until(() => child(first)?.width === 240)
     expect(changes.hasUnsavedChanges()).toBe(false)
     expect(child(second).name).toBe(code('second'))
+  } finally {
+    runtime.dispose()
+    changes.dispose()
+    editor.dispose()
+  }
+})
+
+test('snapshot source collection refuses source edits and disposal during loading', async () => {
+  const editor = createEditor()
+  const changes = createDocumentChanges(editor)
+  const pending = createDeferred<{ source: string; path: null }>()
+  const runtime = createScriptRuntime(editor, io(), {
+    getDocumentPath: () => null,
+    adoptChanges: changes.adopt,
+    loadSource: () => pending.promise,
+    evaluate: async (source, width) => result(source, width)
+  })
+  try {
+    const id = editor.createScript(0, 0)
+    runtime.attachScriptSource(id, 'original.js')
+    const collecting = runtime.collectScriptSources().then(
+      () => null,
+      (error: unknown) => error
+    )
+    runtime.attachScriptSource(id, 'replacement.js', code('replacement'))
+    pending.resolve({ source: code('original'), path: null })
+    expect(String(await collecting)).toMatch(/changed while loading|changed while preparing/)
+    expect(await runtime.collectScriptSources()).toEqual(new Map([[id, code('replacement')]]))
+    runtime.dispose()
+    await expect(runtime.collectScriptSources()).rejects.toThrow(/closed/)
+  } finally {
+    runtime.dispose()
+    changes.dispose()
+    editor.dispose()
+  }
+})
+
+test('snapshot source collection refuses a same-URI component swap during another file load', async () => {
+  const editor = createEditor()
+  const changes = createDocumentChanges(editor)
+  const pending = createDeferred<{ source: string; path: null }>()
+  const runtime = createScriptRuntime(editor, io(), {
+    getDocumentPath: () => null,
+    adoptChanges: changes.adopt,
+    loadSource: () => pending.promise,
+    evaluate: async (source, width) => result(source, width)
+  })
+  try {
+    const mains = ['first', 'second'].map((name) => {
+      const id = editor.createScript(0, 0)
+      runtime.attachScriptSource(id, 'grid.js', code(name))
+      editor.select([id])
+      editor.createComponentFromSelection()
+      return id
+    })
+    const instance = editor.createInstanceFromComponent(mains[0])
+    if (!instance) throw new Error('Missing Script instance')
+    await until(() => editor.graph.getChildren(instance)[0]?.name === code('first'))
+    const other = editor.createScript(300, 0)
+    runtime.attachScriptSource(other, 'pending.js')
+    const collecting = runtime.collectScriptSources().then(
+      () => null,
+      (error: unknown) => error
+    )
+    editor.graph.swapInstanceComponent(instance, mains[1])
+    pending.resolve({ source: code('other'), path: null })
+    expect(String(await collecting)).toMatch(/changed while preparing/)
   } finally {
     runtime.dispose()
     changes.dispose()

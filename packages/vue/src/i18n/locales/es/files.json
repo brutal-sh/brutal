@@ -30,10 +30,16 @@
   "browserFileAPINotSupported": "Tu navegador no admite la API de archivos locales. Los archivos se descargarán en lugar de guardarse en el mismo lugar.",
   "newDesignIn": "Nuevo diseño en {place}",
   "snapshotTitle": "Exportar instantánea",
-  "snapshotDescription": "Una instantánea reúne este diseño y sus imágenes y shaders en un ZIP para otro equipo.",
+  "snapshotDescription": "Una instantánea reúne este diseño y sus imágenes, shaders y scripts en un ZIP para otro equipo.",
   "snapshotDependencies": "Dependencias",
-  "snapshotImages": "{count} imágenes",
-  "snapshotShaders": "{count} shaders",
+  "snapshotImages": {
+    "one": "{count} imagen",
+    "many": "{count} imágenes"
+  },
+  "snapshotShaders": {
+    "one": "{count} sombreador",
+    "many": "{count} sombreadores"
+  },
   "snapshotFailed": "No se pudo exportar la instantánea. Inténtalo de nuevo.",
   "codeGuideTitle": "Exportar diseño a código",
   "codeGuideDescription": "Conecta un agente de programación al servidor MCP local de Open Pen para convertir tus diseños en código dentro de tu proyecto.",
@@ -50,5 +56,9 @@
   "figmaGuideTitle": "Cómo importar desde Figma",
   "figmaGuideClipboard": "Copia una capa o un marco en Figma y pégalo en el lienzo de Open Pen.",
   "figmaGuideFile": "Para incluir imágenes integradas, guarda una copia local .fig desde Figma y ábrela o arrástrala a Open Pen.",
-  "figmaGuideLimits": "Revisa los gráficos avanzados después de importar. Abrir conserva varias páginas; Importar al lienzo acepta un archivo de una sola página."
+  "figmaGuideLimits": "Revisa los gráficos avanzados después de importar. Abrir conserva varias páginas; Importar al lienzo acepta un archivo de una sola página.",
+  "snapshotScripts": {
+    "one": "{count} script de JavaScript",
+    "many": "{count} scripts de JavaScript"
+  }
 }

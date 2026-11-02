@@ -30,10 +30,16 @@
   "browserFileAPINotSupported": "Dein Browser unterstützt die lokale Datei-API nicht. Dateien werden heruntergeladen, statt direkt gespeichert zu werden.",
   "newDesignIn": "Neues Design in {place}",
   "snapshotTitle": "Snapshot exportieren",
-  "snapshotDescription": "Ein Snapshot bündelt dieses Design und seine Bild- und Shader-Abhängigkeiten als ZIP für einen anderen Computer.",
+  "snapshotDescription": "Ein Snapshot bündelt dieses Design und seine Bild-, Shader- und Skript-Abhängigkeiten als ZIP für einen anderen Computer.",
   "snapshotDependencies": "Abhängigkeiten",
-  "snapshotImages": "{count} Bilder",
-  "snapshotShaders": "{count} Shader",
+  "snapshotImages": {
+    "one": "{count} Bild",
+    "many": "{count} Bilder"
+  },
+  "snapshotShaders": {
+    "one": "{count} Shader-Datei",
+    "many": "{count} Shader-Dateien"
+  },
   "snapshotFailed": "Der Snapshot konnte nicht exportiert werden. Bitte erneut versuchen.",
   "codeGuideTitle": "Design als Code exportieren",
   "codeGuideDescription": "Verbinde einen Programmieragenten mit dem lokalen MCP-Server von Open Pen, um deine Designs in deinem Projekt in Code umzusetzen.",
@@ -50,5 +56,9 @@
   "figmaGuideTitle": "Aus Figma importieren",
   "figmaGuideClipboard": "Kopiere eine Ebene oder einen Frame in Figma und füge sie auf der Open Pen-Zeichenfläche ein.",
   "figmaGuideFile": "Speichere für eingebettete Bilder eine lokale .fig-Kopie aus Figma und öffne sie oder ziehe sie in Open Pen.",
-  "figmaGuideLimits": "Prüfe erweiterte Grafiken nach dem Import. Öffnen erhält mehrere Seiten; Import auf die Zeichenfläche akzeptiert eine einseitige Datei."
+  "figmaGuideLimits": "Prüfe erweiterte Grafiken nach dem Import. Öffnen erhält mehrere Seiten; Import auf die Zeichenfläche akzeptiert eine einseitige Datei.",
+  "snapshotScripts": {
+    "one": "{count} Skript",
+    "many": "{count} Skripte"
+  }
 }

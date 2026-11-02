@@ -189,7 +189,9 @@ export function useAppMenu() {
 
   const actions: Partial<Record<string, () => void>> = {
     ...guideMenuActions,
-    'export-snapshot': () => requestSnapshotExport(store),
+    'export-snapshot': () => {
+      void requestSnapshotExport(store)
+    },
     'agent-text-small': () => {
       chatTextSize.value = 'small'
     },

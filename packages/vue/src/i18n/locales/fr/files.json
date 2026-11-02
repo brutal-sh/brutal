@@ -30,10 +30,16 @@
   "browserFileAPINotSupported": "Votre navigateur ne prend pas en charge l’API de fichiers locaux. Les fichiers seront téléchargés au lieu d’être enregistrés sur place.",
   "newDesignIn": "Nouveau design dans {place}",
   "snapshotTitle": "Exporter un instantané",
-  "snapshotDescription": "Un instantané regroupe ce design, ses images et ses shaders dans un ZIP pour un autre ordinateur.",
+  "snapshotDescription": "Un instantané regroupe ce design, ses images, ses shaders et ses scripts dans un ZIP pour un autre ordinateur.",
   "snapshotDependencies": "Dépendances",
-  "snapshotImages": "{count} images",
-  "snapshotShaders": "{count} shaders",
+  "snapshotImages": {
+    "one": "{count} image",
+    "many": "{count} images"
+  },
+  "snapshotShaders": {
+    "one": "{count} nuanceur",
+    "many": "{count} nuanceurs"
+  },
   "snapshotFailed": "Impossible d’exporter l’instantané. Réessayez.",
   "codeGuideTitle": "Exporter le design en code",
   "codeGuideDescription": "Connectez un agent de programmation au serveur MCP local d’Open Pen pour convertir vos designs en code dans votre projet.",
@@ -50,5 +56,9 @@
   "figmaGuideTitle": "Comment importer depuis Figma",
   "figmaGuideClipboard": "Copiez un calque ou un cadre dans Figma, puis collez-le sur le canevas Open Pen.",
   "figmaGuideFile": "Pour inclure les images intégrées, enregistrez une copie locale .fig depuis Figma, puis ouvrez-la ou déposez-la dans Open Pen.",
-  "figmaGuideLimits": "Vérifiez les graphismes avancés après l’importation. Ouvrir conserve plusieurs pages ; Importer sur le canevas accepte un fichier d’une seule page."
+  "figmaGuideLimits": "Vérifiez les graphismes avancés après l’importation. Ouvrir conserve plusieurs pages ; Importer sur le canevas accepte un fichier d’une seule page.",
+  "snapshotScripts": {
+    "one": "{count} script JavaScript",
+    "many": "{count} scripts JavaScript"
+  }
 }

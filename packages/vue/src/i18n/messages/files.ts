@@ -1,4 +1,4 @@
-import { params } from '@nanostores/i18n'
+import { count, params } from '@nanostores/i18n'
 
 import { i18n } from '#vue/i18n/create'
 
@@ -26,10 +26,11 @@ export const filesMessageDefaults = {
     'Check advanced graphics after importing. Open preserves multiple pages; Import to canvas accepts a single-page file.',
   snapshotTitle: 'Export snapshot',
   snapshotDescription:
-    'A snapshot bundles this design and its image and shader dependencies into a ZIP for another machine.',
+    'A snapshot bundles this design and its image, shader and script dependencies into a ZIP for another machine.',
   snapshotDependencies: 'Dependencies',
-  snapshotImages: params('{count} images'),
-  snapshotShaders: params('{count} shaders'),
+  snapshotImages: count({ one: '{count} image', many: '{count} images' }),
+  snapshotShaders: count({ one: '{count} shader', many: '{count} shaders' }),
+  snapshotScripts: count({ one: '{count} script', many: '{count} scripts' }),
   snapshotFailed: 'The snapshot could not be exported. Try again.',
   importLabel: 'Import',
   importHTMLCSS: 'Import HTML/CSS',

@@ -30,10 +30,16 @@
   "browserFileAPINotSupported": "Il browser non supporta l’API dei file locali. I file verranno scaricati anziché salvati nella posizione corrente.",
   "newDesignIn": "Nuovo design in {place}",
   "snapshotTitle": "Esporta istantanea",
-  "snapshotDescription": "Un’istantanea raccoglie questo progetto, le immagini e gli shader in uno ZIP per un altro computer.",
+  "snapshotDescription": "Un’istantanea raccoglie questo progetto, le immagini, gli shader e gli script in uno ZIP per un altro computer.",
   "snapshotDependencies": "Dipendenze",
-  "snapshotImages": "{count} immagini",
-  "snapshotShaders": "{count} shader",
+  "snapshotImages": {
+    "one": "{count} immagine",
+    "many": "{count} immagini"
+  },
+  "snapshotShaders": {
+    "one": "{count} file shader",
+    "many": "{count} file shader"
+  },
   "snapshotFailed": "Impossibile esportare l’istantanea. Riprova.",
   "codeGuideTitle": "Esporta il design in codice",
   "codeGuideDescription": "Collega un agente di programmazione al server MCP locale di Open Pen per trasformare i tuoi design in codice nel tuo progetto.",
@@ -50,5 +56,9 @@
   "figmaGuideTitle": "Come importare da Figma",
   "figmaGuideClipboard": "Copia un livello o un riquadro in Figma e incollalo nell’area di disegno di Open Pen.",
   "figmaGuideFile": "Per includere le immagini incorporate, salva una copia locale .fig da Figma, poi aprila o trascinala in Open Pen.",
-  "figmaGuideLimits": "Controlla la grafica avanzata dopo l’importazione. Apri conserva più pagine; Importa nell’area di disegno accetta un file con una sola pagina."
+  "figmaGuideLimits": "Controlla la grafica avanzata dopo l’importazione. Apri conserva più pagine; Importa nell’area di disegno accetta un file con una sola pagina.",
+  "snapshotScripts": {
+    "one": "{count} script JavaScript",
+    "many": "{count} script JavaScript"
+  }
 }

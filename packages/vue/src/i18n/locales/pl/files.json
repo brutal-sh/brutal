@@ -30,10 +30,18 @@
   "browserFileAPINotSupported": "Twoja przeglądarka nie obsługuje interfejsu API plików lokalnych. Pliki będą pobierane zamiast zapisywane w bieżącym miejscu.",
   "newDesignIn": "Nowy projekt w {place}",
   "snapshotTitle": "Eksportuj migawkę",
-  "snapshotDescription": "Migawka zawiera projekt oraz zależne obrazy i shadery w pliku ZIP dla innego komputera.",
+  "snapshotDescription": "Migawka zawiera projekt oraz zależne obrazy, shadery i skrypty w pliku ZIP dla innego komputera.",
   "snapshotDependencies": "Zależności",
-  "snapshotImages": "{count} obrazów",
-  "snapshotShaders": "{count} shaderów",
+  "snapshotImages": {
+    "one": "{count} obraz",
+    "many": "{count} obrazów",
+    "few": "{count} obrazy"
+  },
+  "snapshotShaders": {
+    "one": "{count} shader",
+    "many": "{count} shaderów",
+    "few": "{count} shadery"
+  },
   "snapshotFailed": "Nie udało się wyeksportować migawki. Spróbuj ponownie.",
   "codeGuideTitle": "Eksportuj projekt do kodu",
   "codeGuideDescription": "Połącz agenta programistycznego z lokalnym serwerem MCP Open Pen, aby zamienić projekty w kod we własnym projekcie.",
@@ -50,5 +58,10 @@
   "figmaGuideTitle": "Jak importować z Figmy",
   "figmaGuideClipboard": "Skopiuj warstwę lub ramkę w Figmie, a następnie wklej ją na płótno Open Pen.",
   "figmaGuideFile": "Aby dołączyć osadzone obrazy, zapisz lokalną kopię .fig z Figmy, a następnie otwórz ją lub przeciągnij do Open Pen.",
-  "figmaGuideLimits": "Po imporcie sprawdź zaawansowaną grafikę. Otwórz zachowuje wiele stron; Importuj na płótno obsługuje plik jednostronicowy."
+  "figmaGuideLimits": "Po imporcie sprawdź zaawansowaną grafikę. Otwórz zachowuje wiele stron; Importuj na płótno obsługuje plik jednostronicowy.",
+  "snapshotScripts": {
+    "one": "{count} skrypt",
+    "many": "{count} skryptów",
+    "few": "{count} skrypty"
+  }
 }

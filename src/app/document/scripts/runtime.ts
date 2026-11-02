@@ -59,6 +59,7 @@ export function createScriptRuntime(editor: Editor, io: IORegistry, options: Scr
   const uploads = new Map<string, Map<string, string>>()
   const inheritedUploads = new Map<string, Map<string, string>>()
   let disposed = false
+  let sourceVersion = 0
   const keyFor = (uri: string) => JSON.stringify([options.getDocumentPath(), uri])
 
   function cancel(id: string) {
@@ -105,6 +106,7 @@ export function createScriptRuntime(editor: Editor, io: IORegistry, options: Scr
         if (result.path && !active.stop) {
           const stop = await watchSource(result.path, () => {
             if (disposed || sources.get(key) !== active || keyFor(uri) !== key) return
+            sourceVersion++
             active.version++
             active.source = undefined
             active.promise = undefined
@@ -314,6 +316,7 @@ export function createScriptRuntime(editor: Editor, io: IORegistry, options: Scr
     for (const node of editor.graph.getAllNodes()) if (scriptOfNode(node)) schedule(node.id)
   }
   function reset() {
+    sourceVersion++
     for (const id of runs.keys()) cancel(id)
     for (const source of sources.values()) source.stop?.()
     sources.clear()
@@ -379,6 +382,7 @@ export function createScriptRuntime(editor: Editor, io: IORegistry, options: Scr
       (source !== undefined && new TextEncoder().encode(source).byteLength > 256_000)
     )
       throw new Error('Choose a Script and a source no larger than 256 KB.')
+    sourceVersion++
     editor.setScriptDefinition(id, { ...definition, uri })
     selectedFiles.add(uri)
     if (source === undefined) uploads.get(id)?.delete(uri)
@@ -398,10 +402,34 @@ export function createScriptRuntime(editor: Editor, io: IORegistry, options: Scr
   return {
     scriptRuntimeStates: states,
     attachScriptSource,
+    collectScriptSources: async () => {
+      const graph = editor.graph
+      const path = options.getDocumentPath()
+      const version = sourceVersion
+      const scripts = () =>
+        [...graph.getAllNodes()].flatMap((node) => {
+          const uri = scriptOfNode(node)?.uri
+          return uri ? [{ id: node.id, uri, componentId: node.componentId }] : []
+        })
+      const original = scripts()
+      const entries = await Promise.all(
+        original.map(async ({ id, uri }) => [id, await sourceFor(uri, id)] as const)
+      )
+      if (
+        disposed ||
+        graph !== editor.graph ||
+        path !== options.getDocumentPath() ||
+        version !== sourceVersion ||
+        !isEqual(original, scripts())
+      )
+        throw new Error('Script sources changed while preparing the snapshot. Try again.')
+      return new Map(entries)
+    },
     reloadScript: (id: string) => {
       const node = editor.graph.getNode(id)
       const definition = node && scriptOfNode(node)
       if (!definition) return
+      sourceVersion++
       const key = keyFor(definition.uri)
       sources.get(key)?.stop?.()
       sources.delete(key)

@@ -41,7 +41,9 @@ export function useEditorMenu() {
   const { runCommand } = useEditorCommands()
 
   const actions: Partial<Record<string, () => void>> = {
-    'export-snapshot': () => requestSnapshotExport(store),
+    'export-snapshot': () => {
+      void requestSnapshotExport(store)
+    },
     new: () => createTab(),
     open: () => void openFileDialog(),
     close: () => {

@@ -2,7 +2,9 @@ import { toUint8Array } from 'js-base64'
 
 import { isLegacyStroke, writePenDocument, type PenOverride } from '@open-pencil/pen'
 import type { SceneGraph } from '@open-pencil/scene-graph'
+import { scriptOfNode, withScript } from '@open-pencil/scene-graph/scripts'
 
+import { extractExportGraph } from '#core/io/subgraph'
 import type { ExportAsset, ExportResult, IOData } from '#core/io/types'
 
 export interface PenSnapshotResult extends ExportResult {
@@ -10,13 +12,20 @@ export interface PenSnapshotResult extends ExportResult {
   sources: ReadonlyMap<string, string>
 }
 
-/** Export loaded image/GLSL dependencies beside a relocatable editable document. */
-export function exportPenSnapshot(graph: SceneGraph): PenSnapshotResult {
-  const penDocument = writePenDocument(graph)
+/** Export dependencies beside a relocatable document; JavaScript sources are keyed by node ID. */
+export function exportPenSnapshot(
+  graph: SceneGraph,
+  scriptSources: ReadonlyMap<string, string> = new Map()
+): PenSnapshotResult {
   const assets: ExportAsset[] = []
   const paths = new Map<string, string>()
   const sources = new Map<string, string>()
-  function asset(key: string, folder: 'images' | 'shaders', extension: string, content: IOData) {
+  function asset(
+    key: string,
+    folder: 'images' | 'shaders' | 'scripts',
+    extension: string,
+    content: IOData
+  ) {
     const identity = `${folder}\0${key}`
     const existing = paths.get(identity)
     if (existing) return existing
@@ -26,6 +35,24 @@ export function exportPenSnapshot(graph: SceneGraph): PenSnapshotResult {
     assets.push({ path, content })
     return path
   }
+  const snapshotGraph = scriptSources.size
+    ? extractExportGraph(graph, { scope: 'document' }).graph
+    : graph
+  for (const node of snapshotGraph.getAllNodes()) {
+    const script = scriptOfNode(node)
+    if (!script?.uri) continue
+    const source = scriptSources.get(node.id)
+    if (source === undefined)
+      throw new Error(
+        `Snapshot cannot bundle linked Script sources: ${node.name}. Choose its source file first.`
+      )
+    if (new TextEncoder().encode(source).byteLength > 256_000)
+      throw new Error('Snapshot Script sources must be no larger than 256 KB.')
+    const path = asset(JSON.stringify([script.uri, source]), 'scripts', 'js', source)
+    sources.set(path, script.uri)
+    snapshotGraph.updateNode(node.id, { pluginData: withScript(node, { ...script, uri: path }) })
+  }
+  const penDocument = writePenDocument(snapshotGraph)
   function paints(value: PenOverride['fill']) {
     for (const paint of Array.isArray(value) ? value : [value]) {
       if (!paint || typeof paint !== 'object') continue
@@ -49,10 +76,6 @@ export function exportPenSnapshot(graph: SceneGraph): PenSnapshotResult {
     }
   }
   function visit(node: PenOverride) {
-    if (node.type === 'script' && node.scriptUri)
-      throw new Error(
-        'Snapshot cannot bundle linked Script sources yet. Save the document beside its JavaScript files instead.'
-      )
     paints(node.fill)
     paints(isLegacyStroke(node.stroke) ? node.stroke.fill : node.stroke)
     for (const child of node.children ?? []) visit(child)

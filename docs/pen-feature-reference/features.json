@@ -809,8 +809,9 @@
           "feature": "Gallery workflow",
           "behavior": "Reference examples can seed a local linked script.",
           "acceptance": "Use an original example; compare browsing, saving, linking and error states.",
-          "status": "open",
-          "evidence": []
+          "status": "partial",
+          "evidence": ["docs/SCRIPT-PARITY.md"],
+          "evidence_note": "Eleven native Pen insertions measured; independent gallery browser/native insertion/history/input/save/reopen/conversion executed. JavaScript Snapshot transfers a Chart to actual Pen. Other Goodies categories, exact artwork and native Snapshot acceptance remain open."
         }
       ]
     },

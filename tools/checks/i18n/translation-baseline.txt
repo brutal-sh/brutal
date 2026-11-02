@@ -543,6 +543,3 @@ es:panels.effectColor
 es:panels.paintColor
 pl:panels.paintGradient
 fr:panels.meshPoint
-es:files.snapshotShaders
-fr:files.snapshotImages
-fr:files.snapshotShaders

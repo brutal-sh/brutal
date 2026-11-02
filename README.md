@@ -6,6 +6,8 @@ The implementation baseline is OpenPencil `24461adec7073312d460d76f08f069de18e4f
 
 The Script Gallery bundles eleven MIT examples from [High Agency's public pencil-scripts repository](https://github.com/highagency/pencil-scripts), with its [license notice](public/licenses/pencil-scripts.txt). Gallery previews are rendered by Open Pen; bundled example fonts retain their OFL notices.
 
+Export Snapshot packages available Script sources beside the design using relative JavaScript paths, including gallery examples. Keep the ZIP's extracted files together when opening the design in Pen. Missing sources refuse export; ordinary saves retain their authored source references.
+
 ## Run this fork
 
 Use Bun 1.4.2 or newer. Install Git LFS and retrieve fixtures before running fixture-dependent tests.

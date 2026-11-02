@@ -35,7 +35,8 @@ const groups = useHeldContent(
   computed(() =>
     [
       { kind: 'images', label: files.value.snapshotImages },
-      { kind: 'shaders', label: files.value.snapshotShaders }
+      { kind: 'shaders', label: files.value.snapshotShaders },
+      { kind: 'scripts', label: files.value.snapshotScripts }
     ]
       .map((group) => ({
         ...group,
@@ -87,8 +88,13 @@ const groups = useHeldContent(
             class="size-3.5 text-muted"
             aria-hidden="true"
           />
+          <icon-lucide-code
+            v-else-if="group.kind === 'scripts'"
+            class="size-3.5 text-muted"
+            aria-hidden="true"
+          />
           <icon-lucide-image v-else class="size-3.5 text-muted" aria-hidden="true" />
-          <span class="flex-1">{{ group.label({ count: String(group.assets.length) }) }}</span>
+          <span class="flex-1">{{ group.label(group.assets.length) }}</span>
           <icon-lucide-chevron-down
             class="size-3 text-muted group-open:rotate-180"
             aria-hidden="true"

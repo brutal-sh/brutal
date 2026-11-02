@@ -1,9 +1,14 @@
 import { readFile, writeFile } from 'node:fs/promises'
 
 import { expect, test } from '@playwright/test'
+import { unzipSync } from 'fflate'
+
+import { BUILTIN_IO_FORMATS, IORegistry } from '@open-pencil/core/io'
+import { scriptOfNode } from '@open-pencil/scene-graph/scripts'
 
 import { create, generated, exportScript } from '#tests/helpers/document/scripts'
 import { openAppMenu } from '#tests/helpers/menu'
+import { repoPath } from '#tests/helpers/paths'
 
 const examples = [
   ['Candlestick', 540, 361],
@@ -96,5 +101,43 @@ test('gallery Script saves and reopens with its bundled source and editable inpu
   await expect(
     page.getByRole('region', { name: 'Script', exact: true }).getByRole('alert')
   ).toHaveCount(0)
+  canvas.assertNoErrors()
+})
+
+test('gallery Snapshot includes a relative JavaScript dependency without changing the design', async ({
+  page
+}, testInfo) => {
+  const canvas = await create(page)
+  await page.getByRole('button', { name: 'Script Gallery...', exact: true }).click()
+  await page.getByRole('button', { name: 'Insert to Canvas: Chart', exact: true }).click()
+  await expect.poll(async () => (await generated(page))?.children.length).toBeGreaterThan(0)
+  const before = await generated(page)
+  await (
+    await openAppMenu(page, 'File')
+  )
+    .getByRole('menuitem', { name: 'Export Snapshot…', exact: true })
+    .click()
+  const dialog = page.getByRole('dialog', { name: 'Export snapshot', exact: true })
+  await expect(dialog).toBeVisible()
+  await dialog.locator('summary').click()
+  await expect(dialog.getByRole('listitem')).toHaveText(/chart\.js/)
+  const downloading = page.waitForEvent('download')
+  await dialog.getByRole('button', { name: 'Export Snapshot', exact: true }).click()
+  const bytes = await readFile(await (await downloading).path())
+  const archive = unzipSync(bytes)
+  expect(Object.keys(archive).sort()).toEqual(['Untitled.pen', 'scripts/1.js'])
+  const { graph } = await new IORegistry(BUILTIN_IO_FORMATS).readDocument({
+    name: 'relocated/Untitled.pen',
+    data: archive['Untitled.pen']
+  })
+  const chart = before && graph.getNode(before.id)
+  expect(chart && scriptOfNode(chart)?.uri).toBe('scripts/1.js')
+  expect(new TextDecoder().decode(archive['scripts/1.js'])).toContain('@input stroke: number')
+  await writeFile(
+    repoPath(`local-evidence/script-chart-snapshot-${testInfo.project.name}.zip`),
+    bytes
+  )
+  await expect(dialog).toBeHidden()
+  expect(await generated(page)).toEqual(before)
   canvas.assertNoErrors()
 })

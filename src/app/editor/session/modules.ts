@@ -85,6 +85,7 @@ export function createEditorStoreModules(
     attachScriptSource: scriptRuntime.attachScriptSource,
     reloadScript: scriptRuntime.reloadScript,
     scriptRuntimeStates: scriptRuntime.scriptRuntimeStates,
+    collectScriptSources: scriptRuntime.collectScriptSources,
     watchShaderSource: shaderSources.watchShaderSource,
     shaderSourceErrors: shaderSources.shaderSourceErrors,
     shaderSourceOrder: shaderSources.shaderSourceOrder,

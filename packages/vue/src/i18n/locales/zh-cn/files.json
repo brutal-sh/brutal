@@ -30,10 +30,14 @@
   "browserFileAPINotSupported": "你的浏览器不支持本地文件 API。文件将被下载，而不是保存在原位置。",
   "newDesignIn": "在 {place} 中新建设计",
   "snapshotTitle": "导出快照",
-  "snapshotDescription": "快照将此设计及其图像和着色器依赖文件打包为 ZIP，以便在另一台电脑上打开。",
+  "snapshotDescription": "快照将此设计及其图像、着色器和脚本依赖文件打包为 ZIP，以便在另一台电脑上打开。",
   "snapshotDependencies": "依赖文件",
-  "snapshotImages": "{count} 张图像",
-  "snapshotShaders": "{count} 个着色器",
+  "snapshotImages": {
+    "many": "{count} 个图像"
+  },
+  "snapshotShaders": {
+    "many": "{count} 个着色器"
+  },
   "snapshotFailed": "无法导出快照。请重试。",
   "codeGuideTitle": "将设计导出为代码",
   "codeGuideDescription": "将编程智能体连接到 Open Pen 的本地 MCP 服务器，在自己的项目中将设计转换为代码。",
@@ -50,5 +54,8 @@
   "figmaGuideTitle": "如何从 Figma 导入",
   "figmaGuideClipboard": "在 Figma 中复制图层或画框，然后粘贴到 Open Pen 画布上。",
   "figmaGuideFile": "如需包含嵌入的图片，请从 Figma 保存本地 .fig 副本，然后在 Open Pen 中打开或拖入。",
-  "figmaGuideLimits": "导入后请检查高级图形。「打开」会保留多个页面；「导入到画布」接受单页文件。"
+  "figmaGuideLimits": "导入后请检查高级图形。「打开」会保留多个页面；「导入到画布」接受单页文件。",
+  "snapshotScripts": {
+    "many": "{count} 个脚本"
+  }
 }

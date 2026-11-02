@@ -193,7 +193,7 @@ Source: [Code on Canvas](https://docs.pen.dev/core-concepts/code-on-canvas).
 | SCRIPT-06 Derived state | Generated children do not create individual history entries. | Change inputs repeatedly; compare Undo granularity and regenerated children. | Partial — [Script evidence](../SCRIPT-PARITY.md). |
 | SCRIPT-07 Sandbox contract | Synchronous; no DOM/network/filesystem; deterministic random sequence. | Run isolated denied-API, random and asynchronous fixtures without host access. | Partial — [Script evidence](../SCRIPT-PARITY.md). |
 | SCRIPT-08 Limits and diagnostics | At most 1,000 generated nodes, two-second execution; no reusable output. | Exceed each limit; verify safe termination, node error/excerpt and intact document. | Partial — [Script evidence](../SCRIPT-PARITY.md). |
-| SCRIPT-09 Gallery workflow | Reference examples can seed a local linked script. | Use an original example; compare browsing, saving, linking and error states. | Open |
+| SCRIPT-09 Gallery workflow | Reference examples can seed a local linked script. | Use an original example; compare browsing, saving, linking and error states. | Partial — [evidence](../SCRIPT-PARITY.md); Eleven examples and the named Snapshot transfer are executed; other Goodies categories, exact artwork and native Snapshot acceptance remain open. |
 
 ## Design Libraries
 
