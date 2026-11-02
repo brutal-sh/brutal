@@ -1,35 +1,60 @@
-/** Worker stack locations refer only to this synthetic source, never host files. */
+import * as v from 'valibot'
+
+import type { SandboxRunResult } from '@/app/code/sandbox/schema'
+
 export const SCRIPT_SOURCE_NAME = 'open-pen-script.js'
 
-function scriptLocation(error: Error) {
-  const stack = error.stack?.slice(0, 8_192) ?? ''
-  const match = /^(\d+):(\d+)/.exec(stack.split(`${SCRIPT_SOURCE_NAME}:`)[1] ?? '')
-  if (match) return { line: Number(match[1]), column: Number(match[2]) }
-  if (!/^[^@\n]*@\s*(?:\n|$)/.test(stack)) return undefined
-  if (
-    'line' in error &&
-    typeof error.line === 'number' &&
-    'column' in error &&
-    typeof error.column === 'number'
-  )
-    return { line: error.line, column: error.column }
-  return undefined
-}
+const scriptErrorSchema = v.object({
+  message: v.string(),
+  name: v.optional(v.string()),
+  stack: v.optional(v.string())
+})
 
-export function scriptFailure(error: unknown, source: string) {
-  const message = (error instanceof Error ? error.message : String(error)).slice(0, 2_000)
-  const location = error instanceof Error ? scriptLocation(error) : undefined
-  const column = location?.column ?? 0
-  // Function adds two wrapper lines and our strict-mode directive adds one.
-  const line = (location?.line ?? 0) - 3
-  return Number.isInteger(line) &&
-    Number.isInteger(column) &&
-    line > 0 &&
-    line <= source.split('\n').length &&
-    column > 0 &&
-    column <= 256_001
-    ? { error: message, line, column }
-    : { error: message }
+/** Retain only bounded frames in the authored virtual file, never worker or host paths. */
+export function scriptFailure(
+  error: unknown,
+  source: string,
+  filename = SCRIPT_SOURCE_NAME,
+  firstLineOffset = 0
+) {
+  const parsed = v.safeParse(scriptErrorSchema, error)
+  const details = parsed.success ? parsed.output : undefined
+  const message = (details?.message ?? String(error)).slice(0, 2_000)
+  const sourceLines = source.split('\n').length
+  const marker = `(${filename}:`
+  const frames = (details?.stack?.slice(0, 8_192) ?? '')
+    .split('\n')
+    .flatMap((frame) => {
+      const start = frame.indexOf(marker)
+      if (start === -1 || !/^\s*at [^\r\n()]*\s+\(/.test(frame)) return []
+      const match = /^(\d+):(\d+)\)\s*$/.exec(frame.slice(start + marker.length))
+      if (!match) return []
+      const line = Number(match[1])
+      const column = Number(match[2]) - (line === 1 ? firstLineOffset : 0)
+      return line > 0 && line <= sourceLines + 1 && column > 0 && column <= 256_001
+        ? [
+            {
+              text: `${frame.slice(0, start)}${marker}${line}:${column})`.slice(0, 256),
+              line,
+              column
+            }
+          ]
+        : []
+    })
+    .slice(0, 4)
+  const location = frames.find((frame) => frame.line <= sourceLines)
+  const failure: Omit<Extract<SandboxRunResult, { ok: false }>, 'id' | 'ok'> = {
+    error: message,
+    errorName: (details?.name ?? 'Error').replace(/[\r\n\t]/g, ' ').slice(0, 100)
+  }
+  if (frames.length)
+    failure.stack =
+      frames.map((frame) => frame.text).join('\n') + (details?.stack?.endsWith('\n') ? '\n' : '')
+  if (location) {
+    failure.line = location.line
+    failure.column = location.column
+  }
+  return failure
 }
 
 export function scriptExcerpt(source: string, line: number) {

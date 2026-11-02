@@ -64,6 +64,8 @@ export function evaluateSandbox(
         finish({
           ok: false,
           error: message.error,
+          errorName: message.errorName,
+          stack: message.stack,
           line: message.line,
           column: message.column
         })

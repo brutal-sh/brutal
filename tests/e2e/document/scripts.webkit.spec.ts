@@ -36,7 +36,9 @@ test('runtime failures report the authored source line through the isolated work
   expect(result).toMatchObject({
     ok: false,
     error: 'Independent failure',
-    line: 3
+    line: 3,
+    errorName: 'Error',
+    stack: expect.stringContaining('(open-pen-script.js:3:16)')
   })
   if (!result.ok && 'column' in result) expect(result.column).toBeGreaterThan(0)
 })

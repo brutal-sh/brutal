@@ -30,7 +30,8 @@ const runRequestEntries = {
       input: v.record(
         v.string(),
         v.union([v.string(), v.pipe(v.number(), v.finite()), v.boolean()])
-      )
+      ),
+      filename: v.optional(v.pipe(v.string(), v.maxLength(4_096)))
     })
   ),
   /** Element names, such as `Frame` or `Button.Root`, by the runtime type they create. */
@@ -50,6 +51,8 @@ const resultEntries = {
     id: v.string(),
     ok: v.literal(false),
     error: v.string(),
+    errorName: v.optional(v.pipe(v.string(), v.maxLength(100))),
+    stack: v.optional(v.pipe(v.string(), v.maxLength(8_192))),
     line: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(256_001))),
     column: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(256_001)))
   }

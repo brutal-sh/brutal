@@ -6,6 +6,8 @@ import { validateStructuredData } from '@open-pencil/core/validation/structured-
 import type { ScriptValue } from '@open-pencil/scene-graph/scripts'
 
 import { evaluateSandbox } from '@/app/code/sandbox/execute'
+import type { SandboxRunResult } from '@/app/code/sandbox/schema'
+import { SCRIPT_SOURCE_NAME } from '@/app/document/scripts/diagnostics'
 import { scriptOutput } from '@/app/document/scripts/output'
 
 /** The linked script sees its own dimensions and resolved inputs, never the live editor. */
@@ -15,7 +17,8 @@ export async function evaluateCanvasScript(
   height: number,
   values: Readonly<Record<string, ScriptValue>> = {},
   signal?: AbortSignal,
-  allowReferences = false
+  allowReferences = false,
+  filename = SCRIPT_SOURCE_NAME
 ) {
   if (!IS_BROWSER) return { ok: false as const, error: 'Canvas scripts require a browser.' }
   try {
@@ -32,7 +35,7 @@ export async function evaluateCanvasScript(
       {
         code: source,
         allowScriptReferences: allowReferences,
-        canvasScript: { width, height, input },
+        canvasScript: { width, height, input, filename },
         elements: {},
         helpers: [],
         limits: SCRIPT_LIMITS
@@ -49,6 +52,9 @@ export async function evaluateCanvasScript(
       input
     }
   } catch (error) {
-    return { ok: false as const, error: error instanceof Error ? error.message : String(error) }
+    const failure: Omit<Extract<SandboxRunResult, { ok: false }>, 'id' | 'ok'> = {
+      error: (error instanceof Error ? error.message : String(error)).slice(0, 2_000)
+    }
+    return { ok: false as const, ...failure }
   }
 }

@@ -160,6 +160,8 @@ export function createScriptRuntime(editor: Editor, io: IORegistry, options: Scr
     let definitions: ScriptInput[] = []
     let source: string | undefined
     let errorLine: number | undefined
+    let errorStack: string | undefined
+    let errorName = 'Error'
     try {
       source = await sourceFor(definition.uri, id)
       if (!current()) return
@@ -179,11 +181,14 @@ export function createScriptRuntime(editor: Editor, io: IORegistry, options: Scr
           )
         ),
         run.controller.signal,
-        true
+        true,
+        definition.uri
       )
       if (!current()) return
       if (!result.ok) {
-        errorLine = 'line' in result ? result.line : undefined
+        errorLine = result.line
+        errorStack = result.stack
+        errorName = result.errorName ?? 'Error'
         throw new Error(result.error)
       }
       const dependencies = new Set<string>()
@@ -206,7 +211,7 @@ export function createScriptRuntime(editor: Editor, io: IORegistry, options: Scr
           description:
             source === undefined
               ? `We could not find “${definition.uri}” at this path. Check for typos or missing folders.`
-              : `Error: ${message}`,
+              : `${errorName}: ${message}${errorStack ? `\n${errorStack}` : ''}`,
           code: source !== undefined && errorLine ? scriptExcerpt(source, errorLine) : undefined
         })
         if (!current()) return

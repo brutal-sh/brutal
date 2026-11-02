@@ -16,8 +16,10 @@ export async function scriptErrorGraph(
       width: 16,
       height: 16,
       viewBox: [0, 0, 24, 24],
-      geometry: 'M 22 12 A 10 10 0 1 1 2 12 A 10 10 0 1 1 22 12 M 8 8 L 16 16 M 16 8 L 8 16',
-      stroke: { thickness: 1, fill: '#E52E2E', cap: 'round', join: 'round' }
+      // Lucide badge-x (ISC); see public/licenses/lucide.txt.
+      geometry:
+        'M3.85 8.62a4 4 0 0 1 4.78-4.77a4 4 0 0 1 6.74 0a4 4 0 0 1 4.78 4.78a4 4 0 0 1 0 6.74a4 4 0 0 1-4.77 4.78a4 4 0 0 1-6.75 0a4 4 0 0 1-4.78-4.77a4 4 0 0 1 0-6.76M15 9l-6 6m0-6l6 6',
+      stroke: { thickness: 4 / 3, fill: '#E52E2E', cap: 'round', join: 'round' }
     },
     {
       type: 'text',

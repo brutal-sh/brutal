@@ -44,7 +44,10 @@ test('Script shows a bounded runtime diagnostic and code excerpt, refuses stale 
   })
   await waitForSettledScene(page)
   expect(await canvas.screenshotCanvasRegion(650, 500)).toEqual(beforeExport)
-  expect(await canvas.screenshotCanvasRegion(650, 500)).toMatchSnapshot('script-runtime-error.png', { threshold: 0, maxDiffPixels: 0 })
+  expect(await canvas.screenshotCanvasRegion(650, 500)).toMatchSnapshot(
+    'script-runtime-error.png',
+    { threshold: 0, maxDiffPixels: 0 }
+  )
   await chooseSource(
     page,
     '/** @schema 2.21 */\nreturn [{type:"rectangle",name:"Recovered output",width:80,height:40,fill:"#34A878"}];'
@@ -72,7 +75,10 @@ test('Script shows the missing-file diagnostic and replaces it after a source is
     maxDiffPixels: 0
   })
   await waitForSettledScene(page)
-  expect(await canvas.screenshotCanvasRegion(650, 500)).toMatchSnapshot('script-missing-file.png', { threshold: 0, maxDiffPixels: 0 })
+  expect(await canvas.screenshotCanvasRegion(650, 500)).toMatchSnapshot('script-missing-file.png', {
+    threshold: 0,
+    maxDiffPixels: 0
+  })
   await chooseSource(page)
   await expect(section.getByRole('alert')).toHaveCount(0)
   await expect.poll(async () => (await generated(page))?.children.length).toBe(3)
