@@ -16,4 +16,5 @@
 - Canvas text Undo and Redo work while typing, including pending changes on an existing layer with empty document history; Escape exits text editing after using a menu.
 - Gap and padding fields preserve fractional values when displaying and editing layout, including paired and individual padding.
 - Text ending in a newline reserves its final empty line when sizing the layer and its containing layout.
+- Zoom buttons and menu actions keep the canvas center stationary when side panels offset the canvas.
 - Desktop tool flyouts focus the selected tool when opened and use the measured spacing, checks and corners; Primitives import labels follow the reference menu.

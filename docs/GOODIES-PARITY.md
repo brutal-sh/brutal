@@ -31,3 +31,9 @@ Selecting Demo File closes Goodies and opens a new `pencil-demo.pen` tab in a fr
 - Verify style-to-composer behavior using independently authored guidance, with existing text/attachments preserved.
 - Qualify document opening and each shader action on synthetic selections, including empty/read-only and cancelled/error cases.
 - Keep gallery membership, screenshot observations, independent implementation and executed acceptance distinct. No Goodies or whole-product parity claim follows from this inventory.
+
+## Native preview continuation —2026-11-02
+
+Actual Goodies reopens on Featured. Native navigation to Scripts exposes all eleven Insert to Canvas cards and the three-column grid. Styles exposes all88 cards with Landing page initially selected. Selecting Mobile App changes all card preview labels and shows tall mobile screenshots; the first three rendered cards are visually observed. This qualifies that named reference preview transition, not every off-screen image, independent implementation, style-to-composer preservation or exact adaptive geometry. No style guidance is sent to an agent in this pass.
+
+Style preservation probe: the active reference composer is observed empty, then receives the synthetic unsent text “Independent unsent prefix.” Reopening Goodies starts on Featured. Selecting Aerial Gravitas - Carbon Frost closes the dialog, preserves the prefix, appends a named style token and focuses the composer. No message is sent. Select-all/Backspace removes the synthetic text and style token; the original empty placeholder is observed again. This qualifies that named reference append/focus behavior, not attachment preservation, repeated style-token deduplication, agent receipt or an independent equivalent.

@@ -72,7 +72,7 @@ function rememberLayout(layout: number[]) {
   if (layout.length === 2) saveEditorLayout([layout[0] ?? 26, (layout[1] ?? 74) - 20, 20])
 }
 function zoom(delta: number) {
-  const center = store.viewportScreenCenter()
+  const center = store.viewportCanvasCenter()
   store.applyZoom(delta, center.x, center.y)
 }
 const horizontalSplitterStyles = tv(splitterTheme)({ direction: 'horizontal' })
