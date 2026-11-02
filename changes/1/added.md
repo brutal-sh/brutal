@@ -19,3 +19,5 @@
 
 - Add independently implemented Script primitives with isolated synchronous QuickJS workers, bounded CPU and memory, deterministic random, typed scalar inputs, local source watches, authored `.pen` round trips and editable-layer conversion with Undo. Show recoverable missing-source and runtime diagnostics on canvas and in exports, with authored source locations and excerpts when available. Refuse stale/unrendered exports and snapshots with missing JavaScript sources. Support component references, variable/theme inputs and eleven bundled MIT Script Gallery examples with editable inputs; retain explicit refusals for unsupported dependencies.
 - Per-layer Context retains text through save/reopen and returns to its first line when editing ends.
+
+- Expand the browser over the canvas, restore split view and retain page history across mode changes; remember the chosen mode when reopening the dock.

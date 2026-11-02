@@ -87,3 +87,6 @@ Inspector browser-entry continuation2026-11-02: Code now opens/closes the native
 
 
 Browser keyboard continuation2026-11-02: a real native regression reproduces toolbar-focused nudge/delete/tool edits. Four native preview checks, editable-import acceptance and a physical Right/Delete/R journey now preserve the focused browser's document state, with canvas Delete/Undo available after closing. The68-workflow browser run, two clipboard-cut model checks, scoped static and normal package/signature/hook checks pass; native clipboard and remaining modes/visual/layout states stay open. See BROWSER.md.
+
+
+Coding Mode continuation2026-11-02: split/expanded mode now retains its controller, canvas renderer and loaded page/history across transitions, and retains the mode choice through close/reopen. Final six native preview/import checks and a physical open/expand/split/close journey execute; sidebar pixels remain384.796875 across seven observed states after border/margin and three-digit rounding corrections. The expanded frame uses58px top and8px left gap. Earlier failures remain recorded. Static checks pass; the39-workflow browser run and normal package/signature/hook checks pass. Page restoration after closing, landing/toolbar/element picker/responsive import and other mode/persistence/focus states remain open. See BROWSER.md.

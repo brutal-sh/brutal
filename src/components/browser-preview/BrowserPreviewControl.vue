@@ -21,6 +21,7 @@ import AppInput from '@/components/ui/input/AppInput.vue'
 import { usePopoverUI } from '@/components/ui/overlay/popover'
 
 const open = defineModel<boolean>('open', { default: false })
+const codingMode = defineModel<boolean>('codingMode', { default: false })
 const store = useEditorStore()
 const surface = ref<HTMLElement | null>(null)
 const inputId = useId()
@@ -86,6 +87,18 @@ watch(
   { immediate: true }
 )
 watch([preset, status], syncSurface)
+watch(
+  codingMode,
+  async (expanded) => {
+    await nextTick()
+    if (disposed) return
+    syncSurface()
+    if (!expanded) return
+    if (status.value) await preview.action('focus')
+    else addressOpen.value = true
+  },
+  { immediate: true }
+)
 watch(
   () => status.value?.url,
   (url) => {
@@ -184,6 +197,15 @@ onScopeDispose(() => {
         @click="preview.capture"
         ><icon-lucide-camera class="size-3.5"
       /></IconButton>
+      <IconButton
+        :label="codingMode ? 'Exit Coding Mode' : 'Coding Mode'"
+        :aria-pressed="codingMode"
+        :disabled="busy"
+        @click="codingMode = !codingMode"
+      >
+        <icon-lucide-minimize-2 v-if="codingMode" class="size-3.5" />
+        <icon-lucide-maximize-2 v-else class="size-3.5" />
+      </IconButton>
       <IconButton label="Close browser preview" @click="open = false"
         ><icon-lucide-x class="size-3.5"
       /></IconButton>

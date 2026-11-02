@@ -91,6 +91,97 @@ describe('native embedded browser preview', () => {
     )
   })
 
+  it('preserves the sidebar and canvas while expanding and reopening the browser', async () => {
+    const result = await browser.executeAsync<{ failure?: string }, []>(async (done) => {
+      const button = (label: string) => {
+        const element = document.querySelector<HTMLButtonElement>(`button[aria-label="${label}"]`)
+        if (!element) throw new Error(`Missing ${label}`)
+        element.click()
+      }
+      const wait = async (condition: () => boolean, label: string) => {
+        const deadline = Date.now() + 12000
+        while (Date.now() < deadline) {
+          if (condition()) return
+          await new Promise((resolve) => {
+            setTimeout(resolve, 30)
+          })
+        }
+        throw new Error(`Timed out: ${label}`)
+      }
+      const dock = () =>
+        document.querySelector<HTMLElement>('[data-test-id="browser-preview-dock"]')
+      const sidebar = document.querySelector('[aria-label="Workspace sidebar"]')
+      const canvas = document.querySelector('canvas')
+      const store = window.openPencil?.getStore?.()
+      if (!sidebar || !canvas || !store) return done({ failure: 'Missing editor surfaces' })
+      const renderer = store.renderer
+      const width = sidebar.getBoundingClientRect().width
+      const before = { version: store.state.sceneVersion, selected: [...store.state.selectedIds] }
+      try {
+        button('Import Web via Browser')
+        await wait(() => !!dock(), 'split browser')
+        await wait(
+          () => Math.abs(sidebar.getBoundingClientRect().width - width) < 1,
+          'stable sidebar'
+        )
+        button('Coding Mode')
+        await wait(
+          () => !!document.querySelector('button[aria-label="Exit Coding Mode"]'),
+          'expanded browser'
+        )
+        await wait(() => {
+          const surface = document
+            .querySelector('[data-slot="canvas-split-root"]')
+            ?.getBoundingClientRect()
+          const browser = dock()?.getBoundingClientRect()
+          return (
+            !!surface &&
+            !!browser &&
+            Math.abs(browser.left - surface.left - 8) < 1 &&
+            Math.abs(browser.right - surface.right) < 1 &&
+            Math.abs(browser.top - surface.top - 50) < 1
+          )
+        }, 'browser over canvas')
+        if (getComputedStyle(canvas).visibility !== 'hidden')
+          throw new Error('Canvas stays visible in Coding Mode')
+        button('Close browser preview')
+        await wait(() => !dock(), 'closed browser')
+        if (getComputedStyle(canvas).visibility === 'hidden')
+          throw new Error('Canvas stays hidden after closing')
+        button('Import Web via Browser')
+        await wait(
+          () => !!document.querySelector('button[aria-label="Exit Coding Mode"]'),
+          'retained mode'
+        )
+        button('Exit Coding Mode')
+        await wait(
+          () => !!document.querySelector('button[aria-label="Coding Mode"]'),
+          'split mode restored'
+        )
+        await wait(
+          () => Math.abs(sidebar.getBoundingClientRect().width - width) < 1,
+          'restored sidebar'
+        )
+        if (store.renderer !== renderer || document.querySelector('canvas') !== canvas)
+          throw new Error('Mode replaces the canvas renderer')
+        if (
+          store.state.sceneVersion !== before.version ||
+          [...store.state.selectedIds].join(',') !== before.selected.join(',')
+        )
+          throw new Error('Mode changes the document')
+        done({})
+      } catch (error) {
+        done({ failure: String(error) })
+      } finally {
+        document.querySelector<HTMLButtonElement>('button[aria-label="Exit Coding Mode"]')?.click()
+        document
+          .querySelector<HTMLButtonElement>('button[aria-label="Close browser preview"]')
+          ?.click()
+      }
+    })
+    assert.equal(result.failure, undefined, result.failure)
+  })
+
   it('keeps canvas edit keys out of the focused browser toolbar', async () => {
     const snapshot = () =>
       browser.execute(() => {
@@ -189,6 +280,18 @@ describe('native embedded browser preview', () => {
           )
         }, 'first page committed')
         await navigate(`${origin}/second`)
+        const modeStore = window.openPencil?.getStore?.()
+        const modeRenderer = modeStore?.renderer
+        const modeCanvas = document.querySelector('canvas')
+        button('Coding Mode')
+        await wait(
+          () => !!document.querySelector('button[aria-label="Exit Coding Mode"]'),
+          'Coding Mode'
+        )
+        button('Exit Coding Mode')
+        await wait(() => !!document.querySelector('button[aria-label="Coding Mode"]'), 'split mode')
+        if (modeStore?.renderer !== modeRenderer || document.querySelector('canvas') !== modeCanvas)
+          throw new Error('Browser mode replaces the canvas renderer')
         button('Back')
         await wait(
           async () =>

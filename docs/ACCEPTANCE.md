@@ -461,3 +461,8 @@ The missing native desktop Code action now toggles the existing browser. Three p
 ### Browser keyboard ownership continuation — 2026-11-02
 
 The native before-fix regression demonstrates toolbar-focused ArrowRight/Delete/R editing the design and changing tools. The shared input-surface guard preserves document/layers/selection/tool while browser-focused. Four native preview checks, one editable-import journey and a separate physical keyboard journey pass; canvas Delete→Undo remains available after closing. Native clipboard and other browser modes remain untested by this unit. The68-workflow browser run, two clipboard-cut model checks, scoped static and normal package/signature/hook checks pass; see BROWSER.md. Full parity remains open.
+
+
+### Coding Mode continuation — 2026-11-02
+
+Five native preview checks and one editable-import journey pass with Mode transitions, real page history, capture/Undo and FIG reopen. The mounted canvas/renderer and document/selection are retained; mode survives dock close/reopen. Final physical open→expand→split→close asserts a58px expanded top,8px sidebar gap, fixed384.796875px sidebar and unchanged document state. Earlier sidebar shrink, quantization and physical/layout failures remain documented. Source/Vue/canonical test types, lint(existing warnings) and architecture pass; the39-workflow browser run, normal79.34MiB package, strict signature and test-hook exclusion pass. Remembered page after closing, richer landing/toolbar, responsive import layout and untested mode/persistence/focus states remain open. See BROWSER.md.
