@@ -177,6 +177,25 @@ describe('lines of mixed sizes', () => {
     expect(Math.ceil(empty.getHeight())).toBe(106)
   })
 
+  test('includes closing empty lines in text height without negative line descents', () => {
+    for (const [text, height] of [
+      ['\n', 28],
+      ['\n\n', 42],
+      ['one\n', 28],
+      ['one\n\n', 42],
+      ['café\n', 28],
+      ['one\ntwo\nthree\n', 56]
+    ] as const) {
+      const layout = layOut({ text, fontSize: 10, lineHeight: pixelLength(14) })
+      expect(layout.getHeight()).toBeCloseTo(height, 4)
+      for (const line of layout.getLineMetrics()) {
+        expect(line.ascent).toBeGreaterThanOrEqual(0)
+        expect(line.descent).toBeGreaterThanOrEqual(0)
+      }
+      layout.delete()
+    }
+  })
+
   test('draws, selects, and hits each line where it is placed', () => {
     const layout = layOut({
       text: 'first line\nSmall LARGE',

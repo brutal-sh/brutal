@@ -1,3 +1,4 @@
+import { flattenNodesToVectorProps, type SkiaRenderer } from '@open-pencil/core/canvas'
 import type { IORegistry } from '@open-pencil/core/io'
 import { layoutAuthoredNodes } from '@open-pencil/core/layout'
 import { prepareGraphFonts } from '@open-pencil/core/text'
@@ -7,7 +8,8 @@ import { scaleNodeChanges } from '@open-pencil/scene-graph/scaling'
 export async function scriptErrorGraph(
   io: IORegistry,
   size: { width: number; height: number },
-  status: { title: string; description: string; code?: string }
+  status: { title: string; description: string; code?: string },
+  getRenderer?: () => SkiaRenderer | null
 ) {
   const children: PenNode[] = [
     {
@@ -106,6 +108,16 @@ export async function scriptErrorGraph(
   })
   await prepareGraphFonts(graph, [graph.rootId])
   layoutAuthoredNodes(graph, [graph.rootId])
+  const renderer = getRenderer?.()
+  if (renderer) {
+    // Preserve measured boxes while scaling outlined diagnostic lettering.
+    for (const node of graph.getAllNodes()) {
+      if (node.type === 'FRAME') graph.updateNode(node.id, { layoutMode: 'NONE' })
+      if (node.type !== 'TEXT') continue
+      const outline = flattenNodesToVectorProps(renderer, graph, [node])
+      if (outline) graph.updateNode(node.id, { ...outline, type: 'VECTOR', name: node.name })
+    }
+  }
   const content = graph.getNode('error-status')
   if (content) {
     const scale = Math.min(

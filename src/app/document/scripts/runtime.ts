@@ -206,14 +206,19 @@ export function createScriptRuntime(editor: Editor, io: IORegistry, options: Scr
       if (!current()) return
       const message = (error instanceof Error ? error.message : String(error)).slice(0, 2_000)
       try {
-        const status = await scriptErrorGraph(io, size, {
-          title: source === undefined ? 'Script not found' : 'Script runtime error',
-          description:
-            source === undefined
-              ? `We could not find “${definition.uri}” at this path. Check for typos or missing folders.`
-              : `${errorName}: ${message}${errorStack ? `\n${errorStack}` : ''}`,
-          code: source !== undefined && errorLine ? scriptExcerpt(source, errorLine) : undefined
-        })
+        const status = await scriptErrorGraph(
+          io,
+          size,
+          {
+            title: source === undefined ? 'Script not found' : 'Script runtime error',
+            description:
+              source === undefined
+                ? `We could not find “${definition.uri}” at this path. Check for typos or missing folders.`
+                : `${errorName}: ${message}${errorStack ? `\n${errorStack}` : ''}`,
+            code: source !== undefined && errorLine ? scriptExcerpt(source, errorLine) : undefined
+          },
+          () => (current() ? editor.renderer : null)
+        )
         if (!current()) return
         options.adoptChanges(() => {
           editor.replaceScriptOutput(id, definition, size, status)

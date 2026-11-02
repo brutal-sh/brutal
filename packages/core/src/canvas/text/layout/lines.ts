@@ -77,11 +77,15 @@ export function figmaLineBox(
   ck: CanvasKit,
   paragraph: Paragraph,
   line: LineMetrics,
-  runs: readonly LineHeightRun[]
+  runs: readonly LineHeightRun[],
+  previous?: LineMetrics
 ): LineBox | null {
   // An empty line is as tall as the newline that makes it.
   const start = line.startIndex
   const end = Math.max(line.endIndex, start + 1)
+  // Skia's closing empty line borrows the preceding line's newline rectangle.
+  const baseline =
+    line.width === 0 && previous && start < previous.endIndex ? previous.baseline : line.baseline
   let height = 0
   let natural = 0
   let ascent = 0
@@ -102,7 +106,7 @@ export function figmaLineBox(
       height = Math.max(height, Math.round(run.lineHeight ?? runNatural))
       if (runNatural > natural) {
         natural = runNatural
-        ascent = metric(line.baseline - rect[1])
+        ascent = metric(baseline - rect[1])
       }
     }
   }
@@ -127,8 +131,8 @@ function lineBoxes(
     const heights = block.lines?.heights
     if (!heights) return null
     const blockBoxes: LineBox[] = []
-    for (const line of metrics[index]) {
-      const box = figmaLineBox(ck, block.paragraph, line, heights)
+    for (const [lineIndex, line] of metrics[index].entries()) {
+      const box = figmaLineBox(ck, block.paragraph, line, heights, metrics[index][lineIndex - 1])
       if (!box) return null
       blockBoxes.push(box)
     }

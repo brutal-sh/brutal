@@ -4,6 +4,26 @@ import { BUILTIN_IO_FORMATS, IORegistry } from '@open-pencil/core/io'
 
 import { scriptErrorGraph } from '@/app/document/scripts/status'
 
+test('diagnostics resolve the current renderer after asynchronous preparation', async () => {
+  let active = true
+  let queried = false
+  const pending = scriptErrorGraph(
+    new IORegistry(BUILTIN_IO_FORMATS),
+    { width: 200, height: 200 },
+    { title: 'Independent failure', description: 'Source unavailable' },
+    () => {
+      queried = true
+      expect(active).toBe(false)
+      return null
+    }
+  )
+  expect(queried).toBe(false)
+  active = false
+  const graph = await pending
+  expect(queried).toBe(true)
+  expect(graph.getNode('error-title')?.type).toBe('TEXT')
+})
+
 test('a tiny Script retains its error background and fits diagnostic content inside its inset', async () => {
   const graph = await scriptErrorGraph(
     new IORegistry(BUILTIN_IO_FORMATS),
