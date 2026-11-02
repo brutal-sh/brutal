@@ -14,7 +14,8 @@ test('closing a still-opening dock precedes another document opening its preview
     title: 'fixture',
     width: 390,
     height: 600,
-    captureAvailable: true
+    captureAvailable: true,
+    loading: false
   }
   const callNative: typeof invoke = async <T>(command: string): Promise<T> => {
     commands.push(command)
@@ -56,7 +57,8 @@ test('a failed closing snapshot still destroys the child', async () => {
         title: '',
         width: 390,
         height: 600,
-        captureAvailable: true
+        captureAvailable: true,
+        loading: false
       } as T
     return undefined as T
   }

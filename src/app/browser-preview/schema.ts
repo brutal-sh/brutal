@@ -53,7 +53,8 @@ export const previewStatusSchema = v.object({
   title: v.string(),
   width: v.number(),
   height: v.number(),
-  captureAvailable: v.boolean()
+  captureAvailable: v.boolean(),
+  loading: v.optional(v.boolean(), false)
 })
 export type PreviewStatus = v.InferOutput<typeof previewStatusSchema>
 

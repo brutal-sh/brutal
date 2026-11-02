@@ -13,7 +13,8 @@ function fixture(overrides: Partial<BrowserPreviewNative> = {}) {
     title: 'Fixture',
     width: 1280,
     height: 800,
-    captureAvailable: true
+    captureAvailable: true,
+    loading: false
   }
   const native: BrowserPreviewNative = {
     open: async (...args) => {
@@ -109,6 +110,24 @@ describe('browser preview', () => {
     await refreshing
     expect(preview.status.value).toBeNull()
     expect(preview.address.value).toBe('')
+  })
+
+  test('overlapping polls retain the newest page when an older response arrives last', async () => {
+    const first = createDeferred<Awaited<ReturnType<BrowserPreviewNative['status']>>>()
+    const second = createDeferred<Awaited<ReturnType<BrowserPreviewNative['status']>>>()
+    let reads = 0
+    const { preview } = fixture({ status: () => (reads++ === 0 ? first.promise : second.promise) })
+    preview.address.value = 'https://example.test/'
+    await preview.navigate()
+    const previous = preview.status.value
+    if (!previous) throw new Error('Fixture page did not open')
+    const older = preview.refresh()
+    const newer = preview.refresh()
+    second.resolve({ ...previous, url: 'https://example.test/next' })
+    await newer
+    first.resolve(previous)
+    await older
+    expect(preview.status.value?.url).toBe('https://example.test/next')
   })
 
   test('opens the address at the selected viewport and navigates only through fixed actions', async () => {
@@ -219,7 +238,8 @@ test('editable import waits for extraction and suppresses a disposed or switched
       title: page.title,
       width: 800,
       height: 600,
-      captureAvailable: true
+      captureAvailable: true,
+      loading: false
     }),
     action: async () => undefined,
     resize: async () => undefined,
@@ -268,7 +288,8 @@ test('closing the controller during asynchronous import preparation cancels its 
       title: page.title,
       width: 800,
       height: 600,
-      captureAvailable: true
+      captureAvailable: true,
+      loading: false
     }),
     action: async () => undefined,
     resize: async () => undefined,

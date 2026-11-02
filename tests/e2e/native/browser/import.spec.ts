@@ -98,15 +98,15 @@ describe('native editable browser import', () => {
         }
         const navigate = async (path: string) => {
           await wait(() => {
-            const address = document.querySelector<HTMLButtonElement>(
-              'button[aria-label="Web address"]'
+            const input = document.querySelector<HTMLInputElement>(
+              'input[aria-label="Web address"]'
             )
-            return !!address && !address.disabled
-          }, 'address button ready')
-          button('Web address')
-          await wait(() => !!document.querySelector('input[type="url"]'), 'address popup')
-          const input = document.querySelector<HTMLInputElement>('input[type="url"]')
-          if (!input) throw new Error('Missing address')
+            return !!input && !input.disabled
+          }, 'address field ready')
+          const input = document.querySelector<HTMLInputElement>('input[aria-label="Web address"]')
+          if (!input) throw new Error('Missing inline address')
+          input.focus()
+          input.select()
           input.value = origin + path
           input.dispatchEvent(new Event('input', { bubbles: true }))
           await new Promise((resolve) => {
@@ -124,6 +124,15 @@ describe('native editable browser import', () => {
           await new Promise((resolve) => {
             setTimeout(resolve, 1000)
           })
+        }
+        const importPage = async () => {
+          await wait(() => {
+            const control = document.querySelector<HTMLButtonElement>(
+              'button[aria-label="Import editable page"]'
+            )
+            return !!control && !control.disabled
+          }, 'completed page import control')
+          button('Import editable page')
         }
         try {
           const store = window.openPencil?.getStore?.()
@@ -145,7 +154,7 @@ describe('native editable browser import', () => {
               await invoke<ArrayBuffer>('browser_preview_capture', { url: origin + '/page' })
             )
           )
-          button('Import editable page')
+          await importPage()
           await wait(() => store.graph.getChildren(pageId).length > initial, 'editable import')
           const rootId = [...store.state.selectedIds][0]
           const descendants = (id: string): ReturnType<typeof store.graph.getChildren> =>
@@ -167,7 +176,7 @@ describe('native editable browser import', () => {
             .join(',')
           const selected = [...store.state.selectedIds].join(',')
           await navigate('/cross-image')
-          button('Import editable page')
+          await importPage()
           await wait(
             () =>
               document.querySelector('[role="alert"]')?.textContent?.includes('cross-origin') ??
@@ -183,7 +192,7 @@ describe('native editable browser import', () => {
           )
             throw new Error('Cross-origin image refusal changed the design')
           await navigate('/unsupported')
-          button('Import editable page')
+          await importPage()
           await wait(
             () =>
               document.querySelector('[role="alert"]')?.textContent?.includes('iframe') ?? false,

@@ -29,8 +29,14 @@ export default {
     featureTitle: 'text-sm font-medium',
     featureDescription: 'mt-1 text-sm text-muted',
     suggestions: 'mt-6',
-    suggestionsHeading: 'mb-3 text-xs font-medium text-muted',
-    suggestion: 'h-8 w-full justify-start gap-2 text-xs',
+    historyHeading: 'mb-3 flex items-center justify-between gap-2',
+    suggestionsHeading: 'flex items-center gap-2.5 text-sm font-medium',
+    historyRows: 'flex flex-col gap-1.5',
+    historyRow:
+      'relative h-auto min-h-[42px] w-full justify-start gap-2 rounded-[10px] border border-panel-foreground/7 px-3 py-2.5 pr-[68px] text-sm font-medium leading-5 hover:border-panel-foreground/12 dark:border-panel-foreground/12 dark:hover:border-panel-foreground/20',
+    historyArrow: 'absolute top-1/2 right-3 size-3.5 -translate-y-1/2 text-muted',
+    historyRemove:
+      'absolute top-1/2 right-[34px] size-[22px] -translate-y-1/2 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100',
     privacy: 'mx-auto mt-6 max-w-[390px] text-center text-[11px] text-muted/80'
   }
 }

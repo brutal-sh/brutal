@@ -5,6 +5,14 @@ import {
   useEventListener,
   useMutationObserver
 } from '@vueuse/core'
+import {
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuPortal,
+  DropdownMenuRoot,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from 'reka-ui'
 import { tv } from 'tailwind-variants'
 import {
   computed,
@@ -21,14 +29,26 @@ import type { BrowserPreviewSession } from '@/app/browser-preview/context'
 import { createBrowserPreviewController } from '@/app/browser-preview/controller'
 import { hasPreviewOverlay, previewDockBounds } from '@/app/browser-preview/dock'
 import { browserImportTarget } from '@/app/browser-preview/dom/placement'
+import { completedBrowserVisitSchema } from '@/app/browser-preview/history/schema'
+import {
+  browserHistory,
+  browserHistoryError,
+  updatingBrowserHistory,
+  rememberBrowserVisit,
+  removeBrowserVisit,
+  clearBrowserHistory
+} from '@/app/browser-preview/history/storage'
 import { createBrowserPreviewNative } from '@/app/browser-preview/native'
 import { browserCaptureTarget } from '@/app/browser-preview/placement'
 import { PREVIEW_PRESETS, previewAddressLabel } from '@/app/browser-preview/schema'
 import { useEditorStore } from '@/app/editor/active-store'
+import { bindDesktopLinkQueue } from '@/app/tauri/link-queue'
 import AppButton from '@/components/ui/button/AppButton.vue'
 import IconButton from '@/components/ui/button/IconButton.vue'
 import AppAlert from '@/components/ui/feedback/AppAlert.vue'
 import AppInput from '@/components/ui/input/AppInput.vue'
+import { menuItem, useMenuUI } from '@/components/ui/menu/menu'
+import MenuScrollArea from '@/components/ui/menu/MenuScrollArea.vue'
 import theme from '@/theme/browser-preview'
 
 const open = defineModel<boolean>('open', { default: false })
@@ -39,6 +59,31 @@ const surface = ref<HTMLElement | null>(null)
 const inputId = useId()
 const addressField = useTemplateRef<InstanceType<typeof AppInput>>('addressField')
 const ui = tv(theme)()
+const historyOpen = ref(false)
+const historyMenu = useMenuUI({
+  content:
+    'w-80 max-w-[calc(100vw-16px)] max-h-[min(384px,var(--reka-dropdown-menu-content-available-height,384px))] rounded-[8px] border border-menu-border shadow-[0_8px_30px_rgb(0_0_0/0.4)]'
+})
+const historyItem = menuItem({
+  justify: 'start',
+  class: 'h-7 rounded-[6px] font-medium data-[highlighted]:bg-border'
+})
+const historyConnection = bindDesktopLinkQueue({
+  event: 'browser-preview:page-loaded',
+  command: 'take_browser_preview_visits',
+  schema: completedBrowserVisitSchema,
+  label: 'Browser history',
+  open: rememberBrowserVisit
+}).catch(() => {
+  browserHistoryError.value =
+    'Browsing history could not be connected. Reopen the browser to try again.'
+  return () => undefined
+})
+async function openHistoryEntry(url: string) {
+  historyOpen.value = false
+  await nextTick()
+  openSuggestion(url)
+}
 const addressFocused = ref(false)
 const displayedAddress = computed({
   get: () => (addressFocused.value ? address.value : previewAddressLabel(address.value)),
@@ -177,6 +222,7 @@ onScopeDispose(() => {
   disposed = true
   if (frame) cancelAnimationFrame(frame)
   preview.dispose()
+  void historyConnection.then((stop) => stop())
   session.url = clearingPage ? '' : (status.value?.url ?? session.url)
   session.closing = bridge
     .dispose()
@@ -235,13 +281,43 @@ onScopeDispose(() => {
           @focus="selectAddress"
           @blur="addressFocused = false"
         />
-        <IconButton
-          label="Web address"
-          :class="ui.addressIcon()"
-          :disabled="busy"
-          @click="focusAddress"
-          ><icon-lucide-globe class="size-3.5"
-        /></IconButton>
+        <DropdownMenuRoot v-model:open="historyOpen">
+          <DropdownMenuTrigger as-child>
+            <IconButton
+              label="Browsing history"
+              :class="ui.addressIcon()"
+              :disabled="busy || updatingBrowserHistory"
+              ><icon-lucide-gallery-vertical-end class="size-3"
+            /></IconButton>
+          </DropdownMenuTrigger>
+          <DropdownMenuPortal>
+            <DropdownMenuContent align="start" :side-offset="4" :class="historyMenu.content">
+              <MenuScrollArea>
+                <DropdownMenuItem
+                  v-for="entry in browserHistory"
+                  :key="entry.url"
+                  :class="historyItem"
+                  @select="openHistoryEntry(entry.url)"
+                  ><span class="truncate">{{
+                    previewAddressLabel(entry.url)
+                  }}</span></DropdownMenuItem
+                >
+                <DropdownMenuItem v-if="!browserHistory.length" disabled :class="historyItem"
+                  >No History</DropdownMenuItem
+                >
+                <template v-else>
+                  <DropdownMenuSeparator :class="historyMenu.separator" />
+                  <DropdownMenuItem
+                    :class="[historyItem, 'text-error']"
+                    :disabled="updatingBrowserHistory"
+                    @select="clearBrowserHistory"
+                    >Clear All History</DropdownMenuItem
+                  >
+                </template>
+              </MenuScrollArea>
+            </DropdownMenuContent>
+          </DropdownMenuPortal>
+        </DropdownMenuRoot>
         <div :class="ui.addressActions()">
           <IconButton
             :label="`Viewport: ${selectedDevice.label}. Switch to ${nextDevice.label}`"
@@ -266,14 +342,14 @@ onScopeDispose(() => {
       <IconButton
         label="Import editable page"
         size="sm"
-        :disabled="busy || !status || store.state.readOnly"
+        :disabled="busy || !status || status.loading || store.state.readOnly"
         @click="preview.importPage"
         ><icon-lucide-import class="size-3.5"
       /></IconButton>
       <IconButton
         label="Capture into this design"
         size="sm"
-        :disabled="busy || !status?.captureAvailable || store.state.readOnly"
+        :disabled="busy || !status?.captureAvailable || status?.loading || store.state.readOnly"
         @click="preview.capture"
         ><icon-lucide-camera class="size-3.5"
       /></IconButton>
@@ -293,11 +369,17 @@ onScopeDispose(() => {
       /></IconButton>
     </div>
     <div
-      v-if="error || notice || (status && !status.captureAvailable)"
+      v-if="error || browserHistoryError || notice || (status && !status.captureAvailable)"
       class="p-2"
       aria-live="polite"
     >
       <AppAlert v-if="error" tone="error" heading="Browser action failed" :description="error" />
+      <AppAlert
+        v-else-if="browserHistoryError"
+        tone="error"
+        heading="History update failed"
+        :description="browserHistoryError"
+      />
       <AppAlert
         v-else-if="notice"
         tone="success"
@@ -350,16 +432,57 @@ onScopeDispose(() => {
             </div>
           </div>
           <div :class="ui.suggestions()">
-            <h3 :class="ui.suggestionsHeading()">Suggested</h3>
-            <AppButton
-              v-for="url in ['pen.dev', 'docs.pen.dev', 'localhost:8080']"
-              :key="url"
-              variant="ghost"
-              :class="ui.suggestion()"
-              :disabled="busy"
-              @click="openSuggestion(url)"
-              ><icon-lucide-globe class="size-3.5" />{{ url }}</AppButton
-            >
+            <div :class="ui.historyHeading()">
+              <h3 :class="ui.suggestionsHeading()">
+                <icon-lucide-gallery-vertical-end class="size-4" />{{
+                  browserHistory.length ? 'Recent' : 'Suggested'
+                }}
+              </h3>
+              <AppButton
+                v-if="browserHistory.length"
+                variant="ghost"
+                size="xs"
+                class="h-6 px-1 text-xs text-muted"
+                :disabled="updatingBrowserHistory"
+                @click="clearBrowserHistory"
+                >Clear All</AppButton
+              >
+            </div>
+            <div :class="ui.historyRows()">
+              <div v-for="entry in browserHistory" :key="entry.url" class="group relative">
+                <AppButton
+                  variant="ghost"
+                  :class="ui.historyRow()"
+                  :disabled="busy"
+                  @click="openSuggestion(entry.url)"
+                  ><icon-lucide-globe class="size-3.5 shrink-0" /><span class="truncate">{{
+                    previewAddressLabel(entry.url)
+                  }}</span
+                  ><icon-lucide-arrow-right :class="ui.historyArrow()"
+                /></AppButton>
+                <IconButton
+                  :label="`Remove ${previewAddressLabel(entry.url)} from history`"
+                  :class="ui.historyRemove()"
+                  :disabled="updatingBrowserHistory"
+                  @click="removeBrowserVisit(entry.url)"
+                  ><icon-lucide-x class="size-3.5"
+                /></IconButton>
+              </div>
+              <template v-if="!browserHistory.length">
+                <AppButton
+                  v-for="url in ['pen.dev', 'docs.pen.dev', 'localhost:8080']"
+                  :key="url"
+                  variant="ghost"
+                  :class="ui.historyRow()"
+                  :disabled="busy"
+                  @click="openSuggestion(url)"
+                  ><icon-lucide-globe class="size-3.5 shrink-0" /><span class="truncate">{{
+                    url
+                  }}</span
+                  ><icon-lucide-arrow-right :class="ui.historyArrow()"
+                /></AppButton>
+              </template>
+            </div>
           </div>
           <p :class="ui.privacy()">
             Pages run locally on your Mac. Passwords and form values are excluded from editable

@@ -23,6 +23,7 @@ const noDirectStorageAccess = {
     const allowedFiles = [
       '/src/app/ai/chat/storage.ts',
       '/src/app/cache/index.ts',
+      '/src/app/browser-preview/history/storage.ts',
       '/src/app/settings/credentials/storage.ts',
       '/src/app/settings/theme.ts',
       '/src/app/shell/layout-storage.ts',

@@ -933,7 +933,7 @@
           "acceptance": "Import a local fixture; compare fonts/layout/effects, with no promised JS interaction.",
           "status": "partial",
           "evidence": ["../BROWSER.md"],
-          "evidence_limit": "Native URL/navigation, viewport cycling, page/dock closing, mode/restoration, bounded editable text/image import, refusal, Undo/Redo and FIG reopen execute. Native landing controls and measured toolbar geometry execute. Element picking, browser history/zoom/screenshot menus, responsive import layout and exact remaining pixels/states stay open."
+          "evidence_limit": "Native URL/navigation, viewport cycling, page/dock closing, mode/restoration, bounded editable text/image import, refusal, Undo/Redo and FIG reopen execute. Native landing controls and measured toolbar geometry execute. Native completed-visit history, revisit/removal/clear, editor-reload persistence and measured popup geometry execute. Element picking, process-restart persistence, zoom/screenshot menus, responsive import layout and exact remaining pixels/states stay open."
         },
         {
           "id": "IO-05",

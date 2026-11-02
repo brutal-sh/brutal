@@ -48,7 +48,7 @@ describe('native embedded browser preview', () => {
       response.writeHead(200, { 'Content-Type': 'text/html' })
       response.end(
         // oxlint-disable-next-line open-pencil/no-hand-rolled-color -- Exact pixels are the native snapshot acceptance contract.
-        `<!doctype html><title>Preview fixture</title><style>html,body{margin:0;width:100%;height:100%;background:rgb(238,51,68)}@media(max-width:500px){html,body{background:rgb(34,170,85)}}</style><a href="/second">Next page</a><script>(async()=>{const invoke=window.__TAURI__?.core?.invoke; const commands=[['browser_preview_status',{}],['plugin:os|platform',{}],['plugin:fs|exists',{path:'/tmp/openpen-no-access-fixture'}]]; const blocked=await Promise.all(commands.map(async([command,args])=>{if(!invoke)return true;try{await invoke(command,args);return false}catch{return true}}));await fetch('/report?blocked='+blocked.join(',')+'&page='+encodeURIComponent(location.pathname));})();</script>`
+        `<!doctype html><title>Preview fixture</title><style>html,body{margin:0;width:100%;height:100%;background:rgb(238,51,68)}@media(max-width:500px){html,body{background:rgb(34,170,85)}}</style><a href="/second">Next page</a><script>(async()=>{const invoke=window.__TAURI__?.core?.invoke; const commands=[['browser_preview_status',{}],['take_browser_preview_visits',{}],['clear_browser_preview_visits',{}],['plugin:os|platform',{}],['plugin:fs|exists',{path:'/tmp/openpen-no-access-fixture'}]]; const blocked=await Promise.all(commands.map(async([command,args])=>{if(!invoke)return true;try{await invoke(command,args);return false}catch{return true}}));await fetch('/report?blocked='+blocked.join(',')+'&page='+encodeURIComponent(location.pathname));})();</script>`
       )
     })
     await new Promise<void>((resolve) => {
@@ -340,15 +340,13 @@ describe('native embedded browser preview', () => {
       }
       const navigate = async (url: string) => {
         await wait(() => {
-          const address = document.querySelector<HTMLButtonElement>(
-            'button[aria-label="Web address"]'
-          )
-          return !!address && !address.disabled
-        }, 'address button ready')
-        button('Web address')
-        await wait(() => !!document.querySelector('input[type="url"]'), 'address popover')
-        const input = document.querySelector<HTMLInputElement>('input[type="url"]')
-        if (!input) throw new Error('Missing address field')
+          const input = document.querySelector<HTMLInputElement>('input[aria-label="Web address"]')
+          return !!input && !input.disabled
+        }, 'address field ready')
+        const input = document.querySelector<HTMLInputElement>('input[aria-label="Web address"]')
+        if (!input) throw new Error('Missing inline address')
+        input.focus()
+        input.select()
         input.value = url
         input.dispatchEvent(new Event('input', { bubbles: true }))
         await new Promise((resolve) => {
@@ -502,6 +500,12 @@ describe('native embedded browser preview', () => {
         const pixel = Array.from(
           context.getImageData(Math.floor(image.width / 2), Math.floor(image.height / 2), 1, 1).data
         )
+        await wait(() => {
+          const capture = document.querySelector<HTMLButtonElement>(
+            'button[aria-label="Capture into this design"]'
+          )
+          return !!capture && !capture.disabled
+        }, 'completed page capture control')
         button('Capture into this design')
         let id = ''
         await wait(() => {
@@ -555,7 +559,7 @@ describe('native embedded browser preview', () => {
     assert.equal(result.layerHeight, result.height)
     assert.ok(result.bytes && result.bytes > 8)
     assert.ok(ipcReports.length > 0)
-    assert.ok(ipcReports.every((report) => report.includes('blocked=true,true,true&')))
+    assert.ok(ipcReports.every((report) => report.includes('blocked=true,true,true,true,true&')))
     assert.deepEqual(await browser.getWindowHandles(), [mainHandle])
     await browser.keys(['Meta', 'z'])
     await browser.waitUntil(async () =>

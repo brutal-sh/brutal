@@ -45,7 +45,7 @@ export function createBrowserPreviewController(
 
   async function refresh() {
     if (busy.value || isDisposed()) return
-    const startedAt = revision
+    const startedAt = ++revision
     try {
       const result = await native.status()
       if (!isDisposed() && startedAt === revision) status.value = result

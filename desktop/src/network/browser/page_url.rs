@@ -1,5 +1,10 @@
+pub(super) struct PageLocation {
+    pub url: Option<url::Url>,
+    pub loading: bool,
+}
+
 #[cfg(target_os = "macos")]
-pub(super) async fn read(view: &tauri::Webview) -> Result<Option<url::Url>, String> {
+pub(super) async fn read(view: &tauri::Webview) -> Result<PageLocation, String> {
     use objc2_web_kit::WKWebView;
 
     let (sender, receiver) = tokio::sync::oneshot::channel();
@@ -9,7 +14,11 @@ pub(super) async fn read(view: &tauri::Webview) -> Result<Option<url::Url>, Stri
         let url = unsafe { view.URL() }
             .and_then(|url| url.absoluteString())
             .map(|url| url::Url::parse(&url.to_string()).map_err(|error| error.to_string()))
-            .transpose();
+            .transpose()
+            .map(|url| PageLocation {
+                url,
+                loading: unsafe { view.isLoading() },
+            });
         let _ = sender.send(url);
     })
     .map_err(|error| error.to_string())?;
@@ -20,6 +29,11 @@ pub(super) async fn read(view: &tauri::Webview) -> Result<Option<url::Url>, Stri
 }
 
 #[cfg(not(target_os = "macos"))]
-pub(super) async fn read(view: &tauri::Webview) -> Result<Option<url::Url>, String> {
-    view.url().map(Some).map_err(|error| error.to_string())
+pub(super) async fn read(view: &tauri::Webview) -> Result<PageLocation, String> {
+    view.url()
+        .map(|url| PageLocation {
+            url: Some(url),
+            loading: false,
+        })
+        .map_err(|error| error.to_string())
 }

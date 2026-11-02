@@ -109,6 +109,26 @@ test('storage rule permits data keys but rejects storage access', async () => {
   }
 })
 
+test('storage rule confines browser history access to its dedicated storage owner', async () => {
+  const rule = 'no-direct-storage-access'
+  const diagnostics = ruleDiagnostics(
+    await lintFiles(
+      {
+        'src/app/browser-preview/history/storage.ts': 'localStorage.removeItem("owned-history")',
+        'src/app/browser-preview/history/view.ts': 'localStorage.clear()'
+      },
+      { [`open-pencil/${rule}`]: 'error' }
+    ),
+    rule
+  )
+  expect(
+    diagnostics.filter((entry) => entry.filename?.endsWith('/history/storage.ts'))
+  ).toHaveLength(0)
+  expect(diagnostics.filter((entry) => entry.filename?.endsWith('/history/view.ts'))).toHaveLength(
+    1
+  )
+})
+
 afterEach(async () => {
   await Promise.all(
     temporaryDirectories.splice(0).map((directory) => rm(directory, { recursive: true }))

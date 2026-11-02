@@ -1,12 +1,16 @@
 //! An isolated child webview. Visited content has no app commands or plugin capabilities.
 mod capture;
 mod extract;
+pub mod history;
 mod page_url;
 pub mod policy;
 
 use policy::{preview_url, require_editor, DockBounds, PREVIEW_LABEL};
 use std::sync::atomic::{AtomicU64, Ordering};
-use tauri::{webview::WebviewBuilder, LogicalPosition, LogicalSize, Manager, Webview, WebviewUrl};
+use tauri::{
+    webview::{PageLoadEvent, WebviewBuilder},
+    LogicalPosition, LogicalSize, Manager, Webview, WebviewUrl,
+};
 
 static NAVIGATION_GENERATION: AtomicU64 = AtomicU64::new(0);
 
@@ -21,9 +25,10 @@ pub struct PreviewStatus {
     width: u32,
     height: u32,
     capture_available: bool,
+    loading: bool,
 }
 
-fn status(view: &Webview, url: url::Url) -> Result<PreviewStatus, String> {
+fn status(view: &Webview, url: url::Url, loading: bool) -> Result<PreviewStatus, String> {
     let size = view
         .size()
         .map_err(|e| e.to_string())?
@@ -41,6 +46,7 @@ fn status(view: &Webview, url: url::Url) -> Result<PreviewStatus, String> {
         width: size.width,
         height: size.height,
         capture_available: cfg!(target_os = "macos"),
+        loading,
     })
 }
 
@@ -92,6 +98,11 @@ pub async fn browser_preview_open(
                 }
                 allowed
             })
+            .on_page_load(|view, payload| {
+                if matches!(payload.event(), PageLoadEvent::Finished) {
+                    history::completed(&view, payload.url());
+                }
+            })
             .on_new_window(|_, _| tauri::webview::NewWindowResponse::Deny)
             .on_download(|_, _| false)
             .on_permission_request(|_, _| tauri::webview::PermissionResponse::Deny);
@@ -105,8 +116,8 @@ pub async fn browser_preview_open(
             .map_err(|e| e.to_string())?
     };
     view.show().map_err(|e| e.to_string())?;
-    let url = page_url::read(&view).await?.unwrap_or(target);
-    status(&view, url)
+    let location = page_url::read(&view).await?;
+    status(&view, location.url.unwrap_or(target), location.loading)
 }
 
 #[tauri::command]
@@ -118,9 +129,10 @@ pub async fn browser_preview_status(
     let Some(view) = app.get_webview(PREVIEW_LABEL) else {
         return Ok(None);
     };
-    page_url::read(&view)
-        .await?
-        .map(|url| status(&view, url))
+    let location = page_url::read(&view).await?;
+    location
+        .url
+        .map(|url| status(&view, url, location.loading))
         .transpose()
 }
 
@@ -172,12 +184,15 @@ pub async fn browser_preview_extract(
     let target = preview_url(&url, app.config().build.dev_url.as_ref())?;
     let view = existing(&app)?;
     let generation = NAVIGATION_GENERATION.load(Ordering::SeqCst);
-    if page_url::read(&view).await?.as_ref() != Some(&target) {
-        return Err("The preview navigated. Wait for loading and import again.".into());
+    let location = page_url::read(&view).await?;
+    if location.loading || location.url.as_ref() != Some(&target) {
+        return Err("Wait for the page to finish loading, then import again.".into());
     }
     let result = extract::page(&view, &request_id).await?;
+    let location = page_url::read(&view).await?;
     if NAVIGATION_GENERATION.load(Ordering::SeqCst) != generation
-        || page_url::read(&view).await?.as_ref() != Some(&target)
+        || location.loading
+        || location.url.as_ref() != Some(&target)
         || result.get("url").and_then(|url| url.as_str()) != Some(target.as_str())
     {
         return Err("The preview changed during extraction. Import again.".into());
@@ -225,11 +240,11 @@ pub async fn browser_preview_capture(
     require_editor(webview.label())?;
     let target = preview_url(&url, app.config().build.dev_url.as_ref())?;
     let view = existing(&app)?;
-    if page_url::read(&view).await?.as_ref() != Some(&target) {
+    if page_url::read(&view).await?.url.as_ref() != Some(&target) {
         return Err("The preview navigated. Wait for it to load and capture again.".into());
     }
     let bytes = capture::snapshot(&view).await?;
-    if page_url::read(&view).await?.as_ref() != Some(&target) {
+    if page_url::read(&view).await?.url.as_ref() != Some(&target) {
         return Err("The preview changed during capture. Try again.".into());
     }
     Ok(tauri::ipc::Response::new(bytes))
