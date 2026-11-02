@@ -69,6 +69,7 @@ pub fn run() {
             let handler: fn(tauri::ipc::Invoke) -> bool = tauri::generate_handler![
                 network::browser::browser_preview_open,
                 network::browser::browser_preview_status,
+                network::browser::browser_preview_picker,
                 network::browser::history::take_browser_preview_visits,
                 network::browser::history::clear_browser_preview_visits,
                 network::browser::browser_preview_action,

@@ -1,4 +1,7 @@
 {
+  "copyAllStyles": "复制所有样式",
+  "copyClass": "复制类名",
+  "noClassOnElement": "此元素没有类名",
   "layers": "图层",
   "pages": "页面",
   "design": "设计",

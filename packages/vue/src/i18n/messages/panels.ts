@@ -4,6 +4,9 @@ import { i18n } from '#vue/i18n/create'
 
 export const panelMessageDefaults = {
   untitled: 'Untitled',
+  copyAllStyles: 'Copy all styles',
+  copyClass: 'Copy class',
+  noClassOnElement: 'No class on this element',
   individualPadding: 'Individual padding',
   layers: 'Layers',
   slides: 'Slides',

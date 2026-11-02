@@ -933,7 +933,7 @@
           "acceptance": "Import a local fixture; compare fonts/layout/effects, with no promised JS interaction.",
           "status": "partial",
           "evidence": ["../BROWSER.md"],
-          "evidence_limit": "Native URL/navigation, viewport cycling, page/dock closing, mode/restoration, bounded editable text/image import, refusal, Undo/Redo and FIG reopen execute. Native landing controls and measured toolbar geometry execute. Native completed-visit history, revisit/removal/clear, editor-reload persistence and measured popup geometry execute. Element picking, process-restart persistence, zoom/screenshot menus, responsive import layout and exact remaining pixels/states stay open."
+          "evidence_limit": "Native URL/navigation, viewport cycling, page/dock closing, mode/restoration, bounded editable text/image import, refusal, Undo/Redo and FIG reopen execute. Native landing controls and measured toolbar geometry execute. Native completed-visit history, revisit/removal/clear, editor-reload persistence and measured popup geometry execute. Visible paragraph picking, selected-subtree import/Undo, selected PNG dimensions/pixels, reload/expiry guards and a measured physical selected-state journey execute. Offscreen/iframe/shadow and remaining selection states, physical keys/clipboard, process-restart persistence, zoom/screenshot menus, responsive import layout and exact remaining pixels/states stay open."
         },
         {
           "id": "IO-05",
@@ -942,7 +942,7 @@
           "acceptance": "Capture a scrolling local page; inspect dimensions, bounds and saved image.",
           "status": "partial",
           "evidence": ["../BROWSER.md"],
-          "evidence_limit": "Native visible-area PNG pixels, capture into an image layer and Undo execute. Selected-element and full-page captures and their menu/delivery variants remain open."
+          "evidence_limit": "Native visible-area PNG pixels, capture into an image layer and Undo execute. Viewport-bound selected-element PNG dimensions/pixels, image insertion and Undo execute. Offscreen selections, full-page/multi-slice capture and remaining menu/delivery variants remain open."
         },
         {
           "id": "IO-06",

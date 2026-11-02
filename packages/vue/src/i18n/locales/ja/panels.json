@@ -1,4 +1,7 @@
 {
+  "copyAllStyles": "すべてのスタイルをコピー",
+  "copyClass": "クラスをコピー",
+  "noClassOnElement": "この要素にクラスはありません",
   "untitled": "無題",
   "layers": "レイヤー",
   "pages": "ページ",

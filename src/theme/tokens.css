@@ -75,6 +75,8 @@
   --color-border: #3f3f46;
   --color-island-border: #a0b2cc21;
   --color-menu-border: #202020;
+  --color-browser-action: #fafafa;
+  --color-on-browser-action: #18181b;
   --color-tool-active: #2e2e32;
   --color-hover: #37373a;
   /* The accent family; src/app/shell/accent/palette.ts derives other accents from it. */
@@ -141,6 +143,8 @@ html[data-theme='light'] {
   --color-border: #d8dce3;
   --color-island-border: #e4e4e7;
   --color-menu-border: #e4e4e7;
+  --color-browser-action: #18181b;
+  --color-on-browser-action: #fafafa;
   --color-tool-active: #fafafa;
   --color-hover: #eef1f5;
   --color-accent: #2563eb;

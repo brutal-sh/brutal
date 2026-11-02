@@ -19,7 +19,25 @@ fn validate_result(input: &str, request_id: &str) -> Result<serde_json::Value, S
     Ok(value)
 }
 
-pub async fn page(view: &tauri::Webview, request_id: &str) -> Result<serde_json::Value, String> {
+pub async fn page(
+    view: &tauri::Webview,
+    request_id: &str,
+    selected: bool,
+) -> Result<serde_json::Value, String> {
+    let argument = serde_json::to_string(request_id).map_err(|e| e.to_string())?;
+    evaluate(
+        view,
+        format!("({SCRIPT})({argument}, {selected})"),
+        request_id,
+    )
+    .await
+}
+
+pub(super) async fn evaluate(
+    view: &tauri::Webview,
+    script: String,
+    request_id: &str,
+) -> Result<serde_json::Value, String> {
     if request_id.len() != 36
         || !request_id
             .bytes()
@@ -27,10 +45,9 @@ pub async fn page(view: &tauri::Webview, request_id: &str) -> Result<serde_json:
     {
         return Err("Invalid browser import request identifier.".into());
     }
-    let argument = serde_json::to_string(request_id).map_err(|e| e.to_string())?;
     let (sender, receiver) = tokio::sync::oneshot::channel();
     let sender = Arc::new(Mutex::new(Some(sender)));
-    view.eval_with_callback(format!("({SCRIPT})({argument})"), move |result| {
+    view.eval_with_callback(script, move |result| {
         if let Ok(mut pending) = sender.lock() {
             if let Some(sender) = pending.take() {
                 let _ = sender.send(result);

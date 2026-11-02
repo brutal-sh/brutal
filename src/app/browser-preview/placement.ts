@@ -2,6 +2,7 @@ import { getActiveEditorStoreOrNull, type EditorStore } from '@/app/editor/activ
 import { pastePoint } from '@/app/editor/clipboard/paste/content'
 
 import type { CaptureTarget } from './controller'
+import { browserImageSnapshot } from './image'
 
 /** Keep capture tied to the selected design/page, even while native snapshotting is pending. */
 export function browserCaptureTarget(store: EditorStore): CaptureTarget {
@@ -17,16 +18,15 @@ export function browserCaptureTarget(store: EditorStore): CaptureTarget {
     isCurrent,
     place: async (png) => {
       if (!isCurrent()) throw new Error('The capture destination changed. Try again.')
-      const selectedBefore = new Set(store.state.selectedIds)
-      const { x, y } = pastePoint(store)
-      await store.placeImageFiles(
-        [new File([png], 'Browser capture.png', { type: 'image/png' })],
-        x,
-        y
-      )
-      if (![...store.state.selectedIds].some((id) => !selectedBefore.has(id))) {
-        throw new Error('The image could not be placed. Wait for the canvas to load and try again.')
-      }
+      // shortcut: this unzoomed view uses editor display density; capture bundles must carry scale for zoom/monitor changes.
+      const snapshot = browserImageSnapshot(png, window.devicePixelRatio)
+      const ck = store.renderer?.ck
+      const image = ck?.MakeImageFromEncoded(png)
+      if (!image) throw new Error('The browser image could not be decoded. Try again.')
+      image.delete()
+      const point = pastePoint(store)
+      store.pastePreparedSnapshot(snapshot, point, 'Capture browser page')
+      store.requestRender()
     }
   }
 }

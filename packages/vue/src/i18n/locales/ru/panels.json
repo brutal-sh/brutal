@@ -1,4 +1,7 @@
 {
+  "copyAllStyles": "Копировать все стили",
+  "copyClass": "Копировать класс",
+  "noClassOnElement": "У этого элемента нет класса",
   "layers": "Слои",
   "pages": "Страницы",
   "design": "Дизайн",

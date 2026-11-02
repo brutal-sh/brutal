@@ -1,5 +1,6 @@
-// Fixed native operation. Never accepts page script, selectors, network requests or credentials.
-function extractPage(requestId) {
+// Fixed native operation. The picker can target an existing element; callers supply no page script or selector.
+function extractPage(requestId, selected = false) {
+  let origin = { x: 0, y: 0 }
   const diagnostics = []
   const nodes = []
   let textLength = 0
@@ -20,7 +21,7 @@ function extractPage(requestId) {
   const issue = (path, message) => {
     if (diagnostics.length < 100) diagnostics.push({ path, message })
   }
-  const boxOf = (rect) => ({ x: rect.x + scrollX, y: rect.y + scrollY,
+  const boxOf = (rect) => ({ x: rect.x + scrollX - origin.x, y: rect.y + scrollY - origin.y,
     width: rect.width, height: rect.height })
   const styleOf = (style) => Object.fromEntries(properties.map((key) => [key, style.getPropertyValue(key)]))
   function add(node) {
@@ -153,14 +154,21 @@ function extractPage(requestId) {
   }
   try {
     if (document.readyState !== 'complete' || document.fonts.status !== 'loaded' || !document.body) throw new Error('Wait for the page to finish loading.')
-    const width = Math.max(innerWidth, document.documentElement.scrollWidth, document.body.scrollWidth)
-    const height = Math.max(innerHeight, document.documentElement.scrollHeight, document.body.scrollHeight)
+    const picked = selected ? window.__openPenElementPicker?.root() : null
+    if (selected && !picked) throw new Error('The element selection is no longer available. Select it again.')
+    const selection = picked === document.body ? null : picked
+    const root = selection ?? document.body
+    const rect = root.getBoundingClientRect()
+    if (selection) origin = { x: rect.x + scrollX, y: rect.y + scrollY }
+    const width = selection ? Math.ceil(rect.width) : Math.max(innerWidth, document.documentElement.scrollWidth, document.body.scrollWidth)
+    const height = selection ? Math.ceil(rect.height) : Math.max(innerHeight, document.documentElement.scrollHeight, document.body.scrollHeight)
+    if (width < 1 || height < 1) throw new Error('The selected element has no visible bounds.')
     if (width > 32768 || height > 32768) throw new Error('This page exceeds the 32768-pixel import dimensions.')
-    walk(document.body, null, 'body', 0)
+    walk(root, null, root.tagName.toLowerCase(), 0)
     const background = getComputedStyle(document.documentElement).backgroundColor
     return { version: 1, requestId, url: location.href, title: document.title.slice(0, 256),
       width, height, viewportWidth: innerWidth, viewportHeight: innerHeight,
-      background: background === 'rgba(0, 0, 0, 0)' ? 'rgb(255, 255, 255)' : background,
+      background: selection ? 'rgba(0, 0, 0, 0)' : background === 'rgba(0, 0, 0, 0)' ? 'rgb(255, 255, 255)' : background,
       nodes, diagnostics }
   } catch (error) {
     return { requestId, error: error instanceof Error ? error.message : 'Page extraction failed.' }

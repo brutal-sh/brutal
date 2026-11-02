@@ -51,6 +51,11 @@ import { menuItem, useMenuUI } from '@/components/ui/menu/menu'
 import MenuScrollArea from '@/components/ui/menu/MenuScrollArea.vue'
 import theme from '@/theme/browser-preview'
 
+import BrowserPreviewPickerBreadcrumbs from './picker/BrowserPreviewPickerBreadcrumbs.vue'
+import BrowserPreviewPickerButton from './picker/BrowserPreviewPickerButton.vue'
+import BrowserPreviewPickerStyles from './picker/BrowserPreviewPickerStyles.vue'
+import { provideBrowserPicker } from './picker/use'
+
 const open = defineModel<boolean>('open', { default: false })
 const codingMode = defineModel<boolean>('codingMode', { default: false })
 const { session } = defineProps<{ session: BrowserPreviewSession }>()
@@ -104,7 +109,7 @@ async function navigate() {
   if (!address.value.trim()) return
   await preview.navigate()
 }
-let frame = 0
+let layoutQueued = false
 let lastLayout = ''
 let disposed = false
 let clearingPage = false
@@ -124,6 +129,30 @@ const preview = createBrowserPreviewController(
   () => browserImportTarget(store, () => open.value)
 )
 const { address, preset, status, busy, error, notice } = preview
+const picker = provideBrowserPicker(
+  bridge.picker,
+  () => status.value?.url ?? '',
+  () => busy.value || !status.value || status.value.loading,
+  (action) => {
+    void (action === 'import' ? importPage() : capture())
+  }
+)
+async function importPage() {
+  if (busy.value) return
+  await preview.importPage(!!picker.state.value?.pick)
+  if (notice.value && picker.state.value?.pick) await picker.stop()
+}
+async function capture() {
+  if (busy.value) return
+  await preview.capture(!!picker.state.value?.pick)
+  if (notice.value && picker.state.value?.pick) await picker.stop()
+}
+watch(
+  () => status.value?.loading,
+  (loading) => {
+    if (loading) picker.reset()
+  }
+)
 const selectedDevice = computed(
   () => PREVIEW_PRESETS.find((device) => device.value === preset.value) ?? PREVIEW_PRESETS[0]
 )
@@ -148,9 +177,12 @@ const { pause, resume } = useIntervalFn(preview.refresh, 1000, {
 })
 
 function syncSurface() {
-  if (frame || disposed) return
-  frame = requestAnimationFrame(() => {
-    frame = 0
+  if (layoutQueued || disposed) return
+  layoutQueued = true
+  // The editor's animation frames can pause while its native child has focus.
+  queueMicrotask(() => {
+    layoutQueued = false
+    if (disposed) return
     const rect = surface.value?.getBoundingClientRect()
     const overlay = !!hasPreviewOverlay()
     const key = JSON.stringify([
@@ -220,7 +252,6 @@ onMounted(async () => {
 })
 onScopeDispose(() => {
   disposed = true
-  if (frame) cancelAnimationFrame(frame)
   preview.dispose()
   void historyConnection.then((stop) => stop())
   session.url = clearingPage ? '' : (status.value?.url ?? session.url)
@@ -246,6 +277,7 @@ onScopeDispose(() => {
   >
     <div role="toolbar" aria-label="Browser View controls" :class="ui.toolbar()">
       <div :class="ui.navigation()">
+        <BrowserPreviewPickerButton :disabled="busy || !status || status.loading" />
         <IconButton
           label="Back"
           size="sm"
@@ -340,17 +372,28 @@ onScopeDispose(() => {
         </div>
       </form>
       <IconButton
-        label="Import editable page"
+        :label="
+          picker.state.value?.pick
+            ? 'Import the selection as nodes (Enter)'
+            : 'Import editable page'
+        "
+        :class="ui.importButton()"
         size="sm"
         :disabled="busy || !status || status.loading || store.state.readOnly"
-        @click="preview.importPage"
-        ><icon-lucide-import class="size-3.5"
-      /></IconButton>
+        @click="importPage"
+        ><icon-lucide-code-xml :class="ui.importGlyph()" /><span :class="ui.importLabel()"
+          >Import</span
+        ></IconButton
+      >
       <IconButton
-        label="Capture into this design"
+        :label="
+          picker.state.value?.pick
+            ? 'Screenshot the selection onto the canvas (Cmd+Enter)'
+            : 'Capture into this design'
+        "
         size="sm"
         :disabled="busy || !status?.captureAvailable || status?.loading || store.state.readOnly"
-        @click="preview.capture"
+        @click="capture"
         ><icon-lucide-camera class="size-3.5"
       /></IconButton>
       <IconButton
@@ -369,11 +412,22 @@ onScopeDispose(() => {
       /></IconButton>
     </div>
     <div
-      v-if="error || browserHistoryError || notice || (status && !status.captureAvailable)"
+      v-if="
+        error ||
+        picker.error.value ||
+        browserHistoryError ||
+        notice ||
+        (status && !status.captureAvailable)
+      "
       class="p-2"
       aria-live="polite"
     >
-      <AppAlert v-if="error" tone="error" heading="Browser action failed" :description="error" />
+      <AppAlert
+        v-if="error || picker.error.value"
+        tone="error"
+        heading="Browser action failed"
+        :description="error || picker.error.value"
+      />
       <AppAlert
         v-else-if="browserHistoryError"
         tone="error"
@@ -392,6 +446,7 @@ onScopeDispose(() => {
         description="Navigation is available on this platform."
       />
     </div>
+    <BrowserPreviewPickerBreadcrumbs />
     <div ref="surface" data-test-id="browser-preview-surface" :class="ui.surface()">
       <div v-if="!status" :class="ui.landing()">
         <div :class="ui.content()">
@@ -418,7 +473,9 @@ onScopeDispose(() => {
               <div :class="ui.featureIcon()"><icon-lucide-mouse-pointer-2 class="size-5" /></div>
               <div>
                 <h3 :class="ui.featureTitle()">Import an element</h3>
-                <p :class="ui.featureDescription()">Element selection is not available yet.</p>
+                <p :class="ui.featureDescription()">
+                  Select an element and reproduce its editable layers.
+                </p>
               </div>
             </div>
             <div :class="ui.feature()">
@@ -494,5 +551,6 @@ onScopeDispose(() => {
     <span v-if="status" class="sr-only" aria-live="polite"
       >{{ status.width }} × {{ status.height }}</span
     >
+    <BrowserPreviewPickerStyles />
   </section>
 </template>

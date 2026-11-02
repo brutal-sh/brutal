@@ -14,7 +14,7 @@ let origin: string
 let mainHandle: string
 const requests: string[] = []
 type ImportResult = {
-  error?: string
+  failure?: string
   rootId?: string
   textId?: string
   imageBytes?: number
@@ -78,7 +78,7 @@ describe('native editable browser import', () => {
     const result = await browser.executeAsync<ImportResult, [string, boolean]>(
       async (origin, hold, done) => {
         const invoke = window.__TAURI__?.core.invoke
-        if (!invoke) return done({ error: 'Missing native bridge' })
+        if (!invoke) return done({ failure: 'Missing native bridge' })
         const wait = async (condition: () => boolean | Promise<boolean>, label: string) => {
           const end = Date.now() + 15000
           while (Date.now() < end) {
@@ -218,13 +218,13 @@ describe('native editable browser import', () => {
           })
         } catch (error) {
           await invoke('browser_preview_action', { action: 'close' }).catch(() => undefined)
-          done({ error: String(error) })
+          done({ failure: String(error) })
         }
       },
       origin,
       holdForInspection
     )
-    assert.ok(!result.error, result.error)
+    assert.ok(!result.failure, result.failure)
     const { rootId, textId } = result
     assert.ok(rootId && textId)
     assert.ok(result.imageBytes && result.imageBytes > 8)
@@ -281,11 +281,13 @@ describe('native editable browser import', () => {
       const data = Array.from(await readFile(filePath))
       await writeFile('local-evidence/native-browser-import.fig', new Uint8Array(data))
       const reopened = await browser.executeAsync<
-        { text?: string; imageCount?: number; error?: string },
+        { text?: string; imageCount?: number; failure?: string },
         [number[]]
       >(async (data, done) => {
+        const originalFrame = window.requestAnimationFrame
+        const store = window.openPencil?.getStore?.()
+        window.requestAnimationFrame = () => 0
         try {
-          const store = window.openPencil?.getStore?.()
           if (!store) throw new Error('Missing editor')
           await store.openFigFile(new File([new Uint8Array(data)], 'Reopened.fig'))
           const descendants = (id: string): ReturnType<typeof store.graph.getChildren> =>
@@ -298,10 +300,13 @@ describe('native editable browser import', () => {
             imageCount: store.graph.images.size
           })
         } catch (error) {
-          done({ error: String(error) })
+          done({ failure: String(error) })
+        } finally {
+          window.requestAnimationFrame = originalFrame
+          store?.requestRender()
         }
       }, data)
-      assert.ok(!reopened.error, reopened.error)
+      assert.ok(!reopened.failure, reopened.failure)
       assert.equal(reopened.text, 'Edited after browser import')
       assert.ok(reopened.imageCount && reopened.imageCount > 0)
     } finally {

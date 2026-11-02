@@ -87,7 +87,7 @@ export function createBrowserPreviewController(
         await native.resize(selectedPreset())
         if (!isDisposed()) status.value = await native.status()
       }),
-    capture: () =>
+    capture: (selected = false) =>
       run(async () => {
         const target = captureTarget()
         if (!target.isCurrent()) throw new Error('Select this document before capturing.')
@@ -95,7 +95,7 @@ export function createBrowserPreviewController(
         if (!current) throw new Error('Open a page in the preview first.')
         if (!current.captureAvailable)
           throw new Error('Browser capture is currently available on macOS.')
-        const png = await native.capture(current.url)
+        const png = await native.capture(current.url, selected)
         if (isDisposed() || !target.isCurrent()) {
           throw new Error('The document or page changed. Capture again into the selected design.')
         }
@@ -103,14 +103,14 @@ export function createBrowserPreviewController(
         if (!isDisposed())
           notice.value = 'Capture added to this design. You can undo it in the editor.'
       }),
-    importPage: () =>
+    importPage: (selected = false) =>
       run(async () => {
         if (!importTarget) throw new Error('Editable browser import is unavailable.')
         const target = importTarget()
         if (!target.isCurrent()) throw new Error('Select this document before importing.')
         const current = await native.status()
         if (!current) throw new Error('Open a page in the preview first.')
-        const page = await native.extract(current.url)
+        const page = await native.extract(current.url, selected)
         if (isDisposed() || !target.isCurrent())
           throw new Error('The document or selection changed. Import again.')
         await target.place(page, () => !isDisposed() && target.isCurrent())

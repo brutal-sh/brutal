@@ -48,7 +48,7 @@ describe('native embedded browser preview', () => {
       response.writeHead(200, { 'Content-Type': 'text/html' })
       response.end(
         // oxlint-disable-next-line open-pencil/no-hand-rolled-color -- Exact pixels are the native snapshot acceptance contract.
-        `<!doctype html><title>Preview fixture</title><style>html,body{margin:0;width:100%;height:100%;background:rgb(238,51,68)}@media(max-width:500px){html,body{background:rgb(34,170,85)}}</style><a href="/second">Next page</a><script>(async()=>{const invoke=window.__TAURI__?.core?.invoke; const commands=[['browser_preview_status',{}],['take_browser_preview_visits',{}],['clear_browser_preview_visits',{}],['plugin:os|platform',{}],['plugin:fs|exists',{path:'/tmp/openpen-no-access-fixture'}]]; const blocked=await Promise.all(commands.map(async([command,args])=>{if(!invoke)return true;try{await invoke(command,args);return false}catch{return true}}));await fetch('/report?blocked='+blocked.join(',')+'&page='+encodeURIComponent(location.pathname));})();</script>`
+        `<!doctype html><title>Preview fixture</title><style>html,body{margin:0;width:100%;height:100%;background:rgb(238,51,68)}@media(max-width:500px){html,body{background:rgb(34,170,85)}}</style><a href="/second">Next page</a><script>(async()=>{const invoke=window.__TAURI__?.core?.invoke; const commands=[['browser_preview_status',{}],['browser_preview_picker',{url:location.href,requestId:'00000000-0000-4000-8000-000000000000',action:'start'}],['take_browser_preview_visits',{}],['clear_browser_preview_visits',{}],['plugin:os|platform',{}],['plugin:fs|exists',{path:'/tmp/openpen-no-access-fixture'}]]; const blocked=await Promise.all(commands.map(async([command,args])=>{if(!invoke)return true;try{await invoke(command,args);return false}catch{return true}}));await fetch('/report?blocked='+blocked.join(',')+'&page='+encodeURIComponent(location.pathname));})();</script>`
       )
     })
     await new Promise<void>((resolve) => {
@@ -555,11 +555,13 @@ describe('native embedded browser preview', () => {
     assert.ok(Math.abs(result.current.y - result.rect.y) < 2)
     assert.ok(result.current.x >= result.rect.x - 1)
     assert.ok(result.current.width <= result.rect.width)
-    assert.equal(result.layerWidth, result.width)
-    assert.equal(result.layerHeight, result.height)
+    assert.equal(result.layerWidth, result.current.width)
+    assert.equal(result.layerHeight, result.current.height)
     assert.ok(result.bytes && result.bytes > 8)
     assert.ok(ipcReports.length > 0)
-    assert.ok(ipcReports.every((report) => report.includes('blocked=true,true,true,true,true&')))
+    assert.ok(
+      ipcReports.every((report) => report.includes('blocked=true,true,true,true,true,true&'))
+    )
     assert.deepEqual(await browser.getWindowHandles(), [mainHandle])
     await browser.keys(['Meta', 'z'])
     await browser.waitUntil(async () =>

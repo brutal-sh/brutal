@@ -3,6 +3,8 @@ import * as v from 'valibot'
 
 import type { PreviewBounds } from './dock'
 import { validateExtractedPage, type ExtractedPage } from './dom/schema'
+import type { BrowserPickerNative } from './picker/controller'
+import { validateBrowserPicker } from './picker/schema'
 import { captureBytes, previewStatusSchema } from './schema'
 import type { PreviewAction, PreviewPreset, PreviewStatus } from './schema'
 
@@ -11,8 +13,8 @@ export interface BrowserPreviewNative {
   status(): Promise<PreviewStatus | null>
   action(action: PreviewAction): Promise<void>
   resize(preset: PreviewPreset): Promise<void>
-  capture(url: string): Promise<Uint8Array<ArrayBuffer>>
-  extract(url: string): Promise<ExtractedPage>
+  capture(url: string, selected?: boolean): Promise<Uint8Array<ArrayBuffer>>
+  extract(url: string, selected?: boolean): Promise<ExtractedPage>
 }
 
 let pendingPreviewOperation: Promise<unknown> = Promise.resolve()
@@ -50,20 +52,48 @@ export function createBrowserPreviewNative(
         : null,
     action: (action) => enqueue(() => callNative('browser_preview_action', { action })),
     resize: () => enqueue(() => callNative('browser_preview_resize', { bounds: requireBounds() })),
-    capture: (url) =>
-      enqueue(async () => captureBytes(await callNative('browser_preview_capture', { url }))),
-    extract: (url) =>
+    capture: (url, selected = false) =>
+      enqueue(async () =>
+        captureBytes(
+          await callNative('browser_preview_capture', {
+            url,
+            ...(selected ? { selected: true } : {})
+          })
+        )
+      ),
+    extract: (url, selected = false) =>
       enqueue(async () => {
         const requestId = crypto.randomUUID()
         return validateExtractedPage(
-          await callNative('browser_preview_extract', { url, requestId }),
+          await callNative('browser_preview_extract', {
+            url,
+            requestId,
+            ...(selected ? { selected: true } : {})
+          }),
           requestId,
           url
         )
       })
   }
+  const picker: BrowserPickerNative = (url, action, index) =>
+    enqueue(async () => {
+      requireBounds()
+      if (!opened) throw new Error('Open a page before selecting an element.')
+      const requestId = crypto.randomUUID()
+      return validateBrowserPicker(
+        await callNative('browser_preview_picker', {
+          url,
+          requestId,
+          action,
+          index
+        }),
+        requestId,
+        url
+      )
+    })
   return {
     native,
+    picker,
     syncBounds: () =>
       enqueue(async () => {
         if (!disposed) await callNative('browser_preview_layout', { bounds: bounds() })

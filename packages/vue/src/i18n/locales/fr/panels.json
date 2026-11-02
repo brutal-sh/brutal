@@ -1,4 +1,7 @@
 {
+  "copyAllStyles": "Copier tous les styles",
+  "copyClass": "Copier la classe",
+  "noClassOnElement": "Cet élément n’a pas de classe",
   "layers": "Calques",
   "pages": "Pages",
   "design": "Design",

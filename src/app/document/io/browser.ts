@@ -79,9 +79,19 @@ export function resolveBrowserFileURL(path: string): URL {
 
 export function yieldToUI(): Promise<void> {
   return new Promise((resolve) => {
-    requestAnimationFrame(() => resolve())
+    let frame = 0
+    const finish = () => {
+      clearTimeout(timer)
+      cancelAnimationFrame(frame)
+      resolve()
+    }
+    // Native child focus and background tabs can pause animation frames indefinitely.
+    const timer = setTimeout(finish, UI_YIELD_FALLBACK_MS)
+    frame = requestAnimationFrame(finish)
   })
 }
+
+const UI_YIELD_FALLBACK_MS = 50
 
 type ViewportEditor = {
   zoomToFit: () => void

@@ -12,6 +12,10 @@ export default {
     viewport:
       'h-5 w-7 rounded-full bg-panel-foreground/6 hover:bg-panel-foreground/10 dark:bg-panel-foreground/15 dark:hover:bg-panel-foreground/25',
     closePage: 'size-5',
+    importButton:
+      'ml-1.5 mr-2 h-7 w-auto shrink-0 rounded-md border-0 bg-browser-action px-3 text-sm font-medium text-on-browser-action hover:bg-browser-action/90 disabled:opacity-25 @max-[460px]/browser:w-7 @max-[460px]/browser:px-0',
+    importGlyph: 'hidden size-3.5 @max-[460px]/browser:block',
+    importLabel: 'inline @max-[460px]/browser:hidden',
     separator: 'mx-2.5 h-4 w-px shrink-0 bg-menu-border',
     surface: 'relative min-h-0 flex-1 overflow-hidden bg-canvas',
     landing: 'absolute inset-0 overflow-auto border-x border-island-border bg-panel',

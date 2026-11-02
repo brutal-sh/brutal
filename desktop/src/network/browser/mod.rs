@@ -3,6 +3,7 @@ mod capture;
 mod extract;
 pub mod history;
 mod page_url;
+mod picker;
 pub mod policy;
 
 use policy::{preview_url, require_editor, DockBounds, PREVIEW_LABEL};
@@ -136,6 +137,34 @@ pub async fn browser_preview_status(
         .transpose()
 }
 
+#[tauri::command]
+pub async fn browser_preview_picker(
+    app: tauri::AppHandle,
+    webview: Webview,
+    url: String,
+    request_id: String,
+    action: picker::PickerAction,
+    index: Option<usize>,
+) -> Result<serde_json::Value, String> {
+    require_editor(webview.label())?;
+    let target = preview_url(&url, app.config().build.dev_url.as_ref())?;
+    let view = existing(&app)?;
+    let generation = NAVIGATION_GENERATION.load(Ordering::SeqCst);
+    let location = page_url::read(&view).await?;
+    if location.loading || location.url.as_ref() != Some(&target) {
+        return Err("Wait for the page to finish loading, then select an element.".into());
+    }
+    let result = picker::update(&view, &request_id, action, index).await?;
+    let location = page_url::read(&view).await?;
+    if NAVIGATION_GENERATION.load(Ordering::SeqCst) != generation
+        || location.loading
+        || location.url.as_ref() != Some(&target)
+    {
+        return Err("The browser page changed. Select the element again.".into());
+    }
+    Ok(result)
+}
+
 #[derive(serde::Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum PreviewAction {
@@ -179,6 +208,7 @@ pub async fn browser_preview_extract(
     webview: Webview,
     url: String,
     request_id: String,
+    selected: Option<bool>,
 ) -> Result<serde_json::Value, String> {
     require_editor(webview.label())?;
     let target = preview_url(&url, app.config().build.dev_url.as_ref())?;
@@ -188,7 +218,7 @@ pub async fn browser_preview_extract(
     if location.loading || location.url.as_ref() != Some(&target) {
         return Err("Wait for the page to finish loading, then import again.".into());
     }
-    let result = extract::page(&view, &request_id).await?;
+    let result = extract::page(&view, &request_id, selected.unwrap_or(false)).await?;
     let location = page_url::read(&view).await?;
     if NAVIGATION_GENERATION.load(Ordering::SeqCst) != generation
         || location.loading
@@ -236,6 +266,7 @@ pub async fn browser_preview_capture(
     app: tauri::AppHandle,
     webview: Webview,
     url: String,
+    selected: Option<bool>,
 ) -> Result<tauri::ipc::Response, String> {
     require_editor(webview.label())?;
     let target = preview_url(&url, app.config().build.dev_url.as_ref())?;
@@ -243,7 +274,39 @@ pub async fn browser_preview_capture(
     if page_url::read(&view).await?.url.as_ref() != Some(&target) {
         return Err("The preview navigated. Wait for it to load and capture again.".into());
     }
-    let bytes = capture::snapshot(&view).await?;
+    let staged = picker::stage(&view, true).await?;
+    let captured = async {
+        let rect = if selected.unwrap_or(false) {
+            Some(
+                picker::selection_rect(&staged)?
+                    .ok_or("The element selection is no longer available. Select it again.")?,
+            )
+        } else {
+            None
+        };
+        let bytes = capture::snapshot(&view).await?;
+        Ok::<_, String>((bytes, rect))
+    }
+    .await;
+    let restored = picker::stage(&view, false).await;
+    let (bytes, rect) = captured?;
+    let restored = restored?;
+    if selected.unwrap_or(false) && picker::selection_rect(&restored)? != rect {
+        return Err("The selected element moved during capture. Try again.".into());
+    }
+    let bytes = if let Some(rect) = rect {
+        let size = view
+            .size()
+            .map_err(|error| error.to_string())?
+            .to_logical::<f64>(
+                view.window()
+                    .scale_factor()
+                    .map_err(|error| error.to_string())?,
+            );
+        capture::crop(bytes, rect, size.width, size.height)?
+    } else {
+        bytes
+    };
     if page_url::read(&view).await?.url.as_ref() != Some(&target) {
         return Err("The preview changed during capture. Try again.".into());
     }
