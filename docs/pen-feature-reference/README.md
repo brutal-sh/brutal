@@ -4,6 +4,8 @@ Reference: official documentation retrieved 2026-10-30; installed acceptance tar
 
 This catalogs every current documentation chapter. Requirements are paraphrased; acceptance checks are our own executable criteria. A documented claim is not an observed result. **No row is fully accepted.** `Open` means acceptance is missing, not necessarily implementation. `Partial` means linked evidence covers only part of the row. The installed app can differ from the live documentation; record both rather than silently choosing one.
 
+The native [Goodies inventory](../GOODIES-PARITY.md) records its five sections, style preview/composer behavior, document cards and shader actions in addition to the documentation chapters below.
+
 Subscriptions, vendor activation and vendor account gates are excluded. Independent equivalents must still protect documents, credentials and published data. External AI/service costs and provider authentication remain separate. Vendor source/assets stay in ignored private evidence.
 
 Machine-readable requirements: [features.json](features.json). Source/heading inventory and cached-page hashes: [sources.json](sources.json). [Shortcut matrix](shortcuts.md), [serialized fields](format-fields.md), [native paint controls](paint-controls.md), [CLI/MCP contracts](command-contract.md), [native screen coverage](../PARITY-STATE-MATRIX.md), [execution evidence](../ACCEPTANCE.md), [reference provenance](../PEN-REFERENCE.md).

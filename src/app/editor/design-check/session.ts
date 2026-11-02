@@ -4,6 +4,7 @@ import { computed, effectScope, ref, shallowRef, watch } from 'vue'
 import type { Editor } from '@open-pencil/core'
 import { isFigPagePending } from '@open-pencil/core/io/formats/fig'
 import { createLinter, type LintConfig, type LintFixRequest } from '@open-pencil/core/lint'
+import { scriptOfNode, hasCurrentScriptOutput } from '@open-pencil/scene-graph/scripts'
 
 import type { AppEditorState } from '@/app/editor/session/types'
 import { appPreferences, type DesignCheckPreset } from '@/app/settings/preferences/store'
@@ -61,7 +62,16 @@ export function createDesignCheck(editor: Editor, state: AppEditorState) {
   )
 
   function checkPage(pageId: string): DesignIssue[] {
-    return toDesignIssues(linter.value.lintGraph(editor.graph, [pageId]).messages, pageId)
+    const messages = linter.value.lintGraph(editor.graph, [pageId]).messages.filter((message) => {
+      const owner = editor.graph.closest(message.nodeId, (node) => !!scriptOfNode(node))
+      // Status artwork is editor feedback, not authored content the user can repair.
+      return (
+        !owner ||
+        owner.id === message.nodeId ||
+        (!!scriptOfNode(owner)?.uri && hasCurrentScriptOutput(editor.graph, owner))
+      )
+    })
+    return toDesignIssues(messages, pageId)
   }
 
   /** Set while the Lint panel lists the whole document, which needs every page checked. */

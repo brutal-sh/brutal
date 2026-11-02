@@ -26,6 +26,21 @@ test.beforeEach(async ({ page }) => {
   await new CanvasHelper(page).waitForInit()
 })
 
+test('runtime failures report the authored source line through the isolated worker boundary', async ({
+  page
+}) => {
+  const result = await execute(
+    page,
+    '/** @schema 2.21 */\nconst value = 1;\nthrow new Error("Independent failure");'
+  )
+  expect(result).toMatchObject({
+    ok: false,
+    error: 'Independent failure',
+    line: 3
+  })
+  if (!result.ok && 'column' in result) expect(result.column).toBeGreaterThan(0)
+})
+
 test('executes bounded Script dimensions, typed inputs and deterministic random in fresh workers', async ({
   page
 }) => {

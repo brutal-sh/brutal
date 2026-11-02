@@ -5,6 +5,7 @@ import { expect, test } from '@playwright/test'
 import { parsePenDocument } from '@open-pencil/pen'
 
 import { CanvasHelper } from '#tests/helpers/canvas'
+import { waitForSettledScene } from '#tests/helpers/canvas/color-space'
 import { create, chooseSource, generated, exportScript } from '#tests/helpers/document/scripts'
 import { openAppMenu } from '#tests/helpers/menu'
 
@@ -15,7 +16,67 @@ test('empty Script exports its translucent placeholder and full-opacity border',
   await expect.poll(async () => (await generated(page))?.children.length).toBe(3)
   const image = Buffer.from(await exportScript(page))
   await writeFile(testInfo.outputPath('empty-script.png'), image)
-  expect(image).toMatchSnapshot('empty-script.png', { threshold: 0, maxDiffPixels: 0 })
+  expect(image).toMatchSnapshot('empty-script.png', {
+    threshold: 0,
+    maxDiffPixels: 0
+  })
+})
+
+test('Script shows a bounded runtime diagnostic and code excerpt, refuses stale conversion, and recovers', async ({
+  page
+}) => {
+  const canvas = await create(page)
+  await chooseSource(
+    page,
+    '/** @schema 2.21 */\nconst value = 1;\nthrow new Error("Independent failure");'
+  )
+  const section = page.getByRole('region', { name: 'Script', exact: true })
+  await expect(section.getByRole('alert')).toContainText('Independent failure')
+  await expect(
+    section.getByRole('button', { name: 'Convert to layers', exact: true })
+  ).toBeDisabled()
+  await expect.poll(async () => (await generated(page))?.children.length).toBe(2)
+  await waitForSettledScene(page)
+  const beforeExport = await canvas.screenshotCanvasRegion(650, 500)
+  expect(Buffer.from(await exportScript(page))).toMatchSnapshot('script-runtime-error-export.png', {
+    threshold: 0,
+    maxDiffPixels: 0
+  })
+  await waitForSettledScene(page)
+  expect(await canvas.screenshotCanvasRegion(650, 500)).toEqual(beforeExport)
+  expect(await canvas.screenshotCanvasRegion(650, 500)).toMatchSnapshot('script-runtime-error.png', { threshold: 0, maxDiffPixels: 0 })
+  await chooseSource(
+    page,
+    '/** @schema 2.21 */\nreturn [{type:"rectangle",name:"Recovered output",width:80,height:40,fill:"#34A878"}];'
+  )
+  await expect(section.getByRole('alert')).toHaveCount(0)
+  await expect.poll(async () => (await generated(page))?.children[0]?.name).toBe('Recovered output')
+  await expect(
+    section.getByRole('button', { name: 'Convert to layers', exact: true })
+  ).toBeEnabled()
+  canvas.assertNoErrors()
+})
+
+test('Script shows the missing-file diagnostic and replaces it after a source is chosen', async ({
+  page
+}) => {
+  const canvas = await create(page)
+  const path = page.getByRole('textbox', { name: 'Script file', exact: true })
+  await path.fill('independent-missing-source.js')
+  await path.press('Enter')
+  const section = page.getByRole('region', { name: 'Script', exact: true })
+  await expect(section.getByRole('alert')).toBeVisible()
+  await expect.poll(async () => (await generated(page))?.children.length).toBe(2)
+  expect(Buffer.from(await exportScript(page))).toMatchSnapshot('script-missing-file-export.png', {
+    threshold: 0,
+    maxDiffPixels: 0
+  })
+  await waitForSettledScene(page)
+  expect(await canvas.screenshotCanvasRegion(650, 500)).toMatchSnapshot('script-missing-file.png', { threshold: 0, maxDiffPixels: 0 })
+  await chooseSource(page)
+  await expect(section.getByRole('alert')).toHaveCount(0)
+  await expect.poll(async () => (await generated(page))?.children.length).toBe(3)
+  canvas.assertNoErrors()
 })
 
 test('Script creates, links, edits inputs, converts to editable layers and undoes', async ({

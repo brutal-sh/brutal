@@ -12,7 +12,7 @@ import {
 
 type SandboxEvaluationResult =
   | Omit<Extract<SandboxRunResult, { ok: true }>, 'id'>
-  | { ok: false; error: string }
+  | Omit<Extract<SandboxRunResult, { ok: false }>, 'id'>
 
 /** Runs bounded data-producing code in an opaque-origin frame's fresh worker. */
 export function evaluateSandbox(
@@ -61,7 +61,12 @@ export function evaluateSandbox(
       }
       if (message.id !== id) return
       if (!message.ok) {
-        finish({ ok: false, error: message.error })
+        finish({
+          ok: false,
+          error: message.error,
+          line: message.line,
+          column: message.column
+        })
         return
       }
       finish(message)

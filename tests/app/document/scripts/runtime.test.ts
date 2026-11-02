@@ -147,6 +147,48 @@ test('snapshot source collection refuses a same-URI component swap during anothe
   }
 })
 
+test('a delayed failure from the old Script component cannot replace a same-URI swapped instance', async () => {
+  const editor = createEditor()
+  const changes = createDocumentChanges(editor)
+  const delayed = createDeferred<Result>()
+  let waiting = false
+  const runtime = createScriptRuntime(editor, io(), {
+    getDocumentPath: () => null,
+    adoptChanges: changes.adopt,
+    evaluate: async (source, width) => {
+      if (source === code('first') && width === 221) {
+        waiting = true
+        return delayed.promise
+      }
+      return result(source, width)
+    }
+  })
+  try {
+    const mains = ['first', 'second'].map((name) => {
+      const id = editor.createScript(0, 0)
+      runtime.attachScriptSource(id, 'grid.js', code(name))
+      editor.select([id])
+      editor.createComponentFromSelection()
+      return id
+    })
+    const instance = editor.createInstanceFromComponent(mains[0])
+    if (!instance) throw new Error('Missing Script instance')
+    editor.updateNodeWithUndo(instance, { width: 221 })
+    await until(() => waiting)
+    editor.graph.swapInstanceComponent(instance, mains[1])
+    delayed.resolve({ ok: false, error: 'Old source failure' })
+    await until(() => editor.graph.getChildren(instance)[0]?.name === code('second'))
+    expect(runtime.scriptRuntimeStates.get(instance)?.error).toBeUndefined()
+    const node = editor.graph.getNode(instance)
+    if (!node) throw new Error('Missing Script instance')
+    expect(hasCurrentScriptOutput(editor.graph, node)).toBe(true)
+  } finally {
+    runtime.dispose()
+    changes.dispose()
+    editor.dispose()
+  }
+})
+
 test('a watched source supersedes delayed output, failures refuse stale conversion, and disposal stops work', async () => {
   const editor = createEditor()
   const changes = createDocumentChanges(editor)
@@ -435,7 +477,9 @@ test('Script variable inputs regenerate across inherited themes, values, Undo an
     editor.removeVariable(variable.id)
     await until(() => !!runtime.scriptRuntimeStates.get('theme-script')?.error)
     expect(hasCurrentScriptOutput(graph, script)).toBe(false)
-    expect(child()?.width).toBe(60)
+    expect(child()?.fills[0]).toMatchObject({
+      color: { r: 1, g: 0.4, b: 0.4 }
+    })
     editor.undo.undo()
     await until(
       () =>

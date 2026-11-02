@@ -1,4 +1,5 @@
 import type { SandboxRunRequest, SandboxRunResult } from '@/app/code/sandbox/schema'
+import { scriptFailure, SCRIPT_SOURCE_NAME } from '@/app/document/scripts/diagnostics'
 import { scriptOutput } from '@/app/document/scripts/output'
 
 const compile = Function
@@ -21,9 +22,17 @@ export function runCanvasScript({
     }
     Object.defineProperty(Math, 'random', { value: random, configurable: true })
     // eslint-disable-next-line typescript-eslint/no-implied-eval -- code runs only in the isolated, time-limited worker
-    const value: unknown = new compile('pencil', `"use strict";\n${code}`)(canvasScript)
-    return { id, ok: true, value: scriptOutput(value, allowScriptReferences), collections: [] }
+    const value: unknown = new compile(
+      'pencil',
+      `"use strict";\n${code}\n//# sourceURL=${SCRIPT_SOURCE_NAME}`
+    )(canvasScript)
+    return {
+      id,
+      ok: true,
+      value: scriptOutput(value, allowScriptReferences),
+      collections: []
+    }
   } catch (error) {
-    return { id, ok: false, error: error instanceof Error ? error.message : String(error) }
+    return { id, ok: false, ...scriptFailure(error, code) }
   }
 }

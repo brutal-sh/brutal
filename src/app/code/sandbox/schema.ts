@@ -46,7 +46,13 @@ const resultEntries = {
     value: v.unknown(),
     collections: v.array(v.unknown())
   },
-  failed: { id: v.string(), ok: v.literal(false), error: v.string() }
+  failed: {
+    id: v.string(),
+    ok: v.literal(false),
+    error: v.string(),
+    line: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(256_001))),
+    column: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(256_001)))
+  }
 }
 
 /** What the host asks the sandbox to run. */

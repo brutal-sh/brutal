@@ -9,6 +9,9 @@ interface ScriptOutputState {
   definition: ScriptDefinition
   width: number
   height: number
+  diagnostic: boolean
+  componentId: SceneNode['componentId']
+  childIds: string[]
 }
 
 // Execution readiness belongs to this process, never to a file an untrusted author can forge.
@@ -16,15 +19,26 @@ const outputs = new WeakMap<SceneGraph, Map<string, ScriptOutputState>>()
 
 export function hasCurrentScriptOutput(graph: SceneGraph, node: SceneNode): boolean {
   const state = outputs.get(graph)?.get(node.id)
+  return !state?.diagnostic && isCurrentPresentation(state, node)
+}
+
+function isCurrentPresentation(state: ScriptOutputState | undefined, node: SceneNode): boolean {
   return (
     !!state &&
     state.width === node.width &&
     state.height === node.height &&
+    state.componentId === node.componentId &&
+    isEqual(state.childIds, node.childIds) &&
     isEqual(state.definition, scriptOfNode(node))
   )
 }
 
-export function markScriptOutputCurrent(graph: SceneGraph, id: string, current: boolean): void {
+/** A diagnostic can be exported, but cannot be converted as successful generated content. */
+export function markScriptOutputCurrent(
+  graph: SceneGraph,
+  id: string,
+  current: boolean | 'diagnostic'
+): void {
   if (!current) {
     outputs.get(graph)?.delete(id)
     return
@@ -42,7 +56,10 @@ export function markScriptOutputCurrent(graph: SceneGraph, id: string, current: 
   states.set(id, {
     definition: structuredClone(definition),
     width: node.width,
-    height: node.height
+    height: node.height,
+    diagnostic: current === 'diagnostic',
+    componentId: node.componentId,
+    childIds: [...node.childIds]
   })
 }
 
@@ -54,7 +71,9 @@ export function copyScriptOutputState(
 ) {
   for (const id of ids) {
     const node = source.getNode(id)
-    if (node && hasCurrentScriptOutput(source, node)) markScriptOutputCurrent(target, id, true)
+    const state = outputs.get(source)?.get(id)
+    if (node && isCurrentPresentation(state, node))
+      markScriptOutputCurrent(target, id, state?.diagnostic ? 'diagnostic' : true)
   }
 }
 
@@ -68,7 +87,7 @@ export function assertScriptOutputs(graph: SceneGraph, nodeIds: readonly string[
     const node = graph.getNode(id)
     if (!node?.visible || node.opacity <= 0) continue
     const script = graph.closest(node.id, (ancestor) => !!scriptOfNode(ancestor))
-    if (script && !hasCurrentScriptOutput(graph, script))
+    if (script && !isCurrentPresentation(outputs.get(graph)?.get(script.id), script))
       throw new Error(
         `Script “${script.name}” has no current generated output. Regenerate it in the editor before exporting.`
       )

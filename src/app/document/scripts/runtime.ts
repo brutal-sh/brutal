@@ -13,8 +13,10 @@ import {
 } from '@open-pencil/scene-graph/scripts'
 
 import { watchTauriFile } from '@/app/document/io/watch/targets'
+import { scriptExcerpt } from '@/app/document/scripts/diagnostics'
 import type { evaluateCanvasScript } from '@/app/document/scripts/evaluate'
 import { loadCanvasScriptSource } from '@/app/document/scripts/source'
+import { scriptErrorGraph } from '@/app/document/scripts/status'
 
 interface ScriptRuntimeState {
   loading: boolean
@@ -143,6 +145,7 @@ export function createScriptRuntime(editor: Editor, io: IORegistry, options: Scr
     const node = graph.getNode(id)
     if (!node) return
     const size = { width: node.width, height: node.height }
+    const componentId = node.componentId
     const variables = inputKey(id, definition)
     const current = () =>
       !disposed &&
@@ -152,10 +155,13 @@ export function createScriptRuntime(editor: Editor, io: IORegistry, options: Scr
       isEqual(scriptOfNode(graph.getNode(id) ?? node), definition) &&
       graph.getNode(id)?.width === size.width &&
       graph.getNode(id)?.height === size.height &&
+      graph.getNode(id)?.componentId === componentId &&
       inputKey(id, definition) === variables
     let definitions: ScriptInput[] = []
+    let source: string | undefined
+    let errorLine: number | undefined
     try {
-      const source = await sourceFor(definition.uri, id)
+      source = await sourceFor(definition.uri, id)
       if (!current()) return
       definitions = parseScriptHeader(source)
       states.set(id, { loading: true, definitions })
@@ -176,7 +182,10 @@ export function createScriptRuntime(editor: Editor, io: IORegistry, options: Scr
         true
       )
       if (!current()) return
-      if (!result.ok) throw new Error(result.error)
+      if (!result.ok) {
+        errorLine = 'line' in result ? result.line : undefined
+        throw new Error(result.error)
+      }
       const dependencies = new Set<string>()
       references.set(id, dependencies)
       const context = scriptReferenceDocument(graph, id, result.nodes, dependencies)
@@ -189,11 +198,30 @@ export function createScriptRuntime(editor: Editor, io: IORegistry, options: Scr
       options.adoptChanges(() => editor.replaceScriptOutput(id, definition, size, document.graph))
       states.set(id, { loading: false, definitions: result.definitions })
     } catch (error) {
+      if (!current()) return
+      const message = (error instanceof Error ? error.message : String(error)).slice(0, 2_000)
+      try {
+        const status = await scriptErrorGraph(io, size, {
+          title: source === undefined ? 'Script not found' : 'Script runtime error',
+          description:
+            source === undefined
+              ? `We could not find “${definition.uri}” at this path. Check for typos or missing folders.`
+              : `Error: ${message}`,
+          code: source !== undefined && errorLine ? scriptExcerpt(source, errorLine) : undefined
+        })
+        if (!current()) return
+        options.adoptChanges(() => {
+          editor.replaceScriptOutput(id, definition, size, status)
+          markScriptOutputCurrent(graph, id, 'diagnostic')
+        })
+      } catch (statusError) {
+        console.warn('Script diagnostic could not be rendered.', statusError)
+      }
       if (current())
         states.set(id, {
           loading: false,
           definitions,
-          error: error instanceof Error ? error.message : String(error)
+          error: message
         })
     }
   }
@@ -286,6 +314,7 @@ export function createScriptRuntime(editor: Editor, io: IORegistry, options: Scr
     }
     const key = JSON.stringify([
       options.getDocumentPath(),
+      node.componentId,
       definition,
       node.width,
       node.height,
@@ -339,7 +368,13 @@ export function createScriptRuntime(editor: Editor, io: IORegistry, options: Scr
   })
   const stopUpdated = editor.onEditorEvent('node:updated', (id, changes) => {
     refreshReferences(id)
-    if ('pluginData' in changes || 'width' in changes || 'height' in changes || 'type' in changes)
+    if (
+      'pluginData' in changes ||
+      'width' in changes ||
+      'height' in changes ||
+      'type' in changes ||
+      'componentId' in changes
+    )
       schedule(id)
   })
   const refreshStructure = (id: string, oldParent: string | null, newParent: string) => {

@@ -433,6 +433,8 @@ export class SkiaRenderer {
   }
 
   replaceSurface(surface: Surface): void {
+    // The replacement may have made another GL context current.
+    this.surface.flush()
     this.tiledScene.destroy()
     // Live textures belong to the old surface's context, so they go before it does.
     releaseLiveImages(this)

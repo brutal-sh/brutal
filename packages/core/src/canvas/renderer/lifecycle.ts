@@ -27,6 +27,8 @@ export function releaseLiveImages(r: Pick<SkiaRenderer, 'liveImages' | 'surface'
 
 export function destroyRenderer(r: SkiaRenderer): void {
   if (r.destroyed) return
+  // CanvasKit deletion uses the current GL context; flush selects this surface's owner.
+  r.surface.flush()
   r.destroyed = true
   r.transientPreviews.clear()
 

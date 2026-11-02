@@ -3,6 +3,7 @@ import { afterEach, describe, expect, jest, test } from 'bun:test'
 import { nextTick, watch } from 'vue'
 
 import { SceneGraph } from '@open-pencil/scene-graph'
+import { markScriptOutputCurrent } from '@open-pencil/scene-graph/scripts'
 
 import { createEditorStore } from '@/app/editor/session'
 
@@ -46,6 +47,33 @@ async function settleCheck() {
   jest.advanceTimersByTime(1000)
   await nextTick()
 }
+
+test('Script status artwork has no repair markers while successful authored output is still checked', () => {
+  jest.useFakeTimers()
+  const store = createEditorStore()
+  stores.push(store)
+  const id = store.createScript(0, 0)
+  const text = store.graph.createNode('TEXT', id, {
+    name: 'Status label',
+    text: 'Status',
+    fontSize: 8
+  })
+  store.designCheck.checkNow()
+  expect(store.designCheck.snapshot.value?.issues.some((issue) => issue.nodeId === text.id)).toBe(
+    false
+  )
+  store.setScriptDefinition(id, { uri: 'original-output.js', inputs: {} })
+  markScriptOutputCurrent(store.graph, id, true)
+  store.designCheck.checkNow()
+  expect(store.designCheck.snapshot.value?.issues.some((issue) => issue.nodeId === text.id)).toBe(
+    true
+  )
+  markScriptOutputCurrent(store.graph, id, false)
+  store.designCheck.checkNow()
+  expect(store.designCheck.snapshot.value?.issues.some((issue) => issue.nodeId === text.id)).toBe(
+    false
+  )
+})
 
 describe('the design check across a page switch', () => {
   test('checks the new page once, after the switch', async () => {
