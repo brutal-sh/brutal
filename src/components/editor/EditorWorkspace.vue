@@ -203,7 +203,7 @@ const { pending: roomPending } = useRoomActions()
         <div
           data-canvas-obstacle
           class="absolute bottom-0 z-10 flex items-center gap-2 rounded-full border border-island-border bg-panel px-2 py-1"
-          :class="inspectorVisible ? 'right-[236px]' : 'right-0'"
+          :class="inspectorVisible ? 'right-[229px]' : 'right-0'"
         >
           <IconButton label="Zoom out" size="sm" @click="zoom(100)"
             ><icon-lucide-minus class="size-4"

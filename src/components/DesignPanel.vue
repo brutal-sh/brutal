@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { tv } from 'tailwind-variants'
 import { computed } from 'vue'
 
 import { getNodeEditCapability } from '@open-pencil/core'
@@ -20,6 +21,7 @@ import IconButton from '@/components/ui/button/IconButton.vue'
 import AppInput from '@/components/ui/input/AppInput.vue'
 import Tip from '@/components/ui/overlay/Tip.vue'
 import PanelHeader from '@/components/ui/panel/PanelHeader.vue'
+import designPanelTheme from '@/theme/panel/design'
 
 import AppearanceSection from './properties/AppearanceSection.vue'
 import CodeExportSection from './properties/CodeExportSection.vue'
@@ -110,6 +112,7 @@ const strokesAndEffects = useSceneComputed(() =>
   store.getSelectedNodes().every((selected) => layerStrokesAndEffects(selected))
 )
 const { panels } = useI18n()
+const panelStyles = tv(designPanelTheme)
 </script>
 
 <template>
@@ -125,7 +128,7 @@ const { panels } = useI18n()
   <div
     v-else-if="multiCount > 1"
     data-test-id="design-panel-multi"
-    class="scrollbar-thin flex-1 overflow-x-hidden overflow-y-auto pb-4"
+    :class="panelStyles({ compact: !advanced })"
   >
     <PanelHeader>
       <template #icon>
@@ -160,7 +163,7 @@ const { panels } = useI18n()
     <div
       v-if="node"
       data-test-id="design-panel-single"
-      class="scrollbar-thin flex-1 overflow-x-hidden overflow-y-auto pb-4"
+      :class="panelStyles({ compact: !advanced })"
     >
       <PanelHeader :component="isComponentType">
         <template #icon>
@@ -190,6 +193,7 @@ const { panels } = useI18n()
             :key="node.id"
             :model-value="node.name"
             aria-label="Layer name"
+            data-property="name"
             class="border-transparent bg-transparent font-normal shadow-none"
             :disabled="!getNodeEditCapability(store.graph, node.id).editable"
             @focus="rename.start(node.id, node.name)"
@@ -241,6 +245,7 @@ const { panels } = useI18n()
 
       <div
         v-if="node.type === 'COMPONENT' && scriptOfNode(node)"
+        data-slot="selection-action"
         class="border-b border-border px-3 pb-2"
       >
         <AppButton
@@ -253,7 +258,11 @@ const { panels } = useI18n()
           <icon-lucide-unlink class="size-3.5" />Detach Component
         </AppButton>
       </div>
-      <div v-else-if="!isComponentType" class="border-b border-border px-3 pb-2">
+      <div
+        v-else-if="!isComponentType"
+        data-slot="selection-action"
+        class="border-b border-border px-3 pb-2"
+      >
         <AppButton
           variant="soft"
           size="xs"

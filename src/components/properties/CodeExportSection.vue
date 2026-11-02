@@ -99,11 +99,23 @@ async function output(save: boolean) {
       </PopoverRoot>
     </template>
     <AppSelect v-model="style" :options="formats" label="Select code export format" />
-    <div class="mt-2 flex gap-2">
-      <AppButton variant="outline" :disabled="busy" @click="output(false)">{{
-        copied ? 'Copied' : 'Copy HTML'
-      }}</AppButton>
-      <AppButton variant="outline" :disabled="busy" @click="output(true)">Export HTML</AppButton>
+    <div class="mt-1.5 flex gap-1.5">
+      <AppButton
+        variant="soft"
+        size="xs"
+        class="flex-1 font-normal"
+        :disabled="busy"
+        @click="output(false)"
+        >{{ copied ? 'Copied' : 'Copy HTML' }}</AppButton
+      >
+      <AppButton
+        variant="soft"
+        size="xs"
+        class="flex-1 font-normal"
+        :disabled="busy"
+        @click="output(true)"
+        >Export HTML</AppButton
+      >
     </div>
     <AppAlert v-if="error" tone="error" heading="Code export failed" :description="error" />
   </PanelSection>

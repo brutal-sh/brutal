@@ -64,7 +64,7 @@ async function output() {
 
 <template>
   <PanelSection :label="panels.export">
-    <div class="grid grid-cols-2 gap-2">
+    <div class="grid grid-cols-2 gap-1.5">
       <AppSelect
         :model-value="format === 'pdf' ? 1 : scale"
         :options="scales"
@@ -76,7 +76,7 @@ async function output() {
     </div>
     <p v-if="format === 'pdf'" class="mt-2 text-[11px] text-muted">{{ panels.exportPDFPages }}</p>
     <AppButton
-      class="mt-2 h-6 w-full bg-input font-normal text-surface"
+      class="mt-1.5 h-6 w-full bg-input font-normal text-surface"
       :disabled="busy || !store.state.selectedIds.size"
       @click="output"
     >

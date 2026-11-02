@@ -69,7 +69,7 @@ const visibleSizeLimits = computed(() =>
       </IconButton>
     </template>
   </PanelGrid>
-  <div v-if="compact" class="mt-2 grid grid-cols-2 gap-1.5 text-[11px] text-surface">
+  <div v-if="compact" class="mt-1.5 grid grid-cols-2 gap-1.5 text-[11px] text-surface">
     <label
       v-for="axis in ['width', 'height'] as const"
       :key="axis"

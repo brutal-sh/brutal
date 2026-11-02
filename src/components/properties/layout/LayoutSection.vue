@@ -63,7 +63,12 @@ const { compact = false } = defineProps<{ compact?: boolean }>()
           <LayoutWrapToggle v-if="ctx.isFlex && !compact" />
         </LayoutFlowControl>
         <FlexControls v-if="compact && ctx.isFlex" compact />
-        <div v-if="ctx.node.type !== 'TEXT'" class="mt-2 mb-1 text-[11px] text-muted">
+        <div
+          v-if="ctx.node.type !== 'TEXT'"
+          :class="
+            compact ? 'mb-1 text-[9px] leading-3 text-muted' : 'mt-2 mb-1 text-[11px] text-muted'
+          "
+        >
           {{ panels.dimensions }}
         </div>
         <TextResizingControl v-if="ctx.node.type === 'TEXT'" />

@@ -60,6 +60,7 @@ function stopEditing(event: FocusEvent) {
   <AppCollapsible
     v-model:open="open"
     label="Context"
+    data-inspector-section="context"
     class="border-panel-foreground/6 border-b py-2 pr-3.5 pl-4 data-[state=open]:pb-[15px]"
     :ui="{
       trigger:
