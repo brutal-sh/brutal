@@ -22,3 +22,6 @@ Manual resize dragging, exact full-panel width and all other inspector row metri
 
 
 Final packaging qualification: source/Vue/test types, lint(existing warnings), architecture, test placement and docs/changelog gates pass. The normal79.34MiB and isolated85.86MiB candidates rebuild; strict normal signature and test-hook exclusion pass. Source-only review reports no further concrete regression, without claiming visual/native execution. No new CSS snapshot baselines are added. The sole new behavior regression covers the blur viewport reset.
+
+
+The following [container correction](INSPECTOR-PARITY.md) retains these local insets while restoring191px field width at the matched1496×932native viewport; its earlier187px width comes from the old container's layout borders. Other row/control widths remain unaccepted.

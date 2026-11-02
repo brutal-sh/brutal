@@ -196,7 +196,7 @@ const { pending: roomPending } = useRoomActions()
         <div
           v-show="inspectorVisible"
           data-canvas-obstacle
-          class="absolute top-14 right-2 bottom-2 z-10 flex w-[220px] flex-col overflow-hidden rounded-[14px] border border-island-border bg-panel shadow-lg"
+          class="absolute top-[50px] right-0 bottom-0 z-10 flex w-[221px] flex-col overflow-hidden rounded-[14px] bg-panel shadow-lg after:pointer-events-none after:absolute after:inset-0 after:z-10 after:rounded-[inherit] after:ring-1 after:ring-island-border after:ring-inset"
         >
           <PropertiesPanel :agent-on-left="true" />
         </div>

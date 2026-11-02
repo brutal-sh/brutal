@@ -1,0 +1,26 @@
+# Inspector design and behavior parity
+
+Target: actual `/Applications/Pen.app`1.2.21, rechecked in its installed Info.plist on2026-11-02. Full inspector and whole-product parity remain open. The reference is inspected through native UI and the private resource archive recorded in [reference provenance](PEN-REFERENCE.md).
+
+## Container geometry
+
+The extracted reference layout uses a221px panel,8px right/bottom window insets and58px desktop top position. Its island rim paints without occupying layout width. Native screenshots show the corresponding placement. The old independent container is220px with an outer border and an additional sidebar border, and places the panel6px lower and8px farther from the right/bottom edges. Those three border pixels plus the width difference reduce Context to187px rather than191px.
+
+The desktop floating container now uses221px width and the measured placement. PropertiesPanel keeps the classic sidebar divider when it is used as a sidebar. An overlay pseudo-element paints the island rim without taking space from controls or intercepting input. The first inset-shadow-only experiment is rejected: an opaque child covers its rim. Native edge pixels in that experiment remain39/39/42, identical to the interior; the final overlay gives55/57/63 at the edge and39/39/42 inside, matching reference rim#A0B2CC21 over the panel background. The earlier images are retained privately in inspector-geometry-before-ring/.
+
+The first native sizing probe fails to find a desktop inspector because the driver treats the requested1496×932window size as physical pixels: the measured content is748×466 at2× scale. The calibrated probe uses the observed ratio, then measures a1496×932content viewport at2×. It asserts the literal independent-reference rectangle{x:1267,y:58,width:221,height:866} and Context width191px. The corrected native probe passes before and after the rim fix. Private evidence:inspector-geometry-native.log, inspector-geometry-native-calibrated.log, inspector-geometry-native-overlay.log, inspector-geometry-edge-comparison.json, native-inspector-geometry.png and native-inspector-context-geometry.png. These results qualify the named container geometry and rim samples, not every row or all panel pixels.
+
+## Remaining shared row design
+
+The measured reference section pattern uses16px/14px horizontal insets,8px top padding,22px headings,6px content gaps and15px bottom padding when content exists; empty sections use8px bottom padding. Titles use11px medium type and the dark panel foreground#C8C8C8. Its Dimensions sublabel uses9px/12px typography with4px bottom margin. The independent shared section still uses12px insets,32px headings and12px bottom padding; its other row/font/border values remain unqualified. The corrected container does not close these gaps.
+
+At the calibrated viewport, the current native rectangle inspector records Alignment y175/h69, Position y244/h99, Layout y343/h121, Appearance y464/h69, Fill y533/h73, Stroke y606/h45, Effects y651/h45, Code y696/h105 and Export y801/h101. These are observed Open Pen values, not accepted Pen matches. Full type/selection/mixed/disabled/light/hover/menu and adaptive states remain open. Context's separately executed control behavior is recorded in [Context parity](CONTEXT-PARITY.md).
+
+## Inspector web-import entry
+
+Actual Pen's Code section includes Import Web via Browser. On the owned synthetic selection, the native action opens the browser's import landing screen and Coding Mode, with address entry, element/full-page reproduction, screenshot and exit/close controls. No URL is chosen and no page is imported. Closing Browser View restores the reference canvas; the owned rectangle is removed, original runtime/missing-source nodes are verified, and native File→Save returns the fixture to clean state. Existing browsing-history content is not copied into product data or documentation.
+
+Open Pen's Code section currently lacks this action. Its existing Browser preview controller and DOM importer are partial implementation building blocks; opening an ordinary split preview does not qualify the reference Coding Mode/landing workflow. This remains an explicit functionality and design gap. No inert button is added.
+
+
+Final container qualification:16 browser Context/HTML/rename/history/fractional-layout/zoom-center workflows pass after the overlay fix, exercising clicks beneath the decorative layer. Source/Vue/test types, lint(existing warnings), architecture, docs/changelog and rebuilt normal/native-test packages pass. Strict normal signature and test-hook exclusion pass. Source-only review identifies the covered-ring defect before correction and finds no further concrete defect afterward; it is not independent runtime proof. The main installed app/profile/recovery remain preserved. No new CSS-only tests or snapshot baselines are added.

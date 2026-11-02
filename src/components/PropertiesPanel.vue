@@ -50,7 +50,8 @@ const problemCount = computed(() => {
 <template>
   <aside
     data-test-id="properties-panel"
-    class="flex min-w-0 flex-1 flex-col overflow-hidden border-l border-border bg-panel"
+    class="flex min-w-0 flex-1 flex-col overflow-hidden bg-panel"
+    :class="{ 'border-l border-border': !agentOnLeft }"
     style="contain: paint layout style"
   >
     <CloudVersionHistory v-if="history" />
