@@ -51,25 +51,33 @@ function commit(event: Event) {
     )
   })
 }
+function stopEditing(event: FocusEvent) {
+  editingId.value = null
+  if (event.target instanceof HTMLTextAreaElement) event.target.scrollTop = 0
+}
 </script>
 <template>
   <AppCollapsible
     v-model:open="open"
     label="Context"
-    class="border-b border-border px-3"
+    class="border-panel-foreground/6 border-b py-2 pr-3.5 pl-4 data-[state=open]:pb-[15px]"
     :ui="{
-      trigger: 'h-[38px] flex-row-reverse justify-between text-[11px]',
-      icon: 'rotate-90 group-data-[state=open]:-rotate-90'
+      trigger:
+        'h-[22px] flex-row-reverse justify-between pr-1 text-[11px] font-medium text-panel-foreground',
+      icon: 'rotate-90 group-data-[state=open]:-rotate-90',
+      content: 'pt-1.5'
     }"
   >
     <AppTextarea
       v-model="draft"
+      :rows="2"
+      class="field-sizing-content min-h-14 max-h-20 resize! rounded-sm! bg-input/30! px-2! py-[3px]! text-[11px]! leading-4! text-panel-foreground! focus:ring-0! hover:not-focus:border-border!"
       aria-label="Context information"
       placeholder="Context information"
       :disabled="!getNodeEditCapability(store.graph, nodeId).editable"
       @focus="editingId = nodeId"
       @change="commit"
-      @blur="editingId = null"
+      @blur="stopEditing"
     />
   </AppCollapsible>
 </template>

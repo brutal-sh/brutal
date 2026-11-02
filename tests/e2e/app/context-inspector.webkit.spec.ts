@@ -90,6 +90,26 @@ test('Context edits undo, save to .pen and reopen without losing the imported te
   await expect(context).toHaveValue('Final context on selection')
 })
 
+test('leaving a long Context keeps the text and returns its viewport to the first line', async ({
+  page
+}) => {
+  await page.goto('/')
+  const canvas = new CanvasHelper(page)
+  await canvas.waitForInit()
+  await canvas.drawRect(150, 150, 120, 80)
+  await page.getByRole('button', { name: 'Context', exact: true }).click()
+  const context = page.getByRole('textbox', { name: 'Context information', exact: true })
+  const value = Array.from({ length: 20 }, (_, index) => `Independent line ${index + 1}`).join('\n')
+  await context.fill(value)
+  await context.evaluate((field) => {
+    field.scrollTop = field.scrollHeight
+  })
+  expect(await context.evaluate((field) => field.scrollTop)).toBeGreaterThan(0)
+  await context.press('Tab')
+  await expect(context).toHaveValue(value)
+  expect(await context.evaluate((field) => field.scrollTop)).toBe(0)
+})
+
 test('inspector layer name commits once, supports cancellation and Undo, and creates a component', async ({
   page
 }, testInfo) => {

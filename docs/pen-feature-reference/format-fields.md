@@ -37,3 +37,6 @@ For every applicable field: compare default, explicit value, variable binding, e
 | Shader inputs | number, boolean, color/string, vec2/3/4 and sampler; object/background sources; typed variables |
 
 Numeric details, angle conventions, crop matrices and resource resolution must be taken from the versioned reference and tested with independent fixtures. Preserve original files before conversion; do not infer compatibility from common property names.
+
+
+Per-entity `context` editing, first-line restoration and named browser/native save/reopen evidence are tracked in [Context inspector parity](../CONTEXT-PARITY.md). This does not qualify the separate Context node type or every entity/selection state.
