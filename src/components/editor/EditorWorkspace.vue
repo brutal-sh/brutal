@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { SplitterGroup, SplitterPanel, SplitterResizeHandle, ToolbarButton } from 'reka-ui'
 import { tv } from 'tailwind-variants'
-import { computed, ref, useTemplateRef } from 'vue'
+import { computed, provide, ref, useTemplateRef } from 'vue'
 
 import { IS_TAURI } from '@open-pencil/core/constants'
 import { formatShortcut } from '@open-pencil/vue/editor/commands'
@@ -9,6 +9,7 @@ import { useViewportKind } from '@open-pencil/vue/editor/viewport-kind'
 import { useI18n } from '@open-pencil/vue/i18n'
 
 import { useAIChat } from '@/app/ai/chat/use'
+import { toggleBrowserPreviewKey } from '@/app/browser-preview/context'
 import { isVersionHistoryOpen } from '@/app/cloud/integration'
 import { provideTabEditorStore } from '@/app/editor/active-store'
 import { openVariablesDialog } from '@/app/editor/tokens/dialog'
@@ -54,6 +55,9 @@ const initialEditorLayout = loadEditorLayout()
 const inspectorPinned = ref(false)
 const inspectorCollapsed = ref(false)
 const browserOpen = ref(consumeHomeBrowserRequest(store))
+provide(toggleBrowserPreviewKey, () => {
+  if (!isMobile.value) browserOpen.value = !browserOpen.value
+})
 const canvasHost = useTemplateRef<HTMLElement>('canvasHost')
 const sidebar = useTemplateRef<InstanceType<typeof SplitterPanel>>('sidebar')
 function toggleSidebar() {

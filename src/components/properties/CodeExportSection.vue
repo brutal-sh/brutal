@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import { useClipboard, useLocalStorage } from '@vueuse/core'
 import { PopoverRoot, PopoverTrigger, PopoverContent, PopoverPortal } from 'reka-ui'
-import { ref } from 'vue'
+import { inject, ref } from 'vue'
 
+import { IS_TAURI } from '@open-pencil/core/constants'
 import { renderNodesToHTML } from '@open-pencil/core/io/formats/html'
+import { useViewportKind } from '@open-pencil/vue/editor/viewport-kind'
 import { useRetainedPopup } from '@open-pencil/vue/lifecycle/retention'
 
+import { toggleBrowserPreviewKey } from '@/app/browser-preview/context'
 import { useEditorStore } from '@/app/editor/active-store'
 import AppButton from '@/components/ui/button/AppButton.vue'
 import IconButton from '@/components/ui/button/IconButton.vue'
@@ -17,6 +20,8 @@ import AppCheckbox from '@/components/ui/toggle/AppCheckbox.vue'
 
 const { nodeId } = defineProps<{ nodeId: string }>()
 const store = useEditorStore()
+const { isMobile } = useViewportKind()
+const toggleBrowserPreview = inject(toggleBrowserPreviewKey, undefined)
 const style = useLocalStorage('open-pen:html-style', 'tailwind')
 const assets = useLocalStorage('open-pen:html-assets', 'inline')
 const scaffold = useLocalStorage('open-pen:html-scaffold', true)
@@ -117,6 +122,15 @@ async function output(save: boolean) {
         >Export HTML</AppButton
       >
     </div>
+    <AppButton
+      v-if="IS_TAURI && !isMobile && toggleBrowserPreview"
+      variant="soft"
+      size="xs"
+      class="mt-1.5 w-full font-normal"
+      aria-label="Import Web via Browser"
+      @click="toggleBrowserPreview"
+      >Import Web via Browser</AppButton
+    >
     <AppAlert v-if="error" tone="error" heading="Code export failed" :description="error" />
   </PanelSection>
 </template>

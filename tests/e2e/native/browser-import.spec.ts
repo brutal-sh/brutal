@@ -62,7 +62,8 @@ describe('native editable browser import', () => {
     if (!address || typeof address === 'string') throw new Error('Missing fixture address')
     origin = `http://127.0.0.1:${address.port}`
     mainHandle = await browser.getWindowHandle()
-    await createNativeLayerFixture()
+    const fixture = await createNativeLayerFixture()
+    await browser.execute((id) => window.openPencil?.getStore?.().select([id]), fixture.first)
   })
   after(async () => {
     await browser.switchToWindow(mainHandle)
@@ -123,7 +124,7 @@ describe('native editable browser import', () => {
           if (!store) throw new Error('Missing design')
           const pageId = store.state.currentPageId
           const initial = store.graph.getChildren(pageId).length
-          button('Browser preview')
+          button('Import Web via Browser')
           await wait(
             () => !!document.querySelector('[data-test-id="browser-preview-surface"]'),
             'dock'

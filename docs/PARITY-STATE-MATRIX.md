@@ -81,3 +81,6 @@ Shared-row continuation2026-11-02: compact rectangle section positions/heights t
 
 
 Inspector collapse continuation2026-11-02: actual native Pen confirms single/multi collapse and retained collapse through selection changes. Open Pen's physical native click and keyboard restoration pass with a221×40px collapsed dock,8px zoom right inset, retained Context and unchanged document/selection state. Existing expanded multi-selection actions remain available. The earlier21-pass/one-failure browser run and three focused successful rechecks retain their separate status; the final26-workflow Chromium/WebKit regression and normal package/signature/hook checks pass. Full parity remains open; see INSPECTOR-PARITY.md.
+
+
+Inspector browser-entry continuation2026-11-02: Code now opens/closes the native desktop browser and measures y695/h136 in the calibrated rectangle fixture. Four native preview/import checks and a separate physical toggle execute through the entry. Actual Pen retains its page/mode and defaults to split view; Coding Mode is not forced by the inspector action. Open Pen's modes, remembered page, landing/toolbar/dock/header and responsive import layout remain open. The14-workflow browser regression, source/Vue/canonical test types, lint(existing warnings), architecture, normal79.34MiB package/signature/hook checks pass; see BROWSER.md.

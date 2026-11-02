@@ -59,13 +59,36 @@ describe('native embedded browser preview', () => {
     origin = `http://127.0.0.1:${address.port}`
     mainHandle = await browser.getWindowHandle()
     await browser.switchToWindow(mainHandle)
-    await createNativeLayerFixture()
+    const fixture = await createNativeLayerFixture()
+    await browser.execute((id) => window.openPencil?.getStore?.().select([id]), fixture.first)
   })
 
   after(async () => {
     await browser.switchToWindow(mainHandle)
     await invokeNative('browser_preview_action', { action: 'close' }).catch(() => undefined)
     server?.close()
+  })
+
+  it('toggles the browser from the selected-layer inspector without editing the document', async () => {
+    const before = await browser.execute(() => {
+      const store = window.openPencil?.getStore?.()
+      if (!store) throw new Error('No editor')
+      return { version: store.state.sceneVersion, selected: [...store.state.selectedIds] }
+    })
+    const entry = await $('button=Import Web via Browser')
+    await entry.waitForDisplayed()
+    await entry.click()
+    await $('[data-test-id="browser-preview-dock"]').waitForDisplayed()
+    await entry.click()
+    await $('[data-test-id="browser-preview-dock"]').waitForExist({ reverse: true })
+    assert.deepEqual(
+      await browser.execute(() => {
+        const store = window.openPencil?.getStore?.()
+        if (!store) throw new Error('No editor')
+        return { version: store.state.sceneVersion, selected: [...store.state.selectedIds] }
+      }),
+      before
+    )
   })
 
   it('embeds responsive pixels, denies remote IPC, captures to a layer, and undoes it', async function () {
@@ -110,7 +133,7 @@ describe('native embedded browser preview', () => {
         await wait(() => !input.disabled, 'navigation settled')
       }
       try {
-        button('Browser preview')
+        button('Import Web via Browser')
         await wait(
           () => !!document.querySelector('[data-test-id="browser-preview-surface"]'),
           'dock mounted'
