@@ -18,3 +18,4 @@
 - Text ending in a newline reserves its final empty line when sizing the layer and its containing layout.
 - Zoom buttons and menu actions keep the canvas center stationary when side panels offset the canvas.
 - Desktop tool flyouts focus the selected tool when opened and use the measured spacing, checks and corners; Primitives import labels follow the reference menu.
+- Fractional edges retain their canvas coverage in raster exports, with software fallback for oversized images.

@@ -1,4 +1,4 @@
-import type { CanvasKit, Canvas } from 'canvaskit-wasm'
+import type { CanvasKit, Canvas, Surface, Image, MallocObj } from 'canvaskit-wasm'
 
 import type { SceneGraph, SceneNode } from '@open-pencil/scene-graph'
 import type { RenderColorSpace } from '@open-pencil/scene-graph/color'
@@ -89,11 +89,12 @@ function findAlphaBounds(ck: CanvasKit, canvas: Canvas, width: number, height: n
 const MIN_TRANSPARENT_TRIM_INSET = 2
 
 function shouldTrimAlphaBounds(
-  alphaBounds: NonNullable<ReturnType<typeof findAlphaBounds>>,
+  alphaBounds: ReturnType<typeof findAlphaBounds>,
   width: number,
   height: number
 ): boolean {
   return (
+    alphaBounds !== null &&
     Math.max(
       alphaBounds.minX,
       alphaBounds.minY,
@@ -101,6 +102,47 @@ function shouldTrimAlphaBounds(
       height - alphaBounds.maxY
     ) >= MIN_TRANSPARENT_TRIM_INSET
   )
+}
+
+function createExportSurface(ck: CanvasKit, renderer: SkiaRenderer, width: number, height: number) {
+  // Preserve GPU edge coverage; software rendering retains its existing supersampling.
+  let renderScale = renderer.surface.reportBackendTypeIsGPU() ? 1 : 2
+  const info = {
+    alphaType: ck.AlphaType.Premul,
+    colorType: ck.ColorType.RGBA_8888,
+    colorSpace: ck.ColorSpace.SRGB,
+    width: width * renderScale,
+    height: height * renderScale
+  }
+  let surface: Surface | null = null
+  try {
+    surface = renderer.surface.makeSurface(info)
+  } catch (error) {
+    console.warn('GPU export target unavailable; using software rasterization.', error)
+  }
+  let rasterPixels: MallocObj | null = null
+  if (!surface) {
+    renderScale = 2
+    info.width = width * renderScale
+    info.height = height * renderScale
+    rasterPixels = ck.Malloc(Uint8Array, info.width * info.height * 4)
+    surface = ck.MakeRasterDirectSurface(info, rasterPixels, info.width * 4)
+  }
+  if (!surface) {
+    if (rasterPixels) ck.Free(rasterPixels)
+    return null
+  }
+  const allocatedSurface = surface
+  return {
+    surface,
+    renderScale,
+    renderWidth: info.width,
+    renderHeight: info.height,
+    dispose() {
+      allocatedSurface.delete()
+      if (rasterPixels) ck.Free(rasterPixels)
+    }
+  }
 }
 
 function renderToSurface(
@@ -115,26 +157,13 @@ function renderToSurface(
   setup: (canvas: Canvas) => void,
   trimTransparent = false
 ): Uint8Array<ArrayBuffer> | null {
-  const renderScale = 2
-  const renderWidth = width * renderScale
-  const renderHeight = height * renderScale
-  const pixels = ck.Malloc(Uint8Array, renderWidth * renderHeight * 4)
-  const surface = ck.MakeRasterDirectSurface(
-    {
-      alphaType: ck.AlphaType.Premul,
-      colorType: ck.ColorType.RGBA_8888,
-      colorSpace: ck.ColorSpace.SRGB,
-      width: renderWidth,
-      height: renderHeight
-    },
-    pixels,
-    renderWidth * 4
-  )
-  if (!surface) {
-    ck.Free(pixels)
-    return null
-  }
+  const allocation = createExportSurface(ck, renderer, width, height)
+  if (!allocation) return null
+  const { surface, renderScale, renderWidth, renderHeight } = allocation
 
+  let highResImage: Image | null = null
+  let downsampleSurface: Surface | null = null
+  let image: Image | null = null
   try {
     const canvas = surface.getCanvas()
     canvas.scale(renderScale, renderScale)
@@ -142,24 +171,14 @@ function renderToSurface(
     renderer.renderSceneToCanvas(canvas, renderGraph, pageId)
     surface.flush()
 
-    const highResImage = surface.makeImageSnapshot()
-    const downsamplePixels = ck.Malloc(Uint8Array, width * height * 4)
-    const downsampleSurface = ck.MakeRasterDirectSurface(
-      {
-        alphaType: ck.AlphaType.Premul,
-        colorType: ck.ColorType.RGBA_8888,
-        colorSpace: ck.ColorSpace.SRGB,
-        width,
-        height
-      },
-      downsamplePixels,
-      width * 4
-    )
-    if (!downsampleSurface) {
-      ck.Free(downsamplePixels)
-      highResImage.delete()
-      return null
-    }
+    highResImage = surface.makeImageSnapshot()
+    downsampleSurface = surface.makeSurface({
+      alphaType: ck.AlphaType.Premul,
+      colorType: ck.ColorType.RGBA_8888,
+      colorSpace: ck.ColorSpace.SRGB,
+      width,
+      height
+    })
     const downsampleCanvas = downsampleSurface.getCanvas()
     downsampleCanvas.clear(ck.TRANSPARENT)
     downsampleCanvas.drawImageRectOptions(
@@ -171,15 +190,13 @@ function renderToSurface(
       null
     )
     downsampleSurface.flush()
-    highResImage.delete()
 
     const foundAlphaBounds = trimTransparent
       ? findAlphaBounds(ck, downsampleCanvas, width, height)
       : null
-    const alphaBounds =
-      foundAlphaBounds && shouldTrimAlphaBounds(foundAlphaBounds, width, height)
-        ? foundAlphaBounds
-        : null
+    const alphaBounds = shouldTrimAlphaBounds(foundAlphaBounds, width, height)
+      ? foundAlphaBounds
+      : null
     if (format === 'JPG') {
       const matte = new ck.Paint()
       matte.setColor(ck.WHITE)
@@ -188,7 +205,7 @@ function renderToSurface(
       downsampleSurface.flush()
       matte.delete()
     }
-    const image = alphaBounds
+    image = alphaBounds
       ? downsampleSurface.makeImageSnapshot([
           alphaBounds.minX,
           alphaBounds.minY,
@@ -226,13 +243,12 @@ function renderToSurface(
       }
     }
 
-    image.delete()
-    downsampleSurface.delete()
-    ck.Free(downsamplePixels)
     return resultBytes
   } finally {
-    surface.delete()
-    ck.Free(pixels)
+    image?.delete()
+    downsampleSurface?.delete()
+    highResImage?.delete()
+    allocation.dispose()
   }
 }
 
