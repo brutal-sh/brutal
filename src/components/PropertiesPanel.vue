@@ -22,6 +22,7 @@ import ZoomDropdown from './editor/ZoomDropdown.vue'
 
 const { agentOnLeft = false } = defineProps<{ agentOnLeft?: boolean }>()
 const propertiesTabs = tv(propertiesTabsTheme)
+const collapsed = defineModel<boolean>('collapsed', { default: false })
 
 const { activeTab, advancedProperties } = useAIChat()
 function backToDesign() {
@@ -69,7 +70,11 @@ const problemCount = computed(() => {
         v-show="activeTab === 'design' || activeTab === 'ai'"
         class="flex min-h-0 flex-1 flex-col"
       >
-        <DesignPanel :advanced="advancedProperties" />
+        <DesignPanel
+          v-model:collapsed="collapsed"
+          :advanced="advancedProperties"
+          :collapsible="true"
+        />
       </div>
       <div v-show="activeTab === 'code'" class="flex min-h-0 flex-1 flex-col">
         <CodePanel :active="activeTab === 'code'" />

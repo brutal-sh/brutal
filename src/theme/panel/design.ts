@@ -1,10 +1,14 @@
 export default {
   base: 'scrollbar-thin flex-1 overflow-x-hidden overflow-y-auto pb-4',
   variants: {
+    collapsed: {
+      true: 'overflow-y-hidden pb-0 [&>:not(header)]:hidden!',
+      false: ''
+    },
     compact: {
       true: [
         '[--color-surface:var(--color-panel-foreground)]',
-        '[&>header]:border-0 [&>header]:pr-3.5 [&>header]:pl-4',
+        '[&>header]:h-10 [&>header]:border-0 [&>header]:pr-3.5 [&>header]:pl-4',
         '[&>header_input[data-property=name]]:h-6 [&>header_input[data-property=name]]:border-0 [&>header_input[data-property=name]]:px-0 [&>header_input[data-property=name]]:text-[11px]',
         '[&>[data-slot=selection-action]]:border-0 [&>[data-slot=selection-action]]:pr-3.5 [&>[data-slot=selection-action]]:pl-4',
         '[&>[data-inspector-section=context]]:border-t [&>[data-inspector-section=context]]:border-b-0',

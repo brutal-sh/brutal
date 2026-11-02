@@ -1,5 +1,5 @@
 - Moves the Agent to a left sidebar with separate conversation and composer surfaces, alongside Layers, Slides, Components and Libraries.
-- Places desktop drawing tools in a vertical rail and keeps a 221px inspector over the canvas so selection does not shift the drawing surface; selected-layer sections use compact spacing and type.
+- Places desktop drawing tools in a vertical rail and keeps a 221px inspector over the canvas so selection does not shift the drawing surface; selected-layer sections use compact spacing and type, with a collapsible title bar that retains property state.
 - Uses floating document and view controls with a dark canvas and hidden rulers by default.
 - Suggests `.pen` for the first local Save and accepts JSON comments while preserving strict malformed-file rejection.
 - Keeps document-tab keyboard focus while the browser dock spans the full editor height.

@@ -9,6 +9,7 @@ import { useViewportKind } from '@open-pencil/vue/editor/viewport-kind'
 import { useI18n } from '@open-pencil/vue/i18n'
 
 import { useAIChat } from '@/app/ai/chat/use'
+import { isVersionHistoryOpen } from '@/app/cloud/integration'
 import { provideTabEditorStore } from '@/app/editor/active-store'
 import { openVariablesDialog } from '@/app/editor/tokens/dialog'
 import { consumeHomeBrowserRequest } from '@/app/home/creation'
@@ -51,6 +52,7 @@ provideTabEditorStore(store)
 const { isMobile } = useViewportKind()
 const initialEditorLayout = loadEditorLayout()
 const inspectorPinned = ref(false)
+const inspectorCollapsed = ref(false)
 const browserOpen = ref(consumeHomeBrowserRequest(store))
 const canvasHost = useTemplateRef<HTMLElement>('canvasHost')
 const sidebar = useTemplateRef<InstanceType<typeof SplitterPanel>>('sidebar')
@@ -66,6 +68,16 @@ const inspectorVisible = computed(
     store.state.selectedIds.size > 0 ||
     activeTab.value === 'code' ||
     activeTab.value === 'lint'
+)
+const compactInspectorCollapsed = computed(
+  () =>
+    inspectorCollapsed.value &&
+    !isVersionHistoryOpen(store) &&
+    !advancedProperties.value &&
+    (activeTab.value === 'design' || activeTab.value === 'ai') &&
+    store.state.selectedIds.size > 0 &&
+    store.state.activeTool !== 'FRAME' &&
+    store.state.activeTool !== 'COMMENT'
 )
 function rememberLayout(layout: number[]) {
   emit('headerWidth', layout.length === 3 ? (layout[0] ?? 0) + (layout[1] ?? 0) : 100)
@@ -196,14 +208,15 @@ const { pending: roomPending } = useRoomActions()
         <div
           v-show="inspectorVisible"
           data-canvas-obstacle
-          class="absolute top-[50px] right-0 bottom-0 z-10 flex w-[221px] flex-col overflow-hidden rounded-[14px] bg-panel shadow-lg after:pointer-events-none after:absolute after:inset-0 after:z-10 after:rounded-[inherit] after:ring-1 after:ring-island-border after:ring-inset"
+          :class="compactInspectorCollapsed ? 'h-10' : 'bottom-0'"
+          class="absolute top-[50px] right-0 z-10 flex w-[221px] flex-col overflow-hidden rounded-[14px] bg-panel shadow-lg after:pointer-events-none after:absolute after:inset-0 after:z-10 after:rounded-[inherit] after:ring-1 after:ring-island-border after:ring-inset"
         >
-          <PropertiesPanel :agent-on-left="true" />
+          <PropertiesPanel v-model:collapsed="inspectorCollapsed" :agent-on-left="true" />
         </div>
         <div
           data-canvas-obstacle
           class="absolute bottom-0 z-10 flex items-center gap-2 rounded-full border border-island-border bg-panel px-2 py-1"
-          :class="inspectorVisible ? 'right-[229px]' : 'right-0'"
+          :class="inspectorVisible && !compactInspectorCollapsed ? 'right-[229px]' : 'right-0'"
         >
           <IconButton label="Zoom out" size="sm" @click="zoom(100)"
             ><icon-lucide-minus class="size-4"

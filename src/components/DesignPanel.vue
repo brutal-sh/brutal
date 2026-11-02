@@ -67,7 +67,11 @@ import TypographySection from './properties/TypographySection.vue'
 import VariablesSection from './properties/VariablesSection.vue'
 
 const store = useEditorStore()
-const { advanced = true } = defineProps<{ advanced?: boolean }>()
+const { advanced = true, collapsible = false } = defineProps<{
+  advanced?: boolean
+  collapsible?: boolean
+}>()
+const collapsed = defineModel<boolean>('collapsed', { default: false })
 const libraryService = useLibraryService()
 const activeTool = computed(() => store.state.activeTool)
 const { selectedNode: node, selectedCount: multiCount } = useSelectionState()
@@ -128,7 +132,7 @@ const panelStyles = tv(designPanelTheme)
   <div
     v-else-if="multiCount > 1"
     data-test-id="design-panel-multi"
-    :class="panelStyles({ compact: !advanced })"
+    :class="panelStyles({ compact: !advanced, collapsed: collapsible && !advanced && collapsed })"
   >
     <PanelHeader>
       <template #icon>
@@ -139,6 +143,15 @@ const panelStyles = tv(designPanelTheme)
       </span>
       <template #actions>
         <SelectionActionsControl :show-boolean-operations="showBooleanOperations" />
+        <IconButton
+          v-if="collapsible && !advanced"
+          :label="collapsed ? 'Expand inspector' : 'Collapse inspector'"
+          :aria-expanded="!collapsed"
+          @click="collapsed = !collapsed"
+        >
+          <icon-lucide-panel-right-open v-if="collapsed" class="size-3.5" />
+          <icon-lucide-panel-right v-else class="size-3.5" />
+        </IconButton>
       </template>
     </PanelHeader>
     <StatusSection v-if="advanced" />
@@ -163,7 +176,7 @@ const panelStyles = tv(designPanelTheme)
     <div
       v-if="node"
       data-test-id="design-panel-single"
-      :class="panelStyles({ compact: !advanced })"
+      :class="panelStyles({ compact: !advanced, collapsed: collapsible && !advanced && collapsed })"
     >
       <PanelHeader :component="isComponentType">
         <template #icon>
@@ -224,6 +237,15 @@ const panelStyles = tv(designPanelTheme)
             @review="openSelectedInstanceReview"
           />
           <SelectionActionsControl v-if="advanced" />
+          <IconButton
+            v-if="collapsible && !advanced"
+            :label="collapsed ? 'Expand inspector' : 'Collapse inspector'"
+            :aria-expanded="!collapsed"
+            @click="collapsed = !collapsed"
+          >
+            <icon-lucide-panel-right-open v-if="collapsed" class="size-3.5" />
+            <icon-lucide-panel-right v-else class="size-3.5" />
+          </IconButton>
           <template v-if="node.type === 'INSTANCE'">
             <IconButton
               :label="goToMainComponent.label"
