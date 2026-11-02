@@ -9,6 +9,9 @@ describe('embedded browser dock', () => {
     expect(previewDockBounds(rect, 'desktop', 1280, 800)).toEqual(rect)
     expect(previewDockBounds(rect, 'phone', 1280, 800)).toEqual({ ...rect, x: 845, width: 390 })
     expect(previewDockBounds({ ...rect, width: 300 }, 'phone', 1280, 800)?.width).toBe(300)
+    expect(
+      previewDockBounds({ x: 0, y: 0, width: 1400, height: 800 }, 'tablet', 1400, 800)
+    ).toEqual({ x: 110, y: 0, width: 1180, height: 800 })
   })
   test('clips the surface to the window and rejects hidden/nonfinite rectangles', () => {
     expect(

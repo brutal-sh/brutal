@@ -2,7 +2,7 @@ import { describe, expect, test } from 'bun:test'
 
 import { createBrowserPreviewController } from '@/app/browser-preview/controller'
 import type { BrowserPreviewNative } from '@/app/browser-preview/native'
-import { captureBytes, previewURL } from '@/app/browser-preview/schema'
+import { captureBytes, previewAddressLabel, previewURL } from '@/app/browser-preview/schema'
 import { createDeferred } from '@/app/runtime/deferred'
 
 const png = new Uint8Array([137, 80, 78, 71, 13, 10, 26, 10])
@@ -52,6 +52,65 @@ function fixture(overrides: Partial<BrowserPreviewNative> = {}) {
 }
 
 describe('browser preview', () => {
+  test('address labels omit only the default scheme and an empty trailing slash', () => {
+    expect(previewAddressLabel('https://example.com/')).toBe('example.com')
+    expect(previewAddressLabel('https://example.com/path?q=1#section')).toBe(
+      'example.com/path?q=1#section'
+    )
+    expect(previewAddressLabel('http://example.com/')).toBe('http://example.com')
+    expect(previewAddressLabel('http://localhost:8080/')).toBe('localhost:8080')
+    expect(previewAddressLabel('https://localhost:8080/')).toBe('https://localhost:8080')
+    expect(previewAddressLabel('unfinished address')).toBe('unfinished address')
+  })
+  test('normalizes web addresses while retaining privileged URL refusals', () => {
+    expect(previewURL('example.com/path?q=1#section')).toBe('https://example.com/path?q=1#section')
+    expect(previewURL('localhost:8080/page')).toBe('http://localhost:8080/page')
+    expect(previewURL('127.0.0.1:8080/page')).toBe('http://127.0.0.1:8080/page')
+    expect(previewURL('[::1]:8080/page')).toBe('http://[::1]:8080/page')
+    expect(previewURL('example.com:8443')).toBe('https://example.com:8443/')
+    expect(() => previewURL('/etc/hosts')).toThrow()
+  })
+
+  test('closing the page clears its address while retaining the chosen viewport', async () => {
+    const { preview, calls } = fixture()
+    preview.address.value = 'https://example.test/'
+    preview.preset.value = 'phone'
+    await preview.navigate()
+    await preview.clearPage()
+    expect(calls.at(-1)).toBe('close')
+    expect(preview.address.value).toBe('')
+    expect(preview.status.value).toBeNull()
+    expect(preview.preset.value).toBe('phone')
+  })
+
+  test('a failed page close retains the loaded page and its retryable address', async () => {
+    const { preview } = fixture({
+      action: async () => {
+        throw new Error('Close failed')
+      }
+    })
+    preview.address.value = 'https://example.test/'
+    await preview.navigate()
+    await preview.clearPage()
+    expect(preview.address.value).toBe('https://example.test/')
+    expect(preview.status.value?.url).toBe('https://example.test/')
+    expect(preview.error.value).toBe('Close failed')
+  })
+
+  test('a late status poll cannot resurrect a page after it is closed', async () => {
+    const pending = createDeferred<Awaited<ReturnType<BrowserPreviewNative['status']>>>()
+    const { preview } = fixture({ status: () => pending.promise })
+    preview.address.value = 'https://example.test/'
+    await preview.navigate()
+    const previous = preview.status.value
+    const refreshing = preview.refresh()
+    await preview.clearPage()
+    pending.resolve(previous)
+    await refreshing
+    expect(preview.status.value).toBeNull()
+    expect(preview.address.value).toBe('')
+  })
+
   test('opens the address at the selected viewport and navigates only through fixed actions', async () => {
     const { preview, calls } = fixture()
     preview.address.value = ' https://example.test/path '

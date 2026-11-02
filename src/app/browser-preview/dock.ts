@@ -1,4 +1,4 @@
-import type { PreviewPreset } from './schema'
+import { PREVIEW_PRESETS, type PreviewPreset } from './schema'
 
 export interface PreviewBounds {
   x: number
@@ -18,7 +18,10 @@ export function previewDockBounds(
     return null
   const availableWidth = Math.floor(Math.min(rect.width, windowWidth - rect.x, 1920))
   const height = Math.floor(Math.min(rect.height, windowHeight - rect.y, 1200))
-  const limit = { phone: 390, tablet: 768, desktop: availableWidth }[preset]
+  const limit =
+    preset === 'desktop'
+      ? availableWidth
+      : (PREVIEW_PRESETS.find((device) => device.value === preset)?.width ?? availableWidth)
   const width = Math.min(availableWidth, limit)
   if (rect.x < 0 || rect.y < 0 || width < 1 || height < 1) return null
   return {

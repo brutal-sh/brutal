@@ -23,12 +23,14 @@ export function createBrowserPreviewController(
   const error = ref('')
   const notice = ref('')
   let disposed = false
+  let revision = 0
   const isDisposed = () => disposed
   const selectedPreset = () =>
     PREVIEW_PRESETS.find((item) => item.value === preset.value) ?? PREVIEW_PRESETS[0]
 
   async function run(operation: () => Promise<void>) {
     if (busy.value || isDisposed()) return
+    revision++
     busy.value = true
     error.value = ''
     notice.value = ''
@@ -43,9 +45,10 @@ export function createBrowserPreviewController(
 
   async function refresh() {
     if (busy.value || isDisposed()) return
+    const startedAt = revision
     try {
       const result = await native.status()
-      if (!isDisposed()) status.value = result
+      if (!isDisposed() && startedAt === revision) status.value = result
     } catch (reason) {
       // Polling keeps the user's action feedback, but failures remain visible in diagnostics.
       console.warn('[Browser preview] Could not refresh status', reason)
@@ -64,6 +67,14 @@ export function createBrowserPreviewController(
       run(async () => {
         const result = await native.open(previewURL(address.value), selectedPreset())
         if (!isDisposed()) status.value = result
+      }),
+    clearPage: () =>
+      run(async () => {
+        await native.action('close')
+        if (!isDisposed()) {
+          status.value = null
+          address.value = ''
+        }
       }),
     action: (action: PreviewAction) =>
       run(async () => {

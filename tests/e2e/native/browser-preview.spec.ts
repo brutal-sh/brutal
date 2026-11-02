@@ -91,6 +91,102 @@ describe('native embedded browser preview', () => {
     )
   })
 
+  it('focuses the inline address, cycles viewports and clears a page without closing its dock', async () => {
+    const result = await browser.executeAsync<{ failure?: string }, [string]>(
+      async (origin, done) => {
+        const invoke = window.__TAURI__?.core.invoke
+        const store = window.openPencil?.getStore?.()
+        if (!invoke || !store) return done({ failure: 'Missing native editor' })
+        const before = { version: store.state.sceneVersion, selected: [...store.state.selectedIds] }
+        const wait = async (condition: () => boolean | Promise<boolean>) => {
+          const deadline = Date.now() + 12000
+          while (Date.now() < deadline) {
+            if (await condition()) return
+            await new Promise((resolve) => {
+              setTimeout(resolve, 30)
+            })
+          }
+          throw new Error('Browser landing did not settle')
+        }
+        const button = (label: string) => {
+          const control =
+            document.querySelector<HTMLButtonElement>(`button[aria-label="${label}"]`) ??
+            [...document.querySelectorAll<HTMLButtonElement>('button')].find(
+              (node) => node.textContent?.trim() === label
+            )
+          if (!control || control.disabled) throw new Error(`Unavailable ${label}`)
+          control.click()
+        }
+        try {
+          button('Import Web via Browser')
+          await wait(() => !!document.querySelector('input[aria-label="Web address"]'))
+          const toolbar = document.querySelector('[aria-label="Browser View controls"]')
+          const input = document.querySelector<HTMLInputElement>('input[aria-label="Web address"]')
+          if (!toolbar || !input) throw new Error('Missing inline browser controls')
+          if (toolbar.getBoundingClientRect().height !== 43) throw new Error('Wrong toolbar height')
+          button('Enter a URL')
+          if (document.activeElement !== input)
+            throw new Error('Landing action does not focus address')
+          input.value = `${origin}/landing`.replace('http://', '')
+          input.dispatchEvent(new Event('input', { bubbles: true }))
+          await new Promise((resolve) => {
+            setTimeout(resolve, 30)
+          })
+          input
+            .closest('form')
+            ?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+          await wait(
+            async () =>
+              (await invoke<{ url: string } | null>('browser_preview_status'))?.url ===
+              `${origin}/landing`
+          )
+          await wait(() => !input.disabled)
+          button('Viewport: Desktop. Switch to Phone')
+          await wait(
+            () => !!document.querySelector('button[aria-label="Viewport: Phone. Switch to Tablet"]')
+          )
+          button('Viewport: Phone. Switch to Tablet')
+          await wait(
+            () =>
+              !!document.querySelector('button[aria-label="Viewport: Tablet. Switch to Desktop"]')
+          )
+          button('Viewport: Tablet. Switch to Desktop')
+          await wait(
+            () =>
+              !!document.querySelector('button[aria-label="Viewport: Desktop. Switch to Phone"]')
+          )
+          button('Close this page')
+          await wait(
+            async () => (await invoke('browser_preview_status')) === null && input.value === ''
+          )
+          if (!document.querySelector('[data-test-id="browser-preview-dock"]'))
+            throw new Error('Page close removes dock')
+          button('Close browser preview')
+          await wait(() => !document.querySelector('[data-test-id="browser-preview-dock"]'))
+          button('Import Web via Browser')
+          await wait(() => !!document.querySelector('input[aria-label="Web address"]'))
+          if ((await invoke('browser_preview_status')) !== null)
+            throw new Error('Cleared page reopens')
+          if (
+            store.state.sceneVersion !== before.version ||
+            [...store.state.selectedIds].join(',') !== before.selected.join(',')
+          )
+            throw new Error('Browser changes design')
+          done({})
+        } catch (reason) {
+          done({ failure: String(reason) })
+        } finally {
+          document
+            .querySelector<HTMLButtonElement>('button[aria-label="Close browser preview"]')
+            ?.click()
+          await invoke('browser_preview_action', { action: 'close' }).catch(() => undefined)
+        }
+      },
+      origin
+    )
+    assert.equal(result.failure, undefined, result.failure)
+  })
+
   it('preserves the sidebar and canvas while expanding and reopening the browser', async () => {
     const result = await browser.executeAsync<{ failure?: string }, []>(async (done) => {
       const button = (label: string) => {
@@ -199,7 +295,7 @@ describe('native embedded browser preview', () => {
     const before = await snapshot()
     await $('button=Import Web via Browser').click()
     try {
-      const desktop = await $('button[aria-label="Desktop"]')
+      const desktop = await $('button[aria-label="Viewport: Desktop. Switch to Phone"]')
       await desktop.waitForDisplayed()
       await desktop.execute((button) => button.focus())
       await browser.keys('ArrowRight')
@@ -316,7 +412,7 @@ describe('native embedded browser preview', () => {
         await new Promise((resolve) => {
           setTimeout(resolve, 100)
         })
-        button('Phone')
+        button('Viewport: Desktop. Switch to Phone')
         const surface = document.querySelector<HTMLElement>(
           '[data-test-id="browser-preview-surface"]'
         )

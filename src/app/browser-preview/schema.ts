@@ -3,19 +3,41 @@ import * as v from 'valibot'
 export const MAX_CAPTURE_BYTES = 16 * 1024 * 1024
 export const PREVIEW_PRESETS = [
   { value: 'desktop', label: 'Desktop', width: 1280, height: 800 },
-  { value: 'tablet', label: 'Tablet', width: 768, height: 1024 },
-  { value: 'phone', label: 'Phone', width: 390, height: 844 }
+  { value: 'phone', label: 'Phone', width: 390, height: 844 },
+  { value: 'tablet', label: 'Tablet', width: 1180, height: 820 }
 ] as const
 
 export type PreviewPreset = (typeof PREVIEW_PRESETS)[number]
 export type PreviewAction = 'back' | 'forward' | 'reload' | 'focus' | 'close'
 
+function isLocalAddress(value: string): boolean {
+  return /^(?:localhost(?:[:/?#]|$)|(?:\d{1,3}\.){3}\d{1,3}(?:[:/?#]|$)|\[[:.\da-f]+\](?:[:/?#]|$))/i.test(
+    value
+  )
+}
+
+export function previewAddressLabel(input: string): string {
+  try {
+    const url = new URL(input)
+    const defaultScheme = isLocalAddress(url.host) ? 'http:' : 'https:'
+    const label =
+      url.protocol === defaultScheme ? url.href.slice(url.protocol.length + 2) : url.href
+    return url.pathname === '/' && !url.search && !url.hash ? label.replace(/\/$/, '') : label
+  } catch {
+    return input
+  }
+}
+
 export function previewURL(input: string): string {
   let url: URL
   try {
-    url = new URL(input.trim())
+    const value = input.trim()
+    if (!value || /^[\\/]/.test(value)) throw new Error('Missing web address')
+    const hostPort = /^(?:localhost|[\da-z-]+(?:\.[\da-z-]+)+):\d+(?:[/?#]|$)/i.test(value)
+    const scheme = /^[a-z][a-z\d+.-]*:/i.test(value) && !hostPort
+    url = new URL(scheme ? value : `${isLocalAddress(value) ? 'http' : 'https'}://${value}`)
   } catch {
-    throw new Error('Enter a full http:// or https:// address.')
+    throw new Error('Enter a valid web address.')
   }
   if (!['http:', 'https:'].includes(url.protocol) || !url.hostname) {
     throw new Error('Only HTTP and HTTPS pages can be previewed.')

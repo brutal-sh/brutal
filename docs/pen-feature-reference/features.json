@@ -931,16 +931,18 @@
           "feature": "Web import",
           "behavior": "Browser URL, device/zoom and element/page capture to editable layers.",
           "acceptance": "Import a local fixture; compare fonts/layout/effects, with no promised JS interaction.",
-          "status": "open",
-          "evidence": []
+          "status": "partial",
+          "evidence": ["../BROWSER.md"],
+          "evidence_limit": "Native URL/navigation, viewport cycling, page/dock closing, mode/restoration, bounded editable text/image import, refusal, Undo/Redo and FIG reopen execute. Native landing controls and measured toolbar geometry execute. Element picking, browser history/zoom/screenshot menus, responsive import layout and exact remaining pixels/states stay open."
         },
         {
           "id": "IO-05",
           "feature": "Screenshots",
           "behavior": "Selected element, visible area or full page.",
           "acceptance": "Capture a scrolling local page; inspect dimensions, bounds and saved image.",
-          "status": "open",
-          "evidence": []
+          "status": "partial",
+          "evidence": ["../BROWSER.md"],
+          "evidence_limit": "Native visible-area PNG pixels, capture into an image layer and Undo execute. Selected-element and full-page captures and their menu/delivery variants remain open."
         },
         {
           "id": "IO-06",
