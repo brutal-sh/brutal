@@ -14,6 +14,8 @@ export interface NumberFieldRootProps {
   max?: number
   /** Pointer-scrub and Arrow-key increment. */
   step?: number
+  /** Evaluate arithmetic and relative operators; false reads a finite numeric prefix. */
+  expressions?: boolean
   /** Multiplier applied to pointer-scrub movement. */
   sensitivity?: number
   /** Selects an absolute position between finite min/max instead of relative movement. */

@@ -30,8 +30,8 @@ export function usePosition() {
   // X, Y, and rotation read as Figma's panel shows them: the turned layer's box on the canvas and
   // its counterclockwise angle; see `panelPosition` and `panelRotation`.
   function shown(target: SceneNode, key: 'x' | 'y' | 'rotation'): number {
-    if (key === 'rotation') return Math.round(panelRotation(target, editor.graph))
-    return Math.round(panelPosition(target, editor.graph)[key])
+    if (key === 'rotation') return panelRotation(target, editor.graph)
+    return panelPosition(target, editor.graph)[key]
   }
 
   /** The shown value of every selected node, or MIXED when they differ. */

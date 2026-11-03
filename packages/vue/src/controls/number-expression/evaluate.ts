@@ -13,6 +13,7 @@ export interface NumberExpressionOptions {
   current: number
   max?: number
   mixed?: boolean
+  expressions?: boolean
 }
 
 class ArithmeticParser {
@@ -99,10 +100,18 @@ function evaluateArithmetic(source: string): NumberExpressionResult {
 
 export function evaluateNumberExpression(
   expression: string,
-  { current, max = Infinity, mixed = false }: NumberExpressionOptions
+  { current, max = Infinity, mixed = false, expressions = true }: NumberExpressionOptions
 ): NumberExpressionResult {
   const source = expression.trim()
   if (!source) return { ok: false, error: 'empty' }
+
+  if (!expressions) {
+    const value = Number.parseFloat(source)
+    if (Number.isNaN(value)) return { ok: false, error: 'syntax' }
+    return Number.isFinite(value)
+      ? { ok: true, value, kind: 'absolute' }
+      : { ok: false, error: 'non-finite' }
+  }
 
   if (source.endsWith('%')) {
     if (!Number.isFinite(max)) return { ok: false, error: 'percent-requires-finite-max' }

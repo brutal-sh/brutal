@@ -16,6 +16,8 @@
 - Canvas text Undo and Redo work while typing, including pending changes on an existing layer with empty document history; Escape exits text editing after using a menu.
 - Gap and padding fields preserve fractional values when displaying and editing layout, including paired and individual padding.
 - Width and Height fields preserve fractional dimensions while displaying, editing, undoing and reopening saved designs.
+- Position fields retain fractional coordinates, compare mixed selections before formatting, and normalize typed turns without clamping them to one revolution.
+- Numeric fields read signed values as absolute numbers and use numeric prefixes to match Pen input behavior.
 - Text ending in a newline reserves its final empty line when sizing the layer and its containing layout.
 - Zoom buttons and menu actions keep the canvas center stationary when side panels offset the canvas.
 - Desktop tool flyouts focus the selected tool when opened and use the measured spacing, checks and corners; Primitives import labels follow the reference menu.

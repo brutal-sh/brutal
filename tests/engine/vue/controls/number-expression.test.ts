@@ -40,6 +40,42 @@ describe('evaluateNumberExpression', () => {
     expect(value('(25 + 25)%', 20, 80)).toBe(40)
   })
 
+  test('numeric mode reads signed prefixes absolutely even for mixed values', () => {
+    for (const [expression, expected] of [
+      ['-0.015', -0.015],
+      ['+10', 10],
+      ['12+2', 12],
+      ['1e3', 1000],
+      ['50%', 50]
+    ] as const) {
+      expect(
+        evaluateNumberExpression(expression, {
+          current: 20,
+          mixed: true,
+          expressions: false
+        })
+      ).toEqual({ ok: true, value: expected, kind: 'absolute' })
+    }
+  })
+
+  test('numeric mode rejects missing and non-finite numeric prefixes', () => {
+    for (const expression of ['*2', '/4', 'constructor']) {
+      expect(
+        evaluateNumberExpression(expression, {
+          current: 20,
+          expressions: false
+        })
+      ).toEqual({
+        ok: false,
+        error: 'syntax'
+      })
+    }
+    expect(evaluateNumberExpression('1e999', { current: 20, expressions: false })).toEqual({
+      ok: false,
+      error: 'non-finite'
+    })
+  })
+
   test('rejects percentages without a finite maximum', () => {
     expect(evaluateNumberExpression('50%', { current: 20 })).toEqual({
       ok: false,

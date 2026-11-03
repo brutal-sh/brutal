@@ -38,6 +38,10 @@ Committed input accepts absolute arithmetic such as `12*8+4`, relative operation
 `+10`, `-4`, `*2`, and `/3`, and percentages such as `50%` when `max` is finite. The parser only
 accepts numbers, parentheses, and `+ - * /`; it never evaluates JavaScript.
 
+Set `expressions` to `false` to read a finite numeric prefix instead: `-4` becomes absolute
+`-4`, `+10` becomes `10`, and `12+2` becomes `12`. A leading operator without a number, such
+as `*2`, is rejected. This is the mode used by the app to match Pen's numeric fields.
+
 Arrow keys step by `step`. Shift multiplies the step by 10 and Alt multiplies it by 0.1. Enter
 commits and Escape restores the interaction-start value.
 

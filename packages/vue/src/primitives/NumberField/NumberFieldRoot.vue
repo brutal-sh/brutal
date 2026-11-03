@@ -31,6 +31,7 @@ const {
   min = -Infinity,
   max = Infinity,
   step = 1,
+  expressions = true,
   sensitivity = 1,
   scrubMode = 'relative',
   inheritBinding = true,
@@ -168,8 +169,10 @@ function startEdit() {
 function setDraft(value: string) {
   if (value !== draftValue.value && !requestMutation('edit')) return
   draftValue.value = value
-  const absoluteNumber = /^\s*(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?\s*$/i.test(value)
-  if (absoluteNumber) updateValue(Number(value))
+  const absoluteNumber = expressions
+    ? /^\s*(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?\s*$/i.test(value)
+    : Number.isFinite(Number.parseFloat(value))
+  if (absoluteNumber) updateValue(Number.parseFloat(value))
 }
 
 function onInput(event: Event) {
@@ -195,6 +198,7 @@ function commitEdit() {
   }
   const result = evaluateNumberExpression(value, {
     current: interactionStartValue,
+    expressions,
     max,
     mixed: interactionStartedMixed
   })
@@ -342,6 +346,7 @@ function stepValueFromKeyboard(event: KeyboardEvent) {
     draft && draftValue.value !== absoluteDraft
       ? evaluateNumberExpression(draft.value, {
           current: interactionStartValue,
+          expressions,
           max,
           mixed: interactionStartedMixed
         })

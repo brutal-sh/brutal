@@ -23,7 +23,7 @@ test.beforeEach(async () => {
   await editor.canvas.drawRect(120, 100, 80, 80)
 })
 
-test('NumberField commits arithmetic and relative expressions', async () => {
+test('NumberField matches Pen signed numeric entry and numeric prefixes', async () => {
   const field = xField()
   const before = await numericFieldValue(field)
 
@@ -35,14 +35,26 @@ test('NumberField commits arithmetic and relative expressions', async () => {
   await input.fill('*2')
   await input.press('Enter')
   await editor.canvas.waitForRender()
-  expect((await getSelectedNode(editor.page))?.x).toBe(before * 2)
+  expect((await getSelectedNode(editor.page))?.x).toBe(before)
 
   input = await editField(field)
   await input.fill('+10')
   await input.press('Enter')
   await editor.canvas.waitForRender()
-  expect((await getSelectedNode(editor.page))?.x).toBe(before * 2 + 10)
-  await expect(field).toHaveAttribute('aria-valuenow', String(before * 2 + 10))
+  expect((await getSelectedNode(editor.page))?.x).toBe(10)
+  await expect(field).toHaveAttribute('aria-valuenow', '10')
+  input = await editField(field)
+  await input.fill('12+2')
+  await input.press('Enter')
+  expect((await getSelectedNode(editor.page))?.x).toBe(12)
+  input = await editField(field)
+  await input.fill('-4')
+  await input.press('ArrowUp')
+  await input.press('Enter')
+  expect((await getSelectedNode(editor.page))?.x).toBe(-3)
+  input = await editField(field)
+  await input.press('Enter')
+  expect((await getSelectedNode(editor.page))?.x).toBe(-3)
   editor.canvas.assertNoErrors()
 })
 
