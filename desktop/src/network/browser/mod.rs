@@ -211,6 +211,36 @@ pub async fn browser_preview_action(
 }
 
 #[tauri::command]
+pub async fn browser_preview_backdrop(
+    app: tauri::AppHandle,
+    webview: Webview,
+    url: String,
+) -> Result<tauri::ipc::Response, String> {
+    require_editor(webview.label())?;
+    let target = preview_url(&url, app.config().build.dev_url.as_ref())?;
+    let view = existing(&app)?;
+    let navigation = NAVIGATION_GENERATION.load(Ordering::SeqCst);
+    let cancellation = CAPTURE_GENERATION.load(Ordering::SeqCst);
+    let location = page_url::read(&view).await?;
+    if location.loading || location.url.as_ref() != Some(&target) {
+        return Err("Wait for the page to finish loading before opening this popup.".into());
+    }
+    // A popup frame must not change page animation/scroll state or hold closing behind a slow page.
+    let bytes = tokio::time::timeout(std::time::Duration::from_secs(1), capture::snapshot(&view))
+        .await
+        .map_err(|_| "The browser frame was not ready in time.")??;
+    let location = page_url::read(&view).await?;
+    if NAVIGATION_GENERATION.load(Ordering::SeqCst) != navigation
+        || CAPTURE_GENERATION.load(Ordering::SeqCst) != cancellation
+        || location.loading
+        || location.url.as_ref() != Some(&target)
+    {
+        return Err("The browser page changed before its popup was ready.".into());
+    }
+    Ok(tauri::ipc::Response::new(bytes))
+}
+
+#[tauri::command]
 pub async fn browser_preview_screenshot(
     app: tauri::AppHandle,
     webview: Webview,

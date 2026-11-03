@@ -20,11 +20,14 @@ import {
   onMounted,
   onScopeDispose,
   ref,
+  shallowRef,
   useId,
   useTemplateRef,
-  watch
+  watch,
+  type CSSProperties
 } from 'vue'
 
+import { createBrowserBackdrop } from '@/app/browser-preview/backdrop'
 import type { BrowserCaptureScope } from '@/app/browser-preview/capture'
 import type { BrowserPreviewSession } from '@/app/browser-preview/context'
 import { createBrowserPreviewController } from '@/app/browser-preview/controller'
@@ -115,8 +118,9 @@ let layoutQueued = false
 let lastLayout = ''
 let disposed = false
 let clearingPage = false
-const bridge = createBrowserPreviewNative(() => {
-  if (!open.value || !surface.value || hasPreviewOverlay()) return null
+const backdropStyle = shallowRef<CSSProperties>({})
+function surfaceBounds() {
+  if (!open.value || !surface.value) return null
   const rect = surface.value.getBoundingClientRect()
   return previewDockBounds(
     rect,
@@ -124,13 +128,45 @@ const bridge = createBrowserPreviewNative(() => {
     window.innerWidth,
     window.innerHeight
   )
-})
+}
+const bridge = createBrowserPreviewNative(() => (hasPreviewOverlay() ? null : surfaceBounds()))
 const preview = createBrowserPreviewController(
   bridge.native,
   () => browserCaptureTarget(store),
   () => browserImportTarget(store, () => open.value)
 )
-const { address, preset, status, busy, error, notice } = preview
+const { address, preset, status, busy: actionBusy, error, notice } = preview
+const backdrop = createBrowserBackdrop(async () => {
+  if (!status.value) throw new Error('Open a page before preparing its backdrop.')
+  return bridge.native.backdrop(status.value.url)
+})
+const busy = computed(() => actionBusy.value || backdrop.pending.value)
+function backdropKey() {
+  return JSON.stringify([status.value?.url, preset.value, surfaceBounds()])
+}
+async function prepareBackdrop() {
+  if (disposed || !open.value) return false
+  if (!status.value?.captureAvailable || status.value.loading) return true
+  const key = backdropKey()
+  try {
+    return await backdrop.prepare(
+      () => !disposed && open.value && !hasPreviewOverlay() && backdropKey() === key
+    )
+  } catch (reason) {
+    if (!disposed) error.value = reason instanceof Error ? reason.message : String(reason)
+    return !disposed && open.value
+  }
+}
+let historyRevision = 0
+async function setHistoryOpen(value: boolean) {
+  const request = ++historyRevision
+  if (!value) {
+    historyOpen.value = false
+    return
+  }
+  if ((await prepareBackdrop()) && request === historyRevision && !disposed)
+    historyOpen.value = true
+}
 const picker = provideBrowserPicker(
   bridge.picker,
   () => status.value?.url ?? '',
@@ -153,6 +189,7 @@ watch(
   () => status.value?.loading,
   (loading) => {
     if (loading) picker.reset()
+    if (loading) backdrop.clear()
   }
 )
 const selectedDevice = computed(
@@ -186,6 +223,16 @@ function syncSurface() {
     layoutQueued = false
     if (disposed) return
     const rect = surface.value?.getBoundingClientRect()
+    const bounds = surfaceBounds()
+    backdropStyle.value =
+      bounds && rect
+        ? {
+            left: `${bounds.x - rect.x}px`,
+            top: `${bounds.y - rect.y}px`,
+            width: `${bounds.width}px`,
+            height: `${bounds.height}px`
+          }
+        : {}
     const overlay = !!hasPreviewOverlay()
     const key = JSON.stringify([
       rect?.x,
@@ -209,13 +256,17 @@ watch(
   open,
   (visible) => {
     if (visible) resume()
-    else pause()
+    else {
+      pause()
+      backdrop.clear()
+    }
     syncSurface()
   },
   { immediate: true }
 )
 watch(preset, (value) => {
   session.preset = value
+  backdrop.clear()
 })
 watch([preset, status], syncSurface)
 watch(
@@ -233,6 +284,7 @@ watch(
 watch(
   () => status.value?.url,
   (url) => {
+    backdrop.clear()
     if (url && document.activeElement?.id !== inputId) address.value = url
   }
 )
@@ -254,6 +306,8 @@ onMounted(async () => {
 })
 onScopeDispose(() => {
   disposed = true
+  historyRevision++
+  backdrop.dispose()
   preview.dispose()
   void historyConnection.then((stop) => stop())
   session.url = clearingPage ? '' : (status.value?.url ?? session.url)
@@ -315,7 +369,7 @@ onScopeDispose(() => {
           @focus="selectAddress"
           @blur="addressFocused = false"
         />
-        <DropdownMenuRoot v-model:open="historyOpen">
+        <DropdownMenuRoot :open="historyOpen" @update:open="setHistoryOpen">
           <DropdownMenuTrigger as-child>
             <IconButton
               label="Browsing history"
@@ -389,6 +443,7 @@ onScopeDispose(() => {
       >
       <BrowserPreviewCapture
         :selected="!!picker.state.value?.pick"
+        :prepare="prepareBackdrop"
         :disabled="busy || !status?.captureAvailable || status?.loading || store.state.readOnly"
         @capture="capture"
       />
@@ -444,6 +499,16 @@ onScopeDispose(() => {
     </div>
     <BrowserPreviewPickerBreadcrumbs />
     <div ref="surface" data-test-id="browser-preview-surface" :class="ui.surface()">
+      <img
+        v-if="backdrop.src.value"
+        :src="backdrop.src.value"
+        alt=""
+        aria-hidden="true"
+        :draggable="false"
+        data-slot="browser-backdrop"
+        :class="ui.backdrop()"
+        :style="backdropStyle"
+      />
       <div v-if="!status" :class="ui.landing()">
         <div :class="ui.content()">
           <div :class="ui.introduction()">

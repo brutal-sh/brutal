@@ -21,3 +21,4 @@
 - Per-layer Context retains text through save/reopen and returns to its first line when editing ends.
 
 - Expand the browser over the canvas, restore split view and retain page history across mode changes; remember the chosen mode, loaded page and viewport when reopening the dock. Enter web or localhost addresses inline, cycle Desktop/Phone/Tablet viewports, close a page back to the web-import landing screen and revisit or remove up to 50 saved recent pages. Inspect individual page elements, import their editable subtrees and capture selected elements, visible areas or full pages as logical-size image slices in one reversible canvas insertion.
+- Keep the current browser viewport visible beneath its screenshot and history menus.

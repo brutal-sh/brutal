@@ -1,12 +1,14 @@
 import { invoke } from '@tauri-apps/api/core'
 import * as v from 'valibot'
 
+import { imageHeader } from '@open-pencil/scene-graph/images'
+
 import { readBrowserCapture, type BrowserCapture, type BrowserCaptureScope } from './capture'
 import type { PreviewBounds } from './dock'
 import { validateExtractedPage, type ExtractedPage } from './dom/schema'
 import type { BrowserPickerNative } from './picker/controller'
 import { validateBrowserPicker } from './picker/schema'
-import { previewStatusSchema } from './schema'
+import { captureBytes, previewStatusSchema } from './schema'
 import type { PreviewAction, PreviewPreset, PreviewStatus } from './schema'
 
 export interface BrowserPreviewNative {
@@ -15,6 +17,7 @@ export interface BrowserPreviewNative {
   action(action: PreviewAction): Promise<void>
   resize(preset: PreviewPreset): Promise<void>
   capture(url: string, scope?: BrowserCaptureScope): Promise<BrowserCapture>
+  backdrop(url: string): Promise<Uint8Array<ArrayBuffer>>
   extract(url: string, selected?: boolean): Promise<ExtractedPage>
 }
 
@@ -70,6 +73,26 @@ export function createBrowserPreviewNative(
             requestId,
             url
           )
+        } finally {
+          capturing = false
+        }
+      }),
+    backdrop: (url) =>
+      enqueue(async () => {
+        requireBounds()
+        if (!opened) throw new Error('Open a page before preparing its backdrop.')
+        capturing = true
+        try {
+          const bytes = captureBytes(await callNative('browser_preview_backdrop', { url }))
+          const header = imageHeader(bytes)
+          if (
+            !header ||
+            header.width < 1 ||
+            header.height < 1 ||
+            header.width * header.height > 16_000_000
+          )
+            throw new Error('The browser returned invalid frame dimensions.')
+          return bytes
         } finally {
           capturing = false
         }

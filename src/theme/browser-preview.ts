@@ -21,6 +21,7 @@ export default {
     popupItem:
       'cursor-default rounded-sm font-medium leading-4 text-browser-menu-foreground data-[highlighted]:bg-browser-menu-highlight',
     surface: 'relative min-h-0 flex-1 overflow-hidden bg-canvas',
+    backdrop: 'pointer-events-none absolute max-w-none select-none',
     landing: 'absolute inset-0 overflow-auto border-x border-island-border bg-panel',
     content: 'mx-auto flex min-h-full w-full max-w-[720px] flex-col px-5 py-14',
     introduction: 'text-center',

@@ -1,6 +1,8 @@
 import { strict as assert } from 'node:assert'
 import { createServer, type Server } from 'node:http'
 
+import type { Rect } from '@open-pencil/scene-graph'
+
 import { createNativeLayerFixture } from '#tests/helpers/tauri/editor-snapshot'
 import { invokeNative } from '#tests/helpers/tauri/invoke'
 
@@ -8,11 +10,21 @@ let server: Server
 let origin: string
 let scrolling = 0
 let lastY = 200
+let animationPauses = 0
 let mainHandle: string
 
 before(async () => {
   server = createServer((request, response) => {
     response.setHeader('Access-Control-Allow-Origin', '*')
+    if (request.url === '/animation-paused') {
+      animationPauses++
+      response.end('ok')
+      return
+    }
+    if (request.url === '/pause-count') {
+      response.end(String(animationPauses))
+      return
+    }
     if (request.url?.startsWith('/scroll?')) {
       scrolling++
       lastY = Number(new URL(request.url, 'http://fixture.test').searchParams.get('y'))
@@ -30,7 +42,7 @@ before(async () => {
     response.writeHead(200, { 'Content-Type': 'text/html' })
     // oxlint-disable-next-line open-pencil/no-hand-rolled-color -- Exact native screenshot pixels.
     response.end(
-      `<!doctype html><title>Tall capture fixture</title><style>html,body{margin:0}body{height:1800px;background:linear-gradient(to bottom,#112233 0px,#112233 600px,#22aa55 600px,#22aa55 1200px,#3344cc 1200px,#3344cc 1800px)}header{position:fixed;left:0;top:0;height:30px;width:100%;background:#ff0000}</style><header></header><script>scrollTo(0,200);addEventListener('scroll',()=>fetch('/scroll?y='+scrollY));</script>`
+      `<!doctype html><title>Tall capture fixture</title><style>html,body{margin:0}body{height:1800px;background:linear-gradient(to bottom,#112233 0px,#112233 600px,#22aa55 600px,#22aa55 1200px,#3344cc 1200px,#3344cc 1800px)}header{position:fixed;left:0;top:0;height:30px;width:100%;background:#ff0000}</style><header></header><script>const pause=Animation.prototype.pause;Animation.prototype.pause=function(){fetch('/animation-paused');return pause.call(this)};const animator=document.createElement('i');document.body.append(animator);animator.animate([{transform:'translateX(0)'},{transform:'translateX(1px)'}],{duration:1000,iterations:Infinity});scrollTo(0,200);addEventListener('scroll',()=>fetch('/scroll?y='+scrollY));</script>`
     )
   })
   await new Promise<void>((resolve) => {
@@ -99,6 +111,29 @@ it('imports full-page slices at CSS size, joins native pixels, restores scrollin
         } finally {
           URL.revokeObjectURL(url)
         }
+      }
+      const verifyBackdrop = async (version: number, pauses: number) => {
+        const image = document.querySelector<HTMLImageElement>('[data-slot="browser-backdrop"]')
+        if (!image?.complete || !image.naturalWidth) throw new Error('Backdrop was not decoded')
+        const bounds = await invoke<Rect>('browser_preview_status')
+        const rect = image.getBoundingClientRect()
+        if (
+          Math.abs(rect.x - bounds.x) > 0.05 ||
+          Math.abs(rect.y - bounds.y) > 0.05 ||
+          rect.width !== bounds.width ||
+          rect.height !== bounds.height
+        )
+          throw new Error(`Backdrop bounds mismatch: ${JSON.stringify({ rect, bounds })}`)
+        const bytes = new Uint8Array(await (await fetch(image.src)).arrayBuffer())
+        const pixel = await sample(bytes, 10, 40)
+        // Live compositing can round an sRGB channel by one before the PNG is decoded.
+        if (pixel.some((channel, index) => Math.abs(channel - [17, 34, 51, 255][index]) > 1))
+          throw new Error(`Backdrop does not show the current page: ${pixel.join(',')}`)
+        if (store.state.sceneVersion !== version) throw new Error('Opening menu edited design')
+        if (Number(await (await fetch(origin + '/pause-count')).text()) !== pauses)
+          throw new Error('Preparing menu paused page animation')
+        if (Number(await (await fetch(origin + '/scroll-y')).text()) !== 200)
+          throw new Error('Preparing menu moved page scroll')
       }
       function validateFrame(
         frame: ReturnType<typeof store.graph.getNode>
@@ -175,8 +210,11 @@ it('imports full-page slices at CSS size, joins native pixels, restores scrollin
           height: 100
         })
         store.select([parent.id])
+        const version = store.state.sceneVersion
+        const pauses = Number(await (await fetch(origin + '/pause-count')).text())
         click('Screenshot')
         await wait(() => !!document.querySelector('[role="menuitem"]'), 'screenshot menu')
+        await verifyBackdrop(version, pauses)
         const full = [...document.querySelectorAll<HTMLElement>('[role="menuitem"]')].find(
           (item) => item.textContent?.trim() === 'Full Page'
         )
