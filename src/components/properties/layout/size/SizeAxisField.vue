@@ -80,7 +80,7 @@ function handleSelect(value: SizeSelectValue) {
       :compact="compact"
       :icon="icon"
       :aria-label="label"
-      :model-value="Math.round(ctx.node[axis])"
+      :model-value="ctx.node[axis]"
       :min="0"
       :node-id="ctx.node.id"
       :binding-path="axis"
