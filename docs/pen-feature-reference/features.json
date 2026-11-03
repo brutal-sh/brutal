@@ -933,7 +933,7 @@
           "acceptance": "Import a local fixture; compare fonts/layout/effects, URL/history/device/menu behavior and viewport resizing.",
           "status": "partial",
           "evidence": ["../BROWSER.md"],
-          "evidence_limit": "Native navigation/history edges, exact CSS Phone/Tablet viewports, modes/restoration, bounded editable import/Undo/FIG reopen and completed-visit history execute. More/zoom/current-origin clearing have named native evidence. Device and separate responsive zoom survive new documents and editor reloads; this is not normal process-restart proof. Physical compact/wide Import and selected control geometry execute. Physical keys/clipboard, process restart, browser clip-height resizing, fixed-device rim, iframe/shadow and remaining pixels/states stay open. See BROWSER.md for prior failures and current regression limits."
+          "evidence_limit": "Native navigation/history edges, exact CSS Phone/Tablet viewports, modes/restoration, bounded editable import/Undo/FIG reopen and completed-visit history execute. More/zoom/current-origin clearing have named native evidence. Device and separate responsive zoom survive new documents and editor reloads; two distinct owned persistent native-test processes also retain Phone and responsive75%, while normal production process-restart delivery remains unqualified. Physical compact/wide Import and selected control geometry execute. Physical keys/clipboard, process restart, browser clip-height resizing, fixed-device rim, iframe/shadow and remaining pixels/states stay open. See BROWSER.md for prior failures and current regression limits."
         },
         {
           "id": "IO-05",
