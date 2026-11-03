@@ -2,6 +2,42 @@
 
 Target: actual `/Applications/Pen.app`1.2.21, rechecked in its installed Info.plist on2026-11-02. Full inspector and whole-product parity remain open. The reference is inspected through native UI and the private resource archive recorded in [reference provenance](PEN-REFERENCE.md).
 
+## HTML image paths and settings —2026-11-03
+
+Actual Pen exports the owned two-image fixture as ordinary HTML in relative and absolute modes,
+referring to the original `images/checker.png` or its canonical file URL. It creates no ZIP or
+copied asset directory. A chosen destination in another folder still retains the repo-relative
+path; the reference does not rebase or copy that image. Its preferences are restored afterward.
+
+Open Pen's desktop Code menu offers those two path modes and embedded assets. Browser downloads
+retain their ZIP option. Retained source/hash pairs belong to each image paint, so same-byte
+fill/stroke paths and paint removal/reordering keep their own identity. Replaced image bytes or
+unavailable/nonlocal source identities fall back to embedding. Absolute paths encode literal
+percent signs and special filename characters. No additional file reads or scopes are introduced.
+
+The measured settings popup is264px wide with12px padding,20px left offset, end alignment and
+10px collision padding. Checkbox labels are10px, controls16px, with6px row gaps. Assets labeling,
+neutral checkboxes, reference ordering and enabled Center without scaffold are implemented and
+visually inspected in the native app. Exact cross-theme pixels remain unqualified.
+
+A154.7s physical three-mode export/open/Close journey preserves source bytes, selection and
+version; relative capture contains14,884 pixels of each fixture color. Its repeated observer
+reports stale counters for later loop iterations, so those counters do not qualify those modes.
+Independent88.4s absolute and35.3s embedded native runs each capture1604×2956 with14,884 pixels
+of both colors and return to the unchanged editor. All three saved PNGs are independently decoded.
+Sixteen Chromium/WebKit HTML journeys and169 owner checks/510assertions pass. Source/Vue/test
+types and architecture pass. Touched-source typed lint passes; full lint reports nine findings
+in unchanged browser owners, retained in code-assets-lint-final.log. No full lint pass is claimed.
+Source review reproduces percent-path and identical-byte source collisions before correction;
+removal/reordering and mutation-isolated copying have regression coverage.
+
+Private receipts:pen-html-assets-reference-2026-11-03/facts.json,
+code-assets-native-physical.log, code-assets-native-absolute-fresh.log,
+code-assets-native-inline-fresh.log and code-assets-native-{relative,absolute,inline}.png.
+The selected-frame body background still differs (white versus the reference frame color).
+Multiple image paints, arbitrary image backgrounds, source-path interchange, OS clipboard,
+file-specific browser menus/history/restart and full parity remain OPEN.
+
 ## Automatic internal HTML preview —2026-11-03
 
 Open in Browser after Export defaults on for embedded HTML. A successful native save opens

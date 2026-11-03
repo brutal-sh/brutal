@@ -193,6 +193,8 @@ export interface Fill {
   gradientTransform?: GradientTransform
   meshGradient?: MeshGradient
   imageHash?: string
+  /** Original image path; valid only while the paint still draws these bytes. */
+  imageSource?: { hash: string; url: string }
   imageScaleMode?: ImageScaleMode
   /** A crop's image-space window; Fill, Fit and Tile ignore it. */
   imageTransform?: GradientTransform

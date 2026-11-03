@@ -93,6 +93,7 @@ export const fillSchema = v.looseObject({
   gradientStops: v.optional(v.array(gradientStopSchema)),
   gradientTransform: v.optional(matrixSchema),
   imageTransform: v.optional(matrixSchema),
+  imageSource: v.optional(v.object({ hash: v.string(), url: v.string() })),
   patternSpacing: v.optional(vectorSchema),
   noiseSize: v.optional(vectorSchema)
 })

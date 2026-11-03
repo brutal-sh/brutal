@@ -115,7 +115,9 @@ export interface HTMLExportOptions {
   includeLayerIds?: boolean
   html?: 'fragment' | 'standalone'
   style?: 'inline' | 'tailwind'
-  assets?: 'inline' | 'external'
+  assets?: 'inline' | 'external' | 'relative' | 'absolute'
+  /** The source document's local path, used by absolute image references. */
+  documentPath?: string
   /** `assets` ships web fonts with external assets. */
   fonts?: 'assets' | 'none'
 }

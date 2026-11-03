@@ -14,6 +14,19 @@ import {
 import { expectDefined } from './helpers/assert'
 
 describe('copy helpers — mutation isolation', () => {
+  test('copied image provenance is independent of its original paint', () => {
+    const original: Fill = {
+      type: 'IMAGE',
+      color: { r: 0, g: 0, b: 0, a: 1 },
+      opacity: 1,
+      visible: true,
+      imageHash: 'same-bytes',
+      imageSource: { hash: 'same-bytes', url: 'images/a.png' }
+    }
+    const copy = copyFill(original)
+    expectDefined(copy.imageSource, 'copied image source').url = 'images/b.png'
+    expect(original.imageSource?.url).toBe('images/a.png')
+  })
   test('copyFill: mutating copy does not affect original', () => {
     const original: Fill = {
       type: 'SOLID',

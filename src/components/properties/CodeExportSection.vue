@@ -3,9 +3,10 @@ import { useClipboard, useLocalStorage } from '@vueuse/core'
 import { basename, dirname, isAbsolute, join } from 'pathe'
 import { filename } from 'pathe/utils'
 import { PopoverRoot, PopoverTrigger, PopoverContent, PopoverPortal } from 'reka-ui'
-import { inject, ref } from 'vue'
+import { computed, inject, ref } from 'vue'
 
 import { IS_TAURI } from '@open-pencil/core/constants'
+import type { HTMLExportOptions } from '@open-pencil/core/io'
 import { renderNodesToHTML } from '@open-pencil/core/io/formats/html'
 import { useViewportKind } from '@open-pencil/vue/editor/viewport-kind'
 import { useRetainedPopup } from '@open-pencil/vue/lifecycle/retention'
@@ -27,6 +28,15 @@ const toggleBrowserPreview = inject(toggleBrowserPreviewKey, undefined)
 const openBrowserExport = inject(openBrowserExportKey, undefined)
 const style = useLocalStorage('open-pen:html-style', 'tailwind')
 const assets = useLocalStorage('open-pen:html-assets', 'inline')
+const assetMode = computed({
+  get: (): NonNullable<HTMLExportOptions['assets']> =>
+    IS_TAURI && assets.value === 'external'
+      ? 'relative'
+      : (assetModes.find((mode) => mode.value === assets.value)?.value ?? 'inline'),
+  set: (value: string) => {
+    assets.value = value
+  }
+})
 const scaffold = useLocalStorage('open-pen:html-scaffold', true)
 const center = useLocalStorage('open-pen:html-center', true)
 const names = useLocalStorage('open-pen:html-layer-names', true)
@@ -34,11 +44,17 @@ const ids = useLocalStorage('open-pen:html-layer-ids', false)
 const askWhere = useLocalStorage('open-pen:html-ask-where', false)
 const openAfterExport = useLocalStorage('open-pen:html-open-after-export', true)
 const { open: settingsOpen, portalActive } = useRetainedPopup()
-const popover = usePopoverUI({ content: 'w-72 p-3' })
-const assetModes = [
-  { value: 'inline', label: 'Embed assets (self-contained document)' },
-  { value: 'external', label: 'Relative paths (ZIP bundle)' }
-]
+const popover = usePopoverUI({ content: 'w-[264px] p-3' })
+const assetModes: { value: NonNullable<HTMLExportOptions['assets']>; label: string }[] = IS_TAURI
+  ? [
+      { value: 'relative', label: 'Relative paths (in the repo...)' },
+      { value: 'absolute', label: 'Absolute paths (on the disk)' },
+      { value: 'inline', label: 'Embed assets (self-contained document)' }
+    ]
+  : [
+      { value: 'inline', label: 'Embed assets (self-contained document)' },
+      { value: 'external', label: 'Relative paths (ZIP bundle)' }
+    ]
 const busy = ref(false)
 const error = ref('')
 const { copy, copied } = useClipboard({ copiedDuring: 1500 })
@@ -49,7 +65,8 @@ const formats = [
 async function output(save: boolean) {
   if (busy.value || !nodeIds.length) return
   const targetIds = [...nodeIds]
-  const previewAfterSave = openAfterExport.value && assets.value === 'inline'
+  const selectedAssets = assetMode.value
+  const previewAfterSave = openAfterExport.value && selectedAssets !== 'external'
   const sourcePath = store.getDocumentFilePath()
   const fileName = `${(sourcePath ? filename(sourcePath) : basename(store.state.documentName)) || 'Untitled'}-export.html`
   const nativePath =
@@ -60,7 +77,8 @@ async function output(save: boolean) {
   error.value = ''
   const options = {
     html: scaffold.value ? 'standalone' : 'fragment',
-    assets: assets.value === 'external' ? 'external' : 'inline',
+    assets: selectedAssets,
+    documentPath: sourcePath ?? undefined,
     center: center.value,
     includeLayerNames: names.value,
     includeLayerIds: ids.value,
@@ -103,46 +121,46 @@ async function output(save: boolean) {
         <PopoverPortal v-if="portalActive"
           ><PopoverContent
             side="left"
-            align="start"
-            :side-offset="8"
+            align="end"
+            :side-offset="20"
+            :collision-padding="10"
             :class="popover.content"
             aria-label="Export Settings"
           >
-            <h3 class="mb-3 text-xs font-semibold text-surface">Export Settings</h3>
-            <AppSelect v-model="assets" :options="assetModes" label="Select asset export mode" />
-            <label class="mt-3 flex items-center gap-2 text-xs text-surface"
-              ><AppCheckbox v-model="scaffold" ariaLabel="Include HTML scaffold" />Include HTML
-              scaffold</label
+            <h3 class="mb-2 text-xxs font-medium text-surface">Export Settings</h3>
+            <p class="mb-1 text-xxs text-muted">Assets</p>
+            <AppSelect v-model="assetMode" :options="assetModes" label="Select asset export mode" />
+            <label class="mt-1.5 flex items-center gap-1 text-2xs text-surface"
+              ><AppCheckbox v-model="scaffold" neutral ariaLabel="Include HTML scaffold" />Include
+              HTML scaffold</label
             >
-            <label class="mt-3 flex items-center gap-2 text-xs text-surface"
+            <label class="mt-1.5 flex items-center gap-1 text-2xs text-surface"
+              ><AppCheckbox v-model="center" neutral ariaLabel="Center body contents" />Center
+              &lt;body&gt; contents</label
+            >
+            <label v-if="IS_TAURI" class="mt-1.5 flex items-center gap-1 text-2xs text-surface"
               ><AppCheckbox
-                v-model="center"
-                ariaLabel="Center body contents"
-                :disabled="!scaffold"
-              />Center &lt;body&gt; contents</label
-            >
-            <label class="mt-3 flex items-center gap-2 text-xs text-surface"
-              ><AppCheckbox v-model="names" ariaLabel="Include layer names" />Include layer
-              names</label
-            >
-            <label v-if="IS_TAURI" class="mt-3 flex items-center gap-2 text-xs text-surface"
-              ><AppCheckbox v-model="askWhere" ariaLabel="Ask user where to export file" />Ask user
-              where to export file</label
+                v-model="askWhere"
+                neutral
+                ariaLabel="Ask user where to export file"
+              />Ask user where to export the file</label
             >
             <label
               v-if="IS_TAURI && openBrowserExport"
-              class="mt-3 flex items-center gap-2 text-xs text-surface"
+              class="mt-1.5 flex items-center gap-1 text-2xs text-surface"
               ><AppCheckbox
                 v-model="openAfterExport"
+                neutral
                 ariaLabel="Open in Browser after Export"
-                :disabled="assets === 'external'"
               />Open in Browser after Export</label
             >
-            <p v-if="IS_TAURI && assets === 'external'" class="mt-1 text-xs text-muted">
-              Embed assets to preview the exported page.
-            </p>
-            <label class="mt-3 flex items-center gap-2 text-xs text-surface"
-              ><AppCheckbox v-model="ids" ariaLabel="Include layer IDs" />Include layer IDs</label
+            <label class="mt-1.5 flex items-center gap-1 text-2xs text-surface"
+              ><AppCheckbox v-model="names" neutral ariaLabel="Include layer names" />Include layer
+              names</label
+            >
+            <label class="mt-1.5 flex items-center gap-1 text-2xs text-surface"
+              ><AppCheckbox v-model="ids" neutral ariaLabel="Include layer IDs" />Include layer
+              IDs</label
             >
           </PopoverContent></PopoverPortal
         >

@@ -107,6 +107,8 @@ export function imagePaint(
     opacity,
     visible: true,
     imageHash: image.hash,
+    imageSource:
+      paint.url && !/^data:/i.test(paint.url) ? { hash: image.hash, url: paint.url } : undefined,
     ...placement(paint, image, box)
   }
 }

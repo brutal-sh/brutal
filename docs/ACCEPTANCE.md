@@ -2,6 +2,19 @@
 
 Full parity is open. A source implementation, unit check, build, and user workflow establish different things. This ledger records only observed outcomes and the scope of each observation.
 
+## HTML image paths and settings —2026-11-03
+
+- Actual Pen relative/absolute image exports refer to original resources without copied files or
+  ZIPs. Open Pen desktop executes all three modes through physical native export/preview/Close.
+  Relative, independent88.4s absolute and35.3s embedded captures contain both checker colors;
+  source bytes, selection and version remain unchanged. The earlier repeated observer's stale
+  later counters are not used as qualification.
+- Source identity follows each image paint through same-byte fill/stroke use, removal, reordering
+  and deep copying. Literal-percent folder names and stale/nonlocal-source fallback are checked.
+  The native settings popup is visually inspected against measured reference dimensions and order.
+- Exported body background, broader image/interchange cases, OS clipboard, remaining browser
+  states and full parity remain open. See [inspector parity](INSPECTOR-PARITY.md).
+
 ## Automatic internal HTML preview —2026-11-03
 
 - The213.1s physical native export/open/pixel-inspection/Close journey preserves document

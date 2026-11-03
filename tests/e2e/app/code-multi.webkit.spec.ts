@@ -143,7 +143,7 @@ test('multi-selection Code settings apply to both roots in a fragment and a sing
   await settings.getByRole('checkbox', { name: 'Include HTML scaffold', exact: true }).uncheck()
   await expect(
     settings.getByRole('checkbox', { name: 'Center body contents', exact: true })
-  ).toBeDisabled()
+  ).toBeEnabled()
   await page.keyboard.press('Escape')
   const fragment = (await exportBytes(page)).bytes.toString()
   expect(fragment).not.toMatch(/<!doctype html>|<html|<body/i)

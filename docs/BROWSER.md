@@ -1,12 +1,12 @@
 # Browser preview and capture
 
-Code's embedded HTML export can automatically open its saved file in this browser. The native
+Code's embedded, relative-image and absolute-image HTML exports can open their saved files in this browser. The native
 editor explicitly authorizes regular visible HTML exports for its workspace; ordinary address
 entry still accepts web addresses. File Reload, element picking, selected editable import,
 full390×844 Phone import and native Undo execute in the owned acceptance fixture. App-command
 and filesystem IPC and a neighboring text-file fetch are refused from that file page. Disabling
-the preview preference still writes HTML without opening a dock. Loose/absolute assets, ZIP
-preview and remaining file-specific menu/history/restart states stay open; see
+the preview preference still writes HTML without opening a dock. Relative/absolute modes refer to retained original images without asset copies or ZIPs.
+Broader image/interchange cases and remaining file-specific menu/history/restart states stay open; see
 [inspector parity](INSPECTOR-PARITY.md).
 
 The native editor has an embedded browser dock on the right. Its inline toolbar opens HTTP(S) web or localhost addresses, navigates history, reloads, cycles Desktop/Phone/Tablet, imports editable content and captures selected elements, visible areas or full pages. Separate controls close the current page or the dock. Desktop uses the dock at50% by default, with25–150% zoom controls. Phone retains a390×844CSS viewport and Tablet1180×820, fitted and centered with8px padding; their zoom controls are disabled. The current implementation changes layout size and display scale, without claiming device hardware emulation.
@@ -17,7 +17,7 @@ On macOS, capture uses the live `WKWebView` snapshot API, encodes PNG, and inser
 
 ## Isolation and lifecycle
 
-The `browser-preview` child webview is attached to the main window. It uses incognito storage and permits only HTTP(S) navigation. Editor origins, local files, embedded URL credentials, popups, downloads and permission requests are denied. Every application command rejects the preview label. The main capability names `webviews: ["main"]`, rather than granting every child of the main window; no remote capability is configured.
+The `browser-preview` child webview is attached to the main window. It uses incognito storage and permits HTTP(S) navigation and editor-authorized HTML exports. Editor origins, unregistered local files, embedded URL credentials, popups, downloads and permission requests are denied. Every application command rejects the preview label. The main capability names `webviews: ["main"]`, rather than granting every child of the main window; no remote capability is configured.
 
 The app validates native surface bounds against the main content rectangle. ResizeObserver updates the surface as its Vue dock changes. Open editor overlays hide the native surface so it cannot cover HTML dialogs/menus; closing/unmounting destroys it. Native changes are serialized across document workspaces so a late close cannot destroy the next document's preview. Main-window lifecycle, launch focusing and developer tools use APIs that remain valid with multiple webviews.
 
