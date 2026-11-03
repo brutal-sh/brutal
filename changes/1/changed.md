@@ -9,6 +9,7 @@
 - Removes a document’s recovery snapshot when Undo returns it to a clean state, while preserving unrelated drafts and edits arriving during cleanup.
 
 - Use compact paint category and Mesh tangent glyphs with separate point labels and regular-weight actions.
+- Compact inspector controls use the measured transform and radius glyphs and a direct opacity field, with layer blending in Advanced properties.
 - The desktop brand popup uses native platform menu presentation, with working links, theme and UI actions and keyboard focus return; browser commands remain in the web menu.
 
 - Converting a Script now replaces it with a new editable frame at the same sibling position, preserving Context and geometry, restoring the original Script on Undo and the same converted IDs on Redo. Fixed component-instance structure is protected; slot ownership changes share the conversion history step.

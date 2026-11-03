@@ -1,5 +1,9 @@
 import { maskIcon } from './mask'
 
+export const OpacityIcon = maskIcon(
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" stroke="black" stroke-linecap="round" stroke-linejoin="round"><defs><clipPath id="box"><rect x="2.5" y="2.5" width="11" height="11" rx="2.5"/></clipPath></defs><g clip-path="url(#box)"><path d="M2.5 13.5L13.5 2.5V13.5Z" fill="black" fill-opacity=".3" stroke="none"/><path d="M2.5 13.5L13.5 2.5"/></g><rect x="2.5" y="2.5" width="11" height="11" rx="2.5"/></svg>'
+)
+
 /** Paint and tangent glyphs drawn independently from the observed native controls. */
 export const PaintColorIcon = maskIcon(
   '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" stroke="black"><path d="M1 1H15V15H1Z"/><path d="M3 3H13V13H3Z" fill="black" stroke="none"/></svg>'

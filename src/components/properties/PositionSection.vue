@@ -4,6 +4,7 @@ import { useI18n } from '@open-pencil/vue/i18n'
 import { PositionControlsRoot } from '@open-pencil/vue/primitives/PositionControls'
 
 import { useEditorStore } from '@/app/editor/active-store'
+import { RotateRightIcon } from '@/components/icons/transform'
 import NumberField from '@/components/inputs/NumberField.vue'
 import AlignmentActionsMenu from '@/components/properties/AlignmentActionsMenu.vue'
 import IconButton from '@/components/ui/button/IconButton.vue'
@@ -171,7 +172,7 @@ function handleAlign(
             @cancel="actions.cancelProp('rotation')"
           >
             <template #icon>
-              <icon-lucide-rotate-cw class="size-3" />
+              <icon-lucide-angle class="size-4 [&_*]:stroke-[1.5]" />
             </template>
           </NumberField>
         </Tip>
@@ -180,13 +181,13 @@ function handleAlign(
           :class="compact ? 'rounded-md bg-panel-field' : undefined"
         >
           <IconButton v-if="compact" :label="panels.rotate90" size="xs" @click="actions.rotate(90)">
-            <icon-lucide-rotate-cw-square class="size-3.5" />
+            <RotateRightIcon class="size-4" />
           </IconButton>
           <IconButton :label="panels.flipHorizontal" size="xs" @click="actions.flip('horizontal')">
-            <icon-lucide-flip-horizontal-2 class="size-3.5" />
+            <icon-lucide-triangles-centerline-dashed-horizontal class="size-4 [&_*]:stroke-[1.5]" />
           </IconButton>
           <IconButton :label="panels.flipVertical" size="xs" @click="actions.flip('vertical')">
-            <icon-lucide-flip-vertical-2 class="size-3.5" />
+            <icon-lucide-triangles-centerline-dashed-vertical class="size-4 [&_*]:stroke-[1.5]" />
           </IconButton>
           <IconButton
             v-if="!compact"

@@ -7,6 +7,7 @@ import { useVariableModes } from '@open-pencil/vue/controls/variable-modes'
 import { useI18n } from '@open-pencil/vue/i18n'
 import { AppearanceControlsRoot } from '@open-pencil/vue/primitives/AppearanceControls'
 
+import { OpacityIcon } from '@/components/icons/paint'
 import { useBlendModeGroups } from '@/components/inputs/blend-mode'
 import NumberField from '@/components/inputs/NumberField.vue'
 import ClipContentControl from '@/components/properties/layout/ClipContentControl.vue'
@@ -99,24 +100,10 @@ function blendModeGroups(value: BlendMode | typeof MIXED) {
             container: compact ? 'flex-row items-center gap-0 rounded bg-panel-field' : undefined
           }"
         >
-          <AppSelect
-            v-if="compact"
-            :model-value="blendModeValue === MIXED ? 'MIXED' : blendModeValue"
-            :groups="blendModeGroups(blendModeValue)"
-            :label="panels.blendMode"
-            @update:model-value="
-              (value: BlendModeSelectValue) => value !== 'MIXED' && actions.setBlendMode(value)
-            "
-          >
-            <template #trigger
-              ><IconButton :label="panels.blendMode" class="size-5 shrink-0"
-                ><icon-lucide-blend class="size-3" /></IconButton
-            ></template>
-          </AppSelect>
           <VariableNumberField
             v-if="node && !isMulti"
             :compact="compact"
-            suffix="%"
+            :suffix="compact ? undefined : '%'"
             :aria-label="panels.opacity"
             :model-value="opacityPercent"
             :min="0"
@@ -126,13 +113,14 @@ function blendModeGroups(value: BlendMode | typeof MIXED) {
             @update:model-value="actions.updateProp('opacity', $event / 100)"
             @commit="(v: number, p: number) => actions.commitProp('opacity', v / 100, p / 100)"
           >
-            <template v-if="!compact" #icon>
-              <icon-lucide-blend class="size-3" />
+            <template #icon>
+              <OpacityIcon v-if="compact" class="size-4" />
+              <icon-lucide-blend v-else class="size-3" />
             </template>
           </VariableNumberField>
           <NumberField
             v-else
-            suffix="%"
+            :suffix="compact ? undefined : '%'"
             data-property="opacity"
             :aria-label="panels.opacity"
             :model-value="opacityPercent"
@@ -141,8 +129,9 @@ function blendModeGroups(value: BlendMode | typeof MIXED) {
             @update:model-value="actions.updateProp('opacity', $event / 100)"
             @commit="(v: number, p: number) => actions.commitProp('opacity', v / 100, p / 100)"
           >
-            <template v-if="!compact" #icon>
-              <icon-lucide-blend class="size-3" />
+            <template #icon>
+              <OpacityIcon v-if="compact" class="size-4" />
+              <icon-lucide-blend v-else class="size-3" />
             </template>
           </NumberField>
         </PanelFieldGroup>
@@ -164,7 +153,7 @@ function blendModeGroups(value: BlendMode | typeof MIXED) {
           :binding-paths="cornerRadiusBindingPaths"
           @update:model-value="actions.updateUniformRadius"
           @commit="actions.commitUniformRadius"
-          ><template #icon><icon-lucide-square-round-corner class="size-3" /></template
+          ><template #icon><icon-lucide-scan class="size-4 [&_*]:stroke-[1.5]" /></template
         ></VariableNumberField>
         <NumberField
           v-else-if="compact && hasCornerRadius && !showIndependentCorners"
@@ -175,7 +164,7 @@ function blendModeGroups(value: BlendMode | typeof MIXED) {
           :min="0"
           @update:model-value="actions.updateUniformRadius"
           @commit="actions.commitUniformRadius"
-          ><template #icon><icon-lucide-square-round-corner class="size-3" /></template
+          ><template #icon><icon-lucide-scan class="size-4 [&_*]:stroke-[1.5]" /></template
         ></NumberField>
         <template v-if="compact && splitsCorners" #actions
           ><IconButton
@@ -184,7 +173,7 @@ function blendModeGroups(value: BlendMode | typeof MIXED) {
             :active="showIndependentCorners"
             :disabled="cornerRadiusDisabled"
             @click="actions.toggleIndependentCorners"
-            ><icon-lucide-square-round-corner class="size-3" /></IconButton
+            ><icon-lucide-scan class="size-4 [&_*]:stroke-[1.5]" /></IconButton
         ></template>
       </PanelGrid>
 
@@ -206,7 +195,7 @@ function blendModeGroups(value: BlendMode | typeof MIXED) {
             @commit="actions.commitUniformRadius"
           >
             <template #icon>
-              <icon-lucide-square-round-corner class="size-3" />
+              <icon-lucide-scan class="size-4 [&_*]:stroke-[1.5]" />
             </template>
           </VariableNumberField>
           <NumberField
@@ -220,7 +209,7 @@ function blendModeGroups(value: BlendMode | typeof MIXED) {
             @commit="actions.commitUniformRadius"
           >
             <template #icon>
-              <icon-lucide-square-round-corner class="size-3" />
+              <icon-lucide-scan class="size-4 [&_*]:stroke-[1.5]" />
             </template>
           </NumberField>
         </PanelFieldGroup>
@@ -232,7 +221,7 @@ function blendModeGroups(value: BlendMode | typeof MIXED) {
             :disabled="cornerRadiusDisabled"
             @click="actions.toggleIndependentCorners"
           >
-            <icon-lucide-square-round-corner class="size-3" />
+            <icon-lucide-scan class="size-4 [&_*]:stroke-[1.5]" />
           </IconButton>
         </div>
       </PanelGrid>
@@ -286,7 +275,7 @@ function blendModeGroups(value: BlendMode | typeof MIXED) {
             active
             @click="actions.toggleIndependentCorners"
           >
-            <icon-lucide-square-round-corner class="size-3" />
+            <icon-lucide-scan class="size-4 [&_*]:stroke-[1.5]" />
           </IconButton>
         </template>
       </PanelGrid>

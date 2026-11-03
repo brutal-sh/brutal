@@ -141,14 +141,26 @@ test('compact frame inspector edits paired dimensions, appearance and clipping w
   await expect
     .poll(() => page.evaluate(() => window.openPencil?.getStore?.().selectedNode.value?.opacity))
     .toBe(0.5)
+  await expect(opacity.locator('[data-slot="value"]')).toHaveText('50')
   await canvas.undo()
   const appearance = inspector.getByRole('region', { name: 'Appearance', exact: true })
+  await expect(appearance.getByRole('combobox', { name: 'Blend mode', exact: true })).toHaveCount(0)
+  await (
+    await openAppMenu(page, 'View')
+  )
+    .getByRole('menuitem', { name: 'Advanced properties', exact: true })
+    .click()
   await appearance.getByRole('combobox', { name: 'Blend mode', exact: true }).click()
   await page.getByRole('option', { name: 'Multiply', exact: true }).click()
   await expect
     .poll(() => page.evaluate(() => window.openPencil?.getStore?.().selectedNode.value?.blendMode))
     .toBe('MULTIPLY')
   await canvas.undo()
+  await (
+    await openAppMenu(page, 'View')
+  )
+    .getByRole('menuitem', { name: 'Design properties', exact: true })
+    .click()
   const radius = inspector.getByRole('spinbutton', { name: 'Radius', exact: true })
   await radius.dblclick()
   await radius.fill('12')
