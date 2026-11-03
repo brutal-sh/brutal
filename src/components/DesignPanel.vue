@@ -134,15 +134,26 @@ const panelStyles = tv(designPanelTheme)
     data-test-id="design-panel-multi"
     :class="panelStyles({ compact: !advanced, collapsed: collapsible && !advanced && collapsed })"
   >
-    <PanelHeader>
+    <PanelHeader
+      :ui="
+        advanced
+          ? undefined
+          : {
+              root: 'grid-cols-[24px_minmax(0,1fr)_auto] gap-0 pl-3!',
+              icon: 'w-6',
+              title: 'mr-2 text-[11px] font-normal text-muted'
+            }
+      "
+    >
       <template #icon>
-        <icon-lucide-layers-3 class="size-3.5" aria-hidden="true" />
+        <icon-lucide-layers-3 v-if="advanced" class="size-3.5" aria-hidden="true" />
+        <icon-lucide-copy v-else class="size-3.5" aria-hidden="true" />
       </template>
       <span role="heading" aria-level="2">
         {{ panels.selectedCount({ count: String(multiCount) }) }}
       </span>
       <template #actions>
-        <SelectionActionsControl :show-boolean-operations="showBooleanOperations" />
+        <SelectionActionsControl v-if="advanced" :show-boolean-operations="showBooleanOperations" />
         <IconButton
           v-if="collapsible && !advanced"
           :label="collapsed ? 'Expand inspector' : 'Collapse inspector'"

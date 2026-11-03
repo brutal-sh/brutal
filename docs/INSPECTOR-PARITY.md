@@ -2,6 +2,30 @@
 
 Target: actual `/Applications/Pen.app`1.2.21, rechecked in its installed Info.plist on2026-11-02. Full inspector and whole-product parity remain open. The reference is inspected through native UI and the private resource archive recorded in [reference provenance](PEN-REFERENCE.md).
 
+## Compact multi-selection header —2026-11-03
+
+Actual Pen's two-layer header has an overlapping-outline-square icon, regular11px count,
+24px icon slot,40px height and12px left/14px right insets. Collapse is its only inline action.
+Open Pen's compact header uses those measured values and the installed Copy glyph; its previous
+stacked-layer glyph and mask/Boolean header actions remain only in Advanced properties.
+
+Twenty-six Chromium/WebKit compact inspector/corner workflows pass. The physical native
+File Open/two-layer selection/header metrics/collapse/expand/Advanced/Design return journey
+verifies40px height,12px left inset,24px icon slot,11px/400 text and a single compact collapse
+button. Advanced still exposes Use as mask. Original file bytes, selection, scene version and
+empty undo history stay unchanged. The native header is visually compared with the reference;
+this does not qualify whole-panel pixels. Private receipts:multi-header-native-physical.log,
+multi-header-native-restored.png and pen-multi-layout-reference-2026-11-03/facts.json.
+The first browser filter selects no tests; the corrected inspector/corner file run is the
+26-workflow acceptance run, with no baseline changes.
+
+Remaining observed multi-layout differences: reference selected stacks show Flex Layout,
+alignment, gap distribution, padding and Hug Width/Height. Reference add-layout creates
+Frame1 with the existing gap (40 for two80×60 shapes at y0/100;20 for two160×80 frames at
+y0/100), zero padding, fixed width and Hug height. Undo restores original nodes and is observed
+with empty selection. Open Pen's current wrapper uses zero gap and both axes Hug. These are
+recorded gaps, not behavior established by this header unit; full parity remains OPEN.
+
 ## Local HTML history —2026-11-03
 
 Actual Pen's history contains the owned exported HTML beside web pages. Selecting its file

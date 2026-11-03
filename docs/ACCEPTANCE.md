@@ -2,6 +2,19 @@
 
 Full parity is open. A source implementation, unit check, build, and user workflow establish different things. This ledger records only observed outcomes and the scope of each observation.
 
+## Compact multi-selection header —2026-11-03
+
+- Actual Pen uses an overlapping-square icon, regular11px count,24px icon slot and a40px
+  header with12px left inset; collapse is its only header action. Open Pen's compact header
+  uses those measurements; Advanced retains its mask/Boolean actions.
+- Twenty-six Chromium/WebKit inspector/corner journeys pass. Physical native File Open,
+  two-layer selection, measured header, collapse/expand, Advanced mask action and return to
+  compact execute without document, history, selection or source-byte changes. The header is
+  visually inspected. Whole inspector parity remains open.
+- Newly observed reference gaps remain explicit: selected stacks expose alignment/gap/padding
+  and Hug controls, and add-layout preserves spacing with a fixed cross axis. These behaviors
+  are not qualified by the header change.
+
 ## Local HTML history —2026-11-03
 
 - Actual Pen records the owned exported HTML beside webpages; selecting that entry restores

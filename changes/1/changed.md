@@ -30,3 +30,4 @@
 - Open Folder selects the authorized HTML preview file in the native file manager, and Open in System Browser opens it in the default browser.
 - Reload local HTML and its resources from the browser cache action without clearing website data or showing its confirmation.
 - Keep exported HTML in browsing history, revalidate files when recalled in another document and let unavailable entries be removed without erasing web visits.
+- Compact multi-selection headers use the measured count typography, overlapping-square icon and collapse control, with additional actions retained in Advanced properties.
