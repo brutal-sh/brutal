@@ -64,7 +64,12 @@ const menu = useMenuUI({
       </IconButton>
     </DropdownMenuTrigger>
     <DropdownMenuPortal>
-      <DropdownMenuContent align="end" :side-offset="4" :class="menu.content">
+      <DropdownMenuContent
+        data-browser-preview-popup
+        align="end"
+        :side-offset="4"
+        :class="menu.content"
+      >
         <DropdownMenuItem :class="menu.item" @select="emit('capture', 'full')"
           >Full Page</DropdownMenuItem
         >

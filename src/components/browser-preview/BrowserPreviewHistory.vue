@@ -65,7 +65,12 @@ const item = menuItem({
       /></IconButton>
     </DropdownMenuTrigger>
     <DropdownMenuPortal>
-      <DropdownMenuContent align="start" :side-offset="4" :class="menu.content">
+      <DropdownMenuContent
+        data-browser-preview-popup
+        align="start"
+        :side-offset="4"
+        :class="menu.content"
+      >
         <MenuScrollArea>
           <DropdownMenuItem
             v-for="entry in browserHistory"

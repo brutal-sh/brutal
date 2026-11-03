@@ -19,3 +19,4 @@
 - Zoom buttons and menu actions keep the canvas center stationary when side panels offset the canvas.
 - Desktop tool flyouts focus the selected tool when opened and use the measured spacing, checks and corners; Primitives import labels follow the reference menu.
 - Fractional edges retain their canvas coverage in raster exports, with software fallback for oversized images.
+- Reload a browser page while its first response is pending without leaving navigation stuck, and discard frame errors from dismissed or replaced editor menus.

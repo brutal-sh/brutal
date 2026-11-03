@@ -61,3 +61,10 @@ export function previewDockViewport(
 export function hasPreviewOverlay(): boolean {
   return !!document.querySelector('[data-dismissable-layer]:not([data-state="closed"])')
 }
+
+export function hasUnpreparedPreviewOverlay(): boolean {
+  return (
+    hasPreviewOverlay() &&
+    !document.querySelector('[data-browser-preview-popup][data-state="open"]')
+  )
+}

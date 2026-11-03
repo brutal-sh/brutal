@@ -86,8 +86,8 @@ export function createBrowserPreviewNative(
       }),
     backdrop: (url) =>
       enqueue(async () => {
-        requireBounds()
-        if (!opened) throw new Error('Open a page before preparing its backdrop.')
+        // Editor overlays hide the native view before requesting their read-only frame.
+        if (disposed || !opened) throw new Error('Open a page before preparing its backdrop.')
         capturing = true
         try {
           const bytes = captureBytes(await callNative('browser_preview_backdrop', { url }))

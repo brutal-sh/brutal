@@ -24,7 +24,11 @@ import type { BrowserCaptureScope } from '@/app/browser-preview/capture'
 import { confirmBrowserSiteClear } from '@/app/browser-preview/clear'
 import type { BrowserPreviewSession } from '@/app/browser-preview/context'
 import { createBrowserPreviewController } from '@/app/browser-preview/controller'
-import { hasPreviewOverlay, previewDockViewport } from '@/app/browser-preview/dock'
+import {
+  hasPreviewOverlay,
+  hasUnpreparedPreviewOverlay,
+  previewDockViewport
+} from '@/app/browser-preview/dock'
 import { browserImportTarget } from '@/app/browser-preview/dom/placement'
 import { completedBrowserVisitSchema } from '@/app/browser-preview/history/schema'
 import {
@@ -100,6 +104,7 @@ async function navigate() {
 }
 let layoutQueued = false
 let lastLayout = ''
+let layoutRevision = 0
 let disposed = false
 let clearingPage = false
 const backdropStyle = shallowRef<CSSProperties>({})
@@ -128,19 +133,24 @@ const backdrop = createBrowserBackdrop(async () => {
 })
 const busy = computed(() => actionBusy.value || backdrop.pending.value)
 function backdropKey() {
-  return JSON.stringify([status.value?.url, preset.value, surfaceViewport()])
+  return JSON.stringify([status.value?.url, status.value?.loading, preset.value, surfaceViewport()])
 }
-async function prepareBackdrop() {
+async function prepareBackdrop(whileHidden = false) {
   if (disposed || !open.value) return false
   if (!status.value?.captureAvailable || status.value.loading) return true
   const key = backdropKey()
+  const revision = layoutRevision
+  const isCurrent = () =>
+    !disposed &&
+    open.value &&
+    revision === layoutRevision &&
+    hasPreviewOverlay() === whileHidden &&
+    backdropKey() === key
   try {
-    return await backdrop.prepare(
-      () => !disposed && open.value && !hasPreviewOverlay() && backdropKey() === key
-    )
+    return await backdrop.prepare(isCurrent)
   } catch (reason) {
-    if (!disposed) error.value = reason instanceof Error ? reason.message : String(reason)
-    return !disposed && open.value
+    if (isCurrent()) error.value = reason instanceof Error ? reason.message : String(reason)
+    return isCurrent()
   }
 }
 const picker = provideBrowserPicker(
@@ -276,15 +286,25 @@ function syncSurface() {
       preset.value,
       zoom.value,
       status.value?.url,
+      status.value?.loading,
       overlay,
       open.value
     ])
     if (key === lastLayout) return
+    const revision = ++layoutRevision
     lastLayout = key
-    void bridge.syncBounds().catch((reason: unknown) => {
-      lastLayout = ''
-      if (!disposed) error.value = String(reason)
-    })
+    void bridge
+      .syncBounds()
+      .then(() =>
+        overlay && revision === layoutRevision && hasUnpreparedPreviewOverlay()
+          ? prepareBackdrop(true)
+          : false
+      )
+      .catch((reason: unknown) => {
+        if (revision !== layoutRevision) return
+        lastLayout = ''
+        if (!disposed) error.value = String(reason)
+      })
   })
 }
 watch(
@@ -388,7 +408,7 @@ onScopeDispose(() => {
           ><icon-lucide-arrow-right class="size-3.5"
         /></IconButton>
         <IconButton
-          label="Reload page"
+          label="Reload"
           size="sm"
           :disabled="busy || !status"
           @click="preview.action('reload')"

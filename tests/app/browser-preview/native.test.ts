@@ -6,6 +6,45 @@ import { createBrowserPreviewNative } from '@/app/browser-preview/native'
 import { PREVIEW_PRESETS } from '@/app/browser-preview/schema'
 import { createDeferred } from '@/app/runtime/deferred'
 
+import { testPath } from '#tests/helpers/paths'
+
+test('an owned hidden page can provide an overlay frame but cannot capture or clear site data', async () => {
+  let visible = true
+  const png = await Bun.file(testPath('fixtures/vectorize/python_logo.png')).arrayBuffer()
+  const status = {
+    url: 'https://example.test/',
+    title: 'Page',
+    width: 390,
+    height: 600,
+    captureAvailable: true
+  }
+  const commands: string[] = []
+  const callNative: typeof invoke = async <T>(command: string): Promise<T> => {
+    commands.push(command)
+    return (command === 'browser_preview_backdrop' ? png : status) as T
+  }
+  const bridge = createBrowserPreviewNative(
+    () =>
+      visible
+        ? {
+            bounds: { x: 0, y: 0, width: 390, height: 600 },
+            zoom: 1,
+            viewport: { width: 390, height: 600 }
+          }
+        : null,
+    callNative
+  )
+  await expect(bridge.native.backdrop(status.url)).rejects.toThrow()
+  await bridge.native.open(status.url, PREVIEW_PRESETS[0])
+  visible = false
+  expect(await bridge.native.backdrop(status.url)).toEqual(new Uint8Array(png))
+  await expect(bridge.native.capture(status.url)).rejects.toThrow()
+  await expect(bridge.native.clearSiteData(status.url)).rejects.toThrow()
+  expect(commands).toEqual(['browser_preview_open', 'browser_preview_backdrop'])
+  await bridge.dispose()
+  await expect(bridge.native.backdrop(status.url)).rejects.toThrow()
+})
+
 test('closing a still-opening dock precedes another document opening its preview', async () => {
   const pending = createDeferred<unknown>()
   const commands: string[] = []

@@ -930,10 +930,10 @@
           "id": "IO-04",
           "feature": "Web import",
           "behavior": "Browser URL, device/zoom and element/page capture to editable layers.",
-          "acceptance": "Import a local fixture; compare fonts/layout/effects, with no promised JS interaction.",
+          "acceptance": "Import a local fixture; compare fonts/layout/effects, URL/history/device/menu behavior and viewport resizing.",
           "status": "partial",
           "evidence": ["../BROWSER.md"],
-          "evidence_limit": "Native navigation, viewports, mode/restoration, bounded editable import/Undo/FIG reopen and completed-visit history execute. Native paragraph, fixed-card and tall fractional selection capture execute. Physical compact/wide Import and selected control geometry execute. A later history second-reload recovery/Home setup failure is corrected in the test, and all three native history checks pass; prior failed receipts remain. Physical keys/clipboard, process-restart persistence, iframe/shadow/remaining states, zoom/More menu and exact remaining pixels stay open."
+          "evidence_limit": "Native navigation/history edges, exact CSS Phone/Tablet viewports, modes/restoration, bounded editable import/Undo/FIG reopen and completed-visit history execute. More/zoom/current-origin clearing have named native evidence. Device and separate responsive zoom survive new documents and editor reloads; this is not normal process-restart proof. Physical compact/wide Import and selected control geometry execute. Physical keys/clipboard, process restart, browser clip-height resizing, fixed-device rim, iframe/shadow and remaining pixels/states stay open. See BROWSER.md for prior failures and current regression limits."
         },
         {
           "id": "IO-05",
@@ -942,7 +942,7 @@
           "acceptance": "Capture a scrolling local page; inspect dimensions, bounds and saved image.",
           "status": "partial",
           "evidence": ["../BROWSER.md"],
-          "evidence_limit": "Native visible-area, selected paragraph/fixed/tall fractional captures and full-page multi-slice import execute with captured CSS dimensions, sampled pixels, 40px page-root placement, Undo/Redo and scroll restoration. Native cancellation restores scroll without editing the design. Oversized bounds are refused atomically. Screenshot menu visual states, nested/sticky/timer/zoom/monitor variants and remaining delivery states remain open."
+          "evidence_limit": "Native visible, selected paragraph/fixed/tall fractional and full-page joined captures execute with CSS dimensions, sampled pixels, native density, 40px page-root placement, Undo/Redo and cancellation scroll restoration. Bounded25% viewport slices and capture feedback without dock resizing execute. Named dark screenshot/More menus and browser-popup backdrops have physical evidence. All nested/sticky/timer/monitor variants, exact remaining visual states and delivery remain open; scoped passes do not clear the shared-worker runner or every later regression."
         },
         {
           "id": "IO-06",

@@ -494,8 +494,7 @@ describe('native embedded browser preview', () => {
           }, 'restored page and phone viewport')
           await wait(
             () =>
-              !document.querySelector<HTMLButtonElement>('button[aria-label="Reload page"]')
-                ?.disabled,
+              !document.querySelector<HTMLButtonElement>('button[aria-label="Reload"]')?.disabled,
             'restoration settled'
           )
           if (
@@ -505,7 +504,7 @@ describe('native embedded browser preview', () => {
             throw new Error('Reopening the browser changes the document')
         }
         await reopen()
-        button('Reload page')
+        button('Reload')
         await new Promise((resolve) => {
           setTimeout(resolve, 400)
         })

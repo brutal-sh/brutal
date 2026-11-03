@@ -53,12 +53,22 @@ const menu = useMenuUI({
 <template>
   <DropdownMenuRoot :open="open" @update:open="setOpen">
     <DropdownMenuTrigger as-child>
-      <IconButton label="More options" size="sm" :class="theme.slots.moreButton" :disabled="disabled">
+      <IconButton
+        label="More options"
+        size="sm"
+        :class="theme.slots.moreButton"
+        :disabled="disabled"
+      >
         <icon-lucide-ellipsis class="size-3.5" />
       </IconButton>
     </DropdownMenuTrigger>
     <DropdownMenuPortal>
-      <DropdownMenuContent align="end" :side-offset="4" :class="menu.content">
+      <DropdownMenuContent
+        data-browser-preview-popup
+        align="end"
+        :side-offset="4"
+        :class="menu.content"
+      >
         <DropdownMenuItem
           :class="menu.item"
           :disabled="fixed || zoom >= 1.5"

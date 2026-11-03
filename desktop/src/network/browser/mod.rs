@@ -220,7 +220,21 @@ pub async fn browser_preview_action(
     match action {
         PreviewAction::Back => view.eval("history.back()"),
         PreviewAction::Forward => view.eval("history.forward()"),
-        PreviewAction::Reload => view.reload(),
+        PreviewAction::Reload => {
+            let location = page_url::read(&view).await?;
+            if location.loading {
+                // WK reload can stall a first navigation before its response commits.
+                let url = location
+                    .url
+                    .ok_or("Wait for the browser address to be ready.")?;
+                view.navigate(preview_url(
+                    url.as_str(),
+                    app.config().build.dev_url.as_ref(),
+                )?)
+            } else {
+                view.reload()
+            }
+        }
         PreviewAction::Focus => view.set_focus(),
         PreviewAction::Close => {
             NAVIGATION_GENERATION.fetch_add(1, Ordering::SeqCst);

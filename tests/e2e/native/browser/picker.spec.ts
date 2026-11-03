@@ -222,7 +222,7 @@ it('delivers native picking, selected pixels and editable subtree import without
       )
         throw new Error('Offscreen capture changed the design')
       await fetch(origin + '/hold-next')
-      button('Reload page')
+      button('Reload')
       await wait(
         async () =>
           (await invoke<{ loading: boolean } | null>('browser_preview_status'))?.loading === true,
