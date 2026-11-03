@@ -64,6 +64,11 @@ export function createBrowserPreviewController(
     error,
     notice,
     refresh,
+    clearSiteData: (url: string) =>
+      run(async () => {
+        await native.clearSiteData(url)
+        if (!isDisposed()) status.value = await native.status()
+      }),
     navigate: () =>
       run(async () => {
         const result = await native.open(previewURL(address.value), selectedPreset())

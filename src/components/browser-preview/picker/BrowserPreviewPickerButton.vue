@@ -21,7 +21,6 @@ const ui = tv(theme)()
     :disabled="disabled || picker.pending.value"
     @click="active ? picker.stop() : picker.start()"
   >
-    <icon-lucide-square-mouse-pointer v-if="picker.state.value?.pick" class="size-3.5" />
-    <icon-lucide-mouse-pointer-2 v-else class="size-3.5" />
+    <icon-lucide-square-mouse-pointer class="size-3.5" />
   </IconButton>
 </template>

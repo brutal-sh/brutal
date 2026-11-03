@@ -26,7 +26,11 @@ test('closing a still-opening dock precedes another document opening its preview
         : undefined
     ) as T
   }
-  const bounds = () => ({ x: 800, y: 100, width: 390, height: 600 })
+  const bounds = () => ({
+    bounds: { x: 800, y: 100, width: 390, height: 600 },
+    zoom: 1,
+    viewport: { width: 390, height: 600 }
+  })
   const first = createBrowserPreviewNative(bounds, callNative)
   const opening = first.native.open(status.url, PREVIEW_PRESETS[0])
   await new Promise((resolve) => {
@@ -63,7 +67,11 @@ test('a failed closing snapshot still destroys the child', async () => {
     return undefined as T
   }
   const bridge = createBrowserPreviewNative(
-    () => ({ x: 0, y: 0, width: 390, height: 600 }),
+    () => ({
+      bounds: { x: 0, y: 0, width: 390, height: 600 },
+      zoom: 1,
+      viewport: { width: 390, height: 600 }
+    }),
     callNative
   )
   await bridge.native.open('https://example.test/', PREVIEW_PRESETS[0])
@@ -119,7 +127,11 @@ test('dock disposal cancels a screenshot before the queued status and close oper
     ) as T
   }
   const bridge = createBrowserPreviewNative(
-    () => ({ x: 0, y: 0, width: 390, height: 600 }),
+    () => ({
+      bounds: { x: 0, y: 0, width: 390, height: 600 },
+      zoom: 1,
+      viewport: { width: 390, height: 600 }
+    }),
     callNative
   )
   await bridge.native.open(status.url, PREVIEW_PRESETS[0])

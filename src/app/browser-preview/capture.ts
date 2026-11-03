@@ -71,8 +71,8 @@ export function readBrowserCapture(input: unknown, requestId: string, url: strin
     pixels += header.width * header.height
     const density = header.width / slice.width
     if (
-      density < 0.25 ||
-      density > 8 ||
+      density < 0.1 ||
+      density > 16 ||
       Math.abs(header.height - slice.height * density) > 1 ||
       (scale !== undefined && Math.abs(header.width - slice.width * scale) > 1)
     )

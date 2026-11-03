@@ -100,6 +100,6 @@ function controlScreenshot(command) {
   return {
     requestId: command.requestId, url: location.href, title: document.title.slice(0, 512),
     box: state.box, viewportWidth: innerWidth, viewportHeight: innerHeight,
-    x: scrollX, y: scrollY, pixelRatio: devicePixelRatio
+    x: scrollX, y: scrollY
   }
 }

@@ -5,5 +5,6 @@ export const toggleBrowserPreviewKey: InjectionKey<() => void> = Symbol('toggle-
 export interface BrowserPreviewSession {
   url: string
   preset: string
+  zoom: number
   closing: Promise<void>
 }

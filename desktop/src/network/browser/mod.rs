@@ -1,11 +1,13 @@
 //! An isolated child webview. Visited content has no app commands or plugin capabilities.
 mod capture;
+mod clear;
 mod extract;
 pub mod history;
 mod page_url;
 mod picker;
 pub mod policy;
 mod screenshot;
+mod viewport;
 
 use policy::{preview_url, require_editor, DockBounds, PREVIEW_LABEL};
 use std::sync::atomic::{AtomicU64, Ordering};
@@ -22,35 +24,34 @@ static CAPTURE_GENERATION: AtomicU64 = AtomicU64::new(0);
 pub struct PreviewStatus {
     url: String,
     title: String,
-    x: i32,
-    y: i32,
+    x: f64,
+    y: f64,
     window_label: String,
-    width: u32,
-    height: u32,
+    width: f64,
+    height: f64,
     capture_available: bool,
     loading: bool,
 }
 
-fn status(view: &Webview, url: url::Url, loading: bool) -> Result<PreviewStatus, String> {
-    let size = view
-        .size()
-        .map_err(|e| e.to_string())?
-        .to_logical::<u32>(view.window().scale_factor().map_err(|e| e.to_string())?);
-    let position = view
-        .position()
-        .map_err(|e| e.to_string())?
-        .to_logical::<i32>(view.window().scale_factor().map_err(|e| e.to_string())?);
-    Ok(PreviewStatus {
-        x: position.x,
-        y: position.y,
+async fn status(
+    view: &Webview,
+    url: url::Url,
+    loading: bool,
+) -> Result<Option<PreviewStatus>, String> {
+    let Some(bounds) = viewport::bounds(view).await? else {
+        return Ok(None);
+    };
+    Ok(Some(PreviewStatus {
+        x: bounds.x,
+        y: bounds.y,
         window_label: view.window().label().into(),
         title: url.host_str().unwrap_or("Browser preview").into(),
         url: url.to_string(),
-        width: size.width,
-        height: size.height,
+        width: bounds.width,
+        height: bounds.height,
         capture_available: cfg!(target_os = "macos"),
         loading,
-    })
+    }))
 }
 
 fn existing(app: &tauri::AppHandle) -> Result<Webview, String> {
@@ -67,27 +68,27 @@ fn validate_bounds(view: &Webview, bounds: &DockBounds) -> Result<(), String> {
     bounds.validate(size.width, size.height)
 }
 
-fn set_bounds(view: &Webview, bounds: DockBounds) -> Result<(), String> {
-    view.set_bounds(tauri::Rect {
-        position: LogicalPosition::new(bounds.x, bounds.y).into(),
-        size: LogicalSize::new(bounds.width, bounds.height).into(),
-    })
-    .map_err(|e| e.to_string())
-}
-
 #[tauri::command]
 pub async fn browser_preview_open(
     app: tauri::AppHandle,
     webview: Webview,
     url: String,
     bounds: DockBounds,
+    zoom: Option<f64>,
+    viewport: Option<viewport::Size>,
 ) -> Result<PreviewStatus, String> {
     require_editor(webview.label())?;
+    let zoom = policy::preview_zoom(zoom)?;
+    let size = viewport
+        .unwrap_or(viewport::Size {
+            width: bounds.width / zoom,
+            height: bounds.height / zoom,
+        })
+        .validate()?;
     validate_bounds(&webview, &bounds)?;
     let dev_url = app.config().build.dev_url.clone();
     let target = preview_url(&url, dev_url.as_ref())?;
     let view = if let Some(view) = app.get_webview(PREVIEW_LABEL) {
-        set_bounds(&view, bounds)?;
         view.navigate(target.clone()).map_err(|e| e.to_string())?;
         view
     } else {
@@ -118,9 +119,12 @@ pub async fn browser_preview_open(
             )
             .map_err(|e| e.to_string())?
     };
-    view.show().map_err(|e| e.to_string())?;
+    viewport::set_bounds(&view, bounds, size).await?;
+    viewport::visible(&view, true).await?;
     let location = page_url::read(&view).await?;
     status(&view, location.url.unwrap_or(target), location.loading)
+        .await?
+        .ok_or("The browser closed before its viewport was ready.".into())
 }
 
 #[tauri::command]
@@ -133,10 +137,21 @@ pub async fn browser_preview_status(
         return Ok(None);
     };
     let location = page_url::read(&view).await?;
-    location
-        .url
-        .map(|url| status(&view, url, location.loading))
-        .transpose()
+    match location.url {
+        Some(url) => status(&view, url, location.loading).await,
+        None => Ok(None),
+    }
+}
+
+#[tauri::command]
+pub async fn browser_preview_clear_site_data(
+    app: tauri::AppHandle,
+    webview: Webview,
+    url: String,
+) -> Result<(), String> {
+    require_editor(webview.label())?;
+    let target = preview_url(&url, app.config().build.dev_url.as_ref())?;
+    clear::run(&existing(&app)?, &target).await
 }
 
 #[tauri::command]
@@ -203,7 +218,10 @@ pub async fn browser_preview_action(
         PreviewAction::Focus => view.set_focus(),
         PreviewAction::Close => {
             NAVIGATION_GENERATION.fetch_add(1, Ordering::SeqCst);
-            view.close().and_then(|()| webview.set_focus())
+            let detached = viewport::detach(&view).await;
+            view.close().map_err(|e| e.to_string())?;
+            detached?;
+            webview.set_focus()
         }
         PreviewAction::CancelCapture => Ok(()),
     }
@@ -226,9 +244,15 @@ pub async fn browser_preview_backdrop(
         return Err("Wait for the page to finish loading before opening this popup.".into());
     }
     // A popup frame must not change page animation/scroll state or hold closing behind a slow page.
-    let bytes = tokio::time::timeout(std::time::Duration::from_secs(1), capture::snapshot(&view))
-        .await
-        .map_err(|_| "The browser frame was not ready in time.")??;
+    let bounds = viewport::bounds(&view)
+        .await?
+        .ok_or("The browser viewport is not ready.")?;
+    let bytes = tokio::time::timeout(
+        std::time::Duration::from_secs(1),
+        capture::backdrop(&view, bounds.width),
+    )
+    .await
+    .map_err(|_| "The browser frame was not ready in time.")??;
     let location = page_url::read(&view).await?;
     if NAVIGATION_GENERATION.load(Ordering::SeqCst) != navigation
         || CAPTURE_GENERATION.load(Ordering::SeqCst) != cancellation
@@ -291,10 +315,20 @@ pub async fn browser_preview_resize(
     app: tauri::AppHandle,
     webview: Webview,
     bounds: DockBounds,
+    zoom: Option<f64>,
+    viewport: Option<viewport::Size>,
 ) -> Result<(), String> {
     require_editor(webview.label())?;
+    let zoom = policy::preview_zoom(zoom)?;
+    let size = viewport
+        .unwrap_or(viewport::Size {
+            width: bounds.width / zoom,
+            height: bounds.height / zoom,
+        })
+        .validate()?;
     validate_bounds(&webview, &bounds)?;
-    set_bounds(&existing(&app)?, bounds)
+    let view = existing(&app)?;
+    viewport::set_bounds(&view, bounds, size).await
 }
 
 /// Hides the native surface behind editor dialogs; the web page stays loaded.
@@ -303,20 +337,28 @@ pub async fn browser_preview_layout(
     app: tauri::AppHandle,
     webview: Webview,
     bounds: Option<DockBounds>,
+    zoom: Option<f64>,
+    viewport: Option<viewport::Size>,
 ) -> Result<(), String> {
     require_editor(webview.label())?;
+    let zoom = policy::preview_zoom(zoom)?;
     let Some(view) = app.get_webview(PREVIEW_LABEL) else {
         return Ok(());
     };
     if let Some(bounds) = bounds {
         validate_bounds(&webview, &bounds)?;
-        set_bounds(&view, bounds)?;
-        view.show().map_err(|e| e.to_string())
+        let size = viewport
+            .unwrap_or(viewport::Size {
+                width: bounds.width / zoom,
+                height: bounds.height / zoom,
+            })
+            .validate()?;
+        viewport::set_bounds(&view, bounds, size).await?;
+        viewport::visible(&view, true).await
     } else {
         // Hiding a focused WKWebView does not return keyboard ownership to the editor.
-        view.hide()
-            .and_then(|()| webview.set_focus())
-            .map_err(|e| e.to_string())
+        viewport::visible(&view, false).await?;
+        webview.set_focus().map_err(|e| e.to_string())
     }
 }
 
@@ -343,12 +385,16 @@ pub async fn browser_preview_capture(
         } else {
             None
         };
+        let scale = capture::pixel_ratio(&view).await?;
         let bytes = capture::snapshot(&view).await?;
-        Ok::<_, String>((bytes, rect))
+        if capture::pixel_ratio(&view).await? != scale {
+            return Err("The browser zoom changed during capture. Try again.".into());
+        }
+        Ok::<_, String>((bytes, rect, scale))
     }
     .await;
     let restored = picker::stage(&view, false).await;
-    let (bytes, rect) = captured?;
+    let (bytes, rect, scale) = captured?;
     let restored = restored?;
     if selected.unwrap_or(false) && picker::selection_rect(&restored)? != rect {
         return Err("The selected element moved during capture. Try again.".into());
@@ -357,11 +403,7 @@ pub async fn browser_preview_capture(
         let size = view
             .size()
             .map_err(|error| error.to_string())?
-            .to_logical::<f64>(
-                view.window()
-                    .scale_factor()
-                    .map_err(|error| error.to_string())?,
-            );
+            .to_logical::<f64>(scale);
         capture::crop(bytes, rect, size.width, size.height)?
     } else {
         bytes

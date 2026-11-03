@@ -2,15 +2,57 @@
 use super::policy::MAX_CAPTURE_BYTES;
 
 #[cfg(target_os = "macos")]
+pub(super) async fn pixel_ratio(view: &tauri::Webview) -> Result<f64, String> {
+    use objc2_web_kit::WKWebView;
+    let density = view.window().scale_factor().map_err(|e| e.to_string())?;
+    let (sender, receiver) = tokio::sync::oneshot::channel();
+    view.with_webview(move |native| {
+        // WK page zoom changes CSS-to-bitmap density without changing window.devicePixelRatio.
+        let zoom = unsafe { (&*native.inner().cast::<WKWebView>()).pageZoom() };
+        let _ = sender.send(density * zoom);
+    })
+    .map_err(|e| e.to_string())?;
+    tokio::time::timeout(std::time::Duration::from_secs(1), receiver)
+        .await
+        .map_err(|_| "The browser zoom was not ready.")?
+        .map_err(|_| "The browser closed before its zoom could be read.".into())
+}
+
+#[cfg(not(target_os = "macos"))]
+pub(super) async fn pixel_ratio(_view: &tauri::Webview) -> Result<f64, String> {
+    Err("Browser capture is currently available on macOS.".into())
+}
+
+#[cfg(target_os = "macos")]
 pub async fn snapshot(window: &tauri::Webview) -> Result<Vec<u8>, String> {
+    snapshot_options(window, None, None).await
+}
+
+#[cfg(target_os = "macos")]
+pub(super) async fn backdrop(window: &tauri::Webview, width: f64) -> Result<Vec<u8>, String> {
+    snapshot_options(window, None, Some(width)).await
+}
+
+#[cfg(target_os = "macos")]
+pub(super) async fn region(window: &tauri::Webview, rect: CaptureRect) -> Result<Vec<u8>, String> {
+    snapshot_options(window, Some(rect), None).await
+}
+
+#[cfg(target_os = "macos")]
+async fn snapshot_options(
+    window: &tauri::Webview,
+    rect: Option<CaptureRect>,
+    width: Option<f64>,
+) -> Result<Vec<u8>, String> {
     use block2::RcBlock;
     use objc2::{AnyThread, MainThreadMarker};
     use objc2_app_kit::{NSBitmapImageFileType, NSBitmapImageRep, NSImage};
-    use objc2_foundation::{NSDictionary, NSError};
+    use objc2_foundation::{NSDictionary, NSError, NSNumber, NSPoint, NSRect, NSSize};
     use objc2_web_kit::{WKSnapshotConfiguration, WKWebView};
     use std::cell::RefCell;
     use std::time::Duration;
 
+    let density = window.window().scale_factor().map_err(|e| e.to_string())?;
     let (sender, receiver) = tokio::sync::oneshot::channel();
     window
         .with_webview(move |native| {
@@ -25,6 +67,52 @@ pub async fn snapshot(window: &tauri::Webview) -> Result<Vec<u8>, String> {
                     "Wait for the page to finish loading, then capture again.".into(),
                 ));
                 return;
+            }
+            let size = view.bounds().size;
+            let area = rect.unwrap_or(CaptureRect {
+                x: 0.0,
+                y: 0.0,
+                width: size.width,
+                height: size.height,
+            });
+            let output_width = width.unwrap_or(area.width);
+            let output_height = area.height * output_width / area.width;
+            if ![
+                area.x,
+                area.y,
+                area.width,
+                area.height,
+                output_width,
+                output_height,
+            ]
+            .iter()
+            .all(|value| value.is_finite())
+                || area.x < 0.0
+                || area.y < 0.0
+                || area.width < 1.0
+                || area.height < 1.0
+                || area.x + area.width > size.width + 0.01
+                || area.y + area.height > size.height + 0.01
+                || output_width < 1.0
+                || width.is_some_and(|value| value > 1920.0)
+                || (output_width * density).ceil() * (output_height * density).ceil() > 16_000_000.0
+            {
+                let _ = sender.send(Err(
+                    "The browser snapshot exceeds its bounds or pixel limit.".into(),
+                ));
+                return;
+            }
+            let configuration = unsafe { WKSnapshotConfiguration::new(mtm) };
+            unsafe {
+                if rect.is_some() {
+                    configuration.setRect(NSRect::new(
+                        NSPoint::new(area.x, area.y),
+                        NSSize::new(area.width, area.height),
+                    ));
+                }
+                if width.is_some() {
+                    configuration.setSnapshotWidth(Some(&NSNumber::new_f64(output_width)));
+                }
             }
             let pending = RefCell::new(Some(sender));
             let completion = RcBlock::new(move |image: *mut NSImage, error: *mut NSError| {
@@ -62,7 +150,6 @@ pub async fn snapshot(window: &tauri::Webview) -> Result<Vec<u8>, String> {
                     let _ = sender.send(result);
                 }
             });
-            let configuration = unsafe { WKSnapshotConfiguration::new(mtm) };
             unsafe {
                 configuration.setAfterScreenUpdates(true);
                 view.takeSnapshotWithConfiguration_completionHandler(
@@ -83,13 +170,22 @@ pub async fn snapshot(_window: &tauri::Webview) -> Result<Vec<u8>, String> {
     Err("Browser capture is currently available on macOS.".into())
 }
 
+#[cfg(not(target_os = "macos"))]
+pub(super) async fn backdrop(window: &tauri::Webview, _width: f64) -> Result<Vec<u8>, String> {
+    snapshot(window).await
+}
+#[cfg(not(target_os = "macos"))]
+pub(super) async fn region(window: &tauri::Webview, _rect: CaptureRect) -> Result<Vec<u8>, String> {
+    snapshot(window).await
+}
+
 #[derive(Clone, Copy, Debug, PartialEq, serde::Deserialize)]
 #[serde(deny_unknown_fields)]
 pub(super) struct CaptureRect {
-    x: f64,
-    y: f64,
-    width: f64,
-    height: f64,
+    pub x: f64,
+    pub y: f64,
+    pub width: f64,
+    pub height: f64,
 }
 
 pub(super) fn crop(

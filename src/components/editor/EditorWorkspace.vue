@@ -62,6 +62,7 @@ const browserOpen = ref(consumeHomeBrowserRequest(store))
 const browserSession: BrowserPreviewSession = {
   url: '',
   preset: 'desktop',
+  zoom: 0.5,
   closing: Promise.resolve()
 }
 const codingMode = useLocalStorage('open-pen:browser-coding-mode', false)

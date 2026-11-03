@@ -36,6 +36,7 @@ function fixture(overrides: Partial<BrowserPreviewNative> = {}) {
     },
     capture: async () => capture,
     backdrop: async () => png,
+    clearSiteData: async () => undefined,
     extract: async () => {
       throw new Error('No extraction fixture')
     },
@@ -252,6 +253,7 @@ test('editable import waits for extraction and suppresses a disposed or switched
     resize: async () => undefined,
     capture: async () => capture,
     backdrop: async () => png,
+    clearSiteData: async () => undefined,
     extract: async () => {
       extractionCalls++
       return pending.promise
@@ -303,6 +305,7 @@ test('closing the controller during asynchronous import preparation cancels its 
     resize: async () => undefined,
     capture: async () => capture,
     backdrop: async () => png,
+    clearSiteData: async () => undefined,
     extract: async () => page
   }
   const preview = createBrowserPreviewController(

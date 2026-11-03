@@ -17,9 +17,12 @@ export default {
     importGlyph: 'hidden size-3.5 @max-[460px]/browser:block',
     importLabel: 'inline @max-[460px]/browser:hidden',
     separator: 'mx-2.5 h-4 w-px shrink-0 bg-menu-border',
+    codingButton: 'mr-1',
+    moreButton: 'mr-1',
     popup: 'min-w-32 rounded-md border border-menu-border shadow-lg',
     popupItem:
-      'cursor-default rounded-sm font-medium leading-4 text-browser-menu-foreground data-[highlighted]:bg-browser-menu-highlight',
+      'cursor-default rounded-sm font-medium leading-4 text-browser-menu-foreground data-[highlighted]:bg-browser-menu-highlight data-[disabled]:text-browser-menu-foreground data-[disabled]:opacity-50',
+    popupSeparator: '-mx-1 my-1 h-px bg-browser-menu-separator',
     surface: 'relative min-h-0 flex-1 overflow-hidden bg-canvas',
     backdrop: 'pointer-events-none absolute max-w-none select-none',
     landing: 'absolute inset-0 overflow-auto border-x border-island-border bg-panel',

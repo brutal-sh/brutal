@@ -39,7 +39,6 @@ struct Page {
     viewport_height: f64,
     x: f64,
     y: f64,
-    pixel_ratio: f64,
 }
 
 impl Page {
@@ -54,7 +53,6 @@ impl Page {
             self.viewport_height,
             self.x,
             self.y,
-            self.pixel_ratio,
         ]
         .iter()
         .any(|value| !value.is_finite())
@@ -66,12 +64,21 @@ impl Page {
             || rect.height > 65536.0
             || self.viewport_width < 1.0
             || self.viewport_height < 1.0
-            || !(0.25..=8.0).contains(&self.pixel_ratio)
-            || rect.width * rect.height * self.pixel_ratio.powi(2) > MAX_PIXELS as f64
         {
             return Err("The page exceeds the screenshot dimension limit.".into());
         }
         Ok(())
+    }
+
+    fn validate_pixels(&self, scale: f64) -> Result<(), String> {
+        if !scale.is_finite()
+            || !(0.1..=16.0).contains(&scale)
+            || self.r#box.width * self.r#box.height * scale.powi(2) > MAX_PIXELS as f64
+        {
+            Err("The page exceeds the screenshot pixel limit.".into())
+        } else {
+            Ok(())
+        }
     }
 }
 
@@ -212,6 +219,8 @@ async fn collect(
     cancellation: u64,
 ) -> Result<Vec<u8>, String> {
     let mut page = command(view, id, "prepare", serde_json::json!({"scope": scope})).await?;
+    let scale = capture::pixel_ratio(view).await?;
+    page.validate_pixels(scale)?;
     if matches!(scope, Scope::Full) && page.r#box.height > page.viewport_height {
         let step = page
             .viewport_height
@@ -233,7 +242,7 @@ async fn collect(
         page = command(view, id, "measure", serde_json::json!({})).await?;
     }
     let rect = page.r#box;
-    let scale = page.pixel_ratio;
+    page.validate_pixels(scale)?;
     let physical_width = (rect.width * scale).round() as u32;
     let step_y = page
         .viewport_height
@@ -253,7 +262,7 @@ async fn collect(
         while left < rect.width {
             unchanged(view, url, navigation, cancellation).await?;
             let width = (rect.width - left).min(page.viewport_width);
-            let position = if matches!(scope, Scope::Selected) {
+            let position = if matches!(scope, Scope::Selected | Scope::Visible) {
                 (
                     scroll_position(rect.x + left, width, origin.0, page.viewport_width),
                     scroll_position(rect.y + top, height, origin.1, page.viewport_height),
@@ -273,7 +282,29 @@ async fn collect(
             .await?;
             origin = (current.x, current.y);
             tokio::time::sleep(Duration::from_millis(50)).await;
-            let bytes = capture::snapshot(view).await?;
+            let source = Rect {
+                x: rect.x + left - current.x,
+                y: rect.y + top - current.y,
+                width,
+                height,
+            };
+            let clipped = (page.viewport_width * scale).ceil()
+                * (page.viewport_height * scale).ceil()
+                > 16_000_000.0;
+            let bytes = if clipped {
+                capture::region(
+                    view,
+                    capture::CaptureRect {
+                        x: source.x,
+                        y: source.y,
+                        width: source.width,
+                        height: source.height,
+                    },
+                )
+                .await?
+            } else {
+                capture::snapshot(view).await?
+            };
             unchanged(view, url, navigation, cancellation).await?;
             let after = command(view, id, "read", serde_json::json!({})).await?;
             if after.x != current.x || after.y != current.y {
@@ -282,21 +313,30 @@ async fn collect(
             let captured = image::load_from_memory_with_format(&bytes, image::ImageFormat::Png)
                 .map_err(|_| "The browser screenshot could not be decoded.")?
                 .into_rgba8();
-            if captured.width() != (page.viewport_width * scale).round() as u32
-                || captured.height() != (page.viewport_height * scale).round() as u32
+            let viewport = if clipped {
+                (width, height)
+            } else {
+                (page.viewport_width, page.viewport_height)
+            };
+            if captured.width() != (viewport.0 * scale).round() as u32
+                || captured.height() != (viewport.1 * scale).round() as u32
             {
                 return Err("The browser display scale changed during capture. Try again.".into());
             }
             append_tile(
                 &mut row,
                 &captured,
-                (page.viewport_width, page.viewport_height),
+                viewport,
                 scale,
-                Rect {
-                    x: rect.x + left - current.x,
-                    y: rect.y + top - current.y,
-                    width,
-                    height,
+                if clipped {
+                    Rect {
+                        x: 0.0,
+                        y: 0.0,
+                        width,
+                        height,
+                    }
+                } else {
+                    source
                 },
                 left,
             )?;
@@ -415,9 +455,9 @@ mod tests {
             viewport_height: 600.0,
             x: 0.0,
             y: 0.0,
-            pixel_ratio: 2.0,
         };
         assert!(page.validate().is_ok());
+        assert!(page.validate_pixels(2.0).is_ok());
         let packet = encode(
             "request",
             &page,
@@ -430,6 +470,7 @@ mod tests {
         assert_eq!(&packet[4 + length..], &[1, 2, 3, 4, 5]);
         page.r#box.height = 65536.0;
         page.r#box.width = 16384.0;
-        assert!(page.validate().is_err());
+        assert!(page.validate_pixels(2.0).is_err());
+        assert!(page.validate_pixels(0.1).is_ok());
     }
 }

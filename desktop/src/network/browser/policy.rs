@@ -16,6 +16,15 @@ pub fn require_editor(label: &str) -> Result<(), String> {
     }
 }
 
+pub fn preview_zoom(zoom: Option<f64>) -> Result<f64, String> {
+    let zoom = zoom.unwrap_or(1.0);
+    if zoom.is_finite() && (0.1..=8.0).contains(&zoom) {
+        Ok(zoom)
+    } else {
+        Err("Choose an available browser zoom level.".into())
+    }
+}
+
 pub fn preview_url(input: &str, dev_url: Option<&Url>) -> Result<Url, String> {
     let url = Url::parse(input.trim()).map_err(|_| "Enter a full HTTP or HTTPS address.")?;
     if !matches!(url.scheme(), "http" | "https") || url.host_str().is_none() {

@@ -4,7 +4,7 @@ import * as v from 'valibot'
 import { imageHeader } from '@open-pencil/scene-graph/images'
 
 import { readBrowserCapture, type BrowserCapture, type BrowserCaptureScope } from './capture'
-import type { PreviewBounds } from './dock'
+import type { PreviewViewport } from './dock'
 import { validateExtractedPage, type ExtractedPage } from './dom/schema'
 import type { BrowserPickerNative } from './picker/controller'
 import { validateBrowserPicker } from './picker/schema'
@@ -18,6 +18,7 @@ export interface BrowserPreviewNative {
   resize(preset: PreviewPreset): Promise<void>
   capture(url: string, scope?: BrowserCaptureScope): Promise<BrowserCapture>
   backdrop(url: string): Promise<Uint8Array<ArrayBuffer>>
+  clearSiteData(url: string): Promise<void>
   extract(url: string, selected?: boolean): Promise<ExtractedPage>
 }
 
@@ -25,7 +26,7 @@ let pendingPreviewOperation: Promise<unknown> = Promise.resolve()
 
 /** Serialize native surface changes so an unmount closes even a still-opening child. */
 export function createBrowserPreviewNative(
-  bounds: () => PreviewBounds | null,
+  viewport: () => PreviewViewport | null,
   callNative: typeof invoke = invoke
 ) {
   let disposed = false
@@ -37,16 +38,22 @@ export function createBrowserPreviewNative(
     return next
   }
   const requireBounds = () => {
-    const result = bounds()
+    const result = viewport()
     if (disposed || !result) throw new Error('The browser dock is not visible. Try again.')
     return result
   }
   const native: BrowserPreviewNative = {
+    clearSiteData: (url) =>
+      enqueue(async () => {
+        requireBounds()
+        if (!opened) throw new Error('Open a page before clearing its data.')
+        await callNative('browser_preview_clear_site_data', { url })
+      }),
     open: (url) =>
       enqueue(async () => {
         const status = v.parse(
           previewStatusSchema,
-          await callNative('browser_preview_open', { url, bounds: requireBounds() })
+          await callNative('browser_preview_open', { url, ...requireBounds() })
         )
         opened = true
         return status
@@ -56,7 +63,7 @@ export function createBrowserPreviewNative(
         ? v.parse(v.nullable(previewStatusSchema), await callNative('browser_preview_status'))
         : null,
     action: (action) => enqueue(() => callNative('browser_preview_action', { action })),
-    resize: () => enqueue(() => callNative('browser_preview_resize', { bounds: requireBounds() })),
+    resize: () => enqueue(() => callNative('browser_preview_resize', { ...requireBounds() })),
     capture: (url, scope = 'visible') =>
       enqueue(async () => {
         requireBounds()
@@ -132,7 +139,10 @@ export function createBrowserPreviewNative(
     picker,
     syncBounds: () =>
       enqueue(async () => {
-        if (!disposed) await callNative('browser_preview_layout', { bounds: bounds() })
+        if (!disposed) {
+          const current = viewport()
+          await callNative('browser_preview_layout', current ? { ...current } : { bounds: null })
+        }
       }),
     dispose: () => {
       disposed = true

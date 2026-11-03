@@ -5,14 +5,6 @@ import {
   useEventListener,
   useMutationObserver
 } from '@vueuse/core'
-import {
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuPortal,
-  DropdownMenuRoot,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from 'reka-ui'
 import { tv } from 'tailwind-variants'
 import {
   computed,
@@ -29,9 +21,10 @@ import {
 
 import { createBrowserBackdrop } from '@/app/browser-preview/backdrop'
 import type { BrowserCaptureScope } from '@/app/browser-preview/capture'
+import { confirmBrowserSiteClear } from '@/app/browser-preview/clear'
 import type { BrowserPreviewSession } from '@/app/browser-preview/context'
 import { createBrowserPreviewController } from '@/app/browser-preview/controller'
-import { hasPreviewOverlay, previewDockBounds } from '@/app/browser-preview/dock'
+import { hasPreviewOverlay, previewDockViewport } from '@/app/browser-preview/dock'
 import { browserImportTarget } from '@/app/browser-preview/dom/placement'
 import { completedBrowserVisitSchema } from '@/app/browser-preview/history/schema'
 import {
@@ -46,16 +39,17 @@ import { createBrowserPreviewNative } from '@/app/browser-preview/native'
 import { browserCaptureTarget } from '@/app/browser-preview/placement'
 import { PREVIEW_PRESETS, previewAddressLabel } from '@/app/browser-preview/schema'
 import { useEditorStore } from '@/app/editor/active-store'
+import { openExternalLink } from '@/app/shell/ui'
 import { bindDesktopLinkQueue } from '@/app/tauri/link-queue'
 import AppButton from '@/components/ui/button/AppButton.vue'
 import IconButton from '@/components/ui/button/IconButton.vue'
 import AppAlert from '@/components/ui/feedback/AppAlert.vue'
 import AppInput from '@/components/ui/input/AppInput.vue'
-import { menuItem, useMenuUI } from '@/components/ui/menu/menu'
-import MenuScrollArea from '@/components/ui/menu/MenuScrollArea.vue'
 import theme from '@/theme/browser-preview'
 
 import BrowserPreviewCapture from './BrowserPreviewCapture.vue'
+import BrowserPreviewHistory from './BrowserPreviewHistory.vue'
+import BrowserPreviewMore from './BrowserPreviewMore.vue'
 import BrowserPreviewPickerBreadcrumbs from './picker/BrowserPreviewPickerBreadcrumbs.vue'
 import BrowserPreviewPickerButton from './picker/BrowserPreviewPickerButton.vue'
 import BrowserPreviewPickerStyles from './picker/BrowserPreviewPickerStyles.vue'
@@ -69,15 +63,6 @@ const surface = ref<HTMLElement | null>(null)
 const inputId = useId()
 const addressField = useTemplateRef<InstanceType<typeof AppInput>>('addressField')
 const ui = tv(theme)()
-const historyOpen = ref(false)
-const historyMenu = useMenuUI({
-  content:
-    'w-80 max-w-[calc(100vw-16px)] max-h-[min(384px,var(--reka-dropdown-menu-content-available-height,384px))] rounded-[8px] border border-menu-border shadow-[0_8px_30px_rgb(0_0_0/0.4)]'
-})
-const historyItem = menuItem({
-  justify: 'start',
-  class: 'h-7 rounded-[6px] font-medium data-[highlighted]:bg-border'
-})
 const historyConnection = bindDesktopLinkQueue({
   event: 'browser-preview:page-loaded',
   command: 'take_browser_preview_visits',
@@ -89,11 +74,6 @@ const historyConnection = bindDesktopLinkQueue({
     'Browsing history could not be connected. Reopen the browser to try again.'
   return () => undefined
 })
-async function openHistoryEntry(url: string) {
-  historyOpen.value = false
-  await nextTick()
-  openSuggestion(url)
-}
 const addressFocused = ref(false)
 const displayedAddress = computed({
   get: () => (addressFocused.value ? address.value : previewAddressLabel(address.value)),
@@ -119,17 +99,19 @@ let lastLayout = ''
 let disposed = false
 let clearingPage = false
 const backdropStyle = shallowRef<CSSProperties>({})
-function surfaceBounds() {
+const zoom = ref(session.zoom)
+function surfaceViewport() {
   if (!open.value || !surface.value) return null
   const rect = surface.value.getBoundingClientRect()
-  return previewDockBounds(
+  return previewDockViewport(
     rect,
     preset.value as 'desktop' | 'tablet' | 'phone',
     window.innerWidth,
-    window.innerHeight
+    window.innerHeight,
+    zoom.value
   )
 }
-const bridge = createBrowserPreviewNative(() => (hasPreviewOverlay() ? null : surfaceBounds()))
+const bridge = createBrowserPreviewNative(() => (hasPreviewOverlay() ? null : surfaceViewport()))
 const preview = createBrowserPreviewController(
   bridge.native,
   () => browserCaptureTarget(store),
@@ -142,7 +124,7 @@ const backdrop = createBrowserBackdrop(async () => {
 })
 const busy = computed(() => actionBusy.value || backdrop.pending.value)
 function backdropKey() {
-  return JSON.stringify([status.value?.url, preset.value, surfaceBounds()])
+  return JSON.stringify([status.value?.url, preset.value, surfaceViewport()])
 }
 async function prepareBackdrop() {
   if (disposed || !open.value) return false
@@ -156,16 +138,6 @@ async function prepareBackdrop() {
     if (!disposed) error.value = reason instanceof Error ? reason.message : String(reason)
     return !disposed && open.value
   }
-}
-let historyRevision = 0
-async function setHistoryOpen(value: boolean) {
-  const request = ++historyRevision
-  if (!value) {
-    historyOpen.value = false
-    return
-  }
-  if ((await prepareBackdrop()) && request === historyRevision && !disposed)
-    historyOpen.value = true
 }
 const picker = provideBrowserPicker(
   bridge.picker,
@@ -184,6 +156,27 @@ async function capture(scope?: BrowserCaptureScope) {
   if (busy.value) return
   await preview.capture(scope ?? (picker.state.value?.pick ? 'selected' : 'visible'))
   if (notice.value && picker.state.value?.pick) await picker.stop()
+}
+async function clearSiteData() {
+  const url = status.value?.url
+  if (!url || busy.value) return
+  try {
+    if ((await confirmBrowserSiteClear(url)) && !disposed && open.value) {
+      backdrop.clear()
+      await preview.clearSiteData(url)
+    }
+  } catch (reason) {
+    if (!disposed) error.value = reason instanceof Error ? reason.message : String(reason)
+  }
+}
+async function openExternal() {
+  const url = status.value?.url
+  if (!url) return
+  try {
+    await openExternalLink(url)
+  } catch (reason) {
+    if (!disposed) error.value = reason instanceof Error ? reason.message : String(reason)
+  }
 }
 watch(
   () => status.value?.loading,
@@ -223,7 +216,8 @@ function syncSurface() {
     layoutQueued = false
     if (disposed) return
     const rect = surface.value?.getBoundingClientRect()
-    const bounds = surfaceBounds()
+    const viewport = surfaceViewport()
+    const bounds = viewport?.bounds
     backdropStyle.value =
       bounds && rect
         ? {
@@ -240,6 +234,7 @@ function syncSurface() {
       rect?.width,
       rect?.height,
       preset.value,
+      zoom.value,
       status.value?.url,
       overlay,
       open.value
@@ -267,6 +262,11 @@ watch(
 watch(preset, (value) => {
   session.preset = value
   backdrop.clear()
+})
+watch(zoom, (value) => {
+  session.zoom = value
+  backdrop.clear()
+  syncSurface()
 })
 watch([preset, status], syncSurface)
 watch(
@@ -306,7 +306,6 @@ onMounted(async () => {
 })
 onScopeDispose(() => {
   disposed = true
-  historyRevision++
   backdrop.dispose()
   preview.dispose()
   void historyConnection.then((stop) => stop())
@@ -369,43 +368,11 @@ onScopeDispose(() => {
           @focus="selectAddress"
           @blur="addressFocused = false"
         />
-        <DropdownMenuRoot :open="historyOpen" @update:open="setHistoryOpen">
-          <DropdownMenuTrigger as-child>
-            <IconButton
-              label="Browsing history"
-              :class="ui.addressIcon()"
-              :disabled="busy || updatingBrowserHistory"
-              ><icon-lucide-gallery-vertical-end class="size-3"
-            /></IconButton>
-          </DropdownMenuTrigger>
-          <DropdownMenuPortal>
-            <DropdownMenuContent align="start" :side-offset="4" :class="historyMenu.content">
-              <MenuScrollArea>
-                <DropdownMenuItem
-                  v-for="entry in browserHistory"
-                  :key="entry.url"
-                  :class="historyItem"
-                  @select="openHistoryEntry(entry.url)"
-                  ><span class="truncate">{{
-                    previewAddressLabel(entry.url)
-                  }}</span></DropdownMenuItem
-                >
-                <DropdownMenuItem v-if="!browserHistory.length" disabled :class="historyItem"
-                  >No History</DropdownMenuItem
-                >
-                <template v-else>
-                  <DropdownMenuSeparator :class="historyMenu.separator" />
-                  <DropdownMenuItem
-                    :class="[historyItem, 'text-error']"
-                    :disabled="updatingBrowserHistory"
-                    @select="clearBrowserHistory"
-                    >Clear All History</DropdownMenuItem
-                  >
-                </template>
-              </MenuScrollArea>
-            </DropdownMenuContent>
-          </DropdownMenuPortal>
-        </DropdownMenuRoot>
+        <BrowserPreviewHistory
+          :disabled="busy"
+          :prepare="prepareBackdrop"
+          @navigate="openSuggestion"
+        />
         <div :class="ui.addressActions()">
           <IconButton
             :label="`Viewport: ${selectedDevice.label}. Switch to ${nextDevice.label}`"
@@ -447,8 +414,10 @@ onScopeDispose(() => {
         :disabled="busy || !status?.captureAvailable || status?.loading || store.state.readOnly"
         @capture="capture"
       />
+      <span aria-hidden="true" :class="ui.separator()" />
       <IconButton
         :label="codingMode ? 'Exit Coding Mode' : 'Coding Mode'"
+        :class="ui.codingButton()"
         size="sm"
         :aria-pressed="codingMode"
         :disabled="busy"
@@ -457,9 +426,18 @@ onScopeDispose(() => {
         <icon-lucide-minimize-2 v-if="codingMode" class="size-3.5" />
         <icon-lucide-maximize-2 v-else class="size-3.5" />
       </IconButton>
-      <span aria-hidden="true" :class="ui.separator()" />
+      <BrowserPreviewMore
+        :zoom="zoom"
+        :fixed="preset !== 'desktop'"
+        :disabled="busy"
+        :page-available="!!status && !status.loading"
+        :prepare="prepareBackdrop"
+        @zoom="zoom = $event"
+        @clear="clearSiteData"
+        @external="openExternal"
+      />
       <IconButton label="Close browser preview" size="sm" @click="open = false"
-        ><icon-lucide-x class="size-3.5"
+        ><icon-lucide-panel-right class="size-3.5"
       /></IconButton>
     </div>
     <div
