@@ -2,6 +2,27 @@
 
 Target: actual `/Applications/Pen.app`1.2.21, rechecked in its installed Info.plist on2026-11-02. Full inspector and whole-product parity remain open. The reference is inspected through native UI and the private resource archive recorded in [reference provenance](PEN-REFERENCE.md).
 
+## HTML preview file actions —2026-11-03
+
+Actual Pen's Open Folder reveals the exported HTML selected in Finder; Open in System Browser
+opens that file in Brave. Open Pen provides the same actions for explicitly authorized exports.
+An editor-only command rechecks the registered regular HTML path, canonical location and
+existing filesystem deny rules. The shared external-link command remains web/mail only;
+file pages gain no application IPC or broader filesystem scope.
+
+The239.1s physical native File Open/select/Export/preview/Open Folder/More/Open in System
+Browser/Close journey executes actual Finder and Brave delivery. Only the owned Finder window
+and new browser tab are closed. A1604×2956 preview contains14,884 pixels of each checker color
+and4,708,656 frame-background pixels. The restored editor is visually inspected. Source bytes,
+selection and document version remain unchanged, with no ZIP or copied assets. The native
+bridge rejects HTTP and an existing unregistered HTML path before opening anything.
+Seventy browser owner checks/282assertions,11 compiled policy checks, source/Vue/test types,
+full lint with existing warnings and architecture pass. Source review finds no concrete defect;
+it does not establish the OS handoffs. Private receipts:file-opener-native-physical.log,
+file-opener-native-inline.png, file-opener-native-editor-restored.png and
+pen-file-browser-reference-2026-11-03/facts.json. File-specific cache, history, restart,
+remaining menu geometry and whole-product parity remain OPEN.
+
 ## Standalone HTML body background —2026-11-03
 
 Ten owned actual-Pen exports establish the body rule: one selected frame promotes its first

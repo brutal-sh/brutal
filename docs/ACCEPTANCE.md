@@ -2,6 +2,18 @@
 
 Full parity is open. A source implementation, unit check, build, and user workflow establish different things. This ledger records only observed outcomes and the scope of each observation.
 
+## HTML preview file actions —2026-11-03
+
+- Actual Pen reveals the owned HTML export selected in Finder and opens it in Brave through
+  its file-page controls. Open Pen's239.1s physical native journey executes both handoffs,
+  closes only its new Finder window and Brave tab, then returns to the editor.
+- The preview captures both checker colors and the frame background. Source bytes, selection
+  and document version remain unchanged; no ZIP or copied assets appear. Native commands
+  reject an HTTP URL and an existing, unregistered HTML file before any external handoff.
+- Seventy browser owner checks/282assertions and11 compiled browser-policy checks pass.
+  File-specific cache, history, restart and exact menu pixels remain open. See
+  [inspector parity](INSPECTOR-PARITY.md).
+
 ## Standalone HTML body background —2026-11-03
 
 - Ten actual-Pen owned exports qualify the one-frame/first-visible-opaque-solid body rule;

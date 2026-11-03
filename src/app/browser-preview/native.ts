@@ -28,6 +28,10 @@ export async function authorizeBrowserExport(path: string): Promise<string> {
   return v.parse(v.string(), await invoke('authorize_browser_export', { path }))
 }
 
+export async function openBrowserExportExternally(url: string, folder = false): Promise<void> {
+  await invoke('browser_preview_open_export', { url, folder })
+}
+
 /** Serialize native surface changes so an unmount closes even a still-opening child. */
 export function createBrowserPreviewNative(
   viewport: () => PreviewViewport | null,

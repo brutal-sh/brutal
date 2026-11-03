@@ -4,6 +4,7 @@ use std::{
 };
 use tauri::Webview;
 use tauri_plugin_fs::FsExt;
+use tauri_plugin_opener::OpenerExt;
 use url::Url;
 
 use super::policy::{preview_url, require_editor};
@@ -54,6 +55,34 @@ pub fn authorize_browser_export(
         exports.push(path);
     }
     Ok(url.to_string())
+}
+
+#[tauri::command]
+pub fn browser_preview_open_export(
+    app: tauri::AppHandle,
+    webview: Webview,
+    url: String,
+    folder: bool,
+) -> Result<(), String> {
+    require_editor(webview.label())?;
+    let url = target(&url, app.config().build.dev_url.as_ref())?;
+    if url.scheme() != "file" {
+        return Err("Choose an exported HTML file.".into());
+    }
+    let path = export_path(
+        &url.to_file_path()
+            .map_err(|_| "The export path is invalid.")?,
+    )?;
+    if app.fs_scope().is_forbidden(&path) {
+        return Err("This export location cannot be opened.".into());
+    }
+    if folder {
+        app.opener().reveal_item_in_dir(path)
+    } else {
+        let url = Url::from_file_path(path).map_err(|_| "The export address is invalid.")?;
+        app.opener().open_url(url.as_str(), None::<&str>)
+    }
+    .map_err(|error| error.to_string())
 }
 
 pub(super) fn target(input: &str, dev_url: Option<&Url>) -> Result<Url, String> {

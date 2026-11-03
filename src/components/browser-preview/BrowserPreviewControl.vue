@@ -39,7 +39,10 @@ import {
   removeBrowserVisit,
   clearBrowserHistory
 } from '@/app/browser-preview/history/storage'
-import { createBrowserPreviewNative } from '@/app/browser-preview/native'
+import {
+  createBrowserPreviewNative,
+  openBrowserExportExternally
+} from '@/app/browser-preview/native'
 import { browserCaptureTarget } from '@/app/browser-preview/placement'
 import {
   browserViewportPreferences,
@@ -216,11 +219,12 @@ async function clearSiteData() {
     if (!disposed) error.value = reason instanceof Error ? reason.message : String(reason)
   }
 }
-async function openExternal() {
+async function openExternal(folder = false) {
   const url = status.value?.url
   if (!url) return
   try {
-    await openExternalLink(url)
+    if (url.startsWith('file:')) await openBrowserExportExternally(url, folder)
+    else if (!folder) await openExternalLink(url)
   } catch (reason) {
     if (!disposed) error.value = reason instanceof Error ? reason.message : String(reason)
   }
@@ -447,6 +451,14 @@ onScopeDispose(() => {
           @navigate="openSuggestion"
         />
         <div :class="ui.addressActions()">
+          <IconButton
+            v-if="status?.url.startsWith('file:')"
+            label="Open Folder"
+            size="sm"
+            :disabled="busy || status.loading"
+            @click="openExternal(true)"
+            ><icon-lucide-folder-open class="size-3.5"
+          /></IconButton>
           <IconButton
             :label="`Viewport: ${selectedDevice.label}. Switch to ${nextDevice.label}`"
             :class="ui.viewport()"

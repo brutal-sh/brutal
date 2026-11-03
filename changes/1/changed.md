@@ -27,3 +27,4 @@
 - Bind Script number/color inputs to variables, regenerate with inherited themes and aliases, preserve input variable identities through rename, interchange and instance sync, and keep independent input claims separate from geometry bindings.
 - Desktop HTML exports reference original relative or absolute image paths and retain each paint's source through reordering.
 - Standalone HTML uses a selected frame's first visible opaque solid fill as the page background.
+- Open Folder selects the authorized HTML preview file in the native file manager, and Open in System Browser opens it in the default browser.
