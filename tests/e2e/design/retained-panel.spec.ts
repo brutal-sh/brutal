@@ -75,7 +75,8 @@ test('reuses one panel without updating its detached fields', async () => {
 })
 
 test('reuses the panel for a newly drawn frame', async () => {
-  const original = await width().evaluateHandle((element) => element)
+  const panel = editor.page.getByTestId('design-panel-single')
+  const original = await panel.evaluateHandle((element) => element)
   try {
     const box = expectDefined(await editor.canvas.canvas.boundingBox(), 'canvas')
     await setTool('FRAME')
@@ -84,7 +85,7 @@ test('reuses the panel for a newly drawn frame', async () => {
     await editor.page.mouse.move(box.x + 620, box.y + 430, { steps: 6 })
     await editor.page.mouse.up()
     await expect(width()).toHaveAttribute('aria-valuenow', '120')
-    expect(await width().evaluate((element, original) => element === original, original)).toBe(true)
+    expect(await panel.evaluate((element, original) => element === original, original)).toBe(true)
   } finally {
     await editor.page.mouse.up()
     await original.dispose()

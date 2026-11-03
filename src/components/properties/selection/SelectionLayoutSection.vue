@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+
+import { MIXED } from '@open-pencil/vue/controls/node-props'
 import { useSelectionLayout } from '@open-pencil/vue/controls/selection-layout'
 import { useEditorCommands } from '@open-pencil/vue/editor/commands'
 import { useI18n } from '@open-pencil/vue/i18n'
@@ -8,10 +11,12 @@ import NumberField from '@/components/inputs/NumberField.vue'
 import ClipContentControl from '@/components/properties/layout/ClipContentControl.vue'
 import LayoutFlowControl from '@/components/properties/layout/LayoutFlowControl.vue'
 import TextResizingControl from '@/components/properties/layout/TextResizingControl.vue'
+import VariableNumberField from '@/components/properties/VariableNumberField.vue'
 import IconButton from '@/components/ui/button/IconButton.vue'
 import Tip from '@/components/ui/overlay/Tip.vue'
 import PanelGrid from '@/components/ui/panel/PanelGrid.vue'
 import PanelSection from '@/components/ui/panel/PanelSection.vue'
+import AppCheckbox from '@/components/ui/toggle/AppCheckbox.vue'
 
 /**
  * Layout of several selected layers, as in Figma: flow when all can hold an auto layout, resizing
@@ -19,6 +24,8 @@ import PanelSection from '@/components/ui/panel/PanelSection.vue'
  * those that can clip.
  */
 const layout = useSelectionLayout()
+const nodeIds = computed(() => layout.nodes.value.map((node) => node.id))
+const { compact = false } = defineProps<{ compact?: boolean }>()
 const { getCommand } = useEditorCommands()
 const wrapInAutoLayout = getCommand('selection.wrapInAutoLayout')
 const { panels } = useI18n()
@@ -37,18 +44,31 @@ const { panels } = useI18n()
       </IconButton>
     </template>
 
-    <LayoutFlowControl v-if="layout.layoutMode.value !== undefined" class="mb-2" />
+    <LayoutFlowControl
+      v-if="layout.layoutMode.value !== undefined"
+      :compact="compact"
+      class="mb-2"
+    />
     <TextResizingControl v-if="layout.textResize.value !== undefined" />
-    <div class="mt-2 mb-1 text-[11px] text-muted">{{ panels.dimensions }}</div>
+    <div
+      :class="compact ? 'mb-1 text-[9px] leading-3 text-muted' : 'mt-2 mb-1 text-[11px] text-muted'"
+    >
+      {{ panels.dimensions }}
+    </div>
 
     <PositionControlsRoot v-slot="{ wValue, hValue, actions }">
-      <PanelGrid :columns="2">
+      <PanelGrid v-if="nodeIds[0]" :key="JSON.stringify(nodeIds)" :columns="2">
         <Tip :label="panels.width">
-          <NumberField
+          <VariableNumberField
+            compact
+            :node-id="nodeIds[0]"
+            :node-ids="nodeIds"
+            binding-path="width"
             icon="W"
             data-property="width"
             :aria-label="panels.width"
             :model-value="wValue"
+            :precision="compact ? 2 : undefined"
             :min="1"
             @update:model-value="actions.updateProp('width', $event)"
             @commit="(v: number, p: number) => actions.commitProp('width', v, p)"
@@ -56,11 +76,16 @@ const { panels } = useI18n()
           />
         </Tip>
         <Tip :label="panels.height">
-          <NumberField
+          <VariableNumberField
+            compact
+            :node-id="nodeIds[0]"
+            :node-ids="nodeIds"
+            binding-path="height"
             icon="H"
             data-property="height"
             :aria-label="panels.height"
             :model-value="hValue"
+            :precision="compact ? 2 : undefined"
             :min="1"
             @update:model-value="actions.updateProp('height', $event)"
             @commit="(v: number, p: number) => actions.commitProp('height', v, p)"
@@ -70,7 +95,27 @@ const { panels } = useI18n()
       </PanelGrid>
     </PositionControlsRoot>
 
-    <template v-if="layout.spacingAxis.value">
+    <div v-if="compact" class="mt-1.5 grid grid-cols-2 gap-1.5 text-[11px] text-surface">
+      <label
+        v-for="axis in ['width', 'height'] as const"
+        :key="axis"
+        class="flex items-center gap-1.5"
+      >
+        <AppCheckbox
+          neutral
+          :ariaLabel="axis === 'width' ? 'Fill Width' : 'Fill Height'"
+          :model-value="
+            (axis === 'width' ? layout.widthSizing.value : layout.heightSizing.value) === MIXED
+              ? 'indeterminate'
+              : (axis === 'width' ? layout.widthSizing.value : layout.heightSizing.value) === 'FILL'
+          "
+          :disabled="layout.fillDisabled.value"
+          @update:model-value="layout.setAxisSizing(axis, $event ? 'FILL' : 'FIXED')"
+        />{{ axis === 'width' ? 'Fill Width' : 'Fill Height' }}
+      </label>
+    </div>
+
+    <template v-if="!compact && layout.spacingAxis.value">
       <div class="mt-2 mb-1 text-[11px] text-muted">{{ panels.spacing }}</div>
       <PanelGrid :columns="2">
         <Tip :label="panels.spacing">
@@ -93,6 +138,6 @@ const { panels } = useI18n()
       </PanelGrid>
     </template>
 
-    <ClipContentControl v-if="layout.clipsContent.value !== undefined" />
+    <ClipContentControl v-if="!compact && layout.clipsContent.value !== undefined" />
   </PanelSection>
 </template>

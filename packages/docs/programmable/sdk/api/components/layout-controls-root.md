@@ -18,6 +18,11 @@ Compose the field with `BindableValue` and an interaction-batch-capable provider
 variable detachment, and the numeric value must commit or roll back as one undo step. Focus and
 picker opening do not change sizing mode.
 
+Pass `true` as `updateAxisSize(axis, value, retainFill)`'s third argument when numeric fields
+edit an authored Fill fallback instead. Fill then remains active, while the default policy and
+Hug-to-Fixed behavior stay unchanged. Ratio locking, preview cancellation and commit history
+use the same transaction in either mode.
+
 Use `setAxisSizing('width', mode)` or `setAxisSizing('height', mode)` for sizing menus. The older
 axis-specific setters are not part of the current contract.
 

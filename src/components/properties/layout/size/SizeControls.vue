@@ -53,7 +53,7 @@ const visibleSizeLimits = computed(() =>
 </script>
 
 <template>
-  <PanelGrid :columns="compact ? 2 : 1">
+  <PanelGrid :key="ctx.node.id" :columns="compact ? 2 : 1">
     <SizeAxisField axis="width" icon="W" :label="panels.width" :compact="compact" />
     <SizeAxisField axis="height" icon="H" :label="panels.height" :compact="compact" />
     <template v-if="ctx.aspectRatioLockable && !compact" #actions>

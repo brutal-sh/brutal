@@ -1,7 +1,14 @@
 import { computed } from 'vue'
 
-import type { LayoutMode, NodeType, SceneNode } from '@open-pencil/scene-graph'
+import type { LayoutMode, LayoutSizing, NodeType, SceneNode } from '@open-pencil/scene-graph'
+import {
+  authoredLayoutSizing,
+  authoredLayoutSizingUpdates,
+  layoutSizingError
+} from '@open-pencil/scene-graph/layout'
 
+import type { LayoutAxis } from '#vue/controls/layout/helpers'
+import { useNodePreview } from '#vue/controls/node-preview/use'
 import { MIXED, useNodeProps, type MixedValue } from '#vue/controls/node-props/use'
 import { useUndoBatch } from '#vue/controls/undo-batch/use'
 import { useEditor } from '#vue/editor/context'
@@ -44,6 +51,46 @@ export function useSelectionLayout() {
   const editor = useEditor()
   const { nodes } = useNodeProps()
   const batch = useUndoBatch(editor.undo, editor.beginInteractiveEdit)
+  const sizingPreview = useNodePreview(editor)
+
+  const widthSizing = computed<MixedValue<LayoutSizing> | undefined>(() =>
+    shared(nodes.value.map((node) => authoredLayoutSizing(editor.graph, node, 'HORIZONTAL')))
+  )
+  const heightSizing = computed<MixedValue<LayoutSizing> | undefined>(() =>
+    shared(nodes.value.map((node) => authoredLayoutSizing(editor.graph, node, 'VERTICAL')))
+  )
+  const fillDisabled = computed(
+    () =>
+      !nodes.value.length ||
+      nodes.value.some((node) => {
+        const parent = node.parentId ? editor.graph.getNode(node.parentId) : undefined
+        return (
+          parent &&
+          parent.layoutMode !== 'NONE' &&
+          layoutSizingError(editor.graph, node, 'FILL') !== undefined
+        )
+      })
+  )
+
+  /** Sets each layer's authored screen-axis sizing and retains its fallback in one undo step. */
+  function setAxisSizing(axis: LayoutAxis, sizing: LayoutSizing) {
+    sizingPreview.update(
+      nodes.value.map((node) => node.id),
+      (id) => {
+        const node = editor.graph.getNode(id)
+        return node
+          ? authoredLayoutSizingUpdates(
+              editor.graph,
+              node,
+              axis === 'width' ? 'HORIZONTAL' : 'VERTICAL',
+              sizing
+            )
+          : {}
+      },
+      `Set ${axis} sizing`
+    )
+    sizingPreview.commit()
+  }
 
   const texts = computed(() => nodes.value.filter((node) => node.type === 'TEXT'))
   const containers = computed(() =>
@@ -109,6 +156,10 @@ export function useSelectionLayout() {
     nodes,
     texts,
     containers,
+    widthSizing,
+    heightSizing,
+    fillDisabled,
+    setAxisSizing,
     textResize,
     layoutMode,
     clipsContent,

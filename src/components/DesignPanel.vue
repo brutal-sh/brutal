@@ -158,7 +158,7 @@ const panelStyles = tv(designPanelTheme)
     <ComponentPropertiesSection />
     <PositionSection :compact="!advanced" />
     <ConstraintsSection v-if="advanced" />
-    <SelectionLayoutSection />
+    <SelectionLayoutSection :compact="!advanced" />
     <AppearanceSection :compact="!advanced" />
     <TypographySection />
     <FillSection :compact="!advanced" />

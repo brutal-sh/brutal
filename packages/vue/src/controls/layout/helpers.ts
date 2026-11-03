@@ -307,23 +307,32 @@ export function createLayoutActions({
     preview.commit()
   }
 
-  function fixedAxisPatch(n: SceneNode, axis: LayoutAxis): Partial<SceneNode> {
-    return authoredLayoutSizing(editor.graph, n, sizingAxis(axis)) === 'FIXED'
+  function fixedAxisPatch(n: SceneNode, axis: LayoutAxis, retainFill: boolean): Partial<SceneNode> {
+    const sizing = authoredLayoutSizing(editor.graph, n, sizingAxis(axis))
+    return sizing === 'FIXED' || (retainFill && sizing === 'FILL')
       ? {}
       : authoredLayoutSizingUpdates(editor.graph, n, sizingAxis(axis), 'FIXED')
   }
 
   // A locked layer keeps its ratio as either side is typed, as in Figma.
-  function updateAxisSize(axis: LayoutAxis, value: number) {
+  function updateAxisSize(axis: LayoutAxis, value: number, retainFill = false) {
     const n = node.value
     if (!n) return
     const ratio = enforcedAspectRatio(n)
     if (ratio === null) {
-      preview.update([n.id], { ...fixedAxisPatch(n, axis), [axis]: value }, `Change ${axis}`)
+      preview.update(
+        [n.id],
+        { ...fixedAxisPatch(n, axis, retainFill), [axis]: value },
+        `Change ${axis}`
+      )
       return
     }
     const size = sizeKeepingAspectRatio(ratio, axis, value)
-    const patch = { ...fixedAxisPatch(n, 'width'), ...fixedAxisPatch(n, 'height'), ...size }
+    const patch = {
+      ...fixedAxisPatch(n, 'width', retainFill),
+      ...fixedAxisPatch(n, 'height', retainFill),
+      ...size
+    }
     preview.update([n.id], patch, `Change ${axis}`)
   }
 

@@ -54,6 +54,11 @@ For one-step commit and Escape rollback across a sizing-mode change, variable de
 numeric value, compose the NumberField with `BindableValue` using a provider that implements
 interaction batches. Merely focusing the field does not switch its sizing mode.
 
+`updateAxisSize('width', value, true)` retains an authored Fill mode and changes its numeric
+fallback. This optional `retainFill` argument defaults to `false`; it does not change the
+default Fixed transition or preserve Hug mode. Key a binding-aware field subtree by the selected
+node ID so a selection change restores an unfinished interaction before accepting another node.
+
 ## Aspect ratio lock
 
 ```ts

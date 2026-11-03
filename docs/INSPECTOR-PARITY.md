@@ -123,3 +123,12 @@ checks pass. The normal81.19MiB package builds and passes strict signature verif
 the inspected normal frontend and executable have no detected WDIO test hooks. The separate
 native-test package is87.68MiB. The main installed app, user profile and recovery data remain
 untouched. These checks qualify the named corner behavior, not full design or functionality parity.
+
+Fill continuation2026-11-03: compact multi-selection now offers mixed Fill Width/Height and omits
+the inherited Spacing row; Advanced retains spacing. Single and multi dimension edits retain
+Fill and update numeric fallbacks, correcting the earlier independent numeric-clear behavior.
+Binding-aware dimensions and selection-keyed fields preserve aliases/scales on cancellation;
+multi-frame clipping appears in Appearance. Twenty-six browser journeys,25owner checks/139assertions
+and a197.1s physical native Fill/mixed/edit/history/clipping/Save/Close/Open journey pass. The final
+native screenshot is inspected. Multi flow/Hug/add-layout, Code/header, mixed paint text/selection
+colors and exact remaining visuals remain open. See [layout evidence](LAYOUT-PARITY.md#fill-fallback-editing-and-multi-selection-2026-11-03).

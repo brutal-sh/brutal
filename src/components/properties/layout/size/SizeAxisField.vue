@@ -85,7 +85,7 @@ function handleSelect(value: SizeSelectValue) {
       :min="0"
       :node-id="ctx.node.id"
       :binding-path="axis"
-      @update:model-value="ctx.updateAxisSize(axis, $event)"
+      @update:model-value="ctx.updateAxisSize(axis, $event, compact)"
       @commit="(value: number, previous: number) => ctx.commitAxisSize(axis, value, previous)"
       @cancel="ctx.cancelPreview"
     >

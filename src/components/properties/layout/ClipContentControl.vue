@@ -8,7 +8,10 @@ const { panels } = useI18n()
 </script>
 
 <template>
-  <label class="mt-2 flex cursor-pointer items-center gap-2 text-xs text-surface">
+  <label
+    v-if="layout.clipsContent.value !== undefined"
+    class="mt-2 flex cursor-pointer items-center gap-2 text-xs text-surface"
+  >
     <input
       type="checkbox"
       data-test-id="clip-content-checkbox"

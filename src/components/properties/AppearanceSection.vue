@@ -2,7 +2,6 @@
 import type { BlendMode } from '@open-pencil/scene-graph'
 import { POINT_COUNT_RANGE } from '@open-pencil/scene-graph/polygon'
 import { MIXED } from '@open-pencil/vue/controls/node-props'
-import { LAYOUT_CONTAINER_TYPES } from '@open-pencil/vue/controls/selection-layout'
 import { useVariableModes } from '@open-pencil/vue/controls/variable-modes'
 import { useI18n } from '@open-pencil/vue/i18n'
 import { AppearanceControlsRoot } from '@open-pencil/vue/primitives/AppearanceControls'
@@ -334,7 +333,6 @@ function blendModeGroups(value: BlendMode | typeof MIXED) {
                 actions.commitCornerProp('cornerSmoothing', v / 100, p / 100)
             "
             @cancel="actions.cancelRadiusPreview"
-            @before-cancel="actions.rollbackRadiusPreview"
           >
             <template #icon>
               <icon-lucide-squircle class="size-3" />
@@ -344,9 +342,7 @@ function blendModeGroups(value: BlendMode | typeof MIXED) {
       </PanelGrid>
 
       <VariableModeRows :choices="variableModes.applied.value" @set="variableModes.setMode" />
-      <ClipContentControl
-        v-if="compact && node && !isMulti && LAYOUT_CONTAINER_TYPES.has(node.type)"
-      />
+      <ClipContentControl v-if="compact" />
     </PanelSection>
   </AppearanceControlsRoot>
 </template>

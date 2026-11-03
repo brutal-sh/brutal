@@ -1,5 +1,6 @@
 import { expect, test, useEditorSetupWithClear } from '#tests/e2e/fixtures'
 import { mixedSelectionDriver } from '#tests/helpers/canvas/mixed-selection/driver'
+import { openAppMenu } from '#tests/helpers/menu'
 import { propertyField, propertySection } from '#tests/helpers/properties'
 
 // Figma desktop 126, probed with the same layers: a multi-selection shows layout, typography for
@@ -7,6 +8,14 @@ import { propertyField, propertySection } from '#tests/helpers/properties'
 
 const editor = useEditorSetupWithClear('/?test&no-rulers')
 const scene = mixedSelectionDriver(() => editor.page)
+
+test.beforeEach(async () => {
+  await (
+    await openAppMenu(editor.page, 'View')
+  )
+    .getByRole('menuitem', { name: 'Advanced properties', exact: true })
+    .click()
+})
 
 async function select(...layers: Parameters<typeof scene.select>) {
   await scene.build()

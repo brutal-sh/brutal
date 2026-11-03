@@ -69,3 +69,59 @@ The final browser run passes23 targeted journeys covering six canvas baselines, 
 The isolated physical native journey passes106.9s, including operator barriers: File Open, width123.456789/height91.56789 typing, two Undo/two Redo, Cmd+S, Close→Home→Recents reopen. The visible fields and badge show123.46×91.57; the saved file retains123.456789/91.56789, x12.5/y16.25 and radius3.5. The final native screenshot is visually inspected. The first Select All arrives before reopened loading completes; repeating after observing the loaded document selects the intended rectangle. Receipt: fractional-size-precision-native-physical.log. Seventeen focused numeric/geometry tests pass56 assertions. Other labels, transformed/mixed states, exact glyph/style identity and full parity remain OPEN.
 
 Source/Vue and canonical test types, architecture, documentation and changelog checks pass. The first structure lint catches unnecessary selector-string escapes in the new assertions; those are removed and final structure lint passes with existing warnings. The normal81.17MiB candidate builds, passes strict signature verification and contains no detected native-test frontend markers or executable symbols. It is not installed over the main application; profiles, credentials and recovery remain untouched.
+
+## Fill fallback editing and multi-selection —2026-11-03
+
+Fresh actual Pen checks correct the earlier independent numeric-clear policy. Single rectangles,
+multiple rectangles and a single freeform frame retain Fill Width when their numeric width is
+edited. The frame120.5→140.25 saves `fill_container(140.25)` and its checkbox remains checked.
+Multi-selection Fill Width/Height changes preserve each layer's own fallback; numeric edits update
+those fallbacks while retaining Fill. A mixed checkbox reports the native indeterminate state and
+one click turns Fill on for both layers without unifying their numeric sizes. Three Undo/Save
+actions restore the rectangle fixture after each block. The frame's width Undo, explicit Fill
+clear and Save restore its original120.5×80.75 and the other frame80.25×45.5, both freeform.
+One earlier frame probe uses a stale field index and changes layout; it is rejected and restored
+before repeating with the observed width field. Private receipt:pen-multi-fill-reference-2026-11-03.json.
+
+Compact dimension fields now opt into retained Fill through the existing sizing transaction;
+default SDK/Advanced numeric sizing still fixes an edited axis, and Hug behavior is unchanged.
+The existing aspect-ratio path remains shared. Compact multi-selection shows mixed Fill controls,
+uses two-decimal display without changing raw values, and omits the inherited Spacing row.
+Advanced spacing remains available. Binding-aware multi-size fields target every selected node,
+and selection-keyed single/multi fields restore an unfinished edit before accepting new targets.
+Compact multi-frame clipping moves to Appearance through the existing clipping owner.
+
+The first single/multi checks reproduce the Fill-clear and Spacing differences in both engines.
+Basic corrected checks pass four journeys. Further RED checks reproduce raw multi-size fields
+keeping aliases/scales after a literal edit, and single-size fields losing aliases/scales on
+selection change. Reusing the binding-aware field and keying its subtree correct those cases.
+The final26 corner/compact inspector journeys pass Chromium and WebKit, including differing scaled
+width bindings, Escape, mixed Fill toggles, one-step Undo/Redo, saved `.pen` expressions/reopen,
+selection cancellation and mixed clipping. Twenty-five related owner checks pass139assertions.
+The first added ratio fixture mistakenly uses a number instead of the canonical vector; the
+corrected fixture verifies retained Fill, ratio, cancellation/history and the default Fixed policy.
+
+The isolated197.1s physical native journey passes File Open, single Fill Width, width140.25,
+Undo/Redo, mixed two-frame selection, Fill Width/Height, both widths177.75, one-step Undo/Redo,
+Appearance clipping/Undo, Save, Close, native File Open and reselection. Saved widths are
+`fill_container(177.75)` with heights`fill_container(80.75)`/`fill_container(45.5)` and original
+positions. Reopened checkboxes and dimensions agree, and the final native screenshot is visually
+inspected. Private receipt:compact-fill-native-physical.log. Source review finds no additional
+concrete defect; it is not independent runtime evidence. Other auto-layout parent configurations,
+absolute children, mixed types, multi Hug/flow/add-layout actions, Code/header design, exact
+remaining pixels and whole-product parity remain OPEN.
+
+The final13 Advanced mixed-selection and retained-panel regressions pass, including spacing,
+flow, typography, strokes, selection colors, bound-width deactivation and held scrubs. The first
+broader run records eight passes/one failure/four not-run: it expects the same numeric input to
+survive selection of a newly drawn frame. The contract now checks that the panel is retained;
+its dimension input ends the previous node's binding interaction, as the executed binding-loss
+regression requires. The same-node retained-control identity check is preserved. No snapshot
+baseline changes. Private receipts:compact-fill-advanced-retained-regression.log and
+compact-fill-advanced-retained-final.log.
+
+Source/Vue and canonical test types, structure lint with existing warnings, architecture and
+docs/changelog checks pass. The normal81.19MiB package builds, passes strict signature verification
+and has no detected WDIO frontend markers or executable symbols. The isolated native-test package
+is87.68MiB. The main installed app, profile and recovery data remain untouched. These receipts
+qualify the named Fill and binding paths; full design/functionality parity remains OPEN.

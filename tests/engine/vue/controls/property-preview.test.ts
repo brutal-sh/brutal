@@ -3,11 +3,50 @@ import { describe, expect, test } from 'bun:test'
 import { computed, effectScope } from 'vue'
 
 import { createEditor } from '@open-pencil/core'
+import { authoredLayoutSizing, authoredLayoutSizingUpdates } from '@open-pencil/scene-graph/layout'
 
 import { createLayoutActions } from '#vue/controls/layout/helpers'
 import { usePropScrub } from '#vue/controls/prop-scrub/use'
 
 describe('property previews', () => {
+  test('retained Fill edits keep fallback and aspect ratio through cancel and Undo while the default still fixes sizing', () => {
+    const editor = createEditor()
+    try {
+      const node = editor.graph.createNode('FRAME', editor.state.currentPageId, {
+        width: 120,
+        height: 60,
+        targetAspectRatio: { x: 120, y: 60 }
+      })
+      editor.graph.updateNode(
+        node.id,
+        authoredLayoutSizingUpdates(editor.graph, node, 'HORIZONTAL', 'FILL')
+      )
+      const original = structuredClone(node.pluginData)
+      const actions = createLayoutActions({ editor, node: computed(() => node) })
+      actions.updateAxisSize('width', 140.25, true)
+      expect([node.width, node.height]).toEqual([140.25, 70.125])
+      expect(authoredLayoutSizing(editor.graph, node, 'HORIZONTAL')).toBe('FILL')
+      actions.cancelPreview()
+      expect([node.width, node.height]).toEqual([120, 60])
+      expect(node.pluginData).toEqual(original)
+      expect(editor.undo.canUndo).toBe(false)
+      actions.updateAxisSize('width', 140.25, true)
+      actions.commitAxisSize('width', 140.25, 120)
+      editor.undoAction()
+      expect([node.width, node.height]).toEqual([120, 60])
+      expect(node.pluginData).toEqual(original)
+      editor.redoAction()
+      expect([node.width, node.height]).toEqual([140.25, 70.125])
+      expect(authoredLayoutSizing(editor.graph, node, 'HORIZONTAL')).toBe('FILL')
+      actions.updateAxisSize('width', 160)
+      expect(authoredLayoutSizing(editor.graph, node, 'HORIZONTAL')).toBe('FIXED')
+      actions.cancelPreview()
+      expect(authoredLayoutSizing(editor.graph, node, 'HORIZONTAL')).toBe('FILL')
+    } finally {
+      editor.dispose()
+    }
+  })
+
   test('pins targets through selection changes and releases previews on scope disposal', () => {
     const editor = createEditor()
     const scope = effectScope()
