@@ -39,6 +39,19 @@ test('saved visits survive a fresh state and removing one retains the other visi
   expect(reopen().entries.value.map((entry) => entry.url)).toEqual([second.url])
 })
 
+test('removing a saved local HTML visit preserves web visits and rejects stale completion', async () => {
+  const file = { url: 'file:///private/tmp/owned-export.html', generation: 0 }
+  const { state, reopen } = fixture()
+  state.remember(first)
+  state.remember(file)
+  expect(reopen().entries.value.map((entry) => entry.url)).toEqual([file.url, first.url])
+  expect(await state.remove(file.url)).toBe(true)
+  state.remember(file)
+  expect(reopen().entries.value.map((entry) => entry.url)).toEqual([first.url])
+  state.remember({ ...file, generation: 1 })
+  expect(reopen().entries.value.map((entry) => entry.url)).toEqual([file.url, first.url])
+})
+
 test('clear removes the saved key and ignores an older pending visit', async () => {
   const pending = createDeferred<number>()
   const { state, values, reopen } = fixture(() => pending.promise)

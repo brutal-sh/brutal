@@ -2,6 +2,20 @@
 
 Full parity is open. A source implementation, unit check, build, and user workflow establish different things. This ledger records only observed outcomes and the scope of each observation.
 
+## Local HTML history —2026-11-03
+
+- Actual Pen records the owned exported HTML beside webpages; selecting that entry restores
+  its file address. Open Pen's103.7s physical native journey exports HTML, recalls it in the
+  same and a new document, reports an unavailable renamed file, and removes only that file
+  entry while retaining the owned web visit. Source bytes, selection and versions stay unchanged.
+- Seventy-three browser owner checks/292assertions and11 compiled browser-policy checks pass.
+  History stores locators; recalling a file rechecks its canonical visible regular HTML path
+  and existing filesystem deny rules. Typed addresses remain web-only. Exact history pixels,
+  other failure states and whole-product parity remain open. Separate dedicated test-app
+  write565ms/read840ms processes retain the visit, refuse direct file navigation after restart
+  and reauthorize through history with4,737,299 expected background pixels. Three existing
+  native web-history workflows pass in40.8s. Normal-build restart stays open.
+
 ## HTML file cache reload —2026-11-03
 
 - Open Pen's108.8s physical native journey exports relative-image HTML, changes the owned

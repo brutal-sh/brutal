@@ -1,7 +1,7 @@
 use std::sync::Mutex;
 use tauri::{Emitter, Manager, Webview};
 
-use super::policy::{preview_url, require_editor};
+use super::{exports, policy::require_editor};
 
 #[derive(Clone, serde::Serialize)]
 pub struct CompletedVisit {
@@ -21,7 +21,7 @@ static HISTORY: Mutex<PendingHistory> = Mutex::new(PendingHistory {
 const MAX_PENDING_VISITS: usize = 50;
 
 pub(super) fn completed(view: &Webview, url: &url::Url) {
-    if preview_url(
+    if exports::target(
         url.as_str(),
         view.app_handle().config().build.dev_url.as_ref(),
     )
@@ -57,7 +57,14 @@ pub fn take_browser_preview_visits(webview: Webview) -> Result<Vec<CompletedVisi
 pub fn clear_browser_preview_visits(webview: Webview, url: Option<String>) -> Result<u64, String> {
     require_editor(webview.label())?;
     let target = url
-        .map(|url| preview_url(&url, webview.app_handle().config().build.dev_url.as_ref()))
+        .map(|url| {
+            let parsed = url::Url::parse(&url).map_err(|_| "The history address is invalid.")?;
+            if parsed.scheme() == "file" {
+                Ok(parsed)
+            } else {
+                exports::target(&url, webview.app_handle().config().build.dev_url.as_ref())
+            }
+        })
         .transpose()?;
     let mut history = HISTORY
         .lock()

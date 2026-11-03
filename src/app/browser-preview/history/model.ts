@@ -1,8 +1,8 @@
 import { compact, uniqBy } from 'es-toolkit/array'
 import * as v from 'valibot'
 
-import { previewURL } from '../schema'
 import { browserHistorySchema, type BrowserHistoryEntry } from './schema'
+import { browserHistoryURL } from './url'
 
 export const MAX_BROWSER_HISTORY_ENTRIES = 50
 
@@ -20,7 +20,7 @@ export function recordBrowserHistory(
 ): readonly BrowserHistoryEntry[] {
   let url: string
   try {
-    url = previewURL(input)
+    url = browserHistoryURL(input)
   } catch {
     return entries
   }

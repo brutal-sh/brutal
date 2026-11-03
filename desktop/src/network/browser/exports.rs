@@ -36,6 +36,26 @@ fn export_path(path: &Path) -> Result<PathBuf, String> {
     Ok(canonical)
 }
 
+fn export_location(input: &str) -> Result<(PathBuf, Url), String> {
+    let original = input
+        .starts_with("file:")
+        .then(|| Url::parse(input).map_err(|_| "The HTML export address is invalid."))
+        .transpose()?;
+    let candidate = match &original {
+        Some(url) => url
+            .to_file_path()
+            .map_err(|_| "Choose a local HTML export.".to_owned())?,
+        None => PathBuf::from(input),
+    };
+    let path = export_path(&candidate)?;
+    let mut url = Url::from_file_path(&path).map_err(|_| "The HTML export address is invalid.")?;
+    if let Some(original) = original {
+        url.set_query(original.query());
+        url.set_fragment(original.fragment());
+    }
+    Ok((path, url))
+}
+
 #[tauri::command]
 pub fn authorize_browser_export(
     app: tauri::AppHandle,
@@ -43,11 +63,10 @@ pub fn authorize_browser_export(
     path: String,
 ) -> Result<String, String> {
     require_editor(webview.label())?;
-    let path = export_path(Path::new(&path))?;
+    let (path, url) = export_location(&path)?;
     if app.fs_scope().is_forbidden(&path) {
         return Err("This export location cannot be previewed.".into());
     }
-    let url = Url::from_file_path(&path).map_err(|_| "The HTML export address is invalid.")?;
     let mut exports = EXPORTS
         .lock()
         .map_err(|_| "Export preview is temporarily unavailable.")?;
@@ -143,6 +162,18 @@ mod tests {
         let url = Url::from_file_path(&path).unwrap();
         assert!(target(url.as_str(), None).is_err());
         let canonical = export_path(&path).unwrap();
+        assert_eq!(
+            export_location(path.to_str().unwrap()).unwrap().0,
+            canonical
+        );
+        let mut history_url = url.clone();
+        history_url.set_query(Some("fixture=1"));
+        history_url.set_fragment(Some("owned"));
+        let (reopened, address) = export_location(history_url.as_str()).unwrap();
+        assert_eq!(reopened, canonical);
+        assert_eq!(address.query(), Some("fixture=1"));
+        assert_eq!(address.fragment(), Some("owned"));
+        assert!(export_location("file://remote/export.html").is_err());
         EXPORTS.lock().unwrap().push(canonical.clone());
         assert!(target(url.as_str(), None).is_ok());
         EXPORTS.lock().unwrap().retain(|path| path != &canonical);

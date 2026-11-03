@@ -1,13 +1,13 @@
 import * as v from 'valibot'
 
-import { previewURL } from '../schema'
+import { browserHistoryURL } from './url'
 
 export const browserHistoryEntrySchema = v.object({
   url: v.pipe(
     v.string(),
     v.check((url) => {
       try {
-        return previewURL(url) === url
+        return browserHistoryURL(url) === url
       } catch {
         return false
       }

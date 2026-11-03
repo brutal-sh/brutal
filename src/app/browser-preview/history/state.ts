@@ -1,8 +1,8 @@
 import { computed, ref } from 'vue'
 
-import { previewURL } from '../schema'
 import { MAX_BROWSER_HISTORY_ENTRIES, parseBrowserHistory, recordBrowserHistory } from './model'
 import type { BrowserHistoryEntry, CompletedBrowserVisit } from './schema'
+import { browserHistoryURL } from './url'
 
 interface HistoryStorage {
   getItem(key: string): string | null
@@ -48,7 +48,7 @@ export function createBrowserHistoryState(
     if (pending.value) {
       let url: string
       try {
-        url = previewURL(visit.url)
+        url = browserHistoryURL(visit.url)
       } catch {
         return
       }
@@ -73,7 +73,7 @@ export function createBrowserHistoryState(
     if (pending.value) return false
     pending.value = true
     try {
-      const target = url === undefined ? undefined : previewURL(url)
+      const target = url === undefined ? undefined : browserHistoryURL(url)
       const nextGeneration = await clearVisits(target)
       if (target === undefined) {
         generation = Math.max(generation, nextGeneration)

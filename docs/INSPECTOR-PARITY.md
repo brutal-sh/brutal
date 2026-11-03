@@ -2,6 +2,37 @@
 
 Target: actual `/Applications/Pen.app`1.2.21, rechecked in its installed Info.plist on2026-11-02. Full inspector and whole-product parity remain open. The reference is inspected through native UI and the private resource archive recorded in [reference provenance](PEN-REFERENCE.md).
 
+## Local HTML history —2026-11-03
+
+Actual Pen's history contains the owned exported HTML beside web pages. Selecting its file
+entry restores the visible address and Open Folder control; unrelated history is neither copied
+nor cleared. Open Pen records completed registered file pages through the same bounded history
+and deletion-generation barriers as web pages. Persisted file addresses are locators, not
+navigation grants: selecting one calls the editor-only export authorization again, canonicalizes
+and validates its visible regular HTML path, and checks existing filesystem deny rules. Query
+and fragment are retained. Ordinary typed addresses remain web-only. Deleting a missing history
+entry needs no filesystem access and grants no file authority.
+
+The103.7s physical native File Open/select/Export/Close page/history recall/new document/recall
+journey executes both same-document and cross-document delivery. Renaming only the owned output
+then produces unavailable-file feedback with no child view; removing that one entry retains
+the seeded owned HTTP visit. Final Close preserves original source design bytes and both
+documents' selections and versions. The1604×2956 export capture contains both checker colors
+and the frame background; the restored new-document screenshot is visually inspected.
+Seventy-three owner checks/292assertions and11 compiled policy checks pass. The initial test-type
+readonly-array mismatch is corrected without changing product behavior. Source review finds
+no concrete defect, without qualifying native delivery. Private receipts:
+file-history-native-physical.log, file-history-native-{inline,editor-restored}.png and the
+owned historyRecall entry in pen-file-browser-reference-2026-11-03/facts.json.
+Separate persistent test-app processes execute write565ms/read840ms stages: history survives
+process termination, direct file navigation is initially rejected by the fresh registry, and
+selecting the saved entry reauthorizes and renders its expected background. Source HTML bytes
+and design state remain unchanged. The profile has a dedicated test identifier, with no file
+associations or production credentials. Three existing native web-history workflows also pass
+in40.8s, including bounded queued visits, loading/deletion and editor-reload persistence.
+Normal-build restart, exact history pixels, additional
+failure states and full parity remain OPEN.
+
 ## HTML file cache reload —2026-11-03
 
 For authorized local HTML, Empty Cache and Reload skips the website-data confirmation and

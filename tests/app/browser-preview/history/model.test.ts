@@ -59,3 +59,12 @@ test('storage recovery caps a larger valid history and preserves its newest-firs
   expect(recovered[0]).toEqual(entries[0])
   expect(recovered.at(-1)).toEqual(entries[49])
 })
+
+test('retains local HTML visits through persistence without accepting other local resources', () => {
+  const url = 'file:///private/tmp/owned%20export.html'
+  const entries = recordBrowserHistory([first], url, 20)
+  expect(entries[0]).toEqual({ url, visitedAt: 20 })
+  expect(parseBrowserHistory(JSON.stringify(entries))).toEqual([...entries])
+  for (const unsafe of ['file:///etc/hosts', 'file:///tmp/image.png', 'file://remote/export.html'])
+    expect(recordBrowserHistory(entries, unsafe, 21)).toBe(entries)
+})

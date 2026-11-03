@@ -40,6 +40,7 @@ import {
   clearBrowserHistory
 } from '@/app/browser-preview/history/storage'
 import {
+  authorizeBrowserExport,
   createBrowserPreviewNative,
   openBrowserExportExternally
 } from '@/app/browser-preview/native'
@@ -140,7 +141,8 @@ const backdrop = createBrowserBackdrop(async () => {
   if (!status.value) throw new Error('Open a page before preparing its backdrop.')
   return bridge.native.backdrop(status.value.url)
 })
-const busy = computed(() => actionBusy.value || backdrop.pending.value)
+const openingHistory = ref(false)
+const busy = computed(() => actionBusy.value || backdrop.pending.value || openingHistory.value)
 defineExpose({
   async openPage(url: string) {
     if (busy.value) throw new Error('Wait for the browser operation to finish, then export again.')
@@ -266,9 +268,20 @@ async function closePage() {
   if (!status.value && !error.value) session.url = ''
   clearingPage = false
 }
-function openSuggestion(url: string) {
-  address.value = url
-  void navigate()
+async function openSuggestion(input: string) {
+  if (busy.value) return
+  openingHistory.value = true
+  try {
+    const url = input.startsWith('file:') ? await authorizeBrowserExport(input) : input
+    if (disposed || !open.value) return
+    if (url.startsWith('file:')) session.exportURLs.add(url)
+    address.value = url
+    await navigate()
+  } catch (reason) {
+    if (!disposed) error.value = reason instanceof Error ? reason.message : String(reason)
+  } finally {
+    openingHistory.value = false
+  }
 }
 preset.value = session.preset
 const { pause, resume } = useIntervalFn(preview.refresh, 1000, {
