@@ -5,3 +5,8 @@ export type ExportOptions = HTMLExportOptions & {
   quality?: number
   pdfMode?: 'single' | 'frames'
 }
+
+export interface ExportDelivery {
+  fileName: string
+  nativePath?: string
+}

@@ -184,11 +184,18 @@ export async function saveExportedFile(
   format: string,
   ext: string,
   mime: string,
-  downloadBlob: DownloadBlob
+  downloadBlob: DownloadBlob,
+  nativePath?: string
 ): Promise<boolean> {
   if (isTauri()) {
-    const path = await chooseTauriExportPath(fileName, format, ext)
+    const path = nativePath ?? (await chooseTauriExportPath(fileName, format, ext))
     if (!path) return false
+    if (nativePath) {
+      const { lstat } = await import('@tauri-apps/plugin-fs')
+      const info = await lstat(path).catch(() => null)
+      if (info && (info.isSymlink || !info.isFile))
+        throw new Error('Choose a regular file for this export.')
+    }
     await writeTauriExportFile(path, data)
     return true
   }

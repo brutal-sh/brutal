@@ -2,6 +2,36 @@
 
 Target: actual `/Applications/Pen.app`1.2.21, rechecked in its installed Info.plist on2026-11-02. Full inspector and whole-product parity remain open. The reference is inspected through native UI and the private resource archive recorded in [reference provenance](PEN-REFERENCE.md).
 
+## Code export destinations —2026-11-03
+
+Code HTML uses`<document-base>-export.html`. Desktop Ask user where to export file defaults
+off: a saved local design writes beside its source; enabling Ask where uses the existing
+Save dialog. An unsaved design falls back to Save with`Untitled-export.html`. Other export
+callers retain their existing destination policy. External HTML bundles keep their ZIP
+delivery. Automatic paths use the existing scoped filesystem writer and refuse detected
+links/directories; no native permission or filesystem scope is widened.
+
+Sixteen Chromium/WebKit HTML journeys pass, including the document-based download name.
+Eighteen file-delivery, bundle and canonical watcher-owner checks/41assertions pass. An81.8s
+physical native journey replaces a stale owned HTML export beside its design, refuses a
+test link targeting the source without changing its bytes, enables Ask where, checks the
+suggested filename, cancels without output, then saves to a chosen filename. The document
+version, selection and original source bytes remain unchanged. A separate32.3s native
+unsaved-design journey observes the fallback Save filename and cancellation without
+creating a document source or changing selection/version. Final native images are inspected.
+
+The first native automatic export exposes a restricted`exists` permission and is rejected;
+that failure remains in code-destination-native-physical.log. The correction uses already
+permitted`lstat` metadata, with no capability changes. An initial broader legacy unit run
+also retains an unrelated stale file-watch expectation; the canonical watcher-owner checks
+pass, and no whole-unit-suite result is claimed. Private successful receipts:
+code-destination-native-recheck.log, code-unsaved-native-physical.log,
+code-destination-browser.log and code-destination-owner-corrected.log.
+
+Automatic internal-browser opening, absolute/loose asset delivery, exact settings geometry,
+themes and every remaining export state remain OPEN. These destination checks do not
+qualify complete HTML export or whole-product parity.
+
 ## Multi-selection Code continuation —2026-11-03
 
 Actual Pen exposes Code for a two-frame selection. An owned native HTML export contains

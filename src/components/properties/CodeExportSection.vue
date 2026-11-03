@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { useClipboard, useLocalStorage } from '@vueuse/core'
+import { basename, dirname, isAbsolute, join } from 'pathe'
+import { filename } from 'pathe/utils'
 import { PopoverRoot, PopoverTrigger, PopoverContent, PopoverPortal } from 'reka-ui'
 import { inject, ref } from 'vue'
 
@@ -28,6 +30,7 @@ const scaffold = useLocalStorage('open-pen:html-scaffold', true)
 const center = useLocalStorage('open-pen:html-center', true)
 const names = useLocalStorage('open-pen:html-layer-names', true)
 const ids = useLocalStorage('open-pen:html-layer-ids', false)
+const askWhere = useLocalStorage('open-pen:html-ask-where', false)
 const { open: settingsOpen, portalActive } = useRetainedPopup()
 const popover = usePopoverUI({ content: 'w-72 p-3' })
 const assetModes = [
@@ -44,6 +47,12 @@ const formats = [
 async function output(save: boolean) {
   if (busy.value || !nodeIds.length) return
   const targetIds = [...nodeIds]
+  const sourcePath = store.getDocumentFilePath()
+  const fileName = `${(sourcePath ? filename(sourcePath) : basename(store.state.documentName)) || 'Untitled'}-export.html`
+  const nativePath =
+    IS_TAURI && !askWhere.value && sourcePath && isAbsolute(sourcePath)
+      ? join(dirname(sourcePath), fileName)
+      : undefined
   busy.value = true
   error.value = ''
   const options = {
@@ -55,7 +64,11 @@ async function output(save: boolean) {
     style: style.value === 'tailwind' ? 'tailwind' : 'inline'
   } as const
   try {
-    if (save) await store.exportTarget({ scope: 'selection', nodeIds: targetIds }, 'html', options)
+    if (save)
+      await store.exportTarget({ scope: 'selection', nodeIds: targetIds }, 'html', options, {
+        fileName,
+        nativePath
+      })
     else await copy((await renderNodesToHTML(store.graph, targetIds, options)).html)
   } catch {
     error.value = 'Could not generate HTML. Try again.'
@@ -96,6 +109,10 @@ async function output(save: boolean) {
             <label class="mt-3 flex items-center gap-2 text-xs text-surface"
               ><AppCheckbox v-model="names" ariaLabel="Include layer names" />Include layer
               names</label
+            >
+            <label v-if="IS_TAURI" class="mt-3 flex items-center gap-2 text-xs text-surface"
+              ><AppCheckbox v-model="askWhere" ariaLabel="Ask user where to export file" />Ask user
+              where to export file</label
             >
             <label class="mt-3 flex items-center gap-2 text-xs text-surface"
               ><AppCheckbox v-model="ids" ariaLabel="Include layer IDs" />Include layer IDs</label

@@ -2,6 +2,19 @@
 
 Full parity is open. A source implementation, unit check, build, and user workflow establish different things. This ledger records only observed outcomes and the scope of each observation.
 
+## Code export destinations —2026-11-03
+
+- Sixteen Chromium/WebKit HTML journeys pass with document-based filenames;18 file delivery,
+  bundle and canonical watcher-owner checks/41assertions pass.
+- The81.8s physical native journey executes automatic adjacent export over stale owned HTML,
+  refusal of an owned link to the source, Ask where enabled, default Save filename, Cancel
+  and chosen Save. Selection/version and original source bytes remain unchanged. A32.3s
+  separate native unsaved-design journey executes Save fallback and Cancel with a null
+  source identity retained. Native screenshots are inspected.
+- The initial native permission failure and unrelated stale legacy watcher expectation remain
+  recorded; scopes are unchanged. Automatic internal-browser opening, absolute/loose asset
+  delivery, exact settings pixels and full parity remain open. See [inspector parity](INSPECTOR-PARITY.md).
+
 ## Multi-selection Code —2026-11-03
 
 - Sixteen Chromium/WebKit journeys execute selected-root HTML output with both styles,

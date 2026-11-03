@@ -13,7 +13,7 @@ import {
   saveExportedFile,
   type ExportedFile
 } from '@/app/document/export/files'
-import type { ExportOptions } from '@/app/document/export/types'
+import type { ExportDelivery, ExportOptions } from '@/app/document/export/types'
 import { trackDocumentFormat } from '@/app/telemetry'
 import { IS_TAURI } from '@/constants'
 
@@ -76,7 +76,7 @@ export function createDocumentExportActions(
     }
   }
 
-  function saveExportFile(file: ExportedFile): Promise<boolean> {
+  function saveExportFile(file: ExportedFile, nativePath?: string): Promise<boolean> {
     if (file.assets?.length)
       return saveExportedFile(
         bundleExportFiles([file]),
@@ -84,7 +84,8 @@ export function createDocumentExportActions(
         'ZIP',
         '.zip',
         'application/zip',
-        downloadBlob
+        downloadBlob,
+        nativePath ? `${nativePath}.zip` : undefined
       )
     return saveExportedFile(
       file.bytes,
@@ -92,16 +93,20 @@ export function createDocumentExportActions(
       file.format,
       file.ext,
       file.mime,
-      downloadBlob
+      downloadBlob,
+      nativePath
     )
   }
 
   async function exportTarget(
     target: ExportRequest['target'],
     formatId: string,
-    options?: ExportOptions
+    options?: ExportOptions,
+    delivery?: ExportDelivery
   ) {
-    if (await saveExportFile(await renderExportFile(target, formatId, options))) {
+    const file = await renderExportFile(target, formatId, options)
+    if (delivery) file.fileName = delivery.fileName
+    if (await saveExportFile(file, delivery?.nativePath)) {
       trackDocumentFormat('document_exported', formatId)
     }
   }

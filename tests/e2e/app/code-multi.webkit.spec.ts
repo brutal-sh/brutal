@@ -99,7 +99,7 @@ for (const format of ['HTML + Tailwind', 'HTML + CSS']) {
       selected: [...(window.openPencil?.getStore?.().state.selectedIds ?? [])]
     }))
     const { name, bytes } = await exportBytes(page)
-    expect(name).toMatch(/\.html$/)
+    expect(name).toBe('multi-code-export.html')
     const html = bytes.toString()
     expect(html).not.toContain('Unselected C')
     const preview = await page.context().newPage()
