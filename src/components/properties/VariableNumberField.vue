@@ -18,6 +18,7 @@ const {
   min,
   max,
   step,
+  precision,
   icon,
   label,
   suffix,
@@ -34,6 +35,7 @@ const {
   min?: number
   max?: number
   step?: number
+  precision?: number
   icon?: string
   label?: string
   suffix?: string
@@ -95,6 +97,7 @@ defineOptions({ inheritAttrs: false })
       :min="min"
       :max="max"
       :step="step"
+      :precision="precision"
       :units="units"
       :ui="{ root: bindingStyles.root }"
       :data-property="bindingPath"

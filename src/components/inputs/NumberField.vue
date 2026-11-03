@@ -17,6 +17,7 @@ export interface NumberFieldProps {
   min?: number
   max?: number
   step?: number
+  precision?: number
   icon?: string
   label?: string
   suffix?: string
@@ -64,6 +65,7 @@ const {
   min,
   max,
   step,
+  precision,
   icon,
   label,
   suffix,
@@ -107,6 +109,7 @@ defineOptions({ inheritAttrs: false })
     v-slot="{ editing, actions, attrs: rootAttrs, placeholder: ph, displayValue }"
     :model-value="modelValue"
     :expressions="false"
+    :precision="precision"
     :min="min"
     :max="max"
     :step="step"

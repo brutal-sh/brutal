@@ -74,7 +74,7 @@ export function drawSingleSelectionSize(
   overlays: RenderOverlays,
   sizeFont: NonNullable<SkiaRenderer['sizeFont']>
 ): void {
-  const sizeText = `${Math.round(node.width)} × ${Math.round(node.height)}`
+  const sizeText = `${Math.round(node.width * 100) / 100} × ${Math.round(node.height * 100) / 100}`
   const pillColor = r.outlineColor(node, graph)
   const transform = frameLabelPlacement(node, graph, overlays.rotationPreview, {
     x: 0.5,
@@ -100,7 +100,7 @@ function drawMultiSelectionSize(
   maxY: number,
   sizeFont: NonNullable<SkiaRenderer['sizeFont']>
 ): void {
-  const sizeText = `${Math.round(maxX - minX)} × ${Math.round(maxY - minY)}`
+  const sizeText = `${Math.round((maxX - minX) * 100) / 100} × ${Math.round((maxY - minY) * 100) / 100}`
   const sx1 = minX * r.zoom + r.panX
   const sx2 = maxX * r.zoom + r.panX
   const sy2 = maxY * r.zoom + r.panY

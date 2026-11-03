@@ -39,6 +39,16 @@ const nodes: PenNode[] = [
     width: 20,
     height: 20,
     fill: '#7799BB'
+  },
+  {
+    id: 'position-precise',
+    name: 'Untouched precision',
+    type: 'rectangle',
+    x: 12.345678901234567,
+    y: 200,
+    width: 123.45678901234567,
+    height: 50.125,
+    fill: '#7799BB'
   }
 ]
 
@@ -96,13 +106,38 @@ async function reopen(page: Page, bytes: Buffer) {
   await page.getByRole('tab', { name: 'Layers', exact: true }).click()
 }
 
+test('opening formatted fields and accepting them retains untouched authored precision', async ({
+  page
+}) => {
+  const { canvas, row, fields } = await openFixture(page)
+  await row('Untouched precision').click()
+  const width = page
+    .getByTestId('properties-panel')
+    .getByRole('spinbutton', { name: 'Width', exact: true })
+  for (const [field, shown] of [
+    [fields.x, '12.35'],
+    [width, '123.46']
+  ] as const) {
+    await expect(field.locator('[data-slot="value"]')).toHaveText(shown)
+    await field.dblclick()
+    await expect(field).toHaveValue(shown)
+    await field.press('Enter')
+    expect(await getSelectedNode(page)).toMatchObject({
+      x: 12.345678901234567,
+      width: 123.45678901234567
+    })
+    await expect(page.getByRole('img', { name: 'Unsaved changes', exact: true })).toHaveCount(0)
+  }
+  canvas.assertNoErrors()
+})
+
 test('position fields retain authored fractions while showing the reference precision through history and reopen', async ({
   page
 }) => {
   const { canvas, row, fields } = await openFixture(page)
   await row('Fractional position').click()
-  await expect(fields.x).toHaveAttribute('aria-valuenow', '12.5')
-  await expect(fields.y).toHaveAttribute('aria-valuenow', '16.25')
+  await expect(fields.x.locator('[data-slot="value"]')).toHaveText('12.5')
+  await expect(fields.y.locator('[data-slot="value"]')).toHaveText('16.25')
   for (const [typed, shown] of [
     ['0.015', '0.02'],
     ['-0.015', '-0.01']
@@ -110,30 +145,30 @@ test('position fields retain authored fractions while showing the reference prec
     await fields.x.dblclick()
     await fields.x.fill(typed)
     await fields.x.press('Enter')
-    await expect(fields.x).toHaveAttribute('aria-valuenow', shown)
+    await expect(fields.x.locator('[data-slot="value"]')).toHaveText(shown)
     expect((await getSelectedNode(page))?.x).toBe(Number(typed))
     await canvas.undo()
-    await expect(fields.x).toHaveAttribute('aria-valuenow', '12.5')
+    await expect(fields.x.locator('[data-slot="value"]')).toHaveText('12.5')
   }
   await fields.x.dblclick()
   await fields.x.fill('20.125')
   await fields.x.press('Enter')
-  await expect(fields.x).toHaveAttribute('aria-valuenow', '20.13')
+  await expect(fields.x.locator('[data-slot="value"]')).toHaveText('20.13')
   expect((await getSelectedNode(page))?.x).toBe(20.125)
   await canvas.undo()
-  await expect(fields.x).toHaveAttribute('aria-valuenow', '12.5')
+  await expect(fields.x.locator('[data-slot="value"]')).toHaveText('12.5')
   await expect(page.getByRole('img', { name: 'Unsaved changes', exact: true })).toHaveCount(0)
   await canvas.redo()
   await fields.y.dblclick()
   await fields.y.fill('30.375')
   await fields.y.press('Escape')
-  await expect(fields.y).toHaveAttribute('aria-valuenow', '16.25')
+  await expect(fields.y.locator('[data-slot="value"]')).toHaveText('16.25')
   await fields.y.dblclick()
   await fields.y.fill('30.375')
   await fields.y.press('Enter')
-  await expect(fields.y).toHaveAttribute('aria-valuenow', '30.38')
+  await expect(fields.y.locator('[data-slot="value"]')).toHaveText('30.38')
   await canvas.undo()
-  await expect(fields.y).toHaveAttribute('aria-valuenow', '16.25')
+  await expect(fields.y.locator('[data-slot="value"]')).toHaveText('16.25')
   await canvas.redo()
   const bytes = await save(page)
   expect(
@@ -141,16 +176,16 @@ test('position fields retain authored fractions while showing the reference prec
   ).toMatchObject({ x: 20.125, y: 30.375, width: 120.5, height: 80.75 })
   await reopen(page, bytes)
   await row('Fractional position').click()
-  await expect(fields.x).toHaveAttribute('aria-valuenow', '20.13')
-  await expect(fields.y).toHaveAttribute('aria-valuenow', '30.38')
+  await expect(fields.x.locator('[data-slot="value"]')).toHaveText('20.13')
+  await expect(fields.y.locator('[data-slot="value"]')).toHaveText('30.38')
   expect(await getSelectedNode(page)).toMatchObject({ x: 20.125, y: 30.375 })
   await (
     await openAppMenu(page, 'View')
   )
     .getByRole('menuitem', { name: 'Advanced properties', exact: true })
     .click()
-  await expect(fields.x).toHaveAttribute('aria-valuenow', '20.13')
-  await expect(fields.y).toHaveAttribute('aria-valuenow', '30.38')
+  await expect(fields.x.locator('[data-slot="value"]')).toHaveText('20.13')
+  await expect(fields.y.locator('[data-slot="value"]')).toHaveText('30.38')
   canvas.assertNoErrors()
 })
 
@@ -174,12 +209,12 @@ test('fractional rotation matches the measured reference bounds and serializes a
   await fields.angle.fill('15.5')
   await fields.angle.press('Enter')
   await expect(fields.angle).toHaveAttribute('aria-valuenow', '15.5')
-  await expect(fields.x).toHaveAttribute('aria-valuenow', '3.9')
-  await expect(fields.y).toHaveAttribute('aria-valuenow', '1.62')
+  await expect(fields.x.locator('[data-slot="value"]')).toHaveText('3.9')
+  await expect(fields.y.locator('[data-slot="value"]')).toHaveText('1.62')
   await canvas.undo()
   await expect(fields.angle).toHaveAttribute('aria-valuenow', '0')
-  await expect(fields.x).toHaveAttribute('aria-valuenow', '12.5')
-  await expect(fields.y).toHaveAttribute('aria-valuenow', '16.25')
+  await expect(fields.x.locator('[data-slot="value"]')).toHaveText('12.5')
+  await expect(fields.y.locator('[data-slot="value"]')).toHaveText('16.25')
   await canvas.redo()
   const bytes = await save(page)
   const saved = parsePenDocument(bytes.toString()).children.find(
@@ -192,8 +227,8 @@ test('fractional rotation matches the measured reference bounds and serializes a
   await reopen(page, bytes)
   await row('Fractional position').click()
   await expect(fields.angle).toHaveAttribute('aria-valuenow', '15.5')
-  await expect(fields.x).toHaveAttribute('aria-valuenow', '3.9')
-  await expect(fields.y).toHaveAttribute('aria-valuenow', '1.62')
+  await expect(fields.x.locator('[data-slot="value"]')).toHaveText('3.9')
+  await expect(fields.y.locator('[data-slot="value"]')).toHaveText('1.62')
   canvas.assertNoErrors()
 })
 
@@ -209,7 +244,7 @@ test('distinct close fractions remain mixed before formatting and retain each pr
   await fields.x.dblclick()
   await fields.x.fill('-4.125')
   await fields.x.press('Enter')
-  await expect(fields.x).toHaveAttribute('aria-valuenow', '-4.12')
+  await expect(fields.x.locator('[data-slot="value"]')).toHaveText('-4.12')
   expect(
     (await getPageChildren(page))
       .filter((node) => ['position-a', 'position-b'].includes(node.id))
@@ -220,7 +255,7 @@ test('distinct close fractions remain mixed before formatting and retain each pr
   await fields.x.dblclick()
   await fields.x.fill('444.125')
   await fields.x.press('Enter')
-  await expect(fields.x).toHaveAttribute('aria-valuenow', '444.13')
+  await expect(fields.x.locator('[data-slot="value"]')).toHaveText('444.13')
   const selectedNodes = async () =>
     (await getPageChildren(page)).filter((node) => ['position-a', 'position-b'].includes(node.id))
   expect((await selectedNodes()).map((node) => node.x)).toEqual([444.125, 444.125])
@@ -229,7 +264,7 @@ test('distinct close fractions remain mixed before formatting and retain each pr
   await expect(fields.x).toHaveAttribute('data-mixed')
   expect((await selectedNodes()).map((node) => node.x)).toEqual([12.341, 12.342])
   await canvas.redo()
-  await expect(fields.x).toHaveAttribute('aria-valuenow', '444.13')
+  await expect(fields.x.locator('[data-slot="value"]')).toHaveText('444.13')
   expect((await selectedNodes()).map((node) => node.x)).toEqual([444.125, 444.125])
   canvas.assertNoErrors()
 })

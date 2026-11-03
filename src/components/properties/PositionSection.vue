@@ -18,11 +18,6 @@ const store = useEditorStore()
 const { getCommand } = useEditorCommands()
 const canTidy = getCommand('selection.tidyUp').enabled
 
-// Pen formats position and angle after comparing the selection's authored values.
-function positionDisplayValue(value: number | symbol) {
-  return typeof value === 'number' ? Math.round(value * 100) / 100 : value
-}
-
 function alignmentDisabled(ids: string[]) {
   if (!compact || (store.state.nodeEditState?.selectedVertexIndices.size ?? 0) >= 2) return false
   return ids.some((id) => {
@@ -142,7 +137,8 @@ function handleAlign(
             icon="X"
             data-property="x"
             :aria-label="panels.xAxis"
-            :model-value="positionDisplayValue(xValue)"
+            :model-value="xValue"
+            :precision="2"
             @update:model-value="actions.updateProp('x', $event)"
             @commit="(v: number, p: number) => actions.commitProp('x', v, p)"
             @cancel="actions.cancelProp('x')"
@@ -153,7 +149,8 @@ function handleAlign(
             icon="Y"
             data-property="y"
             :aria-label="panels.yAxis"
-            :model-value="positionDisplayValue(yValue)"
+            :model-value="yValue"
+            :precision="2"
             @update:model-value="actions.updateProp('y', $event)"
             @commit="(v: number, p: number) => actions.commitProp('y', v, p)"
             @cancel="actions.cancelProp('y')"
@@ -167,7 +164,8 @@ function handleAlign(
             suffix="°"
             data-property="rotation"
             :aria-label="panels.rotation"
-            :model-value="positionDisplayValue(rotationValue)"
+            :model-value="rotationValue"
+            :precision="2"
             @update:model-value="actions.updateProp('rotation', $event)"
             @commit="(v: number, p: number) => actions.commitProp('rotation', v, p)"
             @cancel="actions.cancelProp('rotation')"

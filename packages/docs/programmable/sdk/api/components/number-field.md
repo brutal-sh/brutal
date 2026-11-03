@@ -45,6 +45,10 @@ as `*2`, is rejected. This is the mode used by the app to match Pen's numeric fi
 Arrow keys step by `step`. Shift multiplies the step by 10 and Alt multiplies it by 0.1. Enter
 commits and Escape restores the interaction-start value.
 
+`precision` limits displayed fractional places and the initial edit text to 0–14 places. Formatting
+does not change the semantic value used for bindings, cancellation or an unchanged Enter commit.
+Values outside that precision range leave formatting unchanged.
+
 ## Example
 
 ```vue twoslash

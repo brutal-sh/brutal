@@ -4,7 +4,7 @@ const editor = useEditorSetupWithClear('/?test')
 
 test('selection chrome, size pill and ruler badges follow the accent color', async () => {
   const { page, canvas } = editor
-  await page.getByTestId('app-settings-trigger').click()
+  await page.keyboard.press(process.platform === 'darwin' ? 'Meta+,' : 'Control+,')
   await page
     .getByRole('radiogroup', { name: 'Accent color', exact: true })
     .getByRole('radio', { name: 'Green', exact: true })

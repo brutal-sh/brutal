@@ -16,6 +16,8 @@ export interface NumberFieldRootProps {
   step?: number
   /** Evaluate arithmetic and relative operators; false reads a finite numeric prefix. */
   expressions?: boolean
+  /** Fractional places (0–14) shown in the display and initial draft; keeps the semantic value. */
+  precision?: number
   /** Multiplier applied to pointer-scrub movement. */
   sensitivity?: number
   /** Selects an absolute position between finite min/max instead of relative movement. */

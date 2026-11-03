@@ -81,6 +81,7 @@ function handleSelect(value: SizeSelectValue) {
       :icon="icon"
       :aria-label="label"
       :model-value="ctx.node[axis]"
+      :precision="2"
       :min="0"
       :node-id="ctx.node.id"
       :binding-path="axis"

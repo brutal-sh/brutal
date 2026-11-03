@@ -32,6 +32,7 @@ const {
   max = Infinity,
   step = 1,
   expressions = true,
+  precision,
   sensitivity = 1,
   scrubMode = 'relative',
   inheritBinding = true,
@@ -65,7 +66,11 @@ const displayValue = computed(() => {
   if (binding?.state.value === 'unresolved') return '—'
   return isMixed.value
     ? ''
-    : String(normalizeNumberValue(scrubbing.value ? workingValue.value : numericValue.value))
+    : String(
+        normalizeNumberValue(
+          displayNumber(scrubbing.value ? workingValue.value : numericValue.value)
+        )
+      )
 })
 const disabled = computed(() => disabledProp)
 const bound = computed(() =>
@@ -96,6 +101,15 @@ let stopCancel: (() => void) | undefined
 let stopEscape: (() => void) | undefined
 let scrubTarget: Element | undefined
 let scrubPointerId: number | undefined
+
+function displayNumber(value: number): number {
+  if (precision === undefined || !Number.isInteger(precision) || precision < 0 || precision > 14) {
+    return value
+  }
+  const scale = 10 ** precision
+  const rounded = Math.round(value * scale) / scale
+  return Number.isFinite(rounded) ? rounded : value
+}
 
 function canMutate(): boolean {
   if (binding?.state.value === 'unresolved') return false
@@ -141,7 +155,7 @@ function restoreInteractionValue() {
 }
 
 function finishCommit(value: number, unit?: string) {
-  updateValue(value, unit)
+  if (mutationRequested || value !== interactionStartValue || unit) updateValue(value, unit)
   editing.value = false
   if (
     mutationRequested ||
@@ -156,7 +170,7 @@ function finishCommit(value: number, unit?: string) {
 function startEdit() {
   if (editing.value || !canMutate()) return
   beginInteraction()
-  draftValue.value = interactionStartedMixed ? '' : String(interactionStartValue)
+  draftValue.value = interactionStartedMixed ? '' : String(displayNumber(interactionStartValue))
   // A mixed field's empty draft stays an expression, which Enter rejects.
   absoluteDraft = interactionStartedMixed ? null : draftValue.value
   editing.value = true
