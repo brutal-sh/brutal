@@ -1,11 +1,12 @@
 import { invoke } from '@tauri-apps/api/core'
 import * as v from 'valibot'
 
+import { readBrowserCapture, type BrowserCapture, type BrowserCaptureScope } from './capture'
 import type { PreviewBounds } from './dock'
 import { validateExtractedPage, type ExtractedPage } from './dom/schema'
 import type { BrowserPickerNative } from './picker/controller'
 import { validateBrowserPicker } from './picker/schema'
-import { captureBytes, previewStatusSchema } from './schema'
+import { previewStatusSchema } from './schema'
 import type { PreviewAction, PreviewPreset, PreviewStatus } from './schema'
 
 export interface BrowserPreviewNative {
@@ -13,7 +14,7 @@ export interface BrowserPreviewNative {
   status(): Promise<PreviewStatus | null>
   action(action: PreviewAction): Promise<void>
   resize(preset: PreviewPreset): Promise<void>
-  capture(url: string, selected?: boolean): Promise<Uint8Array<ArrayBuffer>>
+  capture(url: string, scope?: BrowserCaptureScope): Promise<BrowserCapture>
   extract(url: string, selected?: boolean): Promise<ExtractedPage>
 }
 
@@ -26,6 +27,7 @@ export function createBrowserPreviewNative(
 ) {
   let disposed = false
   let opened = false
+  let capturing = false
   const enqueue = <T>(operation: () => Promise<T>): Promise<T> => {
     const next = pendingPreviewOperation.catch(() => undefined).then(operation)
     pendingPreviewOperation = next
@@ -52,15 +54,26 @@ export function createBrowserPreviewNative(
         : null,
     action: (action) => enqueue(() => callNative('browser_preview_action', { action })),
     resize: () => enqueue(() => callNative('browser_preview_resize', { bounds: requireBounds() })),
-    capture: (url, selected = false) =>
-      enqueue(async () =>
-        captureBytes(
-          await callNative('browser_preview_capture', {
-            url,
-            ...(selected ? { selected: true } : {})
-          })
-        )
-      ),
+    capture: (url, scope = 'visible') =>
+      enqueue(async () => {
+        requireBounds()
+        if (!opened) throw new Error('Open a page before capturing a screenshot.')
+        const requestId = crypto.randomUUID()
+        capturing = true
+        try {
+          return readBrowserCapture(
+            await callNative('browser_preview_screenshot', {
+              url,
+              requestId,
+              scope
+            }),
+            requestId,
+            url
+          )
+        } finally {
+          capturing = false
+        }
+      }),
     extract: (url, selected = false) =>
       enqueue(async () => {
         const requestId = crypto.randomUUID()
@@ -100,6 +113,11 @@ export function createBrowserPreviewNative(
       }),
     dispose: () => {
       disposed = true
+      // Cancellation bypasses the queue held by the in-flight tiled capture.
+      if (capturing)
+        void callNative('browser_preview_action', { action: 'cancelcapture' }).catch(
+          (reason: unknown) => console.warn('[Browser preview] Could not cancel capture', reason)
+        )
       return enqueue(async () => {
         try {
           return await native.status()

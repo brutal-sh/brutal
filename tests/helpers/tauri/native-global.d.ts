@@ -20,6 +20,8 @@ type NativeTestNode = {
   text?: string
   width?: number
   height?: number
+  x?: number
+  y?: number
   fills?: Array<{ type: string; imageHash?: string }>
 }
 

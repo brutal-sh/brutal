@@ -44,8 +44,8 @@ before(async () => {
     const finish = () => {
       response.writeHead(200, { 'Content-Type': 'text/html' })
       response.end(`<!doctype html><title>Picker fixture</title><style>
-    @font-face{font-family:Inter;src:url('/font.ttf')}body{margin:0;font-family:Inter;background:#fff}section{padding:20px}p{width:200px;height:50px;margin:0;background:#22aa55;color:white}#offscreen{position:absolute;top:1800px;left:20px}body{height:2000px}</style>
-    <section id="parent"><p id="first" class="message">Picked paragraph</p><p id="other">Unpicked neighbor</p><input type="password" value="excluded-password"></section><p id="offscreen">Outside the viewport</p>
+    @font-face{font-family:Inter;src:url('/font.ttf')}body{margin:0;font-family:Inter;background:#fff}section{padding:20px}p{width:200px;height:50px;margin:0;background:#22aa55;color:white}#offscreen{position:absolute;top:1800px;left:20px}#fixed{position:fixed;top:140px;left:280px;width:80px}#fractional{position:absolute;top:500.25px;left:20.25px;width:120.25px;height:1200.25px}body{height:2000px}</style>
+    <section id="parent"><p id="first" class="message">Picked paragraph</p><p id="other">Unpicked neighbor</p><input type="password" value="excluded-password"></section><p id="offscreen">Outside the viewport</p><p id="fixed">Fixed card</p><p id="fractional">Fractional tall card</p>
     <script>setInterval(async()=>{try{const command=await(await fetch('/next')).text();if(command.startsWith('pick-'))document.getElementById(command.slice(5))?.dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true}));if(command==='enter')window.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true,cancelable:true}));}catch{}},50)</script>`)
     }
     if (request.url === '/page' && holdNext) {
@@ -172,6 +172,36 @@ it('delivers native picking, selected pixels and editable subtree import without
       if (texts.join('') !== 'Picked paragraph' || texts.join('').includes('excluded-password'))
         throw new Error('Import includes content outside the selection')
       await wait(() => !!control('Select an element'), 'import clears picker')
+      store.undoAction()
+      store.select(selected)
+    }
+    async function captureAdditionalSelection(id: string, width: number, height: number) {
+      await pick(id)
+      await wait(
+        () => !control('Screenshot the selection onto the canvas (Cmd+Enter)')?.disabled,
+        'selected camera'
+      )
+      button('Screenshot the selection onto the canvas (Cmd+Enter)')
+      await wait(
+        () => store.graph.getChildren(pageId).length === initial.length + 1,
+        'selected capture'
+      )
+      const image = store.graph.getChildren(pageId).find((node) => !initial.includes(node.id))
+      if (!image || image.width !== width || image.height !== height || image.parentId !== pageId)
+        throw new Error(`Wrong ${id} capture dimensions`)
+      const slices = image.type === 'FRAME' ? store.graph.getChildren(image.id) : [image]
+      if (slices.reduce((sum, slice) => sum + (slice.height ?? 0), 0) !== height)
+        throw new Error('Selected slice heights do not join')
+      for (const slice of slices) {
+        const hash = slice.fills?.find((fill) => fill.type === 'IMAGE')?.imageHash
+        const bytes = hash && store.graph.images.get(hash)
+        if (
+          !bytes ||
+          new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength).getUint32(20) < 1
+        )
+          throw new Error('Selected capture contains an empty pixel slice')
+      }
+      await wait(() => !!control('Select an element'), 'capture clears picker')
       store.undoAction()
       store.select(selected)
     }
@@ -304,6 +334,8 @@ it('delivers native picking, selected pixels and editable subtree import without
       resumeFrames()
       const { width, height } = await captureSelection()
       await importSelection()
+      await captureAdditionalSelection('fixed', 80, 50)
+      await captureAdditionalSelection('fractional', 121, 1201)
       await reloadSelection()
       result = { width, height }
     } catch (reason) {

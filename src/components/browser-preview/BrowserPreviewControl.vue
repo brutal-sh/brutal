@@ -25,6 +25,7 @@ import {
   watch
 } from 'vue'
 
+import type { BrowserCaptureScope } from '@/app/browser-preview/capture'
 import type { BrowserPreviewSession } from '@/app/browser-preview/context'
 import { createBrowserPreviewController } from '@/app/browser-preview/controller'
 import { hasPreviewOverlay, previewDockBounds } from '@/app/browser-preview/dock'
@@ -51,6 +52,7 @@ import { menuItem, useMenuUI } from '@/components/ui/menu/menu'
 import MenuScrollArea from '@/components/ui/menu/MenuScrollArea.vue'
 import theme from '@/theme/browser-preview'
 
+import BrowserPreviewCapture from './BrowserPreviewCapture.vue'
 import BrowserPreviewPickerBreadcrumbs from './picker/BrowserPreviewPickerBreadcrumbs.vue'
 import BrowserPreviewPickerButton from './picker/BrowserPreviewPickerButton.vue'
 import BrowserPreviewPickerStyles from './picker/BrowserPreviewPickerStyles.vue'
@@ -142,9 +144,9 @@ async function importPage() {
   await preview.importPage(!!picker.state.value?.pick)
   if (notice.value && picker.state.value?.pick) await picker.stop()
 }
-async function capture() {
+async function capture(scope?: BrowserCaptureScope) {
   if (busy.value) return
-  await preview.capture(!!picker.state.value?.pick)
+  await preview.capture(scope ?? (picker.state.value?.pick ? 'selected' : 'visible'))
   if (notice.value && picker.state.value?.pick) await picker.stop()
 }
 watch(
@@ -385,17 +387,11 @@ onScopeDispose(() => {
           >Import</span
         ></IconButton
       >
-      <IconButton
-        :label="
-          picker.state.value?.pick
-            ? 'Screenshot the selection onto the canvas (Cmd+Enter)'
-            : 'Capture into this design'
-        "
-        size="sm"
+      <BrowserPreviewCapture
+        :selected="!!picker.state.value?.pick"
         :disabled="busy || !status?.captureAvailable || status?.loading || store.state.readOnly"
-        @click="capture"
-        ><icon-lucide-camera class="size-3.5"
-      /></IconButton>
+        @capture="capture"
+      />
       <IconButton
         :label="codingMode ? 'Exit Coding Mode' : 'Coding Mode'"
         size="sm"

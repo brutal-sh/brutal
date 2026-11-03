@@ -1,5 +1,6 @@
 import { ref, shallowRef } from 'vue'
 
+import type { BrowserCapture, BrowserCaptureScope } from './capture'
 import type { BrowserImportTarget } from './dom/placement'
 import type { BrowserPreviewNative } from './native'
 import { PREVIEW_PRESETS, previewURL } from './schema'
@@ -8,7 +9,7 @@ import type { PreviewAction, PreviewStatus } from './schema'
 export interface CaptureTarget {
   /** Bound to the selected document and page; false after switching, replacing or closing it. */
   isCurrent(): boolean
-  place(png: Uint8Array<ArrayBuffer>): Promise<void>
+  place(capture: BrowserCapture): Promise<void>
 }
 
 export function createBrowserPreviewController(
@@ -87,7 +88,7 @@ export function createBrowserPreviewController(
         await native.resize(selectedPreset())
         if (!isDisposed()) status.value = await native.status()
       }),
-    capture: (selected = false) =>
+    capture: (scope: BrowserCaptureScope = 'visible') =>
       run(async () => {
         const target = captureTarget()
         if (!target.isCurrent()) throw new Error('Select this document before capturing.')
@@ -95,11 +96,11 @@ export function createBrowserPreviewController(
         if (!current) throw new Error('Open a page in the preview first.')
         if (!current.captureAvailable)
           throw new Error('Browser capture is currently available on macOS.')
-        const png = await native.capture(current.url, selected)
+        const captured = await native.capture(current.url, scope)
         if (isDisposed() || !target.isCurrent()) {
           throw new Error('The document or page changed. Capture again into the selected design.')
         }
-        await target.place(png)
+        await target.place(captured)
         if (!isDisposed())
           notice.value = 'Capture added to this design. You can undo it in the editor.'
       }),

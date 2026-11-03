@@ -76,6 +76,7 @@ pub fn run() {
                 network::browser::browser_preview_resize,
                 network::browser::browser_preview_layout,
                 network::browser::browser_preview_capture,
+                network::browser::browser_preview_screenshot,
                 network::browser::browser_preview_extract,
                 #[cfg(feature = "native-test")]
                 agents::native_test::native_test_mcp_configuration,

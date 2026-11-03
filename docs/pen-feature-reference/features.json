@@ -933,7 +933,7 @@
           "acceptance": "Import a local fixture; compare fonts/layout/effects, with no promised JS interaction.",
           "status": "partial",
           "evidence": ["../BROWSER.md"],
-          "evidence_limit": "Native URL/navigation, viewport cycling, page/dock closing, mode/restoration, bounded editable text/image import, refusal, Undo/Redo and FIG reopen execute. Native landing controls and measured toolbar geometry execute. Native completed-visit history, revisit/removal/clear, editor-reload persistence and measured popup geometry execute. Visible paragraph picking, selected-subtree import/Undo, selected PNG dimensions/pixels, reload/expiry guards and a measured physical selected-state journey execute. Offscreen/iframe/shadow and remaining selection states, physical keys/clipboard, process-restart persistence, zoom/screenshot menus, responsive import layout and exact remaining pixels/states stay open."
+          "evidence_limit": "Native navigation, viewports, mode/restoration, bounded editable import/Undo/FIG reopen and completed-visit history execute. Native paragraph, fixed-card and tall fractional selection capture execute. Physical compact/wide Import and selected control geometry execute. A later history second-reload recovery/Home setup failure is corrected in the test, and all three native history checks pass; prior failed receipts remain. Physical keys/clipboard, process-restart persistence, iframe/shadow/remaining states, zoom/More menu and exact remaining pixels stay open."
         },
         {
           "id": "IO-05",
@@ -942,7 +942,7 @@
           "acceptance": "Capture a scrolling local page; inspect dimensions, bounds and saved image.",
           "status": "partial",
           "evidence": ["../BROWSER.md"],
-          "evidence_limit": "Native visible-area PNG pixels, capture into an image layer and Undo execute. Viewport-bound selected-element PNG dimensions/pixels, image insertion and Undo execute. Offscreen selections, full-page/multi-slice capture and remaining menu/delivery variants remain open."
+          "evidence_limit": "Native visible-area, selected paragraph/fixed/tall fractional captures and full-page multi-slice import execute with captured CSS dimensions, sampled pixels, 40px page-root placement, Undo/Redo and scroll restoration. Native cancellation restores scroll without editing the design. Oversized bounds are refused atomically. Screenshot menu visual states, nested/sticky/timer/zoom/monitor variants and remaining delivery states remain open."
         },
         {
           "id": "IO-06",

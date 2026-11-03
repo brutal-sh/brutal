@@ -37,6 +37,7 @@ import type { EditorContext } from './types'
 
 type PasteOptions = {
   replaceSelection?: boolean
+  atPageRoot?: boolean
 }
 
 /**
@@ -184,13 +185,18 @@ export function createClipboardActions(ctx: EditorContext) {
   }
 
   /** Preflight fonts/assets before calling: this insertion cannot yield or leave partial history. */
-  function pastePreparedSnapshot(snapshot: ClipboardSnapshot, cursorPos?: Vector, label = 'Paste') {
+  function pastePreparedSnapshot(
+    snapshot: ClipboardSnapshot,
+    cursorPos?: Vector,
+    label = 'Paste',
+    options: Pick<PasteOptions, 'atPageRoot'> = {}
+  ) {
     if (snapshot.properties) throw new Error('Property snapshots cannot be inserted as layers')
     const checkpoint = captureGraphCheckpoint(ctx.graph)
     const selection = new Set(ctx.state.selectedIds)
     try {
       return ctx.undo.runBatch(label, () => {
-        const created = pasteSnapshotNodes(snapshot, cursorPos)
+        const created = pasteSnapshotNodes(snapshot, cursorPos, options)
         if (!created.length) throw new Error('The selected destination cannot accept these layers')
         return created
       })
@@ -295,7 +301,7 @@ export function createClipboardActions(ctx: EditorContext) {
     )
     const pasteTarget = cycleSafeParent(
       ctx.graph,
-      requestedTarget,
+      options.atPageRoot ? ctx.state.currentPageId : requestedTarget,
       pastedComponentIds(ctx.graph, [...nodes, ...dependencies])
     )
     if (!prepareSlotEdits(ctx, [pasteTarget])) return created

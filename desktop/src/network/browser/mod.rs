@@ -5,6 +5,7 @@ pub mod history;
 mod page_url;
 mod picker;
 pub mod policy;
+mod screenshot;
 
 use policy::{preview_url, require_editor, DockBounds, PREVIEW_LABEL};
 use std::sync::atomic::{AtomicU64, Ordering};
@@ -14,6 +15,7 @@ use tauri::{
 };
 
 static NAVIGATION_GENERATION: AtomicU64 = AtomicU64::new(0);
+static CAPTURE_GENERATION: AtomicU64 = AtomicU64::new(0);
 
 #[derive(serde::Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -173,6 +175,7 @@ pub enum PreviewAction {
     Reload,
     Focus,
     Close,
+    CancelCapture,
 }
 
 #[tauri::command]
@@ -182,6 +185,10 @@ pub async fn browser_preview_action(
     action: PreviewAction,
 ) -> Result<(), String> {
     require_editor(webview.label())?;
+    if matches!(action, PreviewAction::CancelCapture) {
+        CAPTURE_GENERATION.fetch_add(1, Ordering::SeqCst);
+        return Ok(());
+    }
     let Some(view) = app.get_webview(PREVIEW_LABEL) else {
         return if matches!(action, PreviewAction::Close) {
             Ok(())
@@ -196,10 +203,29 @@ pub async fn browser_preview_action(
         PreviewAction::Focus => view.set_focus(),
         PreviewAction::Close => {
             NAVIGATION_GENERATION.fetch_add(1, Ordering::SeqCst);
-            view.close()
+            view.close().and_then(|()| webview.set_focus())
         }
+        PreviewAction::CancelCapture => Ok(()),
     }
     .map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub async fn browser_preview_screenshot(
+    app: tauri::AppHandle,
+    webview: Webview,
+    url: String,
+    request_id: String,
+    scope: screenshot::Scope,
+) -> Result<tauri::ipc::Response, String> {
+    require_editor(webview.label())?;
+    let target = preview_url(&url, app.config().build.dev_url.as_ref())?;
+    let view = existing(&app)?;
+    let navigation = NAVIGATION_GENERATION.load(Ordering::SeqCst);
+    let cancellation = CAPTURE_GENERATION.load(Ordering::SeqCst);
+    screenshot::run(&view, &target, &request_id, scope, navigation, cancellation)
+        .await
+        .map(tauri::ipc::Response::new)
 }
 
 #[tauri::command]
@@ -257,7 +283,10 @@ pub async fn browser_preview_layout(
         set_bounds(&view, bounds)?;
         view.show().map_err(|e| e.to_string())
     } else {
-        view.hide().map_err(|e| e.to_string())
+        // Hiding a focused WKWebView does not return keyboard ownership to the editor.
+        view.hide()
+            .and_then(|()| webview.set_focus())
+            .map_err(|e| e.to_string())
     }
 }
 

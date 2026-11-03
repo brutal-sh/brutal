@@ -6,7 +6,7 @@ export type NativeLayerFixture = {
   third: string
 }
 
-// Home has an editor store too, but no mounted canvas or text-input session.
+// Home can have no document store after recovery is closed; its New design button creates one.
 async function ensureNativeEditorReady(): Promise<void> {
   await invokeNative('plugin:window|set_focus', { label: 'main' })
   await browser.waitUntil(() => browser.execute(() => !document.hidden), {
@@ -17,10 +17,9 @@ async function ensureNativeEditorReady(): Promise<void> {
     async () =>
       browser.execute(() => {
         const store = window.openPencil?.getStore?.()
+        const home = document.querySelector('[data-test-id="home-new-document"]')
         return Boolean(
-          store &&
-          ((document.querySelector('canvas') && store.textEditor) ||
-            document.querySelector('[data-test-id="home-new-document"]'))
+          (document.querySelector('canvas') && store?.textEditor) || home?.getClientRects().length
         )
       }),
     { timeout: 30_000, timeoutMsg: 'OpenPencil store did not initialize' }
@@ -32,7 +31,7 @@ async function ensureNativeEditorReady(): Promise<void> {
       '[data-test-id="home-new-document"]'
     )
     // Setup only: input assertions still use WebDriver after the document is ready.
-    newDesign?.click()
+    if (newDesign?.getClientRects().length) newDesign.click()
   })
   await browser.waitUntil(
     async () =>

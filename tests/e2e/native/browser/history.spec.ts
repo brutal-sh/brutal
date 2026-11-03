@@ -352,6 +352,25 @@ it('restores saved history after reloading the native editor and persists its de
     await browser.waitUntil(async () =>
       browser.execute((origin) => performance.timeOrigin !== origin, before)
     )
+    // Reloads can offer recovery for this test's unsaved fixture; Close preserves those bytes.
+    await browser.waitUntil(
+      async () =>
+        browser.execute(() => {
+          const recovery = document.querySelector(
+            '[data-test-id="recovery-dialog"][data-state="open"]'
+          )
+          if (recovery) {
+            recovery.querySelector<HTMLButtonElement>('[data-slot="dialog-footer"] button')?.click()
+            return false
+          }
+          const home = document.querySelector('[data-test-id="home-new-document"]')
+          return Boolean(
+            home?.getClientRects().length ||
+            (document.querySelector('canvas') && window.openPencil?.getStore?.()?.textEditor)
+          )
+        }),
+      { timeout: 30000, timeoutMsg: 'Reloaded test editor did not leave Home/recovery setup' }
+    )
     const fixture = await createNativeLayerFixture()
     await browser.execute((id) => window.openPencil?.getStore?.().select([id]), fixture.first)
     await $('button[aria-label="Import Web via Browser"]').click()

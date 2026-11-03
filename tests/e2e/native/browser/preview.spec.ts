@@ -48,7 +48,7 @@ describe('native embedded browser preview', () => {
       response.writeHead(200, { 'Content-Type': 'text/html' })
       response.end(
         // oxlint-disable-next-line open-pencil/no-hand-rolled-color -- Exact pixels are the native snapshot acceptance contract.
-        `<!doctype html><title>Preview fixture</title><style>html,body{margin:0;width:100%;height:100%;background:rgb(238,51,68)}@media(max-width:500px){html,body{background:rgb(34,170,85)}}</style><a href="/second">Next page</a><script>(async()=>{const invoke=window.__TAURI__?.core?.invoke; const commands=[['browser_preview_status',{}],['browser_preview_picker',{url:location.href,requestId:'00000000-0000-4000-8000-000000000000',action:'start'}],['take_browser_preview_visits',{}],['clear_browser_preview_visits',{}],['plugin:os|platform',{}],['plugin:fs|exists',{path:'/tmp/openpen-no-access-fixture'}]]; const blocked=await Promise.all(commands.map(async([command,args])=>{if(!invoke)return true;try{await invoke(command,args);return false}catch{return true}}));await fetch('/report?blocked='+blocked.join(',')+'&page='+encodeURIComponent(location.pathname));})();</script>`
+        `<!doctype html><title>Preview fixture</title><style>html,body{margin:0;width:100%;height:100%;background:rgb(238,51,68)}@media(max-width:500px){html,body{background:rgb(34,170,85)}}</style><a href="/second">Next page</a><script>(async()=>{const invoke=window.__TAURI__?.core?.invoke; const commands=[['browser_preview_status',{}],['browser_preview_screenshot',{url:location.href,requestId:'00000000-0000-4000-8000-000000000000',scope:'full'}],['browser_preview_picker',{url:location.href,requestId:'00000000-0000-4000-8000-000000000000',action:'start'}],['take_browser_preview_visits',{}],['clear_browser_preview_visits',{}],['plugin:os|platform',{}],['plugin:fs|exists',{path:'/tmp/openpen-no-access-fixture'}]]; const blocked=await Promise.all(commands.map(async([command,args])=>{if(!invoke)return true;try{await invoke(command,args);return false}catch{return true}}));await fetch('/report?blocked='+blocked.join(',')+'&page='+encodeURIComponent(location.pathname));})();</script>`
       )
     })
     await new Promise<void>((resolve) => {
@@ -502,11 +502,20 @@ describe('native embedded browser preview', () => {
         )
         await wait(() => {
           const capture = document.querySelector<HTMLButtonElement>(
-            'button[aria-label="Capture into this design"]'
+            'button[aria-label="Screenshot"]'
           )
           return !!capture && !capture.disabled
         }, 'completed page capture control')
-        button('Capture into this design')
+        async function captureVisibleArea() {
+          button('Screenshot')
+          await wait(() => !!document.querySelector('[role="menuitem"]'), 'screenshot menu')
+          const visible = [...document.querySelectorAll<HTMLElement>('[role="menuitem"]')].find(
+            (item) => item.textContent?.trim() === 'Visible Area'
+          )
+          if (!visible) throw new Error('Missing visible-area screenshot action')
+          visible.click()
+        }
+        await captureVisibleArea()
         let id = ''
         await wait(() => {
           const store = window.openPencil?.getStore?.()
@@ -519,15 +528,20 @@ describe('native embedded browser preview', () => {
         if (!node) throw new Error('Capture layer disappeared')
         const hash = node.fills?.find((fill) => fill.type === 'IMAGE')?.imageHash
         const bytes = hash ? store.graph.images.get(hash)?.byteLength : 0
-        // Verify the embedded surface yields to HTML modal portals, then comes back.
-        const overlay = document.createElement('div')
-        overlay.setAttribute('data-dismissable-layer', '')
-        overlay.setAttribute('role', 'dialog')
-        document.body.append(overlay)
-        await new Promise((resolve) => {
-          setTimeout(resolve, 100)
-        })
-        overlay.remove()
+        async function verifyOverlayFocus() {
+          await invoke('browser_preview_action', { action: 'focus' })
+          await wait(() => !document.hasFocus(), 'native browser owns focus')
+          const overlay = document.createElement('div')
+          overlay.setAttribute('data-dismissable-layer', '')
+          overlay.setAttribute('role', 'dialog')
+          document.body.append(overlay)
+          try {
+            await wait(() => document.hasFocus(), 'editor focus after browser hides')
+          } finally {
+            overlay.remove()
+          }
+        }
+        await verifyOverlayFocus()
         button('Close browser preview')
         await wait(async () => (await invoke('browser_preview_status')) === null, 'child destroyed')
         done({
@@ -560,7 +574,7 @@ describe('native embedded browser preview', () => {
     assert.ok(result.bytes && result.bytes > 8)
     assert.ok(ipcReports.length > 0)
     assert.ok(
-      ipcReports.every((report) => report.includes('blocked=true,true,true,true,true,true&'))
+      ipcReports.every((report) => report.includes('blocked=true,true,true,true,true,true,true&'))
     )
     assert.deepEqual(await browser.getWindowHandles(), [mainHandle])
     await browser.keys(['Meta', 'z'])

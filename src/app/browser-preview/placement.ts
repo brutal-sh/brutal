@@ -1,5 +1,6 @@
+import { getAxisAlignedWorldBounds } from '@open-pencil/scene-graph/coordinate'
+
 import { getActiveEditorStoreOrNull, type EditorStore } from '@/app/editor/active-store'
-import { pastePoint } from '@/app/editor/clipboard/paste/content'
 
 import type { CaptureTarget } from './controller'
 import { browserImageSnapshot } from './image'
@@ -16,16 +17,27 @@ export function browserCaptureTarget(store: EditorStore): CaptureTarget {
     !store.state.readOnly
   return {
     isCurrent,
-    place: async (png) => {
+    place: async (capture) => {
       if (!isCurrent()) throw new Error('The capture destination changed. Try again.')
-      // shortcut: this unzoomed view uses editor display density; capture bundles must carry scale for zoom/monitor changes.
-      const snapshot = browserImageSnapshot(png, window.devicePixelRatio)
+      const snapshot = browserImageSnapshot(capture)
       const ck = store.renderer?.ck
-      const image = ck?.MakeImageFromEncoded(png)
-      if (!image) throw new Error('The browser image could not be decoded. Try again.')
-      image.delete()
-      const point = pastePoint(store)
-      store.pastePreparedSnapshot(snapshot, point, 'Capture browser page')
+      for (const slice of capture.slices) {
+        const image = ck?.MakeImageFromEncoded(slice.png)
+        if (!image) throw new Error('The browser image could not be decoded. Try again.')
+        image.delete()
+      }
+      const bounds = graph.getChildren(page).map((node) => getAxisAlignedWorldBounds(node, graph))
+      const width = Math.max(...capture.slices.map((slice) => slice.width))
+      const height = capture.slices.reduce((sum, slice) => sum + slice.height, 0)
+      const left = bounds.length ? Math.max(...bounds.map((box) => box.x + box.width)) + 40 : 0
+      const top = bounds.length ? Math.min(...bounds.map((box) => box.y)) : 0
+      const ids = store.pastePreparedSnapshot(
+        snapshot,
+        { x: left + width / 2, y: top + height / 2 },
+        'Capture browser page',
+        { atPageRoot: true }
+      )
+      store.revealNodes(ids)
       store.requestRender()
     }
   }

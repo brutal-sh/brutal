@@ -85,3 +85,54 @@ test('an unopened dock never adopts another document’s native page', async () 
   expect(await bridge.native.status()).toBeNull()
   expect(commands).toEqual([])
 })
+
+test('dock disposal cancels a screenshot before the queued status and close operations', async () => {
+  const started = createDeferred<undefined>()
+  const capture = createDeferred<unknown>()
+  const commands: string[] = []
+  const status = {
+    url: 'https://example.test/',
+    title: 'Page',
+    width: 390,
+    height: 600,
+    captureAvailable: true,
+    loading: false
+  }
+  const callNative: typeof invoke = async <T>(
+    command: string,
+    args?: Parameters<typeof invoke>[1]
+  ): Promise<T> => {
+    const label =
+      command === 'browser_preview_action' && args && typeof args === 'object' && 'action' in args
+        ? String(args.action)
+        : command
+    commands.push(label)
+    if (command === 'browser_preview_screenshot') {
+      started.resolve(undefined)
+      return (await capture.promise) as T
+    }
+    if (label === 'cancelcapture') capture.reject(new Error('cancelled'))
+    return (
+      command === 'browser_preview_open' || command === 'browser_preview_status'
+        ? status
+        : undefined
+    ) as T
+  }
+  const bridge = createBrowserPreviewNative(
+    () => ({ x: 0, y: 0, width: 390, height: 600 }),
+    callNative
+  )
+  await bridge.native.open(status.url, PREVIEW_PRESETS[0])
+  const result = bridge.native.capture(status.url, 'full').catch(String)
+  await started.promise
+  const closing = bridge.dispose()
+  expect(await result).toContain('cancelled')
+  await closing
+  expect(commands).toEqual([
+    'browser_preview_open',
+    'browser_preview_screenshot',
+    'cancelcapture',
+    'browser_preview_status',
+    'close'
+  ])
+})

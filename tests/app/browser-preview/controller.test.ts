@@ -1,11 +1,17 @@
 import { describe, expect, test } from 'bun:test'
 
+import type { BrowserCapture } from '@/app/browser-preview/capture'
 import { createBrowserPreviewController } from '@/app/browser-preview/controller'
 import type { BrowserPreviewNative } from '@/app/browser-preview/native'
 import { captureBytes, previewAddressLabel, previewURL } from '@/app/browser-preview/schema'
 import { createDeferred } from '@/app/runtime/deferred'
 
 const png = new Uint8Array([137, 80, 78, 71, 13, 10, 26, 10])
+const capture: BrowserCapture = {
+  url: 'https://example.test/',
+  title: 'Fixture',
+  slices: [{ png, width: 1280, height: 800 }]
+}
 function fixture(overrides: Partial<BrowserPreviewNative> = {}) {
   const calls: unknown[] = []
   const status = {
@@ -28,14 +34,14 @@ function fixture(overrides: Partial<BrowserPreviewNative> = {}) {
     resize: async (preset) => {
       calls.push(preset)
     },
-    capture: async () => png,
+    capture: async () => capture,
     extract: async () => {
       throw new Error('No extraction fixture')
     },
     ...overrides
   }
   let current = true
-  const placed: Uint8Array[] = []
+  const placed: BrowserCapture[] = []
   const preview = createBrowserPreviewController(native, () => ({
     isCurrent: () => current,
     place: async (image) => {
@@ -167,25 +173,25 @@ describe('browser preview', () => {
   test('inserts a capture into the chosen document once and reports completion after placement', async () => {
     const { preview, placed } = fixture()
     await preview.capture()
-    expect(placed).toEqual([png])
+    expect(placed).toEqual([capture])
     expect(preview.notice.value).toContain('added')
     expect(preview.busy.value).toBe(false)
   })
 
   test('does not insert a delayed capture after its document/page changes', async () => {
-    const pending = createDeferred<Uint8Array<ArrayBuffer>>()
+    const pending = createDeferred<BrowserCapture>()
     const { preview, placed, changeDocument } = fixture({ capture: () => pending.promise })
     const work = preview.capture()
     await Promise.resolve()
     changeDocument()
-    pending.resolve(png)
+    pending.resolve(capture)
     await work
     expect(placed).toEqual([])
     expect(preview.error.value).toContain('document or page changed')
   })
 
   test('does not insert after the controls are disposed or repeat a pending capture', async () => {
-    const pending = createDeferred<Uint8Array<ArrayBuffer>>()
+    const pending = createDeferred<BrowserCapture>()
     let captures = 0
     const { preview, placed } = fixture({
       capture: () => {
@@ -196,7 +202,7 @@ describe('browser preview', () => {
     const work = preview.capture()
     await preview.capture()
     preview.dispose()
-    pending.resolve(png)
+    pending.resolve(capture)
     await work
     expect(captures).toBe(1)
     expect(placed).toEqual([])
@@ -243,7 +249,7 @@ test('editable import waits for extraction and suppresses a disposed or switched
     }),
     action: async () => undefined,
     resize: async () => undefined,
-    capture: async () => png,
+    capture: async () => capture,
     extract: async () => {
       extractionCalls++
       return pending.promise
@@ -293,7 +299,7 @@ test('closing the controller during asynchronous import preparation cancels its 
     }),
     action: async () => undefined,
     resize: async () => undefined,
-    capture: async () => png,
+    capture: async () => capture,
     extract: async () => page
   }
   const preview = createBrowserPreviewController(

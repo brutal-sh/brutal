@@ -17,6 +17,9 @@ export default {
     importGlyph: 'hidden size-3.5 @max-[460px]/browser:block',
     importLabel: 'inline @max-[460px]/browser:hidden',
     separator: 'mx-2.5 h-4 w-px shrink-0 bg-menu-border',
+    popup: 'min-w-32 rounded-md border border-menu-border shadow-lg',
+    popupItem:
+      'cursor-default rounded-sm font-medium leading-4 text-browser-menu-foreground data-[highlighted]:bg-browser-menu-highlight',
     surface: 'relative min-h-0 flex-1 overflow-hidden bg-canvas',
     landing: 'absolute inset-0 overflow-auto border-x border-island-border bg-panel',
     content: 'mx-auto flex min-h-full w-full max-w-[720px] flex-col px-5 py-14',

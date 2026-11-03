@@ -62,3 +62,23 @@ test('read-only documents refuse prepared paste without changing layers', () => 
   expect(() => editor.pastePreparedSnapshot(snapshot)).toThrow('read-only')
   expect(editor.graph.nodes.size).toBe(before)
 })
+
+test('page-root capture stays outside a selected frame and Undo restores that selection', () => {
+  const { editor, parent, snapshot } = fixture()
+  const created = editor.pastePreparedSnapshot(
+    snapshot,
+    { x: 350, y: 75 },
+    'Capture browser page',
+    { atPageRoot: true }
+  )
+  const image = editor.graph.getNode(created[0])
+  expect(image?.parentId).toBe(editor.state.currentPageId)
+  expect(image?.x).toBe(250)
+  expect(image?.y).toBe(0)
+  expect(editor.graph.getChildren(parent.id)).toHaveLength(1)
+  editor.undoAction()
+  expect(editor.graph.getNode(created[0])).toBeUndefined()
+  expect([...editor.state.selectedIds]).toEqual([parent.id])
+  editor.redoAction()
+  expect(editor.graph.getNode(created[0])?.parentId).toBe(editor.state.currentPageId)
+})
