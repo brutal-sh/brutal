@@ -87,6 +87,26 @@ async function exportBytes(page: Page) {
 }
 
 for (const format of ['HTML + Tailwind', 'HTML + CSS']) {
+  test(`single-frame ${format} renders its opaque color across the exported page`, async ({
+    page
+  }) => {
+    const { canvas, section } = await setup(page)
+    await page.getByTestId('layers-item').filter({ hasText: 'Code A' }).click()
+    await section.getByRole('combobox', { name: 'Select code export format', exact: true }).click()
+    await page.getByRole('option', { name: format, exact: true }).click()
+    const { bytes } = await exportBytes(page)
+    const preview = await page.context().newPage()
+    try {
+      await preview.setContent(bytes.toString())
+      await expect(preview.locator('body')).toHaveCSS('background-color', 'rgb(119, 153, 187)')
+      await expect(preview.locator('[data-layer-name="Code A"]')).toHaveCSS('width', '120.5px')
+      await expect(preview.locator('[data-layer-name="Code B"]')).toHaveCount(0)
+    } finally {
+      await preview.close()
+    }
+    canvas.assertNoErrors()
+  })
+
   test(`multi-selection ${format} exports one positioned document containing only the selected roots`, async ({
     page
   }) => {

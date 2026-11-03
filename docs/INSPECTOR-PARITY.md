@@ -2,6 +2,31 @@
 
 Target: actual `/Applications/Pen.app`1.2.21, rechecked in its installed Info.plist on2026-11-02. Full inspector and whole-product parity remain open. The reference is inspected through native UI and the private resource archive recorded in [reference provenance](PEN-REFERENCE.md).
 
+## Standalone HTML body background —2026-11-03
+
+Ten owned actual-Pen exports establish the body rule: one selected frame promotes its first
+visible opaque solid paint. A rectangle, empty frame, gradient, translucent first paint or
+multiple selected roots does not supply a body color. A later opaque paint does not replace
+a translucent first paint; a disabled first paint is skipped. Overall node opacity does not
+change the promoted color. The extra raw color-paint `opacity` probe is ignored by the reference
+reader and does not establish editable paint-alpha behavior. All preferences are restored;
+an incidental owned image-fixture nudge is undone toY0 without saving or changing its file.
+
+Both standalone export styles use the measured rule. Fragment and multi-root output retain
+their prior behavior. Two initially failing owner journeys pass with34assertions, and the
+broader export/domain set passes167checks/622assertions. New Chromium/WebKit browser checks
+render a single frame and inspect the actual body color. The initial browser run records a
+missing-module failure caused by rebuilding shared package output during the run; the repeat
+holds those files stable and passes all20journeys. Source/Vue/test types, full lint
+(existing warnings), architecture and documentation checks pass.
+
+A49.6s physical native File Open/select/Export/automatic preview/Close journey captures1604×2956
+with4,708,656 background pixels and14,884 pixels of each checker color. The native page is
+visually inspected; source bytes, selection and version stay unchanged. Private receipts:
+pen-html-body-reference-2026-11-03/facts.json, code-body-native-physical.log and
+code-body-native-inline.png. Components, instances, groups, additional paint combinations,
+exact exported page pixels and full parity remain OPEN.
+
 ## HTML image paths and settings —2026-11-03
 
 Actual Pen exports the owned two-image fixture as ordinary HTML in relative and absolute modes,

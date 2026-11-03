@@ -6,6 +6,7 @@ import { normalizeFontFamily } from '@open-pencil/scene-graph/font-style'
 
 import { tokenStylesheet, type TokenStylesheetFormat } from '../tokens/stylesheet'
 import type { DesignDocument, DesignElement, DesignNode, DesignStyleDeclaration } from '../types'
+import { cssColor } from './css'
 import { mergeClassNames, serializeHTML, splitWhitespace } from './html'
 
 import themeCSS from 'tailwindcss/theme.css?raw'
@@ -357,6 +358,11 @@ async function exportStandaloneHTML(
   const stageCSS = `.op-stage{position:relative;width:${size.width}px;height:${size.height}px;overflow:hidden;background:transparent}`
   let body: string
   let css = `${RESET_CSS}${stageCSS}`
+  const root = document.children.length === 1 ? document.children[0] : undefined
+  const frame = root?.type === 'element' ? root.sourceSceneNode : undefined
+  const fill = frame?.type === 'FRAME' ? frame.fills.find((paint) => paint.visible) : undefined
+  if (fill?.type === 'SOLID' && fill.opacity === 1 && fill.color.a === 1)
+    css += `body{background:${cssColor(fill.color)}}`
   if (options.center) css += 'body{display:grid;place-content:center;min-height:100vh}'
 
   if (options.style === 'tailwind') {

@@ -2,6 +2,18 @@
 
 Full parity is open. A source implementation, unit check, build, and user workflow establish different things. This ledger records only observed outcomes and the scope of each observation.
 
+## Standalone HTML body background —2026-11-03
+
+- Ten actual-Pen owned exports qualify the one-frame/first-visible-opaque-solid body rule;
+  rectangle, empty, gradient, translucent-first and multi-root exceptions are recorded.
+  Preferences and the incidental owned-fixture nudge are restored without changing source files.
+- Both styles execute in owner checks and rendered Chromium/WebKit previews. A49.6s physical
+  native export/preview/Close check captures4,708,656 frame-background pixels and both checker
+  colors, with source bytes/selection/version unchanged. The page is visually inspected.
+- Initial browser missing-module failure is retained and attributed to overlapping package
+  rebuilding; the stable-output repeat is recorded separately. Additional root/paint cases,
+  exact page pixels and whole-product parity remain open. See [inspector parity](INSPECTOR-PARITY.md).
+
 ## Browser async validation —2026-11-03
 
 Full lint now passes with existing warnings after nine typed findings are corrected. Request
