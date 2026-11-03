@@ -18,7 +18,7 @@ import PanelSection from '@/components/ui/panel/PanelSection.vue'
 import AppSelect from '@/components/ui/select/AppSelect.vue'
 import AppCheckbox from '@/components/ui/toggle/AppCheckbox.vue'
 
-const { nodeId } = defineProps<{ nodeId: string }>()
+const { nodeIds } = defineProps<{ nodeIds: readonly string[] }>()
 const store = useEditorStore()
 const { isMobile } = useViewportKind()
 const toggleBrowserPreview = inject(toggleBrowserPreviewKey, undefined)
@@ -42,7 +42,8 @@ const formats = [
   { value: 'inline', label: 'HTML + CSS' }
 ]
 async function output(save: boolean) {
-  if (busy.value) return
+  if (busy.value || !nodeIds.length) return
+  const targetIds = [...nodeIds]
   busy.value = true
   error.value = ''
   const options = {
@@ -54,8 +55,8 @@ async function output(save: boolean) {
     style: style.value === 'tailwind' ? 'tailwind' : 'inline'
   } as const
   try {
-    if (save) await store.exportTarget({ scope: 'node', nodeId }, 'html', options)
-    else await copy((await renderNodesToHTML(store.graph, [nodeId], options)).html)
+    if (save) await store.exportTarget({ scope: 'selection', nodeIds: targetIds }, 'html', options)
+    else await copy((await renderNodesToHTML(store.graph, targetIds, options)).html)
   } catch {
     error.value = 'Could not generate HTML. Try again.'
   } finally {

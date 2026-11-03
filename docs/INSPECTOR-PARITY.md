@@ -2,6 +2,41 @@
 
 Target: actual `/Applications/Pen.app`1.2.21, rechecked in its installed Info.plist on2026-11-02. Full inspector and whole-product parity remain open. The reference is inspected through native UI and the private resource archive recorded in [reference provenance](PEN-REFERENCE.md).
 
+## Multi-selection Code continuation —2026-11-03
+
+Actual Pen exposes Code for a two-frame selection. An owned native HTML export contains
+both named roots in a260.25×80.75 relative wrapper, with positions0/180 and individual
+sizes120.5×80.75/80.25×45.5. Reference export preferences are restored after measurement.
+Open Pen now passes a snapshot of all selected IDs to its existing HTML renderer and
+selection exporter. Single-layer callers use the same component. Compact selection colors
+remain in Advanced properties, matching their absence from the observed compact reference.
+
+Sixteen Chromium/WebKit journeys execute single/multi HTML export, both style modes,
+fragment/scaffold and annotation settings, rendered external ZIP output and a captured
+clipboard handoff. The clipboard boundary is mocked; this does not establish OS clipboard
+delivery. The61.5s physical native journey executes File Open, two-layer selection,
+Export HTML and the real Save panel. The saved file includes both selected roots and
+excludes the third, with unchanged document version, selection and clean state. Its final
+native screenshot is inspected. Private receipts:code-multi-clipboard-corrected-browser.log,
+code-multi-native-recheck.log and code-multi-native-final.png.
+
+The earlier native journey saves the correct file but fails its final manual-inspection
+barrier after a context continuation; that failed result is retained. The repeat removes
+that unnecessary barrier and captures the native WebView screenshot before process exit.
+An additional owned actual-Pen fixture selects children under different parents in reverse
+order. Its exported roots retain selection order and their local coordinates, omitting
+ancestor translation and rotation. Open Pen's existing renderer shares those limitations;
+the new browser checks assert the measured behavior. Initial canvas-fidelity expectations
+and a speculative shared-exporter correction are rejected after this native comparison;
+no Core or DOM/CSS exporter change ships in this unit.
+
+With Ask user where to export file off, actual Pen writes beside the source design using
+`<document-base>-export.html`. Open in Browser after Export opens its internal Browser View
+at that file URL. No reference preferences change during this observation, and closing
+Browser View returns to the owned canvas. Open Pen's corresponding preferences, default
+destination/filename, actual OS clipboard delivery and exact settings/panel pixels remain
+OPEN. No inert settings are added and full parity is not established.
+
 ## Container geometry
 
 The extracted reference layout uses a221px panel,8px right/bottom window insets and58px desktop top position. Its island rim paints without occupying layout width. Native screenshots show the corresponding placement. The old independent container is220px with an outer border and an additional sidebar border, and places the panel6px lower and8px farther from the right/bottom edges. Those three border pixels plus the width difference reduce Context to187px rather than191px.

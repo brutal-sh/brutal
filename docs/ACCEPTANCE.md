@@ -2,6 +2,21 @@
 
 Full parity is open. A source implementation, unit check, build, and user workflow establish different things. This ledger records only observed outcomes and the scope of each observation.
 
+## Multi-selection Code —2026-11-03
+
+- Sixteen Chromium/WebKit journeys execute selected-root HTML output with both styles,
+  fragment/scaffold and layer annotations, rendered external ZIP output, unchanged design
+  state and single-layer regression coverage. Copy HTML is checked at a mocked browser
+  clipboard boundary; native OS clipboard delivery remains open.
+- A61.5s physical native journey executes File Open, two-layer selection, Export HTML
+  and Save. The1198-byte file has both selected named roots, excludes the third, and
+  preserves the260.25×80.75 wrapper and individual fractional geometry. Document version,
+  selection and clean state remain unchanged; the final native screenshot is inspected.
+- The preceding native run saves the correct output but fails its final manual-inspection
+  timeout. Both logs remain private. The repeat captures its screenshot before exit.
+  Ask where/default destination/filename, automatic internal browser opening, OS clipboard and
+  exact settings pixels are not qualified by this unit. See [inspector parity](INSPECTOR-PARITY.md).
+
 ## GLSL source watching — 2026-10-30
 
 Actual Pen reloaded ordinary and atomic source-file writes while preserving Size24 and a saved document tab. Invalid GLSL displayed a compiler message and red diagonal canvas stripes; restoring the file recovered the original checks. Open Pen's watcher and source reload passed65 model/I/O checks (265 assertions) and10 browser shader workflows, including retained uniforms, compiler-error retention, real changed pixels and Undo. Native parent-folder notifications remain unverified, and Open Pen's last-valid-image behavior still differs from Pen's error stripes. See [shader evidence](SHADER-PARITY.md). The pending macOS Documents permission still blocks the installed-app acceptance path; no recovery drafts were discarded.

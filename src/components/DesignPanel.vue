@@ -74,7 +74,7 @@ const { advanced = true, collapsible = false } = defineProps<{
 const collapsed = defineModel<boolean>('collapsed', { default: false })
 const libraryService = useLibraryService()
 const activeTool = computed(() => store.state.activeTool)
-const { selectedNode: node, selectedCount: multiCount } = useSelectionState()
+const { selectedNode: node, selectedCount: multiCount, selectedIds } = useSelectionState()
 const swapBinding = usePropertyBinding('INSTANCE_SWAP')
 const swapLinked = computed(() => !!swapBinding.definition.value)
 const showBooleanOperations = computed(() => multiCount.value >= 2)
@@ -166,8 +166,9 @@ const panelStyles = tv(designPanelTheme)
       <StrokeSection :compact="!advanced" />
       <EffectsSection :compact="!advanced" />
     </template>
-    <SelectionColorsSection />
+    <SelectionColorsSection v-if="advanced" />
     <LayoutGridSection v-if="advanced && supportsLayoutGuides" />
+    <CodeExportSection :node-ids="[...selectedIds]" />
     <component :is="advanced ? ExportSection : ExportSectionCompact" />
   </div>
 
@@ -343,7 +344,7 @@ const panelStyles = tv(designPanelTheme)
       <SelectionColorsSection v-if="advanced" />
       <LayoutGridSection v-if="advanced && supportsLayoutGuides" />
 
-      <CodeExportSection :node-id="node.id" />
+      <CodeExportSection :node-ids="[node.id]" />
       <component :is="advanced ? ExportSection : ExportSectionCompact" />
     </div>
   </RetainedPanel>
