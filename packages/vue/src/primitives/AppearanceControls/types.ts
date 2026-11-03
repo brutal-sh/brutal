@@ -2,8 +2,17 @@ import type { VNode } from 'vue'
 
 import type { BlendMode, SceneNode } from '@open-pencil/scene-graph'
 
-import type { CornerGeometryKey, CornerRadiusKey } from '#vue/controls/appearance/types'
+import type {
+  CornerExpansion,
+  CornerGeometryKey,
+  CornerRadiusKey
+} from '#vue/controls/appearance/types'
 import type { MixedValue } from '#vue/controls/node-props/use'
+
+export interface AppearanceControlsRootProps {
+  /** Selection follows stored corner state; manual expands without changing document data. */
+  cornerExpansion?: CornerExpansion
+}
 
 export interface AppearanceControlsActions {
   updateProp(key: string, value: number): void
@@ -15,6 +24,8 @@ export interface AppearanceControlsActions {
   commitUniformRadius(): void
   updateCornerProp(key: CornerGeometryKey, value: number): void
   commitCornerProp(key: CornerGeometryKey, value: number, previous: number): void
+  cancelRadiusPreview(): void
+  rollbackRadiusPreview(): void
 }
 
 export interface AppearanceControlsRootSlotProps {
@@ -35,6 +46,8 @@ export interface AppearanceControlsRootSlotProps {
   starRatioPercent: MixedValue<number>
   independentCorners: MixedValue<boolean>
   showIndependentCorners: boolean
+  cornerNodeIds: string[]
+  cornerRadiusValues: Record<CornerRadiusKey, MixedValue<number>>
   cornerRadiusValue: MixedValue<number>
   cornerRadiusBindingPaths: Array<CornerRadiusKey | 'cornerRadius'>
   cornerSmoothingPercent: MixedValue<number>

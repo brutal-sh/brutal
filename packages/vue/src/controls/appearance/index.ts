@@ -1,2 +1,7 @@
 export { useAppearance } from './use'
-export type { CornerGeometryKey, CornerRadiusKey } from './types'
+export type {
+  AppearanceOptions,
+  CornerExpansion,
+  CornerGeometryKey,
+  CornerRadiusKey
+} from './types'

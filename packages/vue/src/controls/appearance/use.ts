@@ -1,6 +1,7 @@
-import { ref } from 'vue'
+import { computed, ref, toValue } from 'vue'
 
 import { createAppearanceActions, createAppearanceState } from '#vue/controls/appearance/helpers'
+import type { AppearanceOptions } from '#vue/controls/appearance/types'
 import { useNodeProps } from '#vue/controls/node-props/use'
 import { useEditor } from '#vue/editor/context'
 
@@ -10,14 +11,24 @@ import { useEditor } from '#vue/editor/context'
  * Use this composable for visibility, opacity, and corner-radius controls in
  * property panels.
  */
-export function useAppearance() {
+export function useAppearance(options: AppearanceOptions = {}) {
   const editor = useEditor()
   const { nodes, node, active, isMulti, merged, updateProp, commitProp } = useNodeProps()
 
   const expandedCornerNodeId = ref<string | null>(null)
-  const options = { node, nodes, isMulti, merged, expandedCornerNodeId }
-  const appearanceState = createAppearanceState(options)
-  const appearanceActions = createAppearanceActions({ editor, ...options })
+  const cornerFieldsExpanded = ref(false)
+  const manualCornerExpansion = computed(() => toValue(options.cornerExpansion) === 'manual')
+  const stateOptions = {
+    node,
+    nodes,
+    isMulti,
+    merged,
+    expandedCornerNodeId,
+    cornerFieldsExpanded,
+    manualCornerExpansion
+  }
+  const appearanceState = createAppearanceState(stateOptions)
+  const appearanceActions = createAppearanceActions({ editor, ...stateOptions })
 
   return {
     editor,

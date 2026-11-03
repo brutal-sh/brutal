@@ -24,6 +24,12 @@ import { useAppearance } from '@open-pencil/vue/controls/appearance'
 const appearance = useAppearance()
 ```
 
+For disclosure-only corner controls, use `useAppearance({ cornerExpansion: 'manual' })`.
+The composable owns expansion state in both modes; consumers render `showIndependentCorners`
+rather than keeping a second expansion ref. Manual mode exposes effective per-corner values
+for all supported selected nodes through `cornerRadiusValues`, and a mixed uniform radius when
+their corners differ. Opening or closing the controls does not edit the document.
+
 ## Basic example
 
 ```ts
@@ -52,6 +58,12 @@ appearance.toggleVisibility()
 appearance.updateCornerProp('topLeftRadius', 12)
 appearance.commitCornerProp('topLeftRadius', 12, 8)
 ```
+
+Cancel an unfinished corner or smoothing edit with `appearance.cancelRadiusPreview()`.
+For a binding-aware numeric field, call `appearance.rollbackRadiusPreview()` from the enclosing
+`BindableValueRoot`'s `before-cancel` event, then `cancelRadiusPreview()` from the numeric field's
+terminal `cancel`. This order preserves both value and binding metadata on Escape, invalid input,
+deactivation and unmount.
 
 ### Edit corner smoothing
 

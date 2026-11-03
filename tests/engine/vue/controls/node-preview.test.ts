@@ -36,3 +36,27 @@ for (const operation of ['update', 'commit'] as const) {
     }
   })
 }
+
+test('rollback restores data while pinning late input until terminal cleanup', () => {
+  const editor = createEditor()
+  const control = useNodePreview(editor)
+  try {
+    const first = editor.graph.createNode('RECTANGLE', editor.state.currentPageId, { x: 10 })
+    const second = editor.graph.createNode('RECTANGLE', editor.state.currentPageId, { x: 20 })
+    control.update([first.id], { x: 50 }, 'Move')
+    control.rollback()
+    expect(first.x).toBe(10)
+    control.update([second.id], { x: 80 }, 'Late input')
+    expect([first.x, second.x]).toEqual([10, 20])
+    control.cancel()
+    expect(editor.undo.canUndo).toBe(false)
+    control.update([second.id], { x: 90 }, 'Move')
+    control.commit()
+    expect(second.x).toBe(90)
+    editor.undoAction()
+    expect(second.x).toBe(20)
+  } finally {
+    control.cancel()
+    editor.dispose()
+  }
+})

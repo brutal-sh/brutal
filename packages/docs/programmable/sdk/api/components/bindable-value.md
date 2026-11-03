@@ -35,6 +35,11 @@ an unchanged field creates no undo entry. Cancellation rolls back an open provid
 Providers without undo support still receive binding changes, with binding snapshots restored
 where possible.
 
+When a consumer also owns a value preview that changes binding metadata, restore that preview
+from the root's `before-cancel` event. The event runs before provider rollback, including on
+deactivation and unmount. Complete the value preview's cleanup from the child field's terminal
+`cancel` event so late input cannot start editing a newly selected target.
+
 ## Provider example
 
 ```ts twoslash

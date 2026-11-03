@@ -167,6 +167,7 @@ function handleAlign(
             :aria-label="panels.rotation"
             :model-value="rotationValue"
             :precision="2"
+            :ui="{ value: 'flex-none', suffix: 'text-surface' }"
             @update:model-value="actions.updateProp('rotation', $event)"
             @commit="(v: number, p: number) => actions.commitProp('rotation', v, p)"
             @cancel="actions.cancelProp('rotation')"

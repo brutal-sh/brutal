@@ -70,3 +70,56 @@ Twelve compact Chromium/WebKit journeys pass, including opacity50/Undo, Advanced
 Earlier native attempts remain retained: the section selector incorrectly requires an explicit region role despite the named HTML section's implicit role; the added selection-ready predicate alone does not fix it. After correcting the selector, the test's guessed positive quarter-turn expectation is contradicted by actual Pen; the isolated owned fixture is undone and that exact test process is stopped before repeating with-90°. Receipts: inspector-glyph-native-physical.log, inspector-glyph-native-physical-final.log, inspector-glyph-native-physical-section.log and inspector-glyph-native-physical-reference.log. Source review's initial flip-glyph concern is resolved by the actual reference mapping; no further concrete source defect is found. Degree-suffix spacing, expanded/multi corner controls, exact remaining glyph/style states and full parity remain OPEN.
 
 The successful physical journey takes131.6s including operator barriers. Source/Vue/canonical test types, structure lint with existing warnings, architecture, documentation/changelog and staged secret checks pass. The normal81.19MiB candidate builds, passes strict signature verification and excludes detected native-test frontend/executable hooks. It is not installed over the main application.
+
+## Corner disclosure and transactions —2026-11-03
+
+Actual Pen's native single/multi corner toggle is a disclosure: the uniform radius remains visible,
+four curve-glyph fields appear in TL/TR/BL/BR order, and one toggle opens or closes them. On two
+owned rectangles, physical edits7.25/3.5/4.25/5.75 apply to both. Save writes
+`[7.25,3.5,5.75,4.25]`, in TL/TR/BR/BL format order. Collapse preserves those arrays without
+editing the document. Four Undo actions and Save restore the reference's original omitted/default
+zero radii and original geometry. A later disclosure-only native check leaves it collapsed again.
+Private receipt:pen-expanded-corners-reference-2026-11-03.json.
+
+Compact Open Pen now uses SDK-owned manual disclosure, effective single/multi corner values and
+the four curve glyphs. The default SDK/Advanced policy remains selection-derived. Disclosure
+does not convert geometry or bindings; actual literal edits use the shared corner conversion and
+owned node-preview transaction. A uniform literal unifies all corners and clears only corner
+bindings. A per-corner literal detaches only that corner while retaining the other bindings,
+their scales and unrelated paint bindings. Binding-aware cancellation restores the owner preview
+before provider rollback, then releases the original targets at the numeric terminal event.
+Selection-keyed field subtrees cancel an old interaction before accepting a new target.
+
+Twenty compact corner/inspector Chromium/WebKit journeys pass, including single and mixed
+multi-selection, disclosure without document history, uniform Mixed-to-literal editing,
+Escape/invalid input, retained-panel deactivation, selection changes, one-step Undo/Redo and
+actual downloaded `.pen` save/reopen. Twenty-two owner checks with92assertions pass. Earlier
+six-pass/two-failure and settled-selection two-failure browser runs are retained: the Advanced
+uniform grid originally did not unmount on selection changes, leaving its whole-radius binding
+detached. The selection key corrects it. Source review also catches a conditional Mixed-to-number
+field replacement that cancels its own draft; keeping one binding-aware field corrects that case.
+
+The isolated native133.8s physical journey passes File Open, two-node selection, disclosure,
+all four individual edits, collapse, Save, four Undo/four Redo actions, Close, native File Open,
+reselection and disclosure with exact saved values. Its final screenshot is visually inspected.
+Private receipt:compact-corners-native-physical.log. Degree suffix placement is also inspected
+after changing the rotation field's value flex behavior. This does not establish exact whole-panel
+pixels or every selection/type/binding configuration. The observed multi-selection Layout still
+differs: Open Pen shows Spacing where Pen offers Fill Width/Height, and multi-selection Code
+actions/header arrangement remain open. Full design and functionality parity remains OPEN.
+
+Eighteen existing corner/smoothing/polygon/stroke-toggle and retained-panel behavior journeys
+also pass with snapshot assertions explicitly disabled. Their Advanced-only expectations now
+select Advanced properties rather than assuming it is the default. A separate current-source
+visual run still fails the old shared-token image:230×174expected versus221×175actual,
+2,789different pixels. Both images are inspected; the earlier sidebar geometry, binding-pill
+style and corner glyph differ. The baseline is not updated. The initial broader run retains its
+six passes/four failures/eight not-run status; it is not reported as a green full visual suite.
+Receipts:compact-corners-existing-regression.log, compact-corners-existing-functional.log and
+compact-corners-existing-visual.log.
+
+Source/Vue and canonical test types, lint with existing warnings, architecture, docs/changelog
+checks pass. The normal81.19MiB package builds and passes strict signature verification;
+the inspected normal frontend and executable have no detected WDIO test hooks. The separate
+native-test package is87.68MiB. The main installed app, user profile and recovery data remain
+untouched. These checks qualify the named corner behavior, not full design or functionality parity.

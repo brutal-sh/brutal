@@ -35,6 +35,159 @@ function rectangle() {
 }
 
 describe('appearance control state', () => {
+  test('manual disclosure presents mixed per-corner values without changing multi-selection data or history', () => {
+    const editor = createEditor()
+    try {
+      const first = editor.graph.createNode('RECTANGLE', editor.state.currentPageId, {
+        cornerRadius: 3.5
+      })
+      const second = editor.graph.createNode('RECTANGLE', editor.state.currentPageId, {
+        independentCorners: true,
+        topLeftRadius: 3.5,
+        topRightRadius: 5.5,
+        bottomLeftRadius: 6.5,
+        bottomRightRadius: 7.5
+      })
+      const original = structuredClone([first, second])
+      const options = {
+        editor,
+        node: computed(() => null),
+        nodes: computed(() => [first, second]),
+        isMulti: computed(() => true),
+        merged: <K extends keyof SceneNode>(): MixedValue<SceneNode[K]> => MIXED,
+        cornerFieldsExpanded: ref(false),
+        manualCornerExpansion: computed(() => true)
+      }
+      const state = createAppearanceState(options)
+      const actions = createAppearanceActions(options)
+      expect(state.showIndependentCorners.value).toBe(false)
+      actions.toggleIndependentCorners()
+      expect(state.showIndependentCorners.value).toBe(true)
+      expect(state.cornerRadiusValue.value).toBe(MIXED)
+      expect(state.cornerRadiusValues.value).toEqual({
+        topLeftRadius: 3.5,
+        topRightRadius: MIXED,
+        bottomLeftRadius: MIXED,
+        bottomRightRadius: MIXED
+      })
+      actions.toggleIndependentCorners()
+      expect(state.showIndependentCorners.value).toBe(false)
+      expect([first, second]).toEqual(original)
+      expect(editor.undo.canUndo).toBe(false)
+    } finally {
+      editor.dispose()
+    }
+  })
+
+  test('a corner literal preserves other bindings and scales through cancel, commit and Undo', () => {
+    const editor = createEditor()
+    try {
+      const node = editor.graph.createNode('RECTANGLE', editor.state.currentPageId, {
+        cornerRadius: 8,
+        topLeftRadius: 12,
+        topRightRadius: 8,
+        bottomLeftRadius: 8,
+        bottomRightRadius: 8,
+        boundVariables: {
+          cornerRadius: 'global',
+          topLeftRadius: 'local',
+          'fills/0/color': 'color'
+        },
+        variableBindingScales: { cornerRadius: 2, topLeftRadius: 3 }
+      })
+      const original = structuredClone(node)
+      const actions = createAppearanceActions({
+        editor,
+        node: computed(() => node),
+        nodes: computed(() => [node]),
+        isMulti: computed(() => false),
+        merged: (key) => node[key]
+      })
+      actions.updateCornerProp('topLeftRadius', 7.25)
+      expect(node.boundVariables).toEqual({
+        topRightRadius: 'global',
+        bottomLeftRadius: 'global',
+        bottomRightRadius: 'global',
+        'fills/0/color': 'color'
+      })
+      expect(node.variableBindingScales).toEqual({
+        topRightRadius: 2,
+        bottomLeftRadius: 2,
+        bottomRightRadius: 2
+      })
+      actions.cancelRadiusPreview()
+      expect(node).toEqual(original)
+      expect(editor.undo.canUndo).toBe(false)
+      actions.updateCornerProp('topLeftRadius', 7.25)
+      actions.commitCornerProp('topLeftRadius', 7.25, 12)
+      expect([node.topLeftRadius, node.topRightRadius]).toEqual([7.25, 8])
+      editor.undoAction()
+      expect(node.boundVariables).toEqual(original.boundVariables)
+      expect(node.variableBindingScales).toEqual(original.variableBindingScales)
+      expect([node.cornerRadius, node.independentCorners, node.topLeftRadius]).toEqual([
+        8,
+        false,
+        12
+      ])
+      expect(editor.undo.canUndo).toBe(false)
+      editor.redoAction()
+      expect(node.topLeftRadius).toBe(7.25)
+      expect(node.boundVariables.topLeftRadius).toBeUndefined()
+    } finally {
+      editor.dispose()
+    }
+  })
+
+  test('uniform literals clear only corner bindings and restore all metadata on cancel and Undo', () => {
+    const editor = createEditor()
+    try {
+      const node = editor.graph.createNode('RECTANGLE', editor.state.currentPageId, {
+        independentCorners: true,
+        cornerRadius: 8,
+        topLeftRadius: 12,
+        topRightRadius: 8,
+        bottomLeftRadius: 8,
+        bottomRightRadius: 8,
+        boundVariables: {
+          cornerRadius: 'global',
+          topLeftRadius: 'local',
+          'fills/0/color': 'color'
+        },
+        variableBindingScales: { cornerRadius: 2, topLeftRadius: 3, opacity: 0.5 }
+      })
+      const original = structuredClone(node)
+      const actions = createAppearanceActions({
+        editor,
+        node: computed(() => node),
+        nodes: computed(() => [node]),
+        isMulti: computed(() => false),
+        merged: (key) => node[key]
+      })
+      actions.updateUniformRadius(4.25)
+      expect(node.boundVariables).toEqual({ 'fills/0/color': 'color' })
+      expect(node.variableBindingScales).toEqual({ opacity: 0.5 })
+      actions.cancelRadiusPreview()
+      expect(node).toEqual(original)
+      actions.updateUniformRadius(4.25)
+      actions.commitUniformRadius()
+      expect(node.independentCorners).toBe(false)
+      expect([
+        node.cornerRadius,
+        node.topLeftRadius,
+        node.topRightRadius,
+        node.bottomRightRadius,
+        node.bottomLeftRadius
+      ]).toEqual([4.25, 4.25, 4.25, 4.25, 4.25])
+      editor.undoAction()
+      expect(node.boundVariables).toEqual(original.boundVariables)
+      expect(node.variableBindingScales).toEqual(original.variableBindingScales)
+      expect(node.independentCorners).toBe(true)
+      expect(node.topLeftRadius).toBe(12)
+    } finally {
+      editor.dispose()
+    }
+  })
+
   test('keeps equal uniform corners collapsed', () => {
     const state = appearanceState(rectangle())
     expect(state.showIndependentCorners.value).toBe(false)

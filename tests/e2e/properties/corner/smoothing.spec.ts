@@ -1,6 +1,7 @@
 import { expect, test, type Page } from '@playwright/test'
 
 import { CanvasHelper } from '#tests/helpers/canvas'
+import { openAppMenu } from '#tests/helpers/menu'
 import { propertySection } from '#tests/helpers/properties'
 
 let page: Page
@@ -13,6 +14,11 @@ test.beforeAll(async ({ browser }) => {
   await page.goto('/')
   canvas = new CanvasHelper(page)
   await canvas.waitForInit()
+  await (
+    await openAppMenu(page, 'View')
+  )
+    .getByRole('menuitem', { name: 'Advanced properties', exact: true })
+    .click()
 })
 
 test.afterAll(async () => {

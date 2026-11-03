@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import { useAppearance } from '#vue/controls/appearance/use'
-import type { AppearanceControlsRootSlots } from '#vue/primitives/AppearanceControls/types'
+import type {
+  AppearanceControlsRootProps,
+  AppearanceControlsRootSlots
+} from '#vue/primitives/AppearanceControls/types'
 
-const ctx = useAppearance()
+const { cornerExpansion = 'selection' } = defineProps<AppearanceControlsRootProps>()
+const ctx = useAppearance({ cornerExpansion: () => cornerExpansion })
 defineSlots<AppearanceControlsRootSlots>()
 const actions = {
   updateProp: ctx.updateProp,
@@ -13,7 +17,9 @@ const actions = {
   updateUniformRadius: ctx.updateUniformRadius,
   commitUniformRadius: ctx.commitUniformRadius,
   updateCornerProp: ctx.updateCornerProp,
-  commitCornerProp: ctx.commitCornerProp
+  commitCornerProp: ctx.commitCornerProp,
+  cancelRadiusPreview: ctx.cancelRadiusPreview,
+  rollbackRadiusPreview: ctx.rollbackRadiusPreview
 }
 </script>
 
@@ -31,6 +37,8 @@ const actions = {
     :star-ratio-percent="ctx.starRatioPercent.value"
     :independent-corners="ctx.independentCorners.value"
     :show-independent-corners="ctx.showIndependentCorners.value"
+    :corner-node-ids="ctx.cornerNodeIds.value"
+    :corner-radius-values="ctx.cornerRadiusValues.value"
     :corner-radius-value="ctx.cornerRadiusValue.value"
     :corner-radius-binding-paths="ctx.cornerRadiusBindingPaths.value"
     :corner-smoothing-percent="ctx.cornerSmoothingPercent.value"

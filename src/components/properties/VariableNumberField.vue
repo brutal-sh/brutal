@@ -55,6 +55,7 @@ const emit = defineEmits<{
   'update:modelValue': [value: number, unit?: string]
   commit: [value: number, previous: number, unit?: string]
   cancel: []
+  'before-cancel': []
 }>()
 
 const { panels, common } = useI18n()
@@ -85,6 +86,7 @@ defineOptions({ inheritAttrs: false })
     :provider="provider"
     :targets="targets"
     :value="typeof modelValue === 'number' ? modelValue : 0"
+    @before-cancel="emit('before-cancel')"
   >
     <NumberField
       v-bind="$attrs"

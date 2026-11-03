@@ -30,6 +30,10 @@ const {
 } = defineProps<BindableValueRootProps<V>>()
 
 defineSlots<BindableValueRootSlots<V>>()
+const emit = defineEmits<{
+  /** Roll back an owning value preview before restoring the binding transaction. */
+  'before-cancel': []
+}>()
 
 const retainedActivity = useRetainedActivity()
 const injectedProvider = useBindingProvider<V>()
@@ -199,9 +203,13 @@ function restoreWithoutRollback() {
 
 function cancelMutation() {
   if (!interactionActive) return
-  if (supportsInteractionBatch) rollbackProviderBatch()
-  else restoreWithoutRollback()
-  resetInteraction()
+  try {
+    emit('before-cancel')
+  } finally {
+    if (supportsInteractionBatch) rollbackProviderBatch()
+    else restoreWithoutRollback()
+    resetInteraction()
+  }
 }
 
 const actions: BindableValueActions<V> = {

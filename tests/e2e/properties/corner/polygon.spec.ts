@@ -1,5 +1,6 @@
 import { expect, test, useEditorSetupWithClear } from '#tests/e2e/fixtures'
 import { shapeHandlesDriver } from '#tests/helpers/canvas/shape-handles-driver'
+import { openAppMenu } from '#tests/helpers/menu'
 import { propertySection } from '#tests/helpers/properties'
 
 // Figma desktop: a polygon's or star's corners share one radius, shown and edited in the panel
@@ -8,6 +9,14 @@ import { propertySection } from '#tests/helpers/properties'
 const editor = useEditorSetupWithClear('/?test&no-rulers')
 
 const corners = shapeHandlesDriver(() => editor.page)
+
+test.beforeEach(async () => {
+  await (
+    await openAppMenu(editor.page, 'View')
+  )
+    .getByRole('menuitem', { name: 'Advanced properties', exact: true })
+    .click()
+})
 
 for (const type of ['POLYGON', 'STAR'] as const) {
   test(`a ${type.toLowerCase()} edits its one radius in the panel`, async () => {

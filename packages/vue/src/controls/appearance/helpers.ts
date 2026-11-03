@@ -1,4 +1,5 @@
 import { compact } from 'es-toolkit'
+import { omit } from 'es-toolkit/object'
 import { computed } from 'vue'
 import type { ComputedRef, Ref } from 'vue'
 
@@ -8,6 +9,7 @@ import { scriptOfNode } from '@open-pencil/scene-graph/scripts'
 import { independentCornerChanges } from '@open-pencil/scene-graph/variables'
 
 import type { CornerGeometryKey, CornerRadiusKey } from '#vue/controls/appearance/types'
+import { useNodePreview } from '#vue/controls/node-preview/use'
 import { MIXED, type MixedValue } from '#vue/controls/node-props/use'
 
 const CORNER_RADIUS_TYPES = new Set([
@@ -38,6 +40,8 @@ const CORNER_PATHS: CornerRadiusKey[] = [
 
 type AppearanceStateOptions = {
   expandedCornerNodeId?: Ref<string | null>
+  cornerFieldsExpanded?: Ref<boolean>
+  manualCornerExpansion?: ComputedRef<boolean>
   node: ComputedRef<SceneNode | null>
   nodes: ComputedRef<SceneNode[]>
   isMulti: ComputedRef<boolean>
@@ -82,13 +86,32 @@ export function createAppearanceState({
   nodes,
   isMulti,
   merged,
-  expandedCornerNodeId
+  expandedCornerNodeId,
+  cornerFieldsExpanded,
+  manualCornerExpansion
 }: AppearanceStateOptions) {
   // Figma shows the radius for any multi-selection and edits only the layers that have one; with
   // none among them the field is disabled.
   const cornerNodes = computed(() =>
     nodes.value.filter((target) => supportsCornerRadius(target) && !scriptOfNode(target))
   )
+  const cornerNodeIds = computed(() => cornerNodes.value.map((target) => target.id))
+  function sharedCornerValue(key: CornerRadiusKey): MixedValue<number> {
+    return sharedValue(
+      cornerNodes.value.map((target) =>
+        target.independentCorners || hasUnequalCorners(target) || target.boundVariables[key]
+          ? target[key]
+          : target.cornerRadius
+      ),
+      0
+    )
+  }
+  const cornerRadiusValues = computed<Record<CornerRadiusKey, MixedValue<number>>>(() => ({
+    topLeftRadius: sharedCornerValue('topLeftRadius'),
+    topRightRadius: sharedCornerValue('topRightRadius'),
+    bottomRightRadius: sharedCornerValue('bottomRightRadius'),
+    bottomLeftRadius: sharedCornerValue('bottomLeftRadius')
+  }))
   const hasCornerRadius = computed(() => {
     if (isMulti.value) return true
     return node.value ? supportsCornerRadius(node.value) : false
@@ -111,6 +134,9 @@ export function createAppearanceState({
   })
 
   const showIndependentCorners = computed(() => {
+    if (manualCornerExpansion?.value) {
+      return !!cornerFieldsExpanded?.value && splitsCorners.value && !cornerRadiusDisabled.value
+    }
     if (isMulti.value || !splitsCorners.value) return false
     const selected = node.value
     return selected
@@ -120,7 +146,13 @@ export function createAppearanceState({
       : false
   })
 
-  const cornerRadiusValue = computed(() => {
+  const cornerRadiusValue = computed<MixedValue<number>>(() => {
+    if (manualCornerExpansion?.value && splitsCorners.value) {
+      return sharedValue(
+        CORNER_PATHS.map((key) => cornerRadiusValues.value[key]),
+        0
+      )
+    }
     if (isMulti.value)
       return sharedValue(
         cornerNodes.value.map((n) => n.cornerRadius),
@@ -136,6 +168,7 @@ export function createAppearanceState({
   })
 
   const cornerRadiusBindingPaths = computed<Array<CornerRadiusKey | 'cornerRadius'>>(() => {
+    if (manualCornerExpansion?.value && cornerRadiusValue.value === MIXED) return CORNER_PATHS
     const selected = node.value
     return selected &&
       splitsCorners.value &&
@@ -198,6 +231,8 @@ export function createAppearanceState({
   })
 
   return {
+    cornerNodeIds,
+    cornerRadiusValues,
     hasCornerRadius,
     cornerRadiusDisabled,
     splitsCorners,
@@ -221,9 +256,11 @@ export function createAppearanceActions({
   node,
   nodes,
   isMulti,
-  expandedCornerNodeId
+  expandedCornerNodeId,
+  cornerFieldsExpanded,
+  manualCornerExpansion
 }: AppearanceActionOptions) {
-  const previousCornerValues = new Map<CornerGeometryKey, Map<string, number>>()
+  const radiusPreview = useNodePreview(editor)
 
   function setBlendMode(value: BlendMode) {
     const selected = node.value
@@ -260,6 +297,10 @@ export function createAppearanceActions({
   }
 
   function toggleIndependentCorners() {
+    if (manualCornerExpansion?.value && cornerFieldsExpanded) {
+      if (cornerTargets().length) cornerFieldsExpanded.value = !cornerFieldsExpanded.value
+      return
+    }
     const selected = node.value
     if (
       !isMulti.value &&
@@ -316,80 +357,63 @@ export function createAppearanceActions({
   }
 
   function updateCornerProp(key: CornerGeometryKey, value: number) {
-    let snapshots = previousCornerValues.get(key)
-    if (!snapshots) {
-      snapshots = new Map()
-      previousCornerValues.set(key, snapshots)
-    }
     const normalized = key === 'cornerSmoothing' ? Math.max(0, Math.min(value, 1)) : value
-    for (const target of cornerTargets()) {
-      if (!snapshots.has(target.id)) snapshots.set(target.id, target[key])
-      editor.updateNode(target.id, { [key]: normalized })
-    }
+    radiusPreview.update(
+      cornerTargets().map((target) => target.id),
+      (id) => {
+        const target = editor.getNode(id)
+        if (!target) return {}
+        if (key === 'cornerSmoothing') return { cornerSmoothing: normalized }
+        const changes = independentCornerChanges(target)
+        // Stale uniform flags must not replace unequal authored corners during conversion.
+        if (!target.independentCorners && hasUnequalCorners(target))
+          for (const corner of CORNER_PATHS) changes[corner] = target[corner]
+        const bindings = changes.boundVariables ?? target.boundVariables
+        const scales = changes.variableBindingScales ?? target.variableBindingScales
+        if (bindings[key]) changes.boundVariables = omit(bindings, [key])
+        if (scales[key] !== undefined) changes.variableBindingScales = omit(scales, [key])
+        return { ...changes, [key]: normalized }
+      },
+      `Change ${key}`
+    )
   }
 
-  function commitCornerProp(key: CornerGeometryKey, _value: number, previous: number) {
-    const targets = cornerTargets()
-    const snapshots = previousCornerValues.get(key)
-    const commit = () => {
-      for (const target of targets) {
-        editor.commitNodeUpdate(
-          target.id,
-          { [key]: snapshots?.get(target.id) ?? previous },
-          `Change ${key}`
-        )
-      }
-    }
-    if (targets.length > 1) editor.undo.runBatch(`Change ${key}`, commit)
-    else commit()
-    previousCornerValues.delete(key)
+  function commitCornerProp(_key: CornerGeometryKey, _value: number, _previous: number) {
+    radiusPreview.commit()
   }
-
-  type UniformCorners = Pick<SceneNode, CornerRadiusKey | 'cornerRadius' | 'independentCorners'>
-  const previousUniformCorners = new Map<string, UniformCorners>()
 
   function updateUniformRadius(value: number) {
-    for (const target of cornerTargets()) {
-      if (!previousUniformCorners.has(target.id)) {
-        previousUniformCorners.set(target.id, {
-          cornerRadius: target.cornerRadius,
-          independentCorners: target.independentCorners,
-          topLeftRadius: target.topLeftRadius,
-          topRightRadius: target.topRightRadius,
-          bottomRightRadius: target.bottomRightRadius,
-          bottomLeftRadius: target.bottomLeftRadius
-        })
-      }
-      const previous = previousUniformCorners.get(target.id)
-      if (
-        previous &&
-        value === (previous.independentCorners ? previous.topLeftRadius : previous.cornerRadius)
-      ) {
-        editor.updateNode(target.id, previous)
-        previousUniformCorners.delete(target.id)
-        continue
-      }
-      editor.updateNode(target.id, {
-        cornerRadius: value,
-        independentCorners: false,
-        topLeftRadius: value,
-        topRightRadius: value,
-        bottomRightRadius: value,
-        bottomLeftRadius: value
-      })
-    }
+    radiusPreview.update(
+      cornerTargets().map((target) => target.id),
+      (id) => {
+        const target = editor.getNode(id)
+        if (!target) return {}
+        const paths = [...CORNER_PATHS, 'cornerRadius'] as const
+        const changes: Partial<SceneNode> = {
+          cornerRadius: value,
+          independentCorners: false,
+          topLeftRadius: value,
+          topRightRadius: value,
+          bottomRightRadius: value,
+          bottomLeftRadius: value
+        }
+        if (paths.some((key) => target.boundVariables[key]))
+          changes.boundVariables = omit(target.boundVariables, paths)
+        if (paths.some((key) => target.variableBindingScales[key] !== undefined))
+          changes.variableBindingScales = omit(target.variableBindingScales, paths)
+        return changes
+      },
+      'Change corner radius'
+    )
   }
 
   function commitUniformRadius() {
-    editor.undo.runBatch('Change corner radius', () => {
-      for (const [id, previous] of previousUniformCorners) {
-        editor.commitNodeUpdate(id, previous, 'Change corner radius')
-      }
-    })
-    previousUniformCorners.clear()
+    radiusPreview.commit()
   }
 
   return {
+    cancelRadiusPreview: radiusPreview.cancel,
+    rollbackRadiusPreview: radiusPreview.rollback,
     updateUniformRadius,
     commitUniformRadius,
     setBlendMode,

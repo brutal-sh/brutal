@@ -8,6 +8,7 @@ import { useI18n } from '@open-pencil/vue/i18n'
 import { AppearanceControlsRoot } from '@open-pencil/vue/primitives/AppearanceControls'
 
 import { OpacityIcon } from '@/components/icons/paint'
+import { CornerRadiusIcon } from '@/components/icons/transform'
 import { useBlendModeGroups } from '@/components/inputs/blend-mode'
 import NumberField from '@/components/inputs/NumberField.vue'
 import ClipContentControl from '@/components/properties/layout/ClipContentControl.vue'
@@ -30,6 +31,12 @@ const variableModes = useVariableModes()
 type BlendModeSelectValue = BlendMode | 'MIXED'
 
 const baseBlendModeGroups = useBlendModeGroups(true)
+const cornerFields = [
+  { key: 'topLeftRadius', label: 'TL', rotation: '' },
+  { key: 'topRightRadius', label: 'TR', rotation: 'rotate-90' },
+  { key: 'bottomLeftRadius', label: 'BL', rotation: '-rotate-90' },
+  { key: 'bottomRightRadius', label: 'BR', rotation: 'rotate-180' }
+] as const
 
 function blendModeGroups(value: BlendMode | typeof MIXED) {
   return value === MIXED
@@ -43,6 +50,7 @@ function blendModeGroups(value: BlendMode | typeof MIXED) {
 
 <template>
   <AppearanceControlsRoot
+    :corner-expansion="compact ? 'manual' : 'selection'"
     v-slot="{
       node,
       isMulti,
@@ -55,6 +63,8 @@ function blendModeGroups(value: BlendMode | typeof MIXED) {
       pointCount,
       starRatioPercent,
       showIndependentCorners,
+      cornerNodeIds,
+      cornerRadiusValues,
       cornerRadiusValue,
       cornerRadiusBindingPaths,
       cornerSmoothingPercent,
@@ -81,7 +91,11 @@ function blendModeGroups(value: BlendMode | typeof MIXED) {
         :label="panels.layerVisibility"
       />
 
-      <PanelGrid :columns="2" :distribution="compact ? 'equal' : 'wide-first'">
+      <PanelGrid
+        :key="`appearance:${JSON.stringify(cornerNodeIds)}`"
+        :columns="2"
+        :distribution="compact ? 'equal' : 'wide-first'"
+      >
         <PanelFieldGroup v-if="!compact" :label="panels.blendMode">
           <AppSelect
             :model-value="blendModeValue === MIXED ? 'MIXED' : blendModeValue"
@@ -136,14 +150,7 @@ function blendModeGroups(value: BlendMode | typeof MIXED) {
           </NumberField>
         </PanelFieldGroup>
         <VariableNumberField
-          v-if="
-            compact &&
-            hasCornerRadius &&
-            !showIndependentCorners &&
-            node &&
-            !isMulti &&
-            !cornerRadiusDisabled
-          "
+          v-if="compact && hasCornerRadius && node && !isMulti && !cornerRadiusDisabled"
           compact
           :aria-label="panels.radius"
           :model-value="cornerRadiusValue"
@@ -153,10 +160,12 @@ function blendModeGroups(value: BlendMode | typeof MIXED) {
           :binding-paths="cornerRadiusBindingPaths"
           @update:model-value="actions.updateUniformRadius"
           @commit="actions.commitUniformRadius"
+          @cancel="actions.cancelRadiusPreview"
+          @before-cancel="actions.rollbackRadiusPreview"
           ><template #icon><icon-lucide-scan class="size-4 [&_*]:stroke-[1.5]" /></template
         ></VariableNumberField>
         <NumberField
-          v-else-if="compact && hasCornerRadius && !showIndependentCorners"
+          v-else-if="compact && hasCornerRadius"
           data-property="cornerRadius"
           :aria-label="panels.radius"
           :model-value="cornerRadiusValue"
@@ -164,6 +173,7 @@ function blendModeGroups(value: BlendMode | typeof MIXED) {
           :min="0"
           @update:model-value="actions.updateUniformRadius"
           @commit="actions.commitUniformRadius"
+          @cancel="actions.cancelRadiusPreview"
           ><template #icon><icon-lucide-scan class="size-4 [&_*]:stroke-[1.5]" /></template
         ></NumberField>
         <template v-if="compact && splitsCorners" #actions
@@ -179,6 +189,7 @@ function blendModeGroups(value: BlendMode | typeof MIXED) {
 
       <PanelGrid
         v-if="!compact && hasCornerRadius && !showIndependentCorners"
+        :key="`uniform:${JSON.stringify(cornerNodeIds)}`"
         :columns="2"
         class="mt-1.5"
       >
@@ -193,6 +204,8 @@ function blendModeGroups(value: BlendMode | typeof MIXED) {
             :binding-paths="cornerRadiusBindingPaths"
             @update:model-value="actions.updateUniformRadius"
             @commit="actions.commitUniformRadius"
+            @cancel="actions.cancelRadiusPreview"
+            @before-cancel="actions.rollbackRadiusPreview"
           >
             <template #icon>
               <icon-lucide-scan class="size-4 [&_*]:stroke-[1.5]" />
@@ -207,6 +220,7 @@ function blendModeGroups(value: BlendMode | typeof MIXED) {
             :min="0"
             @update:model-value="actions.updateUniformRadius"
             @commit="actions.commitUniformRadius"
+            @cancel="actions.cancelRadiusPreview"
           >
             <template #icon>
               <icon-lucide-scan class="size-4 [&_*]:stroke-[1.5]" />
@@ -227,48 +241,30 @@ function blendModeGroups(value: BlendMode | typeof MIXED) {
       </PanelGrid>
 
       <PanelGrid
-        v-else-if="hasCornerRadius && showIndependentCorners && !isMulti && node"
+        v-else-if="hasCornerRadius && showIndependentCorners && cornerNodeIds[0]"
+        :key="`corners:${JSON.stringify(cornerNodeIds)}`"
         :columns="2"
         class="mt-1.5 [&>[data-slot=actions]]:self-start"
         data-corner-grid
       >
         <VariableNumberField
-          label="TL"
-          :model-value="node.topLeftRadius"
+          v-for="corner in cornerFields"
+          :key="corner.key"
+          :aria-label="corner.label"
+          :compact="compact"
+          :model-value="cornerRadiusValues[corner.key]"
           :min="0"
-          :node-id="node.id"
-          binding-path="topLeftRadius"
-          @update:model-value="actions.updateCornerProp('topLeftRadius', $event)"
-          @commit="(v: number, p: number) => actions.commitCornerProp('topLeftRadius', v, p)"
-        />
-        <VariableNumberField
-          label="TR"
-          :model-value="node.topRightRadius"
-          :min="0"
-          :node-id="node.id"
-          binding-path="topRightRadius"
-          @update:model-value="actions.updateCornerProp('topRightRadius', $event)"
-          @commit="(v: number, p: number) => actions.commitCornerProp('topRightRadius', v, p)"
-        />
-        <VariableNumberField
-          label="BL"
-          :model-value="node.bottomLeftRadius"
-          :min="0"
-          :node-id="node.id"
-          binding-path="bottomLeftRadius"
-          @update:model-value="actions.updateCornerProp('bottomLeftRadius', $event)"
-          @commit="(v: number, p: number) => actions.commitCornerProp('bottomLeftRadius', v, p)"
-        />
-        <VariableNumberField
-          label="BR"
-          :model-value="node.bottomRightRadius"
-          :min="0"
-          :node-id="node.id"
-          binding-path="bottomRightRadius"
-          @update:model-value="actions.updateCornerProp('bottomRightRadius', $event)"
-          @commit="(v: number, p: number) => actions.commitCornerProp('bottomRightRadius', v, p)"
-        />
-        <template #actions>
+          :node-id="cornerNodeIds[0]"
+          :node-ids="cornerNodeIds"
+          :binding-path="corner.key"
+          @update:model-value="actions.updateCornerProp(corner.key, $event)"
+          @commit="(v: number, p: number) => actions.commitCornerProp(corner.key, v, p)"
+          @cancel="actions.cancelRadiusPreview"
+          @before-cancel="actions.rollbackRadiusPreview"
+        >
+          <template #icon><CornerRadiusIcon :class="['size-4', corner.rotation]" /></template>
+        </VariableNumberField>
+        <template v-if="!compact" #actions>
           <IconButton
             :label="panels.independentCornerRadii"
             size="xs"
@@ -337,6 +333,8 @@ function blendModeGroups(value: BlendMode | typeof MIXED) {
               (v: number, p: number) =>
                 actions.commitCornerProp('cornerSmoothing', v / 100, p / 100)
             "
+            @cancel="actions.cancelRadiusPreview"
+            @before-cancel="actions.rollbackRadiusPreview"
           >
             <template #icon>
               <icon-lucide-squircle class="size-3" />

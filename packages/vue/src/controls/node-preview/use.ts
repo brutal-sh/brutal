@@ -45,7 +45,12 @@ export function useNodePreview(editor: Editor) {
     takePreview()?.cancel()
   }
 
+  /** Reverts before an enclosing binding rolls back; pins late input until terminal cleanup. */
+  function rollback() {
+    preview?.cancel()
+  }
+
   tryOnScopeDispose(cancel)
   if (getCurrentInstance()) onDeactivated(cancel)
-  return { update, commit, cancel }
+  return { update, commit, cancel, rollback }
 }

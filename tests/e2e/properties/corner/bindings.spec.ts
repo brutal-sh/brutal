@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test'
 
 import { CanvasHelper } from '#tests/helpers/canvas'
+import { openAppMenu } from '#tests/helpers/menu'
 import { propertyField, propertySection } from '#tests/helpers/properties'
 
 const paths = ['topLeftRadius', 'topRightRadius', 'bottomRightRadius', 'bottomLeftRadius'] as const
@@ -11,6 +12,11 @@ test('collapsed equivalent corners preserve their shared token through expansion
   await page.goto('/')
   const canvas = new CanvasHelper(page)
   await canvas.waitForInit()
+  await (
+    await openAppMenu(page, 'View')
+  )
+    .getByRole('menuitem', { name: 'Advanced properties', exact: true })
+    .click()
   const id = await page.evaluate(() => {
     const editor = window.openPencil?.getStore?.()
     if (!editor) throw new Error('Editor unavailable')
