@@ -82,6 +82,21 @@ test('a superseded decode cannot replace a newer frame or clear its pending stat
   }
 })
 
+test('disposal during image decoding cannot restore the closed backdrop', async () => {
+  const decoding = createDeferred<undefined>()
+  const backdrop = createBrowserBackdrop(
+    async () => frame,
+    () => decoding.promise
+  )
+  const preparing = backdrop.prepare(() => true)
+  await Promise.resolve()
+  backdrop.dispose()
+  decoding.resolve(undefined)
+  expect(await preparing).toBe(false)
+  expect(backdrop.src.value).toBeNull()
+  expect(backdrop.pending.value).toBe(false)
+})
+
 test('failed decoding keeps the previous valid backdrop and leaves preparation retryable', async () => {
   let fail = false
   const backdrop = createBrowserBackdrop(

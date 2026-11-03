@@ -90,7 +90,7 @@ export function browserSelectionStyles(pick: BrowserSelection): BrowserStyleGrou
   const add = (id: BrowserStyleGroup['id'], label: string, values: StyleValue[]) => {
     if (values.length) groups.push({ id, label, values })
   }
-  if (['flex', 'inline-flex', 'grid', 'inline-grid'].includes(styles.display ?? '')) {
+  if (['flex', 'inline-flex', 'grid', 'inline-grid'].includes(styles.display)) {
     layout.push(styleValue(styles, 'display', 'Display'))
     for (const [key, label] of LAYOUT_FIELDS) {
       const field = styles[key]

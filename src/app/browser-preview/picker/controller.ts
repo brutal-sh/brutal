@@ -34,12 +34,12 @@ export function createBrowserPickerController(
     if (action !== 'read') error.value = ''
     try {
       const result = await native(target, action, index)
-      if (disposed || target !== url() || started !== revision) return
+      if (target !== url() || started !== revision) return
       error.value = ''
       state.value = result
       if (result.action) perform(result.action)
     } catch {
-      if (!disposed && target === url() && started === revision)
+      if (target === url() && started === revision)
         error.value = 'The element selection could not be updated. Try selecting it again.'
     } finally {
       pending.value = --requests > 0

@@ -2,6 +2,15 @@
 
 Full parity is open. A source implementation, unit check, build, and user workflow establish different things. This ledger records only observed outcomes and the scope of each observation.
 
+## Browser async validation —2026-11-03
+
+Full lint now passes with existing warnings after nine typed findings are corrected. Request
+revisions retain disposal/stale-response protection;70 browser owner checks/282assertions execute,
+including disposal during decoding and a late picker error. Separate rebuilt native processes
+execute fresh first/subsequent editor-menu backdrop pixels (2s) and picker/selected capture/editable
+subtree import (4.7s). Source/Vue/test types and architecture pass. These isolated native runs do
+not qualify the previously failed shared-worker batch or whole-product parity.
+
 ## HTML image paths and settings —2026-11-03
 
 - Actual Pen relative/absolute image exports refer to original resources without copied files or

@@ -112,6 +112,25 @@ test('stopping during a pending poll wins over the older response', async () => 
   expect(picker.state.value?.picking).toBe(false)
 })
 
+test('a late picker failure after disposal cannot restore feedback', async () => {
+  const response = createDeferred<BrowserPickerState>()
+  const picker = createBrowserPickerController(
+    (_url, action) => (action === 'stop' ? Promise.resolve(packet) : response.promise),
+    () => packet.url,
+    () => false,
+    () => {
+      throw new Error('Disposed action')
+    }
+  )
+  const starting = picker.start()
+  picker.dispose()
+  response.reject(new Error('Late page failure'))
+  await starting
+  expect(picker.error.value).toBe('')
+  expect(picker.state.value).toBeNull()
+  expect(picker.pending.value).toBe(false)
+})
+
 test('a recovered poll clears its transient error after a reload', async () => {
   let fails = true
   const picker = createBrowserPickerController(

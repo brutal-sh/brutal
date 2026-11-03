@@ -15,13 +15,19 @@ export function provideBrowserPicker(
   perform: (action: 'import' | 'capture') => void
 ) {
   const picker = createBrowserPickerController(native, url, busy, perform)
-  const { pause, resume } = useIntervalFn(picker.refresh, 150, { immediate: false })
+  const { pause, resume } = useIntervalFn(
+    () => {
+      void picker.refresh()
+    },
+    150,
+    { immediate: false }
+  )
   watch(url, picker.reset)
   watch(
     () => !!(picker.state.value?.picking || picker.state.value?.pick),
     (active) => (active ? resume() : pause())
   )
-  onScopeDispose(picker.dispose)
+  onScopeDispose(() => picker.dispose())
   provide(key, picker)
   return picker
 }

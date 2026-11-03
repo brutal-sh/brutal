@@ -52,7 +52,7 @@ export function browserImageSnapshot(capture: BrowserCapture) {
     new URL(capture.url).hostname.replace(/^www\./, '').replace(/[^a-z0-9.-]/gi, '-') || 'site'
   let y = 0
   const images = sources.map((source, index) => {
-    const slice = capture.slices[index]
+    const slice = capture.slices.at(index)
     if (!source || !slice) throw new Error('The screenshot image disappeared during preparation.')
     const image = graph.createNode('RECTANGLE', frame?.id ?? first.parentId ?? graph.rootId, {
       name: frame ? `screenshot-${host}-${index + 1}.png` : name,

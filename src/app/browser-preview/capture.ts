@@ -59,8 +59,7 @@ export function readBrowserCapture(input: unknown, requestId: string, url: strin
     offset += slice.bytes
     const header = imageHeader(png)
     if (
-      !header ||
-      header.type !== 'image/png' ||
+      header?.type !== 'image/png' ||
       header.width < 1 ||
       header.height < 1 ||
       header.width * header.height > 16_000_000 ||

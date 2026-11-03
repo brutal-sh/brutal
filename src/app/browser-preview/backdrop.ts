@@ -33,10 +33,10 @@ export function createBrowserBackdrop(
       let candidate: string | undefined
       try {
         const captured = await capture()
-        if (disposed || request !== revision || !isCurrent()) return false
+        if (request !== revision || !isCurrent()) return false
         candidate = URL.createObjectURL(new Blob([captured], { type: 'image/png' }))
         await decode(candidate)
-        if (disposed || request !== revision || !isCurrent()) return false
+        if (request !== revision || !isCurrent()) return false
         if (src.value) URL.revokeObjectURL(src.value)
         src.value = candidate
         candidate = undefined
