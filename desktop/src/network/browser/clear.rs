@@ -73,9 +73,51 @@ async fn storage(_view: &tauri::Webview, _origin: String) -> Result<(), String> 
     Err("Clearing site data is currently available on macOS.".into())
 }
 
+#[cfg(target_os = "macos")]
+async fn reload_file(view: &tauri::Webview, url: &url::Url, generation: u64) -> Result<(), String> {
+    use objc2_web_kit::WKWebView;
+    let (sender, receiver) = tokio::sync::oneshot::channel();
+    let expected = url.clone();
+    view.with_webview(move |native| {
+        // The platform callback confines the live WebKit handle to its main thread.
+        let view = unsafe { &*native.inner().cast::<WKWebView>() };
+        let current = unsafe { view.URL() }
+            .and_then(|url| url.absoluteString())
+            .and_then(|url| url::Url::parse(&url.to_string()).ok());
+        let result = if unsafe { view.isLoading() }
+            || current.as_ref() != Some(&expected)
+            || NAVIGATION_GENERATION.load(Ordering::SeqCst) != generation
+        {
+            Err("The browser page changed. Open its menu and try again.".into())
+        } else if unsafe { view.reloadFromOrigin() }.is_some() {
+            Ok(())
+        } else {
+            Err("The browser could not reload this HTML export.".into())
+        };
+        let _ = sender.send(result);
+    })
+    .map_err(|error| error.to_string())?;
+    tokio::time::timeout(std::time::Duration::from_secs(5), receiver)
+        .await
+        .map_err(|_| "The file reload timed out. Try again.")?
+        .map_err(|_| "The browser closed before reloading.".to_owned())?
+}
+
+#[cfg(not(target_os = "macos"))]
+async fn reload_file(
+    _view: &tauri::Webview,
+    _url: &url::Url,
+    _generation: u64,
+) -> Result<(), String> {
+    Err("Reloading the file cache is currently available on macOS.".into())
+}
+
 pub(super) async fn run(view: &tauri::Webview, url: &url::Url) -> Result<(), String> {
     let generation = NAVIGATION_GENERATION.load(Ordering::SeqCst);
     unchanged(view, url, generation).await?;
+    if url.scheme() == "file" {
+        return reload_file(view, url, generation).await;
+    }
     storage(view, url.origin().ascii_serialization()).await?;
     unchanged(view, url, generation).await?;
     let host = url.host_str().ok_or("The page has no website host.")?;

@@ -23,3 +23,11 @@ test('site-data clearing requires the affirmative choice and identifies the orig
   expect(confirmed).toBe(true)
   expect(await confirmBrowserSiteClear('https://example.test/', async () => 'Cancel')).toBe(false)
 })
+
+test('local HTML cache reload does not ask to remove website data', async () => {
+  expect(
+    await confirmBrowserSiteClear('file:///private/tmp/owned-export.html', async () => {
+      throw new Error('Local reload must not open a website-data confirmation.')
+    })
+  ).toBe(true)
+})

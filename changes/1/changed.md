@@ -28,3 +28,4 @@
 - Desktop HTML exports reference original relative or absolute image paths and retain each paint's source through reordering.
 - Standalone HTML uses a selected frame's first visible opaque solid fill as the page background.
 - Open Folder selects the authorized HTML preview file in the native file manager, and Open in System Browser opens it in the default browser.
+- Reload local HTML and its resources from the browser cache action without clearing website data or showing its confirmation.

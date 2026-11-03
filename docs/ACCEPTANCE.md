@@ -2,6 +2,22 @@
 
 Full parity is open. A source implementation, unit check, build, and user workflow establish different things. This ledger records only observed outcomes and the scope of each observation.
 
+## HTML file cache reload —2026-11-03
+
+- Open Pen's108.8s physical native journey exports relative-image HTML, changes the owned
+  output and image, then executes More/Empty Cache and Reload without a website-data dialog.
+  The capture changes from red/green to blue/yellow and the new body background. Closing
+  returns to the unchanged design, selection and version.
+- The native command rejects a different web page and an unregistered existing HTML file.
+  Seventy-one browser owner checks/283assertions and11 compiled policy checks pass. The file
+  branch rechecks URL/loading/navigation generation immediately before WebKit revalidation;
+  it never enters website storage/cookie removal. A separate809ms native website regression
+  clears only current-origin stores and related cookies, rejects a stale target and retains
+  the other origin’s storage.
+- Actual Pen's file menu closes without a prompt, but changed reference pixels are not
+  observed. Its owned output is restored byte for byte. Cache-refresh equivalence, file
+  history/restart and whole-product parity remain open.
+
 ## HTML preview file actions —2026-11-03
 
 - Actual Pen reveals the owned HTML export selected in Finder and opens it in Brave through

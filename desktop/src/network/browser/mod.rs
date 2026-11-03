@@ -157,7 +157,7 @@ pub async fn browser_preview_clear_site_data(
     url: String,
 ) -> Result<(), String> {
     require_editor(webview.label())?;
-    let target = preview_url(&url, app.config().build.dev_url.as_ref())?;
+    let target = exports::target(&url, app.config().build.dev_url.as_ref())?;
     clear::run(&existing(&app)?, &target).await
 }
 

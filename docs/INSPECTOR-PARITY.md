@@ -2,6 +2,30 @@
 
 Target: actual `/Applications/Pen.app`1.2.21, rechecked in its installed Info.plist on2026-11-02. Full inspector and whole-product parity remain open. The reference is inspected through native UI and the private resource archive recorded in [reference provenance](PEN-REFERENCE.md).
 
+## HTML file cache reload —2026-11-03
+
+For authorized local HTML, Empty Cache and Reload skips the website-data confirmation and
+uses WebKit's end-to-end revalidation, without clearing website storage or cookies. The native
+callback checks the live URL, loading and navigation generation immediately before reloading;
+this corrects a source-review race between two separately scheduled page checks. The shared
+HTTP(S) confirmation/storage path is retained. Files still require the existing export registry.
+
+A108.8s physical native journey exports relative-image HTML, records its original checker and
+background pixels, changes only the owned output and image, then clicks More/Empty Cache and
+Reload. Without a confirmation, the1604×2956 capture contains14,884 pixels each of the changed
+blue/yellow image and4,708,656 new body-background pixels. Close returns to the editor with
+source design bytes, selection and version unchanged; the restored editor is visually inspected.
+Wrong-live-web and unregistered-existing-file requests are rejected. A separate809ms native
+website regression clears current-origin stores/cookies, rejects a stale target and retains the
+other origin’s storage. Seventy-one browser owner
+checks/283assertions and11 compiled browser-policy checks pass. Private receipts:
+file-cache-native-physical.log and file-cache-native-{relative,reloaded,editor-restored}.png.
+
+Actual Pen's file menu closes without confirmation, but a temporary owned output change does
+not produce observed changed pixels in that reference page. The output is restored byte for
+byte. This qualifies the no-prompt menu state only; reference cache-refresh equivalence,
+file history/restart, exact menus and full parity remain OPEN.
+
 ## HTML preview file actions —2026-11-03
 
 Actual Pen's Open Folder reveals the exported HTML selected in Finder; Open in System Browser
