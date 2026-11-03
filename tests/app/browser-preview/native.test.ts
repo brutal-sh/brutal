@@ -6,7 +6,49 @@ import { createBrowserPreviewNative } from '@/app/browser-preview/native'
 import { PREVIEW_PRESETS } from '@/app/browser-preview/schema'
 import { createDeferred } from '@/app/runtime/deferred'
 
+import { extractedFixture } from '#tests/helpers/browser-preview/extracted-page'
 import { testPath } from '#tests/helpers/paths'
+
+test('the native bridge retains exact authorized file identity for imports and picker replies', async () => {
+  const url = 'file:///design/owned-export.html'
+  let responseURL = url
+  const status = { url, title: 'Export', width: 390, height: 600, captureAvailable: true }
+  const callNative: typeof invoke = async <T>(
+    command: string,
+    args?: Parameters<typeof invoke>[1]
+  ): Promise<T> => {
+    const requestId =
+      args && typeof args === 'object' && 'requestId' in args ? args.requestId : undefined
+    let response: unknown = status
+    if (command === 'browser_preview_extract' || command === 'browser_preview_picker') {
+      if (typeof requestId !== 'string') throw new Error('Missing native request identity')
+      response =
+        command === 'browser_preview_extract'
+          ? { ...extractedFixture(), url: responseURL, requestId }
+          : { url: responseURL, requestId, picking: true, pick: null, action: null }
+    }
+    return response as T
+  }
+  const bridge = createBrowserPreviewNative(
+    () => ({
+      bounds: { x: 0, y: 0, width: 390, height: 600 },
+      zoom: 1,
+      viewport: { width: 390, height: 600 }
+    }),
+    callNative,
+    (input) => (input === url ? url : undefined)
+  )
+  try {
+    await bridge.native.open(url, PREVIEW_PRESETS[0])
+    expect((await bridge.native.extract(url)).url).toBe(url)
+    expect((await bridge.picker(url, 'start')).url).toBe(url)
+    responseURL = 'file:///design/another.html'
+    await expect(bridge.native.extract(url)).rejects.toThrow()
+    await expect(bridge.picker(url, 'read')).rejects.toThrow()
+  } finally {
+    await bridge.dispose()
+  }
+})
 
 test('an owned hidden page can provide an overlay frame but cannot capture or clear site data', async () => {
   let visible = true

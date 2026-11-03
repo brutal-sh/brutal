@@ -15,7 +15,8 @@ export interface CaptureTarget {
 export function createBrowserPreviewController(
   native: BrowserPreviewNative,
   captureTarget: () => CaptureTarget,
-  importTarget?: () => BrowserImportTarget
+  importTarget?: () => BrowserImportTarget,
+  exportURL?: (input: string) => string | undefined
 ) {
   const address = ref('')
   const preset = ref('desktop')
@@ -71,7 +72,8 @@ export function createBrowserPreviewController(
       }),
     navigate: () =>
       run(async () => {
-        const result = await native.open(previewURL(address.value), selectedPreset())
+        const url = previewURL(address.value, exportURL?.(address.value))
+        const result = await native.open(url, selectedPreset())
         if (!isDisposed()) status.value = result
       }),
     clearPage: () =>

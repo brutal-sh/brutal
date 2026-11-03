@@ -120,11 +120,17 @@ function surfaceViewport() {
     zoom.value
   )
 }
-const bridge = createBrowserPreviewNative(() => (hasPreviewOverlay() ? null : surfaceViewport()))
+const allowedExport = (url: string) => (session.exportURLs.has(url) ? url : undefined)
+const bridge = createBrowserPreviewNative(
+  () => (hasPreviewOverlay() ? null : surfaceViewport()),
+  undefined,
+  allowedExport
+)
 const preview = createBrowserPreviewController(
   bridge.native,
   () => browserCaptureTarget(store),
-  () => browserImportTarget(store, () => open.value)
+  () => browserImportTarget(store, () => open.value),
+  allowedExport
 )
 const { address, preset, status, busy: actionBusy, error, notice } = preview
 const backdrop = createBrowserBackdrop(async () => {
@@ -132,6 +138,13 @@ const backdrop = createBrowserBackdrop(async () => {
   return bridge.native.backdrop(status.value.url)
 })
 const busy = computed(() => actionBusy.value || backdrop.pending.value)
+defineExpose({
+  async openPage(url: string) {
+    if (busy.value) throw new Error('Wait for the browser operation to finish, then export again.')
+    address.value = url
+    await navigate()
+  }
+})
 function backdropKey() {
   return JSON.stringify([status.value?.url, status.value?.loading, preset.value, surfaceViewport()])
 }

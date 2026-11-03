@@ -1,6 +1,7 @@
 //! An isolated child webview. Visited content has no app commands or plugin capabilities.
 mod capture;
 mod clear;
+pub mod exports;
 mod extract;
 pub mod history;
 mod page_url;
@@ -95,7 +96,7 @@ pub async fn browser_preview_open(
         .validate()?;
     validate_bounds(&webview, &bounds)?;
     let dev_url = app.config().build.dev_url.clone();
-    let target = preview_url(&url, dev_url.as_ref())?;
+    let target = exports::target(&url, dev_url.as_ref())?;
     let view = if let Some(view) = app.get_webview(PREVIEW_LABEL) {
         view.navigate(target.clone()).map_err(|e| e.to_string())?;
         view
@@ -104,7 +105,7 @@ pub async fn browser_preview_open(
             .incognito(true)
             .disable_drag_drop_handler()
             .on_navigation(move |url| {
-                let allowed = preview_url(url.as_str(), dev_url.as_ref()).is_ok();
+                let allowed = exports::target(url.as_str(), dev_url.as_ref()).is_ok();
                 if allowed {
                     NAVIGATION_GENERATION.fetch_add(1, Ordering::SeqCst);
                 }
@@ -170,7 +171,7 @@ pub async fn browser_preview_picker(
     index: Option<usize>,
 ) -> Result<serde_json::Value, String> {
     require_editor(webview.label())?;
-    let target = preview_url(&url, app.config().build.dev_url.as_ref())?;
+    let target = exports::target(&url, app.config().build.dev_url.as_ref())?;
     let view = existing(&app)?;
     let generation = NAVIGATION_GENERATION.load(Ordering::SeqCst);
     let location = page_url::read(&view).await?;
@@ -227,7 +228,7 @@ pub async fn browser_preview_action(
                 let url = location
                     .url
                     .ok_or("Wait for the browser address to be ready.")?;
-                view.navigate(preview_url(
+                view.navigate(exports::target(
                     url.as_str(),
                     app.config().build.dev_url.as_ref(),
                 )?)
@@ -255,7 +256,7 @@ pub async fn browser_preview_backdrop(
     url: String,
 ) -> Result<tauri::ipc::Response, String> {
     require_editor(webview.label())?;
-    let target = preview_url(&url, app.config().build.dev_url.as_ref())?;
+    let target = exports::target(&url, app.config().build.dev_url.as_ref())?;
     let view = existing(&app)?;
     let navigation = NAVIGATION_GENERATION.load(Ordering::SeqCst);
     let cancellation = CAPTURE_GENERATION.load(Ordering::SeqCst);
@@ -293,7 +294,7 @@ pub async fn browser_preview_screenshot(
     scope: screenshot::Scope,
 ) -> Result<tauri::ipc::Response, String> {
     require_editor(webview.label())?;
-    let target = preview_url(&url, app.config().build.dev_url.as_ref())?;
+    let target = exports::target(&url, app.config().build.dev_url.as_ref())?;
     let view = existing(&app)?;
     let navigation = NAVIGATION_GENERATION.load(Ordering::SeqCst);
     let cancellation = CAPTURE_GENERATION.load(Ordering::SeqCst);
@@ -311,7 +312,7 @@ pub async fn browser_preview_extract(
     selected: Option<bool>,
 ) -> Result<serde_json::Value, String> {
     require_editor(webview.label())?;
-    let target = preview_url(&url, app.config().build.dev_url.as_ref())?;
+    let target = exports::target(&url, app.config().build.dev_url.as_ref())?;
     let view = existing(&app)?;
     let generation = NAVIGATION_GENERATION.load(Ordering::SeqCst);
     let location = page_url::read(&view).await?;
@@ -390,7 +391,7 @@ pub async fn browser_preview_capture(
     selected: Option<bool>,
 ) -> Result<tauri::ipc::Response, String> {
     require_editor(webview.label())?;
-    let target = preview_url(&url, app.config().build.dev_url.as_ref())?;
+    let target = exports::target(&url, app.config().build.dev_url.as_ref())?;
     let view = existing(&app)?;
     if page_url::read(&view).await?.url.as_ref() != Some(&target) {
         return Err("The preview navigated. Wait for it to load and capture again.".into());

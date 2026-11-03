@@ -1,5 +1,14 @@
 # Browser preview and capture
 
+Code's embedded HTML export can automatically open its saved file in this browser. The native
+editor explicitly authorizes regular visible HTML exports for its workspace; ordinary address
+entry still accepts web addresses. File Reload, element picking, selected editable import,
+full390×844 Phone import and native Undo execute in the owned acceptance fixture. App-command
+and filesystem IPC and a neighboring text-file fetch are refused from that file page. Disabling
+the preview preference still writes HTML without opening a dock. Loose/absolute assets, ZIP
+preview and remaining file-specific menu/history/restart states stay open; see
+[inspector parity](INSPECTOR-PARITY.md).
+
 The native editor has an embedded browser dock on the right. Its inline toolbar opens HTTP(S) web or localhost addresses, navigates history, reloads, cycles Desktop/Phone/Tablet, imports editable content and captures selected elements, visible areas or full pages. Separate controls close the current page or the dock. Desktop uses the dock at50% by default, with25–150% zoom controls. Phone retains a390×844CSS viewport and Tablet1180×820, fitted and centered with8px padding; their zoom controls are disabled. The current implementation changes layout size and display scale, without claiming device hardware emulation.
 
 The chosen device and zoom are saved as non-secret editor preferences, with the responsive zoom retained separately when switching through Phone or Tablet. New documents use the saved choice; a document already open retains its own session. Browsing URLs are not part of these preferences. On macOS, Back and Forward disable at the edges of the actual native history. Browser notices and errors use floating feedback so they do not change the dock's layout.

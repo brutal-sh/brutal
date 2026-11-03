@@ -1,0 +1,139 @@
+use std::{
+    path::{Component, Path, PathBuf},
+    sync::Mutex,
+};
+use tauri::Webview;
+use tauri_plugin_fs::FsExt;
+use url::Url;
+
+use super::policy::{preview_url, require_editor};
+
+static EXPORTS: Mutex<Vec<PathBuf>> = Mutex::new(Vec::new());
+
+fn export_path(path: &Path) -> Result<PathBuf, String> {
+    if !path.is_absolute()
+        || path.components().any(|part| matches!(part, Component::Normal(name) if name.to_string_lossy().starts_with('.')))
+        || !path
+            .extension()
+            .is_some_and(|extension| extension.eq_ignore_ascii_case("html"))
+    {
+        return Err("Choose an exported HTML file.".into());
+    }
+    let metadata =
+        std::fs::symlink_metadata(path).map_err(|_| "The HTML export is unavailable.")?;
+    if !metadata.is_file() || metadata.file_type().is_symlink() {
+        return Err("Choose a regular HTML export file.".into());
+    }
+    let canonical = path
+        .canonicalize()
+        .map_err(|_| "The HTML export is unavailable.")?;
+    if canonical.components().any(
+        |part| matches!(part, Component::Normal(name) if name.to_string_lossy().starts_with('.')),
+    ) {
+        return Err("Choose a visible HTML export file.".into());
+    }
+    Ok(canonical)
+}
+
+#[tauri::command]
+pub fn authorize_browser_export(
+    app: tauri::AppHandle,
+    webview: Webview,
+    path: String,
+) -> Result<String, String> {
+    require_editor(webview.label())?;
+    let path = export_path(Path::new(&path))?;
+    if app.fs_scope().is_forbidden(&path) {
+        return Err("This export location cannot be previewed.".into());
+    }
+    let url = Url::from_file_path(&path).map_err(|_| "The HTML export address is invalid.")?;
+    let mut exports = EXPORTS
+        .lock()
+        .map_err(|_| "Export preview is temporarily unavailable.")?;
+    if !exports.contains(&path) {
+        exports.push(path);
+    }
+    Ok(url.to_string())
+}
+
+pub(super) fn target(input: &str, dev_url: Option<&Url>) -> Result<Url, String> {
+    if let Ok(url) = preview_url(input, dev_url) {
+        return Ok(url);
+    }
+    let url = Url::parse(input).map_err(|_| "Enter a full HTTP or HTTPS address.")?;
+    if url.scheme() != "file" {
+        return preview_url(input, dev_url);
+    }
+    let path = url
+        .to_file_path()
+        .map_err(|_| "This page cannot be previewed.")?;
+    let path = export_path(&path)?;
+    if EXPORTS
+        .lock()
+        .map_err(|_| "Export preview is temporarily unavailable.")?
+        .contains(&path)
+    {
+        Ok(url)
+    } else {
+        Err("Open this HTML file through Code export first.".into())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn ordinary_web_rules_do_not_grant_local_files() {
+        assert!(target("https://example.com/", None).is_ok());
+        for url in [
+            "file:///etc/passwd",
+            "data:text/html,test",
+            "tauri://localhost",
+            "https://tauri.localhost/",
+        ] {
+            assert!(target(url, None).is_err(), "{url}");
+        }
+    }
+
+    #[test]
+    fn only_regular_absolute_html_exports_are_eligible() {
+        let unique = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_nanos();
+        let path = std::env::temp_dir().join(format!(
+            "open-pen-export-policy-{}-{unique}.html",
+            std::process::id()
+        ));
+        std::fs::write(&path, "<!doctype html><p>owned export</p>").unwrap();
+        assert!(export_path(&path).is_ok());
+        assert!(export_path(Path::new("relative.html")).is_err());
+        assert!(export_path(&path.with_file_name(".private-export.html")).is_err());
+        assert!(export_path(&path.with_extension("pen")).is_err());
+        let url = Url::from_file_path(&path).unwrap();
+        assert!(target(url.as_str(), None).is_err());
+        let canonical = export_path(&path).unwrap();
+        EXPORTS.lock().unwrap().push(canonical.clone());
+        assert!(target(url.as_str(), None).is_ok());
+        EXPORTS.lock().unwrap().retain(|path| path != &canonical);
+        assert!(target(url.as_str(), None).is_err());
+        #[cfg(unix)]
+        {
+            let link = path.with_file_name(format!("open-pen-export-link-{unique}.html"));
+            std::os::unix::fs::symlink(&path, &link).unwrap();
+            assert!(export_path(&link).is_err());
+            std::fs::remove_file(link).unwrap();
+            let hidden = path.with_file_name(format!(".open-pen-export-policy-{unique}"));
+            let alias = path.with_file_name(format!("open-pen-export-alias-{unique}"));
+            std::fs::create_dir(&hidden).unwrap();
+            std::fs::write(hidden.join("output.html"), "owned export").unwrap();
+            std::os::unix::fs::symlink(&hidden, &alias).unwrap();
+            assert!(export_path(&alias.join("output.html")).is_err());
+            std::fs::remove_file(alias).unwrap();
+            std::fs::remove_file(hidden.join("output.html")).unwrap();
+            std::fs::remove_dir(hidden).unwrap();
+        }
+        std::fs::remove_file(path).unwrap();
+    }
+}

@@ -46,7 +46,8 @@ export type ExtractedNode = ExtractedPage['nodes'][number]
 export function validateExtractedPage(
   input: unknown,
   requestId: string,
-  url: string
+  url: string,
+  authorizedExportURL?: string
 ): ExtractedPage {
   if (new TextEncoder().encode(JSON.stringify(input)).length > 16 * 1024 * 1024)
     throw new Error('The page exceeds the editable import payload limit.')
@@ -54,7 +55,10 @@ export function validateExtractedPage(
   if (!parsed.success)
     throw new Error('The browser returned an invalid page description. The design was not changed.')
   const page = parsed.output
-  if (page.requestId !== requestId || previewURL(page.url) !== previewURL(url))
+  if (
+    page.requestId !== requestId ||
+    previewURL(page.url, authorizedExportURL) !== previewURL(url, authorizedExportURL)
+  )
     throw new Error('The preview changed or the import response expired. Import again.')
   if (page.diagnostics.length)
     throw new Error(

@@ -10,7 +10,7 @@ import { renderNodesToHTML } from '@open-pencil/core/io/formats/html'
 import { useViewportKind } from '@open-pencil/vue/editor/viewport-kind'
 import { useRetainedPopup } from '@open-pencil/vue/lifecycle/retention'
 
-import { toggleBrowserPreviewKey } from '@/app/browser-preview/context'
+import { openBrowserExportKey, toggleBrowserPreviewKey } from '@/app/browser-preview/context'
 import { useEditorStore } from '@/app/editor/active-store'
 import AppButton from '@/components/ui/button/AppButton.vue'
 import IconButton from '@/components/ui/button/IconButton.vue'
@@ -24,6 +24,7 @@ const { nodeIds } = defineProps<{ nodeIds: readonly string[] }>()
 const store = useEditorStore()
 const { isMobile } = useViewportKind()
 const toggleBrowserPreview = inject(toggleBrowserPreviewKey, undefined)
+const openBrowserExport = inject(openBrowserExportKey, undefined)
 const style = useLocalStorage('open-pen:html-style', 'tailwind')
 const assets = useLocalStorage('open-pen:html-assets', 'inline')
 const scaffold = useLocalStorage('open-pen:html-scaffold', true)
@@ -31,6 +32,7 @@ const center = useLocalStorage('open-pen:html-center', true)
 const names = useLocalStorage('open-pen:html-layer-names', true)
 const ids = useLocalStorage('open-pen:html-layer-ids', false)
 const askWhere = useLocalStorage('open-pen:html-ask-where', false)
+const openAfterExport = useLocalStorage('open-pen:html-open-after-export', true)
 const { open: settingsOpen, portalActive } = useRetainedPopup()
 const popover = usePopoverUI({ content: 'w-72 p-3' })
 const assetModes = [
@@ -47,6 +49,7 @@ const formats = [
 async function output(save: boolean) {
   if (busy.value || !nodeIds.length) return
   const targetIds = [...nodeIds]
+  const previewAfterSave = openAfterExport.value && assets.value === 'inline'
   const sourcePath = store.getDocumentFilePath()
   const fileName = `${(sourcePath ? filename(sourcePath) : basename(store.state.documentName)) || 'Untitled'}-export.html`
   const nativePath =
@@ -64,12 +67,24 @@ async function output(save: boolean) {
     style: style.value === 'tailwind' ? 'tailwind' : 'inline'
   } as const
   try {
-    if (save)
-      await store.exportTarget({ scope: 'selection', nodeIds: targetIds }, 'html', options, {
-        fileName,
-        nativePath
-      })
-    else await copy((await renderNodesToHTML(store.graph, targetIds, options)).html)
+    if (save) {
+      const result = await store.exportTarget(
+        { scope: 'selection', nodeIds: targetIds },
+        'html',
+        options,
+        {
+          fileName,
+          nativePath
+        }
+      )
+      if (result.saved && result.nativePath && previewAfterSave) {
+        try {
+          await openBrowserExport?.(result.nativePath)
+        } catch {
+          error.value = 'HTML saved, but its browser preview could not open. Try again.'
+        }
+      }
+    } else await copy((await renderNodesToHTML(store.graph, targetIds, options)).html)
   } catch {
     error.value = 'Could not generate HTML. Try again.'
   } finally {
@@ -114,6 +129,18 @@ async function output(save: boolean) {
               ><AppCheckbox v-model="askWhere" ariaLabel="Ask user where to export file" />Ask user
               where to export file</label
             >
+            <label
+              v-if="IS_TAURI && openBrowserExport"
+              class="mt-3 flex items-center gap-2 text-xs text-surface"
+              ><AppCheckbox
+                v-model="openAfterExport"
+                ariaLabel="Open in Browser after Export"
+                :disabled="assets === 'external'"
+              />Open in Browser after Export</label
+            >
+            <p v-if="IS_TAURI && assets === 'external'" class="mt-1 text-xs text-muted">
+              Embed assets to preview the exported page.
+            </p>
             <label class="mt-3 flex items-center gap-2 text-xs text-surface"
               ><AppCheckbox v-model="ids" ariaLabel="Include layer IDs" />Include layer IDs</label
             >

@@ -40,11 +40,15 @@ export type BrowserPickerAction = 'start' | 'stop' | 'read' | 'select'
 export function validateBrowserPicker(
   input: unknown,
   requestId: string,
-  url: string
+  url: string,
+  authorizedExportURL?: string
 ): BrowserPickerState {
   const result = v.safeParse(browserPickerSchema, input)
   if (!result.success) throw new Error('The browser returned an invalid element selection.')
-  if (result.output.requestId !== requestId || previewURL(result.output.url) !== previewURL(url))
+  if (
+    result.output.requestId !== requestId ||
+    previewURL(result.output.url, authorizedExportURL) !== previewURL(url, authorizedExportURL)
+  )
     throw new Error('The browser page changed. Select the element again.')
   return result.output
 }

@@ -2,6 +2,22 @@
 
 Full parity is open. A source implementation, unit check, build, and user workflow establish different things. This ledger records only observed outcomes and the scope of each observation.
 
+## Automatic internal HTML preview —2026-11-03
+
+- The213.1s physical native export/open/pixel-inspection/Close journey preserves document
+  version and selection; the raw capture contains both selected fixture colors.
+- The179.4s native journey executes file Reload, picking, selected import with a retained
+  120.5×80.75 child, native Undo, full390×844 Phone import, Undo to clean state and an unchecked
+  preview export. Authorization IPC, filesystem IPC and an adjacent text-file fetch are
+  refused in the owned file-page probe. Source design bytes remain unchanged.
+- A126.3s native receipt regression executes HTML Ask where/Cancel/chosen Save and121×81 PNG
+  Save. Eighty-five browser/export domain checks/304assertions,11 compiled browser-policy
+  checks and16 Chromium/WebKit HTML journeys pass. Earlier native failures remain recorded.
+- A20.5s separate unsaved-design Save/Cancel check with preview enabled leaves the browser
+  closed, source identity null and selection/version unchanged. Its native screenshot is inspected.
+- Loose/absolute assets, ZIP preview, exact settings, additional file-page menu/history/restart
+  states and full parity remain open. See [inspector parity](INSPECTOR-PARITY.md).
+
 ## Code export destinations —2026-11-03
 
 - Sixteen Chromium/WebKit HTML journeys pass with document-based filenames;18 file delivery,

@@ -2,6 +2,52 @@
 
 Target: actual `/Applications/Pen.app`1.2.21, rechecked in its installed Info.plist on2026-11-02. Full inspector and whole-product parity remain open. The reference is inspected through native UI and the private resource archive recorded in [reference provenance](PEN-REFERENCE.md).
 
+## Automatic internal HTML preview —2026-11-03
+
+Open in Browser after Export defaults on for embedded HTML. A successful native save opens
+that file in the existing internal browser. Turning the preference off retains delivery
+without creating a browser. The exporter returns a save result and native path; preview
+follows delivery rather than a guessed filename. Each workspace keeps its authorized export
+addresses in memory and ignores late preview opening after disposal.
+
+Native authorization requires a regular, visible absolute HTML file and checks its canonical
+location against existing filesystem deny rules. Ordinary address entry remains web-only;
+file navigation and picker/import replies require an explicitly authorized address. Browser
+pages gain no app commands, and native capabilities/filesystem scopes stay unchanged. External
+ZIP delivery currently disables preview with an embedded-assets explanation. Loose assets and
+the exact reference settings layout remain open.
+
+The213.1s physical native File Open/select-two/Export/automatic file-page/pixel-inspection/Close
+journey preserves document version and selection. Its1604×2956 capture has39,042 blue and14,560
+pink fixture pixels, establishing rendered content rather than exact reference pixels. The179.4s
+native action journey executes Reload, element picking, selected editable import, native Undo,
+full390×844 Phone import, Undo to clean state, Close and an unchecked-preview export. The owned
+file page cannot invoke export authorization, read the source through filesystem IPC or fetch
+an adjacent private text fixture. These are bounded probes, not a complete security audit.
+Original design bytes remain unchanged.
+
+Selected import retains the existing121×81 outward-rounded wrapper and verifies its inner
+120.5×80.75 blue child. No import-rounding change ships; reference selected-import pixels are
+not qualified. A126.3s native receipt regression executes adjacent HTML replacement, link
+refusal, Ask where/Cancel/chosen Save and a real121×81 PNG Save through shared delivery.
+A separate20.5s unsaved-design check cancels Save with preview enabled by default: no browser
+opens, source identity stays null, and selection/version remain unchanged. Its initial run
+times out during the manual selection stage; the repeat executes the complete path.
+
+Eighty-five browser/export domain checks/304assertions,11 compiled browser-policy checks and
+16 Chromium/WebKit HTML journeys pass. Source review catches file reply validators and a
+canonical hidden-folder alias inconsistency before correction. Earlier native failures remain
+recorded: a future WebDriver call loses its window after child creation, and an unsupported
+fractional-wrapper expectation ends the first action run. The repeat keeps validation in one
+live observer, closes the child before returning and checks retained inner geometry. A test-only
+implicit argument type is corrected.
+
+Private receipts:code-preview-native-recheck.log, code-preview-actions-native-recheck.log,
+code-preview-receipt-native-physical.log, code-preview-cancel-native-recheck.log,
+code-preview-native-page.png and restored-editor images.
+Loose/absolute assets, ZIP preview, exact settings, file-specific More/history/restart states,
+OS clipboard and full parity remain OPEN.
+
 ## Code export destinations —2026-11-03
 
 Code HTML uses`<document-base>-export.html`. Desktop Ask user where to export file defaults

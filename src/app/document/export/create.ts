@@ -5,6 +5,7 @@ import type { BuiltinIOFormatId, ExportRequest, IORegistry } from '@open-pencil/
 
 import {
   bundleExportFiles,
+  chooseTauriExportPath,
   createExportTargetActions,
   getExportBaseName,
   getExportBytes,
@@ -13,7 +14,8 @@ import {
   saveExportedFile,
   type ExportedFile
 } from '@/app/document/export/files'
-import type { ExportDelivery, ExportOptions } from '@/app/document/export/types'
+import type { ExportDelivery, ExportOptions, ExportSaveResult } from '@/app/document/export/types'
+import { isTauri } from '@/app/tauri/env'
 import { trackDocumentFormat } from '@/app/telemetry'
 import { IS_TAURI } from '@/constants'
 
@@ -76,26 +78,35 @@ export function createDocumentExportActions(
     }
   }
 
-  function saveExportFile(file: ExportedFile, nativePath?: string): Promise<boolean> {
-    if (file.assets?.length)
-      return saveExportedFile(
-        bundleExportFiles([file]),
-        `${file.fileName}.zip`,
-        'ZIP',
-        '.zip',
-        'application/zip',
-        downloadBlob,
-        nativePath ? `${nativePath}.zip` : undefined
-      )
-    return saveExportedFile(
-      file.bytes,
-      file.fileName,
-      file.format,
-      file.ext,
-      file.mime,
+  async function saveExportFile(
+    file: ExportedFile,
+    nativePath?: string
+  ): Promise<ExportSaveResult> {
+    const bundled = Boolean(file.assets?.length)
+    const output = bundled
+      ? {
+          bytes: bundleExportFiles([file]),
+          fileName: `${file.fileName}.zip`,
+          format: 'ZIP',
+          ext: '.zip',
+          mime: 'application/zip'
+        }
+      : file
+    let path = nativePath
+    if (path && bundled) path = `${path}.zip`
+    if (!path && isTauri())
+      path = (await chooseTauriExportPath(output.fileName, output.format, output.ext)) ?? undefined
+    if (isTauri() && !path) return { saved: false }
+    const saved = await saveExportedFile(
+      output.bytes,
+      output.fileName,
+      output.format,
+      output.ext,
+      output.mime,
       downloadBlob,
-      nativePath
+      path
     )
+    return { saved, nativePath: saved ? path : undefined }
   }
 
   async function exportTarget(
@@ -106,9 +117,11 @@ export function createDocumentExportActions(
   ) {
     const file = await renderExportFile(target, formatId, options)
     if (delivery) file.fileName = delivery.fileName
-    if (await saveExportFile(file, delivery?.nativePath)) {
+    const result = await saveExportFile(file, delivery?.nativePath)
+    if (result.saved) {
       trackDocumentFormat('document_exported', formatId)
     }
+    return result
   }
 
   // Export a batch of targets. A single file downloads directly; multiple files
@@ -125,7 +138,7 @@ export function createDocumentExportActions(
     const zipBaseName = baseNames.size === 1 ? [...baseNames][0] : 'export'
     const saved =
       files.length === 1
-        ? await saveExportFile(files[0])
+        ? (await saveExportFile(files[0])).saved
         : await saveExportedFile(
             bundleExportFiles(files),
             `${zipBaseName}.zip`,

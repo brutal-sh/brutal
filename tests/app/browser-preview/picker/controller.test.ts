@@ -1,7 +1,7 @@
 import { expect, test } from 'bun:test'
 
 import { createBrowserPickerController } from '@/app/browser-preview/picker/controller'
-import type { BrowserPickerState } from '@/app/browser-preview/picker/schema'
+import { validateBrowserPicker, type BrowserPickerState } from '@/app/browser-preview/picker/schema'
 import { createDeferred } from '@/app/runtime/deferred'
 
 const packet: BrowserPickerState = {
@@ -11,6 +11,22 @@ const packet: BrowserPickerState = {
   pick: null,
   action: null
 }
+
+test('local export picker responses require exact explicit URL authorization and request identity', () => {
+  const url = 'file:///design/owned-export.html'
+  const response = { ...packet, url }
+  expect(() => validateBrowserPicker(response, packet.requestId, url)).toThrow()
+  expect(validateBrowserPicker(response, packet.requestId, url, url).url).toBe(url)
+  expect(() =>
+    validateBrowserPicker(
+      { ...response, url: 'file:///design/another.html' },
+      packet.requestId,
+      url,
+      url
+    )
+  ).toThrow()
+  expect(() => validateBrowserPicker(response, crypto.randomUUID(), url, url)).toThrow('changed')
+})
 
 test('a reply from a previous page cannot restore its picker or trigger an import', async () => {
   const response = createDeferred<BrowserPickerState>()

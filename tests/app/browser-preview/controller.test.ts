@@ -12,7 +12,10 @@ const capture: BrowserCapture = {
   title: 'Fixture',
   slices: [{ png, width: 1280, height: 800 }]
 }
-function fixture(overrides: Partial<BrowserPreviewNative> = {}) {
+function fixture(
+  overrides: Partial<BrowserPreviewNative> = {},
+  exportURL?: () => string | undefined
+) {
   const calls: unknown[] = []
   const status = {
     url: 'https://example.test/',
@@ -44,12 +47,17 @@ function fixture(overrides: Partial<BrowserPreviewNative> = {}) {
   }
   let current = true
   const placed: BrowserCapture[] = []
-  const preview = createBrowserPreviewController(native, () => ({
-    isCurrent: () => current,
-    place: async (image) => {
-      placed.push(image)
-    }
-  }))
+  const preview = createBrowserPreviewController(
+    native,
+    () => ({
+      isCurrent: () => current,
+      place: async (image) => {
+        placed.push(image)
+      }
+    }),
+    undefined,
+    exportURL
+  )
   return {
     preview,
     calls,
@@ -61,6 +69,30 @@ function fixture(overrides: Partial<BrowserPreviewNative> = {}) {
 }
 
 describe('browser preview', () => {
+  test('opens only the explicitly authorized local export address', async () => {
+    const url = 'file:///design/owned-export.html'
+    const { preview, calls } = fixture({}, () => url)
+    preview.address.value = 'file:///design/another.html'
+    await preview.navigate()
+    expect(calls).toEqual([])
+    expect(preview.error.value).toContain('Only HTTP and HTTPS')
+    preview.address.value = url
+    await preview.navigate()
+    expect(calls).toHaveLength(1)
+    expect(calls[0]).toEqual([url, expect.objectContaining({ value: 'desktop' })])
+    expect(preview.error.value).toBe('')
+  })
+
+  test('an expired export authorization restores the normal local-file refusal', async () => {
+    let allowed: string | undefined = 'file:///design/owned-export.html'
+    const { preview, calls } = fixture({}, () => allowed)
+    preview.address.value = allowed
+    await preview.navigate()
+    allowed = undefined
+    await preview.navigate()
+    expect(calls).toHaveLength(1)
+    expect(preview.error.value).toContain('Only HTTP and HTTPS')
+  })
   test('address labels omit only the default scheme and an empty trailing slash', () => {
     expect(previewAddressLabel('https://example.com/')).toBe('example.com')
     expect(previewAddressLabel('https://example.com/path?q=1#section')).toBe(

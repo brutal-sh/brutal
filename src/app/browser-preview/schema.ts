@@ -56,7 +56,8 @@ export function previewAddressLabel(input: string): string {
   }
 }
 
-export function previewURL(input: string): string {
+export function previewURL(input: string, authorizedExportURL?: string): string {
+  if (authorizedExportURL?.startsWith('file:') && input === authorizedExportURL) return input
   let url: URL
   try {
     const value = input.trim()

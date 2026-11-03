@@ -5,6 +5,17 @@ import { validateExtractedPage } from '@/app/browser-preview/dom/schema'
 
 import { extractedFixture } from '#tests/helpers/browser-preview/extracted-page'
 
+test('local export imports require exact explicit URL authorization and request identity', () => {
+  const url = 'file:///design/owned-export.html'
+  const page = { ...extractedFixture(), url }
+  expect(() => validateExtractedPage(page, page.requestId, url)).toThrow()
+  expect(validateExtractedPage(page, page.requestId, url, url).url).toBe(url)
+  expect(() =>
+    validateExtractedPage({ ...page, url: 'file:///design/another.html' }, page.requestId, url, url)
+  ).toThrow()
+  expect(() => validateExtractedPage(page, crypto.randomUUID(), url, url)).toThrow('expired')
+})
+
 test('measured nested page becomes independently editable text and frames at recorded positions', () => {
   const page = extractedFixture()
   const { graph, root } = extractedPageToGraph(

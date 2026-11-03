@@ -14,6 +14,7 @@
 - Compact dimension edits retain Fill sizing and update its numeric fallback; multi-selection offers mixed Fill controls and keeps clipping in Appearance.
 - The Code inspector copies and exports selected layers together using the same HTML export settings.
 - HTML exports use the document name; desktop exports save beside a saved design unless Ask where is enabled, with a Save dialog fallback for unsaved designs.
+- Embedded HTML exports can open automatically in the desktop browser, with element picking, editable import and screenshots through the existing isolated browser.
 - The desktop brand popup uses native platform menu presentation, with working links, theme and UI actions and keyboard focus return; browser commands remain in the web menu.
 
 - Converting a Script now replaces it with a new editable frame at the same sibling position, preserving Context and geometry, restoring the original Script on Undo and the same converted IDs on Redo. Fixed component-instance structure is protected; slot ownership changes share the conversion history step.

@@ -10,3 +10,8 @@ export interface ExportDelivery {
   fileName: string
   nativePath?: string
 }
+
+export interface ExportSaveResult {
+  saved: boolean
+  nativePath?: string
+}

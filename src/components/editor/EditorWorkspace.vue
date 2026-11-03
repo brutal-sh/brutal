@@ -2,7 +2,7 @@
 import { useLocalStorage } from '@vueuse/core'
 import { SplitterGroup, SplitterPanel, SplitterResizeHandle, ToolbarButton } from 'reka-ui'
 import { tv } from 'tailwind-variants'
-import { computed, nextTick, provide, ref, useTemplateRef, watch } from 'vue'
+import { computed, nextTick, onScopeDispose, provide, ref, useTemplateRef, watch } from 'vue'
 
 import { IS_TAURI } from '@open-pencil/core/constants'
 import { formatShortcut } from '@open-pencil/vue/editor/commands'
@@ -10,7 +10,12 @@ import { useViewportKind } from '@open-pencil/vue/editor/viewport-kind'
 import { useI18n } from '@open-pencil/vue/i18n'
 
 import { useAIChat } from '@/app/ai/chat/use'
-import { toggleBrowserPreviewKey, type BrowserPreviewSession } from '@/app/browser-preview/context'
+import {
+  openBrowserExportKey,
+  toggleBrowserPreviewKey,
+  type BrowserPreviewSession
+} from '@/app/browser-preview/context'
+import { authorizeBrowserExport } from '@/app/browser-preview/native'
 import { browserViewportPreferences } from '@/app/browser-preview/preferences'
 import { isVersionHistoryOpen } from '@/app/cloud/integration'
 import { provideTabEditorStore } from '@/app/editor/active-store'
@@ -64,13 +69,27 @@ const browserSession: BrowserPreviewSession = {
   url: '',
   preset: browserViewportPreferences.value.preset,
   zoom: browserViewportPreferences.value.zoom,
-  closing: Promise.resolve()
+  closing: Promise.resolve(),
+  exportURLs: new Set<string>()
 }
 const codingMode = useLocalStorage('open-pen:browser-coding-mode', false)
 const splitBrowser = computed(() => browserOpen.value && !codingMode.value)
 const expandedBrowser = computed(() => browserOpen.value && codingMode.value)
 provide(toggleBrowserPreviewKey, () => {
   if (!isMobile.value) browserOpen.value = !browserOpen.value
+})
+const browserControl = useTemplateRef<InstanceType<typeof BrowserPreviewControl>>('browserControl')
+let workspaceDisposed = false
+onScopeDispose(() => {
+  workspaceDisposed = true
+})
+provide(openBrowserExportKey, async (path) => {
+  const url = await authorizeBrowserExport(path)
+  if (workspaceDisposed) return
+  browserSession.exportURLs.add(url)
+  browserSession.url = url
+  if (browserOpen.value) await browserControl.value?.openPage(url)
+  else browserOpen.value = true
 })
 const canvasHost = useTemplateRef<HTMLElement>('canvasHost')
 const sidebar = useTemplateRef<InstanceType<typeof SplitterPanel>>('sidebar')
@@ -288,6 +307,7 @@ const { pending: roomPending } = useRoomActions()
           :disabled="codingMode || !browserTarget"
         >
           <BrowserPreviewControl
+            ref="browserControl"
             v-model:open="browserOpen"
             v-model:coding-mode="codingMode"
             :session="browserSession"

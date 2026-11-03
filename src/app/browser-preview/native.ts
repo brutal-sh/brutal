@@ -24,10 +24,15 @@ export interface BrowserPreviewNative {
 
 let pendingPreviewOperation: Promise<unknown> = Promise.resolve()
 
+export async function authorizeBrowserExport(path: string): Promise<string> {
+  return v.parse(v.string(), await invoke('authorize_browser_export', { path }))
+}
+
 /** Serialize native surface changes so an unmount closes even a still-opening child. */
 export function createBrowserPreviewNative(
   viewport: () => PreviewViewport | null,
-  callNative: typeof invoke = invoke
+  callNative: typeof invoke = invoke,
+  exportURL?: (input: string) => string | undefined
 ) {
   let disposed = false
   let opened = false
@@ -114,7 +119,8 @@ export function createBrowserPreviewNative(
             ...(selected ? { selected: true } : {})
           }),
           requestId,
-          url
+          url,
+          exportURL?.(url)
         )
       })
   }
@@ -131,7 +137,8 @@ export function createBrowserPreviewNative(
           index
         }),
         requestId,
-        url
+        url,
+        exportURL?.(url)
       )
     })
   return {
