@@ -31,14 +31,20 @@ pub struct PreviewStatus {
     height: f64,
     capture_available: bool,
     loading: bool,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    can_go_back: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    can_go_forward: Option<bool>,
 }
 
 async fn status(
     view: &Webview,
-    url: url::Url,
-    loading: bool,
+    location: page_url::PageLocation,
 ) -> Result<Option<PreviewStatus>, String> {
     let Some(bounds) = viewport::bounds(view).await? else {
+        return Ok(None);
+    };
+    let Some(url) = location.url else {
         return Ok(None);
     };
     Ok(Some(PreviewStatus {
@@ -50,7 +56,9 @@ async fn status(
         width: bounds.width,
         height: bounds.height,
         capture_available: cfg!(target_os = "macos"),
-        loading,
+        loading: location.loading,
+        can_go_back: location.can_go_back,
+        can_go_forward: location.can_go_forward,
     }))
 }
 
@@ -121,8 +129,9 @@ pub async fn browser_preview_open(
     };
     viewport::set_bounds(&view, bounds, size).await?;
     viewport::visible(&view, true).await?;
-    let location = page_url::read(&view).await?;
-    status(&view, location.url.unwrap_or(target), location.loading)
+    let mut location = page_url::read(&view).await?;
+    location.url.get_or_insert(target);
+    status(&view, location)
         .await?
         .ok_or("The browser closed before its viewport was ready.".into())
 }
@@ -137,10 +146,7 @@ pub async fn browser_preview_status(
         return Ok(None);
     };
     let location = page_url::read(&view).await?;
-    match location.url {
-        Some(url) => status(&view, url, location.loading).await,
-        None => Ok(None),
-    }
+    status(&view, location).await
 }
 
 #[tauri::command]

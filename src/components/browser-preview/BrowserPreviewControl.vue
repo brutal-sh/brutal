@@ -37,13 +37,17 @@ import {
 } from '@/app/browser-preview/history/storage'
 import { createBrowserPreviewNative } from '@/app/browser-preview/native'
 import { browserCaptureTarget } from '@/app/browser-preview/placement'
+import {
+  browserViewportPreferences,
+  browserViewportPreferenceError,
+  saveBrowserViewport
+} from '@/app/browser-preview/preferences'
 import { PREVIEW_PRESETS, previewAddressLabel } from '@/app/browser-preview/schema'
 import { useEditorStore } from '@/app/editor/active-store'
-import { openExternalLink } from '@/app/shell/ui'
+import { openExternalLink, toast } from '@/app/shell/ui'
 import { bindDesktopLinkQueue } from '@/app/tauri/link-queue'
 import AppButton from '@/components/ui/button/AppButton.vue'
 import IconButton from '@/components/ui/button/IconButton.vue'
-import AppAlert from '@/components/ui/feedback/AppAlert.vue'
 import AppInput from '@/components/ui/input/AppInput.vue'
 import theme from '@/theme/browser-preview'
 
@@ -147,6 +151,26 @@ const picker = provideBrowserPicker(
     void (action === 'import' ? importPage() : capture())
   }
 )
+watch(
+  () =>
+    error.value ||
+    picker.error.value ||
+    browserHistoryError.value ||
+    browserViewportPreferenceError.value,
+  (message) => {
+    if (message) toast.error(message)
+  },
+  { immediate: true }
+)
+watch(notice, (message) => {
+  if (message) toast.info(message)
+})
+watch(
+  () => status.value?.captureAvailable,
+  (available) => {
+    if (available === false) toast.info('Capture requires macOS.')
+  }
+)
 async function importPage() {
   if (busy.value) return
   await preview.importPage(!!picker.state.value?.pick)
@@ -193,6 +217,22 @@ const nextDevice = computed(
     PREVIEW_PRESETS[(PREVIEW_PRESETS.indexOf(selectedDevice.value) + 1) % PREVIEW_PRESETS.length] ??
     PREVIEW_PRESETS[0]
 )
+function setZoom(value: number) {
+  zoom.value = saveBrowserViewport(selectedDevice.value.value, value).zoom
+}
+function cycleDevice() {
+  const device = nextDevice.value
+  let value =
+    device.value === 'desktop' ? browserViewportPreferences.value.responsiveZoom : zoom.value
+  const rect = surface.value?.getBoundingClientRect()
+  if (device.value !== 'desktop' && rect) {
+    const fitted = previewDockViewport(rect, device.value, innerWidth, innerHeight, value)
+    if (fitted) value = Math.max(0.1, Math.min(value, fitted.zoom, 1.5))
+  }
+  const choice = saveBrowserViewport(device.value, value)
+  preset.value = choice.preset
+  zoom.value = choice.zoom
+}
 async function closePage() {
   clearingPage = true
   await preview.clearPage()
@@ -336,14 +376,14 @@ onScopeDispose(() => {
         <IconButton
           label="Back"
           size="sm"
-          :disabled="busy || !status"
+          :disabled="busy || !status || status.canGoBack === false"
           @click="preview.action('back')"
           ><icon-lucide-arrow-left class="size-3.5"
         /></IconButton>
         <IconButton
           label="Forward"
           size="sm"
-          :disabled="busy || !status"
+          :disabled="busy || !status || status.canGoForward === false"
           @click="preview.action('forward')"
           ><icon-lucide-arrow-right class="size-3.5"
         /></IconButton>
@@ -378,7 +418,7 @@ onScopeDispose(() => {
             :label="`Viewport: ${selectedDevice.label}. Switch to ${nextDevice.label}`"
             :class="ui.viewport()"
             :disabled="busy"
-            @click="preset = nextDevice.value"
+            @click="cycleDevice"
           >
             <icon-lucide-monitor v-if="preset === 'desktop'" class="size-3.5" />
             <icon-lucide-smartphone v-else-if="preset === 'phone'" class="size-3.5" />
@@ -432,48 +472,13 @@ onScopeDispose(() => {
         :disabled="busy"
         :page-available="!!status && !status.loading"
         :prepare="prepareBackdrop"
-        @zoom="zoom = $event"
+        @zoom="setZoom"
         @clear="clearSiteData"
         @external="openExternal"
       />
       <IconButton label="Close browser preview" size="sm" @click="open = false"
         ><icon-lucide-panel-right class="size-3.5"
       /></IconButton>
-    </div>
-    <div
-      v-if="
-        error ||
-        picker.error.value ||
-        browserHistoryError ||
-        notice ||
-        (status && !status.captureAvailable)
-      "
-      class="p-2"
-      aria-live="polite"
-    >
-      <AppAlert
-        v-if="error || picker.error.value"
-        tone="error"
-        heading="Browser action failed"
-        :description="error || picker.error.value"
-      />
-      <AppAlert
-        v-else-if="browserHistoryError"
-        tone="error"
-        heading="History update failed"
-        :description="browserHistoryError"
-      />
-      <AppAlert
-        v-else-if="notice"
-        tone="success"
-        heading="Browser content added"
-        :description="notice"
-      />
-      <AppAlert
-        v-else
-        heading="Capture requires macOS"
-        description="Navigation is available on this platform."
-      />
     </div>
     <BrowserPreviewPickerBreadcrumbs />
     <div ref="surface" data-test-id="browser-preview-surface" :class="ui.surface()">

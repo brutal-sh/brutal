@@ -8,6 +8,34 @@ export const PREVIEW_PRESETS = [
 ] as const
 
 export type PreviewPreset = (typeof PREVIEW_PRESETS)[number]
+const storedZoomSchema = v.fallback(
+  v.pipe(
+    v.number(),
+    v.finite(),
+    v.transform((value) => Math.min(1.5, Math.max(0.1, value)))
+  ),
+  0.5
+)
+const responsiveZoomSchema = v.fallback(
+  v.pipe(
+    v.number(),
+    v.finite(),
+    v.transform((value) => Math.min(1.5, Math.max(0.25, value)))
+  ),
+  0.5
+)
+export const browserViewportPreferencesSchema = v.pipe(
+  v.object({
+    preset: v.fallback(v.picklist(['desktop', 'phone', 'tablet']), 'desktop'),
+    zoom: storedZoomSchema,
+    responsiveZoom: responsiveZoomSchema
+  }),
+  v.transform((choice) => ({
+    ...choice,
+    zoom: choice.preset === 'desktop' ? Math.max(0.25, choice.zoom) : choice.zoom
+  }))
+)
+export type BrowserViewportPreferences = v.InferOutput<typeof browserViewportPreferencesSchema>
 export type PreviewAction = 'back' | 'forward' | 'reload' | 'focus' | 'close'
 
 function isLocalAddress(value: string): boolean {
@@ -54,7 +82,9 @@ export const previewStatusSchema = v.object({
   width: v.number(),
   height: v.number(),
   captureAvailable: v.boolean(),
-  loading: v.optional(v.boolean(), false)
+  loading: v.optional(v.boolean(), false),
+  canGoBack: v.optional(v.boolean()),
+  canGoForward: v.optional(v.boolean())
 })
 export type PreviewStatus = v.InferOutput<typeof previewStatusSchema>
 

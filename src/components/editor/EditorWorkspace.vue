@@ -11,6 +11,7 @@ import { useI18n } from '@open-pencil/vue/i18n'
 
 import { useAIChat } from '@/app/ai/chat/use'
 import { toggleBrowserPreviewKey, type BrowserPreviewSession } from '@/app/browser-preview/context'
+import { browserViewportPreferences } from '@/app/browser-preview/preferences'
 import { isVersionHistoryOpen } from '@/app/cloud/integration'
 import { provideTabEditorStore } from '@/app/editor/active-store'
 import { openVariablesDialog } from '@/app/editor/tokens/dialog'
@@ -61,8 +62,8 @@ const inspectorCollapsed = ref(false)
 const browserOpen = ref(consumeHomeBrowserRequest(store))
 const browserSession: BrowserPreviewSession = {
   url: '',
-  preset: 'desktop',
-  zoom: 0.5,
+  preset: browserViewportPreferences.value.preset,
+  zoom: browserViewportPreferences.value.zoom,
   closing: Promise.resolve()
 }
 const codingMode = useLocalStorage('open-pen:browser-coding-mode', false)

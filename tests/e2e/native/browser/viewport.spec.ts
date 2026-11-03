@@ -101,6 +101,13 @@ it('uses real page zoom, fixed CSS device dimensions, disabled menu states and t
           },
           `CSS viewport ${width}x${height ?? '*'}`
         )
+      function surfaceRect() {
+        const rect = document
+          .querySelector('[data-test-id="browser-preview-surface"]')
+          ?.getBoundingClientRect()
+        if (!rect) throw new Error('Missing browser surface')
+        return JSON.stringify([rect.x, rect.y, rect.width, rect.height])
+      }
       async function captureQuarter(current: Pick<Rect, 'width' | 'height'>) {
         for (const level of [0.9, 0.75, 0.5, 0.3, 0.25]) {
           await more()
@@ -109,12 +116,19 @@ it('uses real page zoom, fixed CSS device dimensions, disabled menu states and t
         }
         click('Screenshot')
         await wait(() => !!document.querySelector('[role="menuitem"]'), 'quarter-zoom camera')
+        const surface = surfaceRect()
         item('Visible Area')
         const page = store.state.currentPageId
         await wait(
           () => store.graph.getChildren(page).length === before.ids.length + 1,
           'quarter-zoom screenshot'
         )
+        await wait(
+          () => !!document.querySelector('[data-slot="toast"]'),
+          'floating capture feedback'
+        )
+        if (surfaceRect() !== surface)
+          throw new Error('Capture feedback resized the browser surface')
         const frame = store.graph.getChildren(page).find((node) => !before.ids.includes(node.id))
         if (
           !frame ||

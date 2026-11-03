@@ -379,6 +379,12 @@ describe('native embedded browser preview', () => {
             )
           )
         }, 'first page committed')
+        await wait(
+          () =>
+            document.querySelector<HTMLButtonElement>('[aria-label="Back"]')?.disabled === true &&
+            document.querySelector<HTMLButtonElement>('[aria-label="Forward"]')?.disabled === true,
+          'first-page history edges'
+        )
         await navigate(`${origin}/second`)
         const modeStore = window.openPencil?.getStore?.()
         const modeRenderer = modeStore?.renderer
@@ -392,6 +398,11 @@ describe('native embedded browser preview', () => {
         await wait(() => !!document.querySelector('button[aria-label="Coding Mode"]'), 'split mode')
         if (modeStore?.renderer !== modeRenderer || document.querySelector('canvas') !== modeCanvas)
           throw new Error('Browser mode replaces the canvas renderer')
+        await wait(
+          () =>
+            document.querySelector<HTMLButtonElement>('[aria-label="Back"]')?.disabled === false,
+          'back enabled'
+        )
         button('Back')
         await wait(
           async () =>
@@ -401,6 +412,11 @@ describe('native embedded browser preview', () => {
         await new Promise((resolve) => {
           setTimeout(resolve, 100)
         })
+        await wait(
+          () =>
+            document.querySelector<HTMLButtonElement>('[aria-label="Forward"]')?.disabled === false,
+          'forward enabled'
+        )
         button('Forward')
         await wait(
           async () =>
@@ -410,6 +426,11 @@ describe('native embedded browser preview', () => {
         await new Promise((resolve) => {
           setTimeout(resolve, 100)
         })
+        await wait(
+          () =>
+            document.querySelector<HTMLButtonElement>('[aria-label="Forward"]')?.disabled === true,
+          'last-page forward edge'
+        )
         button('Viewport: Desktop. Switch to Phone')
         const surface = document.querySelector<HTMLElement>(
           '[data-test-id="browser-preview-surface"]'

@@ -1,6 +1,8 @@
 pub(super) struct PageLocation {
     pub url: Option<url::Url>,
     pub loading: bool,
+    pub can_go_back: Option<bool>,
+    pub can_go_forward: Option<bool>,
 }
 
 #[cfg(target_os = "macos")]
@@ -18,6 +20,8 @@ pub(super) async fn read(view: &tauri::Webview) -> Result<PageLocation, String> 
             .map(|url| PageLocation {
                 url,
                 loading: unsafe { view.isLoading() },
+                can_go_back: Some(unsafe { view.canGoBack() }),
+                can_go_forward: Some(unsafe { view.canGoForward() }),
             });
         let _ = sender.send(url);
     })
@@ -34,6 +38,8 @@ pub(super) async fn read(view: &tauri::Webview) -> Result<PageLocation, String> 
         .map(|url| PageLocation {
             url: Some(url),
             loading: false,
+            can_go_back: None,
+            can_go_forward: None,
         })
         .map_err(|error| error.to_string())
 }
