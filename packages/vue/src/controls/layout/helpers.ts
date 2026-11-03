@@ -328,9 +328,10 @@ export function createLayoutActions({
       return
     }
     const size = sizeKeepingAspectRatio(ratio, axis, value)
+    const widthPatch = fixedAxisPatch(n, 'width', retainFill)
     const patch = {
-      ...fixedAxisPatch(n, 'width', retainFill),
-      ...fixedAxisPatch(n, 'height', retainFill),
+      ...widthPatch,
+      ...fixedAxisPatch({ ...n, ...widthPatch }, 'height', retainFill),
       ...size
     }
     preview.update([n.id], patch, `Change ${axis}`)

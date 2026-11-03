@@ -262,6 +262,10 @@ export function applyPenProperties(node: SceneNode, pen: PenNode, build: Build):
   // An absolute layer leaves its parent's flow; fill sizing then falls back to its value.
   const absolute = pen.layoutPosition === 'absolute' && parentLayout !== 'NONE'
   const flowLayout = absolute ? 'NONE' : parentLayout
+  const widthHugFallback =
+    w.fitContentFallback ?? (layout === 'NONE' && w.sizing === 'HUG' ? w.value : undefined)
+  const heightHugFallback =
+    h.fitContentFallback ?? (layout === 'NONE' && h.sizing === 'HUG' ? h.value : undefined)
 
   Object.assign(node, {
     name: pen.name ?? (pen.type === 'icon_font' ? (pen.iconFontName ?? 'Icon') : pen.type),
@@ -296,8 +300,8 @@ export function applyPenProperties(node: SceneNode, pen: PenNode, build: Build):
   node.pluginData = withPluginData(
     node.pluginData,
     OPEN_PENCIL_PLUGIN_DATA.hugFallback,
-    w.fitContentFallback !== undefined || h.fitContentFallback !== undefined
-      ? { HORIZONTAL: w.fitContentFallback, VERTICAL: h.fitContentFallback }
+    widthHugFallback !== undefined || heightHugFallback !== undefined
+      ? { HORIZONTAL: widthHugFallback, VERTICAL: heightHugFallback }
       : undefined
   )
   bindIfVar(node, 'visible', pen.enabled, ctx)

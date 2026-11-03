@@ -186,15 +186,19 @@ function deferredFillData(node: SceneNode, axis: LayoutSizingAxis, fill: boolean
   )
 }
 
-/** Pen retains Fill intent outside auto layout, using the current size as its fallback. */
+/** Pen retains sizing intent outside auto layout, using the current size as its fallback. */
 export function authoredLayoutSizing(
   graph: SceneGraph,
   node: SceneNode,
   axis: LayoutSizingAxis
 ): LayoutSizing {
-  return readPluginData(node.pluginData, OPEN_PENCIL_PLUGIN_DATA.deferredFill)?.[axis]
-    ? 'FILL'
-    : layoutSizing(graph, node, axis)
+  if (readPluginData(node.pluginData, OPEN_PENCIL_PLUGIN_DATA.deferredFill)?.[axis]) return 'FILL'
+  if (
+    node.layoutMode === 'NONE' &&
+    readPluginData(node.pluginData, OPEN_PENCIL_PLUGIN_DATA.hugFallback)?.[axis] !== undefined
+  )
+    return 'HUG'
+  return layoutSizing(graph, node, axis)
 }
 
 export function authoredLayoutSizingUpdates(
@@ -204,15 +208,20 @@ export function authoredLayoutSizingUpdates(
   value: LayoutSizing
 ): Partial<SceneNode> {
   const parent = graphParent(graph, node)
+  const deferredHug =
+    value === 'HUG' &&
+    node.layoutMode === 'NONE' &&
+    (node.type !== 'TEXT' || !parent || parent.layoutMode === 'NONE')
   let updates: Partial<SceneNode>
-  if ((parent && parent.layoutMode !== 'NONE') || value === 'HUG') {
+  if (!deferredHug && ((parent && parent.layoutMode !== 'NONE') || value === 'HUG')) {
     if (layoutSizingError(graph, node, value)) return {}
     updates = layoutSizingUpdates(graph, node, axis, value)
   } else {
     updates = {
-      ...layoutSizingUpdates(graph, node, axis, value === 'FILL' ? 'FIXED' : value),
+      ...layoutSizingUpdates(graph, node, axis, value === 'FILL' || deferredHug ? 'FIXED' : value),
       pluginData: deferredFillData(node, axis, value === 'FILL')
     }
+    if (deferredHug && node.type === 'TEXT') updates.textAutoResize = 'NONE'
   }
   const fallback = { ...readPluginData(node.pluginData, OPEN_PENCIL_PLUGIN_DATA.hugFallback) }
   const size = axis === 'HORIZONTAL' ? node.width : node.height

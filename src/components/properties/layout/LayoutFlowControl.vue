@@ -20,14 +20,14 @@ const layoutModes = computed<Array<{ value: LayoutMode; label: string }>>(() => 
   { value: 'NONE', label: panels.value.freeform },
   { value: 'VERTICAL', label: panels.value.layoutVertical },
   { value: 'HORIZONTAL', label: panels.value.layoutHorizontal },
-  ...(!compact || layout.layoutMode.value === 'GRID'
+  ...(!compact || layout.containerLayoutMode.value === 'GRID'
     ? [{ value: 'GRID' as const, label: panels.value.layoutGrid }]
     : [])
 ])
 
 // Layers with different flows leave every option off.
 const mode = computed(() => {
-  const value = layout.layoutMode.value
+  const value = compact ? layout.containerLayoutMode.value : layout.layoutMode.value
   return value === MIXED || value === undefined ? '' : value
 })
 </script>

@@ -29,10 +29,18 @@ const { compact = false } = defineProps<{ compact?: boolean }>()
 const { getCommand } = useEditorCommands()
 const wrapInAutoLayout = getCommand('selection.wrapInAutoLayout')
 const { panels } = useI18n()
+const flexSelection = computed(
+  () =>
+    layout.containers.value.length > 0 &&
+    layout.containers.value.every((node) => ['VERTICAL', 'HORIZONTAL'].includes(node.layoutMode))
+)
 </script>
 
 <template>
-  <PanelSection :label="panels.layout" data-test-id="selection-layout">
+  <PanelSection
+    :label="compact && flexSelection ? 'Flex Layout' : panels.layout"
+    data-test-id="selection-layout"
+  >
     <template #actions>
       <IconButton
         :label="wrapInAutoLayout.label"
@@ -45,7 +53,7 @@ const { panels } = useI18n()
     </template>
 
     <LayoutFlowControl
-      v-if="layout.layoutMode.value !== undefined"
+      v-if="(compact ? layout.containerLayoutMode.value : layout.layoutMode.value) !== undefined"
       :compact="compact"
       class="mb-2"
     />
@@ -113,6 +121,26 @@ const { panels } = useI18n()
           @update:model-value="layout.setAxisSizing(axis, $event ? 'FILL' : 'FIXED')"
         />{{ axis === 'width' ? 'Fill Width' : 'Fill Height' }}
       </label>
+      <template v-if="layout.flexContainers.value.length">
+        <label
+          v-for="axis in ['width', 'height'] as const"
+          :key="`hug-${axis}`"
+          class="flex items-center gap-1.5"
+        >
+          <AppCheckbox
+            neutral
+            :ariaLabel="axis === 'width' ? 'Hug Width' : 'Hug Height'"
+            :model-value="
+              (axis === 'width' ? layout.widthSizing.value : layout.heightSizing.value) === MIXED
+                ? 'indeterminate'
+                : (axis === 'width' ? layout.widthSizing.value : layout.heightSizing.value) ===
+                  'HUG'
+            "
+            :disabled="layout.editor.state.readOnly"
+            @update:model-value="layout.setAxisSizing(axis, $event === true ? 'HUG' : 'FIXED')"
+          />{{ axis === 'width' ? 'Hug Width' : 'Hug Height' }}
+        </label>
+      </template>
     </div>
 
     <template v-if="!compact && layout.spacingAxis.value">

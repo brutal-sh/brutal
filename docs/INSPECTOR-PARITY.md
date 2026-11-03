@@ -2,6 +2,49 @@
 
 Target: actual `/Applications/Pen.app`1.2.21, rechecked in its installed Info.plist on2026-11-02. Full inspector and whole-product parity remain open. The reference is inspected through native UI and the private resource archive recorded in [reference provenance](PEN-REFERENCE.md).
 
+## Multi-selection Hug and authored sizing —2026-11-03
+
+Actual Pen exposes Hug Width/Height when a selection includes a flex frame. The checkboxes
+aggregate authored sizing across all selected layers. Rectangles and freeform frames retain
+`fit_content(N)` intent without changing their fixed geometry; selected text freezes its
+current measured box and saves fixed-width-height growth. Flex frames resize to their content.
+Owned reference Save As files establish these distinctions. An Open Pen64×54 Hug export is
+also opened in actual Pen and displays both Hug axes correctly.
+
+Open Pen's compact multi-selection now shows those Hug controls, mixed states and frame-subset
+flow controls. A selection's Flex Layout label follows its applicable containers. Authored
+sizing retains deferred Hug in existing metadata without relaxing the portable Figma sizing
+setter; import and supported Pen output preserve that intent. Fill and Hug remain mutually
+exclusive per axis. A ratio-locked numeric edit composes both metadata patches so fixing one
+axis cannot restore the other's old Hug flag.
+
+Four new browser workflows cover mixed states, independent frame geometry, Fill-to-Hug intent,
+Undo/Redo, Pen Save/reopen and flow applied to selected frames among shapes. The final30
+Chromium/WebKit inspector/corner/Hug workflows pass after the ratio correction.135 owner
+checks/552assertions include deferred sizing on frame/rectangle/text, bare fit_content, portable
+setter refusal and the reproduced two-axis metadata regression. Source/Vue/test types, full
+lint with existing warnings and architecture pass. Source-only review identifies the ratio
+conflict before correction; its follow-up finds no remaining concrete defect.
+
+The physical native journey executes File Open/select-two/Hug Height54/Hug Width64, two Undo
+and two Redo actions, Save, Close/Recent reopen and reselection. Mixed freeform/flex states
+match Pen; clicking Hug changes retained intent while preserving160×80 geometry, and one Undo
+restores prior metadata and clean history. An eight-root selection then applies Hug across
+rectangles, freeform frames, flex frames and text without changing any root's dimensions;
+text growth becomes fixed. One Undo restores all recorded geometry, text growth and metadata.
+The saved file remains byte-identical after the post-reopen checks; the native screenshot is
+visually inspected. Private receipts:multi-hug-authored-native-physical.log,
+multi-hug-authored-native-restored.png and pen-multi-layout-reference-2026-11-03/facts.json.
+The journey passes in191.6s; the normal81.25MiB package builds, passes strict signature
+verification and excludes native test hooks.
+
+The earlier eligible-only interpretation is disproved by actual Pen saves and is not shipped;
+its194.7s native result does not qualify the corrected model. An initial test assumes original
+Hug fallbacks instead of current populated-frame dimensions; reference saves resolve that
+assumption without changing the exporter. The ratio test's unsupported .pen ratio-lock save
+attempt remains a refusal; that guard is retained. Multi-frame alignment/gap/padding, wrapper
+spacing/name/sizing, exact visual variants and whole-product parity remain OPEN.
+
 ## Compact multi-selection header —2026-11-03
 
 Actual Pen's two-layer header has an overlapping-outline-square icon, regular11px count,

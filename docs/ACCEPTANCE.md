@@ -2,6 +2,21 @@
 
 Full parity is open. A source implementation, unit check, build, and user workflow establish different things. This ledger records only observed outcomes and the scope of each observation.
 
+## Multi-selection authored Hug —2026-11-03
+
+- Actual Pen Save As establishes deferred Hug intent on rectangles/freeform frames and fixed
+  text growth, while its flex frames resize. Importing Open Pen's64×54 output into actual Pen
+  shows both Hug axes correctly. The earlier eligible-only interpretation is rejected.
+- Thirty Chromium/WebKit inspector/corner/Hug workflows and135 owner checks/552assertions pass,
+  including deferred intent, mixed states, Undo/Redo, save/reopen and the reproduced ratio-edit
+  metadata conflict. Portable sizing setter and unsupported ratio-export refusal stay intact.
+- Physical native File Open/select/Hug/Undo2/Redo2/Save/Close/Recent reopen executes. Mixed
+  freeform/flex intent and an eight-root four-type action preserve dimensions; one Undo restores
+  metadata and text growth to clean history. Post-reopen checks leave saved bytes unchanged.
+  The screenshot is inspected. The journey passes in191.6s. The normal81.25MiB package builds,
+  passes strict signature verification and contains no native test hooks. Multi-frame
+  gap/padding/alignment and full parity remain open.
+
 ## Compact multi-selection header —2026-11-03
 
 - Actual Pen uses an overlapping-square icon, regular11px count,24px icon slot and a40px

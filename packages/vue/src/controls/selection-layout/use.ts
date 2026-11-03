@@ -99,7 +99,12 @@ export function useSelectionLayout() {
   const allContainers = computed(
     () => nodes.value.length > 0 && containers.value.length === nodes.value.length
   )
-
+  const flexContainers = computed(() =>
+    containers.value.filter((node) => node.layoutMode !== 'NONE')
+  )
+  const containerLayoutMode = computed(() =>
+    shared(containers.value.map((node) => node.layoutMode))
+  )
   /** Undefined when no text is selected. */
   const textResize = computed(() => shared(texts.value.map(textResizeMode)))
   /** Undefined unless every selected layer can hold an auto layout. */
@@ -156,6 +161,8 @@ export function useSelectionLayout() {
     nodes,
     texts,
     containers,
+    flexContainers,
+    containerLayoutMode,
     widthSizing,
     heightSizing,
     fillDisabled,
