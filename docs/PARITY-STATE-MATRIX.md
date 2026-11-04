@@ -4,7 +4,12 @@ Outcome: full functionality and design parity against installed `/Applications/P
 
 Must: inspect actual application, reproduce behavior independently, verify rendered states and executed workflows. Must not: label uninspected screens or implementation-only paths accepted. Authority: explicit user continuation,2026-10-30. Done evidence: every enumerated applicable state has both a visual match and an end-to-end behavior result; no residual unsupported required behavior.
 
-Current continuation—2026-11-04: unrotated selection wrapping passes30 owner checks/205assertions,
+Current continuation—2026-11-04: compact flex inspector passes17 browser workflows and a90.7s
+physical native journey measuring seven fixed/distributed, direction, single/multiple and
+individual-padding states. Marker geometry/selected color, labels, radio rows and spacing
+match the recorded Pen dimensions. The initial native color failure is corrected and retained
+as a separate receipt. Backgrounds, exact glyphs, hover pixels, mixed orientations and
+disabled/light states remain open. Unrotated selection wrapping passes30 owner checks/205assertions,
 17 browser workflows without baseline updates and a146.6s native open/edit/history/save/reopen
 journey with delivered frames at both open boundaries. Actual Pen probes establish retained
 average gaps, numbered frames, cross-axis Fill and retained child Hug. Native screenshot

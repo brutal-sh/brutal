@@ -2,6 +2,22 @@
 
 Full parity is open. A source implementation, unit check, build, and user workflow establish different things. This ledger records only observed outcomes and the scope of each observation.
 
+## Compact flex inspector continuation —2026-11-04
+
+- Actual Pen on the identical owned fixture and its shipped resources establish the compact
+  alignment points/square/distribution bars, selected blue,9px sublabels,24px radio rows and
+ 6px Padding-to-Dimensions spacing, detailed in [inspector parity](INSPECTOR-PARITY.md).
+- Seventeen Chromium/WebKit layout workflows pass. The first native run fails selected color;
+  the shared compound slot correction passes an assert-based class merge check and a separate
+ 90.7s physical native journey. Seven single/multiple, fixed/distributed, vertical/horizontal
+  and individual-padding stages measure actual rendered geometry and color. Native screenshots
+  are inspected; owned source bytes remain unchanged. The failed receipt is retained separately.
+- This qualifies the measured compact geometry and selected states. Backgrounds, exact glyphs,
+  mixed orientations, hover pixels, disabled/light states and whole-product parity remain open.
+- The87.75MiB isolated package and81.25MiB normal package are built. Normal strict signature
+  verification and both frontend/executable native-test-hook exclusion scans pass. Main
+  installation, profiles, credentials and recovery remain untouched.
+
 ## Selection wrapping continuation —2026-11-04
 
 - Actual Pen native probes and owned Save As copies establish unrotated vertical/horizontal

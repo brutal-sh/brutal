@@ -20,15 +20,15 @@ function setDistribution(value: unknown) {
 </script>
 
 <template>
-  <div class="text-[11px] text-surface">
-    <div class="mb-1.5 text-muted">Gap</div>
+  <div class="text-surface">
+    <div class="mb-1 text-[9px] leading-3 text-muted">Gap</div>
     <RadioGroupRoot
       :model-value="ctx.gapDistribution"
       aria-label="Gap distribution"
-      class="flex flex-col gap-1"
+      class="flex flex-col"
       @update:model-value="setDistribution"
     >
-      <div v-for="mode in modes" :key="mode.value" class="flex h-5 items-center gap-1">
+      <div v-for="mode in modes" :key="mode.value" class="flex h-6 items-center gap-1">
         <RadioGroupItem
           :id="`${id}-${mode.value}`"
           :value="mode.value"

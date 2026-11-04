@@ -53,27 +53,20 @@ const alignmentCells = computed(() => {
   </div>
   <div
     :class="[
-      'mt-2 grid items-start',
-      compact ? 'grid-cols-2 gap-1.5' : 'grid-cols-[78px_minmax(0,1fr)] gap-3'
+      'grid items-start',
+      compact ? 'mt-1.5 grid-cols-2 gap-1.5' : 'mt-2 grid-cols-[78px_minmax(0,1fr)] gap-3'
     ]"
   >
     <div>
-      <div v-if="compact" class="mb-1.5 text-[11px] text-muted">{{ panels.alignment }}</div>
+      <div v-if="compact" class="mb-1 text-[9px] leading-3 text-muted">{{ panels.alignment }}</div>
       <LayoutAlignmentControl
         data-test-id="layout-alignment-grid"
         :label="panels.alignment"
         :cells="alignmentCells"
-        :ui="
-          compact
-            ? {
-                grid: 'w-full gap-0 rounded-md p-0',
-                cell: 'group h-6 w-full rounded-none bg-transparent',
-                dot:
-                  ctx.node.layoutMode === 'VERTICAL'
-                    ? 'size-0.5 rounded-none group-data-active:h-px group-data-active:w-2'
-                    : 'size-0.5 rounded-none group-data-active:h-2 group-data-active:w-px'
-              }
-            : undefined
+        :compact="compact"
+        :direction="ctx.node.layoutMode"
+        :distributed="
+          ctx.gapDistribution === 'SPACE_BETWEEN' || ctx.gapDistribution === 'SPACE_AROUND'
         "
         @select="
           (primary, counter) =>

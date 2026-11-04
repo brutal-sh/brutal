@@ -24,84 +24,90 @@ const displayedSides = computed(() =>
 </script>
 
 <template>
-  <div v-if="compact" class="mt-1.5 text-[11px] text-muted">Padding</div>
-  <div class="flex items-start gap-1.5">
-    <div class="min-w-0 flex-1">
-      <div
-        v-if="!ctx.showIndividualPadding && ctx.hasSymmetricPadding"
-        class="mt-1.5 grid grid-cols-2 gap-1.5"
-      >
-        <VariableNumberField
-          data-test-id="layout-horizontal-padding-input"
-          :compact="compact"
-          aria-label="Horizontal padding"
-          :class="compact ? 'order-2' : undefined"
-          :model-value="ctx.node.paddingLeft"
-          :min="0"
-          :node-id="ctx.node.id"
-          binding-path="paddingLeft"
-          @update:model-value="ctx.setHorizontalPadding"
-          @commit="ctx.commitHorizontalPadding"
-          @cancel="ctx.cancelPreview"
+  <div :class="compact ? 'mb-1.5' : undefined">
+    <div v-if="compact" class="mt-1.5 mb-1 text-[9px] leading-3 text-muted">Padding</div>
+    <div class="flex items-start" :class="compact ? 'gap-1' : 'gap-1.5'">
+      <div class="min-w-0 flex-1">
+        <div
+          v-if="!ctx.showIndividualPadding && ctx.hasSymmetricPadding"
+          class="grid grid-cols-2 gap-1.5"
+          :class="compact ? undefined : 'mt-1.5'"
         >
-          <template #icon>
-            <icon-lucide-separator-vertical class="size-3.5" />
-          </template>
-        </VariableNumberField>
-        <VariableNumberField
-          data-test-id="layout-vertical-padding-input"
-          :compact="compact"
-          aria-label="Vertical padding"
-          :model-value="ctx.node.paddingTop"
-          :min="0"
-          :node-id="ctx.node.id"
-          binding-path="paddingTop"
-          @update:model-value="ctx.setVerticalPadding"
-          @commit="ctx.commitVerticalPadding"
-          @cancel="ctx.cancelPreview"
-        >
-          <template #icon>
-            <icon-lucide-separator-horizontal class="size-3.5" />
-          </template>
-        </VariableNumberField>
-      </div>
+          <VariableNumberField
+            data-test-id="layout-horizontal-padding-input"
+            :compact="compact"
+            aria-label="Horizontal padding"
+            :class="compact ? 'order-2' : undefined"
+            :model-value="ctx.node.paddingLeft"
+            :min="0"
+            :node-id="ctx.node.id"
+            binding-path="paddingLeft"
+            @update:model-value="ctx.setHorizontalPadding"
+            @commit="ctx.commitHorizontalPadding"
+            @cancel="ctx.cancelPreview"
+          >
+            <template #icon>
+              <icon-lucide-separator-vertical class="size-3.5" />
+            </template>
+          </VariableNumberField>
+          <VariableNumberField
+            data-test-id="layout-vertical-padding-input"
+            :compact="compact"
+            aria-label="Vertical padding"
+            :model-value="ctx.node.paddingTop"
+            :min="0"
+            :node-id="ctx.node.id"
+            binding-path="paddingTop"
+            @update:model-value="ctx.setVerticalPadding"
+            @commit="ctx.commitVerticalPadding"
+            @cancel="ctx.cancelPreview"
+          >
+            <template #icon>
+              <icon-lucide-separator-horizontal class="size-3.5" />
+            </template>
+          </VariableNumberField>
+        </div>
 
-      <div v-else-if="ctx.isGrid || ctx.isFlex" class="mt-1.5 grid grid-cols-2 gap-1.5">
-        <VariableNumberField
-          v-for="side in displayedSides"
-          :key="side.prop"
-          :compact="compact"
-          :model-value="ctx.node[side.prop]"
-          :min="0"
-          :node-id="ctx.node.id"
-          :binding-path="side.prop"
-          @update:model-value="ctx.updateProp(side.prop, $event)"
-          @commit="(v: number, p: number) => ctx.commitProp(side.prop, v, p)"
-          @cancel="ctx.cancelPreview"
+        <div
+          v-else-if="ctx.isGrid || ctx.isFlex"
+          class="grid grid-cols-2 gap-1.5"
+          :class="compact ? undefined : 'mt-1.5'"
         >
-          <template #icon>
-            <icon-lucide-panel-top v-if="side.icon === 'top'" class="size-3.5" />
-            <icon-lucide-panel-right v-else-if="side.icon === 'right'" class="size-3.5" />
-            <icon-lucide-panel-bottom v-else-if="side.icon === 'bottom'" class="size-3.5" />
-            <icon-lucide-panel-left v-else class="size-3.5" />
-          </template>
-        </VariableNumberField>
+          <VariableNumberField
+            v-for="side in displayedSides"
+            :key="side.prop"
+            :compact="compact"
+            :model-value="ctx.node[side.prop]"
+            :min="0"
+            :node-id="ctx.node.id"
+            :binding-path="side.prop"
+            @update:model-value="ctx.updateProp(side.prop, $event)"
+            @commit="(v: number, p: number) => ctx.commitProp(side.prop, v, p)"
+            @cancel="ctx.cancelPreview"
+          >
+            <template #icon>
+              <icon-lucide-panel-top v-if="side.icon === 'top'" class="size-3.5" />
+              <icon-lucide-panel-right v-else-if="side.icon === 'right'" class="size-3.5" />
+              <icon-lucide-panel-bottom v-else-if="side.icon === 'bottom'" class="size-3.5" />
+              <icon-lucide-panel-left v-else class="size-3.5" />
+            </template>
+          </VariableNumberField>
+        </div>
       </div>
+      <IconButton
+        v-if="ctx.isFlex || ctx.isGrid"
+        :label="panels.individualPadding"
+        :active="ctx.showIndividualPadding"
+        :class="
+          compact
+            ? 'rounded data-[state=on]:border-transparent data-[state=on]:bg-accent/15 data-[state=on]:text-primary'
+            : 'mt-1.5'
+        "
+        @click="ctx.toggleIndividualPadding"
+      >
+        <icon-lucide-square v-if="compact" class="size-3.5" />
+        <icon-lucide-scan v-else class="size-3.5" />
+      </IconButton>
     </div>
-    <IconButton
-      v-if="ctx.isFlex || ctx.isGrid"
-      :label="panels.individualPadding"
-      :active="ctx.showIndividualPadding"
-      class="mt-1.5"
-      :class="
-        compact
-          ? 'rounded data-[state=on]:border-transparent data-[state=on]:bg-accent/15 data-[state=on]:text-primary'
-          : undefined
-      "
-      @click="ctx.toggleIndividualPadding"
-    >
-      <icon-lucide-square v-if="compact" class="size-3.5" />
-      <icon-lucide-scan v-else class="size-3.5" />
-    </IconButton>
   </div>
 </template>

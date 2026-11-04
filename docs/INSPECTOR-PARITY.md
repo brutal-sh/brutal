@@ -2,6 +2,32 @@
 
 Target: actual `/Applications/Pen.app`1.2.21, rechecked in its installed Info.plist on2026-11-02. Full inspector and whole-product parity remain open. The reference is inspected through native UI and the private resource archive recorded in [reference provenance](PEN-REFERENCE.md).
 
+## Compact flex inspector geometry —2026-11-04
+
+The installed Pen resources and its native inspector on an identical owned fixture establish
+the compact alignment geometry: nine26×20 cells,4px gaps and a72px grid height. Inactive points
+are2×2; the fixed selection is an8×8 square with2px corners. Distributed selection uses three
+bars: vertical-flow edge/center/edge markers are10×2,6×2,10×2; horizontal-flow markers are
+2×10,2×6,2×10. Their selected color is#3d99ff. Compact sublabels use9px type,12px line height
+and4px bottom spacing; gap choices occupy three contiguous24px rows. Padding has6px before
+Dimensions. The shared control supplies these compact treatments to single and multiple
+selection while preserving the Advanced treatment and keyboard handlers.
+
+Seventeen Chromium/WebKit layout workflows pass. The first physical native run fails because
+the selected marker is gray: an incorrectly shaped Tailwind Variants compound rule is ignored.
+The corrected rule uses the existing per-slot class shape, with an assert-based merge check
+for selected, hover, inactive and Advanced classes. A separate90.7s native journey physically
+opens the owned file and selects fixed/distributed layouts in both directions, then two
+horizontal frames with paired and individual padding. All seven stages assert cell/marker
+geometry, selected color, labels, radio rows and spacing. Captured native screens are visually
+inspected; source bytes remain unchanged. Private receipts are in
+inspector-flex-visual-2026-11-04, including native-physical-corrected.log and
+multi-sides-horizontal.png. The earlier failed run remains separate.
+
+These observations qualify the named compact dimensions and selected-marker states. Exact
+control backgrounds, flow/header/padding glyphs, mixed orientations, hover pixels, disabled and
+light states remain OPEN, as do full inspector and whole-product design/functionality parity.
+
 ## Selection wrapping —2026-11-04
 
 In the observed unrotated cases, Pen's Add flex layout wraps sibling selections in a numbered frame, infers the flow

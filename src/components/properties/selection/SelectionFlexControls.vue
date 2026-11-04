@@ -55,36 +55,34 @@ function distribution(value: unknown) {
   <fieldset
     v-if="nodeIds[0]"
     :disabled="layout.editor.state.readOnly"
-    class="m-0 min-w-0 border-0 p-0"
+    class="m-0 mb-1.5 min-w-0 border-0 p-0"
   >
-    <div class="mt-2 grid grid-cols-2 items-start gap-1.5">
+    <div class="mt-1.5 grid grid-cols-2 items-start gap-1.5">
       <div>
-        <div class="mb-1.5 text-[11px] text-muted">{{ panels.alignment }}</div>
+        <div class="mb-1 text-[9px] leading-3 text-muted">{{ panels.alignment }}</div>
         <LayoutAlignmentControl
           :label="panels.alignment"
           :cells="cells"
-          :ui="{
-            grid: 'w-full gap-0 rounded-md p-0',
-            cell: 'group h-6 w-full rounded-none bg-transparent',
-            dot:
-              layout.containerLayoutMode.value === 'VERTICAL'
-                ? 'size-0.5 rounded-none group-data-active:h-px group-data-active:w-2'
-                : 'size-0.5 rounded-none group-data-active:h-2 group-data-active:w-px'
-          }"
+          compact
+          :direction="layout.containerLayoutMode.value === 'HORIZONTAL' ? 'HORIZONTAL' : 'VERTICAL'"
+          :distributed="
+            layout.gapDistribution.value === 'SPACE_BETWEEN' ||
+            layout.gapDistribution.value === 'SPACE_AROUND'
+          "
           @select="(_primary, _counter, index) => layout.setFlexAlignment(index)"
         />
       </div>
-      <div class="text-[11px] text-surface">
-        <div class="mb-1.5 text-muted">Gap</div>
+      <div class="text-surface">
+        <div class="mb-1 text-[9px] leading-3 text-muted">Gap</div>
         <RadioGroupRoot
           :model-value="
             typeof layout.gapDistribution.value === 'string' ? layout.gapDistribution.value : ''
           "
           aria-label="Gap distribution"
-          class="flex flex-col gap-1"
+          class="flex flex-col"
           @update:model-value="distribution"
         >
-          <div v-for="mode in modes" :key="mode.value" class="flex h-5 items-center gap-1">
+          <div v-for="mode in modes" :key="mode.value" class="flex h-6 items-center gap-1">
             <RadioGroupItem
               :id="`${id}-${mode.value}`"
               :value="mode.value"
@@ -125,9 +123,9 @@ function distribution(value: unknown) {
       </div>
     </div>
     <template v-if="paddingVisible">
-      <div class="mt-1.5 text-[11px] text-muted">Padding</div>
-      <div class="flex items-start gap-1.5">
-        <div class="mt-1.5 grid min-w-0 flex-1 grid-cols-2 gap-1.5">
+      <div class="mt-1.5 mb-1 text-[9px] leading-3 text-muted">Padding</div>
+      <div class="flex items-start gap-1">
+        <div class="grid min-w-0 flex-1 grid-cols-2 gap-1.5">
           <VariableNumberField
             v-for="field in paddingFields"
             :key="field.prop"
@@ -168,7 +166,7 @@ function distribution(value: unknown) {
         <IconButton
           :label="panels.individualPadding"
           :active="layout.individualPadding.value"
-          class="mt-1.5 rounded data-[state=on]:border-transparent data-[state=on]:bg-accent/15 data-[state=on]:text-primary"
+          class="rounded data-[state=on]:border-transparent data-[state=on]:bg-accent/15 data-[state=on]:text-primary"
           @click="layout.toggleIndividualPadding()"
         >
           <icon-lucide-square class="size-3.5" />

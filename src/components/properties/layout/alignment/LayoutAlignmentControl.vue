@@ -2,13 +2,16 @@
 import { tv } from 'tailwind-variants'
 import { computed, normalizeClass, ref, type HTMLAttributes } from 'vue'
 
-import type { LayoutAlign, LayoutCounterAlign } from '@open-pencil/scene-graph'
+import type { LayoutAlign, LayoutCounterAlign, LayoutMode } from '@open-pencil/scene-graph'
 
 import layoutAlignmentTheme from '@/theme/layout-alignment'
 
 const {
   cells,
   label,
+  compact = false,
+  direction = 'VERTICAL',
+  distributed = false,
   class: className,
   ui
 } = defineProps<{
@@ -19,6 +22,9 @@ const {
     active: boolean
   }[]
   label: string
+  compact?: boolean
+  direction?: LayoutMode
+  distributed?: boolean
   class?: HTMLAttributes['class']
   ui?: { grid?: string; cell?: string; dot?: string }
 }>()
@@ -26,7 +32,7 @@ const emit = defineEmits<{
   select: [primary: LayoutAlign, counter: LayoutCounterAlign, index: number]
 }>()
 const theme = tv(layoutAlignmentTheme)
-const styles = theme()
+const styles = computed(() => theme({ compact }))
 const focusedIndex = ref<number | null>(null)
 const tabIndex = computed(
   () =>
@@ -36,6 +42,14 @@ const tabIndex = computed(
       cells.findIndex((cell) => cell.active)
     )
 )
+
+function marker(index: number, active: boolean): keyof typeof layoutAlignmentTheme.variants.marker {
+  if (!compact) return 'default'
+  if (!active) return 'point'
+  if (!distributed) return 'selected'
+  if (direction === 'HORIZONTAL') return index % 3 === 1 ? 'horizontalCenter' : 'horizontalEdge'
+  return Math.floor(index / 3) === 1 ? 'verticalCenter' : 'verticalEdge'
+}
 
 function navigate(event: KeyboardEvent, index: number) {
   const row = Math.floor(index / 3)
@@ -87,12 +101,12 @@ function navigate(event: KeyboardEvent, index: number) {
       :aria-pressed="cell.active"
       :data-active="cell.active || undefined"
       :tabindex="tabIndex === index ? 0 : -1"
-      :class="theme({ active: cell.active }).cell({ class: ui?.cell })"
+      :class="theme({ active: cell.active, compact }).cell({ class: ui?.cell })"
       @focus="focusedIndex = index"
       @keydown="navigate($event, index)"
       @click="emit('select', cell.primary, cell.counter, index)"
     >
-      <span :class="styles.dot({ class: ui?.dot })" />
+      <span :class="theme({ marker: marker(index, cell.active) }).dot({ class: ui?.dot })" />
     </button>
   </div>
 </template>
