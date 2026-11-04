@@ -9,7 +9,7 @@ import { createMaterialSymbolsProvider } from '@open-pencil/core/icons'
 import { IORegistry, penFormat } from '@open-pencil/core/io'
 import { exportFigFile, parseFigFile } from '@open-pencil/core/io/formats/fig'
 import { PenExportError, parsePenDocument } from '@open-pencil/pen'
-import { readIcon } from '@open-pencil/scene-graph/icons'
+import { iconDrawing, readIcon } from '@open-pencil/scene-graph/icons'
 import { syncInstance } from '@open-pencil/scene-graph/instances'
 import { OPEN_PENCIL_PLUGIN_DATA, readPluginData } from '@open-pencil/scene-graph/plugin-data'
 
@@ -93,8 +93,16 @@ test('Material named export reopens the actual font outline, weight, source size
   }
 })
 
-test('retains an identity reference supplied by a merged component descendant override', async () => {
-  const icons = await materialProvider()
+test('loads the exact descendant weight and keeps identity, artwork and references through sync', async () => {
+  const provider = await materialProvider()
+  const requests: (number | string | undefined)[] = []
+  const icons = {
+    ...provider,
+    icons: async (...args: Parameters<typeof provider.icons>) => {
+      requests.push(args[2]?.wght)
+      return provider.icons(...args)
+    }
+  }
   const io = new IORegistry([penFormat])
   const source = {
     version: '2.21',
@@ -128,16 +136,39 @@ test('retains an identity reference supplied by a merged component descendant ov
   )
   const glyph = graph.getChildren('instance').find((node) => readIcon(node))
   if (!glyph) throw new Error('Merged icon missing')
+  expect(requests).toEqual([200, 700])
+  expect(readIcon(glyph)?.options?.wght).toBe(700)
+  const expected = (await provider.icons(['material-symbols-rounded:home'], 64, { wght: 700 })).get(
+    'material-symbols-rounded:home'
+  )
+  if (!expected) throw new Error('Expected actual weighted glyph')
+  expect(graph.getChildren(glyph.id).map(({ vectorNetwork }) => vectorNetwork)).toEqual(
+    expected.paths.map(({ vectorNetwork }) => vectorNetwork)
+  )
   expect(readPluginData(glyph.pluginData, OPEN_PENCIL_PLUGIN_DATA.penIconReferences)).toEqual({
     weight: '$weight'
   })
   syncInstance(graph, 'instance')
+  expect(readIcon(getNodeOrThrow(graph, glyph.id))?.options?.wght).toBe(700)
+  expect(graph.getChildren(glyph.id).map(({ vectorNetwork }) => vectorNetwork)).toEqual(
+    expected.paths.map(({ vectorNetwork }) => vectorNetwork)
+  )
   expect(
     readPluginData(
       getNodeOrThrow(graph, glyph.id).pluginData,
       OPEN_PENCIL_PLUGIN_DATA.penIconReferences
     )
   ).toEqual({ weight: '$weight' })
+  const reopened = await parseFigFile((await exportFigFile(graph)).slice().buffer)
+  const restored = [...reopened.nodes.values()].find(
+    (node) =>
+      readPluginData(node.pluginData, OPEN_PENCIL_PLUGIN_DATA.penIconReferences)?.weight ===
+      '$weight'
+  )
+  if (!restored) throw new Error('FIG lost the overridden icon')
+  expect(readIcon(restored)?.options?.wght).toBe(700)
+  expect(reopened.getChildren(restored.id).length).toBeGreaterThan(0)
+  expect(readIcon(restored)?.drawing).toBe(iconDrawing(reopened, restored))
 })
 
 test.each([

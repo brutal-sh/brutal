@@ -1,0 +1,41 @@
+{
+  "version": "2.21",
+  "children": [
+    {
+      "id": "main",
+      "type": "frame",
+      "name": "Template",
+      "reusable": true,
+      "layout": "none",
+      "x": 80,
+      "y": 80,
+      "width": 100,
+      "height": 100,
+      "fill": "#27272A",
+      "children": [
+        {
+          "id": "glyph",
+          "type": "icon",
+          "name": "Glyph",
+          "library": "Material Symbols Rounded",
+          "icon": "home",
+          "x": 18,
+          "y": 18,
+          "width": 64,
+          "height": 64,
+          "weight": 200,
+          "fill": "#FFFFFF"
+        }
+      ]
+    },
+    {
+      "id": "instance",
+      "type": "ref",
+      "ref": "main",
+      "name": "Bold instance",
+      "x": 240,
+      "y": 80,
+      "descendants": { "glyph": { "weight": 700 } }
+    }
+  ]
+}

@@ -13,7 +13,11 @@ geometry. Actual Pen opens the independently exported home700 file; REA/Hopper o
 native window. PNG export bounds differ and no exact paired raster match is claimed.
 Identity references are retained through reset/FIG/merged descendants and refused on `.pen`
 export pending full binding support; incompatible legacy alpha is also refused. Nested
-occurrence identity metadata, non-square/zero/live-resize export, physical input and full
+weight overrides now load their exact variant and retain the occurrence's resolved identity
+through synchronization and FIG. Browser and isolated native checks distinguish template200
+from occurrence700. Actual Pen exports the same fixture with matching frame and foreground
+bounds, but 571/699 of 40,000 pixels differ; exact raster acceptance remains open.
+Non-square/zero/live-resize export, physical input and full
 screen/menu parity remain OPEN. The installed main app and user data remain untouched.
 
 Earlier inspector continuation—2026-11-04: Primitives initially focuses Rectangle while remembering Icon,

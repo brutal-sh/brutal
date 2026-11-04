@@ -8,6 +8,7 @@ import type { IconData, IconProvider } from '@open-pencil/core/icons'
 import { IORegistry, penFormat } from '@open-pencil/core/io'
 import type { PenNode } from '@open-pencil/pen'
 import type { Fill } from '@open-pencil/scene-graph'
+import { copyFills } from '@open-pencil/scene-graph/copy'
 import { applyGradientTransform } from '@open-pencil/scene-graph/gradient'
 import {
   iconDrawing,
@@ -15,6 +16,7 @@ import {
   readIcon,
   type IconOptions
 } from '@open-pencil/scene-graph/icons'
+import { syncInstance } from '@open-pencil/scene-graph/instances'
 import { parseSVGPath } from '@open-pencil/scene-graph/parse-path'
 
 // A 2 × 1 PNG.
@@ -77,6 +79,63 @@ function penBytes(children: unknown[]) {
 }
 
 describe('penFormat.readDocument — assets', () => {
+  test('attempts an unavailable resolved variant once and keeps its weight and paint through sync', async () => {
+    const requested: IconRequest[] = []
+    const base = iconProvider(['material-symbols-rounded:home'], requested)
+    const icons: IconProvider = {
+      ...base,
+      async icons(names, size, options) {
+        if (options?.wght === 700) {
+          requested.push({ names: [...names], options })
+          throw new Error('Fixture variant unavailable')
+        }
+        return base.icons(names, size, options)
+      }
+    }
+    const { graph } = await io.readDocument(
+      {
+        name: 'missing-variant.pen',
+        data: penBytes([
+          {
+            id: 'main',
+            type: 'frame',
+            reusable: true,
+            width: 100,
+            height: 100,
+            children: [
+              {
+                id: 'glyph',
+                type: 'icon',
+                library: 'Material Symbols Rounded',
+                icon: 'home',
+                weight: 200,
+                width: 64,
+                height: 64,
+                fill: '#1288AA80'
+              }
+            ]
+          },
+          { id: 'instance', type: 'ref', ref: 'main', descendants: { glyph: { weight: 700 } } }
+        ])
+      },
+      { icons }
+    )
+    expect(requested).toEqual([
+      { names: ['material-symbols-rounded:home'], options: { wght: 200 } },
+      { names: ['material-symbols-rounded:home'], options: { wght: 700 } }
+    ])
+    const [glyph] = graph.getChildren('instance')
+    if (!glyph) throw new Error('Nested icon missing')
+    expect(readIcon(glyph)?.options?.wght).toBe(700)
+    expect(graph.getChildren(glyph.id)).toHaveLength(0)
+    const fills = copyFills(glyph.fills)
+    expect(fills[0]?.opacity).toBe(128 / 255)
+    syncInstance(graph, 'instance')
+    expect(readIcon(getNodeOrThrow(graph, glyph.id))?.options?.wght).toBe(700)
+    expect(getNodeOrThrow(graph, glyph.id).fills).toEqual(fills)
+    expect(requested).toHaveLength(2)
+  })
+
   test.each([
     { name: 'missing', fill: undefined, expected: [] },
     { name: 'empty', fill: [], expected: [] },

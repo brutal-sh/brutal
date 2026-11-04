@@ -74,9 +74,8 @@ Two export-loss cases are explicitly guarded. Incompatible legacy raw-alpha pain
 refused; authored Fill alpha remains supported. Original library/name/weight references are
 retained in validated content metadata through reset, merged descendants, synchronization and
 FIG, and `.pen` export refuses them rather than replacing them with resolved literals.
-This retention does not implement live identity bindings. A pre-existing nested occurrence's
-icon metadata can retain its definition's weight after a descendant override; that runtime
-discrepancy remains open, and icon-instance export is not accepted here.
+This retention does not implement live identity bindings. The nested override correction below
+extends loading and inspector identity; icon-instance export is not accepted here.
 
 Executed evidence:
 
@@ -99,6 +98,38 @@ Executed evidence:
   frontend/executable test-hook exclusion pass. The installed main app remains untouched.
 
 Private receipts: `local-evidence/icon-export-2026-11-04/`.
+
+## Nested icon overrides — 2026-11-04
+
+A weight-only descendant override previously missed asset preloading. Its glyph could be empty,
+and the occurrence's identity could retain the definition's weight even when the correct artwork
+was available. The reader now discovers exact requests from resolved descendants, loads each
+unattempted variant once and rebuilds the private graph before returning it. Occurrences take
+their identity from the selected icon component while retaining their authored paints and
+original reference markers. A failed provider retains the requested identity with empty artwork;
+it does not silently substitute another weight or retry a failed request.
+
+The actual-font fixture draws a 200-weight template and a 700-weight occurrence. Core checks
+verify both exact provider requests, the 700 outline, synchronization and FIG retention of the
+resolved identity, drawing and original `$weight` marker. The unavailable-provider case checks
+one attempt per variant and retained weight/paint after synchronization. Chromium and WebKit
+open the fixture through File/Open and check both inspector weights and distinct artwork.
+An isolated native WebView repeats the selection/inspector checks with both glyphs present;
+fixture loading and selection are programmatic, so physical OS delivery remains unqualified.
+
+Final checks: 1,742 owner tests pass with 11,803 assertions; independent review repeats 25 tests
+with 213 assertions. All 22 icon/toolbar Chromium and WebKit workflows pass without snapshot
+update, including the inspected paired-glyph baselines. The isolated native check passes.
+Source/Vue/test types, repository lint with existing warnings, architecture, docs and changelog
+checks pass. The normal 81.25MiB bundle passes strict signing and excludes test hooks. The
+separate native-driver type gate retains 67 errors outside the new icon-instance spec.
+
+Actual Pen opens the same fixture and exports both 100px frames at 2x. Both applications produce
+200×200 images with matching foreground bounds. Exact pixels still differ: 571 of 40,000 pixels
+for the template and 699 for the occurrence, with maximum channel differences of 67 and 76.
+The cause of those edge differences is not established. This is a measured remaining visual gap.
+
+Private receipts: `local-evidence/icon-instance-identity-2026-11-04/`.
 
 ## Remaining acceptance
 

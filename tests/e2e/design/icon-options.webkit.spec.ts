@@ -7,7 +7,7 @@ import { getSelectedIconGeometry } from '#tests/helpers/icons'
 import { openAppMenu } from '#tests/helpers/menu'
 import { testPath } from '#tests/helpers/paths'
 import { propertyField } from '#tests/helpers/properties'
-import { getSelectedNode } from '#tests/helpers/store'
+import { getNodeById, getSelectedNode } from '#tests/helpers/store'
 import { toolbarFlyoutTestId } from '#tests/helpers/test-ids'
 
 const ctx = useEditorSetupWithClear()
@@ -69,6 +69,47 @@ async function insertHeart() {
 async function currentGeometry() {
   return getSelectedIconGeometry(ctx.page)
 }
+
+test('a nested weight override displays and draws its own weight in the inspector', async () => {
+  const { page, canvas } = ctx
+  const data = await readFile(testPath('fixtures/pen-nested-icon-weight.pen'))
+  await page.evaluate(() => {
+    window.showOpenFilePicker = undefined
+  })
+  const opening = page.waitForEvent('filechooser')
+  await (await openAppMenu(page, 'File')).getByRole('menuitem', { name: /^Open…/ }).click()
+  await (
+    await opening
+  ).setFiles({ name: 'nested-icon.pen', mimeType: 'application/json', buffer: data })
+  await canvas.waitForInit()
+  const instance = await getNodeById(page, 'instance')
+  const glyphId = instance?.childIds[0]
+  if (!glyphId) throw new Error('Nested icon missing after opening')
+  await page.evaluate((id) => window.openPencil?.getStore?.().select([id]), glyphId)
+  await expect(propertyField(page, 'icon-weight')).toContainText('700')
+  await expect(propertyField(page, 'icon-family')).toHaveText('Material Symbols Rounded')
+  const bold = await currentGeometry()
+  expect(bold.length).toBeGreaterThan(0)
+  await page.evaluate(() => window.openPencil?.getStore?.().select(['glyph']))
+  await expect(propertyField(page, 'icon-weight')).toContainText('200')
+  const thin = await currentGeometry()
+  expect(thin.length).toBeGreaterThan(0)
+  expect(thin).not.toEqual(bold)
+  await page.evaluate(() => {
+    const editor = window.openPencil?.getStore?.()
+    editor?.clearSelection()
+    editor?.centerOn(210, 130, 2)
+  })
+  await canvas.waitForRender()
+  const bounds = await canvas.canvas.boundingBox()
+  if (!bounds) throw new Error('Canvas missing before the nested glyph snapshot')
+  expect(
+    await page.screenshot({
+      clip: { x: bounds.x + 150, y: bounds.y + 230, width: 600, height: 300 }
+    })
+  ).toMatchSnapshot('nested-icon-weights.png')
+  canvas.assertNoErrors()
+})
 
 test('family changes preserve the name, size, Fill and frame identity through Undo', async () => {
   const { page, canvas } = ctx

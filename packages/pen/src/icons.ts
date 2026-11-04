@@ -41,7 +41,12 @@ function glyphSource(graph: SceneGraph, glyph: SceneNode): SceneNode {
   return source
 }
 
-function paintGlyph(graph: SceneGraph, frame: SceneNode, paints: Fill[]): void {
+function paintGlyph(
+  graph: SceneGraph,
+  frame: SceneNode,
+  paints: Fill[],
+  identitySource = frame
+): void {
   for (const glyph of graph.getChildren(frame.id)) {
     if (readIconPaintSource(glyph)) continue
     const source = frame.type === 'INSTANCE' ? glyphSource(graph, glyph) : glyph
@@ -49,8 +54,7 @@ function paintGlyph(graph: SceneGraph, frame: SceneNode, paints: Fill[]): void {
       pluginData: withIconPaintSource(glyph, readIconPaintSource(source) ?? source)
     })
   }
-  const main = frame.type === 'INSTANCE' ? instanceMainComponent(graph, frame) : null
-  const icon = readIcon(frame) ?? (main && readIcon(main))
+  const icon = readIcon(identitySource)
   if (!icon) return
   graph.updateNode(frame.id, {
     fills: paints,
@@ -84,8 +88,8 @@ export function drawIcon(node: SceneNode, pen: PenNode, build: Build): void {
     node.fills = []
     return
   }
-  graph.updateNode(node.id, { pluginData: withIcon(node, { name, paintSource: 'frame' }) })
   const options = iconOptions(library, resolveOptionalNumber(pen.weight, ctx))
+  graph.updateNode(node.id, { pluginData: withIcon(node, { name, options, paintSource: 'frame' }) })
   if (!build.icons?.draw(graph, node.id, name, size, color, options)) return
   const dx = (node.width - size) / 2
   const dy = (node.height - size) / 2
@@ -185,7 +189,7 @@ export function useIconComponent(node: SceneNode, pen: PenNode, build: Build): v
     populateInstanceChildren(graph, node.id, node.componentId)
   }
   keepOwnFields(graph, node.id, own, componentId)
-  paintGlyph(graph, node, paints)
+  paintGlyph(graph, node, paints, graph.getNode(componentId))
 }
 
 /**
