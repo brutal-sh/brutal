@@ -33,7 +33,19 @@ const LEGACY_GROUPS: ToolbarEntry[][] = [
   ['COMMENT'],
   ['insert-icon']
 ]
-const UPGRADED_GROUPS: ToolbarEntry[][] = [['SELECT', 'SCALE'], ...LEGACY_GROUPS.slice(1)]
+const UPGRADED_SHAPES: ToolbarEntry[] = [
+  'RECTANGLE',
+  'LINE',
+  'ELLIPSE',
+  'POLYGON',
+  'ICON',
+  'SCRIPT',
+  'STAR'
+]
+const UPGRADED_GROUPS: ToolbarEntry[][] = [
+  ['SELECT', 'SCALE'],
+  ...LEGACY_GROUPS.slice(1).map((group) => (group === SHAPES ? UPGRADED_SHAPES : group))
+]
 const SHORTCUTS = toolShortcutLabels('mac')
 const LABELS = { ...SHORTCUTS }
 
@@ -85,7 +97,14 @@ describe('normalizeToolbarLayout', () => {
 
   test('puts a tool the stored layout lacks into its default flyout', () => {
     const result = layout([['SELECT'], ['STAR', 'RECTANGLE', 'ELLIPSE'], ['LINE']])
-    expect(result.groups).toContainEqual(['STAR', 'RECTANGLE', 'ELLIPSE', 'POLYGON'])
+    expect(result.groups).toContainEqual([
+      'STAR',
+      'RECTANGLE',
+      'ELLIPSE',
+      'POLYGON',
+      'ICON',
+      'SCRIPT'
+    ])
     expect(result.groups.at(-1)).toEqual(['LINE'])
   })
 
@@ -96,7 +115,7 @@ describe('normalizeToolbarLayout', () => {
       ['FRAME', 'SECTION'],
       ['STICKY'],
       ['SELECT', 'SCALE'],
-      SHAPES,
+      UPGRADED_SHAPES,
       ['PEN', 'PENCIL'],
       ['HAND'],
       ['COMMENT'],
@@ -144,10 +163,10 @@ describe('toolbarItems', () => {
     expect(items).toContainEqual({
       kind: 'tool',
       tool: {
-        key: 'LINE',
-        label: 'L',
-        shortcut: 'L',
-        flyout: ['LINE', 'ELLIPSE', 'POLYGON', 'STAR']
+        key: 'ELLIPSE',
+        label: 'O',
+        shortcut: 'O',
+        flyout: ['ELLIPSE', 'POLYGON', 'ICON', 'SCRIPT', 'LINE', 'STAR']
       }
     })
     expect(items.at(-1)).toEqual({ kind: 'action', action: 'insert-icon' })

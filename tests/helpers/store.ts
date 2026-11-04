@@ -124,6 +124,7 @@ export function getNodeById(page: Page, id: string) {
       flipX: n.flipX,
       clipsContent: n.clipsContent,
       fills: n.fills,
+      strokes: n.strokes,
       fontWeight: n.fontWeight,
       italic: n.italic,
       styleRuns: n.styleRuns

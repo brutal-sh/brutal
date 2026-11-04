@@ -2,6 +2,26 @@
 
 Full parity is open. A source implementation, unit check, build, and user workflow establish different things. This ledger records only observed outcomes and the scope of each observation.
 
+## Icon placement continuation —2026-11-04
+
+- Actual Pen's Icon radio arms without editing and places a centered white24×24 Lucide heart
+  named “Icon,” then returns to Move. The native box center matches the delivered point.
+  Its seven-entry default Primitives catalog and remembered Icon choice are observed.
+- Forty-eight owner checks/140assertions pass, including the reproduced stale-parent/page and
+  inherited-slot ownership cases. Nineteen browser workflows pass; existing picker/swap/recolor
+  and customized Star creation remain exercised alongside the new placement/cancellation paths.
+- The139.3s physical native journey checks arming, real glyph loading, delivered-pointer center,
+  one-shot tool behavior, Undo/Redo subtree IDs, seven-entry remembered menu and cancellation.
+  The screenshot is inspected and input file bytes remain unchanged. A separate earlier native
+  observer misses pointer delivery on the canvas rather than its parent input surface.
+- An independently authored legacy icon document opens in actual Pen with editable icon fields.
+  Open Pen's existing `.pen` writer still refuses icon metadata, so editable-icon Save/reopen,
+  exact Icon inspector/tool glyph, menu focus and offline behavior remain OPEN. Detailed receipts
+  and earlier failed runs are in [tool flyout parity](TOOL-FLYOUT-PARITY.md).
+- Source/Vue/test types, scoped lint, architecture, docs/changelog and staged secrets pass.
+  The87.75MiB test and81.25MiB normal packages are built; normal strict signature and
+  frontend/executable native-test-hook exclusion pass. Main installation and user data remain untouched.
+
 ## Compact flex inspector continuation —2026-11-04
 
 - Actual Pen on the identical owned fixture and its shipped resources establish the compact

@@ -5,6 +5,7 @@ import { parseIconName, type IconProvider } from '@open-pencil/core/icons'
 import { SceneGraph } from '@open-pencil/scene-graph'
 import { isIconModified, readIcon } from '@open-pencil/scene-graph/icons'
 import type { Color } from '@open-pencil/scene-graph/primitives'
+import { ownsSlotContent, slotPropertyId } from '@open-pencil/scene-graph/slots'
 
 import { buildIconData } from '#core/icons/svg'
 
@@ -84,6 +85,38 @@ describe('icon commands', () => {
     expect(frame).toMatchObject({ x: 88, y: 63 })
   })
 
+  test('explicit placement keeps fractional parent-local coordinates, name and subtree history', async () => {
+    const editor = setup()
+    const parentId = editor.createShape('FRAME', 100, 100, 400, 400)
+    editor.select([parentId])
+    const id = await editor.insertIcon('test:square', RED, {
+      parentId,
+      x: 12.5,
+      y: 33.25,
+      name: 'Icon'
+    })
+    if (!id) throw new Error('Explicit icon was not inserted')
+    expect(getNodeOrThrow(editor.graph, id)).toMatchObject({
+      parentId,
+      x: 12.5,
+      y: 33.25,
+      width: 24,
+      height: 24,
+      name: 'Icon'
+    })
+    editor.undo.undo()
+    expect(editor.graph.getNode(id)).toBeUndefined()
+    expect(editor.state.selectedIds).toEqual(new Set([parentId]))
+    editor.undo.redo()
+    expect(getNodeOrThrow(editor.graph, id)).toMatchObject({
+      parentId,
+      x: 12.5,
+      y: 33.25,
+      name: 'Icon'
+    })
+    expect(editor.graph.getChildren(id)).toHaveLength(1)
+  })
+
   test('insert rejects a name the provider lacks', async () => {
     const editor = setup()
     await expect(editor.insertIcon('test:missing')).rejects.toThrow('not found')
@@ -133,6 +166,42 @@ describe('icon commands', () => {
 })
 
 describe('icon commands across a document change', () => {
+  test.each([
+    'deleted parent',
+    'read-only',
+    'page switch',
+    'parent moved',
+    'parent replaced'
+  ] as const)('explicit placement is cancelled after %s during loading', async (change) => {
+    let release: (() => void) | undefined
+    const loaded = new Promise<void>((resolve) => {
+      release = resolve
+    })
+    const editor = createEditor({
+      icons: {
+        ...provider,
+        async icons(names, size) {
+          await loaded
+          return provider.icons(names, size)
+        }
+      }
+    })
+    const parentId = editor.createShape('FRAME', 0, 0, 100, 100)
+    const inserting = editor.insertIcon('test:square', RED, { parentId, x: 12, y: 14 })
+    if (change === 'deleted parent') editor.graph.deleteNode(parentId)
+    else if (change === 'read-only') editor.setReadOnly(true)
+    else if (change === 'page switch') await editor.switchPage(editor.graph.addPage('Other').id)
+    else if (change === 'parent moved')
+      editor.graph.reparentNode(parentId, editor.graph.addPage('Other').id)
+    else {
+      editor.graph.deleteNode(parentId)
+      editor.graph.createNode('FRAME', editor.state.currentPageId, { id: parentId })
+    }
+    release?.()
+    expect(await inserting).toBeNull()
+    expect([...editor.graph.getAllNodes()].some((node) => readIcon(node))).toBe(false)
+  })
+
   test('an icon still loading when the document is replaced is not inserted into the new one', async () => {
     let release: (() => void) | undefined
     const loaded = new Promise<void>((resolve) => {
@@ -157,6 +226,37 @@ describe('icon commands across a document change', () => {
     expect(await inserting).toBeNull()
     expect([...replacement.getAllNodes()].some((node) => readIcon(node))).toBe(false)
   })
+})
+
+test('placing in an inherited slot claims ownership in the same Undo step and rejects locked instance content', async () => {
+  const editor = setup()
+  const pageId = editor.state.currentPageId
+  const component = editor.graph.createNode('COMPONENT', pageId, {
+    componentPropertyDefinitions: [
+      { id: 'body-slot', name: 'Body', type: 'SLOT', defaultValue: '' }
+    ]
+  })
+  editor.graph.createNode('FRAME', component.id, {
+    componentPropertyReferences: [{ propertyId: 'body-slot', field: 'SLOT_CONTENT' }]
+  })
+  const instance = editor.graph.createInstance(component.id, pageId)
+  if (!instance) throw new Error('No instance')
+  const slot = editor.graph.getChildren(instance.id).find((node) => slotPropertyId(node))
+  if (!slot) throw new Error('No slot')
+  editor.undo.clear()
+  const id = await editor.insertIcon('test:square', RED, { parentId: slot.id, x: 12, y: 14 })
+  if (!id) throw new Error('No placed icon')
+  expect(ownsSlotContent(editor.graph, getNodeOrThrow(editor.graph, slot.id))).toBe(true)
+  editor.undo.undo()
+  expect(editor.graph.getNode(id)).toBeUndefined()
+  expect(ownsSlotContent(editor.graph, getNodeOrThrow(editor.graph, slot.id))).toBe(false)
+  expect(editor.undo.canUndo).toBe(false)
+  editor.undo.redo()
+  expect(editor.graph.getNode(id)?.parentId).toBe(slot.id)
+  expect(ownsSlotContent(editor.graph, getNodeOrThrow(editor.graph, slot.id))).toBe(true)
+  expect(
+    await editor.insertIcon('test:square', RED, { parentId: instance.id, x: 0, y: 0 })
+  ).toBeNull()
 })
 
 describe('icon layer names', () => {

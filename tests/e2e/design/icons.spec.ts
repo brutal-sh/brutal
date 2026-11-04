@@ -65,14 +65,18 @@ function layerRow(page: Page, name: string) {
   return page.locator('[data-node-id]').filter({ hasText: name }).first()
 }
 
+async function openPicker(page: Page) {
+  const menu = await openAppMenu(page, 'Object')
+  await menu.getByRole('menuitem', { name: 'Insert Icon…' }).click()
+}
+
 async function insertSquare(page: Page) {
-  await page.getByRole('button', { name: 'Primitives', exact: true }).click()
-  await page.getByRole('menuitem', { name: 'Icon', exact: true }).click()
+  await openPicker(page)
   await pick(page, 'Insert icon', 'shape', 'square')
   await expect(propertyField(page, 'icon-name')).toContainText('square')
 }
 
-test('the toolbar inserts a picked icon, selected, as one undo step', async () => {
+test('the picker inserts a chosen icon, selected, as one undo step', async () => {
   const { page, canvas } = ctx
   await insertSquare(page)
 
@@ -88,8 +92,7 @@ test('the toolbar inserts a picked icon, selected, as one undo step', async () =
 
 test('the Object menu opens the same picker', async () => {
   const { page } = ctx
-  const menu = await openAppMenu(page, 'Object')
-  await menu.getByRole('menuitem', { name: 'Insert Icon…' }).click()
+  await openPicker(page)
   await pick(page, 'Insert icon', 'shape', 'ring')
 
   expect(await getSelectedNode(page)).toMatchObject({ name: 'ring' })
@@ -138,8 +141,7 @@ test('the Icon section recolors the icon', async () => {
 
 test('a chosen set is browsed without a query, and a query searches only it', async () => {
   const { page } = ctx
-  await page.getByRole('button', { name: 'Primitives', exact: true }).click()
-  await page.getByRole('menuitem', { name: 'Icon', exact: true }).click()
+  await openPicker(page)
   const dialog = page.getByRole('dialog', { name: 'Insert icon' })
   await dialog.getByRole('button', { name: 'Icon set' }).click()
   await page.getByRole('option', { name: /Test Icons/ }).click()
@@ -159,8 +161,7 @@ test('a chosen set is browsed without a query, and a query searches only it', as
 test('icons in the file and picked lately come first', async () => {
   const { page, canvas } = ctx
   await insertSquare(page)
-  await page.getByRole('button', { name: 'Primitives', exact: true }).click()
-  await page.getByRole('menuitem', { name: 'Icon', exact: true }).click()
+  await openPicker(page)
   const dialog = page.getByRole('dialog', { name: 'Insert icon' })
   await expect(
     dialog.getByRole('group', { name: 'In this file' }).getByRole('option', { name: 'square' })
@@ -172,8 +173,7 @@ test('icons in the file and picked lately come first', async () => {
   // With the icon gone from the file, it is still among the recent ones.
   await canvas.clearCanvas()
   expect(await getPageChildren(page)).toEqual([])
-  await page.getByRole('button', { name: 'Primitives', exact: true }).click()
-  await page.getByRole('menuitem', { name: 'Icon', exact: true }).click()
+  await openPicker(page)
   await expect(
     dialog.getByRole('group', { name: 'Recent' }).getByRole('option', { name: 'square' })
   ).toBeVisible()

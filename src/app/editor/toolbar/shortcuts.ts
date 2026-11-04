@@ -19,6 +19,7 @@ const TOOL_SHORTCUT_KEYS: Readonly<Record<Tool, string>> = {
   TEXT: 'T',
   STICKY: '',
   SCRIPT: '',
+  ICON: '',
   SHAPE_WITH_TEXT: '',
   CONNECTOR: '',
   HAND: 'H',

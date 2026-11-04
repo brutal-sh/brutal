@@ -9,6 +9,9 @@ export * from './ai/providers'
 export const IS_BROWSER = typeof window !== 'undefined'
 export const IS_TAURI = IS_BROWSER && '__TAURI_INTERNALS__' in window
 
+/** The default icon placement box, matching the glyph sets' authoring size. */
+export const DEFAULT_ICON_SIZE = 24
+
 export const BLACK: Color = { r: 0, g: 0, b: 0, a: 1 }
 export const TRANSPARENT: Color = { r: 0, g: 0, b: 0, a: 0 }
 export const DEFAULT_SHADOW_COLOR: Color = { r: 0, g: 0, b: 0, a: 0.25 }

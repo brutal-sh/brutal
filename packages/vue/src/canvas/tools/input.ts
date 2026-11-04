@@ -1,6 +1,8 @@
 import type { Ref } from 'vue'
 
 import type { Editor } from '@open-pencil/core'
+import { DEFAULT_ICON_SIZE } from '@open-pencil/core/constants'
+import { WHITE } from '@open-pencil/scene-graph/constants'
 
 import { startPenInput } from '#vue/canvas/pen/input'
 import { startPencilInput } from '#vue/canvas/pencil/input'
@@ -96,6 +98,23 @@ export function handleToolMouseDown({
     const id = editor.createScript(point.x, point.y, parentId)
     editor.select([id])
     editor.setTool('SELECT')
+    return
+  }
+
+  if (tool === 'ICON') {
+    const parentId = findDrawParent(cx, cy, 'FRAME', editor)
+    const point = parentSpace(editor, parentId)(cx, cy)
+    editor.setTool('SELECT')
+    void editor
+      .insertIcon('lucide:heart', WHITE, {
+        parentId,
+        x: point.x - DEFAULT_ICON_SIZE / 2,
+        y: point.y - DEFAULT_ICON_SIZE / 2,
+        name: 'Icon'
+      })
+      .catch((error: unknown) => {
+        console.error('Failed to place icon', error)
+      })
     return
   }
 

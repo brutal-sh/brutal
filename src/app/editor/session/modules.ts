@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import type { Editor } from '@open-pencil/core'
 import type { IORegistry } from '@open-pencil/core/io'
 import { createSelectedNodeState } from '@open-pencil/vue/editor/selection-state'
+import { panelMessages } from '@open-pencil/vue/i18n'
 
 import { createDocumentExportActions } from '@/app/document/export'
 import { createDocumentIOActions } from '@/app/document/io'
@@ -17,6 +18,7 @@ import type { EditorPreparationController } from '@/app/editor/preparation/contr
 import { createProfilerActions } from '@/app/editor/profiler'
 import type { AppEditorState } from '@/app/editor/session/types'
 import { createVectorEditActions } from '@/app/editor/vector'
+import { toast } from '@/app/shell/ui'
 
 export function defineEditorStoreAccessors(store: object, editor: Editor) {
   Object.defineProperties(store, {
@@ -83,6 +85,14 @@ export function createEditorStoreModules(
     ...pen,
     ...vectorEdit,
     wrapInAutoLayout: () => editor.wrapInAutoLayout(true),
+    async insertIcon(...args: Parameters<Editor['insertIcon']>) {
+      try {
+        return await editor.insertIcon(...args)
+      } catch {
+        toast.error(panelMessages.get().insertIconFailed)
+        return null
+      }
+    },
     attachScriptSource: scriptRuntime.attachScriptSource,
     reloadScript: scriptRuntime.reloadScript,
     scriptRuntimeStates: scriptRuntime.scriptRuntimeStates,

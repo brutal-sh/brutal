@@ -37,7 +37,13 @@ test('Polygon tool creates POLYGON node', async () => {
   editor.canvas.assertNoErrors()
 })
 
-test('Star tool creates STAR node', async () => {
+test('a hidden Star tool can be restored and creates STAR nodes', async () => {
+  await editor.page.getByTestId('toolbar').click({ button: 'right' })
+  await editor.page.getByRole('menuitem', { name: 'Customize toolbar…' }).click()
+  const settings = editor.page.getByTestId('settings-toolbar-panel')
+  await settings.getByRole('switch', { name: 'Show Star', exact: true }).click()
+  await editor.page.getByTestId('app-settings-done').click()
+  await expect(editor.page.getByTestId('app-settings-dialog')).toBeHidden()
   await editor.page.getByTestId(toolbarFlyoutTestId('RECTANGLE')).click()
   await editor.page.getByTestId(toolbarFlyoutItemTestId('STAR')).click()
   await editor.canvas.drag(150, 150, 250, 250)

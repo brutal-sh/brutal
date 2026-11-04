@@ -3,15 +3,15 @@ import { BLACK } from '@open-pencil/scene-graph/constants'
 import { readIcon, type IconOptions } from '@open-pencil/scene-graph/icons'
 import type { Color } from '@open-pencil/scene-graph/primitives'
 
+import { DEFAULT_ICON_SIZE } from '#core/constants'
+import { assertNodeEditable } from '#core/editor/capabilities'
+import { prepareSlotEdits } from '#core/editor/components/slots'
 import { restoreSubtree, snapshotSubtree } from '#core/editor/history/subtree'
 import type { EditorContext } from '#core/editor/types'
 import { pushCreatedSubtreesUndo } from '#core/editor/undo'
 import { parseIconName } from '#core/icons/provider'
 import { detachIcon, placeIcon, recolorIcon, swapIcon } from '#core/icons/render'
 import type { IconData } from '#core/icons/types'
-
-/** The size a picked icon is placed at, as Iconify sets draw them. */
-const ICON_SIZE = 24
 
 /**
  * Icon commands: insert, swap, and recolor, each one undo step. An icon is a frame of paths,
@@ -47,31 +47,53 @@ export function createIconActions(ctx: EditorContext) {
 
   /**
    * Places the icon `name` at the middle of the view, in the container being edited or the
-   * page, and selects it; null when the document was replaced while the icon loaded.
+   * page, or at a supplied parent-local position, and selects it. Returns null when its
+   * document or explicit placement target is no longer editable after loading.
    */
-  async function insertIcon(name: string, color: Color = BLACK): Promise<string | null> {
+  async function insertIcon(
+    name: string,
+    color: Color = BLACK,
+    at?: { parentId: string; x: number; y: number; name?: string }
+  ): Promise<string | null> {
     const graph = ctx.graph
-    const icon = await fetchIcon(name, ICON_SIZE)
+    const pageId = ctx.state.currentPageId
+    const target = at ? graph.getNode(at.parentId) : undefined
+    const icon = await fetchIcon(name, DEFAULT_ICON_SIZE)
     // Opening another document while the icon loaded leaves nothing to insert it into.
     if (ctx.graph !== graph) return null
+    if (
+      at &&
+      (ctx.state.readOnly ||
+        ctx.state.currentPageId !== pageId ||
+        !target ||
+        graph.getNode(at.parentId) !== target ||
+        graph.pageOf(at.parentId) !== pageId)
+    )
+      return null
     const { width, height } = ctx.getViewportSize()
-    const parentId = ctx.state.enteredContainerId ?? ctx.state.currentPageId
+    const parentId = at?.parentId ?? ctx.state.enteredContainerId ?? ctx.state.currentPageId
     const origin =
       parentId === ctx.state.currentPageId
         ? { x: 0, y: 0 }
         : ctx.graph.getAbsolutePosition(parentId)
-    const x = (width / 2 - ctx.state.panX) / ctx.state.zoom - origin.x - ICON_SIZE / 2
-    const y = (height / 2 - ctx.state.panY) / ctx.state.zoom - origin.y - ICON_SIZE / 2
-    const previousSelection = new Set(ctx.state.selectedIds)
-    const frame = placeIcon(ctx.graph, parentId, icon, {
-      size: ICON_SIZE,
-      color,
-      overrides: { x: Math.round(x), y: Math.round(y) }
+    const x = (width / 2 - ctx.state.panX) / ctx.state.zoom - origin.x - DEFAULT_ICON_SIZE / 2
+    const y = (height / 2 - ctx.state.panY) / ctx.state.zoom - origin.y - DEFAULT_ICON_SIZE / 2
+    return ctx.undo.runBatch('Insert icon', () => {
+      assertNodeEditable(graph, parentId)
+      if (!prepareSlotEdits(ctx, [parentId])) return null
+      const previousSelection = new Set(ctx.state.selectedIds)
+      const frame = placeIcon(graph, parentId, icon, {
+        size: DEFAULT_ICON_SIZE,
+        color,
+        overrides: at
+          ? { x: at.x, y: at.y, ...(at.name !== undefined && { name: at.name }) }
+          : { x: Math.round(x), y: Math.round(y) }
+      })
+      pushCreatedSubtreesUndo(ctx, 'Insert icon', [frame.id], previousSelection)
+      ctx.setSelectedIds(new Set([frame.id]))
+      ctx.requestRender()
+      return frame.id
     })
-    pushCreatedSubtreesUndo(ctx, 'Insert icon', [frame.id], previousSelection)
-    ctx.setSelectedIds(new Set([frame.id]))
-    ctx.requestRender()
-    return frame.id
   }
 
   /** Draws the icon `name` fresh in the icon `frameId`, as one step called `label`. */

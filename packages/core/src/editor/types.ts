@@ -47,6 +47,7 @@ export type Tool =
   | 'TEXT'
   | 'STICKY'
   | 'SCRIPT'
+  | 'ICON'
   | 'SHAPE_WITH_TEXT'
   | 'CONNECTOR'
   | 'PEN'

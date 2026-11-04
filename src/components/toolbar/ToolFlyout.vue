@@ -164,15 +164,6 @@ function focusSelectedTool(event: Event) {
               </DropdownMenuRadioItem>
             </DropdownMenuRadioGroup>
             <template v-if="primitives">
-              <DropdownMenuItem
-                :class="flyoutItemClass()"
-                :disabled="store.state.readOnly"
-                @select="store.state.iconPickerOpen = true"
-              >
-                <span :class="styles.flyoutItemIndicator()" aria-hidden="true" />
-                <icon-lucide-smile :class="styles.flyoutItemIcon()" />
-                <span :class="styles.flyoutItemLabel()">Icon</span>
-              </DropdownMenuItem>
               <DropdownMenuSeparator v-if="mobile" class="my-1 h-px bg-border" />
               <DropdownMenuItem
                 :class="flyoutItemClass()"

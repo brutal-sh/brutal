@@ -25,7 +25,9 @@ const HIDDEN_BY_DEFAULT: readonly ToolbarEntry[] = [
   'CONNECTOR',
   'insert-icon',
   'PENCIL',
-  'SECTION'
+  'SECTION',
+  'LINE',
+  'STAR'
 ]
 
 const DEFAULT_TOOL_ORDER: readonly Tool[] = [
