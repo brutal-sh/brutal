@@ -13,6 +13,7 @@ import type {
 } from '@open-pencil/scene-graph'
 import type { ExportFormatId } from '@open-pencil/scene-graph/export-format'
 import { clampExportScale } from '@open-pencil/scene-graph/export-scale'
+import { hasIconFills } from '@open-pencil/scene-graph/icons'
 import { computeImageHash } from '@open-pencil/scene-graph/images'
 import { fillSchema, meshGradientSchema } from '@open-pencil/scene-graph/paints'
 import {
@@ -252,6 +253,36 @@ export function restoreMeshPaints<T extends Fill>(
       ? { ...paint, ...structuredClone(meshPaintPayload(mesh)) }
       : paint
   })
+}
+
+/** Logical icon paints survive FIG without becoming a filled rectangle in other editors. */
+export function applyIconFillsPluginData(
+  node: SceneNode,
+  images: ReadonlyMap<string, Uint8Array>
+): void {
+  const fills = hasIconFills(node)
+    ? node.fills.map((fill) => {
+        const bytes = fill.imageHash ? images.get(fill.imageHash) : undefined
+        if (!bytes) return fill
+        const hash = computeImageHash(bytes)
+        return {
+          ...fill,
+          imageHash: hash,
+          ...(fill.imageSource?.hash === fill.imageHash && {
+            imageSource: { ...fill.imageSource, hash }
+          })
+        }
+      })
+    : undefined
+  node.pluginData = withPluginData(node.pluginData, OPEN_PENCIL_PLUGIN_DATA.iconFills, fills)
+}
+
+export function restoreIconFills(nc: Pick<NodeChange, 'pluginData'>, fallback: Fill[]): Fill[] {
+  const icon = readNodeChangePluginData(nc, OPEN_PENCIL_PLUGIN_DATA.icon)
+  if (icon?.paintSource !== 'frame') return fallback
+  return structuredClone(
+    readNodeChangePluginData(nc, OPEN_PENCIL_PLUGIN_DATA.iconFills) ?? fallback
+  )
 }
 
 /** Paint slots keep presets distinct when identical PNG frames share a FIG content hash. */

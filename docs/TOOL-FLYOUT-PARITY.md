@@ -152,6 +152,44 @@ source. Its remaining two scenarios do not run in that batch. The baseline is no
 and this is not an all-canvas-suite pass. Complete Icon Fill editing and paint persistence,
 image/mesh/shader/bound-variable projection and exact icon/header/toolbar pixels remain open.
 
+## Icon Fill authoring — 2026-11-04
+
+Named icons now own their editable paints on the icon layer. The shared Fill row edits
+the tinted glyph instead of drawing a container background. Existing unflagged icon
+artwork retains its previous background semantics. Solid, gradient and mesh paint stacks,
+alpha, visibility and empty fills retain sampled pixels through supported PEN and FIG
+round trips. Parent gradient and mesh coordinates account for centered glyph bounds;
+mesh curve handles remain relative offsets and authored points remain unchanged.
+
+Color variable changes resolve on the glyph, and the tested binding survives both
+formats. A translucent bound paint also retains the opaque shadow silhouette. SVG export
+contains the glyph without a container background; a complete SVG reimport is not accepted,
+because the existing SVG importer supplies a white frame. Empty SVG export keeps its
+existing null result. These are separate from PEN and FIG round-trip acceptance.
+
+Nested icons retain their generated paint overrides when the containing instance syncs.
+Cancel and commit followed by Undo restore the prior override state, and subsequent
+component Fill changes reach the glyph again. The shared override helper copies state
+before mutation so preview capture observes the actual previous state.
+
+Executed:2,242 owner tests with14,551 assertions, including Scene Graph and editor tests,
+the icon paint and format round trips, and FIG export claims. Independent review repeats
+the preview, projection and claim checks and reports28 passing tests with113 assertions.
+A separate native root-Fill build executes two journeys: synthetic document drop with
+sampled paint pixels, and actual Fill-row color change followed by Save and Recents reopen.
+The native screenshots are inspected; this does not prove physical file drop, the OS Open
+panel, or physical keyboard replacement. Private receipts:icon-fill-editing-2026-11-04.
+
+The centered mesh browser test compares interior samples to the full paint swatch and
+adds only its own new canvas snapshot. The previous imported-icon-paints baseline is
+unchanged. Initial browser save checks expected a legacy string instead of the valid
+authored paint array; the corrected checks retain the reopened glyph-color assertion.
+
+This is bounded paint authoring evidence. Image and shader coordinates, non-square live
+resize and zero-size recovery, mixed selection, read-only states, separate family/name
+controls, Material weight, other writable families/sizes and exact paired pixels remain
+open. Own FIG round trips do not qualify live Figma behavior.
+
 ## Remaining
 
 The earlier Script gap list is superseded by [Script implementation and executed evidence](SCRIPT-PARITY.md).

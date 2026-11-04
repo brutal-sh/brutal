@@ -4,11 +4,13 @@ import { BLACK } from '@open-pencil/scene-graph/constants'
 import {
   iconGlyph,
   iconDrawing,
+  hasIconFills,
   iconLayerName,
   isPlacedIconName,
   readIcon,
   readIconTint,
   withIcon,
+  withIconPaintSource,
   withIconTint,
   type IconOptions,
   type IconPaint
@@ -79,6 +81,7 @@ function addPath(graph: SceneGraph, frameId: string, path: IconPath, size: numbe
     graph.updateNode(vector.id, {
       pluginData: withIconTint(graph.getNode(vector.id) ?? vector, tint)
     })
+  if (tint.length > 0) graph.updateNode(vector.id, { pluginData: withIconPaintSource(vector) })
 }
 
 /**
@@ -92,13 +95,16 @@ export function placeIcon(
   { size, color, overrides, identity = true }: PlaceIconOptions
 ): SceneNode {
   const name = `${icon.prefix}:${icon.name}`
+  const authoredFills = identity && overrides?.fills === undefined
   const frame = graph.createNode('FRAME', parentId, {
     name: identity ? iconLayerName(name) : icon.name,
     width: size,
     height: size,
-    fills: [],
+    fills: authoredFills ? solid(color, color.a) : [],
     ...overrides
   })
+  if (authoredFills)
+    graph.updateNode(frame.id, { pluginData: withIcon(frame, { name, paintSource: 'frame' }) })
   for (const path of icon.paths) addPath(graph, frame.id, path, size, color)
   if (identity) recordIcon(graph, frame.id, name, icon.options)
   return graph.getNode(frame.id) ?? frame
@@ -126,6 +132,11 @@ export function drawIcon(
   size: number,
   color: Color
 ): void {
+  const frame = graph.getNode(frameId)
+  if (frame)
+    graph.updateNode(frameId, {
+      pluginData: withIcon(frame, { name: `${icon.prefix}:${icon.name}`, paintSource: 'frame' })
+    })
   for (const path of scaledPaths(icon, size)) addPath(graph, frameId, path, size, color)
   recordIcon(graph, frameId, `${icon.prefix}:${icon.name}`, icon.options)
 }
@@ -139,7 +150,13 @@ function recordIcon(graph: SceneGraph, frameId: string, name: string, options?: 
   if (!frame) return
   const glyph = iconGlyph(graph, frame)
   const drawing = iconDrawing(graph, frame)
-  const icon = options ? { name, glyph, drawing, options } : { name, glyph, drawing }
+  const icon = {
+    name,
+    glyph,
+    drawing,
+    ...(options && { options }),
+    ...(hasIconFills(frame) && { paintSource: 'frame' as const })
+  }
   graph.updateNode(frameId, { pluginData: withIcon(frame, icon) })
 }
 
@@ -150,14 +167,19 @@ function recordIcon(graph: SceneGraph, frameId: string, name: string, options?: 
 export function detachIcon(graph: SceneGraph, frameId: string): void {
   const frame = graph.getNode(frameId)
   if (!frame || !readIcon(frame)) return
+  const authoredFills = hasIconFills(frame)
   graph.updateNode(frameId, { pluginData: withIcon(frame, null) })
+  if (authoredFills) graph.updateNode(frameId, { fills: [] })
   for (const path of graph.getChildren(frameId))
-    if (readIconTint(path).length > 0)
+    if (readIconTint(path).length > 0) {
       graph.updateNode(path.id, { pluginData: withIconTint(path, []) })
+      graph.updateNode(path.id, { pluginData: withIconPaintSource(path, null) })
+    }
 }
 
 /** The color an icon's tinted paths have, or null when none takes the icon's color. */
 export function iconColor(graph: SceneGraph, frame: SceneNode): Color | null {
+  if (hasIconFills(frame)) return frame.fills.find((fill) => fill.type === 'SOLID')?.color ?? null
   for (const path of graph.getChildren(frame.id)) {
     const tint = readIconTint(path)
     if (tint.includes('fill') && path.fills[0]) return path.fills[0].color
@@ -168,6 +190,13 @@ export function iconColor(graph: SceneGraph, frame: SceneNode): Color | null {
 
 /** Sets the color of an icon's tinted paints; paths with colors of their own keep them. */
 export function recolorIcon(graph: SceneGraph, frameId: string, color: Color): void {
+  const frame = graph.getNode(frameId)
+  if (frame && hasIconFills(frame)) {
+    graph.updateNode(frameId, {
+      fills: frame.fills.map((fill) => (fill.type === 'SOLID' ? { ...fill, color } : fill))
+    })
+    return
+  }
   for (const path of graph.getChildren(frameId)) {
     const tint = readIconTint(path)
     if (tint.includes('fill'))

@@ -2,8 +2,11 @@ import type { Canvas } from 'canvaskit-wasm'
 
 import type { Fill, NodeType, SceneGraph, SceneNode, Stroke } from '@open-pencil/scene-graph'
 import { strokeOverflow as strokeReach } from '@open-pencil/scene-graph/geometry'
+import { hasIconFills } from '@open-pencil/scene-graph/icons'
 import Matrix from '@open-pencil/scene-graph/matrix'
+import { OPEN_PENCIL_PLUGIN_DATA, withoutPluginData } from '@open-pencil/scene-graph/plugin-data'
 import type { Rect } from '@open-pencil/scene-graph/primitives'
+import { resolvedPaintBindings } from '@open-pencil/scene-graph/variables'
 
 import { paintBooleanOperation } from '#core/canvas/boolean'
 import { renderMaskedChildIds } from '#core/canvas/masks'
@@ -52,6 +55,7 @@ export function isLayerContainer(node: SceneNode): boolean {
 }
 
 export function fillsCastShadow(node: SceneNode): boolean {
+  if (hasIconFills(node)) return false
   return (
     node.fills.some(paintCastsShadow) ||
     node.fillGeometry.some((geometry) => geometry.fills?.some(paintCastsShadow) ?? false)
@@ -105,6 +109,11 @@ function silhouetteProxy(node: SceneNode, mode: SilhouetteMode): SceneNode | nul
         : geometry
     ),
     effects: [],
+    // The opaque silhouette must not derive the icon's translucent authored paints again.
+    pluginData: withoutPluginData(node.pluginData, [
+      OPEN_PENCIL_PLUGIN_DATA.icon,
+      OPEN_PENCIL_PLUGIN_DATA.iconPaintSource
+    ]),
     boundVariables: {}
   }
 }
@@ -118,6 +127,8 @@ export function drawSilhouette(
   mode: SilhouetteMode,
   includeChildren: boolean
 ): void {
+  const paints = resolvedPaintBindings(graph, node)
+  if (paints.fills || paints.strokes) node = { ...node, ...paints }
   const proxy = silhouetteProxy(node, mode)
   if (proxy?.type === 'BOOLEAN_OPERATION') paintBooleanOperation(r, canvas, proxy, graph)
   else if (proxy) r.paintShapeContent(canvas, proxy, graph)

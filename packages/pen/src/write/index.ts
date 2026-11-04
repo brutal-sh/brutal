@@ -290,7 +290,7 @@ export function writePenDocument(graph: SceneGraph): PenDocument {
       result.type = 'icon'
       result.library = icon.library
       result.icon = icon.icon
-      result.fill = colorToHex8(icon.color)
+      if (icon.color) result.fill = colorToHex8(icon.color)
     }
     if (node.type === 'COMPONENT') result.reusable = true
     if (!copy && slots.suggestions(node)) result.slot = slots.suggestions(node)

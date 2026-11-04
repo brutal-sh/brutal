@@ -3,6 +3,8 @@ import { isEqual } from 'es-toolkit/predicate'
 import type { VariableModeFallback } from '.'
 import { copyFills, copyStrokes } from '../copy'
 import type { SceneGraph } from '../graph'
+import { hasIconFills } from '../icons/model'
+import { iconPathPaints } from '../icons/paints'
 import { hasInstanceOverride } from '../instances'
 import type { Color } from '../primitives'
 import { pixelLength } from '../text/lengths'
@@ -164,7 +166,17 @@ export function resolvedPaintBindings(
   fallback: VariableModeFallback = 'active'
 ): Pick<Partial<SceneNode>, 'fills' | 'strokes'> {
   // Most nodes bind nothing, so no copy is made until a paint binding is actually found.
-  const changes: Pick<Partial<SceneNode>, 'fills' | 'strokes'> = {}
+  const parent = node.type === 'VECTOR' && node.parentId ? graph.getNode(node.parentId) : undefined
+  const inherited =
+    parent && hasIconFills(parent)
+      ? resolvedPaintBindings(graph, parent, fallback).fills
+      : undefined
+  const projected = parent && inherited ? iconPathPaints(parent, node, inherited) : null
+  const changes: Pick<Partial<SceneNode>, 'fills' | 'strokes'> = projected ?? {}
+  let fills = changes.fills ?? node.fills
+  let strokes = changes.strokes ?? node.strokes
+  let copiedFills = false
+  let copiedStrokes = false
   for (const field of Object.keys(node.boundVariables)) {
     const paint = paintBindingTarget(field)
     if (!paint) continue
@@ -172,13 +184,21 @@ export function resolvedPaintBindings(
     const { index } = paint
     if (!color) continue
     if (paint.list === 'fills') {
-      if (!node.fills[index]) continue
-      changes.fills ??= copyFills(node.fills)
-      applyBoundColor(changes.fills[index], color, paint.colorIndex)
+      if (!fills[index]) continue
+      if (!copiedFills) {
+        fills = copyFills(fills)
+        changes.fills = fills
+        copiedFills = true
+      }
+      applyBoundColor(fills[index], color, paint.colorIndex)
     } else {
-      if (!node.strokes[index]) continue
-      changes.strokes ??= copyStrokes(node.strokes)
-      applyBoundColor(changes.strokes[index], color, paint.colorIndex)
+      if (!strokes[index]) continue
+      if (!copiedStrokes) {
+        strokes = copyStrokes(strokes)
+        changes.strokes = strokes
+        copiedStrokes = true
+      }
+      applyBoundColor(strokes[index], color, paint.colorIndex)
     }
   }
   return changes

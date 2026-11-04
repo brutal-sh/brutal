@@ -1,6 +1,6 @@
 import type { SceneNode } from '@open-pencil/scene-graph'
 import { BLACK } from '@open-pencil/scene-graph/constants'
-import { readIcon, type IconOptions } from '@open-pencil/scene-graph/icons'
+import { hasIconFills, readIcon, type IconOptions } from '@open-pencil/scene-graph/icons'
 import type { Color } from '@open-pencil/scene-graph/primitives'
 
 import { DEFAULT_ICON_SIZE } from '#core/constants'
@@ -137,6 +137,19 @@ export function createIconActions(ctx: EditorContext) {
    * color drag batched into one step stays cheap.
    */
   function setIconColor(frameId: string, color: Color) {
+    const frame = ctx.graph.getNode(frameId)
+    if (frame && hasIconFills(frame)) {
+      const before = frame.fills
+      recolorIcon(ctx.graph, frameId, color)
+      const after = frame.fills
+      const apply = (fills: typeof before) => () => {
+        ctx.graph.updateNode(frameId, { fills })
+        ctx.requestRender()
+      }
+      ctx.undo.push({ label: 'Change icon color', forward: apply(after), inverse: apply(before) })
+      ctx.requestRender()
+      return
+    }
     const paints = () =>
       ctx.graph.getChildren(frameId).map(({ id, fills, strokes }) => ({ id, fills, strokes }))
     const before = paints()

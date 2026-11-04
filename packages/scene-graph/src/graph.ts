@@ -16,6 +16,7 @@ import { bindNodeEvents } from './events'
 import { LAYOUT_AFFECTING_KEYS } from './fields/layout'
 import { withGeneratedFrameSize } from './generated'
 import * as HitTest from './hit-test'
+import { synchronizeIconPaints } from './icons/paints'
 import { generateId } from './ids'
 import * as Instances from './instances'
 import { remapInstanceOverrideState } from './instances/overrides'
@@ -45,7 +46,13 @@ import type { VariableModeFallback } from './variables'
 import { normalizeVectorNetwork } from './vector-network'
 
 /** Scopes that graph methods check while a caller's callback runs; scopes nest. */
-type GraphScope = 'preview' | 'sourceMetadata' | 'importedState' | 'layout' | 'derivedLayout'
+type GraphScope =
+  | 'preview'
+  | 'sourceMetadata'
+  | 'importedState'
+  | 'layout'
+  | 'derivedLayout'
+  | 'iconPaints'
 
 export class SceneGraph {
   nodes = new Map<string, SceneNode>()
@@ -66,7 +73,8 @@ export class SceneGraph {
     sourceMetadata: 0,
     importedState: 0,
     layout: 0,
-    derivedLayout: 0
+    derivedLayout: 0,
+    iconPaints: 0
   }
   private previewObservers: NodePreviewObserver[] = []
   private readonly changeObservers = new Set<NodeChangeObserver>()
@@ -394,6 +402,7 @@ export class SceneGraph {
     if (node.type === 'CONNECTOR') this.connectorIds.add(node.id)
     for (const observer of this.changeObservers) observer.created(node)
     if (node.type === 'INSTANCE' && node.componentId) this.indexInstance(node.componentId, node.id)
+    this.synchronizeIconPaints(node)
     this.emitter.emit('node:created', node)
     return node
   }
@@ -517,7 +526,10 @@ export class SceneGraph {
     const appliedChanges = updateNodePreview(this, id, changes, (node, applied) => {
       for (const observe of this.previewObservers) observe(node, applied)
     })
-    if (appliedChanges) this.emitter.emit('node:previewUpdated', id, appliedChanges)
+    if (appliedChanges) {
+      if (node) this.withScope('preview', () => this.synchronizeIconPaints(node, appliedChanges))
+      this.emitter.emit('node:previewUpdated', id, appliedChanges)
+    }
   }
 
   updateNode(id: string, changes: Partial<SceneNode>): void {
@@ -592,7 +604,13 @@ export class SceneGraph {
     if (changes.fills) removeStaleBindings(node, 'fills', changes)
     if (changes.strokes) removeStaleBindings(node, 'strokes', changes)
     for (const key of absent) Reflect.deleteProperty(node, key)
+    this.synchronizeIconPaints(node, changes)
     this.publishNodeUpdate(id, changes)
+  }
+
+  private synchronizeIconPaints(node: SceneNode, changes?: Partial<SceneNode>): void {
+    if (this.scopeDepths.iconPaints > 0) return
+    this.withScope('iconPaints', () => synchronizeIconPaints(this, node, changes))
   }
 
   /** Publishes an update now, or leaves it to the running layout, which publishes once it ends. */

@@ -2,7 +2,7 @@ import { fromUint8Array } from 'js-base64'
 
 import type { SceneGraph, SceneNode } from '@open-pencil/scene-graph'
 import { BLACK } from '@open-pencil/scene-graph/constants'
-import { readIcon } from '@open-pencil/scene-graph/icons'
+import { hasIconFills, readIcon } from '@open-pencil/scene-graph/icons'
 import { imageMimeType } from '@open-pencil/scene-graph/images'
 import { layoutJustification, layoutSizingInParent } from '@open-pencil/scene-graph/layout'
 import { assertFragmentPaintFrame, shaderOfPaint } from '@open-pencil/scene-graph/shaders'
@@ -318,9 +318,9 @@ function styleFromSceneNode(
   addSize(style, node, parent, css)
   addPositioning(style, node, parent)
   addSizeConstraints(style, node, css)
-  const fill = fillToCSS(node.fills.at(0))
+  const fill = hasIconFills(node) ? undefined : fillToCSS(node.fills.at(0))
   if (fill) style['background-color'] = css('fills/0/color', fill)
-  addImageStyle(style, node)
+  if (!hasIconFills(node)) addImageStyle(style, node)
   addStroke(style, node, css)
   Object.assign(style, effectsToCSS(node.effects))
   if (node.opacity < 1) style.opacity = css('opacity', String(node.opacity))

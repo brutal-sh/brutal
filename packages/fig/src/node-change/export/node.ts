@@ -11,11 +11,9 @@ import type {
   SceneGraph,
   SceneNode
 } from '@open-pencil/scene-graph'
-import {
-  DEFAULT_STROKE_MITER_LIMIT,
-  DEFAULT_STROKE_WEIGHT
-} from '@open-pencil/scene-graph/constants'
+import { DEFAULT_STROKE_WEIGHT } from '@open-pencil/scene-graph/constants'
 import { isGeneratedFrame } from '@open-pencil/scene-graph/generated'
+import { hasIconFills } from '@open-pencil/scene-graph/icons'
 import { layoutGridCount } from '@open-pencil/scene-graph/layout'
 import { siblingOrderKeys } from '@open-pencil/scene-graph/order-keys'
 import { OPEN_PENCIL_PLUGIN_DATA, withPluginData } from '@open-pencil/scene-graph/plugin-data'
@@ -28,6 +26,7 @@ import { snapshotInstanceGeometry } from '../instance/geometry'
 import {
   applyExportSettingsPluginData,
   applyMeshPaintsPluginData,
+  applyIconFillsPluginData,
   applyShaderPaintsPluginData,
   applyLibrarySourcePluginData,
   applyTextPathBoxPluginData,
@@ -58,6 +57,7 @@ import { generatedFrameRecord, writesGeneratedFrame } from './generated'
 import { mergeOverrides, serializeRuntimePropertyOverrides } from './override-claims'
 import { exportedNode } from './resolved-bindings'
 import { slotDefinitionFields } from './slots'
+import { applyStrokeGeometry } from './stroke'
 import { serializeText } from './text'
 
 export type { KiwiNodeChange, SceneNodeToKiwiContext } from './context'
@@ -815,15 +815,8 @@ function applyNodeVisualProps(
   node: SceneNode,
   nc: KiwiNodeChange
 ): void {
-  if (node.independentStrokeWeights) {
-    nc.borderStrokeWeightsIndependent = true
-    nc.borderTopWeight = node.borderTopWeight
-    nc.borderRightWeight = node.borderRightWeight
-    nc.borderBottomWeight = node.borderBottomWeight
-    nc.borderLeftWeight = node.borderLeftWeight
-  }
-
-  if (node.fills.length > 0) nc.fillPaints = createFillPaints(context, node)
+  applyStrokeGeometry(node, nc)
+  if (node.fills.length > 0 && !hasIconFills(node)) nc.fillPaints = createFillPaints(context, node)
 
   context.serializeCornerRadii(node, nc)
   // Figma draws a polygon or star from its count and inner scale; its clipboard has no geometry.
@@ -849,15 +842,6 @@ function applyNodeVisualProps(
   applySharedStyleProps(context, node, nc)
   if (node.horizontalConstraint !== 'MIN') nc.horizontalConstraint = node.horizontalConstraint
   if (node.verticalConstraint !== 'MIN') nc.verticalConstraint = node.verticalConstraint
-  if (node.strokeCap !== 'NONE') nc.strokeCap = node.strokeCap
-  const rawNodeFields = effectiveFigmaRawNodeFields(node)
-  if (node.strokeJoin !== 'MITER' || 'strokeJoin' in rawNodeFields) {
-    nc.strokeJoin = node.strokeJoin
-  }
-  if (node.strokeMiterLimit !== DEFAULT_STROKE_MITER_LIMIT || 'miterLimit' in rawNodeFields) {
-    nc.miterLimit = node.strokeMiterLimit
-  }
-  if (node.dashPattern.length > 0) nc.dashPattern = node.dashPattern
   if (node.arcData) {
     nc.arcData = {
       startingAngle: node.arcData.startingAngle,
@@ -950,6 +934,7 @@ export function overridableNodeFields(
   context.serializeVariableBindings(node, nc, context.graph, context.varIdToGuid)
   applyMeshPaintsPluginData(node)
   applyShaderPaintsPluginData(node, context.graph.images)
+  applyIconFillsPluginData(node, context.graph.images)
   // An empty list clears inherited mesh metadata when this occurrence changes to a solid.
   nc.pluginData = mergePluginData(node.pluginData)
   return nc
@@ -1012,6 +997,7 @@ export function sceneNodeToKiwiWithContext(
 
   applyMeshPaintsPluginData(node)
   applyShaderPaintsPluginData(node, context.graph.images)
+  applyIconFillsPluginData(node, context.graph.images)
   applyExportSettingsPluginData(node)
   applyLibrarySourcePluginData(node)
   serializeNodeStatus(node, nc)

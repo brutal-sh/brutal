@@ -1,6 +1,8 @@
 import type { RenderColorSpace } from '@open-pencil/scene-graph/color'
+import { hasIconFills } from '@open-pencil/scene-graph/icons'
 import { assertScriptOutputs } from '@open-pencil/scene-graph/scripts'
 import { assertFragmentFrames } from '@open-pencil/scene-graph/shaders'
+import { resolvedPaintBindings } from '@open-pencil/scene-graph/variables'
 
 import { normalizeDashPattern } from '#core/canvas/strokes'
 import { lineStrokePath } from '#core/canvas/strokes/line'
@@ -412,6 +414,7 @@ function exportedFill(
 
 function renderNode(node: SceneNode, ctx: SVGExportContext): SVGNode | null {
   if (!node.visible) return null
+  node = { ...node, ...resolvedPaintBindings(ctx.graph, node) }
 
   const { attrs: groupAttrs, clipId } = buildGroupAttrs(node, ctx)
 
@@ -424,7 +427,7 @@ function renderNode(node: SceneNode, ctx: SVGExportContext): SVGNode | null {
     return svg('g', groupAttrs, renderTextNode(node, fill.color, ctx, fill.opacity))
   }
 
-  const visibleFills = node.fills.filter((f) => f.visible)
+  const visibleFills = node.fills.filter((f) => f.visible && !hasIconFills(node))
   const visibleStrokes = node.strokes.filter((s) => s.visible)
   const tint = ctx.tint?.(node) ?? []
   const ownFill = visibleFills.length > 0 && !hasPathLevelFills(node) ? visibleFills[0] : undefined

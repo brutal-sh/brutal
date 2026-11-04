@@ -31,6 +31,43 @@ async function arm() {
   )
 }
 
+test('the icon Fill row edits the glyph color and opacity through the shared controls', async () => {
+  const { page, canvas } = ctx
+  await arm()
+  await canvas.click(350, 250)
+  await expect(propertyField(page, 'icon-name')).toBeVisible()
+  await expect
+    .poll(async () => (await getSelectedNode(page))?.childIds.length ?? 0)
+    .toBeGreaterThan(0)
+  const icon = await getSelectedNode(page)
+  const pathId = icon?.childIds[0]
+  if (!icon || !pathId) throw new Error('Placed icon artwork missing')
+  const fill = page.getByRole('region', { name: 'Fill', exact: true })
+  const hex = fill.getByRole('textbox', { name: 'Fill', exact: true })
+  await expect(hex).toHaveValue('FFFFFF')
+  await hex.fill('1288AA')
+  await hex.press('Enter')
+  await hex.blur()
+  await expect
+    .poll(async () => (await getNodeById(page, pathId))?.strokes[0]?.color)
+    .toMatchObject({ r: 18 / 255, g: 136 / 255, b: 170 / 255 })
+  const opacity = fill.locator('[data-property="opacity"]')
+  await opacity.click()
+  const input = opacity.getByRole('spinbutton')
+  await input.fill('50')
+  await input.press('Enter')
+  await expect.poll(async () => (await getNodeById(page, pathId))?.strokes[0]?.opacity).toBe(0.5)
+  await canvas.undo()
+  await expect.poll(async () => (await getNodeById(page, pathId))?.strokes[0]?.opacity).toBe(1)
+  await canvas.undo()
+  await expect(hex).toHaveValue('FFFFFF')
+  await expect
+    .poll(async () => (await getNodeById(page, pathId))?.strokes[0]?.color)
+    .toEqual({ r: 1, g: 1, b: 1, a: 1 })
+  expect((await getSelectedNode(page))?.id).toBe(icon.id)
+  canvas.assertNoErrors()
+})
+
 test('Primitives focuses Rectangle while remembering Icon and restores trigger focus on Escape', async () => {
   const { page, canvas } = ctx
   await arm()
@@ -143,7 +180,7 @@ test('a placed icon saves as an editable named glyph and reopens through File Op
     icon: 'heart',
     width: 24,
     height: 24,
-    fill: '#FFFFFF'
+    fill: [{ type: 'color', color: '#FFFFFF', enabled: true }]
   })
   expect(document.children[0].children).toBeUndefined()
   const opening = page.waitForEvent('filechooser')

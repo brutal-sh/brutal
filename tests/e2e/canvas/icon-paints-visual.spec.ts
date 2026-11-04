@@ -16,7 +16,7 @@ const gradient = {
   ]
 } satisfies PenNode['fill']
 
-test('File Open keeps icon paint stacks, visibility, alpha and parent gradient bounds', async () => {
+async function openPaintedIcons(children: PenNode[], width: number, height: number) {
   const { page, canvas } = ctx
   await page.route('https://api.iconify.design/lucide.json*', (route) =>
     route.fulfill({
@@ -35,6 +35,27 @@ test('File Open keeps icon paint stacks, visibility, alpha and parent gradient b
   await page.evaluate(() => {
     window.showOpenFilePicker = undefined
   })
+  const opening = page.waitForEvent('filechooser')
+  await (await openAppMenu(page, 'File')).getByRole('menuitem', { name: /^Open…/ }).click()
+  await (
+    await opening
+  ).setFiles({
+    name: 'icon-paints.pen',
+    mimeType: 'application/json',
+    buffer: Buffer.from(
+      JSON.stringify({
+        version: '2.21',
+        children: [
+          { id: 'sheet', type: 'frame', layout: 'none', width, height, fill: '#18181B', children }
+        ]
+      })
+    )
+  })
+  await canvas.waitForInit()
+}
+
+test('File Open keeps icon paint stacks, visibility, alpha and parent gradient bounds', async () => {
+  const { page, canvas } = ctx
   const fills: PenNode['fill'][] = [
     '#FFFFFF',
     gradient,
@@ -57,31 +78,7 @@ test('File Open keeps icon paint stacks, visibility, alpha and parent gradient b
     height: 64,
     fill
   }))
-  const opening = page.waitForEvent('filechooser')
-  await (await openAppMenu(page, 'File')).getByRole('menuitem', { name: /^Open…/ }).click()
-  await (
-    await opening
-  ).setFiles({
-    name: 'icon-paints.pen',
-    mimeType: 'application/json',
-    buffer: Buffer.from(
-      JSON.stringify({
-        version: '2.21',
-        children: [
-          {
-            id: 'sheet',
-            type: 'frame',
-            layout: 'none',
-            width: 620,
-            height: 220,
-            fill: '#18181B',
-            children
-          }
-        ]
-      })
-    )
-  })
-  await canvas.waitForInit()
+  await openPaintedIcons(children, 620, 220)
   await expect.poll(() => getNodeById(page, 'paint-7')).not.toBeNull()
   const points = await page.evaluate(() => {
     const store = window.openPencil?.getStore?.()
@@ -103,4 +100,59 @@ test('File Open keeps icon paint stacks, visibility, alpha and parent gradient b
   expect(pixels[6][2]).toBeGreaterThan(pixels[1][2])
   canvas.assertNoErrors()
   expect(await canvas.screenshotCanvasRegion()).toMatchSnapshot('imported-icon-paints.png')
+})
+
+test('a centered icon samples mesh colors in the same space as the full paint swatch', async () => {
+  const { page, canvas } = ctx
+  const mesh: PenNode['fill'] = {
+    type: 'mesh_gradient',
+    columns: 2,
+    rows: 2,
+    colors: ['#FF0000', '#0000FF', '#00FF00', '#FFFFFF'],
+    points: [
+      { position: [0, 0], rightHandle: [0.2, 0.1] },
+      { position: [1, 0] },
+      { position: [0, 1] },
+      { position: [1, 1] }
+    ]
+  }
+  await openPaintedIcons(
+    [
+      {
+        id: 'mesh-icon',
+        type: 'icon',
+        library: 'lucide',
+        icon: 'heart',
+        x: 24,
+        y: 24,
+        width: 160,
+        height: 80,
+        fill: mesh
+      },
+      { id: 'mesh-swatch', type: 'rectangle', x: 224, y: 24, width: 160, height: 80, fill: mesh }
+    ],
+    408,
+    128
+  )
+  await expect.poll(() => getNodeById(page, 'mesh-icon')).not.toBeNull()
+  const points = await page.evaluate(() => {
+    const store = window.openPencil?.getStore?.()
+    if (!store) throw new Error('Editor unavailable')
+    store.clearSelection()
+    store.centerOn(204, 64, 1)
+    return [24, 224].flatMap((x) =>
+      [60, 80, 100].map((offset) => ({
+        x: store.state.panX + x + offset,
+        y: store.state.panY + 64
+      }))
+    )
+  })
+  await canvas.waitForRender()
+  const pixels = await readScenePixels(page, points)
+  for (let index = 0; index < 3; index++) {
+    for (let channel = 0; channel < 4; channel++)
+      expect(Math.abs(pixels[index][channel] - pixels[index + 3][channel])).toBeLessThanOrEqual(1)
+  }
+  canvas.assertNoErrors()
+  expect(await canvas.screenshotCanvasRegion()).toMatchSnapshot('centered-icon-mesh.png')
 })

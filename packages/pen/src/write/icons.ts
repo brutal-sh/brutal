@@ -1,7 +1,14 @@
 import { isEqual, omit } from 'es-toolkit'
 
 import type { SceneGraph, SceneNode } from '@open-pencil/scene-graph'
-import { iconDrawing, isIconModified, readIcon, readIconTint } from '@open-pencil/scene-graph/icons'
+import {
+  hasIconFills,
+  iconDrawing,
+  isIconModified,
+  readIcon,
+  readIconPaintSource,
+  readIconTint
+} from '@open-pencil/scene-graph/icons'
 import { createDefaultNode } from '@open-pencil/scene-graph/node-defaults'
 import {
   contentPluginData,
@@ -9,6 +16,7 @@ import {
   withoutPluginData
 } from '@open-pencil/scene-graph/plugin-data'
 import type { Color } from '@open-pencil/scene-graph/primitives'
+import { paintBindingTarget } from '@open-pencil/scene-graph/variables'
 import { validateVectorNetwork } from '@open-pencil/scene-graph/vector-network'
 
 /** Geometry is checked below; file-source provenance is not authored interchange content. */
@@ -35,13 +43,15 @@ function supportedFrame(node: SceneNode): boolean {
     node.type === 'FRAME' &&
     node.width === 24 &&
     node.height === 24 &&
-    !node.fills.length &&
+    (hasIconFills(node) || !node.fills.length) &&
     !node.strokes.length &&
     node.layoutMode === 'NONE' &&
     !node.clipsContent &&
     node.cornerRadius === 0 &&
     !node.independentCorners &&
-    !Object.keys(node.boundVariables).length
+    Object.keys(node.boundVariables).every(
+      (field) => hasIconFills(node) && paintBindingTarget(field)?.list === 'fills'
+    )
   )
 }
 
@@ -69,7 +79,10 @@ function supportedPath(path: SceneNode): boolean {
     derivedTextGlyphs:
       path.derivedTextGlyphs?.length === 0 ? defaults.derivedTextGlyphs : path.derivedTextGlyphs,
     pluginData: contentPluginData(
-      withoutPluginData(path.pluginData, [OPEN_PENCIL_PLUGIN_DATA.iconTint])
+      withoutPluginData(path.pluginData, [
+        OPEN_PENCIL_PLUGIN_DATA.iconTint,
+        OPEN_PENCIL_PLUGIN_DATA.iconPaintSource
+      ])
     )
   }
   return isEqual(omit(projected, PATH_FIELDS), omit(defaults, PATH_FIELDS))
@@ -100,7 +113,7 @@ function uniformTint(paths: SceneNode[]): Color | undefined {
 export function iconForExport(
   graph: SceneGraph,
   node: SceneNode
-): { library: string; icon: string; color: Color } | undefined {
+): { library: string; icon: string; color?: Color } | undefined {
   const icon = readIcon(node)
   // shortcut: only the measured 24px Lucide path contract; extend after canonical set/size roundtrips.
   if (
@@ -113,6 +126,24 @@ export function iconForExport(
     iconDrawing(graph, node) !== icon.drawing
   )
     return
+  if (hasIconFills(node)) {
+    const paths = graph.getChildren(node.id)
+    if (
+      !paths.length ||
+      paths.some((path) => {
+        const source = readIconPaintSource(path)
+        const tint = readIconTint(path)
+        return (
+          !supportedPath(path) ||
+          !source ||
+          (source.fills.length > 0 && !tint.includes('fill')) ||
+          (source.strokes.length > 0 && !tint.includes('stroke'))
+        )
+      })
+    )
+      return
+    return { library: 'lucide', icon: icon.name.slice('lucide:'.length) }
+  }
   const color = uniformTint(graph.getChildren(node.id))
   return color ? { library: 'lucide', icon: icon.name.slice('lucide:'.length), color } : undefined
 }

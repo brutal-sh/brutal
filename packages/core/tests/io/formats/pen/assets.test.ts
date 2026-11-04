@@ -155,7 +155,7 @@ describe('penFormat.readDocument — assets', () => {
       )
       const frame = getNodeOrThrow(graph, 'painted')
       const [filled, stroked] = graph.getChildren(frame.id)
-      expect(frame.fills).toEqual([])
+      expect(frame.fills).toHaveLength(expected.length)
       expect(filled.fills).toHaveLength(expected.length)
       expect(stroked.strokes).toHaveLength(expected.length)
       for (const [index, paint] of expected.entries()) {

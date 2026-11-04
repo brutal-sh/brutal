@@ -8,6 +8,7 @@ import type {
   SceneGraph,
   SceneNode
 } from '@open-pencil/scene-graph'
+import { hasIconFills } from '@open-pencil/scene-graph/icons'
 import type { Color, GUID, Matrix } from '@open-pencil/scene-graph/primitives'
 
 import { variableAlias } from '../variable/bindings'
@@ -261,6 +262,7 @@ export function applyColorVariableBinding(
 
 /** A node's fills with their colour variable aliases, for the record and for override claims alike. */
 export function createFillPaints(context: SceneNodeToKiwiContext, node: SceneNode): Paint[] {
+  if (hasIconFills(node)) return []
   return node.fills.map((fill, index) =>
     applyColorVariableBinding(context, node, context.fillToKiwiPaint(fill), `fills/${index}/color`)
   )

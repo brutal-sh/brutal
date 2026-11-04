@@ -8,9 +8,11 @@ import {
   hasTrimmedShaft,
   trimArrowShafts
 } from '@open-pencil/scene-graph/arrow-caps'
+import { hasIconFills } from '@open-pencil/scene-graph/icons'
 import Matrix from '@open-pencil/scene-graph/matrix'
 import type { Color } from '@open-pencil/scene-graph/primitives'
 import { textLinesOverflow } from '@open-pencil/scene-graph/text'
+import { resolvedPaintBindings } from '@open-pencil/scene-graph/variables'
 
 import { createSceneGeometry, nodeOrientationMatrix, projectedNode } from '#core/geometry'
 import { shownText } from '#core/text/case'
@@ -69,7 +71,8 @@ function drawVisibleFills(
   graph: SceneGraph,
   draw: (fill: Fill) => void
 ): void {
-  paintFills(r, node.fills, node, graph, draw)
+  if (hasIconFills(node)) return
+  paintFills(r, resolvedPaintBindings(graph, node).fills ?? node.fills, node, graph, draw)
 }
 
 function hasNodeTransform(node: SceneNode): boolean {
@@ -429,8 +432,9 @@ function forVisibleStrokes(
   graph: SceneGraph,
   draw: (stroke: SceneNode['strokes'][number], color: Color) => void
 ): void {
-  for (let index = 0; index < node.strokes.length; index++) {
-    const stroke = node.strokes[index]
+  const strokes = resolvedPaintBindings(graph, node).strokes ?? node.strokes
+  for (let index = 0; index < strokes.length; index++) {
+    const stroke = strokes[index]
     if (!stroke.visible) continue
     const draws = applyStrokeShader(r, stroke, index, node, graph)
     try {

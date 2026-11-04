@@ -3,7 +3,7 @@ import * as v from 'valibot'
 import { colorSchema } from '../color/schema'
 import { MAX_MESH_DIMENSION } from '../constants'
 import { finiteNumberSchema, matrixSchema, vectorSchema } from '../primitives/schema'
-import type { FillType, GradientTransform } from '../types'
+import type { FillType, GradientTransform, Stroke } from '../types'
 
 const meshDimensionSchema = v.pipe(
   v.number(),
@@ -96,4 +96,25 @@ export const fillSchema = v.looseObject({
   imageSource: v.optional(v.object({ hash: v.string(), url: v.string() })),
   patternSpacing: v.optional(vectorSchema),
   noiseSize: v.optional(vectorSchema)
+})
+
+/** A stored stroke keeps the SVG geometry even when the icon has no authored paints. */
+export const strokeSchema: v.GenericSchema<unknown, Stroke> = v.looseObject({
+  ...fillSchema.entries,
+  weight: finiteNumberSchema,
+  align: v.picklist(['INSIDE', 'CENTER', 'OUTSIDE']),
+  cap: v.optional(
+    v.picklist([
+      'NONE',
+      'ROUND',
+      'SQUARE',
+      'ARROW_LINES',
+      'ARROW_EQUILATERAL',
+      'TRIANGLE_FILLED',
+      'DIAMOND_FILLED',
+      'CIRCLE_FILLED'
+    ])
+  ),
+  join: v.optional(v.picklist(['MITER', 'BEVEL', 'ROUND'])),
+  dashPattern: v.optional(v.array(finiteNumberSchema))
 })

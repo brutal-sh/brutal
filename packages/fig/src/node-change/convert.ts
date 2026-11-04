@@ -29,6 +29,7 @@ import {
   extractTextPathBox,
   extractPluginData,
   restoreMeshPaints,
+  restoreIconFills,
   extractPluginRelaunchData,
   readNodeChangePluginData
 } from './plugin-data'
@@ -742,7 +743,7 @@ export function nodeChangeToProps(
     internalOnly: nc.internalOnly === true || sharedStyleType(nc.styleType) !== null,
     blendMode: (nc.blendMode as Fill['blendMode']) ?? 'PASS_THROUGH',
     booleanOperation: mapBooleanOperation(nc),
-    fills: restoreMeshPaints(convertFills(nc.fillPaints), nc, 'fills'),
+    fills: restoreIconFills(nc, restoreMeshPaints(convertFills(nc.fillPaints), nc, 'fills')),
     strokes: restoreMeshPaints(
       convertStrokes(
         nc.strokePaints,

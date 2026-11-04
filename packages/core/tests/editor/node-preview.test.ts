@@ -4,6 +4,11 @@ import { createEditor } from '@open-pencil/core'
 import { exportFigFile, parseFigFile } from '@open-pencil/core/io/formats/fig'
 import { initCodec } from '@open-pencil/kiwi/fig/codec'
 import { SceneGraph, type SceneNode } from '@open-pencil/scene-graph'
+import { copyFills } from '@open-pencil/scene-graph/copy'
+import { hasInstanceOverride } from '@open-pencil/scene-graph/instances'
+
+import { placeIcon } from '#core/icons/render'
+import { buildIconData } from '#core/icons/svg'
 
 function layerNamed(graph: SceneGraph, name: string) {
   const found = [...graph.getAllNodes()].find((node) => node.name === name)
@@ -32,6 +37,86 @@ async function saveAndReopen(graph: SceneGraph) {
 }
 
 describe('owned node previews', () => {
+  test.each(['cancel', 'undo'] as const)(
+    'nested icon Fill preview %s restores inheritance and follows later definition changes',
+    (ending) => {
+      const editor = createEditor()
+      try {
+        const graph = editor.graph
+        const component = graph.createNode('COMPONENT', editor.state.currentPageId)
+        const icon = buildIconData(
+          { body: '<path fill="currentColor" d="M2 2h20v20H2z"/>' },
+          'lucide',
+          'heart',
+          24,
+          24,
+          24
+        )
+        const source = placeIcon(graph, component.id, icon, {
+          size: 24,
+          color: { r: 1, g: 1, b: 1, a: 1 }
+        })
+        const instance = graph.createInstance(component.id, editor.state.currentPageId)
+        const copy = instance && graph.getChildren(instance.id)[0]
+        const glyph = copy && graph.getChildren(copy.id)[0]
+        if (!instance || !copy || !glyph) throw new Error('Nested icon missing')
+        expect(hasInstanceOverride(graph, copy.id, 'fills')).toBe(false)
+        expect(hasInstanceOverride(graph, glyph.id, 'fills')).toBe(false)
+        const preview = editor.beginNodePreview('Icon Fill')
+        preview.update(copy.id, {
+          fills: [{ ...copy.fills[0], color: { r: 0, g: 1, b: 0, a: 1 } }]
+        })
+        if (ending === 'cancel') preview.cancel()
+        else {
+          preview.commit()
+          editor.undo.undo()
+        }
+        expect(hasInstanceOverride(graph, copy.id, 'fills')).toBe(false)
+        expect(hasInstanceOverride(graph, glyph.id, 'fills')).toBe(false)
+        graph.updateNode(source.id, {
+          fills: [{ ...source.fills[0], color: { r: 1, g: 0, b: 0, a: 1 } }]
+        })
+        graph.syncInstance(instance.id)
+        expect(graph.getNode(glyph.id)?.fills[0].color).toEqual({ r: 1, g: 0, b: 0, a: 1 })
+      } finally {
+        editor.dispose()
+      }
+    }
+  )
+
+  test('cancelling an icon fill preview publishes no committed child edits', () => {
+    const editor = createEditor()
+    try {
+      const white = { r: 1, g: 1, b: 1, a: 1 }
+      const icon = buildIconData(
+        { body: '<path fill="currentColor" d="M2 2h20v20H2z"/>' },
+        'lucide',
+        'heart',
+        24,
+        24,
+        24
+      )
+      const frame = placeIcon(editor.graph, editor.state.currentPageId, icon, {
+        size: 24,
+        color: white
+      })
+      const before = copyFills(editor.graph.getChildren(frame.id)[0].fills)
+      const preview = editor.beginNodePreview('Icon color')
+      preview.update(frame.id, {
+        fills: [{ ...frame.fills[0], color: { r: 0, g: 1, b: 0, a: 1 } }]
+      })
+      const committed: string[] = []
+      const unbind = editor.graph.onNodeEvents({ updated: (id) => committed.push(id) })
+      preview.cancel()
+      unbind()
+      expect(committed).toEqual([])
+      expect(editor.graph.getChildren(frame.id)[0].fills).toEqual(before)
+      expect(editor.undo.canUndo).toBe(false)
+    } finally {
+      editor.dispose()
+    }
+  })
+
   test('publishes layout children with their layout provenance and preserves one-step undo', () => {
     const editor = createEditor()
     try {

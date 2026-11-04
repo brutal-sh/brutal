@@ -6,7 +6,7 @@ import { isEmptyObject } from 'es-toolkit/predicate'
 import type { SceneGraph, SceneNode } from '@open-pencil/scene-graph'
 import { behaviourOwner, findLayerByPath } from '@open-pencil/scene-graph/behaviours'
 import { findComponentPropertyTargets } from '@open-pencil/scene-graph/components'
-import { isIconModified, isNamedIcon, readIcon } from '@open-pencil/scene-graph/icons'
+import { hasIconFills, isIconModified, isNamedIcon, readIcon } from '@open-pencil/scene-graph/icons'
 import { instanceMainComponent } from '@open-pencil/scene-graph/instances'
 
 import { drawsAsMain } from './drawn'
@@ -174,7 +174,16 @@ function usedLayer(
       ...referenceValues(graph, node, component)
     }
   const icon = readIcon(node)
-  return icon && isNamedIcon(icon) && !isIconModified(graph, node)
+  const fill = node.fills[0]
+  const namedPaint =
+    !hasIconFills(node) ||
+    (node.fills.length === 1 &&
+      fill?.type === 'SOLID' &&
+      fill.visible &&
+      fill.opacity === 1 &&
+      fill.color.a === 1 &&
+      (!fill.blendMode || fill.blendMode === 'NORMAL'))
+  return icon && namedPaint && isNamedIcon(icon) && !isIconModified(graph, node)
     ? { type: 'icon', icon: icon.name }
     : null
 }

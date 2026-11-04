@@ -1,7 +1,8 @@
-import { omit } from 'es-toolkit'
+import { isEqual, omit } from 'es-toolkit'
 
 import type { Fill, SceneNode, Stroke, VectorNetwork } from '../types'
-import { readIcon, readIconTint } from './model'
+import { hasIconFills, readIcon, readIconPaintSource, readIconTint } from './model'
+import { iconPathPaints } from './paints'
 
 /** What reading an icon's paths needs of a graph. */
 interface IconGraph {
@@ -108,11 +109,22 @@ function hash(text: string): string {
 export function iconGlyph(graph: IconGraph, frame: SceneNode): string {
   const description = graph.getChildren(frame.id).map((path) => {
     const tint = readIconTint(path)
+    const source = hasIconFills(frame) ? readIconPaintSource(path) : null
+    const expected = iconPathPaints(frame, path)
     return {
       type: path.type,
       shape: shape(path.vectorNetwork),
-      fills: path.fills.map((fill) => paint(fill, tint.includes('fill'))),
-      strokes: path.strokes.map((stroke) => paint(stroke, tint.includes('stroke'))),
+      fills: (source && tint.includes('fill') ? source.fills : path.fills).map((fill) =>
+        paint(fill, tint.includes('fill'))
+      ),
+      strokes: (source && tint.includes('stroke') ? source.strokes : path.strokes).map((stroke) =>
+        paint(stroke, tint.includes('stroke'))
+      ),
+      editedPaints:
+        expected &&
+        (!isEqual(expected.fills, path.fills) || !isEqual(expected.strokes, path.strokes))
+          ? { fills: path.fills, strokes: path.strokes }
+          : undefined,
       ends: [path.strokeCap, path.strokeJoin],
       // Resizing leaves these alone, so they count, unlike a path's place and stroke weight.
       rotation: round(path.rotation),
@@ -140,7 +152,10 @@ export function iconDrawing(graph: IconGraph, frame: SceneNode): string {
             width: path.width,
             height: path.height,
             network: path.vectorNetwork,
-            weights: path.strokes.map((stroke) => stroke.weight)
+            weights:
+              (hasIconFills(frame) ? readIconPaintSource(path)?.strokes : undefined)?.map(
+                (stroke, index) => path.strokes[index]?.weight ?? stroke.weight
+              ) ?? path.strokes.map((stroke) => stroke.weight)
           }))
         },
         'float32'

@@ -1,7 +1,7 @@
 import { readPluginData, withPluginData } from '../plugin-data/field'
 import { OPEN_PENCIL_PLUGIN_DATA } from '../plugin-data/fields'
 import type { SceneNode } from '../types'
-import type { Icon, IconPaint } from './schema'
+import type { Icon, IconPaint, IconPaintSource } from './schema'
 
 /** The icon a frame draws, or null when it is not an icon or its data is unreadable. */
 export function readIcon(node: SceneNode): Icon | null {
@@ -59,5 +59,36 @@ export function withIconTint(
     node.pluginData,
     OPEN_PENCIL_PLUGIN_DATA.iconTint,
     paints.length > 0 ? [...paints] : undefined
+  )
+}
+
+/** Only explicitly opted-in icons use the frame's fills as glyph paints. */
+export function hasIconFills(node: SceneNode): boolean {
+  return (
+    (node.type === 'FRAME' || node.type === 'INSTANCE' || node.type === 'COMPONENT') &&
+    readIcon(node)?.paintSource === 'frame'
+  )
+}
+
+export function readIconPaintSource(node: SceneNode): IconPaintSource | null {
+  return readPluginData(node.pluginData, OPEN_PENCIL_PLUGIN_DATA.iconPaintSource) ?? null
+}
+
+/** Records intrinsic SVG paints before any authored icon paints are applied. */
+export function withIconPaintSource(
+  node: SceneNode,
+  source: IconPaintSource | null = node
+): SceneNode['pluginData'] {
+  return withPluginData(
+    node.pluginData,
+    OPEN_PENCIL_PLUGIN_DATA.iconPaintSource,
+    source
+      ? {
+          fills: source.fills,
+          strokes: source.strokes,
+          width: source.width ?? node.width,
+          height: source.height ?? node.height
+        }
+      : undefined
   )
 }

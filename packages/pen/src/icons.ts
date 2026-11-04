@@ -1,15 +1,14 @@
 import { pick } from 'es-toolkit/object'
 import { isEqual } from 'es-toolkit/predicate'
 
-import type { Fill, GradientTransform, SceneGraph, SceneNode } from '@open-pencil/scene-graph'
+import type { Fill, SceneGraph, SceneNode } from '@open-pencil/scene-graph'
 import { BLACK } from '@open-pencil/scene-graph/constants'
-import { copyFill } from '@open-pencil/scene-graph/copy'
-import { composeGradientTransforms } from '@open-pencil/scene-graph/gradient'
 import {
   iconDrawing,
   iconGlyph,
   readIcon,
-  readIconTint,
+  readIconPaintSource,
+  withIconPaintSource,
   withIcon
 } from '@open-pencil/scene-graph/icons'
 import {
@@ -29,18 +28,6 @@ import { resolveOptionalNumber, resolveString } from './variables'
 /** Space between the icon components on their page. */
 const ICON_COMPONENT_GAP = 16
 
-/** Keep a glyph's stroke geometry and intrinsic opacity while applying the icon's paint stack. */
-function glyphPaints<T extends Fill>(source: T[], paints: Fill[], local: GradientTransform): T[] {
-  return paints.flatMap((paint) =>
-    source.map((base) => {
-      const next = copyFill({ ...base, ...paint, opacity: base.opacity * paint.opacity })
-      if (next.gradientTransform)
-        next.gradientTransform = composeGradientTransforms(next.gradientTransform, local)
-      return next
-    })
-  )
-}
-
 /** A nested instance can point through painted copies before reaching the original glyph. */
 function glyphSource(graph: SceneGraph, glyph: SceneNode): SceneNode {
   let source = glyph
@@ -56,37 +43,27 @@ function glyphSource(graph: SceneGraph, glyph: SceneNode): SceneNode {
 
 function paintGlyph(graph: SceneGraph, frame: SceneNode, paints: Fill[]): void {
   for (const glyph of graph.getChildren(frame.id)) {
+    if (readIconPaintSource(glyph)) continue
     const source = frame.type === 'INSTANCE' ? glyphSource(graph, glyph) : glyph
-    const tint = readIconTint(source)
-    const local = {
-      m00: glyph.width / frame.width,
-      m01: 0,
-      m02: glyph.x / frame.width,
-      m10: 0,
-      m11: glyph.height / frame.height,
-      m12: glyph.y / frame.height
-    }
-    const fills = tint.includes('fill') ? glyphPaints(source.fills, paints, local) : glyph.fills
-    const strokes = tint.includes('stroke')
-      ? glyphPaints(source.strokes, paints, local)
-      : glyph.strokes
-    const changed = [
-      ...(isEqual(fills, glyph.fills) ? [] : ['fills']),
-      ...(isEqual(strokes, glyph.strokes) ? [] : ['strokes'])
-    ]
-    if (!changed.length) continue
-    graph.updateNode(glyph.id, { fills, strokes })
-    if (frame.type === 'INSTANCE') recordInstanceOverride(graph, glyph.id, changed)
-  }
-  const icon = readIcon(frame)
-  if (icon)
-    graph.updateNode(frame.id, {
-      pluginData: withIcon(frame, {
-        ...icon,
-        glyph: iconGlyph(graph, frame),
-        drawing: iconDrawing(graph, frame)
-      })
+    graph.updateNode(glyph.id, {
+      pluginData: withIconPaintSource(glyph, readIconPaintSource(source) ?? source)
     })
+  }
+  const main = frame.type === 'INSTANCE' ? instanceMainComponent(graph, frame) : null
+  const icon = readIcon(frame) ?? (main && readIcon(main))
+  if (!icon) return
+  graph.updateNode(frame.id, {
+    fills: paints,
+    pluginData: withIcon(frame, { ...icon, paintSource: 'frame' })
+  })
+  graph.updateNode(frame.id, {
+    pluginData: withIcon(frame, {
+      ...icon,
+      paintSource: 'frame',
+      glyph: iconGlyph(graph, frame),
+      drawing: iconDrawing(graph, frame)
+    })
+  })
 }
 
 /**
@@ -98,13 +75,16 @@ export function drawIcon(node: SceneNode, pen: PenNode, build: Build): void {
   const { graph, ctx } = build
   const paints = node.fills
   const color = node.fills.find((fill) => fill.type === 'SOLID')?.color ?? { ...BLACK }
-  node.fills = []
   for (const childId of node.childIds) graph.deleteNode(childId)
   const library = resolveString(pen.library, ctx)
   const icon = resolveString(pen.icon, ctx)
   const size = Math.min(node.width, node.height)
   const name = library && icon ? iconName(library, icon) : null
-  if (!library || !name || size <= 0) return
+  if (!library || !name || size <= 0) {
+    node.fills = []
+    return
+  }
+  graph.updateNode(node.id, { pluginData: withIcon(node, { name, paintSource: 'frame' }) })
   const options = iconOptions(library, resolveOptionalNumber(pen.weight, ctx))
   if (!build.icons?.draw(graph, node.id, name, size, color, options)) return
   const dx = (node.width - size) / 2
@@ -191,7 +171,6 @@ function showsReplacedGlyph(graph: SceneGraph, copy: SceneNode, sourceId: string
 export function useIconComponent(node: SceneNode, pen: PenNode, build: Build): void {
   const { graph } = build
   const paints = node.fills
-  node.fills = []
   const own = structuredClone(pick(node, INSTANCE_SYNC_PROPS))
   const componentId = iconComponent(build, pen, node.width, node.height)
   if (!node.componentId) {

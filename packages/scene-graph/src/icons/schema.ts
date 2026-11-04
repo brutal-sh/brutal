@@ -1,5 +1,9 @@
 import * as v from 'valibot'
 
+import { fillSchema, strokeSchema } from '../paints/schema'
+import { finiteNumberSchema } from '../primitives/schema'
+import type { Fill } from '../types'
+
 /**
  * An icon's name in its set, `prefix:name`, as Iconify names icons. Names may hold dots, as SF
  * Symbols' do (`house.fill`).
@@ -20,6 +24,8 @@ export const iconSchema = v.object({
   glyph: v.optional(v.string()),
   /** Exact placed geometry for formats that replace paths with a named glyph. */
   drawing: v.optional(v.string()),
+  /** Authored paints live on the frame; its paths derive their tinted paints from them. */
+  paintSource: v.optional(v.literal('frame')),
   /**
    * Set for an icon drawn from one of our own sets rather than Iconify, so it is drawn again and
    * exported as the paths it draws rather than by its name alone.
@@ -34,3 +40,15 @@ export const ICON_PAINTS = ['fill', 'stroke'] as const
 export type IconPaint = (typeof ICON_PAINTS)[number]
 
 export const iconTintSchema = v.pipe(v.array(v.picklist(ICON_PAINTS)), v.minLength(1))
+
+export const iconFillsSchema: v.GenericSchema<unknown, Fill[]> = v.array(fillSchema)
+
+/** Intrinsic SVG paints, independent of the icon's editable paint stack. */
+export const iconPaintSourceSchema = v.object({
+  fills: iconFillsSchema,
+  strokes: v.array(strokeSchema),
+  width: v.optional(finiteNumberSchema),
+  height: v.optional(finiteNumberSchema)
+})
+
+export type IconPaintSource = v.InferOutput<typeof iconPaintSourceSchema>

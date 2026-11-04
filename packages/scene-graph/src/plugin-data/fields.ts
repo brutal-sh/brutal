@@ -6,7 +6,7 @@ import { commentThreadsSchema } from '../comments/schema'
 import { isExportFormatId, type ExportFormatId } from '../export-format'
 import { clampExportScale } from '../export-scale'
 import { FIG_COMPRESSIONS } from '../fig-compression'
-import { iconSchema, iconTintSchema } from '../icons/schema'
+import { iconFillsSchema, iconPaintSourceSchema, iconSchema, iconTintSchema } from '../icons/schema'
 import { fillSchema } from '../paints/schema'
 import type { Rect } from '../primitives'
 import { scriptDefinitionSchema } from '../scripts/schema'
@@ -240,6 +240,10 @@ export const OPEN_PENCIL_PLUGIN_DATA = {
   icon: jsonPluginDataField('icon', 'content', iconSchema),
   /** Which of an icon path's paints its icon's color sets, on each path the source drew in it. */
   iconTint: jsonPluginDataField('iconTint', 'content', iconTintSchema),
+  /** Intrinsic paints a named icon projects into its generated paths. */
+  iconPaintSource: jsonPluginDataField('iconPaintSource', 'content', iconPaintSourceSchema),
+  /** FIG transport for logical icon fills; native frame paints remain empty. */
+  iconFills: jsonPluginDataField('iconFills', 'format', iconFillsSchema),
   /** One entry per paint that draws a shader, matched to its image paint by the frame's hash. */
   shader: jsonPluginDataField('shader', 'content', shaderPaintSchema)
 } satisfies Record<string, PluginDataKey>

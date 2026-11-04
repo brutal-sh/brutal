@@ -15,6 +15,7 @@ import { canCreateInstance } from './cycles'
 import { INSTANCE_OVERRIDE_FIELDS, INSTANCE_SYNC_PROPS } from './fields'
 import {
   clearInstanceOverrides,
+  cloneInstanceOverrideState,
   getInstanceOverride,
   hasInstanceOverride as hasNodeInstanceOverride,
   setInstanceOverride
@@ -300,7 +301,7 @@ export function recordInstanceOverride(
 
   if (relevant.length === 0) return
 
-  for (const field of relevant)
-    setInstanceOverride(instance.instanceOverrides, instance.id, nodeId, field)
-  graph.updateNode(instance.id, { instanceOverrides: instance.instanceOverrides })
+  const instanceOverrides = cloneInstanceOverrideState(instance.instanceOverrides)
+  for (const field of relevant) setInstanceOverride(instanceOverrides, instance.id, nodeId, field)
+  graph.updateNode(instance.id, { instanceOverrides })
 }

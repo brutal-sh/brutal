@@ -6,6 +6,7 @@ import {
 import { compact } from 'es-toolkit'
 
 import type { SceneGraph, SceneNode } from '@open-pencil/scene-graph'
+import { hasIconFills } from '@open-pencil/scene-graph/icons'
 import {
   forEachInstanceOverride,
   overriddenBindingField
@@ -182,7 +183,7 @@ function bindingClaim(
 ): Omit<KiwiSymbolOverridePayload, 'guidPath'> | undefined {
   const paints = paintBindingOverride(context, target, bindingField)
   if (paints)
-    return paintBindingTarget(bindingField)?.colorIndex === undefined
+    return !hasIconFills(target) && paintBindingTarget(bindingField)?.colorIndex === undefined
       ? paints
       : { ...paints, pluginData: nodeFields().pluginData }
   const entry = overrideVariableBindingEntry(

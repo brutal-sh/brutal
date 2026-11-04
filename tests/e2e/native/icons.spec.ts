@@ -9,6 +9,8 @@ import { toolbarFlyoutItemTestId, toolbarFlyoutTestId } from '@open-pencil/vue/t
 import { createNativeLayerFixture } from '#tests/helpers/tauri/editor-snapshot'
 import { emitNativeMenuAction } from '#tests/helpers/tauri/invoke'
 
+const FILL_HEX = 'section[aria-label="Fill"] input[aria-label="Fill"]'
+
 async function checkIconControls() {
   const sections = await browser.execute(() =>
     [...document.querySelectorAll('section[aria-label]')]
@@ -184,27 +186,27 @@ describe('native editable icon persistence', () => {
         ),
         true
       )
-      const color = await $('[data-property="icon-color"] [data-test-id="color-hex-input"]')
+      const color = await $(FILL_HEX)
       // The embedded driver's replacement appends after Vue restores the cleared field.
       // Exercise the change handler here; physical keyboard replacement remains a separate check.
-      await browser.execute(() => {
-        const input = document.querySelector<HTMLInputElement>(
-          '[data-property="icon-color"] [data-test-id="color-hex-input"]'
-        )
+      await browser.execute((selector) => {
+        const input = document.querySelector<HTMLInputElement>(selector)
         if (!input) throw new Error('Native icon color input missing')
         input.value = '1288AA'
         input.dispatchEvent(new Event('change', { bubbles: true }))
-      })
+      }, FILL_HEX)
       assert.equal((await color.getValue()).toUpperCase(), '1288AA', 'Hex edit did not commit')
       await browser.waitUntil(() =>
         browser.execute(() => window.openPencil?.getStore?.().hasUnsavedChanges() === true)
       )
       await emitNativeMenuAction('save')
-      await browser.waitUntil(async () => {
-        const icon = parsePenDocument(await readFile(path, 'utf8')).children[0]
-        return icon.fill === '#1288AA'
-      })
+      await browser.waitUntil(() =>
+        browser.execute(() => window.openPencil?.getStore?.().hasUnsavedChanges() === false)
+      )
       const saved = await readFile(path, 'utf8')
+      assert.deepEqual(parsePenDocument(saved).children[0].fill, [
+        { type: 'color', color: '#1288AA', enabled: true }
+      ])
       assert.deepEqual(
         parsePenDocument(saved).children.map((node) => ({
           id: node.id,
@@ -242,7 +244,7 @@ describe('native editable icon persistence', () => {
       const reopenedName = await $('[data-property="icon-name"]')
       await reopenedName.waitForDisplayed()
       assert.ok((await reopenedName.getText()).includes('heart'))
-      const reopenedColor = await $('[data-property="icon-color"] [data-test-id="color-hex-input"]')
+      const reopenedColor = await $(FILL_HEX)
       assert.equal((await reopenedColor.getValue()).toUpperCase(), '1288AA')
       assert.equal(
         await browser.execute(() => window.openPencil?.getStore?.().hasUnsavedChanges()),
