@@ -3,6 +3,7 @@ import { parseColor } from '@open-pencil/scene-graph/color'
 import { BLACK } from '@open-pencil/scene-graph/constants'
 import {
   iconGlyph,
+  iconDrawing,
   iconLayerName,
   isPlacedIconName,
   readIcon,
@@ -137,7 +138,8 @@ function recordIcon(graph: SceneGraph, frameId: string, name: string, options?: 
   const frame = graph.getNode(frameId)
   if (!frame) return
   const glyph = iconGlyph(graph, frame)
-  const icon = options ? { name, glyph, options } : { name, glyph }
+  const drawing = iconDrawing(graph, frame)
+  const icon = options ? { name, glyph, drawing, options } : { name, glyph, drawing }
   graph.updateNode(frameId, { pluginData: withIcon(frame, icon) })
 }
 

@@ -5,9 +5,10 @@ import { expectDefined } from '#core-tests/helpers/assert'
 import { SkiaRenderer } from '@open-pencil/core/canvas'
 import { exportFigFile, parseFigFile } from '@open-pencil/core/io/formats/fig'
 import { initCanvasKit, renderNodesToImage } from '@open-pencil/core/io/formats/raster'
+import { writePenDocument } from '@open-pencil/pen'
 import { SceneGraph } from '@open-pencil/scene-graph'
 import { parseColor } from '@open-pencil/scene-graph/color'
-import { readIcon, readIconTint } from '@open-pencil/scene-graph/icons'
+import { iconDrawing, readIcon, readIconTint } from '@open-pencil/scene-graph/icons'
 
 import { iconColor, placeIcon, recolorIcon, swapIcon } from '#core/icons/render'
 import { buildIconData } from '#core/icons/svg'
@@ -22,6 +23,30 @@ function insertIcon(graph: SceneGraph, body: string, viewBox = 24, size = 24) {
 }
 
 describe('placeIcon', () => {
+  test('keeps fractional glyph geometry exportable after a .fig round trip', async () => {
+    const graph = new SceneGraph()
+    const icon = buildIconData(
+      {
+        body: '<path fill="none" stroke="currentColor" stroke-width="2" d="M2.12345 8.56789L12 20L22 8Z"/>'
+      },
+      'lucide',
+      'heart',
+      24,
+      24,
+      24
+    )
+    const frame = placeIcon(graph, graph.getPages()[0].id, icon, { size: 24, color: BLACK })
+    const bytes = await exportFigFile(graph)
+    const reopened = await parseFigFile(bytes.buffer as ArrayBuffer)
+    const after = expectDefined(reopened.getNode(frame.id))
+    expect(iconDrawing(reopened, after)).toBe(expectDefined(readIcon(after)?.drawing))
+    expect(writePenDocument(reopened).children[0]).toMatchObject({
+      type: 'icon',
+      library: 'lucide',
+      icon: 'heart'
+    })
+  })
+
   test('leaves out shapes the SVG hides', () => {
     const body = (hidden: string, none: string) =>
       `<g ${hidden}><path d="M2 2h8v8H2z"/></g><path ${none} d="M14 2h8v8h-8z"/><path d="M2 14h8v8H2z"/>`

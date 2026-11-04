@@ -1,9 +1,14 @@
 import type { SceneGraph, SceneNode } from '@open-pencil/scene-graph'
 import { colorToHex8 } from '@open-pencil/scene-graph/color'
 import { getNodeLocalMatrix } from '@open-pencil/scene-graph/coordinate'
+import { readIcon } from '@open-pencil/scene-graph/icons'
 import { authoredLayoutSizing, layoutJustification } from '@open-pencil/scene-graph/layout'
 import Matrix from '@open-pencil/scene-graph/matrix'
-import { OPEN_PENCIL_PLUGIN_DATA, readPluginData } from '@open-pencil/scene-graph/plugin-data'
+import {
+  OPEN_PENCIL_PLUGIN_DATA,
+  readPluginData,
+  withoutPluginData
+} from '@open-pencil/scene-graph/plugin-data'
 import { scriptOfNode } from '@open-pencil/scene-graph/scripts'
 import { textLengthPixels } from '@open-pencil/scene-graph/text'
 import { vectorNetworkPaths } from '@open-pencil/scene-graph/vector-network'
@@ -16,6 +21,7 @@ import {
   PenExportError,
   type PenExportDiagnostic
 } from './diagnostics'
+import { iconForExport } from './icons'
 import { writeInstance } from './instances'
 import { writePaints } from './paints'
 import { createSlotWriter } from './slots'
@@ -197,6 +203,26 @@ export function writePenDocument(graph: SceneGraph): PenDocument {
     }
   }
 
+  function inspectNode(
+    node: SceneNode,
+    path: string,
+    copy: boolean,
+    handled: ReadonlySet<keyof SceneNode>
+  ) {
+    const icon = iconForExport(graph, node)
+    if (readIcon(node) && !icon)
+      add(
+        node,
+        `${path}/icon`,
+        'The icon has no verified supported source drawing or contains edits that a named .pen icon cannot preserve. Keep the .fig original or reset a copy to its source glyph.'
+      )
+    const diagnosticNode = icon
+      ? { ...node, pluginData: withoutPluginData(node.pluginData, [OPEN_PENCIL_PLUGIN_DATA.icon]) }
+      : node
+    diagnostics.push(...nodeDiagnostics(diagnosticNode, path, copy, handled))
+    return icon
+  }
+
   function properties(
     node: SceneNode,
     path: string,
@@ -208,7 +234,7 @@ export function writePenDocument(graph: SceneGraph): PenDocument {
     // Owned slot content may be cloned through a containing component. A plain layer's
     // componentId is copy provenance, not an instance link; the serialized layer is now owned.
     if (ownedSlotContent && node.type !== 'INSTANCE') handled.add('componentId')
-    diagnostics.push(...nodeDiagnostics(node, path, copy, handled))
+    const icon = inspectNode(node, path, copy, handled)
     const script = scriptOfNode(node)
     const type = penNodeType(node)
     if (!type)
@@ -260,6 +286,12 @@ export function writePenDocument(graph: SceneGraph): PenDocument {
       delete result.alignItems
       delete result.layoutIncludeStroke
     }
+    if (icon) {
+      result.type = 'icon'
+      result.library = icon.library
+      result.icon = icon.icon
+      result.fill = colorToHex8(icon.color)
+    }
     if (node.type === 'COMPONENT') result.reusable = true
     if (!copy && slots.suggestions(node)) result.slot = slots.suggestions(node)
     writeStroke(node, result, path)
@@ -295,7 +327,7 @@ export function writePenDocument(graph: SceneGraph): PenDocument {
         write(child, at, false, true)
       )
     const result = properties(node, path, topLevel, false, ownedSlotContent)
-    if (node.childIds.length && !scriptOfNode(node))
+    if (node.childIds.length && !scriptOfNode(node) && result.type !== 'icon')
       result.children = graph
         .getChildren(node.id)
         .map((child, index) => write(child, `${path}/children/${index}`, false, ownedSlotContent))

@@ -54,11 +54,47 @@ document-capture observer qualifies the journey, without a product input change.
 receipts are in icon-tool-2026-11-04, including native-placement-observer.log and
 native-placement-last.png. This does not qualify editable-icon Save/reopen.
 
+## Editable named-icon saving, 2026-11-04
+
+Open Pen independently writes unedited24px Lucide artwork as an editable legacy `icon`
+with its library, glyph name and uniform color. Derived paths are omitted only after checking
+the recorded drawing, every path's default fields, its supported paints and tint metadata.
+Frame properties still pass through the ordinary writer and diagnostics. Unsupported content
+is refused before output, without changing the graph. Other libraries, options, sizes and
+older icons without the drawing baseline remain unsupported; this is an incremental unit.
+
+The drawing baseline retains float32 coordinate precision independently of the resize-tolerant
+glyph indicator. Independent review reproduces a fractional vertex/stroke edit being lost
+under decimal rounding; the corrected regressions refuse both edits. FIG reopen adds explicit
+handle-mirroring, mirrored stroke weight and empty sentinel/cache defaults. Normalizing only
+those equivalent values retains fractional FIG geometry and permits named-icon export.
+Nonempty content and actual edits remain guarded. The optional metadata is recorded when
+Core places, loads, resets or swaps an icon; existing files remain readable.
+
+Executed:146 related owner checks/475 assertions,13 browser workflows including Save/Open
+in Chromium/WebKit, and a2.2s isolated native placement/color/Save/close/Recents-reopen journey.
+The native test sets the first output path through the save API, changes color through the
+real field's change handler, delivers the native Save event, checks disk bytes and uses the
+tab/Home/Recents controls. Its initial OS picker and physical keyboard replacement are not
+exercised. Reopening retains editable heart controls, color and clean state without rewriting
+the saved file. Browser tests exercise actual download/upload controls; provider fixtures in
+browser/model tests qualify mechanics, while native placement loads the real provider glyph.
+
+Failed receipts remain separate: the first Chromium download probe encounters the local-file
+picker instead of the configured download path; the WebKit probe reads a field absent from
+its projection helper. Native replacement appends text after the controlled input restores
+its value; the corrected integration fixture dispatches the field change explicitly. An old
+element handle remains detached after closing its document; fresh controls and loaded artwork
+are required after reopen. These setup corrections do not establish physical keyboard input.
+The initial package build times out; its fresh run with sleep inhibition passes.
+Private receipts:icon-pen-roundtrip-2026-11-04. Source-only followup review independently
+passes25 checks/61 assertions and finds no further defensible defect; it is not native proof.
+
 ## Remaining
 
 The earlier Script gap list is superseded by [Script implementation and executed evidence](SCRIPT-PARITY.md).
-Editable-icon `.pen` writing remains refused by the existing content guard and requires its
-own roundtrip correction; placement/history does not qualify saving. The observed reference
+Remaining icon families/sizes/options, older metadata, physical Save-panel/keyboard delivery
+and exact paired icon pixels require additional qualification. The observed reference
 opening with Icon remembered focuses Rectangle despite Icon being checked; Open Pen still
 focuses the selected radio. This focus policy, exact Icon inspector order/controls and the
 tool glyph remain open.

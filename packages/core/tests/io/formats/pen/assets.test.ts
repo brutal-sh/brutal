@@ -3,6 +3,7 @@ import { describe, expect, test } from 'bun:test'
 import { getNodeOrThrow } from '#core-tests/helpers/assert'
 import { fromUint8Array, toUint8Array } from 'js-base64'
 
+import { createEditor } from '@open-pencil/core'
 import type { IconData, IconProvider } from '@open-pencil/core/icons'
 import { IORegistry, penFormat } from '@open-pencil/core/io'
 import { readIcon, type IconOptions } from '@open-pencil/scene-graph/icons'
@@ -62,6 +63,56 @@ function penBytes(children: unknown[]) {
 }
 
 describe('penFormat.readDocument — assets', () => {
+  test('a loaded named icon stays editable through recolor, save and reopen', async () => {
+    const provider = iconProvider(['lucide:heart'], [])
+    const { graph } = await io.readDocument(
+      {
+        name: 'icon.pen',
+        data: penBytes([
+          {
+            id: 'glyph',
+            type: 'icon',
+            name: 'Icon',
+            library: 'lucide',
+            icon: 'heart',
+            x: 12.5,
+            y: 33.25,
+            width: 24,
+            height: 24,
+            fill: '#FFFFFF'
+          }
+        ])
+      },
+      { icons: provider }
+    )
+    const frame = getNodeOrThrow(graph, 'glyph')
+    expect(readIcon(frame)?.drawing).toEqual(expect.any(String))
+    const editor = createEditor({ graph, icons: provider })
+    try {
+      editor.setIconColor(frame.id, { r: 1, g: 0, b: 0, a: 1 })
+      const saved = await io.writeDocument('pen', graph)
+      const reopened = await io.readDocument(
+        {
+          name: 'reopened-icon.pen',
+          data: typeof saved.data === 'string' ? new TextEncoder().encode(saved.data) : saved.data
+        },
+        { icons: provider }
+      )
+      const after = getNodeOrThrow(reopened.graph, frame.id)
+      expect(after).toMatchObject({ name: 'Icon', x: 12.5, y: 33.25, width: 24, height: 24 })
+      expect(readIcon(after)).toMatchObject({ name: 'lucide:heart', drawing: expect.any(String) })
+      expect(reopened.graph.getChildren(after.id)[0]?.fills[0]?.color).toEqual({
+        r: 1,
+        g: 0,
+        b: 0,
+        a: 1
+      })
+      await io.writeDocument('pen', reopened.graph)
+    } finally {
+      editor.dispose()
+    }
+  })
+
   test('reads and reopens an object image stroke without losing its image bytes', async () => {
     const asked: string[] = []
     const { graph } = await io.readDocument({

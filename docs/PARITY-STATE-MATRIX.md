@@ -4,9 +4,17 @@ Outcome: full functionality and design parity against installed `/Applications/P
 
 Must: inspect actual application, reproduce behavior independently, verify rendered states and executed workflows. Must not: label uninspected screens or implementation-only paths accepted. Authority: explicit user continuation,2026-10-30. Done evidence: every enumerated applicable state has both a visual match and an end-to-end behavior result; no residual unsupported required behavior.
 
-Current continuation—2026-11-04: Icon placement passes48 owner checks/140assertions,
+Current continuation—2026-11-04: Unedited 24px Lucide icons retain named identity and color
+through saving and reopening. The strict writer and float32 drawing baseline pass 146 related
+owner checks/475 assertions, 13 browser workflows and a 2.2s native Save/Recents journey.
+Physical picker/keyboard delivery, other icon libraries/sizes/options, older metadata, menu
+focus, inspector/tool glyph and exact paired pixels remain open. Source/Vue/test types,
+scoped lint, architecture and docs/changelog checks pass. Normal/test bundles are 81.25/87.75MiB;
+normal strict signing and test-hook exclusion pass. Main installation and user data are untouched.
+
+Earlier Icon placement passes48 owner checks/140assertions,
 19 browser workflows and a139.3s native arm/place/history/remember/cancel journey. The default
-catalog and centered24px white heart follow actual Pen. Editable-icon `.pen` Save/reopen,
+catalog and centered24px white heart follow actual Pen. At that stage, editable-icon `.pen` Save/reopen,
 menu focus, Icon inspector/tool glyph and offline behavior remain open; continue these next.
 Compact flex inspector passes17 browser workflows and a90.7s
 physical native journey measuring seven fixed/distributed, direction, single/multiple and

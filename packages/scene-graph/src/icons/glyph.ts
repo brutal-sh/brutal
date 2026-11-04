@@ -49,29 +49,34 @@ function shape(network: VectorNetwork | null | undefined) {
 }
 
 /**
- * Paint fields that read the same as when they are absent, which saving and loading a document
- * fills in: a normal blend and no dashes.
+ * Fields that read the same as when absent, which saving and loading a document fills in.
  */
-const PAINT_DEFAULTS: Readonly<Record<string, unknown>> = { blendMode: 'NORMAL' }
+const VALUE_DEFAULTS: Readonly<Record<string, unknown>> = {
+  blendMode: 'NORMAL',
+  handleMirroring: 'NONE'
+}
 
 /**
  * A value described the same however it was stored: keys sorted, defaults and empty lists left
  * out, and numbers rounded, since a saved document keeps them at lower precision.
  */
-function canonical(value: unknown): unknown {
+function canonical(value: unknown, precision: 'rounded' | 'float32' = 'rounded'): unknown {
   // Stored as 32-bit floats too, so read at that precision before rounding, as coordinates are.
-  if (typeof value === 'number') return round(Math.fround(value))
-  if (Array.isArray(value)) return value.map(canonical)
+  if (typeof value === 'number') {
+    const stored = Math.fround(value)
+    return precision === 'float32' ? stored : round(stored)
+  }
+  if (Array.isArray(value)) return value.map((item) => canonical(item, precision))
   if (typeof value !== 'object' || value === null) return value
   const entries = Object.entries(value)
     .filter(
       ([key, item]) =>
         item !== undefined &&
-        PAINT_DEFAULTS[key] !== item &&
+        VALUE_DEFAULTS[key] !== item &&
         !(Array.isArray(item) && item.length === 0)
     )
     .sort(([a], [b]) => a.localeCompare(b))
-  return Object.fromEntries(entries.map(([key, item]) => [key, canonical(item)]))
+  return Object.fromEntries(entries.map(([key, item]) => [key, canonical(item, precision)]))
 }
 
 /**
@@ -116,6 +121,32 @@ export function iconGlyph(graph: IconGraph, frame: SceneNode): string {
     }
   })
   return hash(JSON.stringify(description))
+}
+
+/**
+ * Exact placed geometry, independent of the frame's position and representable tint. Unlike
+ * the edit indicator, this catches path translations, point scaling and stroke-weight edits.
+ */
+export function iconDrawing(graph: IconGraph, frame: SceneNode): string {
+  return hash(
+    JSON.stringify(
+      canonical(
+        {
+          width: frame.width,
+          height: frame.height,
+          paths: graph.getChildren(frame.id).map((path) => ({
+            x: path.x,
+            y: path.y,
+            width: path.width,
+            height: path.height,
+            network: path.vectorNetwork,
+            weights: path.strokes.map((stroke) => stroke.weight)
+          }))
+        },
+        'float32'
+      )
+    )
+  )
 }
 
 /**

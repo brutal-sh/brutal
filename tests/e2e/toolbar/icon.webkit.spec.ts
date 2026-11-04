@@ -1,4 +1,9 @@
+import { readFile } from 'node:fs/promises'
+
+import { parsePenDocument } from '@open-pencil/pen'
+
 import { expect, test, useEditorSetupWithClear } from '#tests/e2e/fixtures'
+import { openAppMenu } from '#tests/helpers/menu'
 import { propertyField } from '#tests/helpers/properties'
 import { getNodeById, getPageChildren, getSelectedNode } from '#tests/helpers/store'
 import { toolbarFlyoutTestId, toolbarToolTestId } from '#tests/helpers/test-ids'
@@ -80,5 +85,69 @@ test('Escape cancels armed placement, and a click inside a frame uses that frame
   expect(await getPageChildren(page)).toHaveLength(1)
   await canvas.undo()
   expect((await getNodeById(page, parent.id))?.childIds).toHaveLength(0)
+  canvas.assertNoErrors()
+})
+
+test('a placed icon saves as an editable named glyph and reopens through File Open', async () => {
+  const { page, canvas } = ctx
+  await page.evaluate(() => {
+    window.showOpenFilePicker = undefined
+    window.showSaveFilePicker = undefined
+  })
+  await arm()
+  await canvas.click(350, 250)
+  await expect(propertyField(page, 'icon-name')).toContainText('heart')
+  const placed = await getSelectedNode(page)
+  if (!placed) throw new Error('Icon was not placed')
+  page.once('dialog', (dialog) => dialog.accept('editable-icon.pen'))
+  const downloading = page.waitForEvent('download')
+  await (
+    await openAppMenu(page, 'File')
+  )
+    .getByRole('menuitem', { name: /^Save(?:\s|$)/ })
+    .first()
+    .click()
+  const saved = await readFile(await (await downloading).path())
+  const document = parsePenDocument(saved.toString())
+  expect(document.children).toHaveLength(1)
+  expect(document.children[0]).toMatchObject({
+    id: placed.id,
+    name: 'Icon',
+    type: 'icon',
+    library: 'lucide',
+    icon: 'heart',
+    width: 24,
+    height: 24,
+    fill: '#FFFFFF'
+  })
+  expect(document.children[0].children).toBeUndefined()
+  const opening = page.waitForEvent('filechooser')
+  await (await openAppMenu(page, 'File')).getByRole('menuitem', { name: /^Open…/ }).click()
+  await (
+    await opening
+  ).setFiles({ name: 'editable-icon.pen', mimeType: 'application/json', buffer: saved })
+  await canvas.waitForInit()
+  await expect
+    .poll(async () => (await getPageChildren(page)).map((node) => node.id))
+    .toEqual([placed.id])
+  await page.evaluate((id) => window.openPencil?.getStore?.().select([id]), placed.id)
+  await expect(propertyField(page, 'icon-name')).toContainText('heart')
+  expect(await getSelectedNode(page)).toMatchObject({
+    id: placed.id,
+    name: 'Icon',
+    type: 'FRAME',
+    x: placed.x,
+    y: placed.y,
+    width: 24,
+    height: 24
+  })
+  const reopened = await getSelectedNode(page)
+  if (!reopened?.childIds.length) throw new Error('Reopened icon has no derived artwork')
+  expect((await getNodeById(page, reopened.childIds[0]))?.strokes[0]?.color).toEqual({
+    r: 1,
+    g: 1,
+    b: 1,
+    a: 1
+  })
   canvas.assertNoErrors()
 })

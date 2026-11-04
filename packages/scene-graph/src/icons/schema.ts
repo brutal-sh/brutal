@@ -18,6 +18,8 @@ export const iconSchema = v.object({
   name: v.pipe(v.string(), v.regex(ICON_NAME)),
   /** A fingerprint of the glyph as placed, to tell when its paths were edited; see `iconGlyph`. */
   glyph: v.optional(v.string()),
+  /** Exact placed geometry for formats that replace paths with a named glyph. */
+  drawing: v.optional(v.string()),
   /**
    * Set for an icon drawn from one of our own sets rather than Iconify, so it is drawn again and
    * exported as the paths it draws rather than by its name alone.

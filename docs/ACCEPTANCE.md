@@ -2,6 +2,31 @@
 
 Full parity is open. A source implementation, unit check, build, and user workflow establish different things. This ledger records only observed outcomes and the scope of each observation.
 
+## Editable icon saving continuation — 2026-11-04
+
+- Unedited 24px Lucide icons now write as named editable icons, preserving their uniform
+  color. Changed geometry, child content, unsupported paints, options, sizes, libraries and
+  missing drawing baselines are refused without mutating the graph. This supersedes the
+  blanket icon refusal recorded in the earlier placement entry.
+- The separate float32 drawing baseline catches fractional point and stroke-weight edits
+  that the resize-tolerant glyph indicator misses. A fractional FIG round trip retains its
+  baseline and remains exportable after normalizing equivalent file defaults. Independent
+  review reproduces the original rounding defect, then passes 25 checks/61 assertions after
+  correction, with no further defensible finding.
+- Executed: 146 related owner checks/475 assertions and 13 browser workflows, including actual
+  Save download and File Open in Chromium/WebKit. The 2.2s native journey places the real
+  provider heart, saves a changed tint, closes and reopens it through Recents, observes editable
+  controls and clean state, and confirms saved bytes remain unchanged after reopening.
+- Native path selection uses the save API, color setup dispatches the real field's change
+  event, and Save uses the native menu subscriber. OS picker and physical keyboard replacement
+  remain unqualified. Earlier driver replacement and stale-element failures retain their
+  status. Whole icon/design parity, other families/sizes/options, older metadata and exact
+  paired pixels remain open. See [tool flyout parity](TOOL-FLYOUT-PARITY.md).
+- Current source/Vue/test types, scoped lint, architecture and docs/changelog checks pass.
+  The 87.75MiB isolated test and 81.25MiB normal bundles are built; normal strict signature
+  verification and frontend/binary test-hook exclusion pass. The installed main app and user
+  data remain untouched.
+
 ## Icon placement continuation —2026-11-04
 
 - Actual Pen's Icon radio arms without editing and places a centered white24×24 Lucide heart
