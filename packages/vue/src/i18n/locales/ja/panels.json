@@ -463,6 +463,7 @@
   "mask": "マスク",
   "icon": "アイコン",
   "iconColor": "アイコンの色",
+  "iconWeight": "太さ",
   "swapIcon": "アイコンを入れ替え",
   "insertIcon": "アイコンを挿入",
   "iconModified": "変更済み",

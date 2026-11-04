@@ -3,6 +3,7 @@ import { mkdtemp, readFile, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
+import type { SkiaRenderer } from '@open-pencil/core/canvas'
 import { parsePenDocument } from '@open-pencil/pen'
 import { toolbarFlyoutItemTestId, toolbarFlyoutTestId } from '@open-pencil/vue/testing'
 
@@ -39,6 +40,8 @@ async function checkIconControls() {
   ])
   assert.equal(await $('[aria-label="Flow"]').isExisting(), false)
   assert.equal(await $('[data-test-id="clip-content-checkbox"]').isExisting(), false)
+  assert.equal(await $('[data-property="icon-family"]').getText(), 'lucide')
+  assert.equal(await $('[data-property="icon-weight"]').isExisting(), false)
   await $('[data-test-id="toolbar-flyout-rectangle"]').click()
   await browser.waitUntil(() =>
     browser.execute(
@@ -68,6 +71,100 @@ async function checkIconControls() {
 }
 
 describe('native editable icon persistence', () => {
+  it('edits a Material glyph weight through the native inspector and restores its history', async () => {
+    await createNativeLayerFixture()
+    await browser.execute(() => {
+      const data = JSON.stringify({
+        version: '2.21',
+        children: [
+          {
+            id: 'material',
+            type: 'icon',
+            library: 'Material Symbols Rounded',
+            icon: 'home',
+            width: 64,
+            height: 64,
+            weight: 200,
+            fill: '#FFFFFF'
+          }
+        ]
+      })
+      const transfer = new DataTransfer()
+      transfer.items.add(new File([data], 'Material weight.pen', { type: 'application/json' }))
+      window.dispatchEvent(new DragEvent('drop', { dataTransfer: transfer, cancelable: true }))
+    })
+    await browser.waitUntil(() =>
+      browser.execute(
+        () => !!window.openPencil?.getStore?.().graph.getNode('material')?.childIds?.length
+      )
+    )
+    await browser.execute(() => {
+      const editor = window.openPencil?.getStore?.()
+      editor?.select(['material'])
+      editor?.centerOn(32, 32, 2)
+    })
+    const drawing = () =>
+      browser.execute(() => {
+        const editor = window.openPencil?.getStore?.()
+        if (!editor) throw new Error('Native editor unavailable')
+        return editor.graph
+          .getChildren('material')
+          .map(({ id, vectorNetwork }) => ({ id, vectorNetwork }))
+      })
+    const original = await drawing()
+    assert.ok(original.length)
+    const family = await $('[data-property="icon-family"]')
+    assert.equal(await family.getText(), 'Material Symbols Rounded')
+    const weight = await $('[data-property="icon-weight"]')
+    await weight.scrollIntoView()
+    await browser.execute(() => {
+      document.querySelector<HTMLElement>('[data-property="icon-weight"]')?.focus()
+    })
+    const input = '[data-property="icon-weight"] input'
+    await $(input).waitForDisplayed()
+    // Exercise the WebView's input path; trusted OS keyboard replacement is separate acceptance.
+    const typeWeight = async (value: string) =>
+      browser.execute(
+        (selector, value) => {
+          const input = document.querySelector<HTMLInputElement>(selector)
+          if (!input) throw new Error('Native weight input missing')
+          input.value = value
+          input.dispatchEvent(new Event('input', { bubbles: true }))
+        },
+        input,
+        value
+      )
+    await typeWeight('400')
+    await browser.waitUntil(
+      async () => JSON.stringify(await drawing()) !== JSON.stringify(original)
+    )
+    await typeWeight('700')
+    await browser.execute((selector) => {
+      document.querySelector(selector)?.dispatchEvent(
+        new KeyboardEvent('keydown', {
+          key: 'Enter',
+          code: 'Enter',
+          bubbles: true,
+          cancelable: true
+        })
+      )
+    }, input)
+    await browser.waitUntil(async () => !(await $(input).isExisting()))
+    await browser.waitUntil(async () => (await weight.getText()).includes('700'))
+    const changed = await drawing()
+    assert.deepEqual(
+      changed.map(({ id }) => id),
+      original.map(({ id }) => id)
+    )
+    assert.notDeepEqual(changed, original)
+    await emitNativeMenuAction('edit.undo')
+    await browser.waitUntil(async () => (await weight.getText()).includes('200'))
+    assert.deepEqual(await drawing(), original)
+    await emitNativeMenuAction('edit.redo')
+    await browser.waitUntil(async () => (await weight.getText()).includes('700'))
+    assert.deepEqual(await drawing(), changed)
+  })
+
   it('opens dropped icons in the native WebView and draws alpha and disabled paints', async () => {
     await createNativeLayerFixture()
     await browser.execute(() => {
@@ -113,7 +210,9 @@ describe('native editable icon persistence', () => {
       if (!current) throw new Error('Opened editor unavailable')
       current.clearSelection()
       current.centerOn(210, 80, 1)
-      const renderer = current.canvasRenderers.find((candidate) => candidate.tracksSceneSettlement)
+      const renderer = current.canvasRenderers.find(
+        (candidate: SkiaRenderer) => candidate.tracksSceneSettlement
+      )
       const source = [
         ...document.querySelectorAll<HTMLCanvasElement>('[data-test-id="scene-canvas-element"]')
       ].find((canvas) => canvas.getClientRects().length > 0)

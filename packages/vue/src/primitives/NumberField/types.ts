@@ -50,6 +50,8 @@ export interface NumberFieldRootEmits {
   (event: 'cancel'): void
   /** Emitted when the inline editing state changes. */
   (event: 'editing-change', editing: boolean): void
+  /** Emitted while a typed edit or pointer scrub owns the field's live changes. */
+  (event: 'interaction-change', active: boolean): void
   /** Emitted when a committed expression cannot be evaluated. */
   (event: 'invalid', expression: string, reason: NumberExpressionError): void
   /** Emitted before detach-on-edit mutates a bound value. */

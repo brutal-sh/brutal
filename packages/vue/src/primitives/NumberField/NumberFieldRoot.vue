@@ -314,13 +314,14 @@ function startScrub(event: PointerEvent) {
 
   const finish = (cancelled: boolean) => {
     stopScrubListeners()
-    scrubbing.value = false
     if (cancelled) {
       restoreInteractionValue()
       binding?.actions.cancelMutation()
       emit('cancel')
+      scrubbing.value = false
       return
     }
+    scrubbing.value = false
     if (!hasMoved) {
       startEdit()
       return
@@ -481,6 +482,11 @@ provideNumberField({
 
 // A committing field can unmount before a queued focus change reaches the editor.
 watch(editing, (value) => emit('editing-change', value), { flush: 'sync' })
+watch(
+  () => editing.value || scrubbing.value,
+  (active) => emit('interaction-change', active),
+  { flush: 'sync' }
+)
 watch(
   () => modelValue,
   (value) => {

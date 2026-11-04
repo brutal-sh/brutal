@@ -463,6 +463,7 @@
   "mask": "蒙版",
   "icon": "图标",
   "iconColor": "图标颜色",
+  "iconWeight": "字重",
   "swapIcon": "替换图标",
   "insertIcon": "插入图标",
   "iconModified": "已修改",

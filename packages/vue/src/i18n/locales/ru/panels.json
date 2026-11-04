@@ -475,6 +475,7 @@
   "mask": "Маска",
   "icon": "Иконка",
   "iconColor": "Цвет иконки",
+  "iconWeight": "Толщина",
   "swapIcon": "Заменить иконку",
   "insertIcon": "Вставить иконку",
   "iconModified": "Изменена",

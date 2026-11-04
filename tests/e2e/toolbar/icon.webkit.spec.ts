@@ -68,6 +68,25 @@ test('the icon Fill row edits the glyph color and opacity through the shared con
   canvas.assertNoErrors()
 })
 
+test('compact icon controls separate the family and glyph and keep color in Fill', async () => {
+  const { page, canvas } = ctx
+  await arm()
+  await canvas.click(350, 250)
+  const name = propertyField(page, 'icon-name')
+  await expect(name).toContainText('heart')
+  const family = page.getByRole('combobox', { name: 'Icon set', exact: true })
+  await expect(family).toHaveText('lucide')
+  await expect(propertyField(page, 'icon-color')).toHaveCount(0)
+  await family.click()
+  await expect(
+    page.getByRole('option', { name: 'Material Symbols Rounded', exact: true })
+  ).toBeVisible()
+  await page.keyboard.press('Escape')
+  await expect(family).toBeFocused()
+  await expect(name).not.toContainText('lucide')
+  canvas.assertNoErrors()
+})
+
 test('Primitives focuses Rectangle while remembering Icon and restores trigger focus on Escape', async () => {
   const { page, canvas } = ctx
   await arm()

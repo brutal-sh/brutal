@@ -2,6 +2,9 @@
 
 # Pen.app reference and Open Pen parity
 
+Named icon controls and the remaining all-family export/visual gaps are tracked in
+[Icon comparison](ICON-PARITY.md).
+
 **Current implementation update:** independent Mesh paint editing and supported format persistence are under verification; see [Mesh evidence and remaining gaps](MESH-PARITY.md). the table below is the initial source audit. The fork now has bounded `.pen` import diagnostics, a writer for ordinary shapes/layout/paints/images/variables/instances, normal `.pen` Save/Save As, strict JSON-with-comments parsing, a bounded linked-component slots bridge, presentation navigation, and a native browser preview implementation. Both an isolated native-test and a normal installed-app Home → Codex → MCP canvas edit → Undo workflow have passed with the authorized existing CLI login. The Home layout now follows the observed composer/import/file-grid structure; an original icon is installed and displayed by Finder. See [executed acceptance evidence](ACCEPTANCE.md) for checks and remaining limits. Full parity is still open; a refusal prevents loss but does not satisfy a feature requirement.
 
 2026-10-29 · source baseline `24461adec7073312d460d76f08f069de18e4fb78` · paths relative to the project root after moving `upstream-editor` into it.

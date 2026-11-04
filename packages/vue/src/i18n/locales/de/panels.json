@@ -469,6 +469,7 @@
   "mask": "Maske",
   "icon": "Symbol",
   "iconColor": "Symbolfarbe",
+  "iconWeight": "Stärke",
   "swapIcon": "Symbol austauschen",
   "insertIcon": "Symbol einfügen",
   "iconModified": "Geändert",

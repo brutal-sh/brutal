@@ -303,7 +303,7 @@ export function createEditor(options?: EditorOptions) {
   const variables = createVariableActions(ctx)
   const designTokens = createDesignTokenActions(ctx, variables, nodes)
   const vectorize = createVectorizeActions(ctx)
-  const icons = createIconActions(ctx)
+  const icons = createIconActions(ctx, nodes.beginNodePreview)
   const stickies = createStickyActions(ctx)
   const shapesWithText = createShapeWithTextActions(ctx)
   const generatedText = createGeneratedTextActions(ctx)

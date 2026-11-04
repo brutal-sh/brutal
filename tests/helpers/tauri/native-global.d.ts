@@ -4,6 +4,7 @@ import type * as TauriAPI from '@tauri-apps/api'
 import type * as TauriOS from '@tauri-apps/plugin-os'
 
 import type { SnappingPreferences } from '@open-pencil/core'
+import type { SceneNode } from '@open-pencil/scene-graph'
 
 import type { OpenPencilWindowAPI } from '@/app/browser-bridge'
 import type { EditorStore } from '@/app/editor/active-store'
@@ -23,6 +24,7 @@ type NativeTestNode = {
   x?: number
   y?: number
   fills?: Array<{ type: string; imageHash?: string }>
+  vectorNetwork?: SceneNode['vectorNetwork']
 }
 
 type NativeTestStore = {

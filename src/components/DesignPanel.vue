@@ -347,7 +347,7 @@ const panelStyles = tv(designPanelTheme)
         <!-- A shape with text's typography is its label's, as in Figma. -->
         <TypographySection v-if="node.type === 'TEXT' || node.type === 'SHAPE_WITH_TEXT'" />
         <FillSection v-if="!scriptOfNode(node)" :compact="!advanced" />
-        <IconSection v-if="!advanced" />
+        <IconSection v-if="!advanced" compact />
         <template v-if="strokesAndEffects">
           <StrokeSection
             v-if="!scriptOfNode(node) && (advanced || !readIcon(node))"

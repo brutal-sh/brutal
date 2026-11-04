@@ -475,6 +475,7 @@
   "mask": "Maska",
   "icon": "Ikona",
   "iconColor": "Kolor ikony",
+  "iconWeight": "Grubość",
   "swapIcon": "Zamień ikonę",
   "insertIcon": "Wstaw ikonę",
   "iconModified": "Zmieniona",

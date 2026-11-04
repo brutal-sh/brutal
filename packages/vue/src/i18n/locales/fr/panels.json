@@ -469,6 +469,7 @@
   "mask": "Masque",
   "icon": "Icône",
   "iconColor": "Couleur de l'icône",
+  "iconWeight": "Graisse",
   "swapIcon": "Changer d'icône",
   "insertIcon": "Insérer une icône",
   "iconModified": "Modifiée",

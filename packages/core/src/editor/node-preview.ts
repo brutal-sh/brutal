@@ -12,6 +12,11 @@ export interface NodePreview {
   cancel: () => void
 }
 
+export interface NodePreviewOptions {
+  /** An async owner records its completed preview outside any later edit's open batch. */
+  ownStep?: boolean
+}
+
 /** One owned numeric/property edit, including every node changed by its layout. */
 export function createNodePreviewActions(
   ctx: EditorContext,
@@ -23,7 +28,7 @@ export function createNodePreviewActions(
     current?.cancel()
   }
 
-  function beginNodePreview(label = 'Update'): NodePreview {
+  function beginNodePreview(label = 'Update', options: NodePreviewOptions = {}): NodePreview {
     cancelNodePreviews()
     const graph = ctx.graph
     const originals = new Map<string, Partial<SceneNode>>()
@@ -88,8 +93,11 @@ export function createNodePreviewActions(
           preview.cancel()
           throw error
         }
-        const edits: Array<{ id: string; before: Partial<SceneNode>; after: Partial<SceneNode> }> =
-          []
+        const edits: Array<{
+          id: string
+          before: Partial<SceneNode>
+          after: Partial<SceneNode>
+        }> = []
         for (const [id, before] of originals) {
           const node = graph.getNode(id)
           if (!node) continue
@@ -114,7 +122,13 @@ export function createNodePreviewActions(
         }
         // Publish before the history event so content revisions belong to this step.
         apply('after')
-        ctx.undo.push({ label, forward: () => apply('after'), inverse: () => apply('before') })
+        const entry = {
+          label,
+          forward: () => apply('after'),
+          inverse: () => apply('before')
+        }
+        if (options.ownStep) ctx.undo.pushStep(entry)
+        else ctx.undo.push(entry)
       },
       cancel() {
         if (closed) return

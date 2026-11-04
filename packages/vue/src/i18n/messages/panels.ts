@@ -177,6 +177,7 @@ export const panelMessageDefaults = {
   mask: 'Mask',
   icon: 'Icon',
   iconColor: 'Icon color',
+  iconWeight: 'Weight',
   swapIcon: 'Swap icon',
   insertIcon: 'Insert icon',
   iconModified: 'Modified',

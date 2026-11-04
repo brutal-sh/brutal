@@ -1,8 +1,13 @@
-import { watchImmediate } from '@vueuse/core'
-import { computed, ref } from 'vue'
+import { tryOnScopeDispose, watchImmediate } from '@vueuse/core'
+import { computed, getCurrentInstance, onDeactivated, ref, watch } from 'vue'
 
 import { iconColor } from '@open-pencil/core/icons'
-import { isIconModified, readIcon } from '@open-pencil/scene-graph/icons'
+import {
+  hasIconFills,
+  isIconModified,
+  readIcon,
+  type IconOptions
+} from '@open-pencil/scene-graph/icons'
 import type { Color } from '@open-pencil/scene-graph/primitives'
 
 import { useUndoBatch } from '#vue/controls/undo-batch/use'
@@ -19,6 +24,14 @@ export function useIcon() {
   const name = useSceneComputed(() => {
     const node = selectedNode.value
     return node ? (readIcon(node)?.name ?? null) : null
+  })
+  const options = useSceneComputed(() => {
+    const node = selectedNode.value
+    return node ? readIcon(node)?.options : undefined
+  })
+  const authoredFills = useSceneComputed(() => {
+    const node = selectedNode.value
+    return !!node && hasIconFills(node)
   })
   /** The color of the icon's tinted paths; null for an icon drawn only in its own colors. */
   const color = useSceneComputed(() => {
@@ -59,6 +72,7 @@ export function useIcon() {
   async function reset() {
     const node = selectedNode.value
     if (!node || !name.value) return
+    finishWeight()
     batch.flush()
     await editor.resetIcon(node.id)
   }
@@ -67,16 +81,99 @@ export function useIcon() {
   function detach() {
     const node = selectedNode.value
     if (!node || !name.value) return
+    finishWeight()
     batch.flush()
     editor.detachIcon(node.id)
   }
 
-  async function swap(next: string) {
+  async function swap(next: string, options?: IconOptions) {
     const node = selectedNode.value
     if (!node || !name.value || name.value === next) return
+    finishWeight()
     batch.flush()
-    await editor.swapIconGlyph(node.id, next)
+    await editor.swapIconGlyph(node.id, next, options)
   }
+
+  let weightPreview: ReturnType<typeof editor.beginIconWeightPreview> = null
+  let weightEditing = false
+  let weightRequest: AbortController | null = null
+  const weightFailed = ref(false)
+
+  function finishWeight() {
+    weightRequest?.abort()
+    weightRequest = null
+    const owned = weightPreview
+    weightPreview = null
+    weightEditing = false
+    owned?.finish()
+  }
+
+  function cancelWeight() {
+    weightRequest?.abort()
+    weightRequest = null
+    weightPreview?.cancel()
+    weightPreview = null
+    weightEditing = false
+  }
+
+  function setWeightEditing(open: boolean) {
+    if (editor.state.readOnly) {
+      cancelWeight()
+      return
+    }
+    if (open) {
+      if (weightEditing) return
+      finishWeight()
+      batch.flush()
+      const id = frameId.value
+      weightPreview = id ? editor.beginIconWeightPreview(id) : null
+      weightEditing = true
+      weightFailed.value = false
+      return
+    }
+    weightEditing = false
+    const owned = weightPreview
+    if (owned)
+      void owned
+        .commit()
+        .catch(() => {
+          if (weightPreview === owned) weightFailed.value = true
+        })
+        .finally(() => {
+          if (weightPreview === owned) weightPreview = null
+        })
+  }
+
+  async function setWeight(weight: number) {
+    const id = frameId.value
+    if (!id || editor.state.readOnly) return
+    weightFailed.value = false
+    if (weightEditing) {
+      const owned = weightPreview
+      if (!owned || owned.closed) return
+      try {
+        await owned.update(weight)
+      } catch {
+        if (weightPreview === owned) weightFailed.value = true
+      }
+      return
+    }
+    finishWeight()
+    batch.flush()
+    const request = new AbortController()
+    weightRequest = request
+    try {
+      await editor.setIconOptions(id, { wght: weight }, request.signal)
+    } catch {
+      if (!request.signal.aborted && frameId.value === id) weightFailed.value = true
+    } finally {
+      if (weightRequest === request) weightRequest = null
+    }
+  }
+
+  watch(frameId, finishWeight, { flush: 'sync' })
+  tryOnScopeDispose(finishWeight)
+  if (getCurrentInstance()) onDeactivated(finishWeight)
 
   // A drag in the open color picker sends many colors; they undo as one step, committed when
   // the picker closes. A color typed in while it is closed is a step of its own.
@@ -96,11 +193,17 @@ export function useIcon() {
   return {
     frameId,
     name,
+    options,
+    authoredFills,
     color,
     preview,
     setName,
     modified,
     swap,
+    setWeight,
+    setWeightEditing,
+    cancelWeight,
+    weightFailed,
     reset,
     detach,
     setColor,

@@ -2,7 +2,7 @@ import type { Page } from '@playwright/test'
 
 import { expect, test, useEditorSetupWithClear } from '#tests/e2e/fixtures'
 import { openAppMenu } from '#tests/helpers/menu'
-import { propertyField, propertySection } from '#tests/helpers/properties'
+import { openAdvancedProperties, propertyField, propertySection } from '#tests/helpers/properties'
 import { getNodeById, getPageChildren, getSelectedNode } from '#tests/helpers/store'
 
 /** A small icon set served in place of the Iconify API, so the workflow needs no network. */
@@ -123,7 +123,7 @@ test('the Icon section recolors the icon', async () => {
   await insertSquare(page)
   const pathId = (await getSelectedNode(page))?.childIds[0] ?? ''
 
-  const hex = propertyField(page, 'icon-color').getByTestId('color-hex-input')
+  const hex = propertySection(page, 'Fill').getByRole('textbox', { name: 'Fill', exact: true })
   await hex.fill('FF0000')
   await hex.press('Enter')
   // Undo in a focused field undoes its text; the document's undo needs focus elsewhere.
@@ -211,6 +211,7 @@ test('an edited icon says so, asks before a swap discards the edit, and resets o
   await expect(propertyField(page, 'icon-modified')).toBeHidden()
   expect((await getSelectedNode(page))?.childIds).toHaveLength(1)
 
+  await openAdvancedProperties(page)
   await section.getByRole('button', { name: 'Detach icon' }).click()
   await expect(section).toBeHidden()
 })

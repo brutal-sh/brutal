@@ -114,6 +114,8 @@ function shouldIgnoreShortcut(
     history && (isToggleInput(event.target) || isCanvasTextInput(document.activeElement))
   return (
     event.isComposing ||
+    // The scrubbing field cancels on document capture, after this window listener.
+    (event.code === 'Escape' && document.querySelector('[data-scrubbing]') !== null) ||
     isButtonActivation(event) ||
     overlayHandlesKeyboard(event, history) ||
     (!documentHistory && (isEditing(event) || options.inputFocused.value)) ||

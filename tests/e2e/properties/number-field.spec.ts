@@ -95,6 +95,25 @@ test('NumberField Arrow keys honor Shift and Alt multipliers', async () => {
   editor.canvas.assertNoErrors()
 })
 
+test('Escape cancels a pointer scrub without clearing the selected layer', async () => {
+  const field = xField()
+  const before = expectDefined(await getSelectedNode(editor.page), 'selected layer')
+  const bounds = expectDefined(await field.boundingBox(), 'X field bounds')
+  const x = bounds.x + bounds.width / 2
+  const y = bounds.y + bounds.height / 2
+  await editor.page.mouse.move(x, y)
+  await editor.page.mouse.down()
+  await editor.page.mouse.move(x + 35, y)
+  await expect(field).toHaveAttribute('data-scrubbing')
+  expect((await getSelectedNode(editor.page))?.x).not.toBe(before.x)
+  await editor.page.keyboard.press('Escape')
+  await editor.page.mouse.up()
+  const after = await getSelectedNode(editor.page)
+  expect(after?.id).toBe(before.id)
+  expect(after?.x).toBe(before.x)
+  editor.canvas.assertNoErrors()
+})
+
 test('mixed numeric edits cancel per-node values and commit zero in one undo step', async () => {
   await editor.canvas.drawRect(300, 100, 80, 80)
   await editor.canvas.selectAll()

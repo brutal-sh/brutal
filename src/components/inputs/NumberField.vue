@@ -95,6 +95,7 @@ function rangeWidth(value: string) {
 const emit = defineEmits<{
   'update:modelValue': [value: number, unit?: string]
   'editing-change': [editing: boolean]
+  'interaction-change': [active: boolean]
   commit: [value: number, previous: number, unit?: string]
   cancel: []
   invalid: [expression: string, reason: NumberExpressionError]
@@ -129,6 +130,7 @@ defineOptions({ inheritAttrs: false })
       (expression: string, reason: NumberExpressionError) => emit('invalid', expression, reason)
     "
     @detach-request="emit('detach-request', $event)"
+    @interaction-change="emit('interaction-change', $event)"
     @editing-change="
       (editing: boolean) => {
         store.state.numberFieldFocused = editing

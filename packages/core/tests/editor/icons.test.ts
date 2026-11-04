@@ -3,7 +3,7 @@ import { describe, expect, test } from 'bun:test'
 import { createEditor } from '@open-pencil/core'
 import { parseIconName, type IconProvider } from '@open-pencil/core/icons'
 import { SceneGraph } from '@open-pencil/scene-graph'
-import { isIconModified, readIcon } from '@open-pencil/scene-graph/icons'
+import { isIconModified, readIcon, type IconOptions } from '@open-pencil/scene-graph/icons'
 import type { Color } from '@open-pencil/scene-graph/primitives'
 import { ownsSlotContent, slotPropertyId } from '@open-pencil/scene-graph/slots'
 
@@ -56,6 +56,57 @@ async function insert(editor: ReturnType<typeof setup>, name: string, color?: Co
 }
 
 describe('icon commands', () => {
+  test('changing family retains an unavailable glyph name and its authored paints, undoably', async () => {
+    const editor = setup()
+    const id = await insert(editor, 'test:square', RED)
+    const fills = getNodeOrThrow(editor.graph, id).fills
+    await editor.swapIconGlyph(id, 'other:square')
+    expect(readIcon(getNodeOrThrow(editor.graph, id))?.name).toBe('other:square')
+    expect(getNodeOrThrow(editor.graph, id).fills).toEqual(fills)
+    expect(editor.graph.getChildren(id)).toEqual([])
+    editor.undo.undo()
+    expect(readIcon(getNodeOrThrow(editor.graph, id))?.name).toBe('test:square')
+    expect(editor.graph.getChildren(id)).toHaveLength(1)
+    editor.dispose()
+  })
+
+  test('icon option edits preserve other axes, redraw, and restore options through history', async () => {
+    const received: (IconOptions | undefined)[] = []
+    const editor = createEditor({
+      icons: {
+        ...provider,
+        async icons(names, size, options) {
+          received.push(options)
+          const icons = await provider.icons(names, size)
+          return new Map([...icons].map(([name, icon]) => [name, { ...icon, options }]))
+        }
+      }
+    })
+    try {
+      const id = await insert(editor, 'test:square', RED)
+      await editor.setIconOptions(id, { wght: 200, FILL: 1 })
+      await editor.setIconOptions(id, { wght: 700 })
+      expect(received.at(-1)).toEqual({ wght: 700, FILL: 1 })
+      expect(readIcon(getNodeOrThrow(editor.graph, id))?.options).toEqual({
+        wght: 700,
+        FILL: 1
+      })
+      expect(getNodeOrThrow(editor.graph, id).fills[0].color).toEqual(RED)
+      editor.undo.undo()
+      expect(readIcon(getNodeOrThrow(editor.graph, id))?.options).toEqual({
+        wght: 200,
+        FILL: 1
+      })
+      editor.undo.redo()
+      expect(readIcon(getNodeOrThrow(editor.graph, id))?.options).toEqual({
+        wght: 700,
+        FILL: 1
+      })
+    } finally {
+      editor.dispose()
+    }
+  })
+
   test('insert places the icon at the middle of the view, selected, in one undo step', async () => {
     const editor = setup()
     const id = await insert(editor, 'test:square')
@@ -166,6 +217,68 @@ describe('icon commands', () => {
 })
 
 describe('icon commands across a document change', () => {
+  test('a delayed option result cannot overwrite a later weight or add its own Undo step', async () => {
+    let release: (() => void) | undefined
+    const waiting = new Promise<void>((resolve) => {
+      release = resolve
+    })
+    const editor = createEditor({
+      icons: {
+        ...provider,
+        async icons(names, size, options) {
+          if (options?.wght === 600) await waiting
+          const icons = await provider.icons(names, size)
+          return new Map([...icons].map(([name, icon]) => [name, { ...icon, options }]))
+        }
+      }
+    })
+    try {
+      const id = await insert(editor, 'test:square')
+      const stale = editor.setIconOptions(id, { wght: 600 })
+      await editor.setIconOptions(id, { wght: 700 })
+      release?.()
+      await stale
+      expect(readIcon(getNodeOrThrow(editor.graph, id))?.options).toEqual({
+        wght: 700
+      })
+      editor.undo.undo()
+      expect(readIcon(getNodeOrThrow(editor.graph, id))?.options).toBeUndefined()
+    } finally {
+      release?.()
+      editor.dispose()
+    }
+  })
+
+  test('an option result that arrives after the document becomes read-only makes no edit', async () => {
+    let release: (() => void) | undefined
+    const waiting = new Promise<void>((resolve) => {
+      release = resolve
+    })
+    const editor = createEditor({
+      icons: {
+        ...provider,
+        async icons(names, size, options) {
+          if (options) await waiting
+          const icons = await provider.icons(names, size)
+          return new Map([...icons].map(([name, icon]) => [name, { ...icon, options }]))
+        }
+      }
+    })
+    try {
+      const id = await insert(editor, 'test:square')
+      const before = getNodeOrThrow(editor.graph, id).childIds.slice()
+      const pending = editor.setIconOptions(id, { wght: 700 })
+      editor.setReadOnly(true)
+      release?.()
+      await pending
+      expect(readIcon(getNodeOrThrow(editor.graph, id))?.options).toBeUndefined()
+      expect(getNodeOrThrow(editor.graph, id).childIds).toEqual(before)
+    } finally {
+      release?.()
+      editor.dispose()
+    }
+  })
+
   test.each([
     'deleted parent',
     'read-only',

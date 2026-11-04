@@ -1,23 +1,38 @@
+import { noop } from 'es-toolkit'
+
 import type { SceneNode } from '@open-pencil/scene-graph'
 import { BLACK } from '@open-pencil/scene-graph/constants'
-import { hasIconFills, readIcon, type IconOptions } from '@open-pencil/scene-graph/icons'
+import {
+  hasIconFills,
+  isIconModified,
+  readIcon,
+  type IconOptions
+} from '@open-pencil/scene-graph/icons'
+import { findInstanceAncestor } from '@open-pencil/scene-graph/instances'
 import type { Color } from '@open-pencil/scene-graph/primitives'
 
 import { DEFAULT_ICON_SIZE } from '#core/constants'
 import { assertNodeEditable } from '#core/editor/capabilities'
 import { prepareSlotEdits } from '#core/editor/components/slots'
 import { restoreSubtree, snapshotSubtree } from '#core/editor/history/subtree'
+import type { NodePreview, NodePreviewOptions } from '#core/editor/node-preview'
 import type { EditorContext } from '#core/editor/types'
 import { pushCreatedSubtreesUndo } from '#core/editor/undo'
+import { MATERIAL_SYMBOLS_PREFIXES } from '#core/icons/material-symbols/font'
 import { parseIconName } from '#core/icons/provider'
 import { detachIcon, placeIcon, recolorIcon, swapIcon } from '#core/icons/render'
 import type { IconData } from '#core/icons/types'
+import { previewIconWeight } from '#core/icons/weight'
 
 /**
  * Icon commands: insert, swap, and recolor, each one undo step. An icon is a frame of paths,
  * so inserting and swapping record the frame's whole subtree and swap between the copies.
  */
-export function createIconActions(ctx: EditorContext) {
+export function createIconActions(
+  ctx: EditorContext,
+  beginNodePreview: (label: string, options?: NodePreviewOptions) => NodePreview
+) {
+  const drawingRequests = new Map<string, symbol>()
   async function fetchIcon(name: string, size: number, options?: IconOptions): Promise<IconData> {
     const icon = (await ctx.icons.icons([name], size, options)).get(name)
     if (!icon || icon.paths.length === 0) throw new Error(`Icon "${name}" not found`)
@@ -96,26 +111,173 @@ export function createIconActions(ctx: EditorContext) {
     })
   }
 
-  /** Draws the icon `name` fresh in the icon `frameId`, as one step called `label`. */
-  async function drawIcon(label: string, frameId: string, name: string, options?: IconOptions) {
+  async function loadIcon(
+    frameId: string,
+    name: string,
+    options?: IconOptions,
+    signal?: AbortSignal
+  ) {
     const graph = ctx.graph
     const frame = graph.getNode(frameId)
-    if (!frame || !readIcon(frame)) return
-    const icon = await fetchIcon(name, Math.min(frame.width, frame.height), options)
-    // The document or the frame may have been replaced while the icon loaded.
-    if (ctx.graph !== graph || graph.getNode(frameId) !== frame) return
-    changeIcon(label, frameId, () => swapIcon(graph, frameId, icon))
+    const parsed = parseIconName(name)
+    const pageId = ctx.state.currentPageId
+    const cancelled = () => ctx.state.readOnly || signal?.aborted
+    if (!frame || !readIcon(frame) || !parsed || cancelled()) return undefined
+    assertNodeEditable(graph, frameId)
+    const size = Math.min(frame.width, frame.height)
+    const request = Symbol('icon drawing request')
+    drawingRequests.set(frameId, request)
+    try {
+      const loaded = (await ctx.icons.icons([name], size, options)).get(name)
+      const icon = loaded ?? {
+        prefix: parsed.prefix,
+        name: parsed.iconName,
+        width: size,
+        height: size,
+        paths: [],
+        options
+      }
+      // Pending results belong to the exact editable icon and latest request that started them.
+      if (
+        ctx.graph !== graph ||
+        graph.getNode(frameId) !== frame ||
+        !readIcon(frame) ||
+        cancelled() ||
+        ctx.state.currentPageId !== pageId ||
+        drawingRequests.get(frameId) !== request
+      )
+        return undefined
+      assertNodeEditable(graph, frameId)
+      return { graph, frame, icon }
+    } finally {
+      if (drawingRequests.get(frameId) === request) drawingRequests.delete(frameId)
+    }
+  }
+
+  /** Draws only after loading; its synchronous apply owns the history step. */
+  async function drawIcon(
+    label: string,
+    frameId: string,
+    name: string,
+    options?: IconOptions,
+    signal?: AbortSignal
+  ) {
+    const loaded = await loadIcon(frameId, name, options, signal)
+    if (
+      !loaded ||
+      ctx.graph !== loaded.graph ||
+      ctx.graph.getNode(frameId) !== loaded.frame ||
+      signal?.aborted
+    )
+      return
+    changeIcon(label, frameId, () => swapIcon(loaded.graph, frameId, loaded.icon))
   }
 
   /**
    * Draws the icon `name` in the icon `frameId`, keeping its size, position, and color, and how
    * it is drawn when the new icon is from the same set.
    */
-  async function swapIconGlyph(frameId: string, name: string) {
+  async function swapIconGlyph(frameId: string, name: string, options?: IconOptions) {
     const frame = ctx.graph.getNode(frameId)
     const current = frame && readIcon(frame)
     const sameSet = current && parseIconName(current.name)?.prefix === parseIconName(name)?.prefix
-    await drawIcon('Swap icon', frameId, name, sameSet ? current.options : undefined)
+    await drawIcon('Swap icon', frameId, name, options ?? (sameSet ? current.options : undefined))
+  }
+
+  async function setIconOptions(frameId: string, options: IconOptions, signal?: AbortSignal) {
+    const frame = ctx.graph.getNode(frameId)
+    const icon = frame && readIcon(frame)
+    if (icon)
+      await drawIcon(
+        'Change icon options',
+        frameId,
+        icon.name,
+        { ...icon.options, ...options },
+        signal
+      )
+  }
+
+  /** An owned Material weight edit; no global Undo batch remains open across provider work. */
+  function beginIconWeightPreview(frameId: string) {
+    const graph = ctx.graph
+    const frame = graph.getNode(frameId)
+    const identity = frame && readIcon(frame)
+    const prefix = identity && parseIconName(identity.name)?.prefix
+    if (!frame || !identity || !MATERIAL_SYMBOLS_PREFIXES.some((known) => known === prefix))
+      return null
+    assertNodeEditable(graph, frameId)
+    if (isIconModified(graph, frame))
+      throw new Error('Reset the edited icon before changing its weight')
+    const preview = beginNodePreview('Change icon weight', { ownStep: true })
+    let request: AbortController | null = null
+    let pending = Promise.resolve()
+    let ending = false
+    let updating = false
+    const protectedIds = new Set([frameId, ...frame.childIds])
+    const instance = findInstanceAncestor(graph, frameId)
+    if (instance) protectedIds.add(instance.id)
+    const stopObserving = graph.observeNodeChanges({
+      created: noop,
+      before(node) {
+        if (preview.closed) {
+          stopObserving()
+          return
+        }
+        if (!updating && protectedIds.has(node.id)) finish(true)
+      }
+    })
+    const stopSettling = ctx.undo.onBeforeHistory(() => finish(true))
+
+    function finish(commit: boolean) {
+      ending = true
+      request?.abort()
+      stopObserving()
+      stopSettling()
+      if (commit && !ctx.state.readOnly) preview.commit()
+      else preview.cancel()
+    }
+
+    return {
+      get closed() {
+        return preview.closed
+      },
+      update(weight: number) {
+        if (ending || preview.closed) return Promise.resolve()
+        if (!Number.isFinite(weight)) throw new RangeError('Icon weight must be finite')
+        request?.abort()
+        const owner = new AbortController()
+        request = owner
+        const options = { ...readIcon(frame)?.options, wght: weight }
+        pending = (async () => {
+          try {
+            const loaded = await loadIcon(frameId, identity.name, options, owner.signal)
+            if (!loaded || owner.signal.aborted || preview.closed || ctx.graph !== graph) return
+            updating = true
+            try {
+              previewIconWeight(graph, frame, loaded.icon, preview.update)
+            } finally {
+              updating = false
+            }
+          } catch (error) {
+            if (owner.signal.aborted || preview.closed) return
+            finish(false)
+            throw error
+          }
+        })()
+        return pending
+      },
+      async commit() {
+        if (ending || preview.closed) return
+        ending = true
+        await pending
+        stopObserving()
+        stopSettling()
+        if (ctx.state.readOnly) preview.cancel()
+        else preview.commit()
+      },
+      cancel: () => finish(false),
+      finish: () => finish(true)
+    }
   }
 
   /** Draws the icon `frameId` was placed as afresh, undoing edits to its paths. */
@@ -168,6 +330,8 @@ export function createIconActions(ctx: EditorContext) {
     iconProvider: ctx.icons,
     insertIcon,
     swapIconGlyph,
+    setIconOptions,
+    beginIconWeightPreview,
     resetIcon,
     detachIcon: detachIconFrame,
     setIconColor
