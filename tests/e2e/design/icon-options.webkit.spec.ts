@@ -70,18 +70,23 @@ async function currentGeometry() {
   return getSelectedIconGeometry(ctx.page)
 }
 
-test('a nested weight override displays and draws its own weight in the inspector', async () => {
+async function openPenDocument(buffer: Buffer, name: string) {
   const { page, canvas } = ctx
-  const data = await readFile(testPath('fixtures/pen-nested-icon-weight.pen'))
   await page.evaluate(() => {
     window.showOpenFilePicker = undefined
   })
   const opening = page.waitForEvent('filechooser')
   await (await openAppMenu(page, 'File')).getByRole('menuitem', { name: /^Open…/ }).click()
-  await (
-    await opening
-  ).setFiles({ name: 'nested-icon.pen', mimeType: 'application/json', buffer: data })
+  await (await opening).setFiles({ name, mimeType: 'application/json', buffer })
   await canvas.waitForInit()
+}
+
+test('a nested weight override displays and draws its own weight in the inspector', async () => {
+  const { page, canvas } = ctx
+  await openPenDocument(
+    await readFile(testPath('fixtures/pen-nested-icon-weight.pen')),
+    'nested-icon.pen'
+  )
   const instance = await getNodeById(page, 'instance')
   const glyphId = instance?.childIds[0]
   if (!glyphId) throw new Error('Nested icon missing after opening')
@@ -114,18 +119,12 @@ test('a nested weight override displays and draws its own weight in the inspecto
 test('rectangular source icons retain centered artwork through normal Save and Open', async () => {
   const { page, canvas } = ctx
   await page.evaluate(() => {
-    window.showOpenFilePicker = undefined
     window.showSaveFilePicker = undefined
   })
-  const open = async (buffer: Buffer) => {
-    const opening = page.waitForEvent('filechooser')
-    await (await openAppMenu(page, 'File')).getByRole('menuitem', { name: /^Open…/ }).click()
-    await (
-      await opening
-    ).setFiles({ name: 'rectangular-icons.pen', mimeType: 'application/json', buffer })
-    await canvas.waitForInit()
-  }
-  await open(await readFile(testPath('fixtures/pen-rectangular-icons.pen')))
+  await openPenDocument(
+    await readFile(testPath('fixtures/pen-rectangular-icons.pen')),
+    'rectangular-icons.pen'
+  )
   const drawing = async (id: string) => {
     await page.evaluate((id) => window.openPencil?.getStore?.().select([id]), id)
     const node = await getSelectedNode(page)
@@ -151,7 +150,7 @@ test('rectangular source icons retain centered artwork through normal Save and O
     { id: 'wide', type: 'icon', width: 96, height: 40, weight: 700 },
     { id: 'tall', type: 'icon', width: 40, height: 96 }
   ])
-  await open(saved)
+  await openPenDocument(saved, 'rectangular-icons.pen')
   expect(await drawing('wide')).toEqual(wide)
   expect(await drawing('tall')).toEqual(tall)
   await page.evaluate(() => {
@@ -167,6 +166,64 @@ test('rectangular source icons retain centered artwork through normal Save and O
       clip: { x: bounds.x + 150, y: bounds.y + 200, width: 600, height: 320 }
     })
   ).toMatchSnapshot('rectangular-icons.png')
+  canvas.assertNoErrors()
+})
+
+test('rectangular glyph swaps and resets keep centered artwork through history', async () => {
+  const { page, canvas } = ctx
+  await openPenDocument(
+    await readFile(testPath('fixtures/pen-rectangular-icons.pen')),
+    'rectangular-swap.pen'
+  )
+  for (const [id, x, y] of [
+    ['wide', 28, 0],
+    ['tall', 0, 28]
+  ] as const) {
+    await page.evaluate((id) => window.openPencil?.getStore?.().select([id]), id)
+    const original = await currentGeometry()
+    await propertyField(page, 'icon-name').click()
+    const picker = page.getByRole('dialog', { name: 'Swap icon', exact: true })
+    await picker.getByRole('textbox').fill('dark_mode')
+    await picker.getByRole('option', { name: 'dark_mode', exact: true }).click()
+    await expect(propertyField(page, 'icon-name')).toHaveText('dark_mode')
+    const changed = await currentGeometry()
+    expect(changed).not.toEqual(original)
+    const glyphId = (await getSelectedNode(page))?.childIds[0]
+    if (!glyphId) throw new Error('Swapped glyph missing')
+    expect(await getNodeById(page, glyphId)).toMatchObject({ x, y, width: 40, height: 40 })
+    await canvas.undo()
+    await expect.poll(currentGeometry).toEqual(original)
+    await canvas.redo()
+    await expect.poll(currentGeometry).toEqual(changed)
+    await page.evaluate(
+      (id) => window.openPencil?.getStore?.().updateNodeWithUndo(id, { rotation: 15 }),
+      glyphId
+    )
+    await expect(propertyField(page, 'icon-modified')).toBeVisible()
+    await page.getByRole('button', { name: 'Reset to the original icon', exact: true }).click()
+    await expect(propertyField(page, 'icon-modified')).toBeHidden()
+    await expect.poll(currentGeometry).toEqual(changed)
+    const resetId = (await getSelectedNode(page))?.childIds[0]
+    if (!resetId) throw new Error('Reset glyph missing')
+    expect(await getNodeById(page, resetId)).toMatchObject({ x, y, width: 40, height: 40 })
+    await canvas.undo()
+    await expect(propertyField(page, 'icon-modified')).toBeVisible()
+    await canvas.redo()
+    await expect(propertyField(page, 'icon-modified')).toBeHidden()
+  }
+  await page.evaluate(() => {
+    const editor = window.openPencil?.getStore?.()
+    editor?.clearSelection()
+    editor?.centerOn(220, 140, 2)
+  })
+  await canvas.waitForRender()
+  const bounds = await canvas.canvas.boundingBox()
+  if (!bounds) throw new Error('Canvas missing before swapped glyph capture')
+  expect(
+    await page.screenshot({
+      clip: { x: bounds.x + 150, y: bounds.y + 200, width: 600, height: 320 }
+    })
+  ).toMatchSnapshot('rectangular-swapped-icons.png')
   canvas.assertNoErrors()
 })
 

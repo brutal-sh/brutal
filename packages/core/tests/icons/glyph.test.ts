@@ -124,12 +124,12 @@ describe('icon glyphs', () => {
     }
   })
 
-  test('a swap into an unevenly resized icon stretches the glyph to it', () => {
+  test('a swap into an unevenly resized icon centers its proportional glyph', () => {
     const { graph, frame, modified } = placed(OUTLINE)
     resize(graph, frame.id, 40, 20)
     swapIcon(graph, frame.id, buildIconData({ body: OUTLINE }, 'test', 'other', 24, 24, 20))
 
-    expect(graph.getChildren(frame.id)[0]).toMatchObject({ width: 40, height: 20 })
+    expect(graph.getChildren(frame.id)[0]).toMatchObject({ x: 10, y: 0, width: 20, height: 20 })
     expect(modified()).toBe(false)
   })
 

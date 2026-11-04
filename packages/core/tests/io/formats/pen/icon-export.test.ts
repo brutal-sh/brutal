@@ -171,6 +171,105 @@ test('rectangular source icons reopen with their centered actual-font outline an
   }
 })
 
+test.each(['reset', 'swap'] as const)(
+  '%s centers rectangular icons and retains history and named export',
+  async (operation) => {
+    const icons = await materialProvider()
+    const io = new IORegistry([penFormat])
+    for (const [width, height] of [
+      [96, 40],
+      [40, 96]
+    ]) {
+      const source = {
+        version: '2.21',
+        children: [
+          {
+            id: 'rectangular',
+            type: 'icon',
+            library: 'Material Symbols Rounded',
+            icon: 'home',
+            weight: 700,
+            width,
+            height,
+            fill: '#1288AA80'
+          }
+        ]
+      }
+      const { graph } = await io.readDocument(
+        { name: 'source.pen', data: new TextEncoder().encode(JSON.stringify(source)) },
+        { icons }
+      )
+      const artwork = () =>
+        graph
+          .getChildren('rectangular')
+          .map(({ x, y, width, height, vectorNetwork, fills, strokes }) => ({
+            x,
+            y,
+            width,
+            height,
+            vectorNetwork,
+            fills,
+            strokes
+          }))
+      const before = artwork()
+      const editor = createEditor({ graph, icons })
+      try {
+        if (operation === 'reset') await editor.resetIcon('rectangular')
+        else await editor.swapIconGlyph('rectangular', 'material-symbols-rounded:dark_mode')
+        const size = Math.min(width, height)
+        expect(artwork()[0]).toMatchObject({
+          x: (width - size) / 2,
+          y: (height - size) / 2,
+          width: size,
+          height: size
+        })
+        expect(getNodeOrThrow(graph, 'rectangular')).toMatchObject({ width, height })
+        const name = operation === 'reset' ? 'home' : 'dark_mode'
+        const expected = (
+          await icons.icons([`material-symbols-rounded:${name}`], size, { wght: 700 })
+        ).get(`material-symbols-rounded:${name}`)
+        if (!expected) throw new Error('Expected actual-font glyph')
+        expect(artwork().map(({ vectorNetwork }) => vectorNetwork)).toEqual(
+          expected.paths.map(({ vectorNetwork }) => vectorNetwork)
+        )
+        const changed = artwork()
+        const saved = await io.writeDocument('pen', graph)
+        if (typeof saved.data !== 'string') throw new Error('Expected .pen text')
+        expect(parsePenDocument(saved.data).children[0]).toMatchObject({
+          type: 'icon',
+          icon: name,
+          width,
+          height,
+          weight: 700
+        })
+        editor.undo.undo()
+        expect(artwork()).toEqual(before)
+        editor.undo.redo()
+        expect(artwork()).toEqual(changed)
+        const reopened = await io.readDocument(
+          { name: 'reopened.pen', data: new TextEncoder().encode(saved.data) },
+          { icons }
+        )
+        expect(
+          reopened.graph
+            .getChildren('rectangular')
+            .map(({ x, y, width, height, vectorNetwork, fills, strokes }) => ({
+              x,
+              y,
+              width,
+              height,
+              vectorNetwork,
+              fills,
+              strokes
+            }))
+        ).toEqual(changed)
+      } finally {
+        editor.dispose()
+      }
+    }
+  }
+)
+
 test('loads the exact descendant weight and keeps identity, artwork and references through sync', async () => {
   const provider = await materialProvider()
   const requests: (number | string | undefined)[] = []

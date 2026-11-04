@@ -19,6 +19,8 @@ from occurrence700. Actual Pen exports the same fixture with matching frame and 
 bounds, but 571/699 of 40,000 pixels differ; exact raster acceptance remains open.
 Rectangular-source Save/Open and native weight/history/Save/Recents reopening pass; actual Pen
 opens the exported fixture, with equal 560×240 frame bounds but 731 differing pixels.
+Glyph swap/reset now keeps proportional centered artwork, with browser UI/history and native
+API/history/Save/Recents checks; the controlled Pen crescent reference retains 721 differing pixels.
 Zero/live-resize and instance export, physical input and full
 screen/menu parity remain OPEN. The installed main app and user data remain untouched.
 

@@ -3,6 +3,8 @@ import { mkdtemp, readFile, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
+import { omit } from 'es-toolkit'
+
 import type { SkiaRenderer } from '@open-pencil/core/canvas'
 import { parsePenDocument } from '@open-pencil/pen'
 import { toolbarFlyoutItemTestId, toolbarFlyoutTestId } from '@open-pencil/vue/testing'
@@ -76,7 +78,7 @@ describe('native editable icon persistence', () => {
     [96, 40],
     [40, 96]
   ]) {
-    it(`${width}×${height} Material weight restores history and reopens its .pen save`, async () => {
+    it(`${width}×${height} icon weight, reset and swap retain history and reopen exactly`, async () => {
       const directory = await mkdtemp(join(tmpdir(), 'openpen-material-reopen-'))
       const path = join(directory, 'Material weight.pen')
       try {
@@ -124,7 +126,14 @@ describe('native editable icon persistence', () => {
             if (!editor) throw new Error('Native editor unavailable')
             return editor.graph
               .getChildren('material')
-              .map(({ id, vectorNetwork }) => ({ id, vectorNetwork }))
+              .map(({ id, x, y, width, height, vectorNetwork }) => ({
+                id,
+                x,
+                y,
+                width,
+                height,
+                vectorNetwork
+              }))
           })
         const original = await drawing()
         assert.ok(original.length)
@@ -185,6 +194,34 @@ describe('native editable icon persistence', () => {
         await emitNativeMenuAction('edit.redo')
         await browser.waitUntil(async () => (await weight.getText()).includes('700'))
         assert.deepEqual(await drawing(), changed)
+        await browser.execute(async () => {
+          await window.openPencil?.getStore?.().resetIcon('material')
+        })
+        const reset = await drawing()
+        assert.deepEqual(
+          reset.map((drawing) => omit(drawing, ['id'])),
+          changed.map((drawing) => omit(drawing, ['id']))
+        )
+        await browser.execute(async () => {
+          await window.openPencil
+            ?.getStore?.()
+            .swapIconGlyph('material', 'material-symbols-rounded:dark_mode')
+        })
+        const swapped = await drawing()
+        assert.ok(swapped.length)
+        assert.notDeepEqual(
+          swapped.map(({ vectorNetwork }) => vectorNetwork),
+          reset.map(({ vectorNetwork }) => vectorNetwork)
+        )
+        const size = Math.min(width, height)
+        assert.deepEqual(
+          swapped.map(({ x, y, width, height }) => ({ x, y, width, height })),
+          [{ x: (width - size) / 2, y: (height - size) / 2, width: size, height: size }]
+        )
+        await emitNativeMenuAction('edit.undo')
+        assert.deepEqual(await drawing(), reset)
+        await emitNativeMenuAction('edit.redo')
+        assert.deepEqual(await drawing(), swapped)
         await emitNativeMenuAction('save')
         await browser.waitUntil(() =>
           browser.execute(() => window.openPencil?.getStore?.().hasUnsavedChanges() === false)
@@ -207,7 +244,7 @@ describe('native editable icon persistence', () => {
               id: 'material',
               type: 'icon',
               library: 'Material Symbols Rounded',
-              icon: 'home',
+              icon: 'dark_mode',
               width,
               height,
               weight: 700
@@ -243,7 +280,7 @@ describe('native editable icon persistence', () => {
         assert.equal(await $('[data-property="icon-family"]').getText(), 'Material Symbols Rounded')
         assert.deepEqual(
           (await drawing()).map(({ vectorNetwork }) => vectorNetwork),
-          changed.map(({ vectorNetwork }) => vectorNetwork)
+          swapped.map(({ vectorNetwork }) => vectorNetwork)
         )
         assert.equal(await readFile(path, 'utf8'), saved)
       } finally {

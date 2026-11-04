@@ -33,6 +33,8 @@ type NativeTestStore = {
   hasUnsavedChanges: EditorStore['hasUnsavedChanges']
   saveFigFileToPath: EditorStore['saveFigFileToPath']
   createScript: EditorStore['createScript']
+  resetIcon: EditorStore['resetIcon']
+  swapIconGlyph: EditorStore['swapIconGlyph']
   createInstanceFromComponent: EditorStore['createInstanceFromComponent']
   attachScriptSource: EditorStore['attachScriptSource']
   openFigFile: EditorStore['openFigFile']

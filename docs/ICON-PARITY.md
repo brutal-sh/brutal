@@ -150,8 +150,8 @@ Independent review repeats 48 focused tests with 325 assertions and verifies tha
 width stretch remains refused. Some fractional boxes reopened through FIG are also refused:
 float32 storage can shift the path offset away from the exact source-centering check. This
 precision boundary remains open; the guard is not relaxed to hide it.
-Regular glyph swap/reset on a rectangular frame still needs separate qualification; this unit
-does not establish centered geometry for those commands.
+Regular glyph swap/reset is qualified separately below; this source-export unit does not by
+itself establish those commands.
 
 Final owner checks pass 1,748 tests with 11,891 assertions. All 24 icon/toolbar workflows pass
 in Chromium and WebKit without snapshot update, and the five native workflows above pass.
@@ -165,6 +165,37 @@ reference and Open Pen frame exports are both 560×240 at 2x; 731 of 134,400 pix
 maximum channel difference of 73. No exact raster match is claimed.
 
 Private receipts: `local-evidence/icon-rectangles-2026-11-04/`.
+
+## Proportional glyph swap and reset — 2026-11-04
+
+Swap/reset previously stretched a fresh glyph across a rectangular box. The shared drawing
+path now reuses proportional scaling at the shorter side and centers the new paths before
+recording their baseline. Frame position, dimensions, identity options and authored paints
+remain owned by the frame. The obsolete stretch helper is removed.
+
+Actual Pen's controlled document API keeps 96×40 and 40×96 boxes while changing `home` to
+`dark_mode`; its screenshot shows proportionally centered crescents. This establishes document
+behavior, not native picker delivery. Open Pen's equivalent 560×240 frame export differs in
+721 of 134,400 pixels, with maximum channel difference 82. Exact raster parity remains open.
+
+The actual-font command checks cover reset and swap, centered path boxes, exact outlines,
+Undo/Redo, named Save and reopen. Independent review repeats 124 tests with 619 assertions
+and checks differing provider sizes, stroke scaling and retained authored/fixed-color paints.
+The broader owner run passes 1,771 tests with 11,987 assertions. All 26 icon/toolbar workflows
+pass in Chromium and WebKit without snapshot update, including UI swap, path rotation, Reset,
+history and inspected new crescent baselines. Earlier home baselines are unchanged.
+
+Five isolated native checks pass, including 64×64, 96×40 and 40×96 actual-font weight editing,
+API reset/swap, native-menu history, independent saved `dark_mode` fields, close/Recents reopen
+and exact networks. Wide/tall native captures are inspected. Input, reset/swap and menu events
+are programmatic; physical delivery and exact native picker/control pixels remain open.
+Source/Vue/test types, lint with existing warnings and architecture pass; the separate native
+driver gate retains 67 errors outside the touched icon files. Zero/nonfinite drawing behavior
+and runtime sizing are not qualified by this unit. Docs/changelog and staged secret checks
+pass; normal/test bundles build at 81.25/87.75MiB, with strict normal signing and frontend/binary
+test-hook exclusion. The installed main app and user data remain untouched.
+
+Private receipts: `local-evidence/icon-swap-centering-2026-11-04/`.
 
 ## Remaining acceptance
 

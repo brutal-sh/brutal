@@ -28,4 +28,4 @@
 - Save and reopen verified square and centered rectangular Lucide, Feather, Phosphor and Material Symbols icons with their authored paints and supported Material weights, and refuse unsupported bindings or artwork changes.
 - Open `.pen` icons with solid and gradient paint stacks, alpha and disabled or empty fills while preserving glyph stroke geometry, nested instance paint overrides and resolved descendant weights.
 - Edit named icon colors and opacity through the shared Fill controls and retain solid, gradient and mesh paint stacks when saving supported icons.
-- Choose icon families separately from glyphs and edit Material Symbols weights with cancellable, single-step history.
+- Choose icon families separately from glyphs, keep swapped or reset glyphs proportional and centered in rectangular boxes, and edit Material Symbols weights with cancellable, single-step history.
