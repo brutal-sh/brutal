@@ -1,21 +1,37 @@
 import { describe, expect, test } from 'bun:test'
 
+import type { GradientTransform } from '@open-pencil/scene-graph'
 import {
   DEFAULT_GRADIENT_TRANSFORM,
   IDENTITY_GRADIENT_TRANSFORM,
+  applyGradientTransform,
+  composeGradientTransforms,
   defaultGradientStops,
   ellipticalGradientTransform,
   gradientPoint,
   invertGradientTransform,
   linearGradientTransform
 } from '@open-pencil/scene-graph/gradient'
-import type { GradientTransform } from '@open-pencil/scene-graph'
 
 function values(t: GradientTransform) {
   return [t.m00, t.m01, t.m02, t.m10, t.m11, t.m12].map((v) => +v.toFixed(6) + 0)
 }
 
 describe('gradient paints in Figma convention', () => {
+  test('a centered square samples the middle half of its wider parent gradient', () => {
+    const child = composeGradientTransforms(IDENTITY_GRADIENT_TRANSFORM, {
+      m00: 0.5,
+      m01: 0,
+      m02: 0.25,
+      m10: 0,
+      m11: 1,
+      m12: 0
+    })
+    expect(applyGradientTransform(child, { x: 0, y: 0.5 })).toEqual({ x: 0.25, y: 0.5 })
+    expect(applyGradientTransform(child, { x: 1, y: 0.5 })).toEqual({ x: 0.75, y: 0.5 })
+    expect(gradientPoint(child, { x: 0, y: 0.5 })).toEqual({ x: -0.5, y: 0.5 })
+  })
+
   test('the identity runs from the left edge middle to the right edge middle', () => {
     expect(gradientPoint(IDENTITY_GRADIENT_TRANSFORM, { x: 0, y: 0.5 })).toEqual({ x: 0, y: 0.5 })
     expect(gradientPoint(IDENTITY_GRADIENT_TRANSFORM, { x: 1, y: 0.5 })).toEqual({ x: 1, y: 0.5 })
@@ -26,7 +42,10 @@ describe('gradient paints in Figma convention', () => {
     expect(values(linearGradientTransform({ x: 0.5, y: 0 }, { x: 0.5, y: 1 }))).toEqual(
       values(DEFAULT_GRADIENT_TRANSFORM)
     )
-    expect(gradientPoint(DEFAULT_GRADIENT_TRANSFORM, { x: 0.5, y: 0.5 })).toEqual({ x: 0.5, y: 0.5 })
+    expect(gradientPoint(DEFAULT_GRADIENT_TRANSFORM, { x: 0.5, y: 0.5 })).toEqual({
+      x: 0.5,
+      y: 0.5
+    })
   })
 
   test('a transform and its inverse undo each other', () => {
@@ -36,7 +55,11 @@ describe('gradient paints in Figma convention', () => {
   })
 
   test('an elliptical gradient is centred where its centre was given', () => {
-    const t = ellipticalGradientTransform({ x: 0.35, y: 0.4 }, { x: 0.6, y: 0.4 }, { x: 0.35, y: 0.73 })
+    const t = ellipticalGradientTransform(
+      { x: 0.35, y: 0.4 },
+      { x: 0.6, y: 0.4 },
+      { x: 0.35, y: 0.73 }
+    )
     const center = gradientPoint(t, { x: 0.5, y: 0.5 })
     expect(center.x).toBeCloseTo(0.35, 6)
     expect(center.y).toBeCloseTo(0.4, 6)

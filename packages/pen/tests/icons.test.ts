@@ -58,6 +58,62 @@ function glyphOf(graph: SceneGraph, instanceId: string): SceneNode {
 }
 
 describe('parsePenFile — icons in components', () => {
+  test('a nested instance replaces a paint stack without compounding intrinsic opacity', () => {
+    const graph = parseDocument(
+      [
+        {
+          ...item,
+          children: [
+            {
+              id: 'glyph',
+              type: 'icon',
+              library: 'lucide',
+              icon: 'zap',
+              width: 48,
+              height: 24,
+              fill: ['#FF000080', '#0000FF80']
+            }
+          ]
+        },
+        {
+          id: 'recolored',
+          type: 'ref',
+          ref: 'item',
+          descendants: { glyph: { fill: '#00FF0080' } }
+        }
+      ],
+      {},
+      {
+        icons: {
+          draw(...args: Parameters<typeof icons.draw>) {
+            icons.draw(...args)
+            const [graph, frameId] = args
+            for (const path of graph.getChildren(frameId))
+              graph.updateNode(path.id, {
+                fills: path.fills.map((paint) => ({ ...paint, opacity: 0.5 }))
+              })
+            return true
+          }
+        }
+      }
+    )
+    const original = graph.getChildren('glyph')[0]
+    expect(original.fills).toHaveLength(2)
+    const copy = glyphOf(graph, 'recolored')
+    const check = () => {
+      const [path] = graph.getChildren(copy.id)
+      expect(path.fills).toHaveLength(1)
+      expect(path.fills[0]).toMatchObject({
+        color: { r: 0, g: 1, b: 0, a: 128 / 255 },
+        opacity: 0.5 * (128 / 255)
+      })
+      expect(hasInstanceOverride(graph, path.id, 'fills')).toBe(true)
+    }
+    check()
+    syncInstance(graph, copy.id)
+    check()
+  })
+
   test('reads an icon in a component as an instance of an icon component', () => {
     const graph = read()
     const glyph = getNodeOrThrow(graph, 'glyph')

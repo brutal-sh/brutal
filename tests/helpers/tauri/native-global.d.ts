@@ -34,9 +34,15 @@ type NativeTestStore = {
   createInstanceFromComponent: EditorStore['createInstanceFromComponent']
   attachScriptSource: EditorStore['attachScriptSource']
   openFigFile: EditorStore['openFigFile']
+  clearSelection: EditorStore['clearSelection']
+  centerOn: EditorStore['centerOn']
+  canvasRenderers: EditorStore['canvasRenderers']
+  requestRepaint: EditorStore['requestRepaint']
   state: {
     documentName: string
     zoom: EditorStore['state']['zoom']
+    panX: EditorStore['state']['panX']
+    panY: EditorStore['state']['panY']
     snappingPreferences: SnappingPreferences
     currentPageId: string
     editingTextId: string | null

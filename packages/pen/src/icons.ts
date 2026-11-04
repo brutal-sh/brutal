@@ -1,9 +1,17 @@
 import { pick } from 'es-toolkit/object'
 import { isEqual } from 'es-toolkit/predicate'
 
-import type { SceneGraph, SceneNode } from '@open-pencil/scene-graph'
+import type { Fill, GradientTransform, SceneGraph, SceneNode } from '@open-pencil/scene-graph'
 import { BLACK } from '@open-pencil/scene-graph/constants'
-import { readIconTint } from '@open-pencil/scene-graph/icons'
+import { copyFill } from '@open-pencil/scene-graph/copy'
+import { composeGradientTransforms } from '@open-pencil/scene-graph/gradient'
+import {
+  iconDrawing,
+  iconGlyph,
+  readIcon,
+  readIconTint,
+  withIcon
+} from '@open-pencil/scene-graph/icons'
 import {
   getInstances,
   INSTANCE_SYNC_PROPS,
@@ -12,7 +20,6 @@ import {
   recordInstanceOverride,
   swapInstanceComponent
 } from '@open-pencil/scene-graph/instances'
-import type { Color } from '@open-pencil/scene-graph/primitives'
 
 import { iconName, iconOptions } from './assets'
 import type { Build } from './nodes'
@@ -22,6 +29,66 @@ import { resolveOptionalNumber, resolveString } from './variables'
 /** Space between the icon components on their page. */
 const ICON_COMPONENT_GAP = 16
 
+/** Keep a glyph's stroke geometry and intrinsic opacity while applying the icon's paint stack. */
+function glyphPaints<T extends Fill>(source: T[], paints: Fill[], local: GradientTransform): T[] {
+  return paints.flatMap((paint) =>
+    source.map((base) => {
+      const next = copyFill({ ...base, ...paint, opacity: base.opacity * paint.opacity })
+      if (next.gradientTransform)
+        next.gradientTransform = composeGradientTransforms(next.gradientTransform, local)
+      return next
+    })
+  )
+}
+
+/** A nested instance can point through painted copies before reaching the original glyph. */
+function glyphSource(graph: SceneGraph, glyph: SceneNode): SceneNode {
+  let source = glyph
+  const seen = new Set<string>()
+  while (source.componentId && !seen.has(source.id)) {
+    seen.add(source.id)
+    const next = graph.getNode(source.componentId)
+    if (!next) break
+    source = next
+  }
+  return source
+}
+
+function paintGlyph(graph: SceneGraph, frame: SceneNode, paints: Fill[]): void {
+  for (const glyph of graph.getChildren(frame.id)) {
+    const source = frame.type === 'INSTANCE' ? glyphSource(graph, glyph) : glyph
+    const tint = readIconTint(source)
+    const local = {
+      m00: glyph.width / frame.width,
+      m01: 0,
+      m02: glyph.x / frame.width,
+      m10: 0,
+      m11: glyph.height / frame.height,
+      m12: glyph.y / frame.height
+    }
+    const fills = tint.includes('fill') ? glyphPaints(source.fills, paints, local) : glyph.fills
+    const strokes = tint.includes('stroke')
+      ? glyphPaints(source.strokes, paints, local)
+      : glyph.strokes
+    const changed = [
+      ...(isEqual(fills, glyph.fills) ? [] : ['fills']),
+      ...(isEqual(strokes, glyph.strokes) ? [] : ['strokes'])
+    ]
+    if (!changed.length) continue
+    graph.updateNode(glyph.id, { fills, strokes })
+    if (frame.type === 'INSTANCE') recordInstanceOverride(graph, glyph.id, changed)
+  }
+  const icon = readIcon(frame)
+  if (icon)
+    graph.updateNode(frame.id, {
+      pluginData: withIcon(frame, {
+        ...icon,
+        glyph: iconGlyph(graph, frame),
+        drawing: iconDrawing(graph, frame)
+      })
+    })
+}
+
 /**
  * An icon draws its glyph in its fill colour, scaled to fit its box and centred, as pen.dev does;
  * an icon the host could not load is an empty frame. Its library, name, and weight may be
@@ -29,6 +96,7 @@ const ICON_COMPONENT_GAP = 16
  */
 export function drawIcon(node: SceneNode, pen: PenNode, build: Build): void {
   const { graph, ctx } = build
+  const paints = node.fills
   const color = node.fills.find((fill) => fill.type === 'SOLID')?.color ?? { ...BLACK }
   node.fills = []
   for (const childId of node.childIds) graph.deleteNode(childId)
@@ -44,6 +112,7 @@ export function drawIcon(node: SceneNode, pen: PenNode, build: Build): void {
   for (const glyph of graph.getChildren(node.id)) {
     graph.updateNode(glyph.id, { x: glyph.x + dx, y: glyph.y + dy })
   }
+  paintGlyph(graph, node, paints)
 }
 
 /**
@@ -86,26 +155,6 @@ function iconComponent(build: Build, pen: PenNode, width: number, height: number
   return component.id
 }
 
-/** Paints an icon's glyph `color` where it takes the icon's colour, as overrides of the instance. */
-function recolorGlyph(graph: SceneGraph, instanceId: string, color: Color): void {
-  for (const glyph of graph.getChildren(instanceId)) {
-    const tint = readIconTint(glyph)
-    const fills = tint.includes('fill')
-      ? glyph.fills.map((fill) => ({ ...fill, color }))
-      : glyph.fills
-    const strokes = tint.includes('stroke')
-      ? glyph.strokes.map((stroke) => ({ ...stroke, color }))
-      : glyph.strokes
-    const changed = [
-      ...(isEqual(fills, glyph.fills) ? [] : ['fills']),
-      ...(isEqual(strokes, glyph.strokes) ? [] : ['strokes'])
-    ]
-    if (changed.length === 0) continue
-    graph.updateNode(glyph.id, { fills, strokes })
-    recordInstanceOverride(graph, glyph.id, changed)
-  }
-}
-
 /**
  * Keeps what the icon instance sets on itself, such as its opacity or effects, as overrides of it:
  * the icon component is shared by every use of the glyph at that size, so linking to it would
@@ -141,7 +190,7 @@ function showsReplacedGlyph(graph: SceneGraph, copy: SceneNode, sourceId: string
  */
 export function useIconComponent(node: SceneNode, pen: PenNode, build: Build): void {
   const { graph } = build
-  const color = node.fills.find((fill) => fill.type === 'SOLID')?.color ?? { ...BLACK }
+  const paints = node.fills
   node.fills = []
   const own = structuredClone(pick(node, INSTANCE_SYNC_PROPS))
   const componentId = iconComponent(build, pen, node.width, node.height)
@@ -157,7 +206,7 @@ export function useIconComponent(node: SceneNode, pen: PenNode, build: Build): v
     populateInstanceChildren(graph, node.id, node.componentId)
   }
   keepOwnFields(graph, node.id, own, componentId)
-  recolorGlyph(graph, node.id, color)
+  paintGlyph(graph, node, paints)
 }
 
 /**

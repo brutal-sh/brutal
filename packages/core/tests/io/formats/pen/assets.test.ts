@@ -6,7 +6,15 @@ import { fromUint8Array, toUint8Array } from 'js-base64'
 import { createEditor } from '@open-pencil/core'
 import type { IconData, IconProvider } from '@open-pencil/core/icons'
 import { IORegistry, penFormat } from '@open-pencil/core/io'
-import { readIcon, type IconOptions } from '@open-pencil/scene-graph/icons'
+import type { PenNode } from '@open-pencil/pen'
+import type { Fill } from '@open-pencil/scene-graph'
+import { applyGradientTransform } from '@open-pencil/scene-graph/gradient'
+import {
+  iconDrawing,
+  isIconModified,
+  readIcon,
+  type IconOptions
+} from '@open-pencil/scene-graph/icons'
 import { parseSVGPath } from '@open-pencil/scene-graph/parse-path'
 
 // A 2 × 1 PNG.
@@ -17,6 +25,12 @@ const PNG = toUint8Array(
 interface IconRequest {
   names: string[]
   options?: IconOptions
+}
+
+interface IconPaintCase {
+  name: string
+  fill: PenNode['fill']
+  expected: Partial<Fill>[]
 }
 
 function iconProvider(available: string[], requested: IconRequest[]): IconProvider {
@@ -63,6 +77,106 @@ function penBytes(children: unknown[]) {
 }
 
 describe('penFormat.readDocument — assets', () => {
+  test.each([
+    { name: 'missing', fill: undefined, expected: [] },
+    { name: 'empty', fill: [], expected: [] },
+    {
+      name: 'disabled',
+      fill: { type: 'color', color: '#FFFFFF', enabled: false },
+      expected: [{ type: 'SOLID', visible: false }]
+    },
+    {
+      name: 'alpha',
+      fill: '#FFFFFF80',
+      expected: [{ type: 'SOLID', color: { r: 1, g: 1, b: 1, a: 128 / 255 }, opacity: 128 / 255 }]
+    },
+    {
+      name: 'multiple',
+      fill: ['#FF0000', '#0000FF80'],
+      expected: [
+        { type: 'SOLID', color: { r: 1, g: 0, b: 0, a: 1 } },
+        { type: 'SOLID', color: { r: 0, g: 0, b: 1, a: 128 / 255 }, opacity: 128 / 255 }
+      ]
+    },
+    {
+      name: 'wide gradient',
+      fill: {
+        type: 'gradient',
+        gradientType: 'linear',
+        rotation: 270,
+        opacity: 0.8,
+        colors: [
+          { color: '#FF0000', position: 0 },
+          { color: '#0000FF', position: 1 }
+        ]
+      },
+      expected: [{ type: 'GRADIENT_LINEAR', opacity: 0.8 }]
+    }
+  ] satisfies IconPaintCase[])(
+    'keeps $name icon paint on tinted fills and strokes',
+    async ({ fill, expected, name }: IconPaintCase) => {
+      const provider = iconProvider(['lucide:heart'], [])
+      const sourceIcons = provider.icons
+      provider.icons = async (...args) => {
+        const result = await sourceIcons(...args)
+        for (const icon of result.values()) {
+          const [path] = icon.paths
+          if (!path) throw new Error('Fixture glyph missing')
+          icon.paths = [
+            { ...path, fillOpacity: 0.5 },
+            {
+              ...path,
+              fill: null,
+              stroke: 'currentColor',
+              strokeWidth: 2,
+              strokeCap: 'round',
+              strokeJoin: 'round'
+            }
+          ]
+        }
+        return result
+      }
+      const { graph } = await io.readDocument(
+        {
+          name: 'icon-paints.pen',
+          data: penBytes([
+            {
+              id: 'painted',
+              type: 'icon',
+              library: 'lucide',
+              icon: 'heart',
+              width: 48,
+              height: 24,
+              fill
+            }
+          ])
+        },
+        { icons: provider }
+      )
+      const frame = getNodeOrThrow(graph, 'painted')
+      const [filled, stroked] = graph.getChildren(frame.id)
+      expect(frame.fills).toEqual([])
+      expect(filled.fills).toHaveLength(expected.length)
+      expect(stroked.strokes).toHaveLength(expected.length)
+      for (const [index, paint] of expected.entries()) {
+        expect(filled.fills[index]).toMatchObject({ ...paint, opacity: (paint.opacity ?? 1) * 0.5 })
+        expect(stroked.strokes[index]).toMatchObject({ ...paint, weight: 2 })
+        expect(filled.fills[index].color).not.toBe(stroked.strokes[index].color)
+      }
+      expect(isIconModified(graph, frame)).toBe(false)
+      const baseline = readIcon(frame)?.drawing
+      if (!baseline) throw new Error('Icon drawing baseline missing')
+      expect(iconDrawing(graph, frame)).toEqual(baseline)
+      expect(filled.x).toBe(12)
+      if (name === 'wide gradient') {
+        const transform = filled.fills[0].gradientTransform
+        if (!transform) throw new Error('Gradient transform missing')
+        expect(applyGradientTransform(transform, { x: 0, y: 0.5 }).x).toBeCloseTo(0.25)
+        expect(applyGradientTransform(transform, { x: 1, y: 0.5 }).x).toBeCloseTo(0.75)
+      }
+    }
+  )
+
   test('a loaded named icon stays editable through recolor, save and reopen', async () => {
     const provider = iconProvider(['lucide:heart'], [])
     const { graph } = await io.readDocument(

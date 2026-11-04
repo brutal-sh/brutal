@@ -118,6 +118,40 @@ A native setup import uses a browser-only alias before switching to the owning p
 export. That failed run does not qualify UI behavior. Private receipts:icon-toolbar-focus-2026-11-04.
 Source-only review finds no defensible regression; it is not additional runtime acceptance.
 
+## Icon paint loading — 2026-11-04
+
+The actual Pen1.2.21 app renders an icon's gradient, alpha and enabled state, and draws
+nothing for an omitted or empty fill. A wider icon samples the gradient in its parent
+bounds while its square glyph remains centered. Independent owned probe documents and
+Pen's exported images are private in icon-paints-2026-11-04; no vendor artwork is added.
+
+Open Pen applies those paint stacks to the glyph's tinted fills and strokes, retaining
+intrinsic opacity and stroke geometry. Nested reusable instances resolve the original
+glyph before applying replacement paints. The regression first produces two green paints
+instead of one, then passes with the expected opacity and retained instance override after
+component synchronization. Loaded icons rebase their artwork fingerprint after centering
+and painting, so an authored non-square icon does not immediately appear modified.
+
+The two headless comparisons report zero changed pixels with the existing comparator's
+0.1 color threshold and anti-alias exclusion. They are **not exact matches**: decoded RGBA
+differs at1,457/67,200 pixels in the first sheet and2,238/109,200 in the extended sheet;
+the largest channel difference is118. Exact paired pixels remain unaccepted.
+
+Executed coverage includes304 owner tests with922 assertions, a browser File Open canvas
+snapshot with sampled solid/alpha/disabled/empty/gradient colors, and the existing icon
+picker/placement/save workflows. A native WebView journey dispatches a synthetic file drop
+through the app's real document-opening handler, checks opaque/half-alpha/disabled pixels,
+and displays the named icon controls. The existing native placement/color Save/Recents
+round trip also passes. This does not prove a physical OS drop or the system Open panel.
+Earlier native probes mistakenly used the FIG-only loader and the browser-URL helper;
+those failures are retained and do not qualify `.pen` loading.
+
+The broader fill-mode snapshot run fails on the existing avatar/background image, both
+with this change and after restoring the three changed production files to the parent
+source. Its remaining two scenarios do not run in that batch. The baseline is not refreshed,
+and this is not an all-canvas-suite pass. Complete Icon Fill editing and paint persistence,
+image/mesh/shader/bound-variable projection and exact icon/header/toolbar pixels remain open.
+
 ## Remaining
 
 The earlier Script gap list is superseded by [Script implementation and executed evidence](SCRIPT-PARITY.md).

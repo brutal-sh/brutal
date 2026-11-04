@@ -66,6 +66,94 @@ async function checkIconControls() {
 }
 
 describe('native editable icon persistence', () => {
+  it('opens dropped icons in the native WebView and draws alpha and disabled paints', async () => {
+    await createNativeLayerFixture()
+    await browser.execute(() => {
+      const data = JSON.stringify({
+        version: '2.21',
+        children: [
+          {
+            id: 'sheet',
+            type: 'frame',
+            layout: 'none',
+            width: 420,
+            height: 160,
+            fill: '#18181B',
+            children: [
+              '#FFFFFF',
+              '#FFFFFF80',
+              { type: 'color', color: '#FFFFFF', enabled: false }
+            ].map((fill, index) => ({
+              id: `icon-${index}`,
+              type: 'icon',
+              library: 'lucide',
+              icon: 'heart',
+              x: 20 + index * 100,
+              y: 40,
+              width: 64,
+              height: 64,
+              fill
+            }))
+          }
+        ]
+      })
+      const transfer = new DataTransfer()
+      transfer.items.add(new File([data], 'Painted icons.pen', { type: 'application/json' }))
+      window.dispatchEvent(new DragEvent('drop', { dataTransfer: transfer, cancelable: true }))
+    })
+    await browser.waitUntil(() =>
+      browser.execute(
+        () => !!window.openPencil?.getStore?.().graph.getNode('icon-0')?.childIds?.length
+      )
+    )
+    const pixels = await browser.execute(() => {
+      const current = window.openPencil?.getStore?.()
+      if (!current) throw new Error('Opened editor unavailable')
+      current.clearSelection()
+      current.centerOn(210, 80, 1)
+      const renderer = current.canvasRenderers.find((candidate) => candidate.tracksSceneSettlement)
+      const source = [
+        ...document.querySelectorAll<HTMLCanvasElement>('[data-test-id="scene-canvas-element"]')
+      ].find((canvas) => canvas.getClientRects().length > 0)
+      if (!renderer || !source) throw new Error('Native scene renderer unavailable')
+      const copy = document.createElement('canvas')
+      copy.width = source.width
+      copy.height = source.height
+      const context = copy.getContext('2d', { colorSpace: 'srgb' })
+      if (!context) throw new Error('Native sRGB context unavailable')
+      renderer.renderFromEditorState(
+        current.state,
+        current.graph,
+        current.textEditor,
+        renderer.viewportWidth,
+        renderer.viewportHeight,
+        false,
+        'scene',
+        true
+      )
+      context.drawImage(source, 0, 0)
+      // Lucide heart's left lobe crosses (2, 9.5) in its 24px source square.
+      const values = [0, 1, 2].map((index) =>
+        Array.from(
+          context.getImageData(
+            Math.floor((current.state.panX + 20 + index * 100 + 16 / 3) * devicePixelRatio),
+            Math.floor((current.state.panY + 40 + 76 / 3) * devicePixelRatio),
+            1,
+            1
+          ).data
+        )
+      )
+      current.select(['icon-0'])
+      current.requestRepaint()
+      return values
+    })
+    assert.deepEqual(pixels[0], [255, 255, 255, 255])
+    assert.deepEqual(pixels[1], [140, 140, 141, 255])
+    assert.deepEqual(pixels[2], [24, 24, 27, 255])
+    await $('[data-property="icon-name"]').waitForDisplayed()
+    assert.ok((await $('[data-property="icon-name"]').getText()).includes('heart'))
+  })
+
   it('places a heart, saves its changed color and reopens the editable icon from Recents', async () => {
     const directory = await mkdtemp(join(tmpdir(), 'openpen-icon-reopen-'))
     const path = join(directory, 'Editable heart.pen')

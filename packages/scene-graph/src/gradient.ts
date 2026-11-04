@@ -114,6 +114,21 @@ export function applyGradientTransform(t: GradientTransform, point: Vector): Vec
   }
 }
 
+/** Apply `local` first, then `parent`, keeping paint coordinates through nested bounds. */
+export function composeGradientTransforms(
+  parent: GradientTransform,
+  local: GradientTransform
+): GradientTransform {
+  return {
+    m00: parent.m00 * local.m00 + parent.m01 * local.m10,
+    m01: parent.m00 * local.m01 + parent.m01 * local.m11,
+    m02: parent.m00 * local.m02 + parent.m01 * local.m12 + parent.m02,
+    m10: parent.m10 * local.m00 + parent.m11 * local.m10,
+    m11: parent.m10 * local.m01 + parent.m11 * local.m11,
+    m12: parent.m10 * local.m02 + parent.m11 * local.m12 + parent.m12
+  }
+}
+
 /** Where a point of gradient space falls in the layer's unit square. */
 export function gradientPoint(t: GradientTransform, point: Vector): Vector {
   return applyGradientTransform(invertGradientTransform(t), point)

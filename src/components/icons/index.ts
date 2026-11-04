@@ -19,7 +19,6 @@ import IconPuzzle from '~icons/lucide/puzzle'
 import IconRows from '~icons/lucide/rows-3'
 import IconScaling from '~icons/lucide/scaling'
 import IconShapes from '~icons/lucide/shapes'
-import IconSmile from '~icons/lucide/smile'
 import IconSpline from '~icons/lucide/spline'
 import IconSquare from '~icons/lucide/square'
 import IconSlot from '~icons/lucide/square-dashed'
@@ -115,7 +114,7 @@ export function nodeIcon(node: {
     const icon = outlineIcon(node.outline)
     if (icon) return icon
   }
-  if (node.icon && node.type === 'FRAME') return IconSmile
+  if (node.icon && node.type === 'FRAME') return IconSquare
   if (node.type === 'FRAME' && node.layoutMode !== 'NONE')
     return AUTO_LAYOUT_ICONS[node.layoutMode] ?? IconFrame
   return NODE_ICONS[node.type] ?? IconSquare

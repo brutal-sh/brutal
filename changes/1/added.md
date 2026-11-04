@@ -26,3 +26,4 @@
 - Remember browser device and separate responsive zoom choices across new documents and editor reloads, disable unavailable history navigation, and show browser feedback without resizing the page.
 - Place a centered white24px heart with the Primitives Icon tool, return to Move after placement, and undo or redo the whole icon; Insert Icon keeps the glyph picker, and secondary Line/Star tools remain available through toolbar customization.
 - Save and reopen unedited24px Lucide icons as editable named glyphs with their color, and refuse exports that would discard changed artwork or unsupported icon content.
+- Open `.pen` icons with solid and gradient paint stacks, alpha and disabled or empty fills while preserving glyph stroke geometry and nested instance paint overrides.
