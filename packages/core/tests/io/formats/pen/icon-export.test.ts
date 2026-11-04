@@ -93,6 +93,84 @@ test('Material named export reopens the actual font outline, weight, source size
   }
 })
 
+test('rectangular source icons reopen with their centered actual-font outline and authored paint', async () => {
+  const icons = await materialProvider()
+  const io = new IORegistry([penFormat])
+  for (const [width, height] of [
+    [96, 40],
+    [40, 96],
+    [96.5, 40.25]
+  ]) {
+    for (const weight of [200, 700]) {
+      const source = {
+        version: '2.21',
+        children: [
+          {
+            id: 'rectangular',
+            type: 'icon',
+            library: 'Material Symbols Rounded',
+            icon: 'home',
+            width,
+            height,
+            weight,
+            fill: '#1288AA80'
+          }
+        ]
+      }
+      const { graph } = await io.readDocument(
+        { name: 'rectangular.pen', data: new TextEncoder().encode(JSON.stringify(source)) },
+        { icons }
+      )
+      const size = Math.min(width, height)
+      const artwork = graph
+        .getChildren('rectangular')
+        .map(({ x, y, width, height, vectorNetwork, fills, strokes }) => ({
+          x,
+          y,
+          width,
+          height,
+          vectorNetwork,
+          fills,
+          strokes
+        }))
+      expect(artwork.length).toBeGreaterThan(0)
+      expect(artwork[0]).toMatchObject({
+        x: (width - size) / 2,
+        y: (height - size) / 2,
+        width: size,
+        height: size
+      })
+      const saved = await io.writeDocument('pen', graph)
+      if (typeof saved.data !== 'string') throw new Error('Expected .pen text')
+      expect(parsePenDocument(saved.data).children[0]).toMatchObject({
+        type: 'icon',
+        width,
+        height,
+        weight,
+        library: 'Material Symbols Rounded',
+        icon: 'home'
+      })
+      const reopened = await io.readDocument(
+        { name: 'reopened.pen', data: new TextEncoder().encode(saved.data) },
+        { icons }
+      )
+      expect(
+        reopened.graph
+          .getChildren('rectangular')
+          .map(({ x, y, width, height, vectorNetwork, fills, strokes }) => ({
+            x,
+            y,
+            width,
+            height,
+            vectorNetwork,
+            fills,
+            strokes
+          }))
+      ).toEqual(artwork)
+    }
+  }
+})
+
 test('loads the exact descendant weight and keeps identity, artwork and references through sync', async () => {
   const provider = await materialProvider()
   const requests: (number | string | undefined)[] = []

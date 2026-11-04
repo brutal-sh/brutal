@@ -111,6 +111,65 @@ test('a nested weight override displays and draws its own weight in the inspecto
   canvas.assertNoErrors()
 })
 
+test('rectangular source icons retain centered artwork through normal Save and Open', async () => {
+  const { page, canvas } = ctx
+  await page.evaluate(() => {
+    window.showOpenFilePicker = undefined
+    window.showSaveFilePicker = undefined
+  })
+  const open = async (buffer: Buffer) => {
+    const opening = page.waitForEvent('filechooser')
+    await (await openAppMenu(page, 'File')).getByRole('menuitem', { name: /^Open…/ }).click()
+    await (
+      await opening
+    ).setFiles({ name: 'rectangular-icons.pen', mimeType: 'application/json', buffer })
+    await canvas.waitForInit()
+  }
+  await open(await readFile(testPath('fixtures/pen-rectangular-icons.pen')))
+  const drawing = async (id: string) => {
+    await page.evaluate((id) => window.openPencil?.getStore?.().select([id]), id)
+    const node = await getSelectedNode(page)
+    const geometry = await currentGeometry()
+    expect(geometry.length).toBeGreaterThan(0)
+    return { width: node?.width, height: node?.height, geometry }
+  }
+  const wide = await drawing('wide')
+  expect(wide).toMatchObject({ width: 96, height: 40 })
+  await expect(propertyField(page, 'icon-weight')).toContainText('700')
+  const tall = await drawing('tall')
+  expect(tall).toMatchObject({ width: 40, height: 96 })
+  await expect(propertyField(page, 'icon-weight')).toContainText('200')
+  const downloading = page.waitForEvent('download')
+  await (
+    await openAppMenu(page, 'File')
+  )
+    .getByRole('menuitem', { name: /^Save(?:\s|$)/ })
+    .first()
+    .click()
+  const saved = await readFile(await (await downloading).path())
+  expect(parsePenDocument(saved.toString()).children[0].children).toMatchObject([
+    { id: 'wide', type: 'icon', width: 96, height: 40, weight: 700 },
+    { id: 'tall', type: 'icon', width: 40, height: 96 }
+  ])
+  await open(saved)
+  expect(await drawing('wide')).toEqual(wide)
+  expect(await drawing('tall')).toEqual(tall)
+  await page.evaluate(() => {
+    const editor = window.openPencil?.getStore?.()
+    editor?.clearSelection()
+    editor?.centerOn(220, 140, 2)
+  })
+  await canvas.waitForRender()
+  const bounds = await canvas.canvas.boundingBox()
+  if (!bounds) throw new Error('Canvas missing before the rectangular icon snapshot')
+  expect(
+    await page.screenshot({
+      clip: { x: bounds.x + 150, y: bounds.y + 200, width: 600, height: 320 }
+    })
+  ).toMatchSnapshot('rectangular-icons.png')
+  canvas.assertNoErrors()
+})
+
 test('family changes preserve the name, size, Fill and frame identity through Undo', async () => {
   const { page, canvas } = ctx
   await insertHeart()

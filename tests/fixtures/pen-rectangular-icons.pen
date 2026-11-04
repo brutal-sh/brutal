@@ -1,0 +1,14 @@
+{
+  "version": "2.21",
+  "children": [{
+    "id": "rectangles", "name": "Rectangular icons", "type": "frame",
+    "x": 80, "y": 80, "width": 280, "height": 120, "layout": "none", "fill": "#27272A",
+    "children": [{
+      "id": "wide", "name": "Wide home", "type": "icon", "library": "Material Symbols Rounded",
+      "icon": "home", "weight": 700, "x": 16, "y": 16, "width": 96, "height": 40, "fill": "#FFFFFF"
+    }, {
+      "id": "tall", "name": "Tall home", "type": "icon", "library": "Material Symbols Rounded",
+      "icon": "home", "weight": 200, "x": 180, "y": 16, "width": 40, "height": 96, "fill": "#FFFFFF"
+    }]
+  }]
+}

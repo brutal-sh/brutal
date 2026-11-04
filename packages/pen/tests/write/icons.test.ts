@@ -15,21 +15,24 @@ import {
 import { parseSVGPath } from '@open-pencil/scene-graph/parse-path'
 import { scaleVectorNetworkForResize } from '@open-pencil/scene-graph/resize'
 
-function setup(size = 24, name = 'lucide:heart', options?: IconOptions) {
+function setup(width = 24, name = 'lucide:heart', options?: IconOptions, height = width) {
+  const size = Math.min(width, height)
   const graph = new SceneGraph()
   const page = graph.getPages()[0]
   const frame = graph.createNode('FRAME', page.id, {
     name: 'Icon',
     x: 12.5,
     y: 33.25,
-    width: size,
-    height: size,
+    width,
+    height,
     fills: []
   })
   // A provider fixture: native acceptance separately loads and inspects the real heart.
   const network = parseSVGPath('M2 8L12 20L22 8Z')
   const path = graph.createNode('VECTOR', frame.id, {
     name: 'path',
+    x: (width - size) / 2,
+    y: (height - size) / 2,
     width: size,
     height: size,
     vectorNetwork: scaleVectorNetworkForResize(network, 24, 24, size, size) ?? network,
@@ -90,7 +93,7 @@ test.each([
   ['material-symbols-outlined', 'Material Symbols Outlined'],
   ['material-symbols-rounded', 'Material Symbols Rounded'],
   ['material-symbols-sharp', 'Material Symbols Sharp']
-])('writes supported %s icons at their square source sizes', (prefix, library) => {
+])('writes supported %s icons at their square and rectangular source sizes', (prefix, library) => {
   for (const size of [16, 24, 64, 96.5]) {
     const options = prefix.startsWith('material-')
       ? { wght: 700, opsz: 24, FILL: 0, GRAD: 0 }
@@ -99,6 +102,25 @@ test.each([
     const before = structuredClone([...graph.nodes.values()])
     const saved = writePenDocument(graph).children[0]
     expect(saved).toMatchObject({ type: 'icon', library, icon: 'home', width: size, height: size })
+    expect(saved.weight).toBe(options?.wght)
+    expect([...graph.nodes.values()]).toEqual(before)
+  }
+  for (const [width, height] of [
+    [96, 40],
+    [40, 96],
+    [96.5, 40.25]
+  ]) {
+    const options = prefix.startsWith('material-') ? { wght: 700 } : undefined
+    const { graph } = setup(width, `${prefix}:home`, options, height)
+    const before = structuredClone([...graph.nodes.values()])
+    const saved = writePenDocument(graph).children[0]
+    expect(saved).toMatchObject({
+      type: 'icon',
+      library,
+      icon: 'home',
+      width,
+      height
+    })
     expect(saved.weight).toBe(options?.wght)
     expect([...graph.nodes.values()]).toEqual(before)
   }
@@ -128,9 +150,14 @@ test.each(unsupportedMaterialOptions)(
 
 test.each([
   [0, 0],
+  [24, 0],
+  [0, 24],
   [-24, -24],
   [24, 48],
-  [Number.POSITIVE_INFINITY, 24]
+  [Number.POSITIVE_INFINITY, 24],
+  [24, Number.POSITIVE_INFINITY],
+  [Number.NaN, 24],
+  [24, Number.NaN]
 ])('refuses unsupported source dimensions %j without mutating the icon', (width, height) => {
   const { graph, frame } = setup()
   graph.updateNode(frame.id, { width, height })

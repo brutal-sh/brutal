@@ -11,7 +11,7 @@ the implementation uses the existing independent editor and public icon provider
 | Family change | Controlled reference API retains the glyph name even when the destination family lacks it | Retains name, dimensions, frame identity and paints; missing artwork remains an empty named icon. |
 | Weight | Shipped Material control is one 24px range/numeric field, 100–700 in steps of 100, default 200 | Uses the shared number field; Material outlines change in place, preserving child identities and authored paints. Modified glyphs require reset. |
 | History | Reference control behavior is not exhaustively qualified | Owned asynchronous previews coalesce typed edits and paused scrubs, cancel synchronously, ignore late results and settle before Undo/Redo. Browser and SDK evidence below. |
-| Persistence | Pen owns named icons across its supported libraries and sizes | Named export accepts six mapped libraries at verified positive square source sizes, with Material weight and strict drawing/paint checks. Identity references, unsupported axes and altered drawings are refused. Evidence and remaining scope are below. |
+| Persistence | Pen owns named icons across its supported libraries and sizes | Named export accepts six mapped libraries at verified positive source sizes, including centered rectangular boxes, with Material weight and strict drawing/paint checks. Identity references, unsupported axes and altered drawings are refused. Evidence and remaining scope are below. |
 
 ## Evidence boundaries
 
@@ -60,8 +60,8 @@ owned edit behavior; they do not establish OS keyboard delivery or full native p
 The writer reuses the import library mapping for Lucide, Feather, Phosphor and the three
 Material Symbols families. It retains supported Material weight while refusing other font
 axes that `.pen` cannot represent. Exact drawing and path checks remain in force. Original
-square source sizes are supported; runtime resize rebasing, non-square centering and zero-size
-export remain outside this acceptance.
+square source sizes are supported in this first export unit. The rectangular-source extension
+below retains centered geometry; runtime resize rebasing and zero-size export remain open.
 
 A native 64px edit/reopen initially exposes outline differences of about 0.001 scene units:
 the editor asks the font provider for 64px outlines, while the file loader asks for 24px and
@@ -131,9 +131,44 @@ The cause of those edge differences is not established. This is a measured remai
 
 Private receipts: `local-evidence/icon-instance-identity-2026-11-04/`.
 
+## Rectangular source boxes — 2026-11-04
+
+Save previously refused a rectangular icon that Open could already draw. The writer now accepts
+finite positive source dimensions when every derived path occupies the centered square at the
+smaller dimension. Exact drawing, glyph, path, paint and binding checks remain in force; arbitrary
+resizes, point changes and misplaced glyphs are still refused.
+
+All six mapped families pass square, wide, tall and fractional source writer checks. The actual
+Rounded font reopens with exactly the same centered geometry and authored alpha paint across
+three rectangular dimensions and two weights. A normal browser File/Open→Save→Open journey
+checks both dimensions and geometry for wide and tall icons, with inspected canvas baselines in
+Chromium and WebKit. Five isolated native checks pass, including 64×64, 96×40 and 40×96 Material
+weight changes, Undo/Redo, Save, independent saved fields and close/Recents reopening with exact
+geometry. Input and menu events retain the programmatic-delivery limitation above.
+
+Independent review repeats 48 focused tests with 325 assertions and verifies that a runtime
+width stretch remains refused. Some fractional boxes reopened through FIG are also refused:
+float32 storage can shift the path offset away from the exact source-centering check. This
+precision boundary remains open; the guard is not relaxed to hide it.
+Regular glyph swap/reset on a rectangular frame still needs separate qualification; this unit
+does not establish centered geometry for those commands.
+
+Final owner checks pass 1,748 tests with 11,891 assertions. All 24 icon/toolbar workflows pass
+in Chromium and WebKit without snapshot update, and the five native workflows above pass.
+Source/Vue/test types, lint with existing warnings, architecture, docs/changelog and normal
+bundle checks retain their stated scope. The separate native-driver type gate retains 67
+errors outside the touched icon spec.
+
+Actual Pen opens Open Pen's independently exported fixture. Its native window is observed with
+REA/Hopper and 8,003 untruncated accessibility nodes, with the unchanged executable hash. The
+reference and Open Pen frame exports are both 560×240 at 2x; 731 of 134,400 pixels differ, with a
+maximum channel difference of 73. No exact raster match is claimed.
+
+Private receipts: `local-evidence/icon-rectangles-2026-11-04/`.
+
 ## Remaining acceptance
 
-- Non-square/zero/runtime-resized and instance icon export, live identity bindings and their inspector controls.
+- Zero/runtime-resized and instance icon export, live identity bindings and their inspector controls.
 - Every family's native/reference render states and matching standalone PNG export bounds.
 - Exact glyph picker, family menu and weight-control pixels, hover, focus and disabled states.
 - Native trusted pointer/keyboard cancellation, provider failure, offline and mixed/read-only states.

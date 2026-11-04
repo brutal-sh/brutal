@@ -5,7 +5,7 @@ Outcome: full functionality and design parity against installed `/Applications/P
 Must: inspect actual application, reproduce behavior independently, verify rendered states and executed workflows. Must not: label uninspected screens or implementation-only paths accepted. Authority: explicit user continuation,2026-10-30. Done evidence: every enumerated applicable state has both a visual match and an end-to-end behavior result; no residual unsupported required behavior.
 
 Current continuation—2026-11-04: named icon controls and export have bounded evidence in
-[the icon comparison](ICON-PARITY.md). Six libraries map to verified square named drawings;
+[the icon comparison](ICON-PARITY.md). Six libraries map to verified square and centered rectangular source drawings;
 Material edit→Save→reopen uses the same canonical outline. 1,801 owner tests/12,052 assertions,
 20 Chromium/WebKit workflows and a final two-engine 64px visual recheck pass. Three isolated
 native checks include 64px weight edit/history, Save, close and Recents reopen with exact
@@ -17,7 +17,9 @@ weight overrides now load their exact variant and retain the occurrence's resolv
 through synchronization and FIG. Browser and isolated native checks distinguish template200
 from occurrence700. Actual Pen exports the same fixture with matching frame and foreground
 bounds, but 571/699 of 40,000 pixels differ; exact raster acceptance remains open.
-Non-square/zero/live-resize export, physical input and full
+Rectangular-source Save/Open and native weight/history/Save/Recents reopening pass; actual Pen
+opens the exported fixture, with equal 560×240 frame bounds but 731 differing pixels.
+Zero/live-resize and instance export, physical input and full
 screen/menu parity remain OPEN. The installed main app and user data remain untouched.
 
 Earlier inspector continuation—2026-11-04: Primitives initially focuses Rectangle while remembering Icon,

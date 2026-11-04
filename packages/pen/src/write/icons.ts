@@ -47,7 +47,8 @@ function supportedFrame(node: SceneNode): boolean {
     !hasPluginData(node.pluginData, OPEN_PENCIL_PLUGIN_DATA.penIconReferences) &&
     Number.isFinite(node.width) &&
     node.width > 0 &&
-    node.height === node.width &&
+    Number.isFinite(node.height) &&
+    node.height > 0 &&
     (hasIconFills(node) || !node.fills.length) &&
     !node.strokes.length &&
     node.layoutMode === 'NONE' &&
@@ -61,13 +62,14 @@ function supportedFrame(node: SceneNode): boolean {
 }
 
 function supportedPath(path: SceneNode, frame: SceneNode): boolean {
+  const size = Math.min(frame.width, frame.height)
   if (
     path.type !== 'VECTOR' ||
     path.name !== 'path' ||
-    path.x !== 0 ||
-    path.y !== 0 ||
-    path.width !== frame.width ||
-    path.height !== frame.height ||
+    path.x !== (frame.width - size) / 2 ||
+    path.y !== (frame.height - size) / 2 ||
+    path.width !== size ||
+    path.height !== size ||
     path.horizontalConstraint !== 'SCALE' ||
     path.verticalConstraint !== 'SCALE' ||
     !path.vectorNetwork ||
@@ -122,7 +124,7 @@ export function iconForExport(
 ): { library: string; icon: string; weight?: number; color?: Color } | undefined {
   const icon = readIcon(node)
   const fields = icon && iconFields(icon.name, icon.options)
-  // shortcut: square source drawings only; extend after centered/non-square round trips.
+  // shortcut: source drawings only; extend runtime resize after glyph rebasing is verified.
   if (
     !supportedFrame(node) ||
     !fields ||
