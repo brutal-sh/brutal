@@ -2,6 +2,62 @@
 
 Target: actual `/Applications/Pen.app`1.2.21, rechecked in its installed Info.plist on2026-11-02. Full inspector and whole-product parity remain open. The reference is inspected through native UI and the private resource archive recorded in [reference provenance](PEN-REFERENCE.md).
 
+## Multi-frame flex controls —2026-11-04
+
+Actual Pen exposes alignment and gap when any selected frame has a flex layout. Its frame
+subset supplies the values: a rectangle plus a stack shows the stack's gap/padding; a freeform
+frame plus a stack shows mixed gap and omits padding. Two selected stacks expose the three
+distribution choices and paired/four-side padding before Dimensions. Owned Save As output
+proves gap12.5 on both stacks and vertical padding20.5 on only the selected stack among a shape.
+
+A separate actual-Pen fixture has a160×100 vertical frame, padding12, retained gap12.5,
+Space Around and two40×20 children. Native child-position fields show(12,21) and(12,59).
+Open Pen initially places them at(12,17.875) and(12,62.125): its canvas incorrectly adds the
+retained numeric gap to distributed spacing. The shared layout correction excludes that gap
+from Yoga, saved-size fitting and intrinsic sizing; generated-frame minimum spacing keeps its
+existing exception. The installed Pen exporter still emits the gap alongside space-around:
+that source observation does not establish equal canvas and HTML pixels.
+
+Open Pen's compact multi-selection composes the alignment grid, variable-aware fields and
+distribution choices for its applicable frames. Padding collapse shares the existing binding
+and scale preservation logic. Screen-coordinate alignment respects each frame's direction
+and retains its distributed mode. A reproduced cancellation defect removes an imported side
+field when its last asymmetry disappears; holding the disclosure until commit/cancel corrects
+that path while preserving genuine selection/disposal cancellation.
+
+Seventy-two owner checks/288assertions pass. Twelve Chromium/WebKit layout/padding/canvas
+workflows and the two-axis canvas snapshot pass; its framing is corrected and both frames are
+visually inspected. A broader run records37 passes and one canvas-startup timeout before the
+corner interaction; the separate four-workflow recheck passes that corner plus paired multi
+padding bindings through Escape, invalid input, deactivation, selection changes and Undo/Redo.
+These receipts remain separate. Source/Vue/test types, lint with existing warnings and
+architecture pass; final test types/lint/docs/changelog include the binding and presentation
+tests. One intermediate test-type run overlaps package regeneration and reports missing
+exports; the stable-package repeat passes without a product change.
+
+The304.7s native accessibility journey requires ready surfaces, a delivered frame and no
+preparation overlay at File Open and Recent reopen. It edits mixed gap12.5, Undo/Redo,
+Space Around, middle-right alignment/Undo, paired padding20.5 and left padding33.25 with
+Undo/Redo. Child positions follow the measured distribution and updated padding; the selected
+shape remains unchanged. Native Save contains the exact gap/distribution/four-side values.
+After close/reopen, the mixed freeform/flex selection omits padding and the restored selection
+retains its geometry. Post-reopen checks preserve saved bytes; the inspector screenshot is
+visually inspected. Private receipts:multi-flex-native-presented.log and
+multi-flex-native-restored.png. The test/normal packages are87.75/81.25MiB; the normal package
+passes strict signature verification and both frontend/binary native-test-hook exclusion scans.
+
+The first native attempt reaches its state assertions but fails visual acceptance while the
+canvas waits to present. A separate focus probe presents a ready canvas but fails an overly
+strict document-focus assertion. The corrected setup focuses the test window at both open
+boundaries and checks actual presentation. A two-engine18.7s regression confirms that document
+preparation waits while animation frames are paused and clears when they resume. No loader or
+presentation-controller product code is changed; neither earlier native attempt qualifies the
+final journey.
+
+Exact panel and interactive-overlay pixels, additional mixed orientations/bindings, wrapper
+spacing/name/sizing and whole-product parity remain OPEN. Private reference facts and owned
+saves are in pen-multi-layout-reference-2026-11-03; named test logs start multi-flex-.
+
 ## Multi-selection Hug and authored sizing —2026-11-03
 
 Actual Pen exposes Hug Width/Height when a selection includes a flex frame. The checkboxes

@@ -138,6 +138,41 @@ export function createGridTrackActions(editor: Editor, node: ComputedRef<SceneNo
   return { updateGridTrack, addTrack, removeTrack }
 }
 
+export function paddingModeUpdates(n: SceneNode, collapsing: boolean): Partial<SceneNode> {
+  const changes: Partial<SceneNode> = {
+    pluginData: withPluginData(
+      n.pluginData,
+      OPEN_PENCIL_PLUGIN_DATA.paddingMode,
+      collapsing ? undefined : 'INDIVIDUAL'
+    )
+  }
+  if (collapsing) {
+    changes.paddingBottom = n.paddingTop
+    changes.paddingLeft = n.paddingRight
+    const bindings = { ...n.boundVariables }
+    const scales = { ...n.variableBindingScales }
+    if (bindings.paddingTop) {
+      bindings.paddingBottom = bindings.paddingTop
+      if (scales.paddingTop !== undefined) scales.paddingBottom = scales.paddingTop
+      else delete scales.paddingBottom
+    } else {
+      delete bindings.paddingBottom
+      delete scales.paddingBottom
+    }
+    if (bindings.paddingRight) {
+      bindings.paddingLeft = bindings.paddingRight
+      if (scales.paddingRight !== undefined) scales.paddingLeft = scales.paddingRight
+      else delete scales.paddingLeft
+    } else {
+      delete bindings.paddingLeft
+      delete scales.paddingLeft
+    }
+    changes.boundVariables = bindings
+    changes.variableBindingScales = scales
+  }
+  return changes
+}
+
 export function createPaddingActions(editor: Editor, node: ComputedRef<SceneNode | null>) {
   const preview = useNodePreview(editor)
 
@@ -188,37 +223,7 @@ export function createPaddingActions(editor: Editor, node: ComputedRef<SceneNode
     const n = node.value
     if (!n) return
     const collapsing = showIndividualPadding.value
-    const changes: Partial<SceneNode> = {
-      pluginData: withPluginData(
-        n.pluginData,
-        OPEN_PENCIL_PLUGIN_DATA.paddingMode,
-        collapsing ? undefined : 'INDIVIDUAL'
-      )
-    }
-    if (collapsing) {
-      changes.paddingBottom = n.paddingTop
-      changes.paddingLeft = n.paddingRight
-      const bindings = { ...n.boundVariables }
-      const scales = { ...n.variableBindingScales }
-      if (bindings.paddingTop) {
-        bindings.paddingBottom = bindings.paddingTop
-        if (scales.paddingTop !== undefined) scales.paddingBottom = scales.paddingTop
-        else delete scales.paddingBottom
-      } else {
-        delete bindings.paddingBottom
-        delete scales.paddingBottom
-      }
-      if (bindings.paddingRight) {
-        bindings.paddingLeft = bindings.paddingRight
-        if (scales.paddingRight !== undefined) scales.paddingLeft = scales.paddingRight
-        else delete scales.paddingLeft
-      } else {
-        delete bindings.paddingLeft
-        delete scales.paddingLeft
-      }
-      changes.boundVariables = bindings
-      changes.variableBindingScales = scales
-    }
+    const changes = paddingModeUpdates(n, collapsing)
     preview.update([n.id], changes, 'Change padding mode')
     preview.commit()
   }

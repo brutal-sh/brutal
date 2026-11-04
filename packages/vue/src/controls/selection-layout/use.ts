@@ -14,6 +14,8 @@ import { useUndoBatch } from '#vue/controls/undo-batch/use'
 import { useEditor } from '#vue/editor/context'
 import { useSceneComputed } from '#vue/internal/scene-computed/use'
 
+import { createSelectionFlexControls, shared } from './helpers'
+
 /** Layers that can hold an auto layout and clip their content. */
 export const LAYOUT_CONTAINER_TYPES: ReadonlySet<NodeType> = new Set<NodeType>([
   'FRAME',
@@ -34,12 +36,6 @@ export function textResizeMode(node: SceneNode): TextResizeMode {
   if (node.textAutoResize === 'WIDTH_AND_HEIGHT') return 'AUTO_WIDTH'
   if (node.textAutoResize === 'HEIGHT' || node.textAutoResize === 'TRUNCATE') return 'AUTO_HEIGHT'
   return 'FIXED'
-}
-
-function shared<T>(values: readonly T[]): MixedValue<T> | undefined {
-  if (values.length === 0) return undefined
-  const [first] = values
-  return values.every((value) => value === first) ? first : MIXED
 }
 
 /**
@@ -105,6 +101,7 @@ export function useSelectionLayout() {
   const containerLayoutMode = computed(() =>
     shared(containers.value.map((node) => node.layoutMode))
   )
+  const flexControls = createSelectionFlexControls(editor, containers)
   /** Undefined when no text is selected. */
   const textResize = computed(() => shared(texts.value.map(textResizeMode)))
   /** Undefined unless every selected layer can hold an auto layout. */
@@ -163,6 +160,7 @@ export function useSelectionLayout() {
     containers,
     flexContainers,
     containerLayoutMode,
+    ...flexControls,
     widthSizing,
     heightSizing,
     fillDisabled,

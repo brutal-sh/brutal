@@ -25,6 +25,7 @@ import {
 } from './layout/axis-sizing'
 import { keepsSavedLayout, usesDetachedDerivedLayout } from './layout/derived'
 import { applyEffectiveGeneratedTextLayout } from './layout/effective-generated-text'
+import { hasDistributedGap } from './layout/gap'
 import { buildGridTree, createGridChildNode } from './layout/grid'
 import { sizeAutoResizingText } from './layout/text-auto-resize'
 export { sizeAutoResizingText } from './layout/text-auto-resize'
@@ -231,10 +232,9 @@ function configureFlexContainer(
   yogaNode.setPadding(Edge.Bottom, node.paddingBottom)
   yogaNode.setPadding(Edge.Left, node.paddingLeft)
 
-  // Space between takes the place of the gap in Figma's auto layout. A generated frame keeps it
+  // Distributed spacing replaces the gap. A generated frame keeps it
   // as the least space between its sublayers, as a sticky note keeps its author clear of a long body.
-  const primaryGap =
-    node.primaryAxisAlign === 'SPACE_BETWEEN' && !isGeneratedFrame(node) ? 0 : node.itemSpacing
+  const primaryGap = hasDistributedGap(node) && !isGeneratedFrame(node) ? 0 : node.itemSpacing
   yogaNode.setGap(
     Gutter.Column,
     node.layoutMode === 'HORIZONTAL' ? primaryGap : node.counterAxisSpacing
@@ -326,10 +326,7 @@ function sizesFitParent(
     axis === 'width'
       ? parent.paddingLeft + parent.paddingRight
       : parent.paddingTop + parent.paddingBottom
-  const gap =
-    parent.primaryAxisAlign === 'SPACE_BETWEEN'
-      ? 0
-      : parent.itemSpacing * Math.max(0, childCount - 1)
+  const gap = hasDistributedGap(parent) ? 0 : parent.itemSpacing * Math.max(0, childCount - 1)
   const available = axis === 'width' ? parent.width : parent.height
   const total = sizes.reduce<number>((sum, size) => sum + (size ?? 0), padding + gap)
   return Math.abs(total - available) < 0.001

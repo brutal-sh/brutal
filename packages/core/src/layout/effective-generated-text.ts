@@ -1,6 +1,7 @@
 import type { SceneGraph, SceneNode } from '@open-pencil/scene-graph'
 import type { Size } from '@open-pencil/scene-graph/primitives'
 
+import { hasDistributedGap } from './gap'
 import { getTextMeasurer } from './text-measurement'
 
 type LayoutAxis = 'width' | 'height'
@@ -95,10 +96,7 @@ function intrinsicSize(
   if (children.length === 0) return null
 
   const childSizes = children.map((child) => sizes.get(child.id) ?? child)
-  const gap =
-    node.primaryAxisAlign === 'SPACE_BETWEEN'
-      ? 0
-      : node.itemSpacing * Math.max(0, children.length - 1)
+  const gap = hasDistributedGap(node) ? 0 : node.itemSpacing * Math.max(0, children.length - 1)
   if (node.layoutMode === 'HORIZONTAL') {
     return {
       width:

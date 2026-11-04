@@ -8,6 +8,230 @@ import { CanvasHelper } from '#tests/helpers/canvas'
 import { layerDriver } from '#tests/helpers/canvas/layers'
 import { openAppMenu } from '#tests/helpers/menu'
 
+test('multi-frame flex controls edit every applicable frame in one history step', async ({
+  page
+}) => {
+  await page.addInitScript(() => {
+    window.showOpenFilePicker = undefined
+    window.showSaveFilePicker = undefined
+  })
+  await page.goto('/')
+  const canvas = new CanvasHelper(page)
+  await canvas.waitForInit()
+  const ids = await page.evaluate(() => {
+    const editor = window.openPencil?.getStore?.()
+    if (!editor) throw new Error('Editor unavailable')
+    const frames = [0, 1].map((index) => {
+      const frame = editor.graph.createNode('FRAME', editor.state.currentPageId, {
+        name: `Flex ${index}`,
+        x: index * 200,
+        width: 160,
+        height: 100,
+        layoutMode: 'VERTICAL',
+        itemSpacing: index ? 10 : 8,
+        paddingTop: 12,
+        paddingBottom: 12,
+        paddingLeft: 12,
+        paddingRight: 12
+      })
+      for (let i = 0; i < 2; i++)
+        editor.graph.createNode('RECTANGLE', frame.id, { width: 40, height: 20 })
+      return frame.id
+    })
+    const shape = editor.graph.createNode('RECTANGLE', editor.state.currentPageId, {
+      name: 'Unrelated shape',
+      x: 400,
+      width: 80,
+      height: 60
+    })
+    editor.select([...frames, shape.id])
+    editor.requestRender()
+    return { frames, shape: shape.id }
+  })
+  const layout = page
+    .getByTestId('properties-panel')
+    .getByRole('region', { name: 'Flex Layout', exact: true })
+  const state = () =>
+    page.evaluate(({ frames, shape }) => {
+      const graph = window.openPencil?.getStore?.().graph
+      return [...frames, shape].map((id) => {
+        const n = graph?.getNode(id)
+        if (!n) throw new Error('Flex fixture unavailable')
+        return {
+          gap: n.itemSpacing,
+          primary: n.primaryAxisAlign,
+          counter: n.counterAxisAlign,
+          padding: [n.paddingTop, n.paddingRight, n.paddingBottom, n.paddingLeft],
+          pluginData: n.pluginData,
+          children: graph?.getChildren(id).map((c) => [c.x, c.y])
+        }
+      })
+    }, ids)
+  const original = await state()
+  const gap = layout.getByRole('spinbutton', { name: 'Fixed gap amount', exact: true })
+  await expect(gap).toContainText('Mixed')
+  await gap.dblclick()
+  await gap.fill('12.5')
+  await gap.press('Enter')
+  const spaced = await state()
+  expect(spaced.slice(0, 2).map((n) => n.gap)).toEqual([12.5, 12.5])
+  expect(spaced[2]).toEqual(original[2])
+  await canvas.undo()
+  expect(await state()).toEqual(original)
+  await canvas.redo()
+  expect(await state()).toEqual(spaced)
+  await layout.getByRole('radio', { name: 'Space Around', exact: true }).click()
+  await expect(gap).toHaveAttribute('aria-disabled', 'true')
+  const distributed = await state()
+  expect(distributed[0].children).toEqual([
+    [12, 21],
+    [12, 59]
+  ])
+  expect(distributed[2]).toEqual(original[2])
+  await layout
+    .getByRole('group', { name: 'Alignment', exact: true })
+    .getByRole('button')
+    .nth(5)
+    .click()
+  const aligned = await state()
+  expect(aligned.slice(0, 2).map((n) => n.counter)).toEqual(['MAX', 'MAX'])
+  expect(aligned.slice(0, 2).map((n) => n.children)).toEqual([
+    [
+      [108, 21],
+      [108, 59]
+    ],
+    [
+      [108, 21],
+      [108, 59]
+    ]
+  ])
+  await canvas.undo()
+  expect(await state()).toEqual(distributed)
+  const vertical = layout.getByRole('spinbutton', { name: 'Vertical padding', exact: true })
+  await vertical.dblclick()
+  await vertical.fill('20.5')
+  await vertical.press('Enter')
+  expect((await state()).slice(0, 2).map((n) => n.padding)).toEqual([
+    [20.5, 12, 20.5, 12],
+    [20.5, 12, 20.5, 12]
+  ])
+  await canvas.undo()
+  expect(await state()).toEqual(distributed)
+  await vertical.dblclick()
+  await vertical.fill('33.25')
+  await vertical.press('Escape')
+  expect(await state()).toEqual(distributed)
+  await vertical.dblclick()
+  await vertical.fill('20.5')
+  await vertical.press('Enter')
+  await layout.getByRole('button', { name: 'Individual padding', exact: true }).click()
+  const left = layout.getByRole('spinbutton', { name: 'Left padding', exact: true })
+  await left.dblclick()
+  await left.fill('33.25')
+  await left.press('Enter')
+  const individual = await state()
+  expect(individual.slice(0, 2).map((n) => n.padding)).toEqual([
+    [20.5, 12, 20.5, 33.25],
+    [20.5, 12, 20.5, 33.25]
+  ])
+  await canvas.undo()
+  expect((await state()).slice(0, 2).map((n) => n.padding)).toEqual([
+    [20.5, 12, 20.5, 12],
+    [20.5, 12, 20.5, 12]
+  ])
+  await canvas.redo()
+  expect(await state()).toEqual(individual)
+  page.once('dialog', (dialog) => dialog.accept('multi-flex.pen'))
+  const download = page.waitForEvent('download')
+  await (
+    await openAppMenu(page, 'File')
+  )
+    .getByRole('menuitem', { name: /^Save(?:\s|$)/ })
+    .first()
+    .click()
+  const bytes = await readFile(await (await download).path())
+  expect(
+    parsePenDocument(bytes.toString())
+      .children.filter((n) => ids.frames.includes(n.id))
+      .map((n) => ({
+        gap: n.type === 'frame' ? n.gap : undefined,
+        justify: n.type === 'frame' ? n.justifyContent : undefined,
+        padding: n.type === 'frame' ? n.padding : undefined
+      }))
+  ).toEqual([
+    { gap: 12.5, justify: 'space_around', padding: [20.5, 12, 20.5, 33.25] },
+    { gap: 12.5, justify: 'space_around', padding: [20.5, 12, 20.5, 33.25] }
+  ])
+  const chooser = page.waitForEvent('filechooser')
+  await (await openAppMenu(page, 'File')).getByRole('menuitem', { name: /^Open…/ }).click()
+  await (
+    await chooser
+  ).setFiles({ name: 'multi-flex-reopened.pen', mimeType: 'application/json', buffer: bytes })
+  await canvas.waitForInit()
+  await layerDriver(() => page).select([...ids.frames, ids.shape])
+  await expect(layout.getByRole('radio', { name: 'Space Around', exact: true })).toBeChecked()
+  await expect(left).toHaveAttribute('aria-valuenow', '33.25')
+  expect((await state()).slice(0, 2).map((n) => n.padding)).toEqual([
+    [20.5, 12, 20.5, 33.25],
+    [20.5, 12, 20.5, 33.25]
+  ])
+  canvas.assertNoErrors()
+})
+
+test('equalizing imported individual padding keeps the active field until commit', async ({
+  page
+}) => {
+  await page.goto('/')
+  const canvas = new CanvasHelper(page)
+  await canvas.waitForInit()
+  const ids = await page.evaluate(() => {
+    const editor = window.openPencil?.getStore?.()
+    if (!editor) throw new Error('Editor unavailable')
+    const ids = [0, 1].map(
+      (index) =>
+        editor.graph.createNode('FRAME', editor.state.currentPageId, {
+          x: index * 200,
+          width: 160,
+          height: 100,
+          layoutMode: 'VERTICAL',
+          paddingTop: 12,
+          paddingBottom: 12,
+          paddingLeft: 12,
+          paddingRight: 13
+        }).id
+    )
+    editor.select(ids)
+    editor.requestRender()
+    return ids
+  })
+  const right = page
+    .getByTestId('properties-panel')
+    .getByRole('spinbutton', { name: 'Right padding', exact: true })
+  await right.dblclick()
+  await right.fill('12')
+  await expect(right).toBeFocused()
+  await right.press('Enter')
+  const values = () =>
+    page.evaluate(
+      (ids) =>
+        ids.map((id) => {
+          const node = window.openPencil?.getStore?.().graph.getNode(id)
+          return node ? [node.paddingLeft, node.paddingRight] : []
+        }),
+      ids
+    )
+  expect(await values()).toEqual([
+    [12, 12],
+    [12, 12]
+  ])
+  await canvas.undo()
+  expect(await values()).toEqual([
+    [12, 13],
+    [12, 13]
+  ])
+  canvas.assertNoErrors()
+})
+
 test('multi-frame Hug retains geometry and authored freeform intent through history and pen reopen', async ({
   page
 }) => {

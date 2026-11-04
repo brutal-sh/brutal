@@ -11,6 +11,7 @@ import NumberField from '@/components/inputs/NumberField.vue'
 import ClipContentControl from '@/components/properties/layout/ClipContentControl.vue'
 import LayoutFlowControl from '@/components/properties/layout/LayoutFlowControl.vue'
 import TextResizingControl from '@/components/properties/layout/TextResizingControl.vue'
+import SelectionFlexControls from '@/components/properties/selection/SelectionFlexControls.vue'
 import VariableNumberField from '@/components/properties/VariableNumberField.vue'
 import IconButton from '@/components/ui/button/IconButton.vue'
 import Tip from '@/components/ui/overlay/Tip.vue'
@@ -34,6 +35,11 @@ const flexSelection = computed(
     layout.containers.value.length > 0 &&
     layout.containers.value.every((node) => ['VERTICAL', 'HORIZONTAL'].includes(node.layoutMode))
 )
+const hasFlex = computed(() =>
+  layout.flexContainers.value.some(
+    (node) => node.layoutMode === 'VERTICAL' || node.layoutMode === 'HORIZONTAL'
+  )
+)
 </script>
 
 <template>
@@ -55,9 +61,14 @@ const flexSelection = computed(
     <LayoutFlowControl
       v-if="(compact ? layout.containerLayoutMode.value : layout.layoutMode.value) !== undefined"
       :compact="compact"
-      class="mb-2"
+      :class="compact && hasFlex ? undefined : 'mb-2'"
     />
     <TextResizingControl v-if="layout.textResize.value !== undefined" />
+    <SelectionFlexControls
+      v-if="compact && hasFlex"
+      :key="JSON.stringify(nodeIds)"
+      :layout="layout"
+    />
     <div
       :class="compact ? 'mb-1 text-[9px] leading-3 text-muted' : 'mt-2 mb-1 text-[11px] text-muted'"
     >

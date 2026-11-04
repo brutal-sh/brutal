@@ -22,7 +22,9 @@ const {
   class?: HTMLAttributes['class']
   ui?: { grid?: string; cell?: string; dot?: string }
 }>()
-const emit = defineEmits<{ select: [primary: LayoutAlign, counter: LayoutCounterAlign] }>()
+const emit = defineEmits<{
+  select: [primary: LayoutAlign, counter: LayoutCounterAlign, index: number]
+}>()
 const theme = tv(layoutAlignmentTheme)
 const styles = theme()
 const focusedIndex = ref<number | null>(null)
@@ -88,7 +90,7 @@ function navigate(event: KeyboardEvent, index: number) {
       :class="theme({ active: cell.active }).cell({ class: ui?.cell })"
       @focus="focusedIndex = index"
       @keydown="navigate($event, index)"
-      @click="emit('select', cell.primary, cell.counter)"
+      @click="emit('select', cell.primary, cell.counter, index)"
     >
       <span :class="styles.dot({ class: ui?.dot })" />
     </button>

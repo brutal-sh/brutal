@@ -2,6 +2,26 @@
 
 Full parity is open. A source implementation, unit check, build, and user workflow establish different things. This ledger records only observed outcomes and the scope of each observation.
 
+## Multi-frame layout continuation —2026-11-04
+
+- Actual Pen's child-position fields establish Space Around with retained gap12.5 at Y21/59
+  in the owned160×100/padding12 fixture. Open Pen's two-axis reproduction fails before the
+  shared layout correction and passes afterwards. The gap remains saved; generated-frame
+  minimum-spacing behavior is retained. Pen's HTML exporter still emits that retained gap.
+- Seventy-two owner checks/288assertions and12 browser workflows pass. The corrected canvas
+  snapshot shows both orientations and is visually inspected. The broader run records37
+  passes/one canvas-startup timeout; a separate four-workflow run passes the affected corner
+  and multi-padding binding cancellation/history paths in both engines. No38-pass run is claimed.
+- The304.7s native accessibility journey requires presented open/reopen, executes gap,
+  distribution, alignment, paired/side padding and history, then saves/closes/reopens and
+  checks mixed selection and unchanged saved bytes. The inspector screenshot is inspected.
+  Earlier presentation/focus setup failures remain separate. Two browser-engine checks
+  confirm preparation waits for a paused presentation and clears when frames resume; no
+  loader code is changed. Source/Vue/test types, lint(existing warnings), architecture and
+  final docs/changelog pass. The87.75/81.25MiB test/normal packages build; the normal package
+  passes strict signature verification and excludes native test hooks in assets and executable.
+  Exact panel/interactive-overlay pixels and full parity remain open. See INSPECTOR-PARITY.md.
+
 ## Multi-selection authored Hug —2026-11-03
 
 - Actual Pen Save As establishes deferred Hug intent on rectangles/freeform frames and fixed
