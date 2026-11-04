@@ -1,4 +1,5 @@
 import type { IconOptions } from '@open-pencil/scene-graph/icons'
+import { scaleVectorNetworkForResize } from '@open-pencil/scene-graph/resize'
 
 import {
   fetchMaterialSymbolsCatalogue,
@@ -20,8 +21,8 @@ import {
 import { parseIconName, type IconProvider } from '#core/icons/provider'
 import type { IconCollection, IconData } from '#core/icons/types'
 
-/** The size previews are drawn at, which their SVG scales. */
-const PREVIEW_SIZE = 24
+/** Quantize the font outline once, so drawing at another size matches saving and reopening. */
+const GLYPH_SIZE = 24
 /** Names asked of Google at once, which its URL limit holds comfortably. */
 const NAMES_PER_FONT = 150
 
@@ -103,12 +104,16 @@ export function createMaterialSymbolsProvider(
     const parsed = parseIconName(name)
     if (!glyph || !parsed) return null
     const axes = materialSymbolsOptions(options)
+    const path = materialSymbolsPath(glyph.font, glyph.glyph, GLYPH_SIZE, axes)
+    path.vectorNetwork =
+      scaleVectorNetworkForResize(path.vectorNetwork, GLYPH_SIZE, GLYPH_SIZE, size, size) ??
+      path.vectorNetwork
     return {
       prefix: parsed.prefix,
       name: parsed.iconName,
       width: size,
       height: size,
-      paths: [materialSymbolsPath(glyph.font, glyph.glyph, size, axes)],
+      paths: [path],
       options: axes
     }
   }
@@ -175,12 +180,12 @@ export function createMaterialSymbolsProvider(
         const data = materialSymbolsPathData(
           glyph.font,
           glyph.glyph,
-          PREVIEW_SIZE,
+          GLYPH_SIZE,
           materialSymbolsOptions()
         )
         found.set(
           name,
-          `<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 ${PREVIEW_SIZE} ${PREVIEW_SIZE}"><path fill="currentColor" d="${data}"/></svg>`
+          `<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 ${GLYPH_SIZE} ${GLYPH_SIZE}"><path fill="currentColor" d="${data}"/></svg>`
         )
       }
       return found

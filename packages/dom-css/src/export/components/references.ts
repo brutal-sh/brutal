@@ -178,7 +178,7 @@ function usedLayer(
   const namedPaint =
     !hasIconFills(node) ||
     (node.fills.length === 1 &&
-      fill?.type === 'SOLID' &&
+      fill.type === 'SOLID' &&
       fill.visible &&
       fill.opacity === 1 &&
       fill.color.a === 1 &&

@@ -28,7 +28,7 @@ import { applyStroke, convertPaints, strokeFields } from './paints'
 import { isPlain, type PenPlacement } from './placement'
 import type { NodeFields, PenNode, PenOverride } from './schema'
 import { applyTextProps } from './text'
-import { bindIfVar, resolveBoolean, resolveNumber, type VarContext } from './variables'
+import { bindIfVar, isVarRef, resolveBoolean, resolveNumber, type VarContext } from './variables'
 
 /** Where icon glyphs come from, as the host loaded them. */
 export interface PenIconSource {
@@ -234,6 +234,16 @@ export function fieldsSetBy(pen: PenOverride): string[] {
 }
 
 function drawIconLayer(node: SceneNode, pen: PenNode, build: Build): void {
+  const references = {
+    library: isVarRef(pen.library) ? pen.library : undefined,
+    icon: isVarRef(pen.icon) ? pen.icon : undefined,
+    weight: isVarRef(pen.weight) ? pen.weight : undefined
+  }
+  node.pluginData = withPluginData(
+    node.pluginData,
+    OPEN_PENCIL_PLUGIN_DATA.penIconReferences,
+    Object.values(references).some((value) => value !== undefined) ? references : undefined
+  )
   if (node.type === 'INSTANCE') useIconComponent(node, pen, build)
   else drawIcon(node, pen, build)
 }

@@ -1,7 +1,10 @@
 import { readFile } from 'node:fs/promises'
 
+import { parsePenDocument } from '@open-pencil/pen'
+
 import { expect, test, useEditorSetupWithClear } from '#tests/e2e/fixtures'
 import { getSelectedIconGeometry } from '#tests/helpers/icons'
+import { openAppMenu } from '#tests/helpers/menu'
 import { testPath } from '#tests/helpers/paths'
 import { propertyField } from '#tests/helpers/properties'
 import { getSelectedNode } from '#tests/helpers/store'
@@ -93,74 +96,131 @@ test('family changes preserve the name, size, Fill and frame identity through Un
   canvas.assertNoErrors()
 })
 
-test('Material weight redraws its glyph, coalesces a paused drag and cancels without consuming Redo', async () => {
-  const { page, canvas } = ctx
-  await insertHeart()
-  await page.getByRole('combobox', { name: 'Icon set', exact: true }).click()
-  await page.getByRole('option', { name: 'Material Symbols Rounded', exact: true }).click()
-  await expect(propertyField(page, 'icon-weight')).toContainText('200')
-  await propertyField(page, 'icon-name').click()
-  const picker = page.getByRole('dialog', { name: 'Swap icon', exact: true })
-  await picker.getByRole('textbox').fill('home')
-  await picker.getByRole('option', { name: 'home', exact: true }).click()
-  await expect(propertyField(page, 'icon-name')).toHaveText('home')
-  await expect.poll(currentGeometry).not.toEqual([])
-  const original = await currentGeometry()
-  const field = propertyField(page, 'icon-weight')
-  await field.getByText('200', { exact: true }).click()
-  const input = field.getByRole('spinbutton', { name: 'Weight', exact: true })
-  await input.fill('400')
-  await expect.poll(currentGeometry).not.toEqual(original)
-  await input.fill('700')
-  await input.press('Enter')
-  await expect(field).toContainText('700')
-  await expect.poll(currentGeometry).not.toEqual(original)
-  await canvas.undo()
-  await expect(field).toContainText('200')
-  await expect.poll(currentGeometry).toEqual(original)
-  await field.focus()
-  await input.fill('400')
-  await expect.poll(currentGeometry).not.toEqual(original)
-  await input.press('Escape')
-  await expect(field).toContainText('200')
-  await expect.poll(currentGeometry).toEqual(original)
-  await canvas.redo()
-  await expect(field).toContainText('700')
-  await canvas.undo()
-  await expect(field).toContainText('200')
-  const bounds = await field.boundingBox()
-  if (!bounds) throw new Error('Weight range missing')
-  await page.clock.install()
-  await page.mouse.move(bounds.x + 20, bounds.y + bounds.height / 2)
-  await page.mouse.down()
-  await page.mouse.move(bounds.x + bounds.width * 0.6, bounds.y + bounds.height / 2)
-  await expect(field).toContainText('500')
-  // An ongoing pointer edit must survive the shared batch's 300ms idle boundary.
-  await page.clock.fastForward(600)
-  await page.mouse.move(bounds.x + bounds.width * 0.95, bounds.y + bounds.height / 2)
-  await page.mouse.up()
-  await expect(field).toContainText('700')
-  await canvas.undo()
-  await expect(field).toContainText('200')
-  const beforeCancel = (await getSelectedNode(page))?.childIds
-  const cancelBounds = await field.boundingBox()
-  if (!cancelBounds) throw new Error('Weight range missing before cancellation')
-  await page.mouse.move(cancelBounds.x + 20, cancelBounds.y + cancelBounds.height / 2)
-  await page.mouse.down()
-  await page.mouse.move(
-    cancelBounds.x + cancelBounds.width * 0.8,
-    cancelBounds.y + cancelBounds.height / 2
-  )
-  await expect(field).toContainText('600')
-  await page.keyboard.press('Escape')
-  await page.mouse.up()
-  await expect(field).toContainText('200')
-  await expect.poll(async () => (await getSelectedNode(page))?.childIds).toEqual(beforeCancel)
-  await canvas.redo()
-  await expect(field).toContainText('700')
-  await canvas.waitForRender()
-  expect(await canvas.screenshotCanvasRegion(600, 550)).toMatchSnapshot(
-    'material-icon-weight-700.png'
-  )
-  canvas.assertNoErrors()
-})
+for (const size of [24, 64]) {
+  test(`${size}px Material weight redraws, cancels without consuming Redo and reopens exactly`, async () => {
+    const { page, canvas } = ctx
+    await page.getByRole('button', { name: 'New design', exact: true }).click()
+    await canvas.waitForInit()
+    await insertHeart()
+    if (size !== 24) {
+      for (const axis of ['width', 'height']) {
+        const dimension = propertyField(page, axis)
+        await dimension.click()
+        const input = dimension.getByRole('spinbutton')
+        await input.fill(String(size))
+        await input.press('Enter')
+      }
+    }
+    await page.getByRole('combobox', { name: 'Icon set', exact: true }).click()
+    await page.getByRole('option', { name: 'Material Symbols Rounded', exact: true }).click()
+    await expect(propertyField(page, 'icon-weight')).toContainText('200')
+    await propertyField(page, 'icon-name').click()
+    const picker = page.getByRole('dialog', { name: 'Swap icon', exact: true })
+    await picker.getByRole('textbox').fill('home')
+    await picker.getByRole('option', { name: 'home', exact: true }).click()
+    await expect(propertyField(page, 'icon-name')).toHaveText('home')
+    await expect.poll(currentGeometry).not.toEqual([])
+    const original = await currentGeometry()
+    const field = propertyField(page, 'icon-weight')
+    await field.getByText('200', { exact: true }).click()
+    const input = field.getByRole('spinbutton', { name: 'Weight', exact: true })
+    await input.fill('400')
+    await expect.poll(currentGeometry).not.toEqual(original)
+    await input.fill('700')
+    await input.press('Enter')
+    await expect(field).toContainText('700')
+    await expect.poll(currentGeometry).not.toEqual(original)
+    await canvas.undo()
+    await expect(field).toContainText('200')
+    await expect.poll(currentGeometry).toEqual(original)
+    await field.focus()
+    await input.fill('400')
+    await expect.poll(currentGeometry).not.toEqual(original)
+    await input.press('Escape')
+    await expect(field).toContainText('200')
+    await expect.poll(currentGeometry).toEqual(original)
+    await canvas.redo()
+    await expect(field).toContainText('700')
+    await canvas.undo()
+    await expect(field).toContainText('200')
+    const bounds = await field.boundingBox()
+    if (!bounds) throw new Error('Weight range missing')
+    await page.clock.install()
+    await page.mouse.move(bounds.x + 20, bounds.y + bounds.height / 2)
+    await page.mouse.down()
+    await page.mouse.move(bounds.x + bounds.width * 0.6, bounds.y + bounds.height / 2)
+    await expect(field).toContainText('500')
+    // An ongoing pointer edit must survive the shared batch's 300ms idle boundary.
+    await page.clock.fastForward(600)
+    await page.mouse.move(bounds.x + bounds.width * 0.95, bounds.y + bounds.height / 2)
+    await page.mouse.up()
+    await expect(field).toContainText('700')
+    await canvas.undo()
+    await expect(field).toContainText('200')
+    const beforeCancel = (await getSelectedNode(page))?.childIds
+    const cancelBounds = await field.boundingBox()
+    if (!cancelBounds) throw new Error('Weight range missing before cancellation')
+    await page.mouse.move(cancelBounds.x + 20, cancelBounds.y + cancelBounds.height / 2)
+    await page.mouse.down()
+    await page.mouse.move(
+      cancelBounds.x + cancelBounds.width * 0.8,
+      cancelBounds.y + cancelBounds.height / 2
+    )
+    await expect(field).toContainText('600')
+    await page.keyboard.press('Escape')
+    await page.mouse.up()
+    await expect(field).toContainText('200')
+    await expect.poll(async () => (await getSelectedNode(page))?.childIds).toEqual(beforeCancel)
+    await canvas.redo()
+    await expect(field).toContainText('700')
+    await canvas.waitForRender()
+    const canvasBounds = await canvas.canvas.boundingBox()
+    if (!canvasBounds) throw new Error('Canvas missing before the glyph snapshot')
+    const rendered =
+      size === 24
+        ? await canvas.screenshotCanvasRegion(600, 550)
+        : await page.screenshot({
+            clip: { x: canvasBounds.x + 200, y: canvasBounds.y + 150, width: 300, height: 300 }
+          })
+    expect(rendered).toMatchSnapshot(
+      size === 24 ? 'material-icon-weight-700.png' : 'material-icon-weight-64-700.png'
+    )
+    const beforeSave = await getSelectedNode(page)
+    const geometry = await currentGeometry()
+    if (!beforeSave) throw new Error('Material icon missing before Save')
+    await page.evaluate(() => {
+      window.showSaveFilePicker = undefined
+      window.showOpenFilePicker = undefined
+    })
+    page.once('dialog', (dialog) => dialog.accept('material-weight.pen'))
+    const downloading = page.waitForEvent('download')
+    await (
+      await openAppMenu(page, 'File')
+    )
+      .getByRole('menuitem', { name: /^Save(?:\s|$)/ })
+      .first()
+      .click()
+    const saved = await readFile(await (await downloading).path())
+    expect(parsePenDocument(saved.toString()).children[0]).toMatchObject({
+      id: beforeSave.id,
+      type: 'icon',
+      library: 'Material Symbols Rounded',
+      icon: 'home',
+      weight: 700,
+      width: size,
+      height: size,
+      fill: [{ type: 'color', color: '#FFFFFF', enabled: true }]
+    })
+    const opening = page.waitForEvent('filechooser')
+    await (await openAppMenu(page, 'File')).getByRole('menuitem', { name: /^Open…/ }).click()
+    await (
+      await opening
+    ).setFiles({ name: 'material-weight.pen', mimeType: 'application/json', buffer: saved })
+    await canvas.waitForInit()
+    await page.evaluate((id) => window.openPencil?.getStore?.().select([id]), beforeSave.id)
+    await expect(propertyField(page, 'icon-family')).toHaveText('Material Symbols Rounded')
+    await expect(field).toContainText('700')
+    await expect.poll(currentGeometry).toEqual(geometry)
+    canvas.assertNoErrors()
+  })
+}

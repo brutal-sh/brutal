@@ -18,6 +18,15 @@ export const iconOptionsSchema = v.record(v.string(), v.union([v.number(), v.str
 
 export type IconOptions = v.InferOutput<typeof iconOptionsSchema>
 
+/** Authored .pen identity references that the resolved glyph cannot reconstruct. */
+export const penIconReferencesSchema = v.partial(
+  v.object({
+    library: v.string(),
+    icon: v.string(),
+    weight: v.string()
+  })
+)
+
 export const iconSchema = v.object({
   name: v.pipe(v.string(), v.regex(ICON_NAME)),
   /** A fingerprint of the glyph as placed, to tell when its paths were edited; see `iconGlyph`. */

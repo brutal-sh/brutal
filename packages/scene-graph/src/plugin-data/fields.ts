@@ -6,7 +6,13 @@ import { commentThreadsSchema } from '../comments/schema'
 import { isExportFormatId, type ExportFormatId } from '../export-format'
 import { clampExportScale } from '../export-scale'
 import { FIG_COMPRESSIONS } from '../fig-compression'
-import { iconFillsSchema, iconPaintSourceSchema, iconSchema, iconTintSchema } from '../icons/schema'
+import {
+  iconFillsSchema,
+  iconPaintSourceSchema,
+  iconSchema,
+  iconTintSchema,
+  penIconReferencesSchema
+} from '../icons/schema'
 import { fillSchema } from '../paints/schema'
 import type { Rect } from '../primitives'
 import { scriptDefinitionSchema } from '../scripts/schema'
@@ -238,6 +244,8 @@ export const OPEN_PENCIL_PLUGIN_DATA = {
   behaviour: jsonPluginDataField('behaviour', 'content', behaviourSchema),
   /** The icon a frame draws, such as `lucide:home`, on the frame its paths are in. */
   icon: jsonPluginDataField('icon', 'content', iconSchema),
+  /** Unsupported authored identity references survive copy and FIG instead of becoming literals. */
+  penIconReferences: jsonPluginDataField('penIconReferences', 'content', penIconReferencesSchema),
   /** Which of an icon path's paints its icon's color sets, on each path the source drew in it. */
   iconTint: jsonPluginDataField('iconTint', 'content', iconTintSchema),
   /** Intrinsic paints a named icon projects into its generated paths. */

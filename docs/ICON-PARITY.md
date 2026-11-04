@@ -11,7 +11,7 @@ the implementation uses the existing independent editor and public icon provider
 | Family change | Controlled reference API retains the glyph name even when the destination family lacks it | Retains name, dimensions, frame identity and paints; missing artwork remains an empty named icon. |
 | Weight | Shipped Material control is one 24px range/numeric field, 100–700 in steps of 100, default 200 | Uses the shared number field; Material outlines change in place, preserving child identities and authored paints. Modified glyphs require reset. |
 | History | Reference control behavior is not exhaustively qualified | Owned asynchronous previews coalesce typed edits and paused scrubs, cancel synchronously, ignore late results and settle before Undo/Redo. Browser and SDK evidence below. |
-| Persistence | Pen owns named icons across all its supported libraries and sizes | Current `.pen` writer accepts verified, unmodified 24px Lucide icons only. Other families, weights and sizes remain an explicit export gap. |
+| Persistence | Pen owns named icons across its supported libraries and sizes | Named export accepts six mapped libraries at verified positive square source sizes, with Material weight and strict drawing/paint checks. Identity references, unsupported axes and altered drawings are refused. Evidence and remaining scope are below. |
 
 ## Evidence boundaries
 
@@ -34,7 +34,7 @@ SDK tests cover delayed-provider cancellation, selection changes, disposal, inde
 history batches, external metadata edits and Undo during a held preview. These establish
 owned edit behavior; they do not establish OS keyboard delivery or full native parity.
 
-## Executed checks — 2026-11-04
+## Selector and weight-control checks — 2026-11-04
 
 - 1,049 editor/icon/SDK tests pass with 4,638 assertions; the final focused rerun passes
   45 tests with 174 assertions. An independent reviewer repeats the focused owner checks.
@@ -48,16 +48,62 @@ owned edit behavior; they do not establish OS keyboard delivery or full native p
   Focus, input and Enter are DOM-delivered because the embedded driver's click/key delivery
   does not open/commit this field. Physical OS input and menu clicks remain unqualified.
 - Source/Vue/test types, scoped lint, architecture, documentation, translations and changelog
-  checks pass. Full repository lint still reports existing icon-writer return-contract and
+  checks pass. At this selector unit, full repository lint reports existing icon-writer return-contract and
   DOM/CSS conditional diagnostics. The separate native-test type gate reports older driver
   contract errors outside this icon spec; it is not reported as passing.
 - Native-test/normal bundles build at 87.75/81.25MiB. The normal bundle passes strict signature
   verification and excludes native-test hooks from its frontend and executable. The main
   installed app and user profile are not replaced.
 
+## Named export and exact redraw — 2026-11-04
+
+The writer reuses the import library mapping for Lucide, Feather, Phosphor and the three
+Material Symbols families. It retains supported Material weight while refusing other font
+axes that `.pen` cannot represent. Exact drawing and path checks remain in force. Original
+square source sizes are supported; runtime resize rebasing, non-square centering and zero-size
+export remain outside this acceptance.
+
+A native 64px edit/reopen initially exposes outline differences of about 0.001 scene units:
+the editor asks the font provider for 64px outlines, while the file loader asks for 24px and
+scales them. The shared Material provider now quantizes once at 24px and scales that network.
+The actual-font edit→export→reopen check passes across five sizes and three weights without
+relaxing geometry equality. A new 64px canvas baseline covers the changed drawing path;
+the existing 24px baselines are unchanged.
+
+Two export-loss cases are explicitly guarded. Incompatible legacy raw-alpha paints are
+refused; authored Fill alpha remains supported. Original library/name/weight references are
+retained in validated content metadata through reset, merged descendants, synchronization and
+FIG, and `.pen` export refuses them rather than replacing them with resolved literals.
+This retention does not implement live identity bindings. A pre-existing nested occurrence's
+icon metadata can retain its definition's weight after a descendant override; that runtime
+discrepancy remains open, and icon-instance export is not accepted here.
+
+Executed evidence:
+
+- 1,801 format, icon, Scene Graph and DOM/CSS component tests pass with 12,052 assertions.
+  Independent review repeats the actual-font cases and confirms the alpha/reference guards.
+- 20 Chromium/WebKit checks pass without snapshot update, including normal Save/Open at 24px
+  and 64px. The new 64px capture is narrowed to the glyph region, visually inspected and
+  repeated in both engines without update: two further passes.
+- Three isolated native checks pass, including 64px weight edit/Undo/Redo, Save, independent
+  saved-field inspection, close/Recents reopen and exact restored outline equality. Programmatic
+  focus/input/Enter and native-menu events retain the physical-delivery limitation above.
+- Actual Pen opens the independently exported 64px `home` at weight 700. Its node fields,
+  screenshot and PNG export are observed; REA/Hopper captures the matching native window with
+  7,811 untruncated accessibility nodes and the unchanged reference executable hash.
+  The standalone PNG bounds differ: Open Pen's full icon box is 128×128 at 2x, while Pen exports
+  a trimmed 95×103 glyph. This is an open export-design discrepancy, not a pixel match.
+- Source/Vue/test types, full repository lint with existing warnings, architecture, docs and
+  changelog checks pass. The separate native-driver type gate retains older failures outside
+  this icon spec. Normal/test bundles build at 81.25/87.75MiB; strict normal signing and
+  frontend/executable test-hook exclusion pass. The installed main app remains untouched.
+
+Private receipts: `local-evidence/icon-export-2026-11-04/`.
+
 ## Remaining acceptance
 
-- All-family/size/weight `.pen` Save and reopen, including actual Pen interchange.
+- Non-square/zero/runtime-resized and instance icon export, live identity bindings and their inspector controls.
+- Every family's native/reference render states and matching standalone PNG export bounds.
 - Exact glyph picker, family menu and weight-control pixels, hover, focus and disabled states.
 - Native trusted pointer/keyboard cancellation, provider failure, offline and mixed/read-only states.
 - Image/shader icon paints, live wide and zero-size resizing, and exhaustive instance bindings.

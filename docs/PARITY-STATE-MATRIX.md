@@ -4,7 +4,19 @@ Outcome: full functionality and design parity against installed `/Applications/P
 
 Must: inspect actual application, reproduce behavior independently, verify rendered states and executed workflows. Must not: label uninspected screens or implementation-only paths accepted. Authority: explicit user continuation,2026-10-30. Done evidence: every enumerated applicable state has both a visual match and an end-to-end behavior result; no residual unsupported required behavior.
 
-Current continuation—2026-11-04: Primitives initially focuses Rectangle while remembering Icon,
+Current continuation—2026-11-04: named icon controls and export have bounded evidence in
+[the icon comparison](ICON-PARITY.md). Six libraries map to verified square named drawings;
+Material edit→Save→reopen uses the same canonical outline. 1,801 owner tests/12,052 assertions,
+20 Chromium/WebKit workflows and a final two-engine 64px visual recheck pass. Three isolated
+native checks include 64px weight edit/history, Save, close and Recents reopen with exact
+geometry. Actual Pen opens the independently exported home700 file; REA/Hopper observes its
+native window. PNG export bounds differ and no exact paired raster match is claimed.
+Identity references are retained through reset/FIG/merged descendants and refused on `.pen`
+export pending full binding support; incompatible legacy alpha is also refused. Nested
+occurrence identity metadata, non-square/zero/live-resize export, physical input and full
+screen/menu parity remain OPEN. The installed main app and user data remain untouched.
+
+Earlier inspector continuation—2026-11-04: Primitives initially focuses Rectangle while remembering Icon,
 with arrow/Escape/trigger behavior and retained Move/Scale/mobile/custom Star workflows.
 A fresh actual-Pen REA screenshot confirms compact Icon below Fill and no frame-only Stroke,
 Flow row or Clip content. Open Pen follows that structure while Advanced retains its controls.

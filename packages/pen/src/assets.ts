@@ -1,3 +1,5 @@
+import type { IconOptions } from '@open-pencil/scene-graph/icons'
+
 import { isLegacyStroke } from './paints'
 import type { PenDocument, PenNode, PenOverride, PenPaint, PenPaints } from './schema'
 import { possibleValues } from './variables'
@@ -37,6 +39,34 @@ export function iconOptions(
   weight: number | undefined
 ): Record<string, number> | undefined {
   return WEIGHTED_LIBRARIES.has(library) ? { wght: weight ?? MATERIAL_SYMBOLS_WEIGHT } : undefined
+}
+
+interface PenIconFields {
+  library: string
+  icon: string
+  weight?: number
+}
+
+/** The named drawing a .pen icon can reproduce without discarding font axes. */
+export function iconFields(name: string, options?: IconOptions): PenIconFields | undefined {
+  const separator = name.indexOf(':')
+  const prefix = name.slice(0, separator)
+  const icon = name.slice(separator + 1)
+  const library = Object.entries(ICON_SETS).find(([, set]) => set === prefix)?.[0]
+  if (!library || !icon) return undefined
+  if (!WEIGHTED_LIBRARIES.has(library)) return options === undefined ? { library, icon } : undefined
+  const weight = options?.wght
+  if (typeof weight !== 'number' || !Number.isFinite(weight) || weight < 100 || weight > 700)
+    return undefined
+  // Pen stores weight only; its other font axes remain at these rendering defaults.
+  const defaults: Record<string, number> = { opsz: 24, FILL: 0, GRAD: 0 }
+  if (
+    Object.entries(options ?? {}).some(
+      ([axis, value]) => axis !== 'wght' && value !== defaults[axis]
+    )
+  )
+    return undefined
+  return { library, icon, weight }
 }
 
 /** An icon a document draws: its name in its set and how it is drawn there. */

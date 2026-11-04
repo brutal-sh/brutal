@@ -8,6 +8,7 @@ The complete current documentation inventory is [the Pen feature catalog](pen-fe
 - [89 documented shortcut bindings](pen-feature-reference/shortcuts.md)
 - [CLI options and public MCP contracts](pen-feature-reference/command-contract.md)
 - [Serialized field families](pen-feature-reference/format-fields.md)
+- [Named icon controls, export evidence and remaining gaps](ICON-PARITY.md)
 
 The reference is [official Pen documentation](https://docs.pen.dev/) together with the running `/Applications/Pen.app` 1.2.21. OpenPencil is the MIT implementation base. Its upstream feature descriptions and tests do not determine parity.
 

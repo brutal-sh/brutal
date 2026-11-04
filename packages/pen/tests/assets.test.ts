@@ -281,7 +281,9 @@ describe('parsePenFile — icons', () => {
   test('draws the glyph in the fill colour, fitted and centred in the box', () => {
     const { graph, calls, icon } = drawn({})
     expect(calls).toEqual([{ name: 'lucide:heart', size: 30, color: { r: 0.8, g: 0, b: 0, a: 1 } }])
-    expect(icon.fills).toEqual([])
+    expect(icon.fills).toMatchObject([
+      { type: 'SOLID', color: { r: 0.8, g: 0, b: 0, a: 1 }, opacity: 1, visible: true }
+    ])
     expect(graph.getChildren('icon').map((glyph) => [glyph.x, glyph.y])).toEqual([[33, 0]])
   })
 

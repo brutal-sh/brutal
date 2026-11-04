@@ -12,12 +12,15 @@ import {
 import { createDefaultNode } from '@open-pencil/scene-graph/node-defaults'
 import {
   contentPluginData,
+  hasPluginData,
   OPEN_PENCIL_PLUGIN_DATA,
   withoutPluginData
 } from '@open-pencil/scene-graph/plugin-data'
 import type { Color } from '@open-pencil/scene-graph/primitives'
 import { paintBindingTarget } from '@open-pencil/scene-graph/variables'
 import { validateVectorNetwork } from '@open-pencil/scene-graph/vector-network'
+
+import { iconFields } from '../assets'
 
 /** Geometry is checked below; file-source provenance is not authored interchange content. */
 const PATH_FIELDS = [
@@ -41,8 +44,10 @@ const PATH_FIELDS = [
 function supportedFrame(node: SceneNode): boolean {
   return (
     node.type === 'FRAME' &&
-    node.width === 24 &&
-    node.height === 24 &&
+    !hasPluginData(node.pluginData, OPEN_PENCIL_PLUGIN_DATA.penIconReferences) &&
+    Number.isFinite(node.width) &&
+    node.width > 0 &&
+    node.height === node.width &&
     (hasIconFills(node) || !node.fills.length) &&
     !node.strokes.length &&
     node.layoutMode === 'NONE' &&
@@ -55,14 +60,14 @@ function supportedFrame(node: SceneNode): boolean {
   )
 }
 
-function supportedPath(path: SceneNode): boolean {
+function supportedPath(path: SceneNode, frame: SceneNode): boolean {
   if (
     path.type !== 'VECTOR' ||
     path.name !== 'path' ||
     path.x !== 0 ||
     path.y !== 0 ||
-    path.width !== 24 ||
-    path.height !== 24 ||
+    path.width !== frame.width ||
+    path.height !== frame.height ||
     path.horizontalConstraint !== 'SCALE' ||
     path.verticalConstraint !== 'SCALE' ||
     !path.vectorNetwork ||
@@ -88,20 +93,21 @@ function supportedPath(path: SceneNode): boolean {
   return isEqual(omit(projected, PATH_FIELDS), omit(defaults, PATH_FIELDS))
 }
 
-function uniformTint(paths: SceneNode[]): Color | undefined {
+function uniformTint(paths: SceneNode[], frame: SceneNode): Color | undefined {
   let color: Color | undefined
   for (const path of paths) {
-    if (!supportedPath(path)) return
+    if (!supportedPath(path, frame)) return undefined
     const tint = readIconTint(path)
-    if (!path.fills.length && !path.strokes.length) return
+    if (!path.fills.length && !path.strokes.length) return undefined
     for (const [kind, paints] of [
       ['fill', path.fills],
       ['stroke', path.strokes]
     ] as const) {
-      if (paints.length && !tint.includes(kind)) return
+      if (paints.length && !tint.includes(kind)) return undefined
       for (const paint of paints) {
-        if (paint.type !== 'SOLID' || !paint.visible || paint.opacity !== 1) return
-        if (color && !isEqual(color, paint.color)) return
+        if (paint.type !== 'SOLID' || !paint.visible || paint.opacity !== 1 || paint.color.a !== 1)
+          return undefined
+        if (color && !isEqual(color, paint.color)) return undefined
         color = paint.color
       }
     }
@@ -113,19 +119,19 @@ function uniformTint(paths: SceneNode[]): Color | undefined {
 export function iconForExport(
   graph: SceneGraph,
   node: SceneNode
-): { library: string; icon: string; color?: Color } | undefined {
+): { library: string; icon: string; weight?: number; color?: Color } | undefined {
   const icon = readIcon(node)
-  // shortcut: only the measured 24px Lucide path contract; extend after canonical set/size roundtrips.
+  const fields = icon && iconFields(icon.name, icon.options)
+  // shortcut: square source drawings only; extend after centered/non-square round trips.
   if (
     !supportedFrame(node) ||
-    !icon?.name.startsWith('lucide:') ||
-    icon.options !== undefined ||
+    !fields ||
     !icon.glyph ||
     !icon.drawing ||
     isIconModified(graph, node) ||
     iconDrawing(graph, node) !== icon.drawing
   )
-    return
+    return undefined
   if (hasIconFills(node)) {
     const paths = graph.getChildren(node.id)
     if (
@@ -134,16 +140,16 @@ export function iconForExport(
         const source = readIconPaintSource(path)
         const tint = readIconTint(path)
         return (
-          !supportedPath(path) ||
+          !supportedPath(path, node) ||
           !source ||
           (source.fills.length > 0 && !tint.includes('fill')) ||
           (source.strokes.length > 0 && !tint.includes('stroke'))
         )
       })
     )
-      return
-    return { library: 'lucide', icon: icon.name.slice('lucide:'.length) }
+      return undefined
+    return fields
   }
-  const color = uniformTint(graph.getChildren(node.id))
-  return color ? { library: 'lucide', icon: icon.name.slice('lucide:'.length), color } : undefined
+  const color = uniformTint(graph.getChildren(node.id), node)
+  return color ? { ...fields, color } : undefined
 }

@@ -71,12 +71,126 @@ async function checkIconControls() {
 }
 
 describe('native editable icon persistence', () => {
-  it('edits a Material glyph weight through the native inspector and restores its history', async () => {
-    await createNativeLayerFixture()
-    await browser.execute(() => {
-      const data = JSON.stringify({
-        version: '2.21',
-        children: [
+  it('edits a Material glyph weight, restores history and reopens its .pen save', async () => {
+    const directory = await mkdtemp(join(tmpdir(), 'openpen-material-reopen-'))
+    const path = join(directory, 'Material weight.pen')
+    try {
+      await createNativeLayerFixture()
+      await browser.execute(() => {
+        const data = JSON.stringify({
+          version: '2.21',
+          children: [
+            {
+              id: 'material',
+              type: 'icon',
+              library: 'Material Symbols Rounded',
+              icon: 'home',
+              width: 64,
+              height: 64,
+              weight: 200,
+              fill: '#FFFFFF'
+            }
+          ]
+        })
+        const transfer = new DataTransfer()
+        transfer.items.add(new File([data], 'Material weight.pen', { type: 'application/json' }))
+        window.dispatchEvent(new DragEvent('drop', { dataTransfer: transfer, cancelable: true }))
+      })
+      await browser.waitUntil(() =>
+        browser.execute(
+          () => !!window.openPencil?.getStore?.().graph.getNode('material')?.childIds?.length
+        )
+      )
+      await browser.execute(() => {
+        const editor = window.openPencil?.getStore?.()
+        editor?.select(['material'])
+        editor?.centerOn(32, 32, 2)
+      })
+      const drawing = () =>
+        browser.execute(() => {
+          const editor = window.openPencil?.getStore?.()
+          if (!editor) throw new Error('Native editor unavailable')
+          return editor.graph
+            .getChildren('material')
+            .map(({ id, vectorNetwork }) => ({ id, vectorNetwork }))
+        })
+      const original = await drawing()
+      assert.ok(original.length)
+      assert.equal(
+        await browser.execute(
+          async (path) => window.openPencil?.getStore?.().saveFigFileToPath(path),
+          path
+        ),
+        true
+      )
+      const family = await $('[data-property="icon-family"]')
+      assert.equal(await family.getText(), 'Material Symbols Rounded')
+      const weight = await $('[data-property="icon-weight"]')
+      await weight.scrollIntoView()
+      await browser.execute(() => {
+        document.querySelector<HTMLElement>('[data-property="icon-weight"]')?.focus()
+      })
+      const input = '[data-property="icon-weight"] input'
+      await $(input).waitForDisplayed()
+      // Exercise the WebView's input path; trusted OS keyboard replacement is separate acceptance.
+      const typeWeight = async (value: string) =>
+        browser.execute(
+          (selector, value) => {
+            const input = document.querySelector<HTMLInputElement>(selector)
+            if (!input) throw new Error('Native weight input missing')
+            input.value = value
+            input.dispatchEvent(new Event('input', { bubbles: true }))
+          },
+          input,
+          value
+        )
+      await typeWeight('400')
+      await browser.waitUntil(
+        async () => JSON.stringify(await drawing()) !== JSON.stringify(original)
+      )
+      await typeWeight('700')
+      await browser.execute((selector) => {
+        document.querySelector(selector)?.dispatchEvent(
+          new KeyboardEvent('keydown', {
+            key: 'Enter',
+            code: 'Enter',
+            bubbles: true,
+            cancelable: true
+          })
+        )
+      }, input)
+      await browser.waitUntil(async () => !(await $(input).isExisting()))
+      await browser.waitUntil(async () => (await weight.getText()).includes('700'))
+      const changed = await drawing()
+      assert.deepEqual(
+        changed.map(({ id }) => id),
+        original.map(({ id }) => id)
+      )
+      assert.notDeepEqual(changed, original)
+      await emitNativeMenuAction('edit.undo')
+      await browser.waitUntil(async () => (await weight.getText()).includes('200'))
+      assert.deepEqual(await drawing(), original)
+      await emitNativeMenuAction('edit.redo')
+      await browser.waitUntil(async () => (await weight.getText()).includes('700'))
+      assert.deepEqual(await drawing(), changed)
+      await emitNativeMenuAction('save')
+      await browser.waitUntil(() =>
+        browser.execute(() => window.openPencil?.getStore?.().hasUnsavedChanges() === false)
+      )
+      const saved = await readFile(path, 'utf8')
+      assert.deepEqual(
+        parsePenDocument(saved).children.map(
+          ({ id, type, library, icon, width, height, weight }) => ({
+            id,
+            type,
+            library,
+            icon,
+            width,
+            height,
+            weight
+          })
+        ),
+        [
           {
             id: 'material',
             type: 'icon',
@@ -84,85 +198,45 @@ describe('native editable icon persistence', () => {
             icon: 'home',
             width: 64,
             height: 64,
-            weight: 200,
-            fill: '#FFFFFF'
+            weight: 700
           }
         ]
-      })
-      const transfer = new DataTransfer()
-      transfer.items.add(new File([data], 'Material weight.pen', { type: 'application/json' }))
-      window.dispatchEvent(new DragEvent('drop', { dataTransfer: transfer, cancelable: true }))
-    })
-    await browser.waitUntil(() =>
-      browser.execute(
-        () => !!window.openPencil?.getStore?.().graph.getNode('material')?.childIds?.length
       )
-    )
-    await browser.execute(() => {
-      const editor = window.openPencil?.getStore?.()
-      editor?.select(['material'])
-      editor?.centerOn(32, 32, 2)
-    })
-    const drawing = () =>
-      browser.execute(() => {
+      await $('[data-test-id="tabbar-close"][data-active]').click()
+      await $('[role="tab"][aria-label="Home"]').click()
+      const recent = await $(
+        '//button[.//span[@data-slot="name" and contains(text(), "Material weight")]]'
+      )
+      await recent.waitForDisplayed()
+      await recent.click()
+      await browser.waitUntil(() =>
+        browser.execute(
+          (path) => window.openPencil?.getStore?.().getDocumentFilePath() === path,
+          path
+        )
+      )
+      await browser.waitUntil(() =>
+        browser.execute(
+          () => !!window.openPencil?.getStore?.().graph.getNode('material')?.childIds?.length
+        )
+      )
+      await browser.execute(() => {
         const editor = window.openPencil?.getStore?.()
-        if (!editor) throw new Error('Native editor unavailable')
-        return editor.graph
-          .getChildren('material')
-          .map(({ id, vectorNetwork }) => ({ id, vectorNetwork }))
+        editor?.select(['material'])
+        editor?.centerOn(32, 32, 2)
       })
-    const original = await drawing()
-    assert.ok(original.length)
-    const family = await $('[data-property="icon-family"]')
-    assert.equal(await family.getText(), 'Material Symbols Rounded')
-    const weight = await $('[data-property="icon-weight"]')
-    await weight.scrollIntoView()
-    await browser.execute(() => {
-      document.querySelector<HTMLElement>('[data-property="icon-weight"]')?.focus()
-    })
-    const input = '[data-property="icon-weight"] input'
-    await $(input).waitForDisplayed()
-    // Exercise the WebView's input path; trusted OS keyboard replacement is separate acceptance.
-    const typeWeight = async (value: string) =>
-      browser.execute(
-        (selector, value) => {
-          const input = document.querySelector<HTMLInputElement>(selector)
-          if (!input) throw new Error('Native weight input missing')
-          input.value = value
-          input.dispatchEvent(new Event('input', { bubbles: true }))
-        },
-        input,
-        value
+      const reopenedWeight = await $('[data-property="icon-weight"]')
+      await reopenedWeight.waitForDisplayed()
+      await browser.waitUntil(async () => (await reopenedWeight.getText()).includes('700'))
+      assert.equal(await $('[data-property="icon-family"]').getText(), 'Material Symbols Rounded')
+      assert.deepEqual(
+        (await drawing()).map(({ vectorNetwork }) => vectorNetwork),
+        changed.map(({ vectorNetwork }) => vectorNetwork)
       )
-    await typeWeight('400')
-    await browser.waitUntil(
-      async () => JSON.stringify(await drawing()) !== JSON.stringify(original)
-    )
-    await typeWeight('700')
-    await browser.execute((selector) => {
-      document.querySelector(selector)?.dispatchEvent(
-        new KeyboardEvent('keydown', {
-          key: 'Enter',
-          code: 'Enter',
-          bubbles: true,
-          cancelable: true
-        })
-      )
-    }, input)
-    await browser.waitUntil(async () => !(await $(input).isExisting()))
-    await browser.waitUntil(async () => (await weight.getText()).includes('700'))
-    const changed = await drawing()
-    assert.deepEqual(
-      changed.map(({ id }) => id),
-      original.map(({ id }) => id)
-    )
-    assert.notDeepEqual(changed, original)
-    await emitNativeMenuAction('edit.undo')
-    await browser.waitUntil(async () => (await weight.getText()).includes('200'))
-    assert.deepEqual(await drawing(), original)
-    await emitNativeMenuAction('edit.redo')
-    await browser.waitUntil(async () => (await weight.getText()).includes('700'))
-    assert.deepEqual(await drawing(), changed)
+      assert.equal(await readFile(path, 'utf8'), saved)
+    } finally {
+      await rm(directory, { recursive: true, force: true })
+    }
   })
 
   it('opens dropped icons in the native WebView and draws alpha and disabled paints', async () => {

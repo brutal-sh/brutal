@@ -287,10 +287,9 @@ export function writePenDocument(graph: SceneGraph): PenDocument {
       delete result.layoutIncludeStroke
     }
     if (icon) {
-      result.type = 'icon'
-      result.library = icon.library
-      result.icon = icon.icon
-      if (icon.color) result.fill = colorToHex8(icon.color)
+      const { color, ...fields } = icon
+      Object.assign(result, fields, { type: 'icon' })
+      if (color) result.fill = colorToHex8(color)
     }
     if (node.type === 'COMPONENT') result.reusable = true
     if (!copy && slots.suggestions(node)) result.slot = slots.suggestions(node)
