@@ -1,0 +1,45 @@
+{
+  "version": "2.21",
+  "children": [
+    {
+      "id": "wrap-v-0",
+      "type": "rectangle",
+      "name": "Vertical 1",
+      "x": 40,
+      "y": 40,
+      "width": 80,
+      "height": 60,
+      "fill": "#7799BB"
+    },
+    {
+      "id": "wrap-h-0",
+      "type": "rectangle",
+      "name": "Horizontal 1",
+      "x": 200,
+      "y": 40,
+      "width": 80,
+      "height": 300,
+      "fill": "#9977BB"
+    },
+    {
+      "id": "wrap-v-1",
+      "type": "rectangle",
+      "name": "Vertical 2",
+      "x": 40,
+      "y": 140,
+      "width": 80,
+      "height": 60,
+      "fill": "#7799BB"
+    },
+    {
+      "id": "wrap-h-1",
+      "type": "rectangle",
+      "name": "Horizontal 2",
+      "x": 320,
+      "y": 40,
+      "width": 80,
+      "height": 300,
+      "fill": "#9977BB"
+    }
+  ]
+}

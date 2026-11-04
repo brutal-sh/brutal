@@ -33,3 +33,5 @@
 - Compact multi-selection headers use the measured count typography, overlapping-square icon and collapse control, with additional actions retained in Advanced properties.
 - Edit multi-selection Hug sizing with mixed states, preserve authored sizing on freeform layers through Pen files, and keep both axes fixed after a ratio-locked numeric edit.
 - Edit selected frames' alignment, gap and paired or individual padding together, with variable-aware cancellation and history; distributed canvas spacing retains the numeric gap without adding it between children.
+
+- Wrap sibling selections with inferred flow, retained average spacing, numbered frames and matching cross-axis Fill sizing through inspector, menu and keyboard actions.

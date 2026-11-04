@@ -66,3 +66,33 @@ test('lays out Pen frames whose default horizontal layout is omitted', async () 
     fill: { x: 756, y: 72, width: 604, height: 420 }
   })
 })
+
+test('spacing-aware wrappers retain both layout axes and child sizing on canvas', async () => {
+  await editor.page.evaluate(() =>
+    window.openPencil?.openFile?.('/tests/fixtures/pen-wrap-selection.pen')
+  )
+  await editor.canvas.waitForInit()
+  const frames = await editor.page.evaluate(() => {
+    const store = window.openPencil?.getStore?.()
+    if (!store) throw new Error('Editor unavailable')
+    const frames = ['v', 'h'].map((axis) => {
+      store.select([`wrap-${axis}-1`, `wrap-${axis}-0`])
+      const id = store.wrapInAutoLayout()
+      const frame = id ? store.graph.getNode(id) : undefined
+      return frame ? { size: [frame.width, frame.height], gap: frame.itemSpacing } : null
+    })
+    store.clearSelection()
+    store.setZoomAroundPoint(1, 0, 0)
+    store.pan(-store.state.panX, -store.state.panY)
+    return frames
+  })
+  expect(frames).toEqual([
+    { size: [80, 160], gap: 40 },
+    { size: [200, 300], gap: 40 }
+  ])
+  await editor.canvas.waitForRender()
+  expect(await editor.canvas.screenshotCanvasRegion(650, 400)).toMatchSnapshot(
+    'pen-selection-wrap.png',
+    { maxDiffPixelRatio: 0, threshold: 0 }
+  )
+})

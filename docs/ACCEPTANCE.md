@@ -2,6 +2,30 @@
 
 Full parity is open. A source implementation, unit check, build, and user workflow establish different things. This ledger records only observed outcomes and the scope of each observation.
 
+## Selection wrapping continuation —2026-11-04
+
+- Actual Pen native probes and owned Save As copies establish unrotated vertical/horizontal
+  flow, nonnegative average spacing, numbered frames, cross-axis Fill for matching bounds,
+  retained Hug for unequal child frames, and empty selection after Undo. The detailed cases
+  and the unresolved rotated-state divergence are in [inspector parity](INSPECTOR-PARITY.md).
+- Thirty owner checks/205assertions pass, including existing portable/Slot behavior, nested
+  Undo/Redo and the development-server watcher. Seventeen Chromium/WebKit wrapper, multi-layout
+  and canvas workflows pass without snapshot updates. The new two-axis baseline is visually
+  inspected. Source/Vue/test types, scoped lint and architecture pass.
+- The146.6s native journey physically opens/selects/wraps, performs wrapping Undo/Redo,
+  changes width80→120 with both Fill children following, performs resize Undo/Redo, saves,
+  closes and reopens through Recents. Presented canvas gates run at both open boundaries.
+  Reopened geometry and unchanged saved bytes are asserted; the screenshot is inspected.
+- Earlier browser receipts remain separate: the first six-workflow run has a cold-start
+  timeout and five over-specific bare-Fill export assertions; the latter are corrected to
+  accept valid numeric fallbacks without changing export. Two later17-workflow runs each
+  have16 passes/one cold-start failure. Removing concurrent types does not resolve startup.
+  Vite's documented entry warmup passes the focused two-engine probe, then the full17 run
+  at the original timeouts. No startup-controller product code is changed.
+- The87.75MiB isolated build and81.25MiB normal bundle are built; normal strict signature
+  verification passes. Main installation, profiles, credentials and recovery remain untouched.
+  Rotated wrapping, exact inspector pixels, other menus/screens and full parity remain open.
+
 ## Multi-frame layout continuation —2026-11-04
 
 - Actual Pen's child-position fields establish Space Around with retained gap12.5 at Y21/59

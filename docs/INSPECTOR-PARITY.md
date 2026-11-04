@@ -2,6 +2,48 @@
 
 Target: actual `/Applications/Pen.app`1.2.21, rechecked in its installed Info.plist on2026-11-02. Full inspector and whole-product parity remain open. The reference is inspected through native UI and the private resource archive recorded in [reference provenance](PEN-REFERENCE.md).
 
+## Selection wrapping —2026-11-04
+
+In the observed unrotated cases, Pen's Add flex layout wraps sibling selections in a numbered frame, infers the flow
+from their positions and retains the average nonnegative gap. Two80×60 rectangles at Y0/100
+produce an80×160 vertical wrapper with gap40; two160×80 frames give gap20 and160×180.
+Horizontal80×60 rectangles at X0/120 produce200×60, and tall80×300 rectangles still choose
+horizontal200×300. Three80×60 rectangles at Y0/100/300 give gap90 and80×360. Overlapping
+rectangles at X0/60 use gap0 and160×60. These are observed native inspector values.
+
+Owned Pen Save As output establishes the sizing distinction: matching cross-axis bounds
+become Fill children and the wrapper fixes that axis. Unequal widths or cross-axis offsets
+keep their dimensions while the wrapper hugs both axes. Unequal child frames that already
+hug their contents retain their own Hug sizing. Undo restores the original siblings and
+clears selection. Open Pen routes its inspector, keyboard and menus through the shared
+spacing-aware wrapper, while internal Slot authoring and the portable SDK keep their
+existing default. Undo captures sizing before reparenting as well as affected geometry;
+a nested Redo regression catches stale Fill inherited from the former parent.
+
+Thirty owner checks/205assertions include the default policy, nested history, child Fill,
+retained child Hug and development-server watcher. The two-axis canvas baseline is visually
+inspected. Seventeen Chromium/WebKit wrapper, multi-layout and canvas workflows pass without snapshot
+updates. The146.6s native accessibility journey requires a presented canvas at File Open and Recent
+reopen. It selects two rectangles, wraps them through Add flex layout, verifies Undo/Redo,
+resizes width80→120 with both Fill children following, verifies resize Undo/Redo, saves,
+closes and reopens the owned file. The reopened120×160/gap40 geometry and unchanged saved
+bytes are checked. The native screenshot is visually inspected; exact inspector pixels
+remain open. The isolated and normal packages are87.75/81.25MiB; the normal package passes
+strict signature verification. Private receipts:layout-wrap-native-physical.log and
+layout-wrap-native-reopened.png.
+Three cold development-start runs fail before a wrapper action at the unchanged15s test
+limit. Running separately from types does not resolve it. Warming the editor entry through
+Vite's existing warmup option lets the focused Chromium/WebKit inspector journeys pass;
+this development-server change does not establish native startup behavior.
+
+Rotation remains OPEN. For two90° rectangles, actual Pen initially displays180×80/gap60.
+After Save As, its native child inspector shows80×80, then the wrapper shows60×80; a screenshot
+confirms the narrow wrapper and a child outside it. The saved file retains rotation90,
+width80 and Fill Height. Initial geometry, saved format and post-save geometry are distinct
+observations. No general rotated-layout renderer correction or exact rotated parity is
+claimed from that inconsistent state. Exact inspector pixels and whole-product parity remain
+OPEN. Private owned facts/saves are named wrap-* in pen-multi-layout-reference-2026-11-03.
+
 ## Multi-frame flex controls —2026-11-04
 
 Actual Pen exposes alignment and gap when any selected frame has a flex layout. Its frame

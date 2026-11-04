@@ -166,26 +166,31 @@ describe('layout mode history', () => {
   })
 })
 
-test('undo wrapping a nested selection restores parent order and all affected geometry', () => {
-  const { editor, frame, first, second } = scene()
-  try {
-    editor.select([second.id, first.id])
-    const before = layoutState(editor)
-    editor.wrapInAutoLayout()
-    const after = layoutState(editor)
-    for (let cycle = 0; cycle < 2; cycle++) {
-      editor.undoAction()
-      expect(layoutState(editor)).toEqual(before)
-      expect(editor.state.selectedIds).toEqual(new Set([second.id, first.id]))
-      expect(frame.childIds).toEqual([first.id, second.id])
-      expect(editor.undo.canUndo).toBe(false)
-      editor.redoAction()
-      expect(layoutState(editor)).toEqual(after)
+test.each([false, true])(
+  'undo nested wrapping restores order and geometry (spacing-aware=%s)',
+  (preserveSpacing) => {
+    const { editor, frame, first, second } = scene()
+    try {
+      editor.select([second.id, first.id])
+      const before = layoutState(editor)
+      editor.wrapInAutoLayout(preserveSpacing)
+      const after = layoutState(editor)
+      for (let cycle = 0; cycle < 2; cycle++) {
+        editor.undoAction()
+        expect(layoutState(editor)).toEqual(before)
+        expect(editor.state.selectedIds).toEqual(
+          preserveSpacing ? new Set() : new Set([second.id, first.id])
+        )
+        expect(frame.childIds).toEqual([first.id, second.id])
+        expect(editor.undo.canUndo).toBe(false)
+        editor.redoAction()
+        expect(layoutState(editor)).toEqual(after)
+      }
+    } finally {
+      editor.dispose()
     }
-  } finally {
-    editor.dispose()
   }
-})
+)
 
 // Figma places a new container in the slot of the topmost selected layer.
 test('the wrapper takes the slot of the topmost selected layer', () => {

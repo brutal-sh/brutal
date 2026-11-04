@@ -82,6 +82,7 @@ export function createEditorStoreModules(
     ...flash,
     ...pen,
     ...vectorEdit,
+    wrapInAutoLayout: () => editor.wrapInAutoLayout(true),
     attachScriptSource: scriptRuntime.attachScriptSource,
     reloadScript: scriptRuntime.reloadScript,
     scriptRuntimeStates: scriptRuntime.scriptRuntimeStates,

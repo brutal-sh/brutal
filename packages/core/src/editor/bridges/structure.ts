@@ -7,7 +7,8 @@ type StructureActions = ReturnType<typeof createStructureActions>
 
 export function createStructureBridge(structure: StructureActions, selection: SelectionActions) {
   return {
-    wrapInAutoLayout: () => structure.wrapInAutoLayout(selection.getSelectedNodes()),
+    wrapInAutoLayout: (preserveSpacing = false) =>
+      structure.wrapInAutoLayout(selection.getSelectedNodes(), preserveSpacing),
     groupSelected: () => structure.groupSelected(selection.getSelectedNodes()),
     frameSelection: () => structure.frameSelection(selection.getSelectedNodes()),
     booleanOperationSelected: (operation: 'UNION' | 'SUBTRACT' | 'INTERSECT' | 'EXCLUDE') =>

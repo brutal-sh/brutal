@@ -49,7 +49,7 @@ const hasFlex = computed(() =>
   >
     <template #actions>
       <IconButton
-        :label="wrapInAutoLayout.label"
+        :label="compact ? 'Add flex layout' : wrapInAutoLayout.label"
         size="xs"
         :disabled="!wrapInAutoLayout.enabled.value"
         @click="wrapInAutoLayout.run()"

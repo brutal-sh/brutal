@@ -46,6 +46,7 @@ export function createDevServerOptions(
     strictPort: true,
     host: host || false,
     hmr: hmrOptions(host, hmrURL),
+    warmup: { clientFiles: ['./src/boot.ts'] },
     // Vite forwards browser logs to the terminal when an agent starts it. Vue warnings carry the
     // component's props, and serializing the editor state behind them freezes the tab, so only
     // errors are forwarded.
