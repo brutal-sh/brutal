@@ -35,3 +35,4 @@
 - Edit selected frames' alignment, gap and paired or individual padding together, with variable-aware cancellation and history; distributed canvas spacing retains the numeric gap without adding it between children. Compact alignment uses square selection and direction-aware distribution marks with matching label and row spacing.
 
 - Wrap sibling selections with inferred flow, retained average spacing, numbered frames and matching cross-axis Fill sizing through inspector, menu and keyboard actions.
+- Primitives starts keyboard focus on Rectangle while retaining the checked tool, and compact named icons place their controls below Fill without frame-only Flow, clipping or Stroke controls; Advanced retains those controls.

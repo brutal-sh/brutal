@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { hasGeneratedContent } from '@open-pencil/scene-graph/generated'
+import { readIcon } from '@open-pencil/scene-graph/icons'
 import { LAYOUT_CONTAINER_TYPES } from '@open-pencil/vue/controls/selection-layout'
 import { useI18n } from '@open-pencil/vue/i18n'
 import { LayoutControlsRoot } from '@open-pencil/vue/primitives/LayoutControls'
@@ -59,7 +60,10 @@ const { compact = false } = defineProps<{ compact?: boolean }>()
           </IconButton>
         </template>
 
-        <LayoutFlowControl v-if="LAYOUT_CONTAINER_TYPES.has(ctx.node.type)" :compact="compact">
+        <LayoutFlowControl
+          v-if="LAYOUT_CONTAINER_TYPES.has(ctx.node.type) && (!compact || !readIcon(ctx.node))"
+          :compact="compact"
+        >
           <LayoutWrapToggle v-if="ctx.isFlex && !compact" />
         </LayoutFlowControl>
         <FlexControls v-if="compact && ctx.isFlex" compact />

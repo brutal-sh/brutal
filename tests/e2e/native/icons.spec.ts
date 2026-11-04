@@ -4,9 +4,66 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
 import { parsePenDocument } from '@open-pencil/pen'
+import { toolbarFlyoutItemTestId, toolbarFlyoutTestId } from '@open-pencil/vue/testing'
 
 import { createNativeLayerFixture } from '#tests/helpers/tauri/editor-snapshot'
 import { emitNativeMenuAction } from '#tests/helpers/tauri/invoke'
+
+async function checkIconControls() {
+  const sections = await browser.execute(() =>
+    [...document.querySelectorAll('section[aria-label]')]
+      .map((section) => section.getAttribute('aria-label'))
+      .filter((label) =>
+        [
+          'Alignment',
+          'Position',
+          'Layout',
+          'Appearance',
+          'Fill',
+          'Icon',
+          'Stroke',
+          'Effects'
+        ].includes(label ?? '')
+      )
+  )
+  assert.deepEqual(sections, [
+    'Alignment',
+    'Position',
+    'Layout',
+    'Appearance',
+    'Fill',
+    'Icon',
+    'Effects'
+  ])
+  assert.equal(await $('[aria-label="Flow"]').isExisting(), false)
+  assert.equal(await $('[data-test-id="clip-content-checkbox"]').isExisting(), false)
+  await $('[data-test-id="toolbar-flyout-rectangle"]').click()
+  await browser.waitUntil(() =>
+    browser.execute(
+      (expected) => document.activeElement?.getAttribute('data-test-id') === expected,
+      toolbarFlyoutItemTestId('RECTANGLE')
+    )
+  )
+  assert.equal(
+    await $('[data-test-id="toolbar-flyout-item-icon"]').getAttribute('aria-checked'),
+    'true'
+  )
+  await browser.keys('ArrowDown')
+  await browser.waitUntil(() =>
+    browser.execute(
+      (expected) => document.activeElement?.getAttribute('data-test-id') === expected,
+      toolbarFlyoutItemTestId('ELLIPSE')
+    )
+  )
+  await browser.keys('Escape')
+  await browser.waitUntil(() =>
+    browser.execute(() => document.querySelectorAll('[role="menu"]').length === 0)
+  )
+  assert.equal(
+    await browser.execute(() => document.activeElement?.getAttribute('data-test-id')),
+    toolbarFlyoutTestId('RECTANGLE')
+  )
+}
 
 describe('native editable icon persistence', () => {
   it('places a heart, saves its changed color and reopens the editable icon from Recents', async () => {
@@ -30,6 +87,7 @@ describe('native editable icon persistence', () => {
         () => [...(window.openPencil?.getStore?.().state.selectedIds ?? [])][0]
       )
       assert.ok(id, 'Placed icon was not selected')
+      await checkIconControls()
       // Path setup bypasses the OS picker; the subsequent Save event and Recents controls are exercised.
       assert.equal(
         await browser.execute(

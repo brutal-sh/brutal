@@ -67,7 +67,7 @@ test('shape flyout remembers its selection independently of the active tool', as
 
   await expect(starItem).toHaveAttribute('data-active', 'true')
   await expect(starItem).toHaveAttribute('aria-checked', 'true')
-  await expect(starItem).toBeFocused()
+  await expect(rectangleItem).toBeFocused()
   await expect(starItem.locator('[data-slot="flyout-item-indicator"] svg')).toHaveCount(1)
   await expect(rectangleItem).not.toHaveAttribute('data-active', 'true')
   await expect(rectangleItem).toHaveAttribute('aria-checked', 'false')

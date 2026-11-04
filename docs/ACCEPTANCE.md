@@ -2,6 +2,30 @@
 
 Full parity is open. A source implementation, unit check, build, and user workflow establish different things. This ledger records only observed outcomes and the scope of each observation.
 
+## Primitives focus and compact icon structure — 2026-11-04
+
+- Primitives initially focuses Rectangle while retaining the remembered checked Icon. Arrow
+  navigation and Escape/trigger return execute without selecting a tool or editing. Move/Scale
+  retains selected-radio focus, customized Star stays checked, and mobile behavior is retained.
+- A fresh target-bound REA screenshot of actual Pen's owned legacy-icon fixture confirms Icon
+  below Fill and no compact Stroke, Flow row or Clip content. Open Pen follows that structure;
+  Advanced retains its original controls/order, and ordinary/mixed frame controls retain their
+  workflows. The reference screenshot qualifies the shown state; the truncated accessibility
+  tree includes hidden tabs and is not accepted as active-inspector labels or focus evidence.
+- Final 49 Chromium/WebKit workflows pass, including compact/Advanced return with unchanged
+  selected-node data. The 3.6s isolated native journey asserts initial Rectangle focus, checked
+  Icon, arrow/Escape/trigger return, section order, absent frame-only controls and the existing
+  Save/Recents round trip. Both native screenshots are visually inspected at matching logical
+  window size1496×933. Fill content, glyph/family selectors, tool/header glyphs and exact whole
+  inspector pixels remain different and OPEN.
+- Earlier valid19 and31 runs and the22-pass/two-fixture-failure run retain their scope; the
+  initial exact accessible-name probe and native browser-only-alias import are invalid setup
+  evidence. Source-only review finds no defensible regression. Source/Vue/test types, scoped
+  lint, architecture and docs/changelog checks pass. Normal/test bundles are81.25/87.75MiB;
+  normal strict signature and frontend/binary test-hook exclusion pass. Main installation and
+  user data remain untouched. See [tool flyout evidence](TOOL-FLYOUT-PARITY.md) and
+  [reference provenance](PEN-REFERENCE.md).
+
 ## Editable icon saving continuation — 2026-11-04
 
 - Unedited 24px Lucide icons now write as named editable icons, preserving their uniform

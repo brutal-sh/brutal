@@ -329,7 +329,7 @@ const panelStyles = tv(designPanelTheme)
       <!-- Presets size artboards; an icon is a glyph. -->
       <FramePresetSelect v-if="advanced && node.type === 'FRAME' && !readIcon(node)" />
 
-      <IconSection />
+      <IconSection v-if="advanced" />
       <StickySection />
       <ShapeWithTextSection />
       <ConnectorSection />
@@ -347,8 +347,12 @@ const panelStyles = tv(designPanelTheme)
         <!-- A shape with text's typography is its label's, as in Figma. -->
         <TypographySection v-if="node.type === 'TEXT' || node.type === 'SHAPE_WITH_TEXT'" />
         <FillSection v-if="!scriptOfNode(node)" :compact="!advanced" />
+        <IconSection v-if="!advanced" />
         <template v-if="strokesAndEffects">
-          <StrokeSection v-if="!scriptOfNode(node)" :compact="!advanced" />
+          <StrokeSection
+            v-if="!scriptOfNode(node) && (advanced || !readIcon(node))"
+            :compact="!advanced"
+          />
           <EffectsSection :compact="!advanced" />
         </template>
       </template>

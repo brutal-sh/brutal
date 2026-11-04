@@ -4,7 +4,7 @@ import { parsePenDocument } from '@open-pencil/pen'
 
 import { expect, test, useEditorSetupWithClear } from '#tests/e2e/fixtures'
 import { openAppMenu } from '#tests/helpers/menu'
-import { propertyField } from '#tests/helpers/properties'
+import { openAdvancedProperties, propertyField } from '#tests/helpers/properties'
 import { getNodeById, getPageChildren, getSelectedNode } from '#tests/helpers/store'
 import { toolbarFlyoutTestId, toolbarToolTestId } from '#tests/helpers/test-ids'
 
@@ -30,6 +30,31 @@ async function arm() {
     'true'
   )
 }
+
+test('Primitives focuses Rectangle while remembering Icon and restores trigger focus on Escape', async () => {
+  const { page, canvas } = ctx
+  await arm()
+  await canvas.pressKey('Escape')
+  const trigger = page.getByTestId(toolbarFlyoutTestId('RECTANGLE'))
+  await trigger.focus()
+  await trigger.press('ArrowDown')
+  await expect(page.getByRole('menuitemradio', { name: /^Rectangle/ })).toBeFocused()
+  await expect(page.getByRole('menuitemradio', { name: 'Icon', exact: true })).toHaveAttribute(
+    'aria-checked',
+    'true'
+  )
+  await page.keyboard.press('ArrowDown')
+  await expect(page.getByRole('menuitemradio', { name: /^Ellipse/ })).toBeFocused()
+  expect(await getPageChildren(page)).toHaveLength(0)
+  await expect(page.getByTestId(toolbarToolTestId('SELECT'))).toHaveAttribute(
+    'aria-pressed',
+    'true'
+  )
+  await page.keyboard.press('Escape')
+  await expect(page.locator('[role="menu"]')).toHaveCount(0)
+  await expect(trigger).toBeFocused()
+  canvas.assertNoErrors()
+})
 
 test('Icon arms without editing, places once, remembers the choice and restores its subtree through history', async () => {
   const { page, canvas } = ctx
@@ -149,5 +174,62 @@ test('a placed icon saves as an editable named glyph and reopens through File Op
     b: 1,
     a: 1
   })
+  canvas.assertNoErrors()
+})
+
+test('compact icon controls follow Fill and Advanced retains stroke controls without editing', async () => {
+  const { page, canvas } = ctx
+  await arm()
+  await canvas.click(350, 250)
+  await expect(propertyField(page, 'icon-name')).toBeVisible()
+  const before = await getSelectedNode(page)
+  const sectionOrder = () =>
+    page
+      .locator('section[aria-label]')
+      .evaluateAll((sections) =>
+        sections
+          .map((section) => section.getAttribute('aria-label'))
+          .filter((label) =>
+            [
+              'Alignment',
+              'Position',
+              'Layout',
+              'Appearance',
+              'Fill',
+              'Icon',
+              'Stroke',
+              'Effects'
+            ].includes(label ?? '')
+          )
+      )
+  expect(await sectionOrder()).toEqual([
+    'Alignment',
+    'Position',
+    'Layout',
+    'Appearance',
+    'Fill',
+    'Icon',
+    'Effects'
+  ])
+  await expect(page.getByRole('region', { name: 'Stroke', exact: true })).toHaveCount(0)
+  await expect(page.locator('[aria-label="Flow"]')).toHaveCount(0)
+  await expect(page.getByTestId('clip-content-checkbox')).toHaveCount(0)
+  await openAdvancedProperties(page)
+  await expect(page.getByRole('region', { name: 'Stroke', exact: true })).toBeVisible()
+  await expect(page.locator('[aria-label="Flow"]')).toBeVisible()
+  await expect(page.getByTestId('clip-content-checkbox')).toBeVisible()
+  await expect(propertyField(page, 'icon-name')).toBeVisible()
+  const advanced = await sectionOrder()
+  expect(advanced.indexOf('Icon')).toBeLessThan(advanced.indexOf('Fill'))
+  expect(await getSelectedNode(page)).toEqual(before)
+  await (
+    await openAppMenu(page, 'View')
+  )
+    .getByRole('menuitem', { name: 'Design properties', exact: true })
+    .click()
+  await expect(page.getByRole('region', { name: 'Stroke', exact: true })).toHaveCount(0)
+  await expect(page.locator('[aria-label="Flow"]')).toHaveCount(0)
+  await expect(page.getByTestId('clip-content-checkbox')).toHaveCount(0)
+  expect(await getSelectedNode(page)).toEqual(before)
   canvas.assertNoErrors()
 })

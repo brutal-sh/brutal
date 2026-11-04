@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { BlendMode } from '@open-pencil/scene-graph'
+import { readIcon } from '@open-pencil/scene-graph/icons'
 import { POINT_COUNT_RANGE } from '@open-pencil/scene-graph/polygon'
 import { MIXED } from '@open-pencil/vue/controls/node-props'
 import { useVariableModes } from '@open-pencil/vue/controls/variable-modes'
@@ -342,7 +343,7 @@ function blendModeGroups(value: BlendMode | typeof MIXED) {
       </PanelGrid>
 
       <VariableModeRows :choices="variableModes.applied.value" @set="variableModes.setMode" />
-      <ClipContentControl v-if="compact" />
+      <ClipContentControl v-if="compact && (!node || isMulti || !readIcon(node))" />
     </PanelSection>
   </AppearanceControlsRoot>
 </template>

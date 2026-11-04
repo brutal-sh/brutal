@@ -90,14 +90,41 @@ The initial package build times out; its fresh run with sleep inhibition passes.
 Private receipts:icon-pen-roundtrip-2026-11-04. Source-only followup review independently
 passes25 checks/61 assertions and finds no further defensible defect; it is not native proof.
 
+## Primitives focus and compact icon structure, 2026-11-04
+
+The actual app's remembered Icon remains checked while Primitives initially focuses Rectangle.
+Desktop opening now follows that policy, including keyboard opening, arrow navigation and
+Escape/trigger focus return. Move/Scale retains its selected-radio policy; mobile keeps its
+existing handling. Remembered customized Star still stays checked while Rectangle takes focus.
+Opening or navigating the menu does not select a different tool or edit the document.
+
+A fresh REA observation of the running Pen window confirms Icon below Fill and no Stroke,
+Flow segmented row or Clip content checkbox for the selected named icon. Compact Open Pen
+now follows that section/control structure. Advanced retains its original controls and order;
+ordinary and mixed frame controls keep their existing behavior. This does not yet match the
+Fill row, separate glyph/family selectors, tool/header glyphs or all inspector pixels.
+
+Executed:49 browser workflows across Chromium/WebKit, including icon/picker/save workflows,
+the retained custom Star choice, Move/Scale, mobile keyboard behavior, compact/Advanced return,
+ordinary/mixed frame clipping and unchanged selected-node data. The 3.6s isolated native journey
+checks section order, absent frame-only controls, remembered Icon with initial Rectangle focus,
+arrow movement, Escape/trigger return and the existing Save/Recents round trip. Its viewport is
+1496×933 at scale2, matching the reference window's logical size; both screenshots are inspected.
+The initial 19-workflow pass precedes the extra controls; the next24 run retains22 passes and
+two fixture failures from a nonexistent return button. The corrected31 and final49 runs retain
+their separate results. The first focus probe's exact name omits the R shortcut; its corrected
+two-engine regression demonstrates the actual wrong-focus result before the source change.
+A native setup import uses a browser-only alias before switching to the owning public SDK
+export. That failed run does not qualify UI behavior. Private receipts:icon-toolbar-focus-2026-11-04.
+Source-only review finds no defensible regression; it is not additional runtime acceptance.
+
 ## Remaining
 
 The earlier Script gap list is superseded by [Script implementation and executed evidence](SCRIPT-PARITY.md).
 Remaining icon families/sizes/options, older metadata, physical Save-panel/keyboard delivery
-and exact paired icon pixels require additional qualification. The observed reference
-opening with Icon remembered focuses Rectangle despite Icon being checked; Open Pen still
-focuses the selected radio. This focus policy, exact Icon inspector order/controls and the
-tool glyph remain open.
+and exact paired icon pixels require additional qualification. Initial Primitives focus and
+the named compact section/control structure have the bounded evidence above; complete Icon
+inspector controls and the tool glyph remain open.
 
 Exact glyphs, every hover/disabled/read-only/light/display-scale state, offline placement, native
 scaling pointer/modifier/multiselection behavior and whole-product parity remain unqualified.

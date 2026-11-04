@@ -19,3 +19,18 @@ REA extraction evidence: `ev_5f56f580b215e59f26feb986505ba7205ba42c7ec2ffa7099b5
 `local-evidence/pen-design-extraction/` retains the earlier CSS/component measurements and the Hopper native inspection snapshot. Hopper inspected the native launcher; the Electron editor's design comes from the shipped web assets and observed running Pen UI.
 
 The full reference folder does not close visual acceptance. Dynamic layout, system/network fonts, inline icons, every screen/menu state and executed interactions still need comparison against Pen itself.
+
+## Running icon inspector observation, 2026-11-04
+
+REA observes the already-running owned legacy-icon fixture in Pen, binding the native launcher
+through the Hopper provider. Launcher SHA-256 is `d6047dd37f301aa0a5cc8185b1034a5dc669bb4ae797cf9dba4ad6ee0a026f30`.
+The selected window's screenshot is1496×933, SHA-256
+`dcbbe428ae86402d457270ce4dcef0d66ab759600b07782083b908b084d23f03`.
+Evidence: `ev_973bff3e0f26becc022b1347cc25e7894074be5813cc1de2b6aecb40670dd6da`.
+
+The screenshot confirms the selected icon's section order and absence of frame-only controls.
+The400-node accessibility tree is truncated and includes hidden tab views, so it does not
+qualify the active inspector's labels, focus or editable values. No reference interaction or
+deep launcher analysis occurs in this observation. The evidence bundle and original screenshot
+are retained privately under `local-evidence/icon-toolbar-focus-2026-11-04/`; the REA target is
+closed afterward. Reference document content and application state are unchanged.

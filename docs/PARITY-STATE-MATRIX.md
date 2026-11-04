@@ -4,7 +4,17 @@ Outcome: full functionality and design parity against installed `/Applications/P
 
 Must: inspect actual application, reproduce behavior independently, verify rendered states and executed workflows. Must not: label uninspected screens or implementation-only paths accepted. Authority: explicit user continuation,2026-10-30. Done evidence: every enumerated applicable state has both a visual match and an end-to-end behavior result; no residual unsupported required behavior.
 
-Current continuation—2026-11-04: Unedited 24px Lucide icons retain named identity and color
+Current continuation—2026-11-04: Primitives initially focuses Rectangle while remembering Icon,
+with arrow/Escape/trigger behavior and retained Move/Scale/mobile/custom Star workflows.
+A fresh actual-Pen REA screenshot confirms compact Icon below Fill and no frame-only Stroke,
+Flow row or Clip content. Open Pen follows that structure while Advanced retains its controls.
+Final49 browser workflows and a3.6s isolated native focus/structure/Save/Recents journey pass;
+native screenshots are inspected at matching1496×933 logical window sizes. Source/Vue/test
+types, scoped lint, architecture and docs/changelog checks pass. Normal/test bundles are
+81.25/87.75MiB; normal strict signature and test-hook exclusion pass. Fill content, separate
+glyph/family controls, exact glyphs/pixels and every remaining screen/menu remain OPEN.
+
+Earlier saving continuation: Unedited 24px Lucide icons retain named identity and color
 through saving and reopening. The strict writer and float32 drawing baseline pass 146 related
 owner checks/475 assertions, 13 browser workflows and a 2.2s native Save/Recents journey.
 Physical picker/keyboard delivery, other icon libraries/sizes/options, older metadata, menu

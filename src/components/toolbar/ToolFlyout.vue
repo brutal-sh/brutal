@@ -76,14 +76,14 @@ function flyoutItemClass() {
   })
 }
 
-function focusSelectedTool(event: Event) {
+function focusInitialTool(event: Event) {
   if (mobile || !(event.target instanceof HTMLElement)) return
-  const selected = event.target.querySelector<HTMLElement>(
-    '[role="menuitemradio"][aria-checked="true"]'
+  const initial = event.target.querySelector<HTMLElement>(
+    primitives.value ? '[role="menuitemradio"]' : '[role="menuitemradio"][aria-checked="true"]'
   )
-  if (!selected) return
+  if (!initial) return
   event.preventDefault()
-  selected.focus({ preventScroll: true })
+  initial.focus({ preventScroll: true })
 }
 </script>
 
@@ -121,7 +121,7 @@ function focusSelectedTool(event: Event) {
           :side-offset="mobile ? 8 : 10"
           align="start"
           :class="styles.flyoutContent({ class: ui?.flyoutContent })"
-          @open-auto-focus="focusSelectedTool"
+          @open-auto-focus="focusInitialTool"
           @close-auto-focus="
             (event) => {
               if (store.state.iconPickerOpen) event.preventDefault()
