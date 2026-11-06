@@ -25,7 +25,16 @@ export const AI_SETUP_LABELS = [
     aiSetupAgentAdapterMismatch:
       'Open Pen found {path}, another adapter it doesn’t support. Install the supported one, then remove this one or move it later on your PATH.',
     aiSetupPiDescription:
-      'Open Pen runs Pi through its Harness companion and uses the providers you signed in to in Pi.'
+      'Open Pen runs Pi through its Harness companion and uses the providers you signed in to in Pi.',
+    chatNetworkFailed: 'Open Pen could not reach the provider. Check your connection and endpoint.',
+    retryRequest: 'Retry',
+    describeChange: 'Describe a change…',
+    aiSetupChatGPTSignIn: 'Sign in with ChatGPT',
+    aiSetupChatGPTWaiting: 'Finish signing in to ChatGPT in your browser.',
+    aiSetupSignInCancelled: 'Sign-in was cancelled.',
+    aiSetupChatGPTCallbackCancelled: 'ChatGPT sign-in was cancelled. You can close this tab.',
+    aiSetupChatGPTCallbackStale:
+      'This sign-in link belongs to an earlier attempt. Start again from Open Pen.'
   },
   {
     locale: 'de',
@@ -54,7 +63,18 @@ export const AI_SETUP_LABELS = [
     aiSetupAgentAdapterMismatch:
       'Open Pen hat {path} gefunden, einen anderen Adapter, den es nicht unterstützt. Installiere den unterstützten und entferne diesen oder setze ihn in deinem PATH weiter nach hinten.',
     aiSetupPiDescription:
-      'Open Pen führt Pi über seinen Harness-Begleiter aus und nutzt die Anbieter, bei denen du dich in Pi angemeldet hast.'
+      'Open Pen führt Pi über seinen Harness-Begleiter aus und nutzt die Anbieter, bei denen du dich in Pi angemeldet hast.',
+    chatNetworkFailed:
+      'Open Pen konnte den Anbieter nicht erreichen. Prüfe die Verbindung und den Endpunkt.',
+    retryRequest: 'Erneut versuchen',
+    describeChange: 'Beschreibe eine Änderung…',
+    aiSetupChatGPTSignIn: 'Mit ChatGPT anmelden',
+    aiSetupChatGPTWaiting: 'Schließe die Anmeldung bei ChatGPT in deinem Browser ab.',
+    aiSetupSignInCancelled: 'Die Anmeldung wurde abgebrochen.',
+    aiSetupChatGPTCallbackCancelled:
+      'Die Anmeldung bei ChatGPT wurde abgebrochen. Du kannst diesen Tab schließen.',
+    aiSetupChatGPTCallbackStale:
+      'Dieser Anmeldelink gehört zu einem früheren Versuch. Starte erneut in Open Pen.'
   },
   {
     locale: 'es',
@@ -84,7 +104,18 @@ export const AI_SETUP_LABELS = [
     aiSetupAgentAdapterMismatch:
       'Open Pen encontró {path}, otro adaptador que no admite. Instala el compatible y elimina este o ponlo más atrás en tu PATH.',
     aiSetupPiDescription:
-      'Open Pen ejecuta Pi mediante su complemento Harness y usa los proveedores en los que iniciaste sesión en Pi.'
+      'Open Pen ejecuta Pi mediante su complemento Harness y usa los proveedores en los que iniciaste sesión en Pi.',
+    chatNetworkFailed:
+      'Open Pen no pudo acceder al proveedor. Comprueba la conexión y el endpoint.',
+    retryRequest: 'Reintentar',
+    describeChange: 'Describe un cambio…',
+    aiSetupChatGPTSignIn: 'Iniciar sesión con ChatGPT',
+    aiSetupChatGPTWaiting: 'Termina de iniciar sesión en ChatGPT en tu navegador.',
+    aiSetupSignInCancelled: 'Se canceló el inicio de sesión.',
+    aiSetupChatGPTCallbackCancelled:
+      'Se canceló el inicio de sesión en ChatGPT. Puedes cerrar esta pestaña.',
+    aiSetupChatGPTCallbackStale:
+      'Este enlace de inicio de sesión pertenece a un intento anterior. Vuelve a empezar desde Open Pen.'
   },
   {
     locale: 'fr',
@@ -114,7 +145,18 @@ export const AI_SETUP_LABELS = [
     aiSetupAgentAdapterMismatch:
       'Open Pen a trouvé {path}, un autre adaptateur qu’il ne prend pas en charge. Installez celui qui est pris en charge, puis supprimez celui-ci ou placez-le plus loin dans votre PATH.',
     aiSetupPiDescription:
-      'Open Pen exécute Pi via son compagnon Harness et utilise les fournisseurs auxquels vous êtes connecté dans Pi.'
+      'Open Pen exécute Pi via son compagnon Harness et utilise les fournisseurs auxquels vous êtes connecté dans Pi.',
+    chatNetworkFailed:
+      'Open Pen n’a pas pu joindre le fournisseur. Vérifiez la connexion et le point de terminaison.',
+    retryRequest: 'Réessayer',
+    describeChange: 'Décrivez un changement…',
+    aiSetupChatGPTSignIn: 'Se connecter avec ChatGPT',
+    aiSetupChatGPTWaiting: 'Terminez la connexion à ChatGPT dans votre navigateur.',
+    aiSetupSignInCancelled: 'La connexion a été annulée.',
+    aiSetupChatGPTCallbackCancelled:
+      'La connexion à ChatGPT a été annulée. Vous pouvez fermer cet onglet.',
+    aiSetupChatGPTCallbackStale:
+      'Ce lien de connexion appartient à une tentative précédente. Recommencez depuis Open Pen.'
   },
   {
     locale: 'it',
@@ -144,7 +186,17 @@ export const AI_SETUP_LABELS = [
     aiSetupAgentAdapterMismatch:
       'Open Pen ha trovato {path}, un altro adattatore che non supporta. Installa quello supportato e rimuovi questo o spostalo più avanti nel tuo PATH.',
     aiSetupPiDescription:
-      'Open Pen esegue Pi tramite il suo companion Harness e usa i provider a cui hai effettuato l’accesso in Pi.'
+      'Open Pen esegue Pi tramite il suo companion Harness e usa i provider a cui hai effettuato l’accesso in Pi.',
+    chatNetworkFailed: 'Open Pen non ha raggiunto il provider. Controlla connessione ed endpoint.',
+    retryRequest: 'Riprova',
+    describeChange: 'Descrivi una modifica…',
+    aiSetupChatGPTSignIn: 'Accedi con ChatGPT',
+    aiSetupChatGPTWaiting: 'Completa l’accesso a ChatGPT nel browser.',
+    aiSetupSignInCancelled: 'L’accesso è stato annullato.',
+    aiSetupChatGPTCallbackCancelled:
+      'L’accesso a ChatGPT è stato annullato. Puoi chiudere questa scheda.',
+    aiSetupChatGPTCallbackStale:
+      'Questo link di accesso appartiene a un tentativo precedente. Ricomincia da Open Pen.'
   },
   {
     locale: 'ja',
@@ -174,7 +226,18 @@ export const AI_SETUP_LABELS = [
     aiSetupAgentAdapterMismatch:
       'Open Pen が見つけた {path} は、対応していない別のアダプターです。対応版をインストールし、これを削除するか PATH の後ろに移してください。',
     aiSetupPiDescription:
-      'Open Pen は Harness コンパニオンを通じて Pi を実行し、Pi でサインインしたプロバイダーを使います。'
+      'Open Pen は Harness コンパニオンを通じて Pi を実行し、Pi でサインインしたプロバイダーを使います。',
+    chatNetworkFailed:
+      'Open Penからプロバイダーに接続できませんでした。接続とエンドポイントを確認してください。',
+    retryRequest: '再試行',
+    describeChange: '変更内容を入力…',
+    aiSetupChatGPTSignIn: 'ChatGPT でサインイン',
+    aiSetupChatGPTWaiting: 'ブラウザで ChatGPT へのサインインを完了してください。',
+    aiSetupSignInCancelled: 'サインインはキャンセルされました。',
+    aiSetupChatGPTCallbackCancelled:
+      'ChatGPT へのサインインはキャンセルされました。このタブを閉じてください。',
+    aiSetupChatGPTCallbackStale:
+      'このサインインリンクは以前の試行のものです。Open Pen からやり直してください。'
   },
   {
     locale: 'pl',
@@ -204,7 +267,17 @@ export const AI_SETUP_LABELS = [
     aiSetupAgentAdapterMismatch:
       'Open Pen znalazł {path}, inny adapter, którego nie obsługuje. Zainstaluj obsługiwany, a ten usuń lub przesuń dalej w PATH.',
     aiSetupPiDescription:
-      'Open Pen uruchamia Pi przez towarzyszący program Harness i korzysta z dostawców, do których zalogowano się w Pi.'
+      'Open Pen uruchamia Pi przez towarzyszący program Harness i korzysta z dostawców, do których zalogowano się w Pi.',
+    chatNetworkFailed: 'Open Pen nie mógł połączyć się z dostawcą. Sprawdź połączenie i endpoint.',
+    retryRequest: 'Ponów',
+    describeChange: 'Opisz zmianę…',
+    aiSetupChatGPTSignIn: 'Zaloguj się przez ChatGPT',
+    aiSetupChatGPTWaiting: 'Dokończ logowanie do ChatGPT w przeglądarce.',
+    aiSetupSignInCancelled: 'Logowanie zostało anulowane.',
+    aiSetupChatGPTCallbackCancelled:
+      'Logowanie do ChatGPT zostało anulowane. Możesz zamknąć tę kartę.',
+    aiSetupChatGPTCallbackStale:
+      'Ten link logowania pochodzi z wcześniejszej próby. Zacznij od nowa w Open Pen.'
   },
   {
     locale: 'ru',
@@ -234,7 +307,17 @@ export const AI_SETUP_LABELS = [
     aiSetupAgentAdapterMismatch:
       'Open Pen нашёл {path} — другой адаптер, который он не поддерживает. Установите поддерживаемый, а этот удалите или переместите дальше в PATH.',
     aiSetupPiDescription:
-      'Open Pen запускает Pi через компаньон Harness и использует провайдеров, в которые вы вошли в Pi.'
+      'Open Pen запускает Pi через компаньон Harness и использует провайдеров, в которые вы вошли в Pi.',
+    chatNetworkFailed:
+      'Open Pen не удалось связаться с провайдером. Проверьте соединение и адрес сервера.',
+    retryRequest: 'Повторить',
+    describeChange: 'Опишите изменение…',
+    aiSetupChatGPTSignIn: 'Войти через ChatGPT',
+    aiSetupChatGPTWaiting: 'Завершите вход в ChatGPT в браузере.',
+    aiSetupSignInCancelled: 'Вход отменён.',
+    aiSetupChatGPTCallbackCancelled: 'Вход в ChatGPT отменён. Можно закрыть эту вкладку.',
+    aiSetupChatGPTCallbackStale:
+      'Эта ссылка для входа относится к прошлой попытке. Начните заново в Open Pen.'
   },
   {
     locale: 'zh-CN',
@@ -258,6 +341,14 @@ export const AI_SETUP_LABELS = [
       '请在设置 → MCP 中确认 Open Pen 的 MCP 服务器正在运行，然后点击重新检查。',
     aiSetupAgentAdapterMismatch:
       'Open Pen 找到的 {path} 是它不支持的另一个适配器。请安装受支持的版本，并删除这个或将其在 PATH 中后移。',
-    aiSetupPiDescription: 'Open Pen 通过 Harness 配套程序运行 Pi，并使用你在 Pi 中登录的提供商。'
+    aiSetupPiDescription: 'Open Pen 通过 Harness 配套程序运行 Pi，并使用你在 Pi 中登录的提供商。',
+    chatNetworkFailed: 'Open Pen无法连接提供商。请检查网络和端点。',
+    retryRequest: '重试',
+    describeChange: '描述一个更改…',
+    aiSetupChatGPTSignIn: '使用 ChatGPT 登录',
+    aiSetupChatGPTWaiting: '请在浏览器中完成 ChatGPT 登录。',
+    aiSetupSignInCancelled: '登录已取消。',
+    aiSetupChatGPTCallbackCancelled: 'ChatGPT 登录已取消。你可以关闭此标签页。',
+    aiSetupChatGPTCallbackStale: '此登录链接属于之前的尝试。请从 Open Pen 重新开始。'
   }
 ]

@@ -130,8 +130,27 @@ checks pass in both themes without an accessibility exemption or pixel-baseline 
 Independent review confirms the theme merge and per-instance overrides. Production browser
 build, source/Vue/shared-test types, owned lint and documentation/changelog checks pass.
 
+A separate nine-language chat journey now executes a simulated network failure and the actual
+Retry action. Each case observes translated composer/error/retry labels, exactly two transport
+calls, a successful reply and one user message. No request reaches the intercepted inference
+endpoint. All nine error captures are inspected; this does not qualify a real provider outage.
+
+Nine native callback journeys use the isolated test app's intercepted external opener. A stale
+state returns the translated 400 page while the setup remains waiting; a denied matching state
+returns the translated cancellation page and restores the sign-in button. The native setup
+shows its translated cancellation notice. All nine native captures and 18 actual-response HTML
+renders are inspected. No provider browser is opened, code is exchanged or credential is saved.
+The loopback port is released afterward. The original nine native setup journeys also pass
+after their shared locale/dialog helper is extracted; all 18 native cases pass together.
+
+Earlier test failures remain recorded: cleanup sent Escape before the setup closed; a substring
+selector matched a Codex account description instead of ChatGPT; one run found a hidden native
+window. The final run uses an exact ChatGPT card label and explicit dialog cleanup. A browser
+rerun also records a setup timeout during an unexpected navigation; the final uninterrupted
+nine-case run passes with the exact transport-call assertion and complete transport interface.
+
 A11Y-COPY is executed at `bf1b43eb3`. BRAND-COPY-AI remains open for other AI copy states,
-including chat errors and callbacks not exercised by these receipts.
+including successful callbacks and installed-agent version failures not exercised by these receipts.
 The native bundle precedes the command-copy contrast change; fresh native delivery/clipboard,
 full Pen visual matching and full branding acceptance remain open. The broader structure lint
 and dedicated native typing retain the previously documented unrelated failures.

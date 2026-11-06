@@ -34,8 +34,10 @@ Planning publication, the reproducible runtime audit, own-brand assets, owned di
 names and the MCP startup modularization have bounded acceptance evidence linked.
 Canonical localized product labels have bounded source/CLI/nine-language browser acceptance.
 The discovered command-copy contrast task has bounded executed evidence.
-The single Building task is BRAND-COPY-AI: remaining translated chat-error and callback states.
-Its normal browser/native journeys and component-state checks retain their precise limits.
+The single Building task is BRAND-COPY-AI: remaining successful-callback and installed-agent
+failure states. Nine-language browser network-failure/Retry and native stale/cancelled callback
+journeys now have bounded executed evidence. Its normal browser/native journeys and component
+checks retain their precise limits; no real provider sign-in or inference is accepted by mocks.
 BRAND-COPY is an unaccepted gate in Verify; AI, editor, recovery/update, cloud-client and support
 copy journeys have their own child cards.
 Documentation refresh and graphics lifecycle stability are Ready. The interrupted zero-size
