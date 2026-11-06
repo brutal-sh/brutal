@@ -29,10 +29,11 @@ There are no missing or duplicate task IDs, and the dependency graph is acyclic.
 All 15 oversized runtime modules have individual disposition tasks; branding has six bounded tasks.
 This proves tracking coverage, not accepted product parity or exhaustive discovery of every native state.
 
-Planning publication is the current Building card. The runtime audit is in Verify;
-documentation refresh, own-brand assets and localized product copy are the three Ready tasks.
-The next implementation sequence includes graphics lifecycle stability, own branding and the
-interrupted zero-size icon work. Current failed receipts remain open on their specific cards.
+Planning publication and the reproducible runtime audit are Executed, with their specific
+deliverable evidence linked. Own-brand assets is the single Building task. Documentation
+refresh, localized product copy and graphics lifecycle stability are the three Ready tasks.
+The interrupted zero-size icon work retains its failed wider-run receipts and dependencies.
+The fresh state readback is 330 Backlog, 3 Ready, 1 Building and 2 Executed, plus 17 milestones.
 
 ## Control loop
 
