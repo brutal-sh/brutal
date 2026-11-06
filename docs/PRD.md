@@ -28,9 +28,12 @@ modules, complete Open Pen branding and an executable Trello backlog.
 - Observed: the 2026-11-06 source-size audit counts 2,922 runtime files across the app, Core,
   Vue SDK, Scene Graph and native shell. Median size is 64.5 physical lines; 2,749 are at most
   300 lines and 15 exceed 600. See [modularity](MODULARITY.md).
-- Observed: inherited web marks, localized product names, diagnostics labels and a native
+- Initially observed: inherited web marks, localized product names, diagnostics labels and a native
   microphone explanation still identify the app as OpenPencil. The original violet Open Pen
   app-icon master already exists.
+- Executed afterward: [own-brand asset and diagnostics checks](BRANDING.md) qualify generated
+  artwork and selected real support/error paths. Localized copy, native identity and full
+  branding acceptance remain open.
 - Observed: repeated document changes can exhaust WebKit's context budget. The first cleanup
   patch is incomplete. Zero-size icon preservation has focused evidence, but the wider run
   retains that graphics failure. Neither change is published or accepted as a full fix.

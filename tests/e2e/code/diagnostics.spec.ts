@@ -1,7 +1,7 @@
 import { expect, test, useEditorSetupWithClear } from '#tests/e2e/fixtures'
 import { openAppMenu } from '#tests/helpers/menu'
 
-const editor = useEditorSetupWithClear()
+const editor = useEditorSetupWithClear('/?test')
 
 test("the Design JSX editor flags props an element does not take, and accepts each element's own", async () => {
   const page = editor.page
@@ -23,8 +23,16 @@ test("the Design JSX editor flags props an element does not take, and accepts ea
       '  <Sticky color="yellow" author="Ada">Hi</Sticky>',
       '  <Connector from="a" to="a" line="curved" startCap="none" />',
       '  <Frame from="x" bogus={1} />',
+      '  <UnknownWidget />',
       '</Frame>'
     ].join('\n')
   )
-  await expect(page.locator('.cm-lintRange-warning')).toHaveText(['from', 'bogus'])
+  const warnings = page.locator('.cm-lintRange-warning')
+  await expect(warnings).toHaveText(['from', 'bogus', 'UnknownWidget'])
+  await warnings.first().hover()
+  await expect(page.locator('.cm-tooltip-lint')).toContainText('Unknown design property “from”.')
+  await warnings.last().hover()
+  await expect(page.locator('.cm-tooltip-lint')).toContainText(
+    'Unknown design element <UnknownWidget>.'
+  )
 })

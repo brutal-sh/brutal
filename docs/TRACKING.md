@@ -29,11 +29,13 @@ There are no missing or duplicate task IDs, and the dependency graph is acyclic.
 All 15 oversized runtime modules have individual disposition tasks; branding has six bounded tasks.
 This proves tracking coverage, not accepted product parity or exhaustive discovery of every native state.
 
-Planning publication and the reproducible runtime audit are Executed, with their specific
-deliverable evidence linked. Own-brand assets is the single Building task. Documentation
-refresh, localized product copy and graphics lifecycle stability are the three Ready tasks.
+Planning publication, the reproducible runtime audit, own-brand assets and owned diagnostics/log
+names have their bounded acceptance evidence linked. The single Building task is MOD-07:
+separate MCP startup responsibilities in `src/app/automation/mcp/spawn.ts` while retaining behavior.
+Documentation refresh, localized product copy and graphics lifecycle stability are the three Ready tasks.
 The interrupted zero-size icon work retains its failed wider-run receipts and dependencies.
-The fresh state readback is 330 Backlog, 3 Ready, 1 Building and 2 Executed, plus 17 milestones.
+The delivery snapshot is 328 Backlog, 3 Ready, 1 Building and 4 Executed, plus 17 milestones.
+No branding milestone or product-parity feature group is fully accepted.
 
 ## Control loop
 

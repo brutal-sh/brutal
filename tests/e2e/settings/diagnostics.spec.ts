@@ -4,6 +4,7 @@ import type { Page } from '@playwright/test'
 import * as v from 'valibot'
 
 import { CanvasHelper } from '#tests/helpers/canvas'
+import { beginProfilerCapture, downloadProfilerCapture } from '#tests/helpers/canvas/profiler'
 import { expect, test } from '#tests/helpers/chat/fixture'
 import { openAppMenu } from '#tests/helpers/menu'
 
@@ -35,8 +36,7 @@ test('Settings exports correlated chat telemetry without conversation content', 
   await expect(chat.input).toBeEnabled()
   await chat.submit('A second request in the same conversation')
   await expect(page.getByTestId('chat-message-assistant')).toHaveCount(2)
-  await page.getByTestId('app-settings-trigger').click()
-  await page.getByTestId('settings-section-diagnostics').click()
+  await openDiagnostics(page)
   await page.getByRole('button', { name: 'Copy diagnostics', exact: true }).click()
   await expect(page.getByRole('button', { name: 'Copied', exact: true })).toBeVisible()
   const text = await page.evaluate(() => navigator.clipboard.readText())
@@ -65,7 +65,7 @@ test('Settings saves the diagnostics report as a file', async ({ configuredChat:
     page.getByRole('button', { name: 'Save diagnostics…', exact: true }).click()
   ])
 
-  expect(download.suggestedFilename()).toMatch(/\.json$/)
+  expect(download.suggestedFilename()).toBe('Open Pen diagnostics.json')
   const { environment, events } = v.parse(
     reportSchema,
     await readFile(await download.path(), 'utf8')
@@ -183,4 +183,31 @@ test('File › Diagnostics opens its own page, and usage history is switched on 
     .getByTestId('settings-usage-panel')
     .getByRole('switch', { name: 'Usage history' })
   await expect(history).toHaveAttribute('data-state', 'checked')
+})
+
+const profileSchema = v.pipe(
+  v.string(),
+  v.parseJson(),
+  v.object({
+    shared: v.object({ frames: v.array(v.object({ name: v.string() })) }),
+    profiles: v.pipe(v.array(v.unknown()), v.minLength(1))
+  })
+)
+
+test('the renderer downloads its diagnostic file with the Open Pen profile filename', async ({
+  page
+}) => {
+  await page.goto('/?test')
+  const canvas = new CanvasHelper(page)
+  await canvas.waitForInit()
+  await beginProfilerCapture(page)
+  await canvas.drawRect(100, 100, 120, 80)
+  const [download] = await Promise.all([
+    page.waitForEvent('download'),
+    downloadProfilerCapture(page)
+  ])
+  expect(download.suggestedFilename()).toMatch(/^open-pen-frame-\d+\.speedscope\.json$/)
+  const profile = v.parse(profileSchema, await readFile(await download.path(), 'utf8'))
+  expect(profile.profiles.length).toBeGreaterThan(0)
+  canvas.assertNoErrors()
 })

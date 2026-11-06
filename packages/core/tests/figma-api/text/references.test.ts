@@ -1,10 +1,10 @@
 import { beforeAll, describe, expect, test } from 'bun:test'
 
+import { registerTestFont } from '#core-tests/helpers/figma-api'
+
 import { FigmaAPI } from '@open-pencil/core/figma-api'
 import { SceneGraph } from '@open-pencil/scene-graph'
 import type { Color } from '@open-pencil/scene-graph/primitives'
-
-import { registerTestFont } from '#core-tests/helpers/figma-api'
 
 beforeAll(async () => {
   await registerTestFont()
@@ -71,7 +71,7 @@ describe('text case ranges', () => {
       `in setRangeTextCase: Property "value" failed validation: Invalid enum value. Expected 'ORIGINAL' | 'UPPER' | 'LOWER' | 'TITLE' | 'SMALL_CAPS' | 'SMALL_CAPS_FORCED', received 'SHOUT'`
     )
     expect(() => text.setRangeTextCase(0, 5, 'SMALL_CAPS' as 'UPPER')).toThrow(
-      'in setRangeTextCase: OpenPencil does not support the SMALL_CAPS text case'
+      'in setRangeTextCase: Open Pen does not support the SMALL_CAPS text case'
     )
     expect(() => text.setRangeTextCase(3, 3, 'UPPER')).toThrow(
       "in setRangeTextCase: Empty range selected. 'end' must be greater than 'start'"

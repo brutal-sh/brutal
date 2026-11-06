@@ -3,7 +3,6 @@ import { beforeAll, describe, expect, test } from 'bun:test'
 import { expectDefined } from '#core-tests/helpers/assert'
 import { createAPI, registerTestFont } from '#core-tests/helpers/figma-api'
 
-
 beforeAll(() => registerTestFont())
 
 // Expected values and messages were recorded by running the same calls in Figma desktop.
@@ -305,7 +304,7 @@ describe('node variable bindings', () => {
     expect(text.boundVariables).toEqual({ fontSize: [{ type: 'VARIABLE_ALIAS', id: size.id }] })
     expect(text.fontSize).toBe(4.5)
     expect(() => api.createText().setBoundVariable('fontWeight', size)).toThrow(
-      'in setBoundVariable: OpenPencil binds fontWeight only on text that has characters'
+      'in setBoundVariable: Open Pen binds fontWeight only on text that has characters'
     )
   })
 

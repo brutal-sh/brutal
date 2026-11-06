@@ -1,7 +1,8 @@
 # Open Pen identity acceptance
 
 Updated: 2026-11-06. Own-brand assets have executed output and browser checks.
-Product copy, native identity, owned logs and links remain separate open tasks.
+Owned diagnostics/log names also have bounded executed checks below. Product copy, native
+identity, links and full cross-platform branding remain separate open tasks.
 
 The original `assets/brand/open-pen-app.png` is the source for shipped artwork.
 Historical teal SVG masters retain provenance but are no longer generator inputs.
@@ -33,3 +34,31 @@ their own task cards. None is accepted by the artwork checks.
 
 See the [PRD](PRD.md), [task index](TASKS.md), [source/generator guide](../assets/brand/README.md)
 and [branding milestone](https://trello.com/c/2cCz31Kz).
+
+## Owned diagnostics and log names
+
+App-owned error prefixes, MCP startup/connection/unavailable messages, JSX diagnostics,
+unsupported-input errors and profiler labels use Open Pen or neutral descriptions.
+The support report downloads as `Open Pen diagnostics.json`; the profiler diagnostic
+downloads as `open-pen-frame-<timestamp>.speedscope.json`.
+
+Executed: 184 focused app/MCP/Core/sandbox/profiler/privacy tests pass across 23 files.
+Six Settings/diagnostics browser workflows pass, including actual downloads of both named
+JSON files, correlated events, privacy filtering and retention. A separate code-editor browser
+workflow displays both new property and unknown-element warning messages. Source timing APIs
+emit the new mark/group names while retaining callback event names. Source/Vue/test types,
+focused lint and architecture pass. Independent review identifies three missed labels; all
+three are corrected and its subsequent 33 focused checks pass.
+
+Limits: the profiler file contains no node samples; file delivery/naming is accepted, profiling
+accuracy is not. The editor fixture explicitly uses `/?test`; ordinary startup, the native
+save panel and a newly packaged native build are not qualified by these browser receipts.
+Earlier failures remain recorded: one removed Settings test target, a code-editor fixture
+without test mode, and the incorrect assumption that the existing profiler records node samples.
+
+Compatibility exceptions are intentional: clipboard warnings identify the OpenPencil data
+format; reserved integration names, scripting/API names, package names, headers, readiness
+tokens, discovery paths, storage keys, serialized internal names and font-family identities
+retain their existing values. External OpenPencil Cloud remains named as that provider.
+These are not own-product log prefixes. Localized UI labels, startup guidance, ACP setup copy,
+provider presentation metadata and notification text remain on the product-copy task.

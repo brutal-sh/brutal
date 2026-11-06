@@ -5,6 +5,7 @@
 - Keeps document-tab keyboard focus while the browser dock spans the full editor height.
 - Uses measured Pen toolbar dimensions, inset borders, menu typography and dark surfaces.
 - Uses the original violet Open Pen nib across native, web, favicon, PWA and monochrome artwork.
+- Names owned diagnostics, MCP messages, JSX warnings and profiler exports for Open Pen while retaining compatibility identifiers.
 - Replaces the storage sidebar on Home with a centered creation composer, import actions, document tabs and larger preview cards; keeps search and storage in compact controls, exposes recovery drafts and component libraries, and sends Home prompts and images through the new document’s Agent.
 - Removes a document’s recovery snapshot when Undo returns it to a clean state, while preserving unrelated drafts and edits arriving during cleanup.
 

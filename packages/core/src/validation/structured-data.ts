@@ -123,9 +123,9 @@ export function validateDesignJSXOutput(
   limits: StructuredDataLimits,
   collections: unknown = []
 ): unknown[] {
-  if (value === undefined) throw new Error('Design JSX must return an OpenPencil element.')
+  if (value === undefined) throw new Error('Design JSX must return a design element.')
   const roots = Array.isArray(value) ? value : [value]
-  if (roots.length === 0) throw new Error('Design JSX must return an OpenPencil element.')
+  if (roots.length === 0) throw new Error('Design JSX must return a design element.')
   if (!Array.isArray(collections))
     throw new Error('Design JSX output must contain plain structured data only.')
   validateStructuredData(collections, limits, validateStructuredData(roots, limits))
