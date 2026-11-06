@@ -33,14 +33,14 @@ This proves tracking coverage, not accepted product parity or exhaustive discove
 Planning publication, the reproducible runtime audit, own-brand assets, owned diagnostics/log
 names and the MCP startup modularization have bounded acceptance evidence linked.
 Canonical localized product labels have bounded source/CLI/nine-language browser acceptance.
-The single Building task is A11Y-COPY: a discovered command-copy control contrast failure.
-BRAND-COPY-AI retains its bounded browser/native evidence in Verify until that dependency
-and the remaining AI states are qualified.
+The discovered command-copy contrast task has bounded executed evidence.
+The single Building task is BRAND-COPY-AI: remaining translated chat-error and callback states.
+Its normal browser/native journeys and component-state checks retain their precise limits.
 BRAND-COPY is an unaccepted gate in Verify; AI, editor, recovery/update, cloud-client and support
 copy journeys have their own child cards.
 Documentation refresh and graphics lifecycle stability are Ready. The interrupted zero-size
 icon work retains its failed wider-run receipts and dependencies.
-The delivery snapshot is 332 Backlog, 2 Ready, 1 Building, 2 Verify and 6 Executed, plus 17 milestones.
+The delivery snapshot is 332 Backlog, 2 Ready, 1 Building, 1 Verify and 7 Executed, plus 17 milestones.
 No branding milestone or product-parity feature group is fully accepted.
 
 ## Control loop

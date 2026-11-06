@@ -130,7 +130,8 @@ checks pass in both themes without an accessibility exemption or pixel-baseline 
 Independent review confirms the theme merge and per-instance overrides. Production browser
 build, source/Vue/shared-test types, owned lint and documentation/changelog checks pass.
 
-BRAND-COPY-AI remains open for chat errors and callback states not exercised by these receipts.
+A11Y-COPY is executed at `bf1b43eb3`. BRAND-COPY-AI remains open for other AI copy states,
+including chat errors and callbacks not exercised by these receipts.
 The native bundle precedes the command-copy contrast change; fresh native delivery/clipboard,
 full Pen visual matching and full branding acceptance remain open. The broader structure lint
 and dedicated native typing retain the previously documented unrelated failures.
