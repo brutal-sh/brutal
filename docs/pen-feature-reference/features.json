@@ -149,6 +149,16 @@
           "acceptance": "Open two documents; target one by path and prove the other remains untouched.",
           "status": "open",
           "evidence": []
+        },
+        {
+          "id": "MCP-06",
+          "feature": "Conditional save tool",
+          "behavior": "Expose save unless an explicit server option disables it.",
+          "acceptance": "Inspect live schemas and verify save/disabled behavior without changing another document.",
+          "status": "open",
+          "evidence": [],
+          "discovered": "2026-11-06",
+          "referenceApplicability": "Unconfirmed on pinned Pen1.2.21; verify before implementation or declare newer-only with evidence."
         }
       ]
     },
@@ -373,6 +383,26 @@
           "acceptance": "Toggle panel while editing; ensure context and canvas history stay correct.",
           "status": "open",
           "evidence": []
+        },
+        {
+          "id": "UI-12",
+          "feature": "Layer search",
+          "behavior": "Search names, text or IDs; navigate matches and select with keyboard dismissal.",
+          "acceptance": "Compare matching/selection and inspector restoration on equivalent nested fixtures.",
+          "status": "open",
+          "evidence": [],
+          "discovered": "2026-11-06",
+          "referenceApplicability": "Unconfirmed on pinned Pen1.2.21; verify before implementation or declare newer-only with evidence."
+        },
+        {
+          "id": "UI-13",
+          "feature": "Command search",
+          "behavior": "Search actions/settings, show recent actions and explain unavailable commands.",
+          "acceptance": "Compare results, shortcuts, disabled reasons, focus and keyboard dismissal.",
+          "status": "open",
+          "evidence": [],
+          "discovered": "2026-11-06",
+          "referenceApplicability": "Unconfirmed on pinned Pen1.2.21; verify before implementation or declare newer-only with evidence."
         }
       ]
     },
@@ -504,6 +534,16 @@
           "acceptance": "Run real conversion; edit resulting points and verify original, Undo and errors.",
           "status": "open",
           "evidence": []
+        },
+        {
+          "id": "DRAW-16",
+          "feature": "Sticky-note workflow",
+          "behavior": "Create/edit/color notes and send their text to an agent.",
+          "acceptance": "Verify authoring/history/reopen and the separate explicit send path.",
+          "status": "open",
+          "evidence": [],
+          "discovered": "2026-11-06",
+          "referenceApplicability": "Unconfirmed on pinned Pen1.2.21; verify before implementation or declare newer-only with evidence."
         }
       ]
     },
@@ -733,7 +773,7 @@
         {
           "id": "SCRIPT-01",
           "feature": "Creation and linkage",
-          "behavior": "Script primitive starts at 200×200; relative JS path.",
+          "behavior": "Script primitive starts at 200\u00d7200; relative JS path.",
           "acceptance": "Create, save, link an independent file; compare placeholder and missing-path states.",
           "status": "partial",
           "evidence": ["docs/SCRIPT-PARITY.md"],
@@ -763,9 +803,7 @@
           "behavior": "Inputs can follow variables and theme changes.",
           "acceptance": "Bind color/number inputs; change theme and reopen with source file present.",
           "status": "partial",
-          "evidence": [
-            "docs/SCRIPT-PARITY.md"
-          ],
+          "evidence": ["docs/SCRIPT-PARITY.md"],
           "evidence_note": "Number/color binding, theme regeneration, history and .pen/FIG identity have model/browser evidence plus a physical native binding/theme/save/reopen/detach/convert journey. Exact reference color/theme design and remaining variable/ref cases stay open."
         },
         {
@@ -965,7 +1003,7 @@
         {
           "id": "IO-08",
           "feature": "Raster output",
-          "behavior": "PNG/JPEG/WEBP at 1×/2×/3×; multiple selections produce ZIP.",
+          "behavior": "PNG/JPEG/WEBP at 1\u00d7/2\u00d7/3\u00d7; multiple selections produce ZIP.",
           "acceptance": "Inspect real files, dimensions, alpha, format signatures, filenames and ZIP contents.",
           "status": "open",
           "evidence": []
@@ -986,6 +1024,36 @@
           "acceptance": "Paste into an independent image consumer and compare bounds/transparency.",
           "status": "open",
           "evidence": []
+        },
+        {
+          "id": "IO-11",
+          "feature": "Browser-extension import",
+          "behavior": "Copy a whole page or selected element and paste editable layers into a writable document.",
+          "acceptance": "Use a local fixture; verify target, layout, assets and cancellation.",
+          "status": "open",
+          "evidence": [],
+          "discovered": "2026-11-06",
+          "referenceApplicability": "Unconfirmed on pinned Pen1.2.21; verify before implementation or declare newer-only with evidence."
+        },
+        {
+          "id": "IO-12",
+          "feature": "Live browser layer",
+          "behavior": "Place and navigate a browser-backed canvas layer independently from editable import.",
+          "acceptance": "Verify viewport, navigation, document isolation and reopen/failure behavior.",
+          "status": "open",
+          "evidence": [],
+          "discovered": "2026-11-06",
+          "referenceApplicability": "Unconfirmed on pinned Pen1.2.21; verify before implementation or declare newer-only with evidence."
+        },
+        {
+          "id": "IO-13",
+          "feature": "SVG output",
+          "behavior": "Export vector paths with embedded image fallbacks; copy SVG and archive multiple selections.",
+          "acceptance": "Inspect SVG semantics, clipping, assets, scale handling and native clipboard separately.",
+          "status": "open",
+          "evidence": [],
+          "discovered": "2026-11-06",
+          "referenceApplicability": "Unconfirmed on pinned Pen1.2.21; verify before implementation or declare newer-only with evidence."
         }
       ]
     },
@@ -1039,6 +1107,36 @@
           "acceptance": "Revoke disposable link; verify inaccessible link and intact prior download.",
           "status": "open",
           "evidence": []
+        },
+        {
+          "id": "SHARE-07",
+          "feature": "Review threads",
+          "behavior": "Post a named canvas comment and reply from a shared design.",
+          "acceptance": "Verify marker/target identity, delivery, reload and failed-post handling.",
+          "status": "open",
+          "evidence": [],
+          "discovered": "2026-11-06",
+          "referenceApplicability": "Unconfirmed on pinned Pen1.2.21; verify before implementation or declare newer-only with evidence."
+        },
+        {
+          "id": "SHARE-08",
+          "feature": "Comment images",
+          "behavior": "Upload bounded image attachments before submitting feedback.",
+          "acceptance": "Check type/count/size/dimension limits, upload cancellation and retry.",
+          "status": "open",
+          "evidence": [],
+          "discovered": "2026-11-06",
+          "referenceApplicability": "Unconfirmed on pinned Pen1.2.21; verify before implementation or declare newer-only with evidence."
+        },
+        {
+          "id": "SHARE-09",
+          "feature": "Owner review actions",
+          "behavior": "Refresh/filter markers, resolve/reopen threads and identify deleted targets.",
+          "acceptance": "Verify owner/reviewer authority and persisted thread state with disposable shares.",
+          "status": "open",
+          "evidence": [],
+          "discovered": "2026-11-06",
+          "referenceApplicability": "Unconfirmed on pinned Pen1.2.21; verify before implementation or declare newer-only with evidence."
         }
       ]
     },
@@ -1231,6 +1329,16 @@
           "status": "partial",
           "evidence": ["../ACCEPTANCE.md"],
           "evidence_limit": "Context round trip executed; other special nodes remain open."
+        },
+        {
+          "id": "FMT-09",
+          "feature": "Schema-version drift review",
+          "behavior": "Current documentation publishes 2.22 with a changed Note contract and omits Prompt/Context.",
+          "acceptance": "Compare pinned 2.21 and current 2.22; preserve old node data and reject unqualified conversion.",
+          "status": "open",
+          "evidence": [],
+          "discovered": "2026-11-06",
+          "referenceApplicability": "Unconfirmed on pinned Pen1.2.21; verify before implementation or declare newer-only with evidence."
         }
       ]
     },
@@ -1308,6 +1416,16 @@
           "acceptance": "Document supported variables and precedence; local operations must have no vendor entitlement gate.",
           "status": "open",
           "evidence": []
+        },
+        {
+          "id": "CLI-10",
+          "feature": "CLI design libraries",
+          "behavior": "Preload repeatable library inputs and manage imported libraries from the interactive shell.",
+          "acceptance": "Verify local/URI sources, list identity/status and removal without deleting source files.",
+          "status": "open",
+          "evidence": [],
+          "discovered": "2026-11-06",
+          "referenceApplicability": "Unconfirmed on pinned Pen1.2.21; verify before implementation or declare newer-only with evidence."
         }
       ]
     },
@@ -1372,5 +1490,8 @@
         }
       ]
     }
-  ]
+  ],
+  "refreshed": "2026-11-06",
+  "reference_policy": "Pinned installedPen1.2.21 remains authoritative. New2026-11-06 documentation deltas require explicit applicability evidence; no automatic schema bump or runtime acceptance.",
+  "refresh_inventory": "refresh-2026-11-06.json"
 }

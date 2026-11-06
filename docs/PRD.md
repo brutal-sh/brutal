@@ -21,10 +21,14 @@ modules, complete Open Pen branding and an executable Trello backlog.
   would discard working document, rendering, layout and history systems.
 - Observed: the initial board audit finds 15 broad cards and stale descriptions, before the
   execution-card reconciliation. No feature workstream is fully accepted.
-- Observed: 152 documented requirements across 23 chapters are recorded in the
+- Initially observed: 152 documented requirements across 23 chapters are recorded in the
   [feature catalog](pen-feature-reference/README.md), with a 2026-10-30 snapshot. The official
   [documentation index](https://docs.pen.dev/) is rechecked on 2026-11-06. The installed reference
   still reports 1.2.21. Documentation coverage does not prove runtime coverage.
+- Refreshed: all historical/current documentation routes are fetched on 2026-11-06. The
+  catalog now has 164 requirements, including 12 unaccepted documentary deltas. Current
+  schema 2.22 differs from the unchanged installed archive’s 2.21. Applicability-first
+  tasks preserve the pinned target; see the [refresh](pen-feature-reference/refresh-2026-11-06.md).
 - Observed: the current 2026-11-06 source-size audit counts 2,931 runtime files across the app, Core,
   Vue SDK, Scene Graph and native shell. Median size is 65 physical lines; 2,758 are at most
   300 lines and 13 exceed 600: one has a reviewed model-contract exception, 12 remain open.
@@ -66,7 +70,10 @@ vendor account. Hosted inference and other external services retain their own co
 
 ## Scope and constraints
 
-Retain all 152 documented requirements and the native screen/menu ledger. Split requirements
+Retain all original 152 documented requirements and the native screen/menu ledger. The
+2026-11-06 refresh adds 12 documentary deltas, for 164 allocated requirements. Qualify each
+delta against installed Pen 1.2.21 or record specific newer-only evidence before changing
+implementation scope; do not silently upgrade schema or discard older node data. Split requirements
 that cover separate providers, platforms, tools or inspector domains into smaller tasks. Add
 newly observed states to the same traceability map before implementing them. Existing evidence
 is retained as a starting point; its scope must be checked before reuse.

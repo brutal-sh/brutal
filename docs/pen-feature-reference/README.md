@@ -1,8 +1,8 @@
 # Pen feature catalog
 
-Reference: official documentation retrieved 2026-10-30; installed acceptance target `/Applications/Pen.app` 1.2.21. OpenPencil is the implementation base, never the product reference.
+Reference: original documentation retrieved 2026-10-30, fully rechecked 2026-11-06; installed acceptance target `/Applications/Pen.app` 1.2.21. OpenPencil is the implementation base, never the product reference.
 
-This catalogs every current documentation chapter. Requirements are paraphrased; acceptance checks are our own executable criteria. A documented claim is not an observed result. **No row is fully accepted.** `Open` means acceptance is missing, not necessarily implementation. `Partial` means linked evidence covers only part of the row. The installed app can differ from the live documentation; record both rather than silently choosing one.
+The original 23-chapter catalog is retained below, with the current 22-chapter mapping and additions in the refresh supplement. Requirements are paraphrased; acceptance checks are our own executable criteria. A documented claim is not an observed result. **No row is fully accepted.** `Open` means acceptance is missing, not necessarily implementation. `Partial` means linked evidence covers only part of the row. The installed app can differ from the live documentation; record both rather than silently choosing one.
 
 The native [Goodies inventory](../GOODIES-PARITY.md) records its five sections, style preview/composer behavior, document cards and shader actions in addition to the documentation chapters below.
 
@@ -14,7 +14,8 @@ Machine-readable requirements: [features.json](features.json). Source/heading in
 
 A row closes only after the actual Open Pen user path runs, its saved/exported output is inspected, and the same state is compared with real Pen. Visual acceptance includes size, position, spacing, borders, radii, glyphs, typography, menus, focus, hover/selected/disabled/mixed/loading/error states and dismissal. Functional acceptance includes Undo/Redo, persistence, errors, cancellation and resource handling where applicable. Automated regressions alone do not establish Pen parity.
 
-Every chapter below owns its documented subheadings in sources.json. Those mappings establish documentation coverage, not executed coverage. Undocumented native menus remain in the separate screen/menu ledger.
+Every original chapter below owns its documented subheadings in sources.json. The current
+[refresh inventory](refresh-2026-11-06.json) maps every current chapter/heading to its requirements. Those mappings establish documentation coverage, not executed coverage. Undocumented native menus remain in the separate screen/menu ledger.
 
 ## Installation
 
@@ -331,8 +332,31 @@ Source: [Troubleshooting](https://docs.pen.dev/troubleshooting).
 | ERR-06 CLI output diagnostics | Export may report failure despite successful exit in reference. | Verify expected file content, errors and safe retry; independent CLI should fail clearly. | Open |
 | ERR-07 Support evidence | Exact version, repro, sanitized logs and minimal fixtures. | Produce a redacted diagnostic report without private designs or credentials. | Open |
 
+## Documentation refresh, 2026-11-06
+
+All 24 historical URLs and the current same-host navigation are fetched: 29 successful URL requests resolve to 23 canonical pages. Eighteen historical page texts change and six remain byte-identical after the same main-content extraction. Raw HTML and normalized-content hashes are separate. Historical source bytes match their committed hashes; original requirements and evidence remain.
+
+The live schema is 2.22; the unchanged installed archive packages 2.21, including Prompt/Context and the old Note shape. No format or runtime upgrade follows from this documentation refresh. Every addition below needs actual pinned-version applicability evidence before implementation or a specific newer-only disposition. See [refresh findings](refresh-2026-11-06.md).
+
+| ID / feature | Current documented behavior | Observable acceptance | State |
+| --- | --- | --- | --- |
+| UI-12 Layer search | Search names, text or IDs; navigate matches and select with keyboard dismissal. | Compare matching/selection and inspector restoration on equivalent nested fixtures. | Open — pinned applicability unconfirmed. |
+| UI-13 Command search | Search actions/settings, show recent actions and explain unavailable commands. | Compare results, shortcuts, disabled reasons, focus and keyboard dismissal. | Open — pinned applicability unconfirmed. |
+| DRAW-16 Sticky-note workflow | Create/edit/color notes and send their text to an agent. | Verify authoring/history/reopen and the separate explicit send path. | Open — pinned applicability unconfirmed. |
+| IO-11 Browser-extension import | Copy a whole page or selected element and paste editable layers into a writable document. | Use a local fixture; verify target, layout, assets and cancellation. | Open — pinned applicability unconfirmed. |
+| IO-12 Live browser layer | Place and navigate a browser-backed canvas layer independently from editable import. | Verify viewport, navigation, document isolation and reopen/failure behavior. | Open — pinned applicability unconfirmed. |
+| IO-13 SVG output | Export vector paths with embedded image fallbacks; copy SVG and archive multiple selections. | Inspect SVG semantics, clipping, assets, scale handling and native clipboard separately. | Open — pinned applicability unconfirmed. |
+| SHARE-07 Review threads | Post a named canvas comment and reply from a shared design. | Verify marker/target identity, delivery, reload and failed-post handling. | Open — pinned applicability unconfirmed. |
+| SHARE-08 Comment images | Upload bounded image attachments before submitting feedback. | Check type/count/size/dimension limits, upload cancellation and retry. | Open — pinned applicability unconfirmed. |
+| SHARE-09 Owner review actions | Refresh/filter markers, resolve/reopen threads and identify deleted targets. | Verify owner/reviewer authority and persisted thread state with disposable shares. | Open — pinned applicability unconfirmed. |
+| MCP-06 Conditional save tool | Expose save unless an explicit server option disables it. | Inspect live schemas and verify save/disabled behavior without changing another document. | Open — pinned applicability unconfirmed. |
+| CLI-10 CLI design libraries | Preload repeatable library inputs and manage imported libraries from the interactive shell. | Verify local/URI sources, list identity/status and removal without deleting source files. | Open — pinned applicability unconfirmed. |
+| FMT-09 Schema-version drift review | Current documentation publishes 2.22 with a changed Note contract and omits Prompt/Context. | Compare pinned 2.21 and current 2.22; preserve old node data and reject unqualified conversion. | Open — pinned applicability unconfirmed. |
+
+The refresh also clarifies existing custom-provider limits/token options (AUTH-05), language selection (UI-10), crop interaction (DRAW-10), Figma page selection (IO-01), chat history labels (AI-01), skill-prefix selection (AI-07), library conversion eligibility (LIB-01), and request-driven design/code updates (CODE-01–05). These remain mapped to existing requirements, with separate execution cards where one outcome needs its own check.
+
 ## Coverage limits
 
-The inventory contains 152 requirements across 23 chapter pages plus the documentation landing page. It covers documented features; it cannot prove discovery of undocumented or account/OS-specific behavior. Every native surface still requires direct comparison. The private HTML cache is research evidence, not shipped documentation or production code.
+The inventory contains 164 requirements: the original 152 across 23 historical chapter pages plus 12 current-documentation deltas. The current navigation resolves to 22 chapter pages plus the landing page; five design-system routes move and Design as Code redirects to .pen Files. It covers documented features; it cannot prove discovery of undocumented or account/OS-specific behavior. Every native surface still requires direct comparison. The private HTML cache is research evidence, not shipped documentation or production code.
 
 Re-entry: compare the remaining paint/inspector states, then the first open inspector/menu state in the native ledger. Keep this catalog and its JSON in the same change when requirements or acceptance evidence change.

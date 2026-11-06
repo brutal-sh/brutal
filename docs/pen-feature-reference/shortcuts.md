@@ -2,6 +2,12 @@
 
 Source: [Pen keyboard shortcuts](https://docs.pen.dev/core-concepts/keyboard-shortcuts), retrieved 2026-10-30. These are Pen requirements, not a claim that Open Pen matches them. Use Command/Option on macOS and Control/Alt on Windows/Linux. Test canvas, text, inspector and chat focus separately. All rows await complete native comparison.
 
+## Current documentation additions
+
+Rechecked 2026-11-06: Cmd/Ctrl + P opens command search; Cmd/Ctrl + F opens layer search.
+The current guide labels Cmd/Ctrl + T as a new chat tab. These are documented deltas awaiting
+pinned Pen 1.2.21 comparison; the original matrix below is preserved. See UI-12/13 and KEY-01.
+
 ## AI Chat
 
 | Binding | Action | Native comparison |

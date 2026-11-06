@@ -1,0 +1,2060 @@
+{
+  "retrievedUTC": "2026-11-06T22:06:48.052576+00:00",
+  "referenceApp": "Pen1.2.21",
+  "installedArchiveSHA256": "6020b5d71f5b701ef3a523f7e612a24d3d0ff18f151c5d5e705689ca65a6219a",
+  "installedPackagedSchema": "2.21",
+  "currentDocumentedSchema": "2.22",
+  "summary": {
+    "oldPages": 24,
+    "fetchedURLs": 29,
+    "canonicalPages": 23,
+    "changedOldTexts": 18,
+    "unchangedOldTexts": 6
+  },
+  "policy": "Pinned installedPen1.2.21 remains authoritative. New2026-11-06 documentation deltas require explicit applicability evidence; no automatic schema bump or runtime acceptance.",
+  "historicalInventory": "sources.json",
+  "pages": [
+    {
+      "url": "https://docs.pen.dev/",
+      "canonicalPath": "/",
+      "status": 200,
+      "rawSHA256": "1019b100b1cd941f7f98ee0e0c5b2a98a269d5c9269b739d2420258d63ffc106",
+      "textSHA256": "d481c8e48db6b67628e745669b860c4ccd2a411ee2e81f0fb42fab8416175a9b",
+      "title": "pen.dev Documentation",
+      "headings": [
+        {
+          "level": 1,
+          "id": "",
+          "text": "pen.dev Documentation"
+        },
+        {
+          "level": 2,
+          "id": "quick-links",
+          "text": "Quick Links"
+        },
+        {
+          "level": 2,
+          "id": "what-is-pendev",
+          "text": "What is pen.dev?"
+        },
+        {
+          "level": 2,
+          "id": "why-pendev",
+          "text": "Why pen.dev?"
+        }
+      ],
+      "requestedPaths": ["/"],
+      "featureIds": [],
+      "coverage": "Documentation mapped; native/runtime acceptance remains open."
+    },
+    {
+      "url": "https://docs.pen.dev/core-concepts/ai-agents",
+      "canonicalPath": "/core-concepts/ai-agents",
+      "status": 200,
+      "rawSHA256": "e7b0114a3034e11edc3fb45e88362b788245f860a91220f0efb1ab94c12c0ad0",
+      "textSHA256": "c40e18ef3121c62d088fcc7a3b977d79580830a382b1ae697080a4843b3d93ce",
+      "title": "AI agents and Skills",
+      "headings": [
+        {
+          "level": 1,
+          "id": "",
+          "text": "AI agents and Skills"
+        },
+        {
+          "level": 2,
+          "id": "sessions-and-models",
+          "text": "Sessions and models"
+        },
+        {
+          "level": 2,
+          "id": "add-context",
+          "text": "Add context"
+        },
+        {
+          "level": 2,
+          "id": "review-permissions-and-usage",
+          "text": "Review permissions and usage"
+        },
+        {
+          "level": 2,
+          "id": "use-skills",
+          "text": "Use skills"
+        },
+        {
+          "level": 2,
+          "id": "generate-alternatives",
+          "text": "Generate alternatives"
+        },
+        {
+          "level": 2,
+          "id": "if-an-agent-cannot-continue",
+          "text": "If an agent cannot continue"
+        }
+      ],
+      "requestedPaths": ["/core-concepts/ai-agents"],
+      "featureIds": [
+        "AI-01",
+        "AI-02",
+        "AI-03",
+        "AI-04",
+        "AI-05",
+        "AI-06",
+        "AI-07",
+        "AI-08",
+        "AI-09",
+        "AI-10"
+      ],
+      "coverage": "Documentation mapped; native/runtime acceptance remains open."
+    },
+    {
+      "url": "https://docs.pen.dev/core-concepts/code-on-canvas",
+      "canonicalPath": "/core-concepts/code-on-canvas",
+      "status": 200,
+      "rawSHA256": "0d6e0a1f5b717df7cc2a58fe68e0af991a37570783ca57ae7f313e909c605518",
+      "textSHA256": "66c01f9d0a8a580b35c77ec618fca7cb92aa9e3df9cdee8cbaeb451d987bc087",
+      "title": "Code on Canvas",
+      "headings": [
+        {
+          "level": 1,
+          "id": "",
+          "text": "Code on Canvas"
+        },
+        {
+          "level": 2,
+          "id": "what-is-code-on-canvas",
+          "text": "What is Code on Canvas?"
+        },
+        {
+          "level": 2,
+          "id": "getting-started",
+          "text": "Getting Started"
+        },
+        {
+          "level": 3,
+          "id": "create-a-script-node",
+          "text": "Create a script node"
+        },
+        {
+          "level": 3,
+          "id": "link-it-to-a-js-file",
+          "text": "Link it to a .js file"
+        },
+        {
+          "level": 3,
+          "id": "tweak-it-on-the-canvas",
+          "text": "Tweak it on the canvas"
+        },
+        {
+          "level": 2,
+          "id": "how-it-works",
+          "text": "How it Works"
+        },
+        {
+          "level": 2,
+          "id": "api-reference",
+          "text": "API Reference"
+        },
+        {
+          "level": 3,
+          "id": "file-header",
+          "text": "File header"
+        },
+        {
+          "level": 3,
+          "id": "input-types",
+          "text": "Input types"
+        },
+        {
+          "level": 3,
+          "id": "the-pencil-global",
+          "text": "The pencil global"
+        },
+        {
+          "level": 3,
+          "id": "return-value",
+          "text": "Return value"
+        },
+        {
+          "level": 3,
+          "id": "example",
+          "text": "Example"
+        }
+      ],
+      "requestedPaths": ["/core-concepts/code-on-canvas"],
+      "featureIds": [
+        "SCRIPT-01",
+        "SCRIPT-02",
+        "SCRIPT-03",
+        "SCRIPT-04",
+        "SCRIPT-05",
+        "SCRIPT-06",
+        "SCRIPT-07",
+        "SCRIPT-08",
+        "SCRIPT-09"
+      ],
+      "coverage": "Documentation mapped; native/runtime acceptance remains open."
+    },
+    {
+      "url": "https://docs.pen.dev/core-concepts/drawing-and-editing",
+      "canonicalPath": "/core-concepts/drawing-and-editing",
+      "status": 200,
+      "rawSHA256": "a4ac91b858ab3a6740fb2e0e09734a8cbce838a01542ea7fad5407586a5c3465",
+      "textSHA256": "69b11806f36606af2f56525dd4bf941d2ed889219027027427534646fe5319f2",
+      "title": "Drawing and editing",
+      "headings": [
+        {
+          "level": 1,
+          "id": "",
+          "text": "Drawing and editing"
+        },
+        {
+          "level": 2,
+          "id": "shapes",
+          "text": "Shapes"
+        },
+        {
+          "level": 2,
+          "id": "scale",
+          "text": "Scale"
+        },
+        {
+          "level": 2,
+          "id": "paths",
+          "text": "Paths"
+        },
+        {
+          "level": 2,
+          "id": "text-and-fonts",
+          "text": "Text and fonts"
+        },
+        {
+          "level": 2,
+          "id": "sticky-notes",
+          "text": "Sticky notes"
+        },
+        {
+          "level": 2,
+          "id": "icons",
+          "text": "Icons"
+        },
+        {
+          "level": 2,
+          "id": "fill-stroke-and-effects",
+          "text": "Fill, stroke, and effects"
+        },
+        {
+          "level": 2,
+          "id": "edit-images",
+          "text": "Edit images"
+        },
+        {
+          "level": 3,
+          "id": "crop-an-image",
+          "text": "Crop an image"
+        }
+      ],
+      "requestedPaths": ["/core-concepts/drawing-and-editing"],
+      "featureIds": [
+        "DRAW-01",
+        "DRAW-02",
+        "DRAW-03",
+        "DRAW-04",
+        "DRAW-05",
+        "DRAW-06",
+        "DRAW-07",
+        "DRAW-08",
+        "DRAW-09",
+        "DRAW-10",
+        "DRAW-11",
+        "DRAW-12",
+        "DRAW-13",
+        "DRAW-14",
+        "DRAW-15",
+        "DRAW-16"
+      ],
+      "coverage": "Documentation mapped; native/runtime acceptance remains open."
+    },
+    {
+      "url": "https://docs.pen.dev/core-concepts/import-and-export",
+      "canonicalPath": "/core-concepts/import-and-export",
+      "status": 200,
+      "rawSHA256": "e837ccdd71f1d7ea911e107ff6956bc2362ceafc907cda905f927441409d10ac",
+      "textSHA256": "6070e430023a79f4bda52e2b8d139328c792aa60b2ab7a2955337251da2153e5",
+      "title": "Import & Export",
+      "headings": [
+        {
+          "level": 1,
+          "id": "",
+          "text": "Import & Export"
+        },
+        {
+          "level": 2,
+          "id": "import",
+          "text": "Import"
+        },
+        {
+          "level": 3,
+          "id": "complete-figma-files",
+          "text": "Complete Figma Files"
+        },
+        {
+          "level": 3,
+          "id": "individual-figma-layers",
+          "text": "Individual Figma Layers"
+        },
+        {
+          "level": 3,
+          "id": "images",
+          "text": "Images"
+        },
+        {
+          "level": 3,
+          "id": "web-pages-browser-extension",
+          "text": "Web pages (browser extension)"
+        },
+        {
+          "level": 3,
+          "id": "web-pages-desktop-app",
+          "text": "Web pages (desktop app)"
+        },
+        {
+          "level": 3,
+          "id": "icons",
+          "text": "Icons"
+        },
+        {
+          "level": 2,
+          "id": "export",
+          "text": "Export"
+        },
+        {
+          "level": 3,
+          "id": "design-to-code",
+          "text": "Design to Code"
+        },
+        {
+          "level": 3,
+          "id": "individual-elements",
+          "text": "Individual Elements"
+        }
+      ],
+      "requestedPaths": ["/core-concepts/import-and-export"],
+      "featureIds": [
+        "IO-01",
+        "IO-02",
+        "IO-03",
+        "IO-04",
+        "IO-05",
+        "IO-06",
+        "IO-07",
+        "IO-08",
+        "IO-09",
+        "IO-10",
+        "IO-11",
+        "IO-12",
+        "IO-13"
+      ],
+      "coverage": "Documentation mapped; native/runtime acceptance remains open."
+    },
+    {
+      "url": "https://docs.pen.dev/core-concepts/keyboard-shortcuts",
+      "canonicalPath": "/core-concepts/keyboard-shortcuts",
+      "status": 200,
+      "rawSHA256": "1a7040935337fae00939191e36247a60662ee6fd607eff1888c7ad55170a54cf",
+      "textSHA256": "a829aedf7a1e08773258797009c7f658f18869ae4a7ac866c4fdbcc777fd5c9b",
+      "title": "Keyboard Shortcuts",
+      "headings": [
+        {
+          "level": 1,
+          "id": "",
+          "text": "Keyboard Shortcuts"
+        },
+        {
+          "level": 2,
+          "id": "search",
+          "text": "Search"
+        },
+        {
+          "level": 2,
+          "id": "ai-chat",
+          "text": "AI Chat"
+        },
+        {
+          "level": 2,
+          "id": "tools",
+          "text": "Tools"
+        },
+        {
+          "level": 2,
+          "id": "editing",
+          "text": "Editing"
+        },
+        {
+          "level": 2,
+          "id": "arrange",
+          "text": "Arrange"
+        },
+        {
+          "level": 2,
+          "id": "selection",
+          "text": "Selection"
+        },
+        {
+          "level": 2,
+          "id": "components",
+          "text": "Components"
+        },
+        {
+          "level": 2,
+          "id": "canvas-navigation",
+          "text": "Canvas Navigation"
+        },
+        {
+          "level": 2,
+          "id": "path-editing",
+          "text": "Path editing"
+        },
+        {
+          "level": 2,
+          "id": "canvas-settings",
+          "text": "Canvas Settings"
+        },
+        {
+          "level": 2,
+          "id": "file-operations",
+          "text": "File Operations"
+        }
+      ],
+      "requestedPaths": ["/core-concepts/keyboard-shortcuts"],
+      "featureIds": ["KEY-01", "KEY-02", "KEY-03", "KEY-04", "KEY-05"],
+      "coverage": "Documentation mapped; native/runtime acceptance remains open."
+    },
+    {
+      "url": "https://docs.pen.dev/core-concepts/pen-files",
+      "canonicalPath": "/core-concepts/pen-files",
+      "status": 200,
+      "rawSHA256": "301006b68511c6d4d5553240dc07681e5bcd37679c71ff02acfc87ed2e0853cd",
+      "textSHA256": "af1c97c4ec9ed93f347e23941787d717d96ed5077a3de01c3d30017b4de20cf8",
+      "title": ".pen Files",
+      "headings": [
+        {
+          "level": 1,
+          "id": "",
+          "text": ".pen Files"
+        },
+        {
+          "level": 2,
+          "id": "what-are-pen-files",
+          "text": "What are .pen files?"
+        },
+        {
+          "level": 2,
+          "id": "working-with-pen-files",
+          "text": "Working with .pen files"
+        },
+        {
+          "level": 2,
+          "id": "desktop-dashboard",
+          "text": "Desktop dashboard"
+        },
+        {
+          "level": 2,
+          "id": "recovering-desktop-changes",
+          "text": "Recovering desktop changes"
+        },
+        {
+          "level": 2,
+          "id": "ide-and-cli-saving",
+          "text": "IDE and CLI saving"
+        },
+        {
+          "level": 2,
+          "id": "working-with-git",
+          "text": "Working with Git"
+        }
+      ],
+      "requestedPaths": ["/core-concepts/design-as-code", "/core-concepts/pen-files"],
+      "featureIds": [
+        "FILE-01",
+        "FILE-02",
+        "FILE-03",
+        "FILE-04",
+        "FILE-05",
+        "FILE-06",
+        "FILE-07",
+        "FILE-08",
+        "FILE-09",
+        "FILE-10",
+        "GIT-01"
+      ],
+      "coverage": "Documentation mapped; native/runtime acceptance remains open."
+    },
+    {
+      "url": "https://docs.pen.dev/core-concepts/pencil-interface",
+      "canonicalPath": "/core-concepts/pencil-interface",
+      "status": 200,
+      "rawSHA256": "a42fe1906ccfac7966a6446a91bbcce578d9674a48f94ba01e0b232608e346c3",
+      "textSHA256": "b950d39b918039879dd126728ef64680e9f2e4b627f8ec8babd52f53d962c932",
+      "title": "pen.dev Interface",
+      "headings": [
+        {
+          "level": 1,
+          "id": "",
+          "text": "pen.dev Interface"
+        },
+        {
+          "level": 2,
+          "id": "infinite-canvas",
+          "text": "Infinite Canvas"
+        },
+        {
+          "level": 3,
+          "id": "navigation-shortcuts",
+          "text": "Navigation Shortcuts"
+        },
+        {
+          "level": 2,
+          "id": "frames",
+          "text": "Frames"
+        },
+        {
+          "level": 3,
+          "id": "flex-layout",
+          "text": "Flex layout"
+        },
+        {
+          "level": 3,
+          "id": "selection--highlighting",
+          "text": "Selection & Highlighting"
+        },
+        {
+          "level": 3,
+          "id": "selection-shortcuts",
+          "text": "Selection Shortcuts"
+        },
+        {
+          "level": 2,
+          "id": "layers-panel",
+          "text": "Layers Panel"
+        },
+        {
+          "level": 3,
+          "id": "find-layers",
+          "text": "Find layers"
+        },
+        {
+          "level": 2,
+          "id": "properties-panel",
+          "text": "Properties Panel"
+        },
+        {
+          "level": 2,
+          "id": "command-palette",
+          "text": "Command palette"
+        },
+        {
+          "level": 2,
+          "id": "settings",
+          "text": "Settings"
+        },
+        {
+          "level": 2,
+          "id": "ai-chat",
+          "text": "AI Chat"
+        },
+        {
+          "level": 2,
+          "id": "undo--redo",
+          "text": "Undo / Redo"
+        }
+      ],
+      "requestedPaths": ["/core-concepts/pencil-interface"],
+      "featureIds": [
+        "UI-01",
+        "UI-02",
+        "UI-03",
+        "UI-04",
+        "UI-05",
+        "UI-06",
+        "UI-07",
+        "UI-08",
+        "UI-09",
+        "UI-10",
+        "UI-11",
+        "UI-12",
+        "UI-13"
+      ],
+      "coverage": "Documentation mapped; native/runtime acceptance remains open."
+    },
+    {
+      "url": "https://docs.pen.dev/core-concepts/presentations",
+      "canonicalPath": "/core-concepts/presentations",
+      "status": 200,
+      "rawSHA256": "427ed84e4cce9ee86422a9aab4f678596b906f806adca4c1e767ae2be853a954",
+      "textSHA256": "71aa81f0ba8ab624eab8c6aac8c92703ffd7b999a24ef74c8c3b758d2521193f",
+      "title": "Slides and presentations",
+      "headings": [
+        {
+          "level": 1,
+          "id": "",
+          "text": "Slides and presentations"
+        },
+        {
+          "level": 2,
+          "id": "arrange-slides",
+          "text": "Arrange slides"
+        },
+        {
+          "level": 2,
+          "id": "present",
+          "text": "Present"
+        },
+        {
+          "level": 2,
+          "id": "export-a-pdf",
+          "text": "Export a PDF"
+        }
+      ],
+      "requestedPaths": ["/core-concepts/presentations"],
+      "featureIds": ["SLIDE-01", "SLIDE-02", "SLIDE-03"],
+      "coverage": "Documentation mapped; native/runtime acceptance remains open."
+    },
+    {
+      "url": "https://docs.pen.dev/core-concepts/sharing",
+      "canonicalPath": "/core-concepts/sharing",
+      "status": 200,
+      "rawSHA256": "8c639eca2f72622f58a5c2ce1063648c8ac474dd0751368b20dbe888ae03e56e",
+      "textSHA256": "2d1d7ad3026b9f49aeb1f95a34ca2358d61e0648d7c702aa22ab9b7317b666cb",
+      "title": "Share a design",
+      "headings": [
+        {
+          "level": 1,
+          "id": "",
+          "text": "Share a design"
+        },
+        {
+          "level": 2,
+          "id": "create-a-share-link",
+          "text": "Create a share link"
+        },
+        {
+          "level": 2,
+          "id": "update-the-snapshot",
+          "text": "Update the snapshot"
+        },
+        {
+          "level": 3,
+          "id": "share-upload-failed",
+          "text": "Share Upload Failed"
+        },
+        {
+          "level": 2,
+          "id": "revoke-the-link",
+          "text": "Revoke the link"
+        },
+        {
+          "level": 2,
+          "id": "download-a-shared-design",
+          "text": "Download a shared design"
+        },
+        {
+          "level": 2,
+          "id": "leave-feedback",
+          "text": "Leave feedback"
+        },
+        {
+          "level": 3,
+          "id": "review-comments-as-the-owner",
+          "text": "Review comments as the owner"
+        }
+      ],
+      "requestedPaths": ["/core-concepts/sharing"],
+      "featureIds": [
+        "SHARE-01",
+        "SHARE-02",
+        "SHARE-03",
+        "SHARE-04",
+        "SHARE-05",
+        "SHARE-06",
+        "SHARE-07",
+        "SHARE-08",
+        "SHARE-09"
+      ],
+      "coverage": "Documentation mapped; native/runtime acceptance remains open."
+    },
+    {
+      "url": "https://docs.pen.dev/design-and-code/design-to-code",
+      "canonicalPath": "/design-and-code/design-to-code",
+      "status": 200,
+      "rawSHA256": "521b89d4d90456ef778f7b1a601fa0e568a375ce21b974c3e25e101b164aa8ae",
+      "textSHA256": "c5cbf616aab8e8313a083d2598f04288739beb6a38141f687ef0e445af899117",
+      "title": "Design ↔ Code",
+      "headings": [
+        {
+          "level": 1,
+          "id": "",
+          "text": "Design ↔ Code"
+        },
+        {
+          "level": 2,
+          "id": "set-up-the-project",
+          "text": "Set up the project"
+        },
+        {
+          "level": 2,
+          "id": "code--design-workflow",
+          "text": "Code → Design Workflow"
+        },
+        {
+          "level": 3,
+          "id": "importing-existing-code",
+          "text": "Importing Existing Code"
+        },
+        {
+          "level": 3,
+          "id": "import-a-rendered-page",
+          "text": "Import a rendered page"
+        },
+        {
+          "level": 2,
+          "id": "design--code-workflow",
+          "text": "Design → Code Workflow"
+        },
+        {
+          "level": 3,
+          "id": "basic-export-to-code",
+          "text": "Basic Export to Code"
+        },
+        {
+          "level": 2,
+          "id": "variables--design-tokens",
+          "text": "Variables & Design Tokens"
+        },
+        {
+          "level": 2,
+          "id": "two-way-sync",
+          "text": "Two-Way Sync"
+        },
+        {
+          "level": 2,
+          "id": "keep-design-and-code-together",
+          "text": "Keep design and code together"
+        }
+      ],
+      "requestedPaths": ["/design-and-code/design-to-code"],
+      "featureIds": ["CODE-01", "CODE-02", "CODE-03", "CODE-04", "CODE-05"],
+      "coverage": "Documentation mapped; native/runtime acceptance remains open."
+    },
+    {
+      "url": "https://docs.pen.dev/design-systems/build-a-design-system",
+      "canonicalPath": "/design-systems/build-a-design-system",
+      "status": 200,
+      "rawSHA256": "fc24c110bf6ed9bb39b024a72bc0af935a7614b581c58dbf2d9c5d9358c66837",
+      "textSHA256": "43c7b5f887b1d6c2496575365c96a649e5590a8db3234cc198ee1404dfcee55a",
+      "title": "Build a small design system",
+      "headings": [
+        {
+          "level": 1,
+          "id": "",
+          "text": "Build a small design system"
+        },
+        {
+          "level": 2,
+          "id": "define-the-variables",
+          "text": "Define the variables"
+        },
+        {
+          "level": 2,
+          "id": "create-the-components",
+          "text": "Create the components"
+        },
+        {
+          "level": 2,
+          "id": "use-the-library",
+          "text": "Use the library"
+        },
+        {
+          "level": 2,
+          "id": "update-the-source",
+          "text": "Update the source"
+        }
+      ],
+      "requestedPaths": [
+        "/core-concepts/build-a-design-system",
+        "/design-systems/build-a-design-system"
+      ],
+      "featureIds": ["DS-01", "DS-02", "DS-03"],
+      "coverage": "Documentation mapped; native/runtime acceptance remains open."
+    },
+    {
+      "url": "https://docs.pen.dev/design-systems/components",
+      "canonicalPath": "/design-systems/components",
+      "status": 200,
+      "rawSHA256": "72ba2d943389f8c7daa218732f1c20c09085ea25c32482afe27da5eb7c3075a2",
+      "textSHA256": "e3949ce2b351a344f3be71b1e6cc74e12c76fc24ef97487e75c4565b1f48b51d",
+      "title": "Components and instances",
+      "headings": [
+        {
+          "level": 1,
+          "id": "",
+          "text": "Components and instances"
+        },
+        {
+          "level": 2,
+          "id": "why-use-components",
+          "text": "Why Use Components"
+        },
+        {
+          "level": 2,
+          "id": "creating-components",
+          "text": "Creating Components"
+        },
+        {
+          "level": 2,
+          "id": "using-components",
+          "text": "Using Components"
+        },
+        {
+          "level": 2,
+          "id": "overrides-and-detaching",
+          "text": "Overrides and detaching"
+        }
+      ],
+      "requestedPaths": ["/core-concepts/components", "/design-systems/components"],
+      "featureIds": ["COMP-01", "COMP-02", "COMP-03", "COMP-04", "COMP-05", "COMP-06"],
+      "coverage": "Documentation mapped; native/runtime acceptance remains open."
+    },
+    {
+      "url": "https://docs.pen.dev/design-systems/design-libraries",
+      "canonicalPath": "/design-systems/design-libraries",
+      "status": 200,
+      "rawSHA256": "9a98b12fcc2937e81093ec32fcc0091158619addf7a63eff57d747bc7b89b1b1",
+      "textSHA256": "0b6793f6278851dfea5b135fcccc21c566dd15635663162838d450df3a2b4069",
+      "title": "Set up a design system",
+      "headings": [
+        {
+          "level": 1,
+          "id": "",
+          "text": "Set up a design system"
+        },
+        {
+          "level": 2,
+          "id": "choose-a-starting-point",
+          "text": "Choose a starting point"
+        },
+        {
+          "level": 2,
+          "id": "import-a-library-into-a-file",
+          "text": "Import a Library Into a File"
+        },
+        {
+          "level": 2,
+          "id": "use-design-library-assets",
+          "text": "Use Design Library Assets"
+        },
+        {
+          "level": 2,
+          "id": "create-a-design-library",
+          "text": "Create a Design Library"
+        },
+        {
+          "level": 2,
+          "id": "start-from-figma",
+          "text": "Start from Figma"
+        },
+        {
+          "level": 2,
+          "id": "update-a-shared-component-or-variable",
+          "text": "Update a shared component or variable"
+        },
+        {
+          "level": 2,
+          "id": "copying-between-documents",
+          "text": "Copying between documents"
+        }
+      ],
+      "requestedPaths": ["/core-concepts/design-libraries", "/design-systems/design-libraries"],
+      "featureIds": ["LIB-01", "LIB-02", "LIB-03", "LIB-04", "LIB-05", "LIB-06"],
+      "coverage": "Documentation mapped; native/runtime acceptance remains open."
+    },
+    {
+      "url": "https://docs.pen.dev/design-systems/slots",
+      "canonicalPath": "/design-systems/slots",
+      "status": 200,
+      "rawSHA256": "cbb801417e0883f20619f1016b4c06cfc06fe3a413f0a5102a0646e17f54dae7",
+      "textSHA256": "a228e68311117e0a501ffab03b60bf4caac192d6770f18bf6d72bc534ba7987c",
+      "title": "Slots",
+      "headings": [
+        {
+          "level": 1,
+          "id": "",
+          "text": "Slots"
+        },
+        {
+          "level": 2,
+          "id": "create-a-slot",
+          "text": "Create a Slot"
+        },
+        {
+          "level": 3,
+          "id": "suggested-slot-components",
+          "text": "Suggested Slot Components"
+        },
+        {
+          "level": 2,
+          "id": "drop-elements-into-slots",
+          "text": "Drop Elements into Slots"
+        }
+      ],
+      "requestedPaths": ["/core-concepts/slots", "/design-systems/slots"],
+      "featureIds": ["SLOT-01", "SLOT-02", "SLOT-03"],
+      "coverage": "Documentation mapped; native/runtime acceptance remains open."
+    },
+    {
+      "url": "https://docs.pen.dev/design-systems/variables",
+      "canonicalPath": "/design-systems/variables",
+      "status": 200,
+      "rawSHA256": "6c323c62c9d84e23f45fcfc4cb7c0898058d730ea23120517ae7eecc0d29bb3b",
+      "textSHA256": "0c3a8581d0397eb5c938bf496e21af3ac6b7828b02d88d063cf00b15baec1f02",
+      "title": "Variables and themes",
+      "headings": [
+        {
+          "level": 1,
+          "id": "",
+          "text": "Variables and themes"
+        },
+        {
+          "level": 2,
+          "id": "what-are-variables",
+          "text": "What are Variables?"
+        },
+        {
+          "level": 2,
+          "id": "creating-variables",
+          "text": "Creating Variables"
+        },
+        {
+          "level": 3,
+          "id": "bring-in-existing-tokens",
+          "text": "Bring in existing tokens"
+        },
+        {
+          "level": 2,
+          "id": "using-variables",
+          "text": "Using Variables"
+        },
+        {
+          "level": 3,
+          "id": "theming",
+          "text": "Theming"
+        },
+        {
+          "level": 3,
+          "id": "variable-aliases",
+          "text": "Variable aliases"
+        },
+        {
+          "level": 2,
+          "id": "sync-with-code",
+          "text": "Sync with Code"
+        }
+      ],
+      "requestedPaths": ["/core-concepts/variables", "/design-systems/variables"],
+      "featureIds": ["VAR-01", "VAR-02", "VAR-03", "VAR-04", "VAR-05", "VAR-06"],
+      "coverage": "Documentation mapped; native/runtime acceptance remains open."
+    },
+    {
+      "url": "https://docs.pen.dev/for-developers/pen-cli",
+      "canonicalPath": "/for-developers/pen-cli",
+      "status": 200,
+      "rawSHA256": "6160750fa8228c4b1a58e78d1d00edb3c2c95de1b14e2a377de9fd8cdf204c52",
+      "textSHA256": "44e44f27e1f7c6b682b4e325f47fe6e2af1e76747f84aaaf50cec090a51d0155",
+      "title": "pen.dev CLI",
+      "headings": [
+        {
+          "level": 1,
+          "id": "",
+          "text": "pen.dev CLI"
+        },
+        {
+          "level": 2,
+          "id": "installation",
+          "text": "Installation"
+        },
+        {
+          "level": 2,
+          "id": "authentication",
+          "text": "Authentication"
+        },
+        {
+          "level": 3,
+          "id": "interactive-login",
+          "text": "Interactive Login"
+        },
+        {
+          "level": 3,
+          "id": "cli-key-for-cicd",
+          "text": "CLI Key (for CI/CD)"
+        },
+        {
+          "level": 3,
+          "id": "checking-status",
+          "text": "Checking Status"
+        },
+        {
+          "level": 2,
+          "id": "quick-start",
+          "text": "Quick Start"
+        },
+        {
+          "level": 2,
+          "id": "commands",
+          "text": "Commands"
+        },
+        {
+          "level": 3,
+          "id": "pen-login",
+          "text": "pen login"
+        },
+        {
+          "level": 3,
+          "id": "pen-status",
+          "text": "pen status"
+        },
+        {
+          "level": 3,
+          "id": "pen-codex-login",
+          "text": "pen codex-login"
+        },
+        {
+          "level": 3,
+          "id": "pen-codex-logout",
+          "text": "pen codex-logout"
+        },
+        {
+          "level": 3,
+          "id": "pen-version",
+          "text": "pen version"
+        },
+        {
+          "level": 3,
+          "id": "pen-interactive",
+          "text": "pen interactive"
+        },
+        {
+          "level": 2,
+          "id": "agent-mode",
+          "text": "Agent Mode"
+        },
+        {
+          "level": 3,
+          "id": "examples",
+          "text": "Examples"
+        },
+        {
+          "level": 2,
+          "id": "available-models",
+          "text": "Available Models"
+        },
+        {
+          "level": 2,
+          "id": "interactive-mode",
+          "text": "Interactive Mode"
+        },
+        {
+          "level": 3,
+          "id": "app-mode",
+          "text": "App Mode"
+        },
+        {
+          "level": 3,
+          "id": "headless-mode",
+          "text": "Headless Mode"
+        },
+        {
+          "level": 3,
+          "id": "shell-commands",
+          "text": "Shell Commands"
+        },
+        {
+          "level": 3,
+          "id": "design-libraries",
+          "text": "Design libraries"
+        },
+        {
+          "level": 3,
+          "id": "example-session",
+          "text": "Example Session"
+        },
+        {
+          "level": 2,
+          "id": "supported-mcp-tools",
+          "text": "Supported MCP Tools"
+        },
+        {
+          "level": 3,
+          "id": "design-operations",
+          "text": "Design Operations"
+        },
+        {
+          "level": 3,
+          "id": "visual-operations",
+          "text": "Visual Operations"
+        },
+        {
+          "level": 3,
+          "id": "style--guidelines",
+          "text": "Style & Guidelines"
+        },
+        {
+          "level": 2,
+          "id": "cicd-usage",
+          "text": "CI/CD Usage"
+        },
+        {
+          "level": 2,
+          "id": "environment-variables",
+          "text": "Environment Variables"
+        },
+        {
+          "level": 2,
+          "id": "token-storage",
+          "text": "Token Storage"
+        }
+      ],
+      "requestedPaths": ["/for-developers/pen-cli"],
+      "featureIds": [
+        "CLI-01",
+        "CLI-02",
+        "CLI-03",
+        "CLI-04",
+        "CLI-05",
+        "CLI-06",
+        "CLI-07",
+        "CLI-08",
+        "CLI-09",
+        "CLI-10"
+      ],
+      "coverage": "Documentation mapped; native/runtime acceptance remains open."
+    },
+    {
+      "url": "https://docs.pen.dev/for-developers/the-pen-format",
+      "canonicalPath": "/for-developers/the-pen-format",
+      "status": 200,
+      "rawSHA256": "5ea7d1007b5fbafbc5606a0f0c72c7f4a9fbf382bf34d6eee64bf59ec648d712",
+      "textSHA256": "41775208ae6eb3cc222bf65b810b8180f23bbf71164cdd989ae4a619631b2367",
+      "title": "The .pen Format",
+      "headings": [
+        {
+          "level": 1,
+          "id": "",
+          "text": "The .pen Format"
+        },
+        {
+          "level": 2,
+          "id": "overview",
+          "text": "Overview"
+        },
+        {
+          "level": 2,
+          "id": "layout",
+          "text": "Layout"
+        },
+        {
+          "level": 2,
+          "id": "graphics",
+          "text": "Graphics"
+        },
+        {
+          "level": 2,
+          "id": "components-and-instances",
+          "text": "Components and Instances"
+        },
+        {
+          "level": 3,
+          "id": "components",
+          "text": "Components"
+        },
+        {
+          "level": 3,
+          "id": "instances",
+          "text": "Instances"
+        },
+        {
+          "level": 3,
+          "id": "overrides",
+          "text": "Overrides"
+        },
+        {
+          "level": 3,
+          "id": "nesting",
+          "text": "Nesting"
+        },
+        {
+          "level": 3,
+          "id": "slots",
+          "text": "Slots"
+        },
+        {
+          "level": 2,
+          "id": "variables-and-themes",
+          "text": "Variables and Themes"
+        },
+        {
+          "level": 2,
+          "id": "typescript-schema",
+          "text": "TypeScript Schema"
+        }
+      ],
+      "requestedPaths": ["/for-developers/the-pen-format"],
+      "featureIds": [
+        "FMT-01",
+        "FMT-02",
+        "FMT-03",
+        "FMT-04",
+        "FMT-05",
+        "FMT-06",
+        "FMT-07",
+        "FMT-08",
+        "FMT-09"
+      ],
+      "coverage": "Documentation mapped; native/runtime acceptance remains open."
+    },
+    {
+      "url": "https://docs.pen.dev/getting-started/ai-integration",
+      "canonicalPath": "/getting-started/ai-integration",
+      "status": 200,
+      "rawSHA256": "4da8fc7062357289a5d5a8f7e3b9df849003b04525aaf3e73b9c4583b8248d19",
+      "textSHA256": "f068191aa3985ac8ba9c556a37ceb0ea92d43dc848519ea1849b5f08eb4897ac",
+      "title": "AI Integration",
+      "headings": [
+        {
+          "level": 1,
+          "id": "",
+          "text": "AI Integration"
+        },
+        {
+          "level": 2,
+          "id": "use-an-integrated-agent",
+          "text": "Use an integrated agent"
+        },
+        {
+          "level": 3,
+          "id": "set-up-a-custom-provider-desktop",
+          "text": "Set up a custom provider (desktop)"
+        },
+        {
+          "level": 2,
+          "id": "connect-an-external-mcp-client",
+          "text": "Connect an external MCP client"
+        },
+        {
+          "level": 2,
+          "id": "mcp-tools",
+          "text": "MCP tools"
+        },
+        {
+          "level": 2,
+          "id": "troubleshooting",
+          "text": "Troubleshooting"
+        },
+        {
+          "level": 3,
+          "id": "the-integrated-agent-has-no-model",
+          "text": "The integrated agent has no model"
+        },
+        {
+          "level": 3,
+          "id": "the-external-client-cannot-connect",
+          "text": "The external client cannot connect"
+        },
+        {
+          "level": 3,
+          "id": "a-documented-tool-is-missing",
+          "text": "A documented tool is missing"
+        },
+        {
+          "level": 3,
+          "id": "an-agent-is-using-the-wrong-document",
+          "text": "An agent is using the wrong document"
+        }
+      ],
+      "requestedPaths": ["/getting-started/ai-integration"],
+      "featureIds": ["MCP-01", "MCP-02", "MCP-03", "MCP-04", "MCP-05", "MCP-06"],
+      "coverage": "Documentation mapped; native/runtime acceptance remains open."
+    },
+    {
+      "url": "https://docs.pen.dev/getting-started/authentication",
+      "canonicalPath": "/getting-started/authentication",
+      "status": 200,
+      "rawSHA256": "b1f248a1871aebbb531d0b8fe2676d17b3c36ec0dd43b0ae61818a19a9af014f",
+      "textSHA256": "b67ab3da40813fa1770f4ebfa441f46a30dca88aa89cf965e0fb3ad62f54e581",
+      "title": "Authentication",
+      "headings": [
+        {
+          "level": 1,
+          "id": "",
+          "text": "Authentication"
+        },
+        {
+          "level": 2,
+          "id": "sign-in-to-pendev",
+          "text": "Sign in to pen.dev"
+        },
+        {
+          "level": 2,
+          "id": "connect-an-integrated-ai-provider",
+          "text": "Connect an integrated AI provider"
+        },
+        {
+          "level": 3,
+          "id": "authentication-options",
+          "text": "Authentication options"
+        },
+        {
+          "level": 3,
+          "id": "check-a-provider-connection",
+          "text": "Check a provider connection"
+        },
+        {
+          "level": 2,
+          "id": "troubleshooting",
+          "text": "Troubleshooting"
+        },
+        {
+          "level": 3,
+          "id": "the-pendev-verification-code-does-not-arrive",
+          "text": "The pen.dev verification code does not arrive"
+        },
+        {
+          "level": 3,
+          "id": "a-provider-is-not-connected",
+          "text": "A provider is not connected"
+        },
+        {
+          "level": 3,
+          "id": "a-model-is-missing",
+          "text": "A model is missing"
+        }
+      ],
+      "requestedPaths": ["/getting-started/authentication"],
+      "featureIds": ["AUTH-01", "AUTH-02", "AUTH-03", "AUTH-04", "AUTH-05", "AUTH-06"],
+      "coverage": "Documentation mapped; native/runtime acceptance remains open."
+    },
+    {
+      "url": "https://docs.pen.dev/getting-started/create-your-first-design",
+      "canonicalPath": "/getting-started/create-your-first-design",
+      "status": 200,
+      "rawSHA256": "36f5d160fba689ff76b4e5b91f087c4bc68905b2b34ca3eb9d7a83b8d0efb35e",
+      "textSHA256": "82968d9db9bad47ecf88e4f43e034560a42110cf2b6851159843b57156c0a85a",
+      "title": "Create your first design",
+      "headings": [
+        {
+          "level": 1,
+          "id": "",
+          "text": "Create your first design"
+        },
+        {
+          "level": 2,
+          "id": "create-a-shape",
+          "text": "Create a shape"
+        },
+        {
+          "level": 2,
+          "id": "change-the-selection",
+          "text": "Change the selection"
+        },
+        {
+          "level": 2,
+          "id": "save-your-file",
+          "text": "Save your file"
+        },
+        {
+          "level": 2,
+          "id": "if-the-agent-cannot-start",
+          "text": "If the agent cannot start"
+        }
+      ],
+      "requestedPaths": ["/getting-started/create-your-first-design"],
+      "featureIds": ["FIRST-01", "FIRST-02", "FIRST-03"],
+      "coverage": "Documentation mapped; native/runtime acceptance remains open."
+    },
+    {
+      "url": "https://docs.pen.dev/getting-started/installation",
+      "canonicalPath": "/getting-started/installation",
+      "status": 200,
+      "rawSHA256": "d501aa34dc802c9bf61fac8571771b1938415c8bfaf66fc4945aa3b4afd14071",
+      "textSHA256": "55822d49ac214d70056cfebc4b677f7296645a2b35e7e9d10df41804648cf16e",
+      "title": "Installation",
+      "headings": [
+        {
+          "level": 1,
+          "id": "",
+          "text": "Installation"
+        },
+        {
+          "level": 2,
+          "id": "desktop-app",
+          "text": "Desktop app"
+        },
+        {
+          "level": 3,
+          "id": "macos",
+          "text": "macOS"
+        },
+        {
+          "level": 3,
+          "id": "windows",
+          "text": "Windows"
+        },
+        {
+          "level": 3,
+          "id": "linux",
+          "text": "Linux"
+        },
+        {
+          "level": 3,
+          "id": "check-the-version-or-update",
+          "text": "Check the version or update"
+        },
+        {
+          "level": 2,
+          "id": "ide-extension",
+          "text": "IDE extension"
+        },
+        {
+          "level": 3,
+          "id": "vs-code-and-cursor",
+          "text": "VS Code and Cursor"
+        },
+        {
+          "level": 2,
+          "id": "cli",
+          "text": "CLI"
+        },
+        {
+          "level": 2,
+          "id": "connect-an-ai-client-with-mcp",
+          "text": "Connect an AI client with MCP"
+        },
+        {
+          "level": 3,
+          "id": "claude-code",
+          "text": "Claude Code"
+        },
+        {
+          "level": 3,
+          "id": "chatgpt-and-codex",
+          "text": "ChatGPT and Codex"
+        },
+        {
+          "level": 2,
+          "id": "troubleshooting",
+          "text": "Troubleshooting"
+        },
+        {
+          "level": 3,
+          "id": "a-pen-file-opens-as-text-in-the-ide",
+          "text": "A .pen file opens as text in the IDE"
+        },
+        {
+          "level": 3,
+          "id": "the-pen-command-is-not-found",
+          "text": "The pen command is not found"
+        }
+      ],
+      "requestedPaths": ["/getting-started/installation"],
+      "featureIds": ["ENV-01", "ENV-02", "ENV-03", "ENV-04", "ENV-05"],
+      "coverage": "Documentation mapped; native/runtime acceptance remains open."
+    },
+    {
+      "url": "https://docs.pen.dev/troubleshooting",
+      "canonicalPath": "/troubleshooting",
+      "status": 200,
+      "rawSHA256": "0f22db432fdef019c560083c9d35db34a5927d39ce2a0b3c4659eace8ab1fbbd",
+      "textSHA256": "1bcda04cd361c69a49a70dd2dcd6db3f64e9e6ca0bfa6953e5974709031aed3a",
+      "title": "Troubleshooting",
+      "headings": [
+        {
+          "level": 1,
+          "id": "",
+          "text": "Troubleshooting"
+        },
+        {
+          "level": 2,
+          "id": "installation--setup",
+          "text": "Installation & Setup"
+        },
+        {
+          "level": 3,
+          "id": "a-pen-file-opens-as-text",
+          "text": "A .pen file opens as text"
+        },
+        {
+          "level": 3,
+          "id": "dont-see-the-pendev-icon",
+          "text": "Don’t see the pen.dev icon"
+        },
+        {
+          "level": 3,
+          "id": "the-pen-command-is-not-found",
+          "text": "The pen command is not found"
+        },
+        {
+          "level": 2,
+          "id": "authentication--ai-providers",
+          "text": "Authentication & AI Providers"
+        },
+        {
+          "level": 3,
+          "id": "not-receiving-a-sign-in-email",
+          "text": "Not receiving a sign-in email"
+        },
+        {
+          "level": 3,
+          "id": "an-ai-provider-is-not-connected",
+          "text": "An AI provider is not connected"
+        },
+        {
+          "level": 2,
+          "id": "welcome-file--onboarding",
+          "text": "Welcome File & Onboarding"
+        },
+        {
+          "level": 3,
+          "id": "didnt-get-the-welcome-file",
+          "text": "Didn’t get the welcome file"
+        },
+        {
+          "level": 3,
+          "id": "add-pendev-to-a-project",
+          "text": "Add pen.dev to a project"
+        },
+        {
+          "level": 2,
+          "id": "canvas--interface",
+          "text": "Canvas & Interface"
+        },
+        {
+          "level": 3,
+          "id": "cant-navigate-nested-elements",
+          "text": "Can’t navigate nested elements"
+        },
+        {
+          "level": 3,
+          "id": "selection-box-colors",
+          "text": "Selection box colors"
+        },
+        {
+          "level": 2,
+          "id": "importing--exporting",
+          "text": "Importing & Exporting"
+        },
+        {
+          "level": 3,
+          "id": "images-dont-paste-from-figma",
+          "text": "Images don’t paste from Figma"
+        },
+        {
+          "level": 2,
+          "id": "mcp--ai-integration",
+          "text": "MCP & AI Integration"
+        },
+        {
+          "level": 3,
+          "id": "an-external-agent-does-not-list-pendev-tools",
+          "text": "An external agent does not list pen.dev tools"
+        },
+        {
+          "level": 3,
+          "id": "a-tool-is-present-but-a-call-fails",
+          "text": "A tool is present but a call fails"
+        },
+        {
+          "level": 3,
+          "id": "pendev-changed-an-mcp-configuration-file",
+          "text": "pen.dev changed an MCP configuration file"
+        },
+        {
+          "level": 2,
+          "id": "saving--version-control",
+          "text": "Saving & Version Control"
+        },
+        {
+          "level": 3,
+          "id": "desktop-changes-are-visible-but-the-original-file-has-not-changed",
+          "text": "Desktop changes are visible but the original file has not changed"
+        },
+        {
+          "level": 3,
+          "id": "pendev-reopened-a-file-with-recovered-changes",
+          "text": "pen.dev reopened a file with “Recovered changes”"
+        },
+        {
+          "level": 2,
+          "id": "platform-specific",
+          "text": "Platform-Specific"
+        },
+        {
+          "level": 3,
+          "id": "windows-desktop-app",
+          "text": "Windows desktop app"
+        },
+        {
+          "level": 3,
+          "id": "linux-desktop-app",
+          "text": "Linux desktop app"
+        },
+        {
+          "level": 2,
+          "id": "cli-issues",
+          "text": "CLI Issues"
+        },
+        {
+          "level": 3,
+          "id": "authentication-required",
+          "text": "Authentication required"
+        },
+        {
+          "level": 3,
+          "id": "a-command-fails",
+          "text": "A command fails"
+        },
+        {
+          "level": 2,
+          "id": "getting-more-help",
+          "text": "Getting More Help"
+        },
+        {
+          "level": 3,
+          "id": "review-the-relevant-documentation",
+          "text": "Review the relevant documentation"
+        },
+        {
+          "level": 3,
+          "id": "report-a-reproducible-problem",
+          "text": "Report a reproducible problem"
+        },
+        {
+          "level": 2,
+          "id": "prevention-tips",
+          "text": "Prevention Tips"
+        }
+      ],
+      "requestedPaths": ["/troubleshooting"],
+      "featureIds": ["ERR-01", "ERR-02", "ERR-03", "ERR-04", "ERR-05", "ERR-06", "ERR-07"],
+      "coverage": "Documentation mapped; native/runtime acceptance remains open."
+    }
+  ],
+  "historicalComparisons": [
+    {
+      "path": "/",
+      "oldTitle": "pen.dev Documentation",
+      "currentTitle": "pen.dev Documentation",
+      "canonicalPath": "/",
+      "oldRawSHA256": "56443ad62a4cab1f19517868d4e14e564b420a62fdd87e4ed5b8abca14f0c57c",
+      "currentRawSHA256": "1019b100b1cd941f7f98ee0e0c5b2a98a269d5c9269b739d2420258d63ffc106",
+      "oldTextSHA256": "d481c8e48db6b67628e745669b860c4ccd2a411ee2e81f0fb42fab8416175a9b",
+      "currentTextSHA256": "d481c8e48db6b67628e745669b860c4ccd2a411ee2e81f0fb42fab8416175a9b",
+      "textChanged": false,
+      "featureIds": [],
+      "headingsChanged": false
+    },
+    {
+      "path": "/core-concepts/ai-agents",
+      "oldTitle": "AI agents and Skills",
+      "currentTitle": "AI agents and Skills",
+      "canonicalPath": "/core-concepts/ai-agents",
+      "oldRawSHA256": "e405d004cce0a1e623ebb4f9f562b83b8a8769acc8f20d122b660024afe3e3f4",
+      "currentRawSHA256": "e7b0114a3034e11edc3fb45e88362b788245f860a91220f0efb1ab94c12c0ad0",
+      "oldTextSHA256": "545671bd5e98548a5218788847431bd847c7f1e5e5062f6b1b578ab3a6779ca9",
+      "currentTextSHA256": "c40e18ef3121c62d088fcc7a3b977d79580830a382b1ae697080a4843b3d93ce",
+      "textChanged": true,
+      "featureIds": [
+        "AI-01",
+        "AI-02",
+        "AI-03",
+        "AI-04",
+        "AI-05",
+        "AI-06",
+        "AI-07",
+        "AI-08",
+        "AI-09",
+        "AI-10"
+      ],
+      "headingsChanged": false
+    },
+    {
+      "path": "/core-concepts/build-a-design-system",
+      "oldTitle": "Build a small design system",
+      "currentTitle": "Build a small design system",
+      "canonicalPath": "/design-systems/build-a-design-system",
+      "oldRawSHA256": "3c1af9c1ee966323d1f4637411c67f953288b961eb9488516b5ca8f61d1f8320",
+      "currentRawSHA256": "fc24c110bf6ed9bb39b024a72bc0af935a7614b581c58dbf2d9c5d9358c66837",
+      "oldTextSHA256": "6b8a5ba4fa6b330735aadd236c9fb3c799d35384142736f2768e0c7d9c47e6d7",
+      "currentTextSHA256": "43c7b5f887b1d6c2496575365c96a649e5590a8db3234cc198ee1404dfcee55a",
+      "textChanged": true,
+      "featureIds": ["DS-01", "DS-02", "DS-03"],
+      "headingsChanged": false
+    },
+    {
+      "path": "/core-concepts/code-on-canvas",
+      "oldTitle": "Code on Canvas",
+      "currentTitle": "Code on Canvas",
+      "canonicalPath": "/core-concepts/code-on-canvas",
+      "oldRawSHA256": "f0a718b36deac036aa879fff11ea7a8e68a11bc4e952fb0d7b4d619d15dd48fd",
+      "currentRawSHA256": "0d6e0a1f5b717df7cc2a58fe68e0af991a37570783ca57ae7f313e909c605518",
+      "oldTextSHA256": "66c01f9d0a8a580b35c77ec618fca7cb92aa9e3df9cdee8cbaeb451d987bc087",
+      "currentTextSHA256": "66c01f9d0a8a580b35c77ec618fca7cb92aa9e3df9cdee8cbaeb451d987bc087",
+      "textChanged": false,
+      "featureIds": [
+        "SCRIPT-01",
+        "SCRIPT-02",
+        "SCRIPT-03",
+        "SCRIPT-04",
+        "SCRIPT-05",
+        "SCRIPT-06",
+        "SCRIPT-07",
+        "SCRIPT-08",
+        "SCRIPT-09"
+      ],
+      "headingsChanged": false
+    },
+    {
+      "path": "/core-concepts/components",
+      "oldTitle": "Components",
+      "currentTitle": "Components and instances",
+      "canonicalPath": "/design-systems/components",
+      "oldRawSHA256": "d0b124014bdde4e13bdfffa9dc2c97e6372480a38f16882d0a8b28e3dd696e99",
+      "currentRawSHA256": "72ba2d943389f8c7daa218732f1c20c09085ea25c32482afe27da5eb7c3075a2",
+      "oldTextSHA256": "c0a2ea70c24308ef81753b8e4553825729698403d2b8269451a599329296f9ac",
+      "currentTextSHA256": "e3949ce2b351a344f3be71b1e6cc74e12c76fc24ef97487e75c4565b1f48b51d",
+      "textChanged": true,
+      "featureIds": ["COMP-01", "COMP-02", "COMP-03", "COMP-04", "COMP-05", "COMP-06"],
+      "headingsChanged": true
+    },
+    {
+      "path": "/core-concepts/design-as-code",
+      "oldTitle": "Design as Code",
+      "currentTitle": ".pen Files",
+      "canonicalPath": "/core-concepts/pen-files",
+      "oldRawSHA256": "59c9dfa932092571b7a4c2a5953084f6af487fee74975c451a51bdd9bfad0b09",
+      "currentRawSHA256": "301006b68511c6d4d5553240dc07681e5bcd37679c71ff02acfc87ed2e0853cd",
+      "oldTextSHA256": "285fb22e13580bb3a288d25ea31f219f44841217c0c455eecec72724cc79eafa",
+      "currentTextSHA256": "af1c97c4ec9ed93f347e23941787d717d96ed5077a3de01c3d30017b4de20cf8",
+      "textChanged": true,
+      "featureIds": ["GIT-01"],
+      "headingsChanged": true
+    },
+    {
+      "path": "/core-concepts/design-libraries",
+      "oldTitle": "Design Libraries",
+      "currentTitle": "Set up a design system",
+      "canonicalPath": "/design-systems/design-libraries",
+      "oldRawSHA256": "d223c2432fa536e5948372ee01d0b15e233af265a7a60d4906fac3dc59da4e29",
+      "currentRawSHA256": "9a98b12fcc2937e81093ec32fcc0091158619addf7a63eff57d747bc7b89b1b1",
+      "oldTextSHA256": "0d3413f43e34361aa217649ba52f35f2d8f6337381e2dd42d8ce3406afa3a28b",
+      "currentTextSHA256": "0b6793f6278851dfea5b135fcccc21c566dd15635663162838d450df3a2b4069",
+      "textChanged": true,
+      "featureIds": ["LIB-01", "LIB-02", "LIB-03", "LIB-04", "LIB-05", "LIB-06"],
+      "headingsChanged": true
+    },
+    {
+      "path": "/core-concepts/drawing-and-editing",
+      "oldTitle": "Drawing and editing",
+      "currentTitle": "Drawing and editing",
+      "canonicalPath": "/core-concepts/drawing-and-editing",
+      "oldRawSHA256": "00d1c630615af8259d287d665863f6d4c8d38f8a1a3b9d771bd014485ab25388",
+      "currentRawSHA256": "a4ac91b858ab3a6740fb2e0e09734a8cbce838a01542ea7fad5407586a5c3465",
+      "oldTextSHA256": "8bb0c5d223b2598ded2e10fb79a75b4f490c0a8e477a4203636e5dc925c070c2",
+      "currentTextSHA256": "69b11806f36606af2f56525dd4bf941d2ed889219027027427534646fe5319f2",
+      "textChanged": true,
+      "featureIds": [
+        "DRAW-01",
+        "DRAW-02",
+        "DRAW-03",
+        "DRAW-04",
+        "DRAW-05",
+        "DRAW-06",
+        "DRAW-07",
+        "DRAW-08",
+        "DRAW-09",
+        "DRAW-10",
+        "DRAW-11",
+        "DRAW-12",
+        "DRAW-13",
+        "DRAW-14",
+        "DRAW-15"
+      ],
+      "headingsChanged": true
+    },
+    {
+      "path": "/core-concepts/import-and-export",
+      "oldTitle": "Import & Export",
+      "currentTitle": "Import & Export",
+      "canonicalPath": "/core-concepts/import-and-export",
+      "oldRawSHA256": "7adbe005f1c3f0dca385a0b24bcc21303c46b8b16d22b337523bd6487aa27b95",
+      "currentRawSHA256": "e837ccdd71f1d7ea911e107ff6956bc2362ceafc907cda905f927441409d10ac",
+      "oldTextSHA256": "af72628167d857579b75a7d09fd2d1dafd68632b7e1b5fe61c1013eb417b50e2",
+      "currentTextSHA256": "6070e430023a79f4bda52e2b8d139328c792aa60b2ab7a2955337251da2153e5",
+      "textChanged": true,
+      "featureIds": [
+        "IO-01",
+        "IO-02",
+        "IO-03",
+        "IO-04",
+        "IO-05",
+        "IO-06",
+        "IO-07",
+        "IO-08",
+        "IO-09",
+        "IO-10"
+      ],
+      "headingsChanged": true
+    },
+    {
+      "path": "/core-concepts/keyboard-shortcuts",
+      "oldTitle": "Keyboard Shortcuts",
+      "currentTitle": "Keyboard Shortcuts",
+      "canonicalPath": "/core-concepts/keyboard-shortcuts",
+      "oldRawSHA256": "f27110e7378a75b49ebd52ed54903ec6107256f10560d586cdcd6481b7bd1562",
+      "currentRawSHA256": "1a7040935337fae00939191e36247a60662ee6fd607eff1888c7ad55170a54cf",
+      "oldTextSHA256": "c96af6e49dfeb538b3c7071698129a08db194b1ecdbc9ccc22645451b1b501d1",
+      "currentTextSHA256": "a829aedf7a1e08773258797009c7f658f18869ae4a7ac866c4fdbcc777fd5c9b",
+      "textChanged": true,
+      "featureIds": ["KEY-01", "KEY-02", "KEY-03", "KEY-04", "KEY-05"],
+      "headingsChanged": true
+    },
+    {
+      "path": "/core-concepts/pen-files",
+      "oldTitle": ".pen Files",
+      "currentTitle": ".pen Files",
+      "canonicalPath": "/core-concepts/pen-files",
+      "oldRawSHA256": "187277d0f5d9224cac8d4e15dd9e16df1a9e57ab27144263380a793022c90fb0",
+      "currentRawSHA256": "301006b68511c6d4d5553240dc07681e5bcd37679c71ff02acfc87ed2e0853cd",
+      "oldTextSHA256": "af1c97c4ec9ed93f347e23941787d717d96ed5077a3de01c3d30017b4de20cf8",
+      "currentTextSHA256": "af1c97c4ec9ed93f347e23941787d717d96ed5077a3de01c3d30017b4de20cf8",
+      "textChanged": false,
+      "featureIds": [
+        "FILE-01",
+        "FILE-02",
+        "FILE-03",
+        "FILE-04",
+        "FILE-05",
+        "FILE-06",
+        "FILE-07",
+        "FILE-08",
+        "FILE-09",
+        "FILE-10"
+      ],
+      "headingsChanged": false
+    },
+    {
+      "path": "/core-concepts/pencil-interface",
+      "oldTitle": "pen.dev Interface",
+      "currentTitle": "pen.dev Interface",
+      "canonicalPath": "/core-concepts/pencil-interface",
+      "oldRawSHA256": "8e9dfe54115821cd10ccaae0578eed9869e0adc91df0e816059e089dc74b081c",
+      "currentRawSHA256": "a42fe1906ccfac7966a6446a91bbcce578d9674a48f94ba01e0b232608e346c3",
+      "oldTextSHA256": "f1c205beec70c544883c8e7aaf8115664dfdf61395b6184dbe2a333a6a4215b1",
+      "currentTextSHA256": "b950d39b918039879dd126728ef64680e9f2e4b627f8ec8babd52f53d962c932",
+      "textChanged": true,
+      "featureIds": [
+        "UI-01",
+        "UI-02",
+        "UI-03",
+        "UI-04",
+        "UI-05",
+        "UI-06",
+        "UI-07",
+        "UI-08",
+        "UI-09",
+        "UI-10",
+        "UI-11"
+      ],
+      "headingsChanged": true
+    },
+    {
+      "path": "/core-concepts/presentations",
+      "oldTitle": "Slides and presentations",
+      "currentTitle": "Slides and presentations",
+      "canonicalPath": "/core-concepts/presentations",
+      "oldRawSHA256": "02cf0707be2ef1acd3c2534786cc6595d5eb08ff1c7d92b3162b0826b8bc166d",
+      "currentRawSHA256": "427ed84e4cce9ee86422a9aab4f678596b906f806adca4c1e767ae2be853a954",
+      "oldTextSHA256": "71aa81f0ba8ab624eab8c6aac8c92703ffd7b999a24ef74c8c3b758d2521193f",
+      "currentTextSHA256": "71aa81f0ba8ab624eab8c6aac8c92703ffd7b999a24ef74c8c3b758d2521193f",
+      "textChanged": false,
+      "featureIds": ["SLIDE-01", "SLIDE-02", "SLIDE-03"],
+      "headingsChanged": false
+    },
+    {
+      "path": "/core-concepts/sharing",
+      "oldTitle": "Share a design",
+      "currentTitle": "Share a design",
+      "canonicalPath": "/core-concepts/sharing",
+      "oldRawSHA256": "5b75d2592a96e3569daf094a147ca961a553f9e17e89f4e22916d08408837480",
+      "currentRawSHA256": "8c639eca2f72622f58a5c2ce1063648c8ac474dd0751368b20dbe888ae03e56e",
+      "oldTextSHA256": "61ded0b0ffff6b5d2d7caa1dfc62aeb17cab7814bdb3b1c8b1775d410d68c475",
+      "currentTextSHA256": "2d1d7ad3026b9f49aeb1f95a34ca2358d61e0648d7c702aa22ab9b7317b666cb",
+      "textChanged": true,
+      "featureIds": ["SHARE-01", "SHARE-02", "SHARE-03", "SHARE-04", "SHARE-05", "SHARE-06"],
+      "headingsChanged": true
+    },
+    {
+      "path": "/core-concepts/slots",
+      "oldTitle": "Slots",
+      "currentTitle": "Slots",
+      "canonicalPath": "/design-systems/slots",
+      "oldRawSHA256": "55000f95b005656760f7dbb668846231ecd9a5b64ba114af5b7d1d570ea4e0e8",
+      "currentRawSHA256": "cbb801417e0883f20619f1016b4c06cfc06fe3a413f0a5102a0646e17f54dae7",
+      "oldTextSHA256": "43b4200d7723cbc31de9d329f09b6584e1309d52f89ff0c8e10ae233f133697b",
+      "currentTextSHA256": "a228e68311117e0a501ffab03b60bf4caac192d6770f18bf6d72bc534ba7987c",
+      "textChanged": true,
+      "featureIds": ["SLOT-01", "SLOT-02", "SLOT-03"],
+      "headingsChanged": false
+    },
+    {
+      "path": "/core-concepts/variables",
+      "oldTitle": "Variables",
+      "currentTitle": "Variables and themes",
+      "canonicalPath": "/design-systems/variables",
+      "oldRawSHA256": "ba78718581a4433d3878bc7f9896f9376b37f4f95eed3f899c0633fee43587e4",
+      "currentRawSHA256": "6c323c62c9d84e23f45fcfc4cb7c0898058d730ea23120517ae7eecc0d29bb3b",
+      "oldTextSHA256": "0513728da522acc7c215ed171bb98ed9713e90ce1aa43299020eee27a0e0f093",
+      "currentTextSHA256": "0c3a8581d0397eb5c938bf496e21af3ac6b7828b02d88d063cf00b15baec1f02",
+      "textChanged": true,
+      "featureIds": ["VAR-01", "VAR-02", "VAR-03", "VAR-04", "VAR-05", "VAR-06"],
+      "headingsChanged": true
+    },
+    {
+      "path": "/design-and-code/design-to-code",
+      "oldTitle": "Design ↔ Code",
+      "currentTitle": "Design ↔ Code",
+      "canonicalPath": "/design-and-code/design-to-code",
+      "oldRawSHA256": "c517a52409a76f8bcf41a001af2d4ab12de10398b8e54d781c6abd39276b6715",
+      "currentRawSHA256": "521b89d4d90456ef778f7b1a601fa0e568a375ce21b974c3e25e101b164aa8ae",
+      "oldTextSHA256": "3a11d31ad64b3b9da25fe3747ae8d154a70bce75d6bdeca1eff7961c8badafab",
+      "currentTextSHA256": "c5cbf616aab8e8313a083d2598f04288739beb6a38141f687ef0e445af899117",
+      "textChanged": true,
+      "featureIds": ["CODE-01", "CODE-02", "CODE-03", "CODE-04", "CODE-05"],
+      "headingsChanged": true
+    },
+    {
+      "path": "/for-developers/pen-cli",
+      "oldTitle": "pen.dev CLI",
+      "currentTitle": "pen.dev CLI",
+      "canonicalPath": "/for-developers/pen-cli",
+      "oldRawSHA256": "af4afd9e8c30c151be8399637690f04b1ee3ef165f53796b6dc0ec4b43d228ea",
+      "currentRawSHA256": "6160750fa8228c4b1a58e78d1d00edb3c2c95de1b14e2a377de9fd8cdf204c52",
+      "oldTextSHA256": "dcfc728bf4fbc4056f4332bc7e53ce4565e06c222e7e19af9ed89bae5cd25826",
+      "currentTextSHA256": "44e44f27e1f7c6b682b4e325f47fe6e2af1e76747f84aaaf50cec090a51d0155",
+      "textChanged": true,
+      "featureIds": [
+        "CLI-01",
+        "CLI-02",
+        "CLI-03",
+        "CLI-04",
+        "CLI-05",
+        "CLI-06",
+        "CLI-07",
+        "CLI-08",
+        "CLI-09"
+      ],
+      "headingsChanged": true
+    },
+    {
+      "path": "/for-developers/the-pen-format",
+      "oldTitle": "The .pen Format",
+      "currentTitle": "The .pen Format",
+      "canonicalPath": "/for-developers/the-pen-format",
+      "oldRawSHA256": "f60ad5f2bb991e27c0d94e04967f7cc2cf7011e46e0da5da887a49e43430e35f",
+      "currentRawSHA256": "5ea7d1007b5fbafbc5606a0f0c72c7f4a9fbf382bf34d6eee64bf59ec648d712",
+      "oldTextSHA256": "6325c90d145d55d5f5c7607ba18f6cf3415ffb2317b5482db154729cc714b2a2",
+      "currentTextSHA256": "41775208ae6eb3cc222bf65b810b8180f23bbf71164cdd989ae4a619631b2367",
+      "textChanged": true,
+      "featureIds": [
+        "FMT-01",
+        "FMT-02",
+        "FMT-03",
+        "FMT-04",
+        "FMT-05",
+        "FMT-06",
+        "FMT-07",
+        "FMT-08"
+      ],
+      "headingsChanged": false
+    },
+    {
+      "path": "/getting-started/ai-integration",
+      "oldTitle": "AI Integration",
+      "currentTitle": "AI Integration",
+      "canonicalPath": "/getting-started/ai-integration",
+      "oldRawSHA256": "606c00cf96bf99f529be2371a5e990d70ffa1389154d738ef44b2ec5a7f6b12d",
+      "currentRawSHA256": "4da8fc7062357289a5d5a8f7e3b9df849003b04525aaf3e73b9c4583b8248d19",
+      "oldTextSHA256": "96d0ac36243edbecf482a76a053485d2bef20d099f17124dddba02115c66ebe0",
+      "currentTextSHA256": "f068191aa3985ac8ba9c556a37ceb0ea92d43dc848519ea1849b5f08eb4897ac",
+      "textChanged": true,
+      "featureIds": ["MCP-01", "MCP-02", "MCP-03", "MCP-04", "MCP-05"],
+      "headingsChanged": true
+    },
+    {
+      "path": "/getting-started/authentication",
+      "oldTitle": "Authentication",
+      "currentTitle": "Authentication",
+      "canonicalPath": "/getting-started/authentication",
+      "oldRawSHA256": "2177dd4a77129d17a5322e36d2c92cdeb5a8b7ce2b494ada927c5d93f8ee2e84",
+      "currentRawSHA256": "b1f248a1871aebbb531d0b8fe2676d17b3c36ec0dd43b0ae61818a19a9af014f",
+      "oldTextSHA256": "e6d56a59ffb68ee6c7a4a6ec8018019923f1aeb581c33c7e7a0c4acad2ff7a55",
+      "currentTextSHA256": "b67ab3da40813fa1770f4ebfa441f46a30dca88aa89cf965e0fb3ad62f54e581",
+      "textChanged": true,
+      "featureIds": ["AUTH-01", "AUTH-02", "AUTH-03", "AUTH-04", "AUTH-05", "AUTH-06"],
+      "headingsChanged": false
+    },
+    {
+      "path": "/getting-started/create-your-first-design",
+      "oldTitle": "Create your first design",
+      "currentTitle": "Create your first design",
+      "canonicalPath": "/getting-started/create-your-first-design",
+      "oldRawSHA256": "8f481d37dc677756ab6a9ffad56c3a4cf6597b2ea95decda9ceabb9b751ce36f",
+      "currentRawSHA256": "36f5d160fba689ff76b4e5b91f087c4bc68905b2b34ca3eb9d7a83b8d0efb35e",
+      "oldTextSHA256": "c90d71283df2a0af24d9df1aa97c503dc31b226d1b6d62ea5daccfe967592316",
+      "currentTextSHA256": "82968d9db9bad47ecf88e4f43e034560a42110cf2b6851159843b57156c0a85a",
+      "textChanged": true,
+      "featureIds": ["FIRST-01", "FIRST-02", "FIRST-03"],
+      "headingsChanged": false
+    },
+    {
+      "path": "/getting-started/installation",
+      "oldTitle": "Installation",
+      "currentTitle": "Installation",
+      "canonicalPath": "/getting-started/installation",
+      "oldRawSHA256": "7c0d1532a7ab9f428ded3bf5bd0fcb508791ba083f864bbeeb5171d353ebb876",
+      "currentRawSHA256": "d501aa34dc802c9bf61fac8571771b1938415c8bfaf66fc4945aa3b4afd14071",
+      "oldTextSHA256": "55822d49ac214d70056cfebc4b677f7296645a2b35e7e9d10df41804648cf16e",
+      "currentTextSHA256": "55822d49ac214d70056cfebc4b677f7296645a2b35e7e9d10df41804648cf16e",
+      "textChanged": false,
+      "featureIds": ["ENV-01", "ENV-02", "ENV-03", "ENV-04", "ENV-05"],
+      "headingsChanged": false
+    },
+    {
+      "path": "/troubleshooting",
+      "oldTitle": "Troubleshooting",
+      "currentTitle": "Troubleshooting",
+      "canonicalPath": "/troubleshooting",
+      "oldRawSHA256": "a71c34249b5eb3e585129199dbbe6e79ba69b2cfb0a5adaf45b10c500c4bb817",
+      "currentRawSHA256": "0f22db432fdef019c560083c9d35db34a5927d39ce2a0b3c4659eace8ab1fbbd",
+      "oldTextSHA256": "1bcda04cd361c69a49a70dd2dcd6db3f64e9e6ca0bfa6953e5974709031aed3a",
+      "currentTextSHA256": "1bcda04cd361c69a49a70dd2dcd6db3f64e9e6ca0bfa6953e5974709031aed3a",
+      "textChanged": false,
+      "featureIds": ["ERR-01", "ERR-02", "ERR-03", "ERR-04", "ERR-05", "ERR-06", "ERR-07"],
+      "headingsChanged": false
+    }
+  ],
+  "newPaths": [
+    "/design-systems/build-a-design-system",
+    "/design-systems/components",
+    "/design-systems/design-libraries",
+    "/design-systems/slots",
+    "/design-systems/variables"
+  ]
+}
