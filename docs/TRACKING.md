@@ -1,9 +1,46 @@
 # Tracking
 
-Repository: https://github.com/jpoindexter/open-pen (verified private; `feat/open-pen` pushed)
-Board: https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor (created PRIVATE)
-Lists: Backlog, Building, Verify, Executed.
+Updated: 2026-11-06. The full independent design and functionality parity goal remains active.
 
-Only executed acceptance criteria move to Executed. Feature parity remains open.
+Repository: [private Open Pen repository](https://github.com/jpoindexter/open-pen), branch `feat/open-pen`.
+Board: [Open Pen — independent design editor](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor), private.
 
-Visual and functional acceptance: https://trello.com/c/WwkmCAiU (Building). Both checks are required; initial shell is recorded as a failed visual match.
+The [PRD](PRD.md) owns the outcome, constraints and release criteria.
+The [task index](TASKS.md) links all 336 execution cards; the [modularity audit](MODULARITY.md)
+records the measured review queue. Requirements come from the [feature catalog](pen-feature-reference/README.md)
+and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), using actual Pen 1.2.21 as the reference.
+
+## Board organization
+
+| List | Purpose |
+| --- | --- |
+| Milestones | The 15 original cards retain their history; two new milestones track own branding and modularization. These broad cards are not executable units or current acceptance claims. |
+| Backlog | Bounded tasks with source, scope, owner, dependencies and observable Done criteria. |
+| Ready | At most three next tasks whose dependencies are accepted or absent. |
+| Building | One current task; record its last result and exact re-entry action before switching. |
+| Verify | Implementation or artifact exists; the actual Done criterion still needs evidence. |
+| Executed | The task's real acceptance path has run, with result, artifact/commit and residual limits linked. |
+
+## Verified planning snapshot
+
+A complete fresh board readback finds 353 open cards: 336 unique execution tasks and 17 milestones.
+All 152 catalog requirements and 22 exact native ledger rows map to real execution cards.
+There are no missing or duplicate task IDs, and the dependency graph is acyclic.
+All 15 oversized runtime modules have individual disposition tasks; branding has six bounded tasks.
+This proves tracking coverage, not accepted product parity or exhaustive discovery of every native state.
+
+Planning publication is the current Building card. The runtime audit is in Verify;
+documentation refresh, own-brand assets and localized product copy are the three Ready tasks.
+The next implementation sequence includes graphics lifecycle stability, own branding and the
+interrupted zero-size icon work. Current failed receipts remain open on their specific cards.
+
+## Control loop
+
+At each accepted card, meaningful interruption or new requirement: reconcile the actual result,
+update dependencies and evidence, then choose the next dependency-free action. Split independent
+failures into bounded tasks before expanding a card. Preserve historical comments and prior evidence.
+
+The [original acceptance card](https://trello.com/c/WwkmCAiU) remains a milestone with its history.
+The new full-parity execution gate depends on every other required task. A private beta has a
+separate core-journey gate and explicit limits. Neither a green build nor published documentation
+earns feature acceptance. GitHub Actions remains disabled; the PR stays draft.
