@@ -72,7 +72,7 @@ function isMissingCommandError(message: string): boolean {
 function missingCommandMessage(agentDef?: ACPAgentDef): string {
   if (!agentDef) return 'ACP agent CLI is not installed.'
   if (!agentDef.installCommand) {
-    return `"${agentDef.command}" is not installed. Install it and restart OpenPencil.`
+    return `"${agentDef.command}" is not installed. Install it and restart Open Pen.`
   }
   return `"${agentDef.command}" is not installed. Install it with: ${agentDef.installCommand}`
 }
@@ -103,10 +103,10 @@ function isAuthRequiredError(e: unknown): boolean {
   return typeof e === 'object' && e !== null && 'code' in e && e.code === -32000
 }
 
-/** The agent never opened its session with OpenPencil's MCP server, so it has no design tools. */
+/** The agent never opened its session with Open Pen's MCP server, so it has no design tools. */
 function toolsUnreachableError(agentDef: ACPAgentDef, reason: string | null): Error {
   return new Error(
-    `${agentDef.name} couldn't reach OpenPencil's tools, so your message wasn't sent.` +
+    `${agentDef.name} couldn't reach Open Pen's tools, so your message wasn't sent.` +
       (reason ? ` ${agentDef.name} reported: ${reason}` : '')
   )
 }
@@ -354,7 +354,7 @@ export class ACPChatTransport implements ChatTransport<UIMessage> {
       throw startupError(e, this.agentDef)
     }
 
-    // The agent must reach OpenPencil's tools before it gets a prompt.
+    // The agent must reach Open Pen's tools before it gets a prompt.
     let tools: Awaited<ReturnType<typeof linkOwnTools>>
     try {
       tools = await linkOwnTools(automationAuthToken)

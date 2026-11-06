@@ -73,7 +73,7 @@ async function writeOutput(args: ImportArgs, { styled, graph }: ReadHTMLResult) 
 }
 
 export default defineCommand({
-  meta: { description: 'Import HTML/CSS/Tailwind into an OpenPencil document' },
+  meta: { description: 'Import HTML/CSS/Tailwind into an Open Pen document' },
   args: {
     file: {
       type: 'positional',

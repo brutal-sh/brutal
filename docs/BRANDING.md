@@ -62,3 +62,37 @@ tokens, discovery paths, storage keys, serialized internal names and font-family
 retain their existing values. External OpenPencil Cloud remains named as that provider.
 These are not own-product log prefixes. Localized UI labels, startup guidance, ACP setup copy,
 provider presentation metadata and notification text remain on the product-copy task.
+
+## Canonical product copy
+
+Canonical own-app labels use Open Pen in English and the eight translated SDK catalogs,
+translated app notifications, startup guidance, AI setup/ACP feedback, WebMCP descriptions,
+OpenRouter's app-title metadata, document-format labels and CLI help. The welcome uses its
+catalog directly; it no longer replaces an English name inside translated text at render time.
+
+Privacy copy names the actual upstream OpenPencil project as the recipient when reporting is
+available, and states that this build sends no pings or usage statistics. No feedback setting,
+endpoint, consent behavior, provider login or credential is changed. Actual OpenPencil Cloud,
+upstream hosting, format names, package/command/API names and storage keys remain explicit
+compatibility or external-service exceptions.
+
+Executed source evidence: all 96 modified JSON catalogs retain their keys, types and
+interpolation tokens across 464 edited values. Locale validation passes. All 94 focused tests
+across eight files pass, including support guidance, WebMCP, ACP and reporting/consent behavior.
+Four actual CLI help commands and the format list show the new presentation names while
+retaining command and format IDs. Workspace packages and the production browser build pass.
+
+The nine-locale browser journey exercises ordinary first-run welcome, privacy preferences and
+reload, diagnostics and the rendering section. It checks explicit translated headings, inspects
+Open Pen labels, captures each affected section and intercepts the reporting endpoint; no report
+request occurs even after changing sharing preferences. Separate existing first-run,
+diagnostics and General settings journeys pass. This is bounded browser copy acceptance,
+not native input or full design parity.
+
+The parent [BRAND-COPY](https://trello.com/c/zU0zBEql) stays open. Six smaller cards separate
+canonical sources from remaining AI, editor notifications/menus, recovery/update, cloud-client
+pages and support journeys. Unexercised states do not inherit acceptance from source checks.
+Native delivery, help destinations and final shipped-brand qualification remain separate.
+Translations have technical and visual review, not independent native-speaker review.
+The full lint gate retains an existing graphics-resource test error outside this copy change;
+owned-file lint, source/Vue/test types, architecture and documentation checks pass.

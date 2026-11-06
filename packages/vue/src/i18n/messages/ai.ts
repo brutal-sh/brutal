@@ -210,7 +210,7 @@ export const aiMessageDefaults = {
   chatOutputLimit:
     'The model ran out of output tokens while reasoning. Raise Max output tokens or lower reasoning effort.',
   chatModelNotFound: 'The selected model is unavailable. Choose another model in Settings.',
-  chatNetworkFailed: 'OpenPencil could not reach the provider. Check your connection and endpoint.',
+  chatNetworkFailed: 'Open Pen could not reach the provider. Check your connection and endpoint.',
   chatRateLimited: 'The provider rate limit was reached. Wait a moment and try again.',
   chatRequestFailed: 'The model request failed. Check the provider settings and try again.',
   openProviderSettingsAction: 'Open settings',
@@ -238,16 +238,16 @@ export const aiMessageDefaults = {
   visionModelUnavailable: 'Choose a Vision model in Settings before attaching images.',
   chatPiCompanionMissing: 'Pi needs the Harness companion. Run guided setup to install it.',
   chatPiCompanionOutdated:
-    'The Harness companion doesn’t match this version of OpenPencil. Run guided setup to update it.',
+    'The Harness companion doesn’t match this version of Open Pen. Run guided setup to update it.',
   chatMCPOutdated:
-    'OpenPencil’s MCP server doesn’t match this version of OpenPencil. Run guided setup to update it.',
+    'Open Pen’s MCP server doesn’t match this version of Open Pen. Run guided setup to update it.',
   chatPiSignIn:
     'Pi isn’t signed in to a provider. Run pi in a terminal and type /login, or add an AI Gateway key.',
   chatPiModel:
     'Pi has no model to use. Run pi in a terminal and type /model, or choose one in Settings.',
   completions: 'Completions',
   responses: 'Responses',
-  aiSetupWelcomeTitle: 'Welcome to OpenPencil',
+  aiSetupWelcomeTitle: 'Welcome to Open Pen',
   aiSetupWelcomeDescription:
     'Create and edit designs on an open canvas. Import Figma files and make them your own.',
   aiSetupWelcomeAITitle: 'Design with AI',
@@ -273,7 +273,7 @@ export const aiMessageDefaults = {
   aiSetupAccessAgents: 'Coding agents on this computer',
   aiSetupAccessAgentsDescription:
     'Use your existing subscription. The agent chooses its own model.',
-  aiSetupAccessAgentsDesktop: 'Coding agents are available in the OpenPencil desktop app.',
+  aiSetupAccessAgentsDesktop: 'Coding agents are available in the Open Pen desktop app.',
   modelProviderSetUp: 'Set up',
   aiSetupAccessAPI: 'API accounts',
   aiSetupAccessServer: 'Local model or company server',
@@ -286,20 +286,20 @@ export const aiMessageDefaults = {
   aiSetupConnectTitle: 'Connect your AI',
   aiSetupNothingDescription: 'Go back to choose other access, or set up AI in advanced settings.',
   aiSetupAgentDescription: params(
-    'OpenPencil starts {agent} when you send a message, with the account {agent} is signed in to.'
+    'Open Pen starts {agent} when you send a message, with the account {agent} is signed in to.'
   ),
   aiSetupAgentInstall: 'If it is not installed yet, run:',
   aiSetupAgentInstallSupported: 'Install the supported adapter:',
   aiSetupAgentChecking: 'Checking this computer…',
   aiSetupAgentInstalled: 'installed',
   aiSetupAgentNotFound: 'not found',
-  aiSetupAgentMCP: 'OpenPencil MCP server',
+  aiSetupAgentMCP: 'Open Pen MCP server',
   aiSetupAgentMCPInstall:
-    'Coding agents reach the canvas through OpenPencil’s MCP server. Install it with:',
+    'Coding agents reach the canvas through Open Pen’s MCP server. Install it with:',
   aiSetupAgentPromptHint: params(
-    'Already using {agent} or another coding agent? Copy the setup prompt and paste it there; it installs what OpenPencil needs.'
+    'Already using {agent} or another coding agent? Copy the setup prompt and paste it there; it installs what Open Pen needs.'
   ),
-  aiSetupAgentNeedsAdapter: 'installed · OpenPencil adapter missing',
+  aiSetupAgentNeedsAdapter: 'installed · Open Pen adapter missing',
   aiSetupAgentInstallAdapter: 'Install adapter',
   aiSetupAgentInstallMCP: 'Install MCP server',
   aiSetupAgentUpdateMCP: 'Update MCP server',
@@ -313,7 +313,7 @@ export const aiMessageDefaults = {
   aiSetupAgentInstallFailed:
     'The installation didn’t finish. Check your connection, or run the command yourself.',
   aiSetupAgentMCPStartFailed:
-    'The MCP server is installed but didn’t start. Restart OpenPencil, then check again.',
+    'The MCP server is installed but didn’t start. Restart Open Pen, then check again.',
   aiSetupAgentLookupFailed: 'Couldn’t check this computer. Try again.',
   aiSetupAgentCopyPrompt: 'Copy setup prompt',
   aiSetupAgentCheckAgain: 'Check again',
@@ -334,19 +334,19 @@ export const aiMessageDefaults = {
   aiSetupAgentSignInCode: 'Code from the sign-in page, if it shows one',
   aiSetupAgentSignInSubmitCode: 'Submit code',
   aiSetupAgentSignInFailed: params('Couldn’t sign in to {agent}. Try again.'),
-  aiSetupAgentTools: 'OpenPencil tools',
+  aiSetupAgentTools: 'Open Pen tools',
   aiSetupAgentToolsConnected: 'connected',
   aiSetupAgentToolsUnreachable: 'not reachable',
   aiSetupAgentToolsFailed: params(
-    '{agent} can’t reach OpenPencil’s tools, so chats with it won’t start.'
+    '{agent} can’t reach Open Pen’s tools, so chats with it won’t start.'
   ),
   aiSetupAgentToolsHint:
-    'Check that OpenPencil’s MCP server is running in Settings → MCP, then press Check again.',
+    'Check that Open Pen’s MCP server is running in Settings → MCP, then press Check again.',
   aiSetupAgentAdapterMismatch: params(
-    'OpenPencil found {path}, another adapter it doesn’t support. Install the supported one, then remove this one or move it later on your PATH.'
+    'Open Pen found {path}, another adapter it doesn’t support. Install the supported one, then remove this one or move it later on your PATH.'
   ),
   aiSetupPiDescription:
-    'OpenPencil runs Pi through its Harness companion and uses the providers you signed in to in Pi.',
+    'Open Pen runs Pi through its Harness companion and uses the providers you signed in to in Pi.',
   aiSetupPiCompanion: 'Harness companion',
   aiSetupPiInstallCompanion: 'Install companion',
   aiSetupPiUpdateCompanion: 'Update companion',
@@ -383,7 +383,7 @@ export const aiMessageDefaults = {
   aiSetupSignInReopen: 'Open again',
   aiSetupOpenRouterOrKey: 'Or paste an API key',
   aiSetupOpenRouterBlocked:
-    'Your browser blocked the sign-in window. Allow pop-ups for OpenPencil and try again.',
+    'Your browser blocked the sign-in window. Allow pop-ups for Open Pen and try again.',
   aiSetupSignInCancelled: 'Sign-in was cancelled.',
   aiSetupSignInExpired: 'Sign-in took too long. Try again.',
   aiSetupOpenRouterFailed: 'Couldn’t sign in to OpenRouter. Try again or paste an API key.',
@@ -395,7 +395,7 @@ export const aiMessageDefaults = {
   aiSetupSignInChange: 'Use a different account',
   aiSetupSignOut: 'Sign out',
   aiSetupAccessSubscriptions: 'Subscriptions',
-  aiSetupAccessChatGPT: 'Use your ChatGPT plan’s models in OpenPencil’s own agent.',
+  aiSetupAccessChatGPT: 'Use your ChatGPT plan’s models in Open Pen’s own agent.',
   aiSetupChatGPTSignIn: 'Sign in with ChatGPT',
   aiSetupChatGPTWaiting: 'Finish signing in to ChatGPT in your browser.',
   aiSetupChatGPTSignedInTitle: 'Signed in to ChatGPT',
@@ -403,10 +403,10 @@ export const aiMessageDefaults = {
   aiSetupChatGPTPortInUse:
     'Another sign-in, such as `codex login`, is using port 1455. Finish or close it, then try again.',
   aiSetupChatGPTCallbackSignedIn:
-    'Signed in to ChatGPT. You can close this tab and return to OpenPencil.',
+    'Signed in to ChatGPT. You can close this tab and return to Open Pen.',
   aiSetupChatGPTCallbackCancelled: 'ChatGPT sign-in was cancelled. You can close this tab.',
   aiSetupChatGPTCallbackStale:
-    'This sign-in link belongs to an earlier attempt. Start again from OpenPencil.',
+    'This sign-in link belongs to an earlier attempt. Start again from Open Pen.',
   aiSetupChatGPTUsage: 'Replies count toward your ChatGPT plan’s usage limits.',
   aiSetupSavedSignInHint: 'Your saved sign-in will be used.',
   aiSetupUseRecommended: 'Use recommended setup',
@@ -443,7 +443,7 @@ export const aiMessageDefaults = {
   skillsUploadSeveral: 'The archive holds more than one skill. Upload them one at a time.',
   skillsUploadUnreadable: 'Choose a ZIP archive or a SKILL.md text file.',
   skillsDelete: 'Delete skill',
-  skillsDeleteDescription: params('“{name}” will be removed from OpenPencil.'),
+  skillsDeleteDescription: params('“{name}” will be removed from Open Pen.'),
   skillsLocation: 'Location',
   skillsFiles: 'Files',
   skillsInstructions: 'Instructions',

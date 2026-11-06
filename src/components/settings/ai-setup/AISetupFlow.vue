@@ -66,7 +66,7 @@ const goals = computed(() => [
 const header = computed(() => {
   if (phase.value === 'welcome') {
     return {
-      heading: ai.value.aiSetupWelcomeTitle.replace('OpenPencil', 'Open Pen'),
+      heading: ai.value.aiSetupWelcomeTitle,
       description: ai.value.aiSetupWelcomeDescription
     }
   }
@@ -90,7 +90,7 @@ const header = computed(() => {
 
 /** Runs in the click handler, so the browser allows the sign-in popup. */
 function signIn(providerID: OnboardingAccess): void {
-  onboarding.signIn(providerID, { keyLabel: 'OpenPencil' })
+  onboarding.signIn(providerID, { keyLabel: 'Open Pen' })
 }
 
 function back(): void {
