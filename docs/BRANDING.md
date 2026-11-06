@@ -149,9 +149,9 @@ window. The final run uses an exact ChatGPT card label and explicit dialog clean
 rerun also records a setup timeout during an unexpected navigation; the final uninterrupted
 nine-case run passes with the exact transport-call assertion and complete transport interface.
 
-A11Y-COPY is executed at `bf1b43eb3`. BRAND-COPY-AI remains open for other AI copy states,
-including successful callbacks and the toast reflow issue described below.
-The native bundle precedes the command-copy contrast change; fresh native delivery/clipboard,
+A11Y-COPY is executed at `bf1b43eb3`. The original AI-copy sweep leaves successful
+callbacks and the toast reflow issue open; subsequent acceptance is recorded below.
+Those initial native captures precede the command-copy contrast change; native clipboard,
 full Pen visual matching and full branding acceptance remain open. The broader structure lint
 and dedicated native typing retain the previously documented unrelated failures.
 
@@ -210,3 +210,34 @@ Earlier build, native fixture/model-save and cleanup failures remain recorded. T
 layout pass passed component checks but orphaned controls; manual review rejects it before
 the final grouping. UI-TOAST-REFLOW is executed only for this bounded criterion. AI copy,
 full branding/accessibility, physical input/clipboard and exact Pen parity remain open.
+
+## Callback presentation with provider traffic rejected
+
+Nine additional native journeys execute the code callback in the isolated test app and pass
+in 11.2 seconds. The app supplies its current translated page to the real loopback listener;
+a matching synthetic callback returns HTTP 200 with Open Pen branding. Each subsequent native
+token connection is rejected by a test-owned localhost proxy before TLS or token data reaches
+the provider. The actual setup then displays its translated failure and re-enables sign-in.
+All nine native result captures and nine rendered actual response documents are inspected;
+the response documents have no horizontal overflow. Raw French/Japanese/Polish captures also
+confirm that review-sheet cropping is not actual dialog clipping.
+
+The proxy forwards nothing. Before opening sign-in, an actual native HTTPS probe to an invalid
+fixture domain must reach that proxy and fail. The final proxy log contains nine rejected
+provider tunnels, one per locale; other background tunnels are also rejected. The native-test
+opener records the authorization URL without opening a provider browser. No real login,
+successful token exchange, credential save, inference or main-app installation is executed.
+The callback's existing “signed in” wording precedes the exchange; its presentation is not
+proof of authentication. The test app and callback listener are absent after the run.
+
+The temporary acceptance spec and proxy configuration remain in ignored `scratch/`; no
+production hook, dependency or persistent callback-success regression is added. Earlier driver
+mock/immutable-invoke preflights stop before sign-in, and an initial proxy run records a local
+socket-reset failure. The final proxy handles socket resets and exits successfully. These
+failures and private captures remain in `local-evidence/brand-copy-ai-2026-11-06/callback-success/`.
+The dedicated native type gate retains its 67 earlier errors. Physical input, real provider
+sign-in, native clipboard and exact Pen screen matching remain separate acceptance gates.
+
+Together with the earlier source, access/cancel, component failure, network Retry, stale/denied
+callback and companion-version checks, this closes the bounded BRAND-COPY-AI copy task.
+The parent copy gate, whole branding milestone and full product parity remain open.

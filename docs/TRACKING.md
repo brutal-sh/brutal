@@ -34,7 +34,10 @@ Planning publication, the reproducible runtime audit, own-brand assets, owned di
 names and the MCP startup modularization have bounded acceptance evidence linked.
 Canonical localized product labels have bounded source/CLI/nine-language browser acceptance.
 The discovered command-copy contrast task has bounded executed evidence.
-The single Building task is BRAND-COPY-AI: remaining successful-callback presentation.
+BRAND-COPY-AI has bounded executed copy evidence, including nine code-callback/native-failure
+journeys with every provider tunnel rejected by a test-owned local proxy. No real provider
+authentication, credential save or inference is accepted. The single Building task is STAB-GPU:
+repeated document switching, resource bounds and final browser/native drawing.
 UI-TOAST-REFLOW has bounded executed evidence: 72 translated component captures at two widths
 and both themes, six baseline examples, and 18 rebuilt native version-warning journeys.
 Manual visual review confirms the message column and grouped controls; automated checks cover
@@ -43,9 +46,9 @@ regression passes all 18 native cases with the selected editor handle preserved.
 No real provider sign-in or inference is accepted by mocks.
 BRAND-COPY is an unaccepted gate in Verify; AI, editor, recovery/update, cloud-client and support
 copy journeys have their own child cards.
-Documentation refresh and graphics lifecycle stability are Ready. The interrupted zero-size
+Documentation refresh is Ready; graphics lifecycle stability is Building. The interrupted zero-size
 icon work retains its failed wider-run receipts and dependencies.
-The delivery snapshot is 332 Backlog, 2 Ready, 1 Building, 1 Verify and 8 Executed, plus 17 milestones.
+The delivery snapshot is 332 Backlog, 1 Ready, 1 Building, 1 Verify and 9 Executed, plus 17 milestones.
 No branding milestone or product-parity feature group is fully accepted.
 
 ## Control loop
