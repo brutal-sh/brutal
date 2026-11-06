@@ -48,6 +48,11 @@ export interface UseCanvasOptions {
    */
   onFailed?: (error: unknown) => void
   /**
+   * Takes ownership of the canvas after its renderer and CanvasKit handle are released.
+   * The owner may detach and reuse its browser context. Default disposal unregisters the handle.
+   */
+  onCanvasRelease?: (canvas: HTMLCanvasElement) => void
+  /**
    * Reports the color space the canvas actually presents, including fallbacks, or null
    * when no surface could be configured.
    */

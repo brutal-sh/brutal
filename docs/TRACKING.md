@@ -6,7 +6,7 @@ Repository: [private Open Pen repository](https://github.com/jpoindexter/open-pe
 Board: [Open Pen — independent design editor](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor), private.
 
 The [PRD](PRD.md) owns the outcome, constraints and release criteria.
-The [task index](TASKS.md) links all 344 execution cards; the [modularity audit](MODULARITY.md)
+The [task index](TASKS.md) links all 345 execution cards; the [modularity audit](MODULARITY.md)
 records the measured review queue. Requirements come from the [feature catalog](pen-feature-reference/README.md)
 and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), using actual Pen 1.2.21 as the reference.
 
@@ -23,7 +23,7 @@ and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), using actual Pen 1.
 
 ## Verified planning snapshot
 
-A complete fresh board readback finds 361 open cards: 344 unique execution tasks and 17 milestones.
+A complete fresh board readback finds 362 open cards: 345 unique execution tasks and 17 milestones.
 All 152 catalog requirements and 22 exact native ledger rows map to real execution cards.
 There are no missing or duplicate task IDs, and the dependency graph is acyclic.
 All 15 originally oversized runtime modules have individual disposition tasks; one is executed
@@ -36,8 +36,9 @@ Canonical localized product labels have bounded source/CLI/nine-language browser
 The discovered command-copy contrast task has bounded executed evidence.
 BRAND-COPY-AI has bounded executed copy evidence, including nine code-callback/native-failure
 journeys with every provider tunnel rejected by a test-owned local proxy. No real provider
-authentication, credential save or inference is accepted. The single Building task is STAB-GPU:
-repeated document switching, resource bounds and final browser/native drawing.
+authentication, credential save or inference is accepted. STAB-GPU has a browser-verified
+implementation in Verify; actual native drawing remains unexecuted because macOS reports a locked desktop. [Canvas evidence](CANVAS-LIFECYCLE.md)
+records the executed paths and limits. MOD-02 declaration ownership is the sole Building task.
 UI-TOAST-REFLOW has bounded executed evidence: 72 translated component captures at two widths
 and both themes, six baseline examples, and 18 rebuilt native version-warning journeys.
 Manual visual review confirms the message column and grouped controls; automated checks cover
@@ -46,9 +47,11 @@ regression passes all 18 native cases with the selected editor handle preserved.
 No real provider sign-in or inference is accepted by mocks.
 BRAND-COPY is an unaccepted gate in Verify; AI, editor, recovery/update, cloud-client and support
 copy journeys have their own child cards.
-Documentation refresh is Ready; graphics lifecycle stability is Building. The interrupted zero-size
-icon work retains its failed wider-run receipts and dependencies.
-The delivery snapshot is 332 Backlog, 1 Ready, 1 Building, 1 Verify and 9 Executed, plus 17 milestones.
+Documentation refresh is Ready; graphics lifecycle stability remains unaccepted in Verify.
+The interrupted zero-size icon work retains its failed wider-run receipts and dependencies.
+The delivery snapshot is 332 Backlog, 1 Ready, 1 Building, 2 Verify and 9 Executed, plus 17 milestones.
+UI-SPLIT-HEADER separately records toolbar/inspector overlap blocking pane Close controls.
+The board retains 17 milestones, 152 mapped requirements and 22 mapped native rows.
 No branding milestone or product-parity feature group is fully accepted.
 
 ## Control loop

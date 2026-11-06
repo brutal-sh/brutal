@@ -25,8 +25,8 @@ modules, complete Open Pen branding and an executable Trello backlog.
   [feature catalog](pen-feature-reference/README.md), with a 2026-10-30 snapshot. The official
   [documentation index](https://docs.pen.dev/) is rechecked on 2026-11-06. The installed reference
   still reports 1.2.21. Documentation coverage does not prove runtime coverage.
-- Observed: the current 2026-11-06 source-size audit counts 2,923 runtime files across the app, Core,
-  Vue SDK, Scene Graph and native shell. Median size is 65 physical lines; 2,750 are at most
+- Observed: the last accepted 2026-11-06 source-size audit counts 2,923 runtime files across the
+  app, Core, Vue SDK, Scene Graph and native shell. Median size is 65 physical lines; 2,750 are at most
   300 lines and 14 exceed 600 after the MCP startup disposition. See [modularity](MODULARITY.md).
 - Initially observed: inherited web marks, localized product names, diagnostics labels and a native
   microphone explanation still identify the app as OpenPencil. The original violet Open Pen
@@ -34,9 +34,11 @@ modules, complete Open Pen branding and an executable Trello backlog.
 - Executed afterward: [own-brand asset and diagnostics checks](BRANDING.md) qualify generated
   artwork and selected real support/error paths. Localized copy, native identity and full
   branding acceptance remain open.
-- Observed: repeated document changes can exhaust WebKit's context budget. The first cleanup
-  patch is incomplete. Zero-size icon preservation has focused evidence, but the wider run
-  retains that graphics failure. Neither change is published or accepted as a full fix.
+- Observed: repeated document changes exhaust WebKit's context budget with eager context loss.
+  The [canvas reuse candidate](CANVAS-LIFECYCLE.md) passes browser resource and pixel checks;
+  native acceptance is held by a confirmed locked desktop. STAB-GPU remains in Verify.
+  Four-pane checks also expose toolbar/inspector overlap blocking Close controls; a separate
+  bounded task records that defect. Zero-size icon preservation remains unpublished/unaccepted.
 
 ## User journey
 

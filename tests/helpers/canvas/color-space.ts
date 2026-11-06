@@ -1,5 +1,17 @@
 import type { Page } from '@playwright/test'
 
+import { readFixtureBytes } from '#tests/helpers/fig/fixtures'
+
+/** Stable paint coverage, independent of the product tour's current chapters. */
+export async function loadPaintEffectsFixture(page: Page) {
+  const bytes = Array.from(readFixtureBytes('paint-effects-regression.fig'))
+  await page.evaluate(async (bytes) => {
+    const store = window.openPencil?.getStore?.()
+    if (!store) throw new Error('Editor unavailable')
+    await store.openFigFile(new File([new Uint8Array(bytes)], 'paint-effects-regression.fig'))
+  }, bytes)
+}
+
 /** Exercise the P3 surface negotiation even on an sRGB CI display. */
 export async function emulateWideGamutDisplay(page: Page) {
   await page.addInitScript(() => {
@@ -24,8 +36,17 @@ export async function dismissWideGamutBanner(page: Page) {
   if (await banner.isVisible()) await banner.locator('[data-slot="banner-dismiss"]').click()
 }
 
-/** Focus the demo's paint and effects page, where blends and masks live. */
+/** Focus the fixed paint specimen, where blends and masks live. */
 export async function focusPaintEffects(page: Page) {
+  await page.waitForFunction(
+    () =>
+      window.openPencil
+        ?.getStore?.()
+        ?.graph.getPages()
+        .some((page) => page.name.startsWith('03')),
+    undefined,
+    { timeout: 5000 }
+  )
   // Zooming to a layer uses the viewport size the canvas last measured, so a window resize must
   // reach it first or the zoom fits the old size. The canvas sizes its pixels in the same step.
   await page.waitForFunction(() => {
@@ -43,7 +64,7 @@ export async function focusPaintEffects(page: Page) {
     const store = window.openPencil?.getStore?.()
     if (!store) throw new Error('Editor unavailable')
     const paintPage = store.graph.getPages().find((candidate) => candidate.name.startsWith('03'))
-    if (!paintPage) throw new Error('Demo paint page unavailable')
+    if (!paintPage) throw new Error('Paint fixture page unavailable')
     store.setDocumentColorSpace('display-p3')
     if (store.state.currentPageId !== paintPage.id) await store.switchPage(paintPage.id)
   })

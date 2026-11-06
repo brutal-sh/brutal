@@ -26,3 +26,5 @@
 
 - Keep command-copy buttons readable against their field background in both themes.
 - Keep translated toast messages readable when recovery actions need another row.
+
+- Reuse canvas contexts across document switches without retaining retired document renderers, and cancel initialization when its view closes.

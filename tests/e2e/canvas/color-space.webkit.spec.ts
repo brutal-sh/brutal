@@ -5,6 +5,7 @@ import {
   dismissWideGamutBanner,
   emulateWideGamutDisplay,
   focusPaintEffects,
+  loadPaintEffectsFixture,
   sceneBufferState,
   waitForSettledScene,
   wideGamutBanner
@@ -14,9 +15,10 @@ test.use({ viewport: { width: 1200, height: 900 } })
 
 test('P3 paint blends and masks survive pan, zoom, and surface resize', async ({ page }) => {
   await emulateWideGamutDisplay(page)
-  await page.goto('/demo?no-chrome&no-rulers')
+  await page.goto('/?test&no-chrome&no-rulers')
   const canvas = new CanvasHelper(page)
   await canvas.waitForInit()
+  await loadPaintEffectsFixture(page)
   await focusPaintEffects(page)
   // The notice appears once the document is Display P3, and dismissing it keeps the canvas
   // at a fixed offset for the snapshot. The canvas grows when it goes, so focus again to fit
@@ -25,13 +27,16 @@ test('P3 paint blends and masks survive pan, zoom, and surface resize', async ({
   await focusPaintEffects(page)
   await waitForSettledScene(page)
 
-  async function expectEffects() {
+  async function expectEffects(phase: 'initial' | 'resized') {
     const buffer = await sceneBufferState(page)
     expect(buffer).toEqual({ colorSpace: 'srgb', documentColorSpace: 'display-p3', error: 0 })
-    expect(await canvas.screenshotCanvas()).toMatchSnapshot('paint-effects.png')
+    expect(await canvas.screenshotCanvas()).toMatchSnapshot(`paint-fixture-${phase}.png`, {
+      threshold: 0,
+      maxDiffPixels: 0
+    })
     canvas.assertNoErrors()
   }
-  await expectEffects()
+  await expectEffects('initial')
 
   await canvas.canvas.hover()
   await page.mouse.wheel(80, 40)
@@ -50,11 +55,11 @@ test('P3 paint blends and masks survive pan, zoom, and surface resize', async ({
   await page.setViewportSize({ width: 1200, height: 900 })
   await focusPaintEffects(page)
   await waitForSettledScene(page)
-  await expectEffects()
+  await expectEffects('resized')
 })
 
 test('warns when a Display-P3 document cannot be presented in wide gamut', async ({ page }) => {
-  await page.goto('/demo?no-chrome&no-rulers')
+  await page.goto('/?test&no-chrome&no-rulers')
   const canvas = new CanvasHelper(page)
   await canvas.waitForInit()
 

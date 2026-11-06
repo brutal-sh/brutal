@@ -80,6 +80,7 @@ export default defineConfig({
       testIgnore: ['**/native/**', '**/storybook/**'],
       testMatch: [
         '**/*.webkit.spec.ts',
+        '**/canvas/split-views.spec.ts',
         '**/design/panel.spec.ts',
         '**/design/retained-panel.spec.ts',
         '**/export/basic.spec.ts',

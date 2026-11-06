@@ -39,6 +39,7 @@ export function useCanvasKitLoader({
     await new Promise((resolve) => {
       requestAnimationFrame(resolve)
     })
+    if (isDestroyed()) return
     if (!createSurface(canvas)) throw new Error('WebGL is unavailable, so the canvas cannot draw')
     await loadFonts()
     if (isDestroyed()) return
@@ -52,8 +53,9 @@ export function useCanvasKitLoader({
     canvasRef,
     () =>
       void init().catch((error: unknown) => {
+        if (isDestroyed()) return
         if (!onFailed) throw error
-        if (!isDestroyed()) onFailed(error)
+        onFailed(error)
       }),
     { once: true, flush: 'post', immediate: true }
   )

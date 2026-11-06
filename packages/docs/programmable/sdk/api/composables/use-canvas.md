@@ -78,6 +78,10 @@ useCanvas(canvasRef, editor, {
 - `useCanvas()` is renderer-facing and browser-only in practice
 - it is responsible for the live canvas pipeline, not app-level file flows
 - it should usually be paired with `useCanvasInput()` for interaction handling
+- disposal releases the renderer, Skia resources and CanvasKit handle. With `onCanvasRelease`,
+  ownership of the canvas transfers to that callback so it can reuse the browser context;
+  the owner must detach or dispose the element. Without the callback, disposal retains its
+  existing CanvasKit handle cleanup. Canceling initialization does not report a rendering failure.
 
 ## Related APIs
 
@@ -92,6 +96,7 @@ interface UseCanvasOptions {
   showRulers?: boolean
   preserveDrawingBuffer?: boolean
   onReady?: () => void
+  onCanvasRelease?: (canvas: HTMLCanvasElement) => void
 }
 
 function useCanvas(

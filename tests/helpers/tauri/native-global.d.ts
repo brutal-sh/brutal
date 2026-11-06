@@ -42,6 +42,7 @@ type NativeTestStore = {
   centerOn: EditorStore['centerOn']
   canvasRenderers: EditorStore['canvasRenderers']
   requestRepaint: EditorStore['requestRepaint']
+  setDocumentColorSpace: EditorStore['setDocumentColorSpace']
   state: {
     documentName: string
     zoom: EditorStore['state']['zoom']

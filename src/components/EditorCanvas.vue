@@ -40,6 +40,7 @@ import { useEditorStore } from '@/app/editor/active-store'
 import { useCanvasCollaborationAwareness } from '@/app/editor/canvas/collaboration-awareness'
 import { createCanvasContextSelection } from '@/app/editor/canvas/context-selection'
 import { canvasOverlayObstacles } from '@/app/editor/canvas/obstacles'
+import { releaseEditorCanvas } from '@/app/editor/canvas/surfaces'
 import { useFollowView } from '@/app/presence/follow-view'
 import { appRuntimeConfig } from '@/app/runtime/config'
 import { appPreferences } from '@/app/settings/preferences/store'
@@ -53,6 +54,7 @@ import { motionStyles } from '@/theme/motion/styles'
 import { floatingSurface } from '@/theme/overlay'
 
 import CanvasMenu from './canvas/CanvasMenu.vue'
+import EditorCanvasSurface from './canvas/EditorCanvasSurface.vue'
 import CanvasLabelEditor from './canvas/labels/CanvasLabelEditor.vue'
 import { canvasLabelPresentation } from './canvas/labels/presentation'
 import NumberField from './inputs/NumberField.vue'
@@ -106,6 +108,7 @@ function canvasReady() {
 
 useCanvas(sceneCanvasRef, store, {
   layer: 'scene',
+  onCanvasRelease: releaseEditorCanvas,
   onFrame: (view) => {
     drawnView.value = view
   },
@@ -133,6 +136,7 @@ const {
   hitTestStatusLabel
 } = useCanvas(canvasRef, store, {
   layer: 'overlays',
+  onCanvasRelease: releaseEditorCanvas,
   // The scene canvas reports a canvas that cannot start.
   onFailed: () => undefined,
   get showRulers() {
@@ -277,20 +281,12 @@ const cursor = computed(() =>
         @wheel.capture="activatePane"
         @dragenter.capture="activatePane"
       >
-        <canvas
-          ref="sceneCanvasRef"
-          :data-pane-id="paneId"
-          data-test-id="scene-canvas-element"
-          aria-hidden="true"
-          class="pointer-events-none absolute inset-0 size-full outline-none"
-        />
-        <canvas
-          ref="canvasRef"
-          :data-pane-id="paneId"
-          data-test-id="canvas-element"
-          tabindex="-1"
-          :style="{ cursor }"
-          class="absolute inset-0 block size-full touch-none outline-none"
+        <EditorCanvasSurface v-model:element="sceneCanvasRef" layer="scene" :pane-id="paneId" />
+        <EditorCanvasSurface
+          v-model:element="canvasRef"
+          layer="overlays"
+          :pane-id="paneId"
+          :cursor="cursor"
         />
         <PlayIslands :view="paneView" :drawn="drawnView" :canvas="canvasRef" />
         <AppDropOverlay :visible="isDraggingOver" />

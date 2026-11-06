@@ -56,6 +56,7 @@ export function createCanvasSurfaceManager({
     presentation: null
   }
   let sceneBackingRenderTimer: ReturnType<typeof setTimeout> | null = null
+  let disposed = false
 
   // The scene of an editing canvas shows an empty sticky note's placeholder, and every layer an
   // empty connector label's while it is typed into, as the overlays draw the text being edited,
@@ -81,6 +82,19 @@ export function createCanvasSurfaceManager({
     if (showsStickyPlaceholder) renderer.stickyPlaceholder = stickyPlaceholder
   }
 
+  function configureRenderer(renderer: SkiaRenderer) {
+    renderer.onImagePreviewReady = () => renderLoop.markDirty()
+    renderer.imagePreviews.setDecoder(createImagePreviewDecoder())
+    renderer.presentationColorSpace = state.presentation ?? 'srgb'
+    renderer.tracksSceneSettlement = options?.layer !== 'overlays'
+    renderer.tiledSceneEnabled = options?.sceneRenderer === 'tiled'
+    showPlaceholders(renderer)
+    editor.setCanvasKit(renderer.ck, renderer)
+    // The scene surface draws shader frames; an overlay surface has none to draw.
+    if (options?.layer !== 'overlays' && !editor.hasShaderRasterizer())
+      editor.setShaderRasterizer(createShaderRasterizer())
+  }
+
   function clearSceneBackingRenderTimer() {
     if (sceneBackingRenderTimer === null) return
     clearTimeout(sceneBackingRenderTimer)
@@ -101,6 +115,7 @@ export function createCanvasSurfaceManager({
     canvas: HTMLCanvasElement,
     { reloadFonts = false }: { reloadFonts?: boolean } = {}
   ): boolean {
+    if (disposed || isDestroyed()) return false
     const ck = getCanvasKit()
     if (!ck) return false
 
@@ -131,16 +146,7 @@ export function createCanvasSurfaceManager({
 
     const glCtx = canvas.getContext('webgl2') ?? null
     state.renderer = new SkiaRenderer(ck, surface, glCtx)
-    state.renderer.onImagePreviewReady = () => renderLoop.markDirty()
-    state.renderer.imagePreviews.setDecoder(createImagePreviewDecoder())
-    state.renderer.presentationColorSpace = result.presentation ?? 'srgb'
-    state.renderer.tracksSceneSettlement = options?.layer !== 'overlays'
-    state.renderer.tiledSceneEnabled = options?.sceneRenderer === 'tiled'
-    showPlaceholders(state.renderer)
-    editor.setCanvasKit(ck, state.renderer)
-    // The scene surface draws shader frames; an overlay surface has none to draw.
-    if (options?.layer !== 'overlays' && !editor.hasShaderRasterizer())
-      editor.setShaderRasterizer(createShaderRasterizer())
+    configureRenderer(state.renderer)
     canvas.dataset.ready = '1'
 
     // When the surface is recreated after a resize fallback, destroyRenderer
@@ -250,6 +256,9 @@ export function createCanvasSurfaceManager({
   )
 
   function destroy() {
+    if (disposed) return
+    disposed = true
+    const canvas = state.glCanvas ?? canvasRef.value
     stopPlaceholders()
     stopPresentationRefresh()
     stopColorSpaceRefresh()
@@ -257,7 +266,9 @@ export function createCanvasSurfaceManager({
     renderLoop.pause()
     if (state.renderer) editor.removeCanvasRenderer(state.renderer)
     state.renderer?.destroy()
+    state.renderer = null
     releaseGLContext()
+    if (canvas) options?.onCanvasRelease?.(canvas)
   }
 
   return {

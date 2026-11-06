@@ -1,7 +1,7 @@
 # Runtime modularity audit
 
-Measured 2026-11-06 from the current checkout. This is a size/ownership review, not proof that
-all architecture or behavior is accepted. The implementation uses OpenPencil's existing
+Last accepted measurement: 2026-11-06, before the canvas reuse candidate.
+This is a size/ownership review, not proof that all architecture or behavior is accepted. The implementation uses OpenPencil's existing
 package boundaries; Open Pen-specific behavior is added to the owning domain.
 
 Scope: authored `.ts`, `.vue`, `.rs` and `.css` under `src`, `packages/core/src`,
@@ -84,3 +84,11 @@ Missing/outdated refusal logic remains covered by focused tests and natural nati
 Driver window-title/mock-cleanup warnings remain in the receipt; visibility is asserted and
 process cleanup is independently checked. Main installation, user data and global MCP binaries
 remain untouched. Fourteen oversized owners and full product parity remain open.
+
+## Candidate awaiting native verification
+
+[Canvas reuse](CANVAS-LIFECYCLE.md) adds two focused app owners of 38 and 48 lines.
+Browser resource, rendering and teardown evidence passes; isolated native acceptance is held
+by a confirmed locked desktop. These additions are not an executed oversized-module disposition.
+The table above remains the last accepted audit snapshot; refresh it after acceptance.
+MOD-02 is the sole Building task and reviews Scene Graph declaration ownership independently.
