@@ -27,9 +27,9 @@ A complete fresh board readback finds 386 open cards: 369 unique execution tasks
 All 164 catalog requirements and 22 exact native ledger rows map to real execution cards.
 There are no missing or duplicate task IDs, and the dependency graph is acyclic.
 All 15 originally oversized runtime modules have individual disposition tasks. Two dispositions
-are executed: one cohesive extraction and one explicit model-contract exception. Thirteen files remain
-above 600 lines, including the reviewed model exception; twelve oversized dispositions remain
-open. The font candidate is below 600 lines but its native acceptance remains open.
+are executed: one cohesive extraction and one explicit model-contract exception. Twelve files remain
+above 600 lines, including the reviewed model exception; eleven oversized dispositions remain
+open. Font and graph candidates are below 600 lines but their native acceptance remains open.
 REF-01 fetches all 24 historical URLs and current navigation: 29 successful requests resolve
 to 23 canonical pages. It preserves the original 152 requirements/evidence and adds 12
 unaccepted documentation deltas with 20 applicability-first cards. Current schema 2.22
@@ -59,10 +59,12 @@ regression passes all 18 native cases with the selected editor handle preserved.
 No real provider sign-in or inference is accepted by mocks.
 BRAND-COPY is an unaccepted gate in Verify; AI, editor, recovery/update, cloud-client and support
 copy journeys have their own child cards.
-Documentation refresh (REF-01) has executed its inventory criterion; MOD-04 graph
-ownership is the sole Building task. Font and graphics candidates remain in Verify.
+Documentation refresh (REF-01) has executed its inventory criterion. Graph ownership
+(MOD-04) is in Verify, with owner/history/browser/visual/build evidence and unexecuted
+native acceptance; [graph evidence](GRAPH-OWNERSHIP.md) records the limits.
+BRAND-COPY-EDITOR is the sole Building task. Font and graphics candidates remain in Verify.
 The interrupted zero-size icon work retains its failed wider-run receipts and dependencies.
-The delivery snapshot is 353 Backlog, 0 Ready, 1 Building, 3 Verify and 12 Executed, plus 17 milestones.
+The delivery snapshot is 352 Backlog, 0 Ready, 1 Building, 4 Verify and 12 Executed, plus 17 milestones.
 DELIVERY-LFS has bounded executed current-checkout fixture delivery: all twelve objects
 are fetched from the own private endpoint into empty independent storage, with matching
 SHA-256/sizes and LFS integrity checks. Historical object closure is not qualified.

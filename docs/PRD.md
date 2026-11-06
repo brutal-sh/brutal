@@ -29,11 +29,11 @@ modules, complete Open Pen branding and an executable Trello backlog.
   catalog now has 164 requirements, including 12 unaccepted documentary deltas. Current
   schema 2.22 differs from the unchanged installed archive’s 2.21. Applicability-first
   tasks preserve the pinned target; see the [refresh](pen-feature-reference/refresh-2026-11-06.md).
-- Observed: the current 2026-11-06 source-size audit counts 2,931 runtime files across the app, Core,
-  Vue SDK, Scene Graph and native shell. Median size is 65 physical lines; 2,758 are at most
-  300 lines and 13 exceed 600: one has a reviewed model-contract exception, 12 remain open.
-  Counts include canvas and font candidates without accepting their pending native behavior.
-  The font disposition remains open even though its owner is below 600 lines. See [modularity](MODULARITY.md).
+- Observed: the current 2026-11-06 source-size audit counts 2,935 runtime files across the app, Core,
+  Vue SDK, Scene Graph and native shell. Median size is 65 physical lines; 2,762 are at most
+  300 lines and 12 exceed 600: one has a reviewed model-contract exception, 11 remain open.
+  Counts include canvas, font and graph candidates without accepting their pending native behavior.
+  The font and graph dispositions remain open even though both owners are below 600 lines. See [modularity](MODULARITY.md).
 - Initially observed: inherited web marks, localized product names, diagnostics labels and a native
   microphone explanation still identify the app as OpenPencil. The original violet Open Pen
   app-icon master already exists.

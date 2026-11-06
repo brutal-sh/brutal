@@ -1,28 +1,21 @@
-/* eslint-disable max-lines -- SceneGraph is the facade over the domain modules */
 import { omitBy } from 'es-toolkit/object'
 import { isUndefined } from 'es-toolkit/predicate'
 
 import { removeStaleBindings } from './bindings'
 import { BufferedSceneEmitter } from './buffered-events'
-import {
-  getAbsolutePosition,
-  getNodeLocalMatrix,
-  getParentWorldMatrix,
-  isTranslationOnly,
-  localTransformFromWorld
-} from './coordinate'
-import { cloneNodeProps, type NodeCloneMode } from './copy'
+import type { NodeCloneMode } from './copy'
 import { bindNodeEvents } from './events'
 import { LAYOUT_AFFECTING_KEYS } from './fields/layout'
 import { withGeneratedFrameSize } from './generated'
+import { generateUnusedEntityId, entityIdTaken } from './graph/ids'
+import { indexInstance, unindexInstance, updateInstanceIndex } from './graph/indexes'
+import { GraphMutationScopes } from './graph/scopes'
+import { GraphTree } from './graph/tree'
 import * as HitTest from './hit-test'
 import { synchronizeIconPaints } from './icons/paints'
 import { generateId } from './ids'
 import * as Instances from './instances'
-import { remapInstanceOverrideState } from './instances/overrides'
-import { LayoutWrites } from './layout/writes'
-import Matrix from './matrix'
-import { CONTAINER_TYPES, createDefaultNode } from './node-defaults'
+import { createDefaultNode } from './node-defaults'
 import { updateNodePreview, type NodePreviewObserver } from './preview'
 import type { Color, Rect, Vector } from './primitives'
 import { styleDetachmentChanges } from './shared-styles'
@@ -45,15 +38,6 @@ import * as Variables from './variables'
 import type { VariableModeFallback } from './variables'
 import { normalizeVectorNetwork } from './vector-network'
 
-/** Scopes that graph methods check while a caller's callback runs; scopes nest. */
-type GraphScope =
-  | 'preview'
-  | 'sourceMetadata'
-  | 'importedState'
-  | 'layout'
-  | 'derivedLayout'
-  | 'iconPaints'
-
 export class SceneGraph {
   nodes = new Map<string, SceneNode>()
   images = new Map<string, Uint8Array>()
@@ -67,19 +51,11 @@ export class SceneGraph {
   documentColorSpace: DocumentColorSpace = 'srgb'
   enabledLibraries = new Map<string, EnabledLibraryBinding>()
   readonly emitter = new BufferedSceneEmitter()
-  private absPosCache = new Map<string, Vector>()
-  private readonly scopeDepths: Record<GraphScope, number> = {
-    preview: 0,
-    sourceMetadata: 0,
-    importedState: 0,
-    layout: 0,
-    derivedLayout: 0,
-    iconPaints: 0
-  }
-  private previewObservers: NodePreviewObserver[] = []
+  private readonly scopes = new GraphMutationScopes(this)
+  private readonly tree = new GraphTree(this, (componentId, instanceId) =>
+    unindexInstance(this.instanceIndex, componentId, instanceId)
+  )
   private readonly changeObservers = new Set<NodeChangeObserver>()
-  private importedIdGenerator: (() => string) | undefined
-  private layoutWrites: LayoutWrites | null = null
   positionPreviewVersion = 0
   instanceIndex = new Map<string, Set<string>>()
   /** Every connector in the graph, so routing need not scan every layer. */
@@ -133,22 +109,7 @@ export class SceneGraph {
   }
 
   countDescendants(nodeId: string): number {
-    const node = this.nodes.get(nodeId)
-    if (!node) return 0
-    let count = 0
-    const stack = [...node.childIds]
-    while (stack.length > 0) {
-      const id = stack.pop()
-      if (id === undefined) break
-      count++
-      const child = this.nodes.get(id)
-      if (child) {
-        for (const childId of child.childIds) {
-          stack.push(childId)
-        }
-      }
-    }
-    return count
+    return this.tree.countDescendants(nodeId)
   }
   addVariable(variable: Variable): void {
     Variables.addVariable(this, variable)
@@ -288,16 +249,11 @@ export class SceneGraph {
   }
 
   getChildren(id: string): SceneNode[] {
-    const node = this.nodes.get(id)
-    if (!node) return []
-    return node.childIds
-      .map((cid) => this.nodes.get(cid))
-      .filter((n): n is SceneNode => n !== undefined)
+    return this.tree.getChildren(id)
   }
 
   isContainer(id: string): boolean {
-    const node = this.nodes.get(id)
-    return node ? CONTAINER_TYPES.has(node.type) : false
+    return this.tree.isContainer(id)
   }
 
   isDescendant(childId: string, ancestorId: string): boolean {
@@ -309,12 +265,7 @@ export class SceneGraph {
    * as the graph holds, so a parent cycle in bad data cannot hang it.
    */
   closest(id: string, match: (node: SceneNode) => boolean): SceneNode | undefined {
-    let current = this.nodes.get(id)
-    for (let steps = 0; current && steps < this.nodes.size; steps++) {
-      if (match(current)) return current
-      current = current.parentId ? this.nodes.get(current.parentId) : undefined
-    }
-    return undefined
+    return this.tree.closest(id, match)
   }
 
   /**
@@ -322,34 +273,19 @@ export class SceneGraph {
    * null for the document root or a node on no page.
    */
   pageOf(id: string): string | null {
-    return this.closest(id, (node) => node.type === 'CANVAS')?.id ?? null
+    return this.tree.pageOf(id)
   }
 
   clearAbsPosCache(): void {
-    this.absPosCache.clear()
+    return this.tree.clearAbsPosCache()
   }
 
   getAbsolutePosition(id: string): Vector {
-    const cached = this.absPosCache.get(id)
-    if (cached) return cached
-
-    const node = this.getNode(id)
-    if (!node) return { x: 0, y: 0 }
-
-    const result = getAbsolutePosition(node, this)
-    this.absPosCache.set(id, result)
-    return result
+    return this.tree.getAbsolutePosition(id)
   }
 
   getAbsoluteBounds(id: string): Rect {
-    const pos = this.getAbsolutePosition(id)
-    const node = this.nodes.get(id)
-    return {
-      x: pos.x,
-      y: pos.y,
-      width: node?.width ?? 0,
-      height: node?.height ?? 0
-    }
+    return this.tree.getAbsoluteBounds(id)
   }
   /**
    * An ID no entity uses; `issued` also excludes IDs handed out earlier in the same creation.
@@ -357,51 +293,23 @@ export class SceneGraph {
    * it counts as exhausted then; a fixed cap would reject a sequence walking past a large import.
    */
   private generateEntityId(issued?: Set<string>): string {
-    let limit = Infinity
-    for (let attempt = 0; attempt < limit; attempt++) {
-      const id = (this.importedIdGenerator ?? this.idGenerator)()
-      if (this.isEntityIdTaken(id) || issued?.has(id)) {
-        if (limit === Infinity) limit = this.entityIdCount() + (issued?.size ?? 0) + 1
-        continue
-      }
-      issued?.add(id)
-      return id
-    }
-    throw new Error('The ID generator only returned IDs that are in use')
-  }
-  private entityIdCount(): number {
-    let count = this.nodes.size + this.variables.size + this.variableCollections.size
-    for (const collection of this.variableCollections.values()) count += collection.modes.length
-    return count
+    return generateUnusedEntityId(
+      this,
+      () => (this.scopes.importedIdGenerator ?? this.idGenerator)(),
+      issued
+    )
   }
   /** Whether a node, variable, collection, or mode has this id. */
   isEntityIdTaken(id: string): boolean {
-    if (this.nodes.has(id) || this.variables.has(id) || this.variableCollections.has(id))
-      return true
-    // Callers replace collection maps and edit `modes` in place (history snapshots, transfer,
-    // undo), so an index of mode IDs would go stale; walk them without allocating instead.
-    for (const collection of this.variableCollections.values()) {
-      for (const mode of collection.modes) if (mode.modeId === id) return true
-    }
-    return false
-  }
-  private indexInstance(componentId: string, instanceId: string): void {
-    let set = this.instanceIndex.get(componentId)
-    if (!set) {
-      set = new Set()
-      this.instanceIndex.set(componentId, set)
-    }
-    set.add(instanceId)
-  }
-  private unindexInstance(componentId: string, instanceId: string): void {
-    this.instanceIndex.get(componentId)?.delete(instanceId)
+    return entityIdTaken(this, id)
   }
   private registerNode(node: SceneNode, parentId: string | null): SceneNode {
     node.parentId = parentId
     this.nodes.set(node.id, node)
     if (node.type === 'CONNECTOR') this.connectorIds.add(node.id)
     for (const observer of this.changeObservers) observer.created(node)
-    if (node.type === 'INSTANCE' && node.componentId) this.indexInstance(node.componentId, node.id)
+    if (node.type === 'INSTANCE' && node.componentId)
+      indexInstance(this.instanceIndex, node.componentId, node.id)
     this.synchronizeIconPaints(node)
     this.emitter.emit('node:created', node)
     return node
@@ -435,42 +343,22 @@ export class SceneGraph {
     return this.registerNode(node, parentId)
   }
 
-  private withScope<T>(scope: GraphScope, fn: () => T): T {
-    this.scopeDepths[scope]++
-    try {
-      return fn()
-    } finally {
-      this.scopeDepths[scope]--
-    }
-  }
-
   runPreviewUpdates(fn: () => void, beforeUpdate?: NodePreviewObserver): void {
-    if (beforeUpdate) this.previewObservers.push(beforeUpdate)
-    try {
-      this.withScope('preview', fn)
-    } finally {
-      if (beforeUpdate) this.previewObservers.pop()
-    }
+    this.scopes.runPreviewUpdates(fn, beforeUpdate)
   }
   preserveSourceMetadataDuring<T>(fn: () => T): T {
-    return this.withScope('sourceMetadata', fn)
+    return this.scopes.preserveSourceMetadataDuring(fn)
   }
   get isPreservingSourceMetadata(): boolean {
-    return this.scopeDepths.sourceMetadata > 0
+    return this.scopes.isPreservingSourceMetadata
   }
 
   applyImportedStateDuring<T>(fn: () => T, idGenerator?: () => string): T {
-    const previousGenerator = this.importedIdGenerator
-    this.importedIdGenerator = idGenerator ?? previousGenerator
-    try {
-      return this.withScope('importedState', () => this.preserveSourceMetadataDuring(fn))
-    } finally {
-      this.importedIdGenerator = previousGenerator
-    }
+    return this.scopes.applyImportedStateDuring(fn, idGenerator)
   }
 
   get isApplyingImportedState(): boolean {
-    return this.scopeDepths.importedState > 0
+    return this.scopes.isApplyingImportedState
   }
 
   /**
@@ -478,11 +366,11 @@ export class SceneGraph {
    * arrive. What this writes derives from the document; an edit's own layout is not this.
    */
   applyDerivedLayoutDuring(fn: () => void): void {
-    this.withScope('derivedLayout', fn)
+    this.scopes.applyDerivedLayoutDuring(fn)
   }
 
   get isApplyingDerivedLayout(): boolean {
-    return this.scopeDepths.derivedLayout > 0
+    return this.scopes.isApplyingDerivedLayout
   }
 
   /**
@@ -491,31 +379,10 @@ export class SceneGraph {
    * derived layout, the positions and sizes it publishes count as edited, so formats save them.
    */
   withLayoutMutations(fn: () => void): void {
-    const outermost = this.scopeDepths.layout === 0
-    this.scopeDepths.layout++
-    if (outermost) this.layoutWrites = new LayoutWrites()
-    try {
-      fn()
-    } finally {
-      try {
-        if (outermost) this.publishLayoutUpdates()
-      } finally {
-        this.scopeDepths.layout--
-      }
-    }
-  }
-
-  private publishLayoutUpdates(): void {
-    const writes = this.layoutWrites
-    this.layoutWrites = null
-    if (!writes) return
-    for (const [node, changes, edited] of writes.updates((nodeId) => this.nodes.get(nodeId))) {
-      markSourceFieldsEdited(node, edited)
-      this.emitter.emit('node:updated', node.id, changes)
-    }
+    this.scopes.withLayoutMutations(fn)
   }
   get isApplyingLayout(): boolean {
-    return this.scopeDepths.layout > 0
+    return this.scopes.isApplyingLayout
   }
   updateNodePositionPreview(id: string, x: number, y: number): void {
     this.updateNodePreview(id, { x, y })
@@ -524,16 +391,17 @@ export class SceneGraph {
     const node = this.nodes.get(id)
     if (node) changes = this.sizedChanges(node, changes)
     const appliedChanges = updateNodePreview(this, id, changes, (node, applied) => {
-      for (const observe of this.previewObservers) observe(node, applied)
+      this.scopes.notifyPreview(node, applied)
     })
     if (appliedChanges) {
-      if (node) this.withScope('preview', () => this.synchronizeIconPaints(node, appliedChanges))
+      if (node)
+        this.scopes.runPreviewUpdates(() => this.synchronizeIconPaints(node, appliedChanges))
       this.emitter.emit('node:previewUpdated', id, appliedChanges)
     }
   }
 
   updateNode(id: string, changes: Partial<SceneNode>): void {
-    if (this.scopeDepths.preview > 0) {
+    if (this.scopes.isPreviewing) {
       this.updateNodePreview(id, changes)
       return
     }
@@ -560,16 +428,6 @@ export class SceneGraph {
     if (node) this.applyNodeChanges(node, changes, absent)
   }
 
-  private updateInstanceIndex(node: SceneNode, changes: Partial<SceneNode>): void {
-    if (!('type' in changes) && !('componentId' in changes)) return
-    const before = node.type === 'INSTANCE' ? node.componentId : null
-    const componentId = 'componentId' in changes ? changes.componentId : node.componentId
-    const after = (changes.type ?? node.type) === 'INSTANCE' ? componentId : null
-    if (before === after) return
-    if (before) this.unindexInstance(before, node.id)
-    if (after) this.indexInstance(after, node.id)
-  }
-
   private applyNodeChanges(
     node: SceneNode,
     changes: Partial<SceneNode>,
@@ -586,20 +444,16 @@ export class SceneGraph {
     // Only clear absPosCache when layout-affecting properties change.
     // Fills, strokes, effects, plugin data changes do NOT affect absolute position.
     const affectsLayout = Object.keys(changes).some((k) => LAYOUT_AFFECTING_KEYS.has(k))
-    if (affectsLayout) this.absPosCache.clear()
-    this.updateInstanceIndex(node, changes)
+    if (affectsLayout) this.tree.clearAbsPosCache()
+    updateInstanceIndex(this.instanceIndex, node, changes)
     if (node.type === 'TEXT') invalidateTextCaches(node, changes)
-    if (this.scopeDepths.sourceMetadata === 0 && !this.isApplyingLayout) {
+    if (!this.scopes.isPreservingSourceMetadata && !this.isApplyingLayout) {
       markSourceFieldsEdited(node, Object.keys(changes))
     }
     if (changes.vectorNetwork) {
       changes = { ...changes, vectorNetwork: normalizeVectorNetwork(changes.vectorNetwork) }
     }
-    this.layoutWrites?.record(
-      node,
-      changes,
-      this.scopeDepths.sourceMetadata === 0 && !this.isApplyingDerivedLayout
-    )
+    this.scopes.recordLayout(node, changes)
     Object.assign(node, changes)
     if (changes.fills) removeStaleBindings(node, 'fills', changes)
     if (changes.strokes) removeStaleBindings(node, 'strokes', changes)
@@ -609,51 +463,16 @@ export class SceneGraph {
   }
 
   private synchronizeIconPaints(node: SceneNode, changes?: Partial<SceneNode>): void {
-    if (this.scopeDepths.iconPaints > 0) return
-    this.withScope('iconPaints', () => synchronizeIconPaints(this, node, changes))
+    this.scopes.withIconPaints(() => synchronizeIconPaints(this, node, changes))
   }
 
   /** Publishes an update now, or leaves it to the running layout, which publishes once it ends. */
   private publishNodeUpdate(id: string, changes: Partial<SceneNode>): void {
-    if (!this.layoutWrites) this.emitter.emit('node:updated', id, changes)
+    if (!this.scopes.isBufferingLayoutUpdates) this.emitter.emit('node:updated', id, changes)
   }
 
   reparentNode(nodeId: string, newParentId: string): void {
-    const node = this.nodes.get(nodeId)
-    if (!node || nodeId === this.rootId) return
-    if (this.isDescendant(newParentId, nodeId)) return
-
-    const oldParent = node.parentId ? this.nodes.get(node.parentId) : undefined
-    const newParent = this.nodes.get(newParentId)
-    if (!newParent) return
-    if (node.parentId === newParentId) return
-
-    const oldParentId = node.parentId
-    this.willChangeNode(node)
-    this.willChangeNode(oldParent)
-    this.willChangeNode(newParent)
-    this.absPosCache.clear()
-
-    const oldParentWorld = getParentWorldMatrix(oldParent, this)
-    const newParentWorld = getParentWorldMatrix(newParent, this)
-
-    if (oldParent) {
-      oldParent.childIds = oldParent.childIds.filter((cid) => cid !== nodeId)
-    }
-
-    node.parentId = newParentId
-    newParent.childIds.push(nodeId)
-
-    if (isTranslationOnly(oldParentWorld) && isTranslationOnly(newParentWorld)) {
-      node.x += oldParentWorld[2] - newParentWorld[2]
-      node.y += oldParentWorld[5] - newParentWorld[5]
-    } else {
-      const world = Matrix.multiply(oldParentWorld, getNodeLocalMatrix(node))
-      const local = localTransformFromWorld(node, world, newParentWorld)
-      if (local) Object.assign(node, local)
-    }
-
-    this.emitter.emit('node:reparented', nodeId, oldParentId, newParentId)
+    return this.tree.reparentNode(nodeId, newParentId)
   }
 
   /**
@@ -662,46 +481,11 @@ export class SceneGraph {
    * its descendants is ignored.
    */
   insertChildAt(childId: string, parentId: string, index: number): void {
-    const node = this.nodes.get(childId)
-    const newParent = this.nodes.get(parentId)
-    if (!node || !newParent || this.isDescendant(parentId, childId)) return
-    const previousParentId = node.parentId
-    const oldParent = previousParentId ? this.nodes.get(previousParentId) : undefined
-    this.willChangeNode(node)
-    this.willChangeNode(oldParent)
-    this.willChangeNode(newParent)
-    if (oldParent) {
-      oldParent.childIds = oldParent.childIds.filter((id) => id !== childId)
-    }
-    newParent.childIds = newParent.childIds.filter((id) => id !== childId)
-    const at = Math.min(index, newParent.childIds.length)
-    newParent.childIds.splice(at, 0, childId)
-    node.parentId = parentId
-    this.absPosCache.clear()
-    this.emitter.emit('node:reordered', childId, parentId, at, previousParentId)
+    return this.tree.insertChildAt(childId, parentId, index)
   }
 
   deleteNode(id: string): void {
-    const node = this.nodes.get(id)
-    if (!node || id === this.rootId) return
-    this.willChangeNode(node)
-
-    if (node.parentId) {
-      const parent = this.nodes.get(node.parentId)
-      this.willChangeNode(parent)
-      if (parent) {
-        parent.childIds = parent.childIds.filter((cid) => cid !== id)
-      }
-    }
-
-    for (const childId of Array.from(node.childIds)) {
-      this.deleteNode(childId)
-    }
-
-    if (node.type === 'INSTANCE' && node.componentId) this.unindexInstance(node.componentId, id)
-    this.connectorIds.delete(id)
-    this.nodes.delete(id)
-    this.emitter.emit('node:deleted', id, node.parentId)
+    return this.tree.deleteNode(id)
   }
 
   hitTest(px: number, py: number, scopeId?: string): SceneNode | null {
@@ -751,37 +535,7 @@ export class SceneGraph {
     overrides: Partial<SceneNode> = {},
     sourceGraph: SceneGraph = this
   ): SceneNode | null {
-    if (sourceGraph === this && this.isDescendant(parentId, sourceId)) return null
-    const copies = new Map<string, SceneNode>()
-    const copy = (
-      id: string,
-      parent: string,
-      changes: Partial<SceneNode> = {}
-    ): SceneNode | null => {
-      const src = sourceGraph.nodes.get(id)
-      if (!src) return null
-      const props = cloneNodeProps(src, null)
-      // A clone is local and has not been reviewed.
-      if (props.source) props.source = { ...props.source, id: null, orderKey: null }
-      props.status = null
-      const clone = this.createNode(src.type, parent, { ...props, ...changes })
-      if (src.status) markSourceFieldsEdited(clone, ['status'])
-      copies.set(id, clone)
-      for (const childId of src.childIds) copy(childId, clone.id)
-      return clone
-    }
-    const root = copy(sourceId, parentId, overrides)
-    for (const node of copies.values()) {
-      if (!node.instanceOverrides.self.size && !node.instanceOverrides.descendants.size) continue
-      this.updateNode(node.id, {
-        instanceOverrides: remapInstanceOverrideState(node.instanceOverrides, {
-          node: (id) => copies.get(id)?.id ?? id,
-          component: (id) => id,
-          variable: (id) => id
-        })
-      })
-    }
-    return root
+    return this.tree.cloneTree(sourceId, parentId, overrides, sourceGraph)
   }
 
   createInstance(
@@ -833,16 +587,6 @@ export class SceneGraph {
   }
 
   flattenTree(parentId?: string, depth = 0): Array<{ node: SceneNode; depth: number }> {
-    const id = parentId ?? this.rootId
-    const parent = this.nodes.get(id)
-    if (!parent) return []
-    const result: Array<{ node: SceneNode; depth: number }> = []
-    for (const childId of parent.childIds) {
-      const child = this.nodes.get(childId)
-      if (!child) continue
-      result.push({ node: child, depth })
-      if (child.childIds.length > 0) result.push(...this.flattenTree(childId, depth + 1))
-    }
-    return result
+    return this.tree.flattenTree(parentId, depth)
   }
 }
