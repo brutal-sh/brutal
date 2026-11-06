@@ -25,6 +25,19 @@ for (const theme of THEMES) {
 }
 
 for (const theme of THEMES) {
+  for (const story of ['default', 'error-with-action', 'download-progress']) {
+    test(`toast ${story} keeps its accessibility checks in ${theme}`, async ({
+      page
+    }, testInfo) => {
+      await page.goto(
+        `/iframe.html?id=design-system-feedback-toast--${story}&viewMode=story&globals=theme:${theme}`
+      )
+      expect(await storyOutcome(page)).toBe('ok')
+      await page.locator('[data-slot="toast"]').screenshot({
+        path: testInfo.outputPath(`${story}-${theme}.png`)
+      })
+    })
+  }
   for (const look of ['command', 'plain']) {
     test(`copy field ${look} keeps its accessibility checks in ${theme}`, async ({
       page
@@ -58,6 +71,43 @@ for (const labels of AI_SETUP_LABELS) {
       }
     })
     for (const theme of THEMES) {
+      test(`translated recovery toasts keep their message and controls visible in ${theme}`, async ({
+        page
+      }, testInfo) => {
+        for (const [story, message] of [
+          ['recovery-mcp', labels.chatMCPOutdated],
+          ['recovery-mcp-narrow', labels.chatMCPOutdated],
+          ['recovery-harness', labels.chatPiCompanionOutdated],
+          ['recovery-harness-narrow', labels.chatPiCompanionOutdated]
+        ]) {
+          await page.goto(
+            `/iframe.html?id=design-system-feedback-toast--${story}&viewMode=story&globals=theme:${theme}`
+          )
+          expect(await storyOutcome(page)).toBe('ok')
+          const toast = page.locator('[data-slot="toast"]')
+          await expect(toast).toContainText(message)
+          const action = toast.getByRole('button', { name: labels.aiSetupRun, exact: true })
+          await expect(action).toBeVisible()
+          await expect(toast.locator('[data-slot="toast-copy"]')).toBeVisible()
+          await expect(toast.locator('[data-slot="toast-close"]')).toBeVisible()
+          expect(
+            await toast.evaluate((element) => element.scrollWidth <= element.clientWidth)
+          ).toBe(true)
+          expect(await toast.evaluate((element) => element.getBoundingClientRect().width)).toBe(
+            story.endsWith('narrow') ? 320 : 384
+          )
+          await toast.screenshot({
+            path: testInfo.outputPath(`${labels.locale}-${theme}-${story}.png`)
+          })
+          await action.focus()
+          await page.keyboard.press('Tab')
+          await expect(toast.locator('[data-slot="toast-copy"]')).toBeFocused()
+          await page.keyboard.press('Tab')
+          await expect(toast.locator('[data-slot="toast-close"]')).toBeFocused()
+          await page.keyboard.press('Enter')
+          await expect(toast).toHaveCount(0)
+        }
+      })
       test(`translated setup failure states name Open Pen in ${theme}`, async ({
         page
       }, testInfo) => {

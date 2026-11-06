@@ -284,7 +284,7 @@ This table records the verified planning snapshot. Read the live board for later
 | BRAND-ASSETS | Unify app, favicon and PWA marks from the Open Pen master | PRD / native ledger | None identified | Executed | [Card](https://trello.com/c/UgP3wg8H/80-brand-assets-unify-app-favicon-and-pwa-marks-from-the-open-pen-master) |
 | BRAND-COPY | Replace inherited product labels in every app locale | PRD / native ledger | BRAND-COPY-SOURCE, BRAND-COPY-AI, BRAND-COPY-EDITOR, BRAND-COPY-RECOVERY, BRAND-COPY-PORTAL, BRAND-COPY-SUPPORT | Verify | [Card](https://trello.com/c/zU0zBEql/81-brand-copy-replace-inherited-product-labels-in-every-app-locale) |
 | BRAND-COPY-SOURCE | Replace canonical app labels across all nine locales | PRD-02 / BRAND-COPY | None identified | Executed | [Card](https://trello.com/c/SLVNhSXy/354-brand-copy-source-replace-canonical-app-labels-across-all-nine-locales) |
-| BRAND-COPY-AI | Verify translated AI setup and agent failure labels | PRD-02 / BRAND-COPY | BRAND-COPY-SOURCE, A11Y-COPY, UI-TOAST-REFLOW | Verify | [Card](https://trello.com/c/S0EQHPiD/355-brand-copy-ai-verify-translated-ai-setup-and-agent-failure-labels) |
+| BRAND-COPY-AI | Verify translated AI setup and agent failure labels | PRD-02 / BRAND-COPY | BRAND-COPY-SOURCE, A11Y-COPY, UI-TOAST-REFLOW | Building | [Card](https://trello.com/c/S0EQHPiD/355-brand-copy-ai-verify-translated-ai-setup-and-agent-failure-labels) |
 | BRAND-COPY-EDITOR | Verify translated editor menus and notification labels | PRD-02 / BRAND-COPY | BRAND-COPY-SOURCE | Backlog | [Card](https://trello.com/c/WB4Y2rWd/356-brand-copy-editor-verify-translated-editor-menus-and-notification-labels) |
 | BRAND-COPY-RECOVERY | Verify translated recovery and update labels | PRD-02 / BRAND-COPY | BRAND-COPY-SOURCE | Backlog | [Card](https://trello.com/c/jAZkNGSW/357-brand-copy-recovery-verify-translated-recovery-and-update-labels) |
 | BRAND-COPY-PORTAL | Verify translated desktop-client names in cloud pages | PRD-02 / BRAND-COPY | BRAND-COPY-SOURCE | Backlog | [Card](https://trello.com/c/G83Ps06r/358-brand-copy-portal-verify-translated-desktop-client-names-in-cloud-pages) |
@@ -358,7 +358,7 @@ This table records the verified planning snapshot. Read the live board for later
 | BETA-01 | Qualify the private macOS core design journey | ENV-01, FIRST-01, FIRST-02, FIRST-03, FILE-07, FILE-08 | STAB-GPU, BRAND-VERIFY, FIRST-03, FILE-07, FILE-08 | Backlog | [Card](https://trello.com/c/sYpWJdvu/150-beta-01-qualify-the-private-macos-core-design-journey) |
 | PARITY-ALL | Audit every applicable requirement and surface for full parity | PRD / native ledger | Every other required execution task (343) | Backlog | [Card](https://trello.com/c/cr0YPLzZ/151-parity-all-audit-every-applicable-requirement-and-surface-for-full-parity) |
 | A11Y-COPY | Keep command-copy buttons readable in both themes | PRD-05 / PRD-09 | BRAND-COPY-SOURCE | Executed | [Card](https://trello.com/c/1e6Ou0e7/360-a11y-copy-keep-command-copy-buttons-readable-in-both-themes) |
-| UI-TOAST-REFLOW | Keep translated toast messages readable beside long actions | PRD-05 / PRD-09 | BRAND-COPY-SOURCE | Building | [Card](https://trello.com/c/DjJkNW8V/361-ui-toast-reflow-keep-translated-toast-messages-readable-beside-long-actions) |
+| UI-TOAST-REFLOW | Keep translated toast messages readable beside long actions | PRD-05 / PRD-09 | BRAND-COPY-SOURCE | Executed | [Card](https://trello.com/c/DjJkNW8V/361-ui-toast-reflow-keep-translated-toast-messages-readable-beside-long-actions) |
 
 ## Native surface coverage
 

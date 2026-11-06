@@ -2,6 +2,8 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { ToastProvider, ToastViewport } from 'reka-ui'
 import { computed, ref } from 'vue'
 
+import { useI18n } from '@open-pencil/vue/i18n'
+
 import AppButton from '@/components/ui/button/AppButton.vue'
 
 import AppToast from './AppToast.vue'
@@ -83,6 +85,29 @@ export const ErrorWithAction: Story = {
     copiedLabel: 'Copied',
     closeLabel: 'Close'
   }
+}
+
+function translatedRecovery(
+  messageKey: 'chatMCPOutdated' | 'chatPiCompanionOutdated',
+  width: 'w-80' | 'w-96'
+): Story {
+  return {
+    args: { variant: 'error', copyable: true, ui: { root: width } },
+    render: (args) => ({
+      components: { AppToast },
+      setup: () => ({ args, messageKey, ...useI18n() }),
+      template: `<AppToast v-bind="args" :message="ai[messageKey]" :action-label="ai.aiSetupRun"
+        :copy-label="common.copyMessage" :copied-label="common.copiedExclamation"
+        :close-label="common.close" />`
+    })
+  }
+}
+
+export const RecoveryMCP: Story = { ...translatedRecovery('chatMCPOutdated', 'w-96') }
+export const RecoveryMCPNarrow: Story = { ...translatedRecovery('chatMCPOutdated', 'w-80') }
+export const RecoveryHarness: Story = { ...translatedRecovery('chatPiCompanionOutdated', 'w-96') }
+export const RecoveryHarnessNarrow: Story = {
+  ...translatedRecovery('chatPiCompanionOutdated', 'w-80')
 }
 
 export const RepeatedMessage: Story = {

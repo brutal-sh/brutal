@@ -8,6 +8,8 @@ export type NativeLayerFixture = {
 
 // Home can have no document store after recovery is closed; its New design button creates one.
 export async function ensureNativeEditorReady(): Promise<void> {
+  // Keep the chosen editor handle instead of recovering focus by its changing title.
+  await browser.switchToWindow(await browser.getWindowHandle())
   await invokeNative('plugin:window|set_focus', { label: 'main' })
   await browser.waitUntil(() => browser.execute(() => !document.hidden), {
     timeout: 30_000,

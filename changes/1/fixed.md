@@ -25,3 +25,4 @@
 - Reload a browser page while its first response is pending without leaving navigation stuck, and discard frame errors from dismissed or replaced editor menus.
 
 - Keep command-copy buttons readable against their field background in both themes.
+- Keep translated toast messages readable when recovery actions need another row.

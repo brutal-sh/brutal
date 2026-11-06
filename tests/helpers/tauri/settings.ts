@@ -31,7 +31,7 @@ export async function closeOwnedDialogs(): Promise<void> {
   }
   const setup = await $('[data-test-id="ai-setup-dialog"]')
   if (await setup.isExisting()) {
-    await browser.keys('Escape')
+    await (await setup.$('[data-slot="dialog-close"]')).click()
     await setup.waitForExist({ reverse: true })
   }
   const settings = await $('[data-test-id="app-settings-dialog"]')

@@ -176,3 +176,37 @@ of the toast width and force a narrow message column. Captures wait for the toas
 finish; full Polish captures confirm the issue is in the actual layout, not only the review crop.
 [UI-TOAST-REFLOW](https://trello.com/c/DjJkNW8V) owns the shared layout fix. AI copy moves to Verify
 without being accepted. Full branding, successful callback presentation and Pen parity remain open.
+
+## Executed toast reflow
+
+The shared toast keeps a readable message measure and lets a long recovery action move to
+another row. Action, copy and close controls stay together in a conditional group; short
+controls can remain inline. Existing button order, handlers, labels, tone colors, root lifetime
+policy and progress content remain. This addresses the observed translated-layout defect.
+
+Executed: 54 component checks pass. They include both warning messages in all nine languages,
+both themes and measured 320/384-pixel fixtures, plus default/error/progress examples. Automated
+checks cover translated labels, no outer overflow, visible controls, Tab to Copy/Close, Enter
+dismissal and render/accessibility completion. All 72 translated captures and six baseline
+captures are manually reviewed. Readability acceptance is visual; these checks do not establish
+an automated readable-column guard or clipboard delivery.
+
+A rebuilt isolated native app passes strict ad-hoc signing and all 18 version-warning journeys
+again. All 18 stable native captures are reviewed against the preserved originals; the warning
+keeps its draft, adds no user row and opens guided setup. The existing setup/callback checks
+then pass all 18 cases as well. The fixture selects its editor handle explicitly, preventing
+the driver's title-based recovery loop from switching during input. Cleanup uses the visible
+wizard Close control; this does not qualify Escape behavior or arbitrary multi-window handling.
+No real provider browser, sign-in or inference is exercised. The main installed app is unchanged.
+
+Source/Vue/shared-test types, owned lint/format, architecture, documentation/changelog and
+frontend compilation pass. The worktree's full build also passes after a diagnostic stack-trace
+probe receives a descriptive error label. That one-line probe edit stays with the unpublished
+GPU work and changes no GPU behavior; its wider runtime failure remains open. Dedicated native
+typing retains 67 existing errors outside the owned files. The native bundle includes the
+retained worktree changes and is not a clean release qualification.
+
+Earlier build, native fixture/model-save and cleanup failures remain recorded. The first
+layout pass passed component checks but orphaned controls; manual review rejects it before
+the final grouping. UI-TOAST-REFLOW is executed only for this bounded criterion. AI copy,
+full branding/accessibility, physical input/clipboard and exact Pen parity remain open.

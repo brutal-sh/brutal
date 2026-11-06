@@ -36,6 +36,7 @@ const styles = computed(() => {
     message: theme.message({ class: ui?.message }),
     count: theme.count({ class: ui?.count }),
     progress: theme.progress({ class: ui?.progress }),
+    controls: theme.controls({ class: ui?.controls }),
     action: theme.action({ class: ui?.action }),
     control: theme.control({ class: ui?.control })
   }
@@ -76,25 +77,27 @@ const styles = computed(() => {
       />
       <slot />
     </div>
-    <button v-if="actionLabel" type="button" :class="styles.action" @click="emit('action')">
-      {{ actionLabel }}
-    </button>
-    <template v-if="copyable">
-      <Tip :label="copied ? copiedLabel : copyLabel">
-        <button
-          type="button"
-          data-slot="toast-copy"
-          :class="styles.control"
-          :aria-label="copied ? copiedLabel : copyLabel"
-          @click="copy(message)"
-        >
-          <icon-lucide-check v-if="copied" class="size-3" aria-hidden="true" />
-          <icon-lucide-copy v-else class="size-3" aria-hidden="true" />
-        </button>
-      </Tip>
-      <ToastClose data-slot="toast-close" :class="styles.control" :aria-label="closeLabel">
-        <icon-lucide-x class="size-3" aria-hidden="true" />
-      </ToastClose>
-    </template>
+    <div v-if="actionLabel || copyable" :class="styles.controls">
+      <button v-if="actionLabel" type="button" :class="styles.action" @click="emit('action')">
+        {{ actionLabel }}
+      </button>
+      <template v-if="copyable">
+        <Tip :label="copied ? copiedLabel : copyLabel">
+          <button
+            type="button"
+            data-slot="toast-copy"
+            :class="styles.control"
+            :aria-label="copied ? copiedLabel : copyLabel"
+            @click="copy(message)"
+          >
+            <icon-lucide-check v-if="copied" class="size-3" aria-hidden="true" />
+            <icon-lucide-copy v-else class="size-3" aria-hidden="true" />
+          </button>
+        </Tip>
+        <ToastClose data-slot="toast-close" :class="styles.control" :aria-label="closeLabel">
+          <icon-lucide-x class="size-3" aria-hidden="true" />
+        </ToastClose>
+      </template>
+    </div>
   </ToastRoot>
 </template>
