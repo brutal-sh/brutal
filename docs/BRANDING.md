@@ -89,7 +89,8 @@ request occurs even after changing sharing preferences. Separate existing first-
 diagnostics and General settings journeys pass. This is bounded browser copy acceptance,
 not native input or full design parity.
 
-The parent [BRAND-COPY](https://trello.com/c/zU0zBEql) stays open. Six smaller cards separate
+The canonical-source child is executed at `f021d071f`; the parent
+[BRAND-COPY](https://trello.com/c/zU0zBEql) stays open. Six smaller cards separate
 canonical sources from remaining AI, editor notifications/menus, recovery/update, cloud-client
 pages and support journeys. Unexercised states do not inherit acceptance from source checks.
 Native delivery, help destinations and final shipped-brand qualification remain separate.

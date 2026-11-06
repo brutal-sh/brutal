@@ -32,12 +32,13 @@ This proves tracking coverage, not accepted product parity or exhaustive discove
 
 Planning publication, the reproducible runtime audit, own-brand assets, owned diagnostics/log
 names and the MCP startup modularization have bounded acceptance evidence linked.
-The single Building task is BRAND-COPY-SOURCE: canonical localized and hard-coded product labels.
+Canonical localized product labels have bounded source/CLI/nine-language browser acceptance.
+The single Building task is BRAND-COPY-AI: translated AI setup and agent failure journeys.
 BRAND-COPY is an unaccepted gate in Verify; AI, editor, recovery/update, cloud-client and support
 copy journeys have their own child cards.
 Documentation refresh and graphics lifecycle stability are Ready. The interrupted zero-size
 icon work retains its failed wider-run receipts and dependencies.
-The delivery snapshot is 333 Backlog, 2 Ready, 1 Building, 1 Verify and 5 Executed, plus 17 milestones.
+The delivery snapshot is 332 Backlog, 2 Ready, 1 Building, 1 Verify and 6 Executed, plus 17 milestones.
 No branding milestone or product-parity feature group is fully accepted.
 
 ## Control loop
