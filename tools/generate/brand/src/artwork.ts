@@ -1,55 +1,36 @@
-import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 
 import { stringToSvg as stringToSVG } from '@realfavicongenerator/generate-favicon'
 import type { ImageAdapter } from '@realfavicongenerator/generate-favicon'
 import { getNodeImageAdapter } from '@realfavicongenerator/image-adapter-node'
+import { fromUint8Array } from 'js-base64'
+import sharp from 'sharp'
 
 import { brand } from './config.ts'
 
 export async function loadArtwork(root: string) {
   const adapter = await getNodeImageAdapter()
-  const main = await readFile(join(root, 'assets/brand/mark.svg'), 'utf8')
-  const micro = await readFile(join(root, 'assets/brand/mark-micro.svg'), 'utf8')
-  return { adapter, main, micro }
+  const source = sharp(join(root, 'assets/brand/open-pen-app.png'))
+  async function image(size: number) {
+    const png = await source.clone().resize(size, size).png().toBuffer()
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}"><image width="${size}" height="${size}" href="data:image/png;base64,${fromUint8Array(png)}"/></svg>`
+  }
+  return { adapter, main: await image(256), micro: await image(16), appIcon: await image(1024) }
 }
 
-export function recolor(
-  source: string,
-  adapter: ImageAdapter,
-  mode: 'dark' | 'mono' | 'mono-dark'
-) {
+export function monochrome(source: string, adapter: ImageAdapter) {
   const svg = stringToSVG(source, adapter)
-  if (mode === 'dark') {
-    for (const [part, color] of Object.entries(brand.darkPalette)) {
-      for (const path of svg.find(`[data-part="${part}"]`)) path.fill(color)
-    }
-    for (const grid of svg.find('[data-detail="grid"]')) grid.opacity(brand.darkGridOpacity)
-  } else {
-    for (const detail of svg.find('[data-detail]')) detail.remove()
-    for (const path of svg.find('[data-part]')) {
-      path.fill(mode === 'mono' ? brand.darkBackground : brand.background)
-    }
-  }
+  const filter = svg.defs().element('filter').attr('id', 'open-pen-monochrome')
+  filter.element('feColorMatrix').attr({ type: 'saturate', values: '0' })
+  for (const image of svg.find('image')) image.attr('filter', 'url(#open-pen-monochrome)')
   return svg.svg()
 }
 
-/** Shared rounded app icon; touch and maskable variants leave cropping to the platform. */
-export function appArtwork(
-  source: string,
-  adapter: ImageAdapter,
-  kind: 'web' | 'maskable' | 'tile' | 'desktop'
-) {
+/** Touch icons are opaque; the maskable mark stays inside the platform's safe circle. */
+export function appArtwork(source: string, adapter: ImageAdapter, maskable = false) {
   const svg = adapter.createSvg().size(1024, 1024).viewbox(0, 0, 1024, 1024)
-  const rounded = kind === 'tile' || kind === 'desktop'
-  const inset = kind === 'desktop' ? brand.tileInset : 0
-  const background = svg
-    .rect(1024 - inset * 2, 1024 - inset * 2)
-    .move(inset, inset)
-    .fill(brand.background)
-  if (rounded) background.radius(brand.tileRadius)
-  const regularScale = kind === 'tile' ? brand.tileScale : brand.appScale
-  const scale = kind === 'maskable' ? brand.maskableScale : regularScale
+  svg.rect(1024, 1024).fill(brand.background)
+  const scale = maskable ? brand.maskableScale : 1
   const mark = stringToSVG(source, adapter).size(1024 * scale, 1024 * scale)
   mark.move((1024 * (1 - scale)) / 2, (1024 * (1 - scale)) / 2)
   svg.add(mark)

@@ -33,13 +33,13 @@ for (const deviceScaleFactor of [1, 2]) {
       }
     })
 
-    test('the 16px favicon keeps its edge-to-edge ivory tile in both browser themes', async ({
+    test('the 16px favicon shows the Open Pen icon in both browser themes', async ({
       page,
       baseURL
     }) => {
       const src = new URL('/brand/favicon.svg', baseURL).href
-      await page.setContent(`<img src="${src}" alt="OpenPencil favicon" width="16" height="16">`)
-      const icon = page.getByRole('img', { name: 'OpenPencil favicon' })
+      await page.setContent(`<img src="${src}" alt="Open Pen favicon" width="16" height="16">`)
+      const icon = page.getByRole('img', { name: 'Open Pen favicon' })
       await icon.evaluate((image: HTMLImageElement) => image.decode())
       for (const colorScheme of ['light', 'dark'] as const) {
         await page.emulateMedia({ colorScheme })
@@ -65,7 +65,7 @@ test('the main SVG retains its approved appearance', async ({ page }) => {
   await expect(page.locator('svg')).toHaveScreenshot('brand-mark.png')
 })
 
-test('the larger dark SVG retains its palette and subtle grid', async ({ page }) => {
+test('the larger dark SVG retains the Open Pen icon', async ({ page }) => {
   await page.goto('/brand/mark-dark.svg')
   const mark = page.locator('svg')
   await mark.evaluate((svg) => {
@@ -74,7 +74,7 @@ test('the larger dark SVG retains its palette and subtle grid', async ({ page })
   await expect(mark).toHaveScreenshot('brand-mark-dark.png')
 })
 
-test('the ivory app tile works on light and dark surfaces', async ({ page }) => {
+test('the Open Pen app tile works on light and dark surfaces', async ({ page }) => {
   await page.goto('/brand/app-icon.svg')
   const icon = page.locator('svg').first()
   for (const appearance of ['light', 'dark'] as const) {

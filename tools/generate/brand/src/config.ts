@@ -7,23 +7,8 @@ export const targets = ['web', 'docs', 'desktop'] as const
 export type BrandTarget = (typeof targets)[number]
 
 export const brand = {
-  background: '#F5F5EF',
-  darkBackground: '#202B2D',
-  darkPalette: {
-    body: '#55BAAC',
-    upper: '#258E83',
-    middle: '#86D5C6',
-    lower: '#45AFA0',
-    point: '#29978A',
-    handle: '#438CFF',
-    'handle-surface': '#F4FBFA'
-  },
-  darkGridOpacity: 0.6,
-  tileInset: 64,
-  tileRadius: 200,
-  appScale: 0.82,
-  tileScale: 0.88,
-  maskableScale: 0.66
+  background: '#4F00E8',
+  maskableScale: 0.55
 } as const
 
 export const webFiles = [

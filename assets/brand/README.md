@@ -1,14 +1,13 @@
 # Open Pen brand sources
 
-`open-pen-app.png` is the original Open Pen desktop icon master: an ivory pen nib on a violet tile, generated for this project. The desktop generator converts it into the native PNG, ICO and ICNS sizes. The web generator also publishes it for the loading screen and other in-app app-icon placements. Keep this source under version control; build output in `desktop/icons/` is regenerated. The SVG sources below remain the inherited web artwork.
+`open-pen-app.png` is the original Open Pen artwork master: an ivory pen nib on a violet tile, generated for this project. All shipped app, browser, PWA and documentation marks derive from this source. Edit the master, then regenerate; generated output is ignored by Git.
 
-- `mark.svg` is the teal pencil-P master: a long pointed stem, contrasting teal blocks, a faint clipped pixel grid, and white editing handles with blue borders (`#005CFF`). The square sits at the top-left; the circle sits on the outer curve.
-- `mark-micro.svg` renders at 16px and preserves the main P's geometry and proportions. Its square and circular handles are enlarged for small sizes, with the circle slightly larger than the square. It has no grid.
-- Both use the same tight `28 28 228 228` viewBox. Keep the P geometry aligned between masters; optical adjustments belong to the handles, not the letter's proportions.
-- Both use real transparent counters and no white outline. Preserve the `data-part` attributes used for derived dark and monochrome artwork.
-- Dark artwork has its own brighter teal palette, lighter blue borders, soft-white handle centers, and a subtler grid. Monochrome artwork omits the grid.
-
-Edit these SVGs, not generated files. Platform backgrounds, padding, and dark colors live in `tools/generate/brand/src/config.ts`. The approved main colors are defined by the SVG artwork. The official app-icon variant puts the light-palette mark on an ivory (`#F5F5EF`) rounded tile that fills the image, with transparency only at the rounded corners. The native desktop icon uses the separate `open-pen-app.png` master described above. Any-purpose PWA icons and larger in-app branding still share the inherited ivory composition. The tile stays ivory in both themes; the inherited SVG remains available for historical web assets. `BrandMark` with `variant="app-icon"` uses the new violet Open Pen icon. The editor header uses a 24px tile. Favicons use the same tile with the optical micro master inside, in both browser themes. Generated `brand/app-icon.svg` and `brand/app-icon-1024.png` are suitable for profile images. Apple Touch keeps an opaque square for platform rounding; maskable artwork stays opaque and inside the central 80%-diameter safe circle.
+- Native PNG, ICO and ICNS assets retain the existing Tauri generation path.
+- Web main and optical micro placements embed the master at 256px and 16px respectively. Both themes retain the same recognizable violet/ivory palette.
+- Monochrome placements use neutral shades of the same tile and nib. They do not reuse the inherited pencil-P artwork.
+- App/profile and any-purpose PWA icons preserve the master's transparency. Apple Touch is opaque so the platform controls rounding; maskable artwork is opaque with the mark inside the central 80%-diameter safe circle.
+- `BrandMark` with `variant="app-icon"` uses the original Open Pen PNG. The editor header keeps its 24px tile.
+- Historical `mark.svg` and `mark-micro.svg` sources retain their provenance and are not inputs to shipped artwork. Required upstream licenses and credit remain intact.
 
 ## Generation
 
