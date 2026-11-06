@@ -12,7 +12,7 @@ const CORS_HEADERS = {
 async function openGuidedSetup(page: Page) {
   await page.goto('/?test')
   await new CanvasHelper(page).waitForInit()
-  await page.getByTestId('app-settings-trigger').click()
+  await page.keyboard.press(process.platform === 'darwin' ? 'Meta+,' : 'Control+,')
   await page.getByTestId('settings-section-ai').click()
   await page.getByTestId('settings-run-ai-setup').click()
   const setup = page.getByTestId('ai-setup-dialog')

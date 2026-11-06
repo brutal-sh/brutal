@@ -27,7 +27,15 @@ interface Args {
 
 function detected(id: ACPAgentID, status: DetectedAgent['status']): DetectedAgent {
   const definition = ACP_AGENTS.find((agent) => agent.id === id) ?? ACP_AGENTS[0]
-  return { definition, cliPath: null, adapterPath: null, status }
+  return {
+    definition,
+    cliPath:
+      status === 'needs-adapter'
+        ? `/usr/local/bin/${definition.cliCommand ?? definition.command}`
+        : null,
+    adapterPath: null,
+    status
+  }
 }
 
 function agentSetup(overrides: Partial<AgentSetupState>): AgentSetupState {
@@ -129,7 +137,7 @@ export const OpenRouterWaiting: Story = {
 }
 export const OpenRouterVerifying: Story = { args: { signInStatus: 'verifying' } }
 export const OpenRouterSignedIn: Story = {
-  args: { account: { label: 'OpenPencil', freeTier: false } },
+  args: { account: { label: 'Open Pen', freeTier: false } },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     await expect(canvas.getByRole('status')).toHaveTextContent('Signed in to OpenRouter')
@@ -138,7 +146,7 @@ export const OpenRouterSignedIn: Story = {
   }
 }
 export const OpenRouterSignedInWithoutCredits: Story = {
-  args: { account: { label: 'OpenPencil', freeTier: true } }
+  args: { account: { label: 'Open Pen', freeTier: true } }
 }
 export const OpenRouterPopupBlocked: Story = { args: { signInStatus: 'blocked' } }
 export const OpenRouterFailed: Story = { args: { signInStatus: 'failed' } }
@@ -222,7 +230,7 @@ export const CodingAgentSignedIn: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     await expect(canvas.getByText(/Claude Max · ada@example\.com/)).toBeVisible()
-    await expect(canvas.getByText(/OpenPencil tools · connected/)).toBeVisible()
+    await expect(canvas.getByText(/Open Pen tools · connected/)).toBeVisible()
     await expect(canvas.queryByRole('button', { name: 'Sign in' })).toBeNull()
   }
 }
@@ -246,8 +254,8 @@ export const CodingAgentToolsUnreachable: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    await expect(canvas.getByText(/OpenPencil tools · not reachable/)).toBeVisible()
-    await expect(canvas.getByText(/Codex can’t reach OpenPencil’s tools/)).toBeVisible()
+    await expect(canvas.getByText(/Open Pen tools · not reachable/)).toBeVisible()
+    await expect(canvas.getByText(/Codex can’t reach Open Pen’s tools/)).toBeVisible()
     await expect(canvas.getByText(/already defines an MCP server/)).toBeVisible()
   }
 }
@@ -355,8 +363,66 @@ export const PiOutdatedMCPFromBun: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    await expect(canvas.getByText(/OpenPencil MCP server · update needed/)).toBeVisible()
+    await expect(canvas.getByText(/Open Pen MCP server · update needed/)).toBeVisible()
     await expect(canvas.getByRole('button', { name: 'Update MCP server' })).toBeVisible()
     await expect(canvas.getByText('bun add -g @open-pencil/mcp@0.15.1')).toBeVisible()
   }
+}
+
+export const CopyStates: Story = {
+  render: () => ({
+    components: { AISetupConnection },
+    setup: () => ({
+      cases: [
+        { id: 'blocked', args: OpenRouterPopupBlocked.args },
+        { id: 'adapter', args: CodingAgentNeedsAdapter.args },
+        { id: 'manual-mcp', args: CodingAgentNeedsNpm.args },
+        {
+          id: 'tools',
+          args: {
+            providerID: 'acp:codex',
+            agentSetup: agentSetup({
+              detected: detected('codex', 'available'),
+              bridge: true,
+              account: account({
+                status: {
+                  kind: 'account',
+                  label: 'ChatGPT Pro',
+                  account: { email: 'ada@example.com' }
+                },
+                adapter: { name: '@agentclientprotocol/codex-acp', version: '2.2.2' },
+                tools: { connected: false, reason: null }
+              })
+            })
+          }
+        },
+        { id: 'other-adapter', args: CodingAgentOtherAdapter.args },
+        { id: 'pi', args: PiNeedsCompanion.args },
+        {
+          id: 'start-failed',
+          args: {
+            providerID: 'acp:codex',
+            agentSetup: agentSetup({
+              detected: detected('codex', 'available'),
+              bridge: true,
+              error: 'canvas-start'
+            })
+          }
+        }
+      ].map((entry) => ({ ...entry, args: { ...meta.args, ...entry.args } })),
+      state: {
+        apiKey: '',
+        customBaseURL: '',
+        customModelID: '',
+        test: 'idle',
+        reason: null,
+        account: null
+      }
+    }),
+    template: `<div class="grid max-w-[30rem] gap-8">
+      <section v-for="entry in cases" :key="entry.id" :data-copy-state="entry.id">
+        <AISetupConnection v-bind="entry.args" :state="state" />
+      </section>
+    </div>`
+  })
 }

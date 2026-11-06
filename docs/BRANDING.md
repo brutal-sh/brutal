@@ -97,3 +97,40 @@ Native delivery, help destinations and final shipped-brand qualification remain 
 Translations have technical and visual review, not independent native-speaker review.
 The full lint gate retains an existing graphics-resource test error outside this copy change;
 owned-file lint, source/Vue/test types, architecture and documentation checks pass.
+
+## AI copy checks and command-copy readability
+
+Guided setup has nine executed browser journeys for translated access/connection screens and
+unsaved-draft cancellation. Reopening and selecting the server again shows empty URL, model
+and key fields with Continue disabled. Three existing simulated provider/setup journeys also
+pass; the complete moved domain then passes all 15 journeys, including first-run cases.
+The tests live together under `tests/e2e/settings/ai-setup/`; the directory move preserves
+the existing first-run and setup test bodies and updates the contributor-guide reference.
+
+A fresh isolated native test bundle also executes nine translated Codex setup journeys. The
+captured screens show Open Pen agent/MCP labels; detection may still be checking or show an
+existing account/tools connection. These checks do not install, initiate sign-in or send a
+message. Failure-safe cleanup closes the owned dialogs, restores the captured starting language
+and leaves Settings on General. Locale fixture setup focuses an existing option before Enter;
+this does not qualify physical mouse input. Native captures stay private and may contain the
+existing CLI account identity. The dedicated native type gate still has 67 existing errors,
+with none in the new tests/helper.
+
+Thirty targeted Storybook cases pass: four existing AI interaction/accessibility stories in
+both themes, Command/Plain copy fields in both themes, and seven failure/setup states in all
+nine languages and both themes. All 126 translated-state captures and four copy-field captures
+are preserved and visually reviewed. Stories reuse the actual component and valid synthetic
+states; they do not prove that a real provider or installed adapter reaches every failure.
+The shared story-result helper retains the original completion/error/accessibility contract.
+
+That sweep first finds a contrast failure on the command-copy button. Command fields now use
+the existing surface foreground for that button; plain fields, geometry and the copy handler
+retain their behavior. The failing receipt is retained, and the affected AI and copy-field
+checks pass in both themes without an accessibility exemption or pixel-baseline replacement.
+Independent review confirms the theme merge and per-instance overrides. Production browser
+build, source/Vue/shared-test types, owned lint and documentation/changelog checks pass.
+
+BRAND-COPY-AI remains open for chat errors and callback states not exercised by these receipts.
+The native bundle precedes the command-copy contrast change; fresh native delivery/clipboard,
+full Pen visual matching and full branding acceptance remain open. The broader structure lint
+and dedicated native typing retain the previously documented unrelated failures.
