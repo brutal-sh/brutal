@@ -25,10 +25,11 @@ modules, complete Open Pen branding and an executable Trello backlog.
   [feature catalog](pen-feature-reference/README.md), with a 2026-10-30 snapshot. The official
   [documentation index](https://docs.pen.dev/) is rechecked on 2026-11-06. The installed reference
   still reports 1.2.21. Documentation coverage does not prove runtime coverage.
-- Observed: the current 2026-11-06 source-size audit counts 2,925 runtime files across the app, Core,
-  Vue SDK, Scene Graph and native shell. Median size is 65 physical lines; 2,752 are at most
-  300 lines and 14 exceed 600: one has a reviewed model-contract exception, 13 remain open.
-  Counts include the canvas candidate without accepting its pending native behavior. See [modularity](MODULARITY.md).
+- Observed: the current 2026-11-06 source-size audit counts 2,931 runtime files across the app, Core,
+  Vue SDK, Scene Graph and native shell. Median size is 65 physical lines; 2,758 are at most
+  300 lines and 13 exceed 600: one has a reviewed model-contract exception, 12 remain open.
+  Counts include canvas and font candidates without accepting their pending native behavior.
+  The font disposition remains open even though its owner is below 600 lines. See [modularity](MODULARITY.md).
 - Initially observed: inherited web marks, localized product names, diagnostics labels and a native
   microphone explanation still identify the app as OpenPencil. The original violet Open Pen
   app-icon master already exists.
@@ -129,6 +130,9 @@ percentage is reported until its denominator and acceptance evidence are complet
   Codex will update counts, evidence and dependencies from fresh results.
 - Open: graphics context reuse/retirement, zero-to-positive icon redraw, exact glyph pixels,
   runtime resize and bindings, remaining native screens/menus and non-macOS qualification.
+- Open: mixed-script export bounds, local-font picker acceptance and delayed CJK repaint
+  acceptance. Exact original-versus-refactor controls reproduce the same failures; the
+  [font ownership record](FONT-OWNERSHIP.md) retains scope and separate task links.
 - Open: shipping destination, external hosting and release signing/notarization. Jason owns
   those choices when a concrete release candidate is ready; implementation continues meanwhile.
 

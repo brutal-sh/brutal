@@ -14,6 +14,8 @@ Renderer, layout, editor, Figma API, tools, clipboard, vector conversion, and do
 - An edit that records the document changes it makes, as AI and MCP calls do, runs through `recordEdit`, or `recordEditAsync` when it awaits, which keeps the edit open until its step is recorded so undoing it returns the document to saved; capturing a change by hand fails `open-pencil/no-document-change-capture` (`packages/core/tests/editor/history/edit.test.ts`).
 - The recording copies only what an edit touches: the edit's page is copied up front, and another page or the document node the first time `SceneGraph.observeNodeChanges` reports it about to change, so code that writes into a node directly calls `willChangeNode` first. Copies share values rather than deep-copying, so values must be replaced rather than written into, apart from the child lists, source metadata, and override maps it copies; comments on the document node stay out of undo (`packages/core/tests/editor/history/document-change.test.ts`).
 
+- `FontManager` in `src/text/fonts.ts` owns loaded bytes, coverage and registration orchestration; internal `src/text/font/{catalog,loading,providers,fallback,metadata,reads}.ts` own catalog access, source reads, provider lifetimes, fallback packs, variation metadata and shared reads. Keep browser font globals at the existing `fonts.ts` boundary and public font contracts in `font/sources.ts` (`packages/core/tests/text/`).
+
 ## Layout
 
 - `@open-pencil/yoga-layout` supplies both flexbox and CSS Grid.

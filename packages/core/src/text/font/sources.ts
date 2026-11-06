@@ -35,3 +35,10 @@ export class UnsupportedFontFormatError extends Error {
     this.name = 'UnsupportedFontFormatError'
   }
 }
+
+/**
+ * Maps a bundled font's file name (`InterVariable.ttf`) to the URL a browser fetches it from.
+ * Mirrors CanvasKit's `locateFile`; the default expects the host to serve
+ * `@open-pencil/core/assets` at the site root.
+ */
+export type BundledFontLocator = (file: string) => string

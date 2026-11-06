@@ -207,3 +207,25 @@ test('keeps the file it has when the same font is read or downloaded again', asy
   expect(manager.renderFamily(family, 'Regular')).toBe(family)
   expect(manager.renderShardFamilies(family, 'Regular')).toEqual([])
 })
+
+test('family metadata follows loaded variable faces and replacement with a static file', async () => {
+  const manager = offlineManager()
+  const variable = await Bun.file(join(FIXTURES, 'fonts', 'InterVariable-Latin.ttf')).arrayBuffer()
+  const staticFace = await Bun.file(join(FIXTURES, 'fonts', 'InterRegular-Faces.ttf')).arrayBuffer()
+  const family = 'Metadata lifecycle'
+
+  expect(manager.familyVariation(family)).toBeUndefined()
+  await manager.markLoaded('Static metadata', 'Regular', staticFace)
+  expect(manager.familyVariation('Static metadata')).toBeNull()
+
+  await manager.markLoaded(family, 'Regular', variable)
+  const upright = manager.familyVariation(family, false)
+  expect(upright?.data).toBe(variable)
+  expect(upright?.axes.some((axis) => axis.tag === 'wght')).toBe(true)
+  // A family with no italic file still reports its available variable face.
+  expect(manager.familyVariation(family, true)?.data).toBe(variable)
+  expect(manager.familyVariation(family, false)?.axes).toBe(upright?.axes)
+
+  await manager.markLoaded(family, 'Regular', staticFace)
+  expect(manager.familyVariation(family)).toBeNull()
+})

@@ -101,7 +101,10 @@ test('variable fonts render each style at its named instance', async ({ page }) 
   )
 
   expect(result.readiness).toEqual(['ready', 'ready', 'ready', 'ready', 'ready'])
-  expect(Buffer.from(result.image)).toMatchSnapshot('variable-font-weights.png')
+  expect(Buffer.from(result.image)).toMatchSnapshot('variable-font-weights-current.png', {
+    threshold: 0,
+    maxDiffPixels: 0
+  })
 })
 
 test('a range draws at its own optical size, as Figma saves one', async ({ page }) => {
@@ -116,5 +119,8 @@ test('a range draws at its own optical size, as Figma saves one', async ({ page 
   ])
 
   expect(result.readiness).toEqual(['ready', 'ready', 'ready'])
-  expect(Buffer.from(result.image)).toMatchSnapshot('variable-font-optical-size-ranges.png')
+  expect(Buffer.from(result.image)).toMatchSnapshot(
+    'variable-font-optical-size-ranges-current.png',
+    { threshold: 0, maxDiffPixels: 0 }
+  )
 })

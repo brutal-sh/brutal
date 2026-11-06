@@ -9,6 +9,8 @@ import { CanvasHelper } from '#tests/helpers/canvas'
 import { mockFontsource } from '#tests/helpers/fonts/fontsource'
 import { trackFontModuleResources } from '#tests/helpers/fonts/runtime'
 
+test.use({ colorScheme: 'dark' })
+
 async function openEditor(page: Page): Promise<CanvasHelper> {
   await trackFontModuleResources(page)
   // These tests install fixture fonts explicitly; remote arrivals must not race those fixtures.
@@ -195,7 +197,10 @@ test('international text is correct on its first visible paint', async ({ page }
     ],
     unblockedAfterFonts: true
   })
-  expect(Buffer.from(image)).toMatchSnapshot('international-text-first-paint.png')
+  expect(Buffer.from(image)).toMatchSnapshot('international-text-first-paint-current.png', {
+    threshold: 0,
+    maxDiffPixels: 0
+  })
 })
 
 test('typed and tool-created text repaint with the same resolved fallbacks', async ({ page }) => {
@@ -298,7 +303,7 @@ test('typed and tool-created text repaint with the same resolved fallbacks', asy
     return nodeIds.every((id) => fontManager.isNodeBlocked(id))
   }, ids.nodeIds)
   expect(pending).toBe(true)
-  await expectCanvas(canvas, 'interactive-font-fallback-pending')
+  await expectCanvas(canvas, 'interactive-font-fallback-pending-dark')
 
   const resolved = await page.evaluate(async ({ nodeIds, toolId, typedId }) => {
     const store = window.openPencil?.getStore?.()
@@ -359,7 +364,10 @@ test('typed and tool-created text repaint with the same resolved fallbacks', asy
 
   const { image, ...state } = resolved
   expect(state).toEqual({ textsMatch: true, toolReady: true, typedReady: true, unblocked: true })
-  expect(Buffer.from(image)).toMatchSnapshot('interactive-font-fallback-resolved.png')
+  expect(Buffer.from(image)).toMatchSnapshot('interactive-font-fallback-resolved-current.png', {
+    threshold: 0,
+    maxDiffPixels: 0
+  })
 })
 
 test('substituted fonts still request fallbacks for CJK text', async ({ page }) => {
@@ -439,5 +447,8 @@ test('substituted fonts still request fallbacks for CJK text', async ({ page }) 
 
   const { image, ...state } = result
   expect(state).toEqual({ readiness: 'substituted', requestedCJK: true })
-  expect(Buffer.from(image)).toMatchSnapshot('substituted-font-cjk-fallback.png')
+  expect(Buffer.from(image)).toMatchSnapshot('substituted-font-cjk-fallback-current.png', {
+    threshold: 0,
+    maxDiffPixels: 0
+  })
 })

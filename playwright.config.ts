@@ -84,7 +84,9 @@ export default defineConfig({
         '**/design/panel.spec.ts',
         '**/design/retained-panel.spec.ts',
         '**/export/basic.spec.ts',
-        '**/fonts/settings.spec.ts'
+        '**/fonts/settings.spec.ts',
+        '**/fonts/variable-weights-visual.spec.ts',
+        '**/fonts/cjk-rendering-visual.spec.ts'
       ],
       use: {
         ...appDefaults.use,

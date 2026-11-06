@@ -6,7 +6,7 @@ Repository: [private Open Pen repository](https://github.com/jpoindexter/open-pe
 Board: [Open Pen — independent design editor](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor), private.
 
 The [PRD](PRD.md) owns the outcome, constraints and release criteria.
-The [task index](TASKS.md) links all 346 execution cards; the [modularity audit](MODULARITY.md)
+The [task index](TASKS.md) links all 349 execution cards; the [modularity audit](MODULARITY.md)
 records the measured review queue. Requirements come from the [feature catalog](pen-feature-reference/README.md)
 and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), using actual Pen 1.2.21 as the reference.
 
@@ -23,12 +23,13 @@ and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), using actual Pen 1.
 
 ## Verified planning snapshot
 
-A complete fresh board readback finds 363 open cards: 346 unique execution tasks and 17 milestones.
+A complete fresh board readback finds 366 open cards: 349 unique execution tasks and 17 milestones.
 All 152 catalog requirements and 22 exact native ledger rows map to real execution cards.
 There are no missing or duplicate task IDs, and the dependency graph is acyclic.
 All 15 originally oversized runtime modules have individual disposition tasks. Two dispositions
-are executed: one cohesive extraction and one explicit model-contract exception. Fourteen files remain
-above 600 lines, including the reviewed model exception; thirteen dispositions remain open.
+are executed: one cohesive extraction and one explicit model-contract exception. Thirteen files remain
+above 600 lines, including the reviewed model exception; twelve oversized dispositions remain
+open. The font candidate is below 600 lines but its native acceptance remains open.
 The six identity workstreams include a copy gate with six smaller source/acceptance tasks.
 This proves tracking coverage, not accepted product parity or exhaustive discovery of every native state.
 
@@ -43,7 +44,8 @@ implementation in Verify; actual native drawing remains unexecuted because macOS
 a locked desktop. [Canvas evidence](CANVAS-LIFECYCLE.md) records the paths and limits.
 MOD-02 is an executed model-contract ownership exception, with no code extraction claimed.
 The [disposition](MODEL-OWNERSHIP.md) records its owner, checks and review trigger.
-MOD-03 font-manager responsibilities is the sole Building task.
+MOD-03 font-manager responsibilities has bounded owner/browser evidence and pending native
+acceptance. [Font ownership](FONT-OWNERSHIP.md) records the exact control comparison and limits.
 UI-TOAST-REFLOW has bounded executed evidence: 72 translated component captures at two widths
 and both themes, six baseline examples, and 18 rebuilt native version-warning journeys.
 Manual visual review confirms the message column and grouped controls; automated checks cover
@@ -52,14 +54,19 @@ regression passes all 18 native cases with the selected editor handle preserved.
 No real provider sign-in or inference is accepted by mocks.
 BRAND-COPY is an unaccepted gate in Verify; AI, editor, recovery/update, cloud-client and support
 copy journeys have their own child cards.
-Documentation refresh is Ready; graphics lifecycle stability remains unaccepted in Verify.
+Documentation refresh (REF-01) is the sole Building task; font and graphics lifecycle
+candidates remain unaccepted in Verify.
 The interrupted zero-size icon work retains its failed wider-run receipts and dependencies.
-The delivery snapshot is 331 Backlog, 1 Ready, 1 Building, 2 Verify and 11 Executed, plus 17 milestones.
+The delivery snapshot is 334 Backlog, 0 Ready, 1 Building, 3 Verify and 11 Executed, plus 17 milestones.
 DELIVERY-LFS has bounded executed current-checkout fixture delivery: all twelve objects
 are fetched from the own private endpoint into empty independent storage, with matching
 SHA-256/sizes and LFS integrity checks. Historical object closure is not qualified.
 [Delivery details](CHECKOUT.md) retain the exact scope.
 UI-SPLIT-HEADER separately records toolbar/inspector overlap blocking pane Close controls.
+FONT-EXPORT-BOUNDS, FONT-LOCAL-PICKER and FONT-CJK-REPAINT separately record existing
+font acceptance failures. Exact original-versus-refactor controls reproduce the same three
+broader workflow failures; ten named pre-refactor visual controls pass afterward in both engines.
+The terminal gate depends on all 348 other required execution tasks.
 The board retains 17 milestones, 152 mapped requirements and 22 mapped native rows.
 No branding milestone or product-parity feature group is fully accepted.
 

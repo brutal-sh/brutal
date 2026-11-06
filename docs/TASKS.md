@@ -3,7 +3,7 @@
 Updated: 2026-11-06. All task links are verified by a fresh complete board readback.
 The full design AND functionality parity goal remains active; allocation does not establish accepted behavior.
 
-The breakdown contains **346 execution tasks**, covering all **152 documented requirements** and **22 native screen/menu rows**, plus branding, modularity and known residuals.
+The breakdown contains **349 execution tasks**, covering all **152 documented requirements** and **22 native screen/menu rows**, plus branding, modularity and known residuals.
 The board also preserves the 15 original cards as milestones and adds two milestones for branding and modularization.
 
 Ready is limited to three dependency-free tasks; Building to one current task. Each card contains its scope, owner, dependencies and concrete Done checks.
@@ -278,7 +278,7 @@ This table records the verified planning snapshot. Read the live board for later
 | DRAW-07-PAINT-SHADER | Shader icon paint fidelity | DRAW-07 | None identified | Backlog | [Card](https://trello.com/c/DYZdIfQm/352-draw-07-paint-shader-shader-icon-paint-fidelity) |
 | DRAW-07-PAINT-FIXEDCOLORS | FixedColors icon paint fidelity | DRAW-07 | None identified | Backlog | [Card](https://trello.com/c/FnPUchYd/353-draw-07-paint-fixedcolors-fixedcolors-icon-paint-fidelity) |
 | PLAN-01 | Publish PRD and verify complete atomic Trello coverage | PRD / native ledger | None identified | Executed | [Card](https://trello.com/c/WsjsXdxv/76-plan-01-publish-prd-and-verify-complete-atomic-trello-coverage) |
-| REF-01 | Refresh official documentation versus the pinned reference | PRD / native ledger | None identified | Ready | [Card](https://trello.com/c/wAtaxwvk/77-ref-01-refresh-official-documentation-versus-the-pinned-reference) |
+| REF-01 | Refresh official documentation versus the pinned reference | PRD / native ledger | None identified | Building | [Card](https://trello.com/c/wAtaxwvk/77-ref-01-refresh-official-documentation-versus-the-pinned-reference) |
 | REF-02 | Find undocumented native screens and menu states | PRD / native ledger | None identified | Backlog | [Card](https://trello.com/c/aInXMBKc/78-ref-02-find-undocumented-native-screens-and-menu-states) |
 | STAB-GPU | Keep repeated document switching within the GPU context budget | PRD / native ledger | PLAN-01 | Verify | [Card](https://trello.com/c/F8qWzU8W/79-stab-gpu-keep-repeated-document-switching-within-the-gpu-context-budget) |
 | BRAND-ASSETS | Unify app, favicon and PWA marks from the Open Pen master | PRD / native ledger | None identified | Executed | [Card](https://trello.com/c/UgP3wg8H/80-brand-assets-unify-app-favicon-and-pwa-marks-from-the-open-pen-master) |
@@ -296,7 +296,7 @@ This table records the verified planning snapshot. Read the live board for later
 | MOD-AUDIT | Record runtime module sizes and ownership review queue | PRD / native ledger | None identified | Executed | [Card](https://trello.com/c/VvfSFVWv/86-mod-audit-record-runtime-module-sizes-and-ownership-review-queue) |
 | MOD-01 | Split cohesive responsibilities: scene.ts | PRD / native ledger | STAB-GPU | Backlog | [Card](https://trello.com/c/tTqRqnzU/87-mod-01-split-cohesive-responsibilities-scenets) |
 | MOD-02 | Review declaration/catalog ownership: types.ts | PRD / native ledger | None identified | Executed | [Card](https://trello.com/c/BW7NKv2t/88-mod-02-review-declaration-catalog-ownership-typests) |
-| MOD-03 | Split cohesive responsibilities: fonts.ts | PRD / native ledger | None identified | Building | [Card](https://trello.com/c/4ehkJaOM/89-mod-03-split-cohesive-responsibilities-fontsts) |
+| MOD-03 | Split cohesive responsibilities: fonts.ts | PRD / native ledger | None identified | Verify | [Card](https://trello.com/c/4ehkJaOM/89-mod-03-split-cohesive-responsibilities-fontsts) |
 | MOD-04 | Split cohesive responsibilities: graph.ts | PRD / native ledger | None identified | Backlog | [Card](https://trello.com/c/TrLXJQUl/90-mod-04-split-cohesive-responsibilities-graphts) |
 | MOD-05 | Split cohesive responsibilities: renderer.ts | PRD / native ledger | STAB-GPU | Backlog | [Card](https://trello.com/c/iHHP32LH/91-mod-05-split-cohesive-responsibilities-rendererts) |
 | MOD-06 | Split cohesive responsibilities: index.ts | PRD / native ledger | STAB-GPU | Backlog | [Card](https://trello.com/c/4BpMrJ8z/92-mod-06-split-cohesive-responsibilities-indexts) |
@@ -356,10 +356,13 @@ This table records the verified planning snapshot. Read the live board for later
 | BROWSER-FRAMES | Import iframe/shadow content or report precise unsupported scope | IO-04 | None identified | Backlog | [Card](https://trello.com/c/o8bvGU8E/148-browser-frames-import-iframe-shadow-content-or-report-precise-unsupported-scope) |
 | CONTEXT-DRAG | Native Context resize-handle delivery and exact geometry | UI-08 | None identified | Backlog | [Card](https://trello.com/c/dRLZalKf/149-context-drag-native-context-resize-handle-delivery-and-exact-geometry) |
 | BETA-01 | Qualify the private macOS core design journey | ENV-01, FIRST-01, FIRST-02, FIRST-03, FILE-07, FILE-08 | STAB-GPU, BRAND-VERIFY, FIRST-03, FILE-07, FILE-08 | Backlog | [Card](https://trello.com/c/sYpWJdvu/150-beta-01-qualify-the-private-macos-core-design-journey) |
-| PARITY-ALL | Audit every applicable requirement and surface for full parity | PRD / native ledger | Every other required execution task (345) | Backlog | [Card](https://trello.com/c/cr0YPLzZ/151-parity-all-audit-every-applicable-requirement-and-surface-for-full-parity) |
+| PARITY-ALL | Audit every applicable requirement and surface for full parity | PRD / native ledger | Every other required execution task (348) | Backlog | [Card](https://trello.com/c/cr0YPLzZ/151-parity-all-audit-every-applicable-requirement-and-surface-for-full-parity) |
 | A11Y-COPY | Keep command-copy buttons readable in both themes | PRD-05 / PRD-09 | BRAND-COPY-SOURCE | Executed | [Card](https://trello.com/c/1e6Ou0e7/360-a11y-copy-keep-command-copy-buttons-readable-in-both-themes) |
 | UI-TOAST-REFLOW | Keep translated toast messages readable beside long actions | PRD-05 / PRD-09 | BRAND-COPY-SOURCE | Executed | [Card](https://trello.com/c/DjJkNW8V/361-ui-toast-reflow-keep-translated-toast-messages-readable-beside-long-actions) |
 | UI-SPLIT-HEADER | Keep pane controls reachable below floating workspace actions | PRD-04 / PRD-05 | STAB-GPU | Backlog | [Card](https://trello.com/c/Lz1r5iLo/362-ui-split-header-keep-pane-controls-reachable-below-floating-workspace-actions) |
+| FONT-EXPORT-BOUNDS | Reconcile mixed-script edit export bounds with the reference | PRD operational requirement | None identified | Backlog | [Card](https://trello.com/c/vw3MaeLF/364-font-export-bounds-reconcile-mixed-script-edit-export-bounds-with-the-reference) |
+| FONT-LOCAL-PICKER | Verify local-font selection with real font bytes | PRD operational requirement | None identified | Backlog | [Card](https://trello.com/c/IMBhByZW/365-font-local-picker-verify-local-font-selection-with-real-font-bytes) |
+| FONT-CJK-REPAINT | Reconcile delayed CJK fallback and repaint acceptance | PRD operational requirement | None identified | Backlog | [Card](https://trello.com/c/alOGuXJ8/366-font-cjk-repaint-reconcile-delayed-cjk-fallback-and-repaint-acceptance) |
 | DELIVERY-LFS | Verify current fixture delivery from our private fork | PRD operational requirement | PLAN-01 | Executed | [Card](https://trello.com/c/cvzyZ7Hw/363-delivery-lfs-verify-current-fixture-delivery-from-our-private-fork) |
 
 ## Native surface coverage

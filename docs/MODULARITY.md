@@ -1,7 +1,7 @@
 # Runtime modularity audit
 
-Measured 2026-11-06 from the current source after the model ownership review.
-This includes the canvas candidate whose native acceptance is pending; counts do not qualify behavior.
+Measured 2026-11-06 from the current source after the font ownership candidate.
+This includes canvas and font candidates whose native acceptance is pending; counts do not qualify behavior.
 This is a size/ownership review, not proof that all architecture or behavior is accepted.
 The implementation uses OpenPencil's existing package boundaries; Open Pen-specific behavior is added to the owning domain.
 
@@ -11,19 +11,21 @@ Scope: authored `.ts`, `.vue`, `.rs` and `.css` under `src`, `packages/core/src`
 
 | Size | Files |
 | --- | ---: |
-| 1–50 | 1,189 |
-| 51–200 | 1,359 |
+| 1–50 | 1,190 |
+| 51–200 | 1,364 |
 | 201–300 | 204 |
-| 301–600 | 159 |
-| Above 600 | 14 |
+| 301–600 | 160 |
+| Above 600 | 13 |
 
-Total: 2,925. Median: 65. At most 300 lines: 2,752 (94%).
+Total: 2,931. Median: 65. At most 300 lines: 2,758 (94%).
 
 The initial baseline has 2,922 files, median 64.5, and 15 above 600. MOD-07 adds one
 focused owner and reduces the over-600 count to 14. MOD-02 records a reviewed model-contract
 exception among those 14, leaving 13 open dispositions. The canvas candidate adds two small
 owners, included in the current count without accepting its pending native behavior.
-The baseline remains available at the planning commit; counts describe the measured source scope, not accepted product parity.
+The font candidate adds six internal owners and brings the over-600 count to 13; one is the
+reviewed model exception, 12 oversized owners still need disposition, and font acceptance
+remains open pending native execution. The baseline remains available at the planning commit; counts describe the measured source scope, not accepted product parity.
 
 There is no universal industry file-size standard. Use 50–200 lines as a useful range for
 focused helpers/controls and 200–300 for a cohesive feature module, not a compulsory split.
@@ -33,7 +35,6 @@ The repository's configured review warning is 600 lines. Some inherited files ha
 | --- | ---: | --- |
 | `packages/core/src/canvas/scene.ts` | 1,140 | Separate cohesive scene drawing responsibilities; retain pixels and order. |
 | `packages/scene-graph/src/types.ts` | 1,107 | Reviewed model-contract exception; see MOD-02 disposition below. |
-| `packages/core/src/text/fonts.ts` | 1,014 | Separate font loading/resolution responsibilities; retain font recovery and shaping. |
 | `packages/scene-graph/src/graph.ts` | 848 | Review graph mutation/storage domains without weakening invariants. |
 | `packages/core/src/canvas/renderer.ts` | 752 | Separate lifecycle/state responsibilities using existing renderer domains. |
 | `src/app/tabs/index.ts` | 715 | Separate tab lifecycle, persistence and selection ownership. |
@@ -46,15 +47,17 @@ The repository's configured review warning is 600 lines. Some inherited files ha
 | `packages/core/src/layout.ts` | 619 | Separate layout coordination domains; retain authored geometry. |
 | `packages/core/src/figma-api/index.ts` | 606 | Review facade versus domain implementation; retain public API. |
 
-Every original oversized file has its own review/refactor task. Thirteen listed dispositions remain open;
-`types.ts` is the reviewed exception. Completed dispositions are recorded separately below.
+Every original oversized file has its own review/refactor task. Twelve listed oversized dispositions
+remain open; `types.ts` is the reviewed exception. The font candidate is below the size warning
+but its acceptance remains open. Completed dispositions are recorded separately below.
 Do not remove attribution, change serialized formats or introduce forwarding-only public
 exports to reduce a count. Declaration/catalog exceptions must identify an owner and reason.
 
 For each refactor, read callers and the owning guide, extract one cohesive responsibility,
 run the relevant behavioral tests, and compare affected browser/native output. Required
 checks include public exports and architecture; renderer changes retain canvas evidence.
-Update this audit after the corresponding task is executed, not after moving text alone.
+Measure candidates explicitly without accepting them from line reduction. Record executed
+dispositions only after the corresponding behavioral criterion runs.
 
 ## Executed disposition: MCP startup
 
@@ -94,7 +97,9 @@ remain untouched. Fourteen oversized owners and full product parity remain open.
 Browser resource, rendering and teardown evidence passes; isolated native acceptance is held
 by a confirmed locked desktop. These additions are not an executed oversized-module disposition.
 The current source-size table includes those additions without qualifying native graphics.
-MOD-03 is the sole Building task; it reviews the font-manager responsibilities.
+[MOD-03](https://trello.com/c/4ehkJaOM) separates the font-manager responsibilities.
+Its [ownership and verification record](FONT-OWNERSHIP.md) distinguishes the passing
+refactor controls from existing workflow failures and unexecuted native acceptance.
 
 ## Executed disposition: model-contract exception
 
@@ -109,4 +114,6 @@ All 1,486 Scene Graph owner tests / 10,789 assertions, actual public model/predi
 package metadata/export/contents/Publint/ATTW checks pass. Independent review confirms the narrow
 rationale. No runtime source, public export or serialized shape changes. Reopen this exception
 when procedural responsibilities enter the contract or an independently owned domain benefits
-from separation. Fourteen files remain above 600 lines; thirteen still need disposition.
+from separation. At that review, fourteen files remain above 600 lines; thirteen need disposition.
+The current table additionally includes the unaccepted font candidate, reducing those counts
+to thirteen files and twelve other oversized owners.
