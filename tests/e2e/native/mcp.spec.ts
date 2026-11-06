@@ -1,16 +1,24 @@
 import { strict as assert } from 'node:assert'
-import { readFileSync, renameSync } from 'node:fs'
+import { readFileSync, realpathSync } from 'node:fs'
+import { dirname } from 'node:path'
 
 import * as v from 'valibot'
 
+import { ensureNativeEditorReady } from '#tests/helpers/tauri/editor-snapshot'
 import { invokeNative } from '#tests/helpers/tauri/invoke'
 
 const healthSchema = v.pipe(v.string(), v.parseJson(), v.object({ status: v.string() }))
 
+const nativeConfigurationSchema = v.object({ discoveryPath: v.string() })
+
 const discoveryFileSchema = v.pipe(
   v.string(),
   v.parseJson(),
-  v.object({ httpPort: v.number(), authToken: v.string() })
+  v.object({
+    pid: v.pipe(v.number(), v.integer(), v.minValue(1)),
+    httpPort: v.number(),
+    authToken: v.string()
+  })
 )
 
 const NOT_INSTALLED = 'MCP automation is not installed'
@@ -106,10 +114,7 @@ describe('native MCP server lifecycle', () => {
   })
 
   it('uses the server it resolves, or reports why it cannot', async () => {
-    await browser.waitUntil(
-      async () => browser.execute(() => Boolean(window.openPencil?.getStore?.())),
-      { timeout: 30_000, timeoutMsg: 'OpenPencil editor did not initialize' }
-    )
+    await ensureNativeEditorReady()
     await openMCPSettings()
 
     // The app resolves the binary through the PATH it derives from the login
@@ -120,6 +125,7 @@ describe('native MCP server lifecycle', () => {
       // Without a global install the reason must be the install itself.
       await waitForStatus('Error')
       assert.equal(await mcpAlert(), NOT_INSTALLED)
+      console.debug('Native MCP acceptance: missing-install refusal')
       return
     }
 
@@ -132,12 +138,18 @@ describe('native MCP server lifecycle', () => {
         /requires @open-pencil\/mcp|major\.minor compatibility/,
         `resolved ${lookup.path} but failed without a version explanation: ${detail}`
       )
+      console.debug('Native MCP acceptance: version refusal')
       return
     }
 
     await waitForStatus('Running')
-    const discoveryPath = process.env.OPENPENCIL_MCP_DISCOVERY_PATH
-    assert.ok(discoveryPath, 'discovery path missing from the wdio configuration')
+    const directory = process.env.OPENPENCIL_NATIVE_TEST_DIRECTORY
+    assert.ok(directory, 'test-owned MCP directory missing from the runner')
+    const { discoveryPath } = v.parse(
+      nativeConfigurationSchema,
+      await invokeNative<unknown>('native_test_mcp_configuration')
+    )
+    assert.equal(realpathSync(dirname(discoveryPath)), realpathSync(directory))
     const discovery = v.parse(discoveryFileSchema, readFileSync(discoveryPath, 'utf8'))
     assert.ok(discovery.authToken, 'discovery file omitted the auth token')
 
@@ -148,21 +160,41 @@ describe('native MCP server lifecycle', () => {
     assert.equal(health.status, 200)
     assert.equal(v.parse(healthSchema, await health.text()).status, 'ok')
 
-    // Hiding the resolved binary must report the missing install, and restoring
-    // it must recover without relaunching the app.
-    const hidden = `${lookup.path}.native-test-hidden`
-    renameSync(lookup.path, hidden)
-    try {
-      await clickRestart()
-      await browser.waitUntil(async () => (await mcpAlert()) === NOT_INSTALLED, {
-        timeout: 30_000,
-        timeoutMsg: `MCP failure alert was: ${await mcpAlert()}`
-      })
-    } finally {
-      renameSync(hidden, lookup.path)
-    }
-
+    // Restart only the server owned by this test; never hide an installed executable.
     await clickRestart()
+    await browser.waitUntil(
+      () => {
+        try {
+          const next = v.parse(discoveryFileSchema, readFileSync(discoveryPath, 'utf8'))
+          return next.pid !== discovery.pid
+        } catch {
+          return false
+        }
+      },
+      { timeout: 30_000, timeoutMsg: 'Restart did not publish a new test-owned MCP process' }
+    )
+    await browser.waitUntil(
+      () => {
+        try {
+          process.kill(discovery.pid, 0)
+          return false
+        } catch (error) {
+          if (error instanceof Error && 'code' in error && error.code === 'ESRCH') return true
+          throw error
+        }
+      },
+      { timeout: 30_000, timeoutMsg: 'The previous test-owned MCP process is still alive' }
+    )
     await waitForStatus('Running')
+    const restarted = v.parse(discoveryFileSchema, readFileSync(discoveryPath, 'utf8'))
+    const restartedHealth = await fetch(`http://127.0.0.1:${restarted.httpPort}/health`, {
+      headers: { authorization: `Bearer ${restarted.authToken}` }
+    })
+    assert.equal(restartedHealth.status, 200)
+    assert.equal(v.parse(healthSchema, await restartedHealth.text()).status, 'ok')
+    console.debug('Native MCP acceptance: authenticated healthy restart and old process exit', {
+      previousPid: discovery.pid,
+      currentPid: restarted.pid
+    })
   })
 })

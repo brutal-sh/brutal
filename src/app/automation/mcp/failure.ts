@@ -1,3 +1,5 @@
+import { compact } from 'es-toolkit/array'
+
 import { APP_VERSION } from '@/app/runtime/version'
 
 /**
@@ -90,4 +92,21 @@ export function classifySpawnFailure(error: unknown): MCPFailure {
 export function failureFromError(error: unknown): MCPFailure {
   if (error instanceof MCPStartupError) return error.failure
   return classifySpawnFailure(error)
+}
+
+export function exitedStartupError(
+  message: string,
+  event: { code: number | null; signal: number | null },
+  stderr: string
+): MCPStartupError {
+  const details = stderr.trim()
+  return new MCPStartupError(
+    `${message} (code ${event.code ?? 'null'}, signal ${event.signal ?? 'null'})${details ? `: ${details}` : '.'}`,
+    mcpFailure(
+      'exited',
+      compact([`code=${event.code ?? 'null'}`, `signal=${event.signal ?? 'null'}`, details]).join(
+        ' '
+      )
+    )
+  )
 }

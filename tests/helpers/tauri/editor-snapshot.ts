@@ -7,7 +7,7 @@ export type NativeLayerFixture = {
 }
 
 // Home can have no document store after recovery is closed; its New design button creates one.
-async function ensureNativeEditorReady(): Promise<void> {
+export async function ensureNativeEditorReady(): Promise<void> {
   await invokeNative('plugin:window|set_focus', { label: 'main' })
   await browser.waitUntil(() => browser.execute(() => !document.hidden), {
     timeout: 30_000,

@@ -1,17 +1,11 @@
 import { promiseTimeout } from '@vueuse/core'
-import { compact } from 'es-toolkit/array'
 import * as v from 'valibot'
 
 import { AUTOMATION_HTTP_PORT } from '@open-pencil/core/constants'
 import type { DiscoveryInfo } from '@open-pencil/mcp/discovery'
-import {
-  parseToolDescriptor,
-  serializeDisabledTools,
-  type ToolDescriptor
-} from '@open-pencil/mcp/tools'
+import { serializeDisabledTools } from '@open-pencil/mcp/tools'
 import { randomHex } from '@open-pencil/scene-graph/random'
 
-import { APP_VERSION } from '@/app/runtime/version'
 import { decodeTauriStderr } from '@/app/shell/ui'
 import { resolvePlatformCommand } from '@/app/tauri/command'
 import { isTauri } from '@/app/tauri/env'
@@ -19,13 +13,14 @@ import { isTauri } from '@/app/tauri/env'
 import { DEV_MCP_RESTART_PATH, type DevMCPConfiguration } from './dev-control'
 import {
   classifySpawnFailure,
+  exitedStartupError,
   mcpFailure,
   MCP_EXECUTABLE,
   MCP_INSTALL_COMMAND,
-  MCP_PACKAGE_NAME,
   MCPStartupError,
   type MCPFailure
 } from './failure'
+import { assertCompatibleMCPVersion, parseAutomationHealth, type AutomationHealth } from './health'
 import {
   loadNativeTestMCPConfiguration,
   nativeTestMCPRoute,
@@ -37,16 +32,6 @@ import {
   mcpRootDirectory,
   mcpScope
 } from './preferences'
-
-export interface AutomationHealth {
-  status: 'ok' | 'no_app'
-  version?: string
-  authRequired?: boolean
-  discoveryPath?: string
-  tools?: ToolDescriptor[]
-  /** The server tells the app when an agent opens a session, so a chat can wait for its agent. */
-  agentSessionEvents?: boolean
-}
 
 export interface AutomationServerHandle {
   disconnect: () => void | Promise<void>
@@ -264,68 +249,6 @@ async function resolveDiscoveryPath(healthDiscoveryPath?: string): Promise<strin
   return expected
 }
 
-interface AutomationHealthRecord {
-  status?: unknown
-  version?: unknown
-  installCommand?: unknown
-  authRequired?: unknown
-  discoveryPath?: unknown
-  tools?: unknown
-  agentSessionEvents?: unknown
-}
-
-function isAutomationHealthRecord(value: unknown): value is AutomationHealthRecord {
-  return typeof value === 'object' && value !== null && !Array.isArray(value)
-}
-
-function optionalString(value: unknown): string | null | undefined {
-  if (value === undefined) return undefined
-  return typeof value === 'string' ? value : null
-}
-
-function optionalBoolean(value: unknown): boolean | null | undefined {
-  if (value === undefined) return undefined
-  return typeof value === 'boolean' ? value : null
-}
-
-function parseToolDescriptors(value: unknown): ToolDescriptor[] | null | undefined {
-  if (value === undefined) return undefined
-  if (!Array.isArray(value)) return null
-  const descriptors: ToolDescriptor[] = []
-  for (const candidate of value) {
-    const descriptor = parseToolDescriptor(candidate)
-    if (!descriptor) return null
-    descriptors.push(descriptor)
-  }
-  return descriptors
-}
-
-function parseAutomationHealth(value: unknown): AutomationHealth | null {
-  if (!isAutomationHealthRecord(value)) return null
-  if (value.status !== 'ok' && value.status !== 'no_app') return null
-  const version = optionalString(value.version)
-  const authRequired = optionalBoolean(value.authRequired)
-  const discoveryPath = optionalString(value.discoveryPath)
-  const tools = parseToolDescriptors(value.tools)
-  const agentSessionEvents = optionalBoolean(value.agentSessionEvents)
-  if (
-    version === null ||
-    authRequired === null ||
-    discoveryPath === null ||
-    tools === null ||
-    agentSessionEvents === null
-  ) {
-    return null
-  }
-  const health: AutomationHealth = { status: value.status }
-  if (version !== undefined) health.version = version
-  if (authRequired !== undefined) health.authRequired = authRequired
-  if (discoveryPath !== undefined) health.discoveryPath = discoveryPath
-  if (tools !== undefined) health.tools = tools
-  if (agentSessionEvents !== undefined) health.agentSessionEvents = agentSessionEvents
-  return health
-}
-
 export async function readAutomationHealth(
   authToken: string | null = runtimeAutomationAuthToken
 ): Promise<AutomationHealth | null> {
@@ -356,31 +279,6 @@ export async function readAutomationHealth(
     runtimeAutomationHealthFailure = mcpFailure('unreachable', DEV_AUTOMATION_HTTP_URL)
     return null
   }
-}
-
-/**
- * Returns the major.minor portion of a semver string (e.g. "0.5.1" → "0.5").
- * Returns null if the string is not parseable as semver.
- */
-function parseMajorMinor(version: string): string | null {
-  const match = version.match(/^(\d+)\.(\d+)/)
-  return match ? `${match[1]}.${match[2]}` : null
-}
-
-function assertCompatibleMCPVersion(health: AutomationHealth): void {
-  const runningMajorMinor = health.version ? parseMajorMinor(health.version) : null
-  const oursMajorMinor = parseMajorMinor(APP_VERSION)
-  if (!oursMajorMinor) return
-  if (runningMajorMinor === oursMajorMinor) return
-  const runningVersion = health.version ? `v${health.version}` : 'an older version'
-  // The running server's own install command names its own version, so the fix always
-  // comes from this app's version.
-  throw new MCPStartupError(
-    `Open Pen desktop v${APP_VERSION} requires ${MCP_PACKAGE_NAME} v${oursMajorMinor}.x ` +
-      `(major.minor compatibility), but the running MCP server is ${runningVersion}. ` +
-      `Run: ${MCP_INSTALL_COMMAND}, then restart the MCP server.`,
-    mcpFailure('outdated', health.version)
-  )
 }
 
 async function pollHealth(
@@ -512,23 +410,6 @@ async function configureDevMCP(): Promise<AutomationServerHandle> {
     )
   runtimeAutomationAuthToken = authToken
   return { disconnect: noop, authToken, managed: true }
-}
-
-function exitedStartupError(
-  message: string,
-  event: { code: number | null; signal: number | null },
-  stderr: string
-): MCPStartupError {
-  const details = stderr.trim()
-  return new MCPStartupError(
-    `${message} (code ${event.code ?? 'null'}, signal ${event.signal ?? 'null'})${details ? `: ${details}` : '.'}`,
-    mcpFailure(
-      'exited',
-      compact([`code=${event.code ?? 'null'}`, `signal=${event.signal ?? 'null'}`, details]).join(
-        ' '
-      )
-    )
-  )
 }
 
 async function startMCPIfNeeded(timing: MCPStartupTiming): Promise<AutomationServerHandle | null> {

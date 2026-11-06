@@ -26,15 +26,16 @@ and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), using actual Pen 1.
 A complete fresh board readback finds 353 open cards: 336 unique execution tasks and 17 milestones.
 All 152 catalog requirements and 22 exact native ledger rows map to real execution cards.
 There are no missing or duplicate task IDs, and the dependency graph is acyclic.
-All 15 oversized runtime modules have individual disposition tasks; branding has six bounded tasks.
+All 15 originally oversized runtime modules have individual disposition tasks; one is executed
+and 14 remain above 600 lines. Branding has six bounded tasks.
 This proves tracking coverage, not accepted product parity or exhaustive discovery of every native state.
 
-Planning publication, the reproducible runtime audit, own-brand assets and owned diagnostics/log
-names have their bounded acceptance evidence linked. The single Building task is MOD-07:
-separate MCP startup responsibilities in `src/app/automation/mcp/spawn.ts` while retaining behavior.
-Documentation refresh, localized product copy and graphics lifecycle stability are the three Ready tasks.
-The interrupted zero-size icon work retains its failed wider-run receipts and dependencies.
-The delivery snapshot is 328 Backlog, 3 Ready, 1 Building and 4 Executed, plus 17 milestones.
+Planning publication, the reproducible runtime audit, own-brand assets, owned diagnostics/log
+names and the MCP startup modularization have bounded acceptance evidence linked.
+The single Building task is BRAND-COPY: localized and hard-coded product-facing labels.
+Documentation refresh and graphics lifecycle stability are Ready. The interrupted zero-size
+icon work retains its failed wider-run receipts and dependencies.
+The delivery snapshot is 328 Backlog, 2 Ready, 1 Building and 5 Executed, plus 17 milestones.
 No branding milestone or product-parity feature group is fully accepted.
 
 ## Control loop
