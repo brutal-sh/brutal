@@ -33,7 +33,8 @@ modules, complete Open Pen branding and an executable Trello backlog.
   Vue SDK, Scene Graph and native shell. Median size is 65 physical lines; 2,762 are at most
   300 lines and 12 exceed 600: one has a reviewed model-contract exception, 11 remain open.
   Counts include canvas, font and graph candidates without accepting their pending native behavior.
-  The font and graph dispositions remain open even though both owners are below 600 lines. See [modularity](MODULARITY.md).
+  The font and graph dispositions remain open even though both owners are below 600 lines. See [modularity](MODULARITY.md). The five-root count does not cover every first-party
+  dependency/CLI/service package; MOD-AUDIT-CLOSURE owns the remaining inventory.
 - Initially observed: inherited web marks, localized product names, diagnostics labels and a native
   microphone explanation still identify the app as OpenPencil. The original violet Open Pen
   app-icon master already exists.

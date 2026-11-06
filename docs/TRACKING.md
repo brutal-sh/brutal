@@ -6,7 +6,7 @@ Repository: [private Open Pen repository](https://github.com/jpoindexter/open-pe
 Board: [Open Pen — independent design editor](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor), private.
 
 The [PRD](PRD.md) owns the outcome, constraints and release criteria.
-The [task index](TASKS.md) links all 369 execution cards; the [modularity audit](MODULARITY.md)
+The [task index](TASKS.md) links all 370 execution cards; the [modularity audit](MODULARITY.md)
 records the measured review queue. Requirements come from the [feature catalog](pen-feature-reference/README.md)
 and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), using actual Pen 1.2.21 as the reference.
 
@@ -23,7 +23,7 @@ and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), using actual Pen 1.
 
 ## Verified planning snapshot
 
-A complete fresh board readback finds 386 open cards: 369 unique execution tasks and 17 milestones.
+A complete fresh board readback finds 387 open cards: 370 unique execution tasks and 17 milestones.
 All 164 catalog requirements and 22 exact native ledger rows map to real execution cards.
 There are no missing or duplicate task IDs, and the dependency graph is acyclic.
 All 15 originally oversized runtime modules have individual disposition tasks. Two dispositions
@@ -36,6 +36,9 @@ unaccepted documentation deltas with 20 applicability-first cards. Current schem
 does not change the pinned 2.21 contract. [Refresh evidence](pen-feature-reference/refresh-2026-11-06.md)
 records the complete chapter and version disposition.
 The six identity workstreams include a copy gate with six smaller source/acceptance tasks.
+The initial runtime size scope excludes other first-party dependency/CLI/service owners.
+[MOD-AUDIT-CLOSURE](https://trello.com/c/R0oPWJAa) inventories those owners and allocates
+remaining review tasks before whole-app maintainability can be accepted.
 This proves tracking coverage, not accepted product parity or exhaustive discovery of every native state.
 
 Planning publication, the reproducible runtime audit, own-brand assets, owned diagnostics/log
@@ -64,7 +67,7 @@ Documentation refresh (REF-01) has executed its inventory criterion. Graph owner
 native acceptance; [graph evidence](GRAPH-OWNERSHIP.md) records the limits.
 BRAND-COPY-EDITOR is the sole Building task. Font and graphics candidates remain in Verify.
 The interrupted zero-size icon work retains its failed wider-run receipts and dependencies.
-The delivery snapshot is 352 Backlog, 0 Ready, 1 Building, 4 Verify and 12 Executed, plus 17 milestones.
+The delivery snapshot is 353 Backlog, 0 Ready, 1 Building, 4 Verify and 12 Executed, plus 17 milestones.
 DELIVERY-LFS has bounded executed current-checkout fixture delivery: all twelve objects
 are fetched from the own private endpoint into empty independent storage, with matching
 SHA-256/sizes and LFS integrity checks. Historical object closure is not qualified.
@@ -73,7 +76,7 @@ UI-SPLIT-HEADER separately records toolbar/inspector overlap blocking pane Close
 FONT-EXPORT-BOUNDS, FONT-LOCAL-PICKER and FONT-CJK-REPAINT separately record existing
 font acceptance failures. Exact original-versus-refactor controls reproduce the same three
 broader workflow failures; ten named pre-refactor visual controls pass afterward in both engines.
-The terminal gate depends on all 368 other required execution tasks.
+The terminal gate depends on all 369 other required execution tasks.
 The board retains 17 milestones, 164 mapped requirements and 22 mapped native rows.
 No branding milestone or product-parity feature group is fully accepted.
 

@@ -3,7 +3,7 @@
 Updated: 2026-11-06. All task links are verified by a fresh complete board readback.
 The full design AND functionality parity goal remains active; allocation does not establish accepted behavior.
 
-The breakdown contains **369 execution tasks**, covering all **164 documented requirements** and **22 native screen/menu rows**, plus branding, modularity and known residuals.
+The breakdown contains **370 execution tasks**, covering all **164 documented requirements** and **22 native screen/menu rows**, plus branding, modularity and known residuals.
 The board also preserves the 15 original cards as milestones and adds two milestones for branding and modularization.
 
 Ready is limited to three dependency-free tasks; Building to one current task. Each card contains its scope, owner, dependencies and concrete Done checks.
@@ -356,7 +356,7 @@ This table records the verified planning snapshot. Read the live board for later
 | BROWSER-FRAMES | Import iframe/shadow content or report precise unsupported scope | IO-04 | None identified | Backlog | [Card](https://trello.com/c/o8bvGU8E/148-browser-frames-import-iframe-shadow-content-or-report-precise-unsupported-scope) |
 | CONTEXT-DRAG | Native Context resize-handle delivery and exact geometry | UI-08 | None identified | Backlog | [Card](https://trello.com/c/dRLZalKf/149-context-drag-native-context-resize-handle-delivery-and-exact-geometry) |
 | BETA-01 | Qualify the private macOS core design journey | ENV-01, FIRST-01, FIRST-02, FIRST-03, FILE-07, FILE-08 | STAB-GPU, BRAND-VERIFY, FIRST-03, FILE-07, FILE-08 | Backlog | [Card](https://trello.com/c/sYpWJdvu/150-beta-01-qualify-the-private-macos-core-design-journey) |
-| PARITY-ALL | Audit every applicable requirement and surface for full parity | PRD / native ledger | Every other required execution task (368) | Backlog | [Card](https://trello.com/c/cr0YPLzZ/151-parity-all-audit-every-applicable-requirement-and-surface-for-full-parity) |
+| PARITY-ALL | Audit every applicable requirement and surface for full parity | PRD / native ledger | Every other required execution task (369) | Backlog | [Card](https://trello.com/c/cr0YPLzZ/151-parity-all-audit-every-applicable-requirement-and-surface-for-full-parity) |
 | A11Y-COPY | Keep command-copy buttons readable in both themes | PRD-05 / PRD-09 | BRAND-COPY-SOURCE | Executed | [Card](https://trello.com/c/1e6Ou0e7/360-a11y-copy-keep-command-copy-buttons-readable-in-both-themes) |
 | UI-TOAST-REFLOW | Keep translated toast messages readable beside long actions | PRD-05 / PRD-09 | BRAND-COPY-SOURCE | Executed | [Card](https://trello.com/c/DjJkNW8V/361-ui-toast-reflow-keep-translated-toast-messages-readable-beside-long-actions) |
 | UI-SPLIT-HEADER | Keep pane controls reachable below floating workspace actions | PRD-04 / PRD-05 | STAB-GPU | Backlog | [Card](https://trello.com/c/Lz1r5iLo/362-ui-split-header-keep-pane-controls-reachable-below-floating-workspace-actions) |
@@ -383,6 +383,7 @@ This table records the verified planning snapshot. Read the live board for later
 | CLI-10-MANAGE | Manage imported libraries in the interactive shell | CLI-10 | None identified | Backlog | [Card](https://trello.com/c/YKqtpM1c/384-cli-10-manage-manage-imported-libraries-in-the-interactive-shell) |
 | AUTH-05-ADVANCED | Match custom-provider limits and completion options | AUTH-05 | None identified | Backlog | [Card](https://trello.com/c/Xv3V4jV7/385-auth-05-advanced-match-custom-provider-limits-and-completion-options) |
 | FMT-09-DRIFT | Qualify current schema changes against pinned2.21 | FMT-09 | None identified | Backlog | [Card](https://trello.com/c/eZXKvRhb/386-fmt-09-drift-qualify-current-schema-changes-against-pinned221) |
+| MOD-AUDIT-CLOSURE | Audit remaining first-party runtime package owners | PRD-03 / operational requirement | MOD-AUDIT | Backlog | [Card](https://trello.com/c/R0oPWJAa/387-mod-audit-closure-audit-remaining-first-party-runtime-package-owners) |
 | DELIVERY-LFS | Verify current fixture delivery from our private fork | PRD operational requirement | PLAN-01 | Executed | [Card](https://trello.com/c/cvzyZ7Hw/363-delivery-lfs-verify-current-fixture-delivery-from-our-private-fork) |
 
 ## Native surface coverage

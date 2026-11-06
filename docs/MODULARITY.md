@@ -8,6 +8,9 @@ The implementation uses OpenPencil's existing package boundaries; Open Pen-speci
 Scope: authored `.ts`, `.vue`, `.rs` and `.css` under `src`, `packages/core/src`,
 `packages/vue/src`, `packages/scene-graph/src` and `desktop/src`. Counts are physical lines.
 `.d.ts` declarations, tests and `.stories.ts` examples are excluded; authored catalogs are included.
+This does not yet inventory the other first-party format, CLI/MCP or service package owners.
+[MOD-AUDIT-CLOSURE](https://trello.com/c/R0oPWJAa) records that bounded follow-up and must
+allocate any further oversized-owner tasks before whole-app maintainability is accepted.
 
 | Size | Files |
 | --- | ---: |
