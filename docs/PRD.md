@@ -25,9 +25,10 @@ modules, complete Open Pen branding and an executable Trello backlog.
   [feature catalog](pen-feature-reference/README.md), with a 2026-10-30 snapshot. The official
   [documentation index](https://docs.pen.dev/) is rechecked on 2026-11-06. The installed reference
   still reports 1.2.21. Documentation coverage does not prove runtime coverage.
-- Observed: the last accepted 2026-11-06 source-size audit counts 2,923 runtime files across the
-  app, Core, Vue SDK, Scene Graph and native shell. Median size is 65 physical lines; 2,750 are at most
-  300 lines and 14 exceed 600 after the MCP startup disposition. See [modularity](MODULARITY.md).
+- Observed: the current 2026-11-06 source-size audit counts 2,925 runtime files across the app, Core,
+  Vue SDK, Scene Graph and native shell. Median size is 65 physical lines; 2,752 are at most
+  300 lines and 14 exceed 600: one has a reviewed model-contract exception, 13 remain open.
+  Counts include the canvas candidate without accepting its pending native behavior. See [modularity](MODULARITY.md).
 - Initially observed: inherited web marks, localized product names, diagnostics labels and a native
   microphone explanation still identify the app as OpenPencil. The original violet Open Pen
   app-icon master already exists.

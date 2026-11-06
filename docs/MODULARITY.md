@@ -1,26 +1,29 @@
 # Runtime modularity audit
 
-Last accepted measurement: 2026-11-06, before the canvas reuse candidate.
-This is a size/ownership review, not proof that all architecture or behavior is accepted. The implementation uses OpenPencil's existing
-package boundaries; Open Pen-specific behavior is added to the owning domain.
+Measured 2026-11-06 from the current source after the model ownership review.
+This includes the canvas candidate whose native acceptance is pending; counts do not qualify behavior.
+This is a size/ownership review, not proof that all architecture or behavior is accepted.
+The implementation uses OpenPencil's existing package boundaries; Open Pen-specific behavior is added to the owning domain.
 
 Scope: authored `.ts`, `.vue`, `.rs` and `.css` under `src`, `packages/core/src`,
 `packages/vue/src`, `packages/scene-graph/src` and `desktop/src`. Counts are physical lines.
-Declarations, tests and `.stories.ts` examples are excluded; authored catalogs are included.
+`.d.ts` declarations, tests and `.stories.ts` examples are excluded; authored catalogs are included.
 
 | Size | Files |
 | --- | ---: |
-| 1–50 | 1,187 |
+| 1–50 | 1,189 |
 | 51–200 | 1,359 |
 | 201–300 | 204 |
 | 301–600 | 159 |
 | Above 600 | 14 |
 
-Total: 2,923. Median: 65. At most 300 lines: 2,750 (94%).
+Total: 2,925. Median: 65. At most 300 lines: 2,752 (94%).
 
 The initial baseline has 2,922 files, median 64.5, and 15 above 600. MOD-07 adds one
-focused owner and reduces the current oversized queue to 14. The baseline remains available
-at the planning commit; counts describe the measured source scope, not accepted product parity.
+focused owner and reduces the over-600 count to 14. MOD-02 records a reviewed model-contract
+exception among those 14, leaving 13 open dispositions. The canvas candidate adds two small
+owners, included in the current count without accepting its pending native behavior.
+The baseline remains available at the planning commit; counts describe the measured source scope, not accepted product parity.
 
 There is no universal industry file-size standard. Use 50–200 lines as a useful range for
 focused helpers/controls and 200–300 for a cohesive feature module, not a compulsory split.
@@ -29,7 +32,7 @@ The repository's configured review warning is 600 lines. Some inherited files ha
 | File | Lines | Required review |
 | --- | ---: | --- |
 | `packages/core/src/canvas/scene.ts` | 1,140 | Separate cohesive scene drawing responsibilities; retain pixels and order. |
-| `packages/scene-graph/src/types.ts` | 1,107 | Review declaration ownership; extract coherent type domains or document the schema exception. |
+| `packages/scene-graph/src/types.ts` | 1,107 | Reviewed model-contract exception; see MOD-02 disposition below. |
 | `packages/core/src/text/fonts.ts` | 1,014 | Separate font loading/resolution responsibilities; retain font recovery and shaping. |
 | `packages/scene-graph/src/graph.ts` | 848 | Review graph mutation/storage domains without weakening invariants. |
 | `packages/core/src/canvas/renderer.ts` | 752 | Separate lifecycle/state responsibilities using existing renderer domains. |
@@ -43,8 +46,8 @@ The repository's configured review warning is 600 lines. Some inherited files ha
 | `packages/core/src/layout.ts` | 619 | Separate layout coordination domains; retain authored geometry. |
 | `packages/core/src/figma-api/index.ts` | 606 | Review facade versus domain implementation; retain public API. |
 
-Every original oversized file has its own review/refactor task. The remaining rows are open.
-Completed dispositions are recorded separately below.
+Every original oversized file has its own review/refactor task. Thirteen listed dispositions remain open;
+`types.ts` is the reviewed exception. Completed dispositions are recorded separately below.
 Do not remove attribution, change serialized formats or introduce forwarding-only public
 exports to reduce a count. Declaration/catalog exceptions must identify an owner and reason.
 
@@ -90,5 +93,20 @@ remain untouched. Fourteen oversized owners and full product parity remain open.
 [Canvas reuse](CANVAS-LIFECYCLE.md) adds two focused app owners of 38 and 48 lines.
 Browser resource, rendering and teardown evidence passes; isolated native acceptance is held
 by a confirmed locked desktop. These additions are not an executed oversized-module disposition.
-The table above remains the last accepted audit snapshot; refresh it after acceptance.
-MOD-02 is the sole Building task and reviews Scene Graph declaration ownership independently.
+The current source-size table includes those additions without qualifying native graphics.
+MOD-03 is the sole Building task; it reviews the font-manager responsibilities.
+
+## Executed disposition: model-contract exception
+
+[MOD-02](https://trello.com/c/BW7NKv2t) retains the 1,107-line root Scene Graph model contract.
+Owner: Scene Graph model maintainers. The [ownership disposition](MODEL-OWNERSHIP.md)
+records 56 interfaces, 53 aliases, six constant catalogs/regex definitions and two three-line
+pure predicates; mutation/evaluation and validation already have separate domain owners.
+This is an ownership review and explicit exception, not a code extraction or line reduction.
+A careful physical split could preserve runtime shape and public names; it is not prohibited.
+
+All 1,486 Scene Graph owner tests / 10,789 assertions, actual public model/predicate checks and
+package metadata/export/contents/Publint/ATTW checks pass. Independent review confirms the narrow
+rationale. No runtime source, public export or serialized shape changes. Reopen this exception
+when procedural responsibilities enter the contract or an independently owned domain benefits
+from separation. Fourteen files remain above 600 lines; thirteen still need disposition.

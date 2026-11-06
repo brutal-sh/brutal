@@ -20,8 +20,8 @@ Destroyed managers cannot create another surface. Initialization checks cancella
 its awaited animation frame and suppresses late failures after disposal.
 
 The two new app owners are 38 and 48 lines. This is a cohesive lifecycle change, not a
-completed disposition of any oversized-module task. The last accepted size audit remains
-in [MODULARITY.md](MODULARITY.md); its runtime counts precede this candidate.
+completed disposition of any oversized-module task. The current source-size audit in
+[MODULARITY.md](MODULARITY.md) includes these additions without accepting native behavior.
 
 ## Executed browser evidence
 

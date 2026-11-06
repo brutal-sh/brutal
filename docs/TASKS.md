@@ -295,8 +295,8 @@ This table records the verified planning snapshot. Read the live board for later
 | BRAND-VERIFY | Qualify own-brand identity across the shipped app | PRD / native ledger | BRAND-ASSETS, BRAND-COPY, BRAND-NATIVE, BRAND-LOGS, BRAND-LINKS | Backlog | [Card](https://trello.com/c/1kq4PDg2/85-brand-verify-qualify-own-brand-identity-across-the-shipped-app) |
 | MOD-AUDIT | Record runtime module sizes and ownership review queue | PRD / native ledger | None identified | Executed | [Card](https://trello.com/c/VvfSFVWv/86-mod-audit-record-runtime-module-sizes-and-ownership-review-queue) |
 | MOD-01 | Split cohesive responsibilities: scene.ts | PRD / native ledger | STAB-GPU | Backlog | [Card](https://trello.com/c/tTqRqnzU/87-mod-01-split-cohesive-responsibilities-scenets) |
-| MOD-02 | Review declaration/catalog ownership: types.ts | PRD / native ledger | None identified | Building | [Card](https://trello.com/c/BW7NKv2t/88-mod-02-review-declaration-catalog-ownership-typests) |
-| MOD-03 | Split cohesive responsibilities: fonts.ts | PRD / native ledger | None identified | Backlog | [Card](https://trello.com/c/4ehkJaOM/89-mod-03-split-cohesive-responsibilities-fontsts) |
+| MOD-02 | Review declaration/catalog ownership: types.ts | PRD / native ledger | None identified | Executed | [Card](https://trello.com/c/BW7NKv2t/88-mod-02-review-declaration-catalog-ownership-typests) |
+| MOD-03 | Split cohesive responsibilities: fonts.ts | PRD / native ledger | None identified | Building | [Card](https://trello.com/c/4ehkJaOM/89-mod-03-split-cohesive-responsibilities-fontsts) |
 | MOD-04 | Split cohesive responsibilities: graph.ts | PRD / native ledger | None identified | Backlog | [Card](https://trello.com/c/TrLXJQUl/90-mod-04-split-cohesive-responsibilities-graphts) |
 | MOD-05 | Split cohesive responsibilities: renderer.ts | PRD / native ledger | STAB-GPU | Backlog | [Card](https://trello.com/c/iHHP32LH/91-mod-05-split-cohesive-responsibilities-rendererts) |
 | MOD-06 | Split cohesive responsibilities: index.ts | PRD / native ledger | STAB-GPU | Backlog | [Card](https://trello.com/c/4BpMrJ8z/92-mod-06-split-cohesive-responsibilities-indexts) |

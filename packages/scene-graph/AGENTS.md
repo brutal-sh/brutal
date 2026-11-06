@@ -4,6 +4,8 @@ Framework-neutral document model. Owns node types, primitives, geometry, matrice
 
 - The root entry holds the model: `SceneGraph` (`src/graph.ts`), ID generation (`src/ids.ts`), and the node types (`src/types.ts`). Every other domain is a subpath named after its source path, such as `./instances/overrides` for `src/instances/overrides.ts`; `src/index.ts` only re-exports. Add a subpath to `package.json` and `tsdown.config.ts` together (`check:packages`).
 
+- `src/types.ts` has a reviewed model-contract size exception owned by Scene Graph model maintainers; keep mutation, parsing, I/O and lifecycle behavior in their domains, and reopen the review if those enter the contract or a domain benefits from independent ownership (`docs/MODEL-OWNERSHIP.md`, MOD-02).
+
 - Nodes live in a flat `Map<string, SceneNode>`; runtime hierarchy uses `parentId` and `childIds`. Frames do not clip by default.
 - Walk up the tree with `SceneGraph.closest()` or `isDescendant()`, which stop on a parent cycle in bad data, rather than a hand-written `parentId` loop (`packages/scene-graph/tests/basic/graph.test.ts`).
 - Change a live graph's hierarchy through `reparentNode`, `insertChildAt`, or `updateNode`, which emit the events collaboration syncs; assign `childIds` directly only on a graph copy or nodes created in the same edit (`sortInstanceChildren` in `packages/scene-graph/src/instances/sync.ts`).

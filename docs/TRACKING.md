@@ -26,8 +26,10 @@ and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), using actual Pen 1.
 A complete fresh board readback finds 363 open cards: 346 unique execution tasks and 17 milestones.
 All 152 catalog requirements and 22 exact native ledger rows map to real execution cards.
 There are no missing or duplicate task IDs, and the dependency graph is acyclic.
-All 15 originally oversized runtime modules have individual disposition tasks; one is executed
-and 14 remain above 600 lines. The six identity workstreams include a copy gate with six smaller source/acceptance tasks.
+All 15 originally oversized runtime modules have individual disposition tasks. Two dispositions
+are executed: one cohesive extraction and one explicit model-contract exception. Fourteen files remain
+above 600 lines, including the reviewed model exception; thirteen dispositions remain open.
+The six identity workstreams include a copy gate with six smaller source/acceptance tasks.
 This proves tracking coverage, not accepted product parity or exhaustive discovery of every native state.
 
 Planning publication, the reproducible runtime audit, own-brand assets, owned diagnostics/log
@@ -37,8 +39,11 @@ The discovered command-copy contrast task has bounded executed evidence.
 BRAND-COPY-AI has bounded executed copy evidence, including nine code-callback/native-failure
 journeys with every provider tunnel rejected by a test-owned local proxy. No real provider
 authentication, credential save or inference is accepted. STAB-GPU has a browser-verified
-implementation in Verify; actual native drawing remains unexecuted because macOS reports a locked desktop. [Canvas evidence](CANVAS-LIFECYCLE.md)
-records the executed paths and limits. MOD-02 declaration ownership is the sole Building task.
+implementation in Verify; actual native drawing remains unexecuted because macOS reports
+a locked desktop. [Canvas evidence](CANVAS-LIFECYCLE.md) records the paths and limits.
+MOD-02 is an executed model-contract ownership exception, with no code extraction claimed.
+The [disposition](MODEL-OWNERSHIP.md) records its owner, checks and review trigger.
+MOD-03 font-manager responsibilities is the sole Building task.
 UI-TOAST-REFLOW has bounded executed evidence: 72 translated component captures at two widths
 and both themes, six baseline examples, and 18 rebuilt native version-warning journeys.
 Manual visual review confirms the message column and grouped controls; automated checks cover
@@ -49,7 +54,7 @@ BRAND-COPY is an unaccepted gate in Verify; AI, editor, recovery/update, cloud-c
 copy journeys have their own child cards.
 Documentation refresh is Ready; graphics lifecycle stability remains unaccepted in Verify.
 The interrupted zero-size icon work retains its failed wider-run receipts and dependencies.
-The delivery snapshot is 332 Backlog, 1 Ready, 1 Building, 2 Verify and 10 Executed, plus 17 milestones.
+The delivery snapshot is 331 Backlog, 1 Ready, 1 Building, 2 Verify and 11 Executed, plus 17 milestones.
 DELIVERY-LFS has bounded executed current-checkout fixture delivery: all twelve objects
 are fetched from the own private endpoint into empty independent storage, with matching
 SHA-256/sizes and LFS integrity checks. Historical object closure is not qualified.
