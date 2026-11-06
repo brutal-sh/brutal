@@ -13,6 +13,10 @@ The initial mirror is limited to the twelve current object IDs, totaling 154,786
 It does not upload every object from branch history. Historical checkouts retain the endpoint
 configuration recorded by those revisions and are outside this current-checkout acceptance.
 
-[DELIVERY-LFS](https://trello.com/c/cvzyZ7Hw) tracks the own-endpoint upload and independent
-fresh-storage fetch/digest check. Verification remains pending until that actual fetch runs.
+[DELIVERY-LFS](https://trello.com/c/cvzyZ7Hw) has executed own-endpoint upload and an independent
+fresh-storage download of all twelve objects. The shallow local source clone starts with only
+LFS pointers, empty storage and no reference directory; actual GitHub LFS pull downloads all
+twelve, every SHA-256 and size matches, and `git lfs fsck` passes. Independent review also
+checks the retained files and endpoint configuration, without another network run.
+The source Git clone is local and shallow; remote Git-history completeness is not established.
 The canvas candidate and native limits are recorded in [CANVAS-LIFECYCLE.md](CANVAS-LIFECYCLE.md).

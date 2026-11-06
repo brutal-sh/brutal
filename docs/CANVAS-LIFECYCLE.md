@@ -69,3 +69,7 @@ A separate observed defect, [UI-SPLIT-HEADER](https://trello.com/c/Lz1r5iLo), re
 inspector overlap blocking pane Close controls. Real pointer failures remain preserved. Keyboard
 activation in the resource fixture does not accept those clicks. Full Pen design/functionality,
 normal native delivery, whole-product branding and beta qualification remain open.
+
+The new fixture and the other eleven current LFS fixtures are delivered through the own
+private endpoint. [Current-checkout delivery](CHECKOUT.md) has executed fresh-storage
+download, digest/size and integrity checks; no historical-object closure is inferred.

@@ -6,7 +6,7 @@ Repository: [private Open Pen repository](https://github.com/jpoindexter/open-pe
 Board: [Open Pen — independent design editor](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor), private.
 
 The [PRD](PRD.md) owns the outcome, constraints and release criteria.
-The [task index](TASKS.md) links all 345 execution cards; the [modularity audit](MODULARITY.md)
+The [task index](TASKS.md) links all 346 execution cards; the [modularity audit](MODULARITY.md)
 records the measured review queue. Requirements come from the [feature catalog](pen-feature-reference/README.md)
 and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), using actual Pen 1.2.21 as the reference.
 
@@ -23,7 +23,7 @@ and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), using actual Pen 1.
 
 ## Verified planning snapshot
 
-A complete fresh board readback finds 362 open cards: 345 unique execution tasks and 17 milestones.
+A complete fresh board readback finds 363 open cards: 346 unique execution tasks and 17 milestones.
 All 152 catalog requirements and 22 exact native ledger rows map to real execution cards.
 There are no missing or duplicate task IDs, and the dependency graph is acyclic.
 All 15 originally oversized runtime modules have individual disposition tasks; one is executed
@@ -49,7 +49,11 @@ BRAND-COPY is an unaccepted gate in Verify; AI, editor, recovery/update, cloud-c
 copy journeys have their own child cards.
 Documentation refresh is Ready; graphics lifecycle stability remains unaccepted in Verify.
 The interrupted zero-size icon work retains its failed wider-run receipts and dependencies.
-The delivery snapshot is 332 Backlog, 1 Ready, 1 Building, 2 Verify and 9 Executed, plus 17 milestones.
+The delivery snapshot is 332 Backlog, 1 Ready, 1 Building, 2 Verify and 10 Executed, plus 17 milestones.
+DELIVERY-LFS has bounded executed current-checkout fixture delivery: all twelve objects
+are fetched from the own private endpoint into empty independent storage, with matching
+SHA-256/sizes and LFS integrity checks. Historical object closure is not qualified.
+[Delivery details](CHECKOUT.md) retain the exact scope.
 UI-SPLIT-HEADER separately records toolbar/inspector overlap blocking pane Close controls.
 The board retains 17 milestones, 152 mapped requirements and 22 mapped native rows.
 No branding milestone or product-parity feature group is fully accepted.

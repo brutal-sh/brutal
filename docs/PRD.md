@@ -73,7 +73,9 @@ Use actual `/Applications/Pen.app`, measurements and official documentation as t
 Use OpenPencil as the implementation foundation. Do not include proprietary Pen code/assets,
 copy credentials, bypass vendor activation or route requests through a paid vendor backend.
 Preserve the Open Pen installation and user data during isolated tests. GitHub remains private,
-the PR stays draft and Actions stays disabled. No public deployment, release or merge is authorized.
+the PR stays draft and Actions stays disabled. [Current fixture delivery](CHECKOUT.md) uses
+the private fork endpoint with verified downloads; upstream attribution remains. No public
+deployment, release or merge is authorized.
 
 Do not rename compatibility protocols or package imports merely to remove a spelling from
 source. Do not rename an external provider as if Open Pen operates it. Do not split cohesive
