@@ -150,7 +150,29 @@ rerun also records a setup timeout during an unexpected navigation; the final un
 nine-case run passes with the exact transport-call assertion and complete transport interface.
 
 A11Y-COPY is executed at `bf1b43eb3`. BRAND-COPY-AI remains open for other AI copy states,
-including successful callbacks and installed-agent version failures not exercised by these receipts.
+including successful callbacks and the toast reflow issue described below.
 The native bundle precedes the command-copy contrast change; fresh native delivery/clipboard,
 full Pen visual matching and full branding acceptance remain open. The broader structure lint
 and dedicated native typing retain the previously documented unrelated failures.
+
+## Companion version warnings and observed reflow gap
+
+Eighteen actual native journeys exercise old MCP and Harness versions across all nine languages.
+The opt-in runner fixture writes rejecting executables only beneath its checked temporary
+native-test directory and prepends that directory to its own PATH. The spec verifies the native
+build, discovered paths and reported versions before configuring models or sending a message.
+Non-version commands exit without forwarding to real agents; setup may probe the rejecting ACP
+stub without arguments. No installed companion is replaced and no inference is performed.
+
+Each case observes the translated version warning, retains the unsent draft, adds no user
+message and opens translated guided setup through the warning action. The final moved spec
+passes all 18 cases in 31.4 seconds. The existing setup/callback domain passes its 18 cases again
+after the shared locale helper becomes idempotent and avoids toggling an already-open popup.
+The three specs now share `tests/e2e/native/ai/`; default runs leave the version fixture disabled.
+Fixture self-checks verify root rejection, all version outputs, rejecting exits and call logs.
+
+Visual review withholds acceptance: long Polish, French and German action labels consume most
+of the toast width and force a narrow message column. Captures wait for the toast animation to
+finish; full Polish captures confirm the issue is in the actual layout, not only the review crop.
+[UI-TOAST-REFLOW](https://trello.com/c/DjJkNW8V) owns the shared layout fix. AI copy moves to Verify
+without being accepted. Full branding, successful callback presentation and Pen parity remain open.

@@ -34,7 +34,12 @@ export const AI_SETUP_LABELS = [
     aiSetupSignInCancelled: 'Sign-in was cancelled.',
     aiSetupChatGPTCallbackCancelled: 'ChatGPT sign-in was cancelled. You can close this tab.',
     aiSetupChatGPTCallbackStale:
-      'This sign-in link belongs to an earlier attempt. Start again from Open Pen.'
+      'This sign-in link belongs to an earlier attempt. Start again from Open Pen.',
+    chatMCPOutdated:
+      'Open Pen’s MCP server doesn’t match this version of Open Pen. Run guided setup to update it.',
+    chatPiCompanionOutdated:
+      'The Harness companion doesn’t match this version of Open Pen. Run guided setup to update it.',
+    aiSetupRun: 'Run guided setup'
   },
   {
     locale: 'de',
@@ -74,7 +79,12 @@ export const AI_SETUP_LABELS = [
     aiSetupChatGPTCallbackCancelled:
       'Die Anmeldung bei ChatGPT wurde abgebrochen. Du kannst diesen Tab schließen.',
     aiSetupChatGPTCallbackStale:
-      'Dieser Anmeldelink gehört zu einem früheren Versuch. Starte erneut in Open Pen.'
+      'Dieser Anmeldelink gehört zu einem früheren Versuch. Starte erneut in Open Pen.',
+    chatMCPOutdated:
+      'Der MCP-Server von Open Pen passt nicht zu dieser Open Pen-Version. Starte die geführte Einrichtung, um ihn zu aktualisieren.',
+    chatPiCompanionOutdated:
+      'Der Harness-Begleiter passt nicht zu dieser Open Pen-Version. Starte die geführte Einrichtung, um ihn zu aktualisieren.',
+    aiSetupRun: 'Geführte Einrichtung starten'
   },
   {
     locale: 'es',
@@ -115,7 +125,12 @@ export const AI_SETUP_LABELS = [
     aiSetupChatGPTCallbackCancelled:
       'Se canceló el inicio de sesión en ChatGPT. Puedes cerrar esta pestaña.',
     aiSetupChatGPTCallbackStale:
-      'Este enlace de inicio de sesión pertenece a un intento anterior. Vuelve a empezar desde Open Pen.'
+      'Este enlace de inicio de sesión pertenece a un intento anterior. Vuelve a empezar desde Open Pen.',
+    chatMCPOutdated:
+      'El servidor MCP de Open Pen no coincide con esta versión de Open Pen. Ejecuta la configuración guiada para actualizarlo.',
+    chatPiCompanionOutdated:
+      'El complemento Harness no coincide con esta versión de Open Pen. Ejecuta la configuración guiada para actualizarlo.',
+    aiSetupRun: 'Iniciar la configuración guiada'
   },
   {
     locale: 'fr',
@@ -156,7 +171,12 @@ export const AI_SETUP_LABELS = [
     aiSetupChatGPTCallbackCancelled:
       'La connexion à ChatGPT a été annulée. Vous pouvez fermer cet onglet.',
     aiSetupChatGPTCallbackStale:
-      'Ce lien de connexion appartient à une tentative précédente. Recommencez depuis Open Pen.'
+      'Ce lien de connexion appartient à une tentative précédente. Recommencez depuis Open Pen.',
+    chatMCPOutdated:
+      'Le serveur MCP d’Open Pen ne correspond pas à cette version d’Open Pen. Lancez la configuration guidée pour le mettre à jour.',
+    chatPiCompanionOutdated:
+      'Le compagnon Harness ne correspond pas à cette version d’Open Pen. Lancez la configuration guidée pour le mettre à jour.',
+    aiSetupRun: 'Lancer la configuration guidée'
   },
   {
     locale: 'it',
@@ -196,7 +216,12 @@ export const AI_SETUP_LABELS = [
     aiSetupChatGPTCallbackCancelled:
       'L’accesso a ChatGPT è stato annullato. Puoi chiudere questa scheda.',
     aiSetupChatGPTCallbackStale:
-      'Questo link di accesso appartiene a un tentativo precedente. Ricomincia da Open Pen.'
+      'Questo link di accesso appartiene a un tentativo precedente. Ricomincia da Open Pen.',
+    chatMCPOutdated:
+      'Il server MCP di Open Pen non corrisponde a questa versione di Open Pen. Avvia la configurazione guidata per aggiornarlo.',
+    chatPiCompanionOutdated:
+      'Il companion Harness non corrisponde a questa versione di Open Pen. Avvia la configurazione guidata per aggiornarlo.',
+    aiSetupRun: 'Avvia la configurazione guidata'
   },
   {
     locale: 'ja',
@@ -237,7 +262,12 @@ export const AI_SETUP_LABELS = [
     aiSetupChatGPTCallbackCancelled:
       'ChatGPT へのサインインはキャンセルされました。このタブを閉じてください。',
     aiSetupChatGPTCallbackStale:
-      'このサインインリンクは以前の試行のものです。Open Pen からやり直してください。'
+      'このサインインリンクは以前の試行のものです。Open Pen からやり直してください。',
+    chatMCPOutdated:
+      'Open Pen の MCP サーバーがこのバージョンの Open Pen と一致しません。ガイド付きセットアップを実行して更新してください。',
+    chatPiCompanionOutdated:
+      'Harness コンパニオンがこのバージョンの Open Pen と一致しません。ガイド付きセットアップを実行して更新してください。',
+    aiSetupRun: 'ガイド付き設定を開始'
   },
   {
     locale: 'pl',
@@ -277,7 +307,12 @@ export const AI_SETUP_LABELS = [
     aiSetupChatGPTCallbackCancelled:
       'Logowanie do ChatGPT zostało anulowane. Możesz zamknąć tę kartę.',
     aiSetupChatGPTCallbackStale:
-      'Ten link logowania pochodzi z wcześniejszej próby. Zacznij od nowa w Open Pen.'
+      'Ten link logowania pochodzi z wcześniejszej próby. Zacznij od nowa w Open Pen.',
+    chatMCPOutdated:
+      'Serwer MCP Open Pen nie pasuje do tej wersji Open Pen. Uruchom konfigurację z przewodnikiem, aby go zaktualizować.',
+    chatPiCompanionOutdated:
+      'Program towarzyszący Harness nie pasuje do tej wersji Open Pen. Uruchom konfigurację z przewodnikiem, aby go zaktualizować.',
+    aiSetupRun: 'Uruchom konfigurację z przewodnikiem'
   },
   {
     locale: 'ru',
@@ -317,7 +352,12 @@ export const AI_SETUP_LABELS = [
     aiSetupSignInCancelled: 'Вход отменён.',
     aiSetupChatGPTCallbackCancelled: 'Вход в ChatGPT отменён. Можно закрыть эту вкладку.',
     aiSetupChatGPTCallbackStale:
-      'Эта ссылка для входа относится к прошлой попытке. Начните заново в Open Pen.'
+      'Эта ссылка для входа относится к прошлой попытке. Начните заново в Open Pen.',
+    chatMCPOutdated:
+      'MCP-сервер Open Pen не подходит к этой версии Open Pen. Запустите пошаговую настройку, чтобы обновить его.',
+    chatPiCompanionOutdated:
+      'Компаньон Harness не подходит к этой версии Open Pen. Запустите пошаговую настройку, чтобы обновить его.',
+    aiSetupRun: 'Пройти пошаговую настройку'
   },
   {
     locale: 'zh-CN',
@@ -349,6 +389,9 @@ export const AI_SETUP_LABELS = [
     aiSetupChatGPTWaiting: '请在浏览器中完成 ChatGPT 登录。',
     aiSetupSignInCancelled: '登录已取消。',
     aiSetupChatGPTCallbackCancelled: 'ChatGPT 登录已取消。你可以关闭此标签页。',
-    aiSetupChatGPTCallbackStale: '此登录链接属于之前的尝试。请从 Open Pen 重新开始。'
+    aiSetupChatGPTCallbackStale: '此登录链接属于之前的尝试。请从 Open Pen 重新开始。',
+    chatMCPOutdated: 'Open Pen 的 MCP 服务器与此版本的 Open Pen 不匹配。运行引导式设置来更新它。',
+    chatPiCompanionOutdated: 'Harness 配套程序与此版本的 Open Pen 不匹配。运行引导式设置来更新它。',
+    aiSetupRun: '运行引导式设置'
   }
 ]

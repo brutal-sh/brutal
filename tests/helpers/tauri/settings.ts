@@ -1,6 +1,12 @@
 export async function chooseLocale(name: string): Promise<void> {
-  await (await $('[data-test-id="settings-language"]')).click()
-  await browser.keys('Space')
+  const trigger = await $('[data-test-id="settings-language"]')
+  await trigger.waitForDisplayed()
+  const open = (await trigger.getAttribute('aria-expanded')) === 'true'
+  if (!open && (await trigger.getText()).trim() === name) return
+  if (!open) {
+    await trigger.click()
+    if ((await trigger.getAttribute('aria-expanded')) !== 'true') await browser.keys('Space')
+  }
   await (await $('[role="listbox"]')).waitForDisplayed()
   // Fixture setup targets the option; Enter still traverses the native WebView's UI handler.
   await browser.execute((language) => {
@@ -18,7 +24,11 @@ export async function chooseLocale(name: string): Promise<void> {
 }
 
 export async function closeOwnedDialogs(): Promise<void> {
-  if (await (await $('[role="listbox"]')).isExisting()) await browser.keys('Escape')
+  const listbox = await $('[role="listbox"]')
+  if (await listbox.isExisting()) {
+    await browser.keys('Escape')
+    await listbox.waitForExist({ reverse: true })
+  }
   const setup = await $('[data-test-id="ai-setup-dialog"]')
   if (await setup.isExisting()) {
     await browser.keys('Escape')

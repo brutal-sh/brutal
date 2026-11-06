@@ -6,7 +6,7 @@ Repository: [private Open Pen repository](https://github.com/jpoindexter/open-pe
 Board: [Open Pen — independent design editor](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor), private.
 
 The [PRD](PRD.md) owns the outcome, constraints and release criteria.
-The [task index](TASKS.md) links all 343 execution cards; the [modularity audit](MODULARITY.md)
+The [task index](TASKS.md) links all 344 execution cards; the [modularity audit](MODULARITY.md)
 records the measured review queue. Requirements come from the [feature catalog](pen-feature-reference/README.md)
 and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), using actual Pen 1.2.21 as the reference.
 
@@ -23,7 +23,7 @@ and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), using actual Pen 1.
 
 ## Verified planning snapshot
 
-A complete fresh board readback finds 360 open cards: 343 unique execution tasks and 17 milestones.
+A complete fresh board readback finds 361 open cards: 344 unique execution tasks and 17 milestones.
 All 152 catalog requirements and 22 exact native ledger rows map to real execution cards.
 There are no missing or duplicate task IDs, and the dependency graph is acyclic.
 All 15 originally oversized runtime modules have individual disposition tasks; one is executed
@@ -34,15 +34,18 @@ Planning publication, the reproducible runtime audit, own-brand assets, owned di
 names and the MCP startup modularization have bounded acceptance evidence linked.
 Canonical localized product labels have bounded source/CLI/nine-language browser acceptance.
 The discovered command-copy contrast task has bounded executed evidence.
-The single Building task is BRAND-COPY-AI: remaining successful-callback and installed-agent
-failure states. Nine-language browser network-failure/Retry and native stale/cancelled callback
-journeys now have bounded executed evidence. Its normal browser/native journeys and component
-checks retain their precise limits; no real provider sign-in or inference is accepted by mocks.
+The single Building task is UI-TOAST-REFLOW: long translated recovery actions squeeze the
+message column. BRAND-COPY-AI is unaccepted in Verify with this visual dependency and remaining
+successful-callback presentation. Nine-language browser network-failure/Retry and native
+stale/cancelled callback journeys have bounded executed evidence. Eighteen native version-failure
+journeys also preserve drafts and open guided setup, but their visual acceptance is withheld.
+Normal browser/native journeys and component checks retain their precise limits; no real
+provider sign-in or inference is accepted by mocks.
 BRAND-COPY is an unaccepted gate in Verify; AI, editor, recovery/update, cloud-client and support
 copy journeys have their own child cards.
 Documentation refresh and graphics lifecycle stability are Ready. The interrupted zero-size
 icon work retains its failed wider-run receipts and dependencies.
-The delivery snapshot is 332 Backlog, 2 Ready, 1 Building, 1 Verify and 7 Executed, plus 17 milestones.
+The delivery snapshot is 332 Backlog, 2 Ready, 1 Building, 2 Verify and 7 Executed, plus 17 milestones.
 No branding milestone or product-parity feature group is fully accepted.
 
 ## Control loop
