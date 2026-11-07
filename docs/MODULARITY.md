@@ -156,3 +156,18 @@ and after, source/consumer types, lint, architecture and build. Both full app-sh
 retain the same three failures; two narrow verification cards preserve those failures.
 MOD-06 remains Verify until fresh isolated native tab acceptance can run on an available
 desktop. The existing font and graph native criteria remain open too.
+
+## Candidate awaiting reference acceptance: FIG text import
+
+[MOD-16](https://trello.com/c/P6y3uJe1) moves the existing text-conversion concern into
+`node-change/text/import.ts` (187 lines), reducing `convert.ts` from 1,333 to 1,155.
+Seven helpers and their private type retain their implementations; dispatcher order,
+other declarations and public exports are unchanged. The remaining coordinator
+still exceeds the review threshold and belongs to MOD-19.
+
+The expanded source candidate now has 3,612 runtime code files and twelve above
+600. [FIG text evidence](FIG-TEXT-OWNERSHIP.md) records 761 owner tests before/after,
+zero differences in two complete archive digests, four browser round trips in both
+controls, and an identical actual wrapped-text PNG. The old stored visual control
+still fails, and required live Figma validation is unexecuted. MOD-16 stays Verify;
+line reduction and preserved before/after output do not close those gates.

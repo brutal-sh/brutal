@@ -45,6 +45,9 @@ modules, complete Open Pen branding and an executable Trello backlog.
   full app shards initially retain the same three failures, allocated to two narrow repair
   tasks. Their [bounded test-control repairs](APP-TEST-CONTROLS.md) subsequently pass the
   full app shard: 1,955 tests across 339 files, without application source changes.
+  The FIG text-import candidate adds one owner (3,612 code files; twelve still above 600),
+  preserves 761 owner tests and two whole-archive digests, and remains Verify for its retained
+  visual-control failure and required live Figma round trip.
 - Initially observed: inherited web marks, localized product names, diagnostics labels and a native
   microphone explanation still identify the app as OpenPencil. The original violet Open Pen
   app-icon master already exists.
@@ -105,13 +108,13 @@ types/catalogs into arbitrary microfiles or weaken validation to reduce line cou
 
 ## Delivery sequence
 
-The fresh board contains 382 bounded execution tasks and 17 milestones. Every one of the
+The fresh board contains 383 bounded execution tasks and 17 milestones. Every one of the
 164 catalog requirements and 22 native ledger rows is allocated; allocation is not acceptance.
 [Task index](TASKS.md) records the live-board states and dependencies.
 
 | Horizon | Outcome | Evidence checkpoint |
 | --------------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Now | Extract FIG text import conversion from record dispatch (MOD-16) | Capture the whole-archive baseline and preserve text fallback, metadata, dispatch and public exports; retain any unexecuted Figma acceptance. |
+| Now | Extract raw FIG payload preservation from node export (MOD-17) | Capture export/raw-metadata/patch baselines and preserve authored/raw precedence, blob references, metadata and public exports; retain any unexecuted Figma acceptance. |
 | Next | Continue dependency-free branding and module work; retain native and mixed-run gates | The traced host-sleep failure has a passing awake control; the older mixed failure and native associated-file delivery remain unclassified or unexecuted. |
 | Then                  | Stabilize document switching and finish unaccepted icon, module and feature/screen tasks in dependency order | Each card has relevant owner tests, visual/native checks and a commit/evidence link before Executed; dependent renderer/input work waits for STAB-GPU. |
 | Release qualification | Deliver private beta, then complete the full parity gate | Clean normal build, install/restart/recovery and core journey; declared beta limitations. Later, no required parity state remains unaccepted. |
@@ -150,7 +153,7 @@ percentage is reported until its denominator and acceptance evidence are complet
 - 2026-11-06 — Jason requests explicit modularization goals, a PRD and smaller complete Trello tasks.
 - 2026-11-06 — Keep the full parity objective active; preserve broad cards as milestones and
   add traceable execution tasks rather than dropping unfinished work.
-- Next review: after the FIG text-import extraction and its owner/browser controls.
+- Next review: after the FIG raw-payload export extraction and its owner/browser controls.
   Codex will update counts, evidence and dependencies from fresh results.
 - Open: graphics context reuse/retirement, zero-to-positive icon redraw, exact glyph pixels,
   runtime resize and bindings, remaining native screens/menus and non-macOS qualification.
