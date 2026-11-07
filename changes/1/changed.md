@@ -37,7 +37,7 @@
 
 - Wrap sibling selections with inferred flow, retained average spacing, numbered frames and matching cross-axis Fill sizing through inspector, menu and keyboard actions.
 - Primitives starts keyboard focus on Rectangle while retaining the checked tool, and compact named icons place their controls below Fill without frame-only Flow, clipping or Stroke controls; Advanced retains those controls.
-- Use Open Pen product labels across supported translations, setup, notifications, startup guidance, document-format labels and CLI help while preserving third-party service names.
+- Use Open Pen product labels across supported translations, setup, notifications, startup guidance, document-format labels, CLI help and export errors while preserving third-party service names.
 
 - Software Update links to Open Pen’s change history and shows translated availability guidance with readable release-note placeholders.
 - Startup support notices link to Open Pen’s system requirements and issue form with matching diagnostic platform details.
