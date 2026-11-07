@@ -38,6 +38,8 @@ modules, complete Open Pen branding and an executable Trello backlog.
   including sixteen runtime packages and explicit public/alias helpers. Fourteen code files
   and nine data/declaration files exceed 600; new FIG/schema follow-ups and the translated
   catalog family have explicit cards. Inventory acceptance does not qualify those dispositions.
+  The subsequent PEN-adapter extraction adds two focused code files (3,609 total), reduces
+  code files above 600 to thirteen, and has bounded owner/browser/native acceptance.
 - Initially observed: inherited web marks, localized product names, diagnostics labels and a native
   microphone explanation still identify the app as OpenPencil. The original violet Open Pen
   app-icon master already exists.
@@ -98,7 +100,7 @@ types/catalogs into arbitrary microfiles or weaken validation to reduce line cou
 
 | Horizon | Outcome | Evidence checkpoint |
 | --------------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Now                   | Review panel-catalog ownership across canonical and translated files                   | Choose a cohesive catalog partition or justified exception, preserving all nine locales, keys and consuming inspector behavior.         |
+| Now                   | Execute native graphics lifecycle acceptance                   | Twelve document switches retain drawing/state with bounded resources; verify resize, color-space and teardown in the isolated native host.         |
 | Next                  | Continue dependency-free branding and mixed WebKit reliability checks                           | Warning surface has bounded executed evidence; native associated-file delivery and the failed mixed run remain open.                 |
 | Then                  | Stabilize document switching and finish unaccepted icon, module and feature/screen tasks in dependency order | Each card has relevant owner tests, visual/native checks and a commit/evidence link before Executed; dependent renderer/input work waits for STAB-GPU. |
 | Release qualification | Deliver private beta, then complete the full parity gate | Clean normal build, install/restart/recovery and core journey; declared beta limitations. Later, no required parity state remains unaccepted. |

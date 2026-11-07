@@ -130,3 +130,14 @@ when procedural responsibilities enter the contract or an independently owned do
 from separation. At that review, fourteen files remain above 600 lines; thirteen need disposition.
 The current table additionally includes the unaccepted font and graph candidates, reducing
 those counts to twelve files and eleven other oversized owners.
+
+## Executed criterion: format registry
+
+[MOD-11](https://trello.com/c/yoCuhcXD/97-mod-11-split-cohesive-responsibilities-formatsts) separates the existing PEN adapter and
+its asset-loading helpers into their format owner. The candidate registry is 513 lines,
+the adapter 129 and shared immutable contracts 17. The complete moved bodies and public
+metadata/order are retained. The expanded baseline above remains 3,607 code files at its
+measured source; this candidate adds two files (3,609) and reduces code files above 600
+from fourteen to thirteen, without accepting behavior from counts. [Format evidence](FORMAT-OWNERSHIP.md)
+records the before/after controls, one executed isolated native save/reopen path and
+remaining native file-panel/full-format limits. Source publication/readback follows.

@@ -6,7 +6,7 @@ Repository: [private Open Pen repository](https://github.com/jpoindexter/open-pe
 Board: [Open Pen — independent design editor](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor), private.
 
 The [PRD](PRD.md) owns the outcome, constraints and release criteria.
-The [task index](TASKS.md) links all 377 execution cards; the [modularity audit](MODULARITY.md)
+The [task index](TASKS.md) links all 378 execution cards; the [modularity audit](MODULARITY.md)
 records the measured review queue. Requirements come from the [feature catalog](pen-feature-reference/README.md)
 and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), using actual Pen 1.2.21 as the reference.
 
@@ -23,16 +23,18 @@ and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), using actual Pen 1.
 
 ## Verified planning snapshot
 
-A complete fresh board readback finds 394 open cards: 377 unique execution tasks and 17 milestones.
+A complete fresh board readback finds 395 open cards: 378 unique execution tasks and 17 milestones.
 All 164 catalog requirements and 22 exact native ledger rows map to real execution cards.
 There are no missing or duplicate task IDs, and the dependency graph is acyclic.
 All 15 originally oversized runtime modules have individual disposition tasks.
 The expanded runtime audit adds two FIG code owners with four staged disposition cards
-and a separate Kiwi schema review; eight translated catalogs join existing MOD-08. Two
-dispositions are executed: one cohesive extraction and one explicit model-contract exception.
+and a separate Kiwi schema review; eight translated catalogs join existing MOD-08. Three
+dispositions have bounded executed criteria: MCP and PEN-adapter extractions, and one
+explicit model-contract exception.
 The original five-root code scope has twelve files above 600 lines. The expanded
-3,607-file scope has fourteen, including the reviewed model exception; thirteen other
-oversized code owners remain open. Font and graph candidates are below 600 lines but their
+3,607-file audit baseline has fourteen oversized code files. After the PEN-adapter
+extraction, the current scope has 3,609 files and thirteen above 600, including the reviewed
+model exception; twelve other oversized code owners remain open. Font and graph candidates are below 600 lines but their
 native acceptance remains open.
 REF-01 fetches all 24 historical URLs and current navigation: 29 successful requests resolve
 to 23 canonical pages. It preserves the original 152 requirements/evidence and adds 12
@@ -57,8 +59,9 @@ The discovered command-copy contrast task has bounded executed evidence.
 BRAND-COPY-AI has bounded executed copy evidence, including nine code-callback/native-failure
 journeys with every provider tunnel rejected by a test-owned local proxy. No real provider
 authentication, credential save or inference is accepted. STAB-GPU has a browser-verified
-implementation in Verify; actual native drawing remains unexecuted because macOS reports
-a locked desktop. [Canvas evidence](CANVAS-LIFECYCLE.md) records the paths and limits.
+implementation; its native resource check is now Building after a fresh isolated PEN
+Script save/reopen test demonstrates a usable native test host. That one test does not
+qualify graphics acceptance. [Canvas evidence](CANVAS-LIFECYCLE.md) records the paths and limits.
 MOD-02 is an executed model-contract ownership exception, with no code extraction claimed.
 The [disposition](MODEL-OWNERSHIP.md) records its owner, checks and review trigger.
 MOD-03 font-manager responsibilities has bounded owner/browser evidence and pending native
@@ -78,9 +81,16 @@ BRAND-COPY-EDITOR remains in Verify for native associated-file delivery and mixe
 reliability. The [warning-surface correction](https://trello.com/c/FzA3qbsT) has bounded
 executed evidence: actual FIG36 round trips, 72 settled captures, component24/78 captures
 and five progress/lifetime checks. Action activation and clipboard contents are not qualified.
-MOD-08 panel-catalog ownership is the sole Building task. Font and graphics candidates remain in Verify.
+MOD-08 panel-catalog ownership remains Verify: its proposed declaration exception retains
+all locale/public contracts, but inherited inspector controls require actual-Pen adjudication.
+[Catalog evidence](PANEL-CATALOG-OWNERSHIP.md) retains421owner passes, compact6passes and
+the4pass/3fail/13notrun inherited-control attempt. MOD-11 has executed its bounded
+format-ownership criterion:827owner tests before/after, four browser round trips before/after,
+and one isolated native Script-source save/reopen/watch/refusal journey.
+[Format evidence](FORMAT-OWNERSHIP.md) retains exact limits. STAB-GPU is the sole Building
+task for its remaining native resource acceptance. Font and graph candidates remain Verify.
 The interrupted zero-size icon work retains its failed wider-run receipts and dependencies.
-The delivery snapshot is 357 Backlog, 0 Ready, 1 Building, 5 Verify and 14 Executed, plus 17 milestones.
+The delivery snapshot is 357 Backlog, 0 Ready, 1 Building, 5 Verify and 15 Executed, plus 17 milestones.
 DELIVERY-LFS has bounded executed current-checkout fixture delivery: all twelve objects
 are fetched from the own private endpoint into empty independent storage, with matching
 SHA-256/sizes and LFS integrity checks. Historical object closure is not qualified.
@@ -89,7 +99,7 @@ UI-SPLIT-HEADER separately records toolbar/inspector overlap blocking pane Close
 FONT-EXPORT-BOUNDS, FONT-LOCAL-PICKER and FONT-CJK-REPAINT separately record existing
 font acceptance failures. Exact original-versus-refactor controls reproduce the same three
 broader workflow failures; ten named pre-refactor visual controls pass afterward in both engines.
-The terminal gate depends on all 376 other required execution tasks.
+The terminal gate depends on all 377 other required execution tasks.
 The board retains 17 milestones, 164 mapped requirements and 22 mapped native rows.
 No branding milestone or product-parity feature group is fully accepted.
 
