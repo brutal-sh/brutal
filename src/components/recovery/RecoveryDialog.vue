@@ -8,14 +8,12 @@ import { useI18n } from '@open-pencil/vue/i18n'
 import type { RecoverySnapshotMeta } from '@/app/document/recovery'
 import { recoveryEnabled } from '@/app/document/recovery/preferences'
 import { useDateFormat } from '@/app/i18n/date'
-import { useNotificationMessages } from '@/app/i18n/notifications'
 import { toast } from '@/app/shell/ui'
 import { formatStorageBytes } from '@/app/storage/format-bytes'
 import { discardRecoverySnapshot, listRecoverySnapshots, restoreRecoverySnapshot } from '@/app/tabs'
 import AppButton from '@/components/ui/button/AppButton.vue'
 
 const { recovery, common } = useI18n()
-const notifications = useNotificationMessages()
 const route = useRoute()
 const snapshots = ref<RecoverySnapshotMeta[]>([])
 const busyId = ref<string | null>(null)
@@ -38,11 +36,8 @@ async function restore(snapshot: RecoverySnapshotMeta): Promise<void> {
     await restoreRecoverySnapshot(snapshot.id)
     settle(snapshot)
   } catch (error) {
-    toast.error(
-      notifications.value.operationFailed({
-        error: error instanceof Error ? error.message : recovery.value.restoreFailed
-      })
-    )
+    console.warn('[Recovery] Failed to restore snapshot:', error)
+    toast.error(recovery.value.restoreFailed)
   } finally {
     busyId.value = null
   }

@@ -29,3 +29,4 @@
 
 - Reuse canvas contexts across document switches without retaining retired document renderers, and cancel initialization when its view closes.
 - Desktop setup links open this Open Pen fork’s build instructions with translated setup labels.
+- Failed recovery uses translated document-recovery feedback while retaining parser details in the local diagnostic warning.

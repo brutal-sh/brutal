@@ -298,3 +298,19 @@ updates, paused expiry, resumed progress and dismissal after clearing progress. 
 is simulated. Action activation and clipboard contents remain outside this check.
 [UI-TOAST-SURFACE](https://trello.com/c/FzA3qbsT) has executed this bounded surface criterion. Its bounded acceptance cannot close editor copy, native/Pen matching,
 mixed stability, the branding milestone or beta.
+
+
+## Recovery identity and failure feedback
+
+The [recovery record](RECOVERY-COPY.md) qualifies actual dialog outcomes in all nine locales
+and both browser engines: 76 cases pass, including four existing controls, and all 72 captures
+are inspected. Close and failed Restore retain the disposable snapshot bytes; Restore recovers
+the named geometry; explicit Discard stays removed after reload. Failed recovery uses its
+existing translated message and retains parser details in the local warning. Eighteen owner
+tests, normal build, source/Vue/test types and focused lint pass. Publication is pending.
+
+One short Chinese error toast stacks its icon, message and controls; the separate
+[reference task](https://trello.com/c/f3kDECKO) retains actual-Pen grouping adjudication.
+This receipt does not qualify native recovery, multiple-snapshot preservation, exact Pen
+geometry, every recovery workflow or full product identity. The failed-restore test proves
+retention through Close, not rediscovery after another launch.
