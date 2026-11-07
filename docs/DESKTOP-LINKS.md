@@ -80,8 +80,9 @@ nonexistent `tests/tsconfig.json`; the canonical `check:test-types` command pass
 Both final runs' complete results, traces, captures and source freezes are archived.
 The owned preview process and temporary sleep assertions are absent after exit.
 
-The final evidence qualifies the desktop-link and shared-keyboard task paths;
-their card acceptance additionally requires scoped source/evidence publication.
+The final evidence qualifies the desktop-link and shared-keyboard task paths.
+Scoped source/evidence is published in private commit `4df71f1fb`; the own remote
+and draft PR head match and Actions stays disabled. Both bounded cards are Executed.
 
 No timing limit, retry, skip, screenshot baseline, provider credential, native
 installation or global error filter changes. Native OS keyboard delivery, physical

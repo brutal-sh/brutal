@@ -387,7 +387,7 @@ This table records the verified planning snapshot. Read the live board for later
 | DELIVERY-LFS | Verify current fixture delivery from our private fork | PRD operational requirement | PLAN-01 | Executed | [Card](https://trello.com/c/cvzyZ7Hw/363-delivery-lfs-verify-current-fixture-delivery-from-our-private-fork) |
 | UI-TOAST-SURFACE | Keep floating warning text readable over the canvas | PRD-02 / PRD-05 / PRD-06 | UI-TOAST-REFLOW | Executed | [Card](https://trello.com/c/FzA3qbsT/388-ui-toast-surface-keep-floating-warning-text-readable-over-the-canvas) |
 | STAB-WEBKIT-MIXED | Stabilize WebKit checks after mixed editor workflows | PRD-04 / PRD-06 / PRD-09 | None identified | Verify | [Card](https://trello.com/c/ech6H0Xm/389-stab-webkit-mixed-stabilize-webkit-checks-after-mixed-editor-workflows) |
-| MOD-16 | Extract FIG text import conversion from record dispatch | PRD-03 / runtime ownership | MOD-AUDIT-CLOSURE | Backlog | [Card](https://trello.com/c/P6y3uJe1/390-mod-16-extract-fig-text-import-conversion-from-record-dispatch) |
+| MOD-16 | Extract FIG text import conversion from record dispatch | PRD-03 / runtime ownership | MOD-AUDIT-CLOSURE | Building | [Card](https://trello.com/c/P6y3uJe1/390-mod-16-extract-fig-text-import-conversion-from-record-dispatch) |
 | MOD-17 | Extract raw FIG payload preservation from node export | PRD-03 / runtime ownership | MOD-AUDIT-CLOSURE | Backlog | [Card](https://trello.com/c/uGL3MDSH/391-mod-17-extract-raw-fig-payload-preservation-from-node-export) |
 | MOD-18 | Review Kiwi wire-schema ownership and size exception | PRD-03 / runtime ownership | MOD-AUDIT-CLOSURE | Backlog | [Card](https://trello.com/c/3TOfol9P/392-mod-18-review-kiwi-wire-schema-ownership-and-size-exception) |
 | MOD-19 | Review remaining FIG importer coordination after text extraction | PRD-03 / runtime ownership | MOD-16 | Backlog | [Card](https://trello.com/c/q0ZEZpOy/393-mod-19-review-remaining-fig-importer-coordination-after-text-extraction) |
@@ -395,8 +395,8 @@ This table records the verified planning snapshot. Read the live board for later
 | VERIFY-INSPECTOR-CONTROLS | Reconcile inspector acceptance controls with actual Pen | PRD-04 / PRD-05 / PRD-09 | None identified | Backlog | [Card](https://trello.com/c/ngc2tr1y/395-verify-inspector-controls-reconcile-inspector-acceptance-controls-with-actual-pen) |
 | VERIFY-TAURI-IO-CONTRACTS | Reconcile native save and parent-watch test contracts | PRD-04 / PRD-06 / PRD-09 | None identified | Executed | [Card](https://trello.com/c/btVgS7TP/396-verify-tauri-io-contracts-reconcile-native-save-and-parent-watch-test-contracts) |
 | STAB-UNIT-BLOB-FETCH | Isolate app-shard backdrop Blob fetch failure | PRD-04 / PRD-06 / PRD-09 | None identified | Executed | [Card](https://trello.com/c/bd0qkKEQ/397-stab-unit-blob-fetch-isolate-app-shard-backdrop-blob-fetch-failure) |
-| BRAND-DESKTOP-LINK | Route desktop setup links to Open Pen instructions | PRD-02 / PRD-04 / PRD-06 | A11Y-ANCHOR-ENTER | Verify | [Card](https://trello.com/c/Xc3zTZLF/398-brand-desktop-link-route-desktop-setup-links-to-open-pen-instructions) |
-| A11Y-ANCHOR-ENTER | Preserve native link Enter activation | PRD-02 / PRD-04 / PRD-06 | None identified | Building | [Card](https://trello.com/c/zdRSOywB/399-a11y-anchor-enter-preserve-native-link-enter-activation) |
+| BRAND-DESKTOP-LINK | Route desktop setup links to Open Pen instructions | PRD-02 / PRD-04 / PRD-06 | A11Y-ANCHOR-ENTER | Executed | [Card](https://trello.com/c/Xc3zTZLF/398-brand-desktop-link-route-desktop-setup-links-to-open-pen-instructions) |
+| A11Y-ANCHOR-ENTER | Preserve native link Enter activation | PRD-02 / PRD-04 / PRD-06 | None identified | Executed | [Card](https://trello.com/c/zdRSOywB/399-a11y-anchor-enter-preserve-native-link-enter-activation) |
 
 ## Native surface coverage
 

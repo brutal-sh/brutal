@@ -50,6 +50,7 @@ The new module dispositions remain unaccepted.
 A separate [mixed WebKit reliability gate](https://trello.com/c/ech6H0Xm) retains the
 failed long-run font/decode paths and passing cold trace controls. Cold passes do not waive
 that open editor/beta/terminal dependency.
+The two desktop-link/keyboard cards have bounded executed evidence at `4df71f1fb`.
 [Desktop setup links](DESKTOP-LINKS.md) records the own destination, translated wrapping and
 shared native-link keyboard repair. Its bounded browser checks do not accept native installation.
 This proves tracking coverage, not accepted product parity or exhaustive discovery of every native state.
@@ -99,11 +100,11 @@ distinguishes two stale native test contracts from an unproven cross-file backdr
 criteria. The [control record](APP-TEST-CONTROLS.md) retains paired failures, the two-file
 reproduction, scoped cleanup and the subsequent 1,955 passing app-shard tests. Neither
 changes production behavior or accepts native delivery. Both remain required beta and
-terminal dependencies with linked evidence. Native-link Enter activation is the sole Building task; mixed WebKit reliability is Verify. Font and graph candidates remain Verify. A later native graph/text batch has
+terminal dependencies with linked evidence. FIG text-import extraction (MOD-16) is the sole Building task; mixed WebKit reliability is Verify. Font and graph candidates remain Verify. A later native graph/text batch has
 four hidden-window failures; a fresh OS read confirms the desktop is locked again. Those
 failed/unexecuted input criteria do not erase the earlier successful native resource path.
 The interrupted zero-size icon work retains its failed wider-run receipts and dependencies.
-The delivery snapshot is 355 Backlog, 0 Ready, 1 Building, 8 Verify and 18 Executed, plus 17 milestones.
+The delivery snapshot is 354 Backlog, 0 Ready, 1 Building, 7 Verify and 20 Executed, plus 17 milestones.
 DELIVERY-LFS has bounded executed current-checkout fixture delivery: all twelve objects
 are fetched from the own private endpoint into empty independent storage, with matching
 SHA-256/sizes and LFS integrity checks. Historical object closure is not qualified.

@@ -111,7 +111,7 @@ The fresh board contains 382 bounded execution tasks and 17 milestones. Every on
 
 | Horizon | Outcome | Evidence checkpoint |
 | --------------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Now | Finish desktop-link and shared Enter activation acceptance | Use the real own-repository instructions, retain translations and document state, inspect wrapping and publish the bounded Chromium/WebKit evidence. |
+| Now | Extract FIG text import conversion from record dispatch (MOD-16) | Capture the whole-archive baseline and preserve text fallback, metadata, dispatch and public exports; retain any unexecuted Figma acceptance. |
 | Next | Continue dependency-free branding and module work; retain native and mixed-run gates | The traced host-sleep failure has a passing awake control; the older mixed failure and native associated-file delivery remain unclassified or unexecuted. |
 | Then                  | Stabilize document switching and finish unaccepted icon, module and feature/screen tasks in dependency order | Each card has relevant owner tests, visual/native checks and a commit/evidence link before Executed; dependent renderer/input work waits for STAB-GPU. |
 | Release qualification | Deliver private beta, then complete the full parity gate | Clean normal build, install/restart/recovery and core journey; declared beta limitations. Later, no required parity state remains unaccepted. |
@@ -150,7 +150,7 @@ percentage is reported until its denominator and acceptance evidence are complet
 - 2026-11-06 — Jason requests explicit modularization goals, a PRD and smaller complete Trello tasks.
 - 2026-11-06 — Keep the full parity objective active; preserve broad cards as milestones and
   add traceable execution tasks rather than dropping unfinished work.
-- Next review: after the graphics lifecycle reproduction and the first complete branding pass.
+- Next review: after the FIG text-import extraction and its owner/browser controls.
   Codex will update counts, evidence and dependencies from fresh results.
 - Open: graphics context reuse/retirement, zero-to-positive icon redraw, exact glyph pixels,
   runtime resize and bindings, remaining native screens/menus and non-macOS qualification.
