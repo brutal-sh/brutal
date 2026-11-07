@@ -119,8 +119,8 @@ The fresh board contains 393 bounded execution tasks and 17 milestones. Every on
 
 | Horizon | Outcome | Evidence checkpoint |
 | --------------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Now | Verify actual CLI help and document-format presentation (BRAND-SUPPORT-CLI) | Execute the workspace CLI, inspect own display names and preserve command/package/format compatibility IDs; retain actual output and exit codes. |
-| Next | Verify the discovered Storybook error label, ACP failure presentation and WebMCP metadata | Each is a separate Ready task. Preserve the Storybook compatibility filename/path namespace; native-engine advice and portal remain separate. |
+| Now | Correct the Storybook manifest error label (BRAND-STORYBOOK-ERROR) | Trigger real invalid-manifest feedback in disposable directories; preserve invalid bytes, unrelated files, valid round trips and compatibility filenames/paths. |
+| Next | Verify ACP failure presentation and WebMCP metadata | Each is a separate Ready task. Native-engine advice and portal remain separate; the remaining full branding inventory stays open. |
 | Then                  | Stabilize document switching and finish unaccepted icon, module and feature/screen tasks in dependency order | Each card has relevant owner tests, visual/native checks and a commit/evidence link before Executed; dependent renderer/input work waits for STAB-GPU. |
 | Release qualification | Deliver private beta, then complete the full parity gate | Clean normal build, install/restart/recovery and core journey; declared beta limitations. Later, no required parity state remains unaccepted. |
 

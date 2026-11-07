@@ -112,11 +112,11 @@ distinguishes two stale native test contracts from an unproven cross-file backdr
 criteria. The [control record](APP-TEST-CONTROLS.md) retains paired failures, the two-file
 reproduction, scoped cleanup and the subsequent 1,955 passing app-shard tests. Neither
 changes production behavior or accepts native delivery. Both remain required beta and
-terminal dependencies with linked evidence. CLI/format presentation (BRAND-SUPPORT-CLI) is the sole Building task; mixed WebKit reliability is Verify. Font and graph candidates remain Verify. A later native graph/text batch has
+terminal dependencies with linked evidence. Storybook manifest error identity (BRAND-STORYBOOK-ERROR) is the sole Building task; mixed WebKit reliability is Verify. Font and graph candidates remain Verify. A later native graph/text batch has
 four hidden-window failures; a fresh OS read confirms the desktop is locked again. Those
 failed/unexecuted input criteria do not erase the earlier successful native resource path.
 The interrupted zero-size icon work retains its failed wider-run receipts and dependencies.
-The delivery snapshot is 354 Backlog, 3 Ready, 1 Building, 9 Verify and 26 Executed, plus 17 milestones.
+The delivery snapshot is 354 Backlog, 2 Ready, 1 Building, 9 Verify and 27 Executed, plus 17 milestones.
 DELIVERY-LFS has bounded executed current-checkout fixture delivery: all twelve objects
 are fetched from the own private endpoint into empty independent storage, with matching
 SHA-256/sizes and LFS integrity checks. Historical object closure is not qualified.
@@ -163,7 +163,7 @@ The parent recovery/update/restart copy gate is Executed only for its three publ
 children's copy criteria: 148 passing browser cases and 360 inspected captures across
 their explicitly documented locale/theme/engine scopes. Those totals do not broaden native
 or design acceptance. Support-copy work is split into five named owners rather than one
-implementation card; browser guidance has bounded Executed evidence, CLI is Building, ACP/WebMCP are Ready, and native-engine
+implementation card; browser guidance has bounded Executed evidence, CLI has bounded Executed evidence, ACP/WebMCP are Ready, and native-engine
 advice is Backlog. All original support criteria remain on the parent gate.
 
 
@@ -175,7 +175,8 @@ notice; distinct light styling, historical engines, native delivery and full bra
 
 
 CLI help inspection discovers missing subcommand metadata names: Citty falls back to the
-local entry script path. The current CLI card owns that observed help defect. A separate
-Ready task, BRAND-STORYBOOK-ERROR, owns one remaining inherited error-label sentence;
+local entry script path. The CLI card publishes its bounded fix at `f5eef8e84`; [evidence](CLI-COPY.md) retains
+98 passing help invocations and 46 passing owner tests. The separate
+Building task, BRAND-STORYBOOK-ERROR, owns one remaining inherited error-label sentence;
 its manifest filename and generated path namespace remain compatibility identities.
 The full branding and terminal gates depend on that new diagnostic task.

@@ -349,8 +349,8 @@ and full branding remain unaccepted.
 The remaining support-copy gate has five bounded children: browser guidance, native-engine
 advice, ACP startup failure, WebMCP document metadata and CLI/format output. The pre-boot
 notice is intentionally English before locale boot; platform fixtures do not prove native
-delivery. Browser guidance now has bounded Executed evidence; CLI/format output is the current
-task. Portal, support and other links remain
+delivery. Browser guidance now has bounded Executed evidence; CLI/format output has bounded Executed evidence; the Storybook manifest error label is the
+current task. Portal, support and other links remain
 separate open acceptance.
 
 
@@ -370,6 +370,7 @@ Bun and packaged Node entries: 98 passing invocations, complete nested usage pat
 seventy-four matching frozen source/compiled hashes. Format-list text and JSON remain
 byte-identical across all fourteen entries. The public command registry, compatibility
 executable/package IDs and format contracts remain unchanged. The CLI owner suite passes
-46 tests; final build/lint and source/Vue/test types pass. Publication is pending.
+46 tests; final build/lint and source/Vue/test types pass. The source and record are published at
+[`f5eef8e84`](https://github.com/jpoindexter/open-pen/commit/f5eef8e84a2e438d53a112e199240f895f92f303).
 The separate Storybook manifest error-label task remains open; compatibility filenames
 and namespaces are preserved. No full CLI, native or whole-brand acceptance is inferred.
