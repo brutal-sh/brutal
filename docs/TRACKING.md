@@ -112,11 +112,11 @@ distinguishes two stale native test contracts from an unproven cross-file backdr
 criteria. The [control record](APP-TEST-CONTROLS.md) retains paired failures, the two-file
 reproduction, scoped cleanup and the subsequent 1,955 passing app-shard tests. Neither
 changes production behavior or accepts native delivery. Both remain required beta and
-terminal dependencies with linked evidence. Browser support guidance (BRAND-SUPPORT-BROWSER) is the sole Building task; mixed WebKit reliability is Verify. Font and graph candidates remain Verify. A later native graph/text batch has
+terminal dependencies with linked evidence. CLI/format presentation (BRAND-SUPPORT-CLI) is the sole Building task; mixed WebKit reliability is Verify. Font and graph candidates remain Verify. A later native graph/text batch has
 four hidden-window failures; a fresh OS read confirms the desktop is locked again. Those
 failed/unexecuted input criteria do not erase the earlier successful native resource path.
 The interrupted zero-size icon work retains its failed wider-run receipts and dependencies.
-The delivery snapshot is 354 Backlog, 3 Ready, 1 Building, 9 Verify and 25 Executed, plus 17 milestones.
+The delivery snapshot is 354 Backlog, 2 Ready, 1 Building, 9 Verify and 26 Executed, plus 17 milestones.
 DELIVERY-LFS has bounded executed current-checkout fixture delivery: all twelve objects
 are fetched from the own private endpoint into empty independent storage, with matching
 SHA-256/sizes and LFS integrity checks. Historical object closure is not qualified.
@@ -163,5 +163,12 @@ The parent recovery/update/restart copy gate is Executed only for its three publ
 children's copy criteria: 148 passing browser cases and 360 inspected captures across
 their explicitly documented locale/theme/engine scopes. Those totals do not broaden native
 or design acceptance. Support-copy work is split into five named owners rather than one
-implementation card; browser guidance is Building, CLI/ACP/WebMCP are Ready, and native-engine
+implementation card; browser guidance has bounded Executed evidence, CLI is Building, ACP/WebMCP are Ready, and native-engine
 advice is Backlog. All original support criteria remain on the parent gate.
+
+
+[Browser support](BROWSER-SUPPORT-COPY.md) has published source and exact post-publication
+remote README/template readback at `59e02516b`. All 35 browser cases and 65 live owner tests
+pass; all 35 captures are inspected. Modern UA/capability fixtures and intercepted link
+activation qualify this path only. Both requested color schemes keep the existing dark
+notice; distinct light styling, historical engines, native delivery and full branding remain open.

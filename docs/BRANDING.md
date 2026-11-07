@@ -349,5 +349,15 @@ and full branding remain unaccepted.
 The remaining support-copy gate has five bounded children: browser guidance, native-engine
 advice, ACP startup failure, WebMCP document metadata and CLI/format output. The pre-boot
 notice is intentionally English before locale boot; platform fixtures do not prove native
-delivery. Own browser guidance is the current task. Portal, support and other links remain
+delivery. Browser guidance now has bounded Executed evidence; CLI/format output is the current
+task. Portal, support and other links remain
 separate open acceptance.
+
+
+The [browser support record](BROWSER-SUPPORT-COPY.md) publishes the own requirements/report
+routing, matching issue-form platform option and preserved diagnostic details at
+[`59e02516b`](https://github.com/jpoindexter/open-pen/commit/59e02516b70bd22032906a1e8f5683c8512197ce).
+All 35 browser cases pass with inspected captures and matching frozen sources; fresh
+authenticated remote contents match the new README and template exactly. Both requested
+color schemes retain existing dark pre-boot styling. The support parent and full links
+gate remain open for their other owners and uninspected destinations.

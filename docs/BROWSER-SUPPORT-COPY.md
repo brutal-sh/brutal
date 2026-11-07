@@ -1,7 +1,8 @@
 # Pre-boot browser identity and support routing
 
-Updated: 2026-11-07. Status: bounded browser criterion executed; source publication and
-new remote content readback pending for BRAND-SUPPORT-BROWSER. Actual unsupported engines,
+Updated: 2026-11-07. Status: bounded browser criterion executed and published at
+[`59e02516b`](https://github.com/jpoindexter/open-pen/commit/59e02516b70bd22032906a1e8f5683c8512197ce),
+with exact remote content readback for BRAND-SUPPORT-BROWSER. Actual unsupported engines,
 native delivery, exact Pen geometry and full branding remain unaccepted.
 
 ## Resulting behavior
@@ -65,11 +66,13 @@ run the actual four live owners without changing the archive or test discovery p
 - `scratch/support-browser-*-2026-11-07.*`: source freeze, owner/build/types/architecture/docs
   receipts and the explicitly retained invocation failure.
 
-The earlier authenticated GitHub readbacks prove the own private repository, enabled issues,
-README and issue template exist. They predate this candidate and do not yet prove the new
-requirements anchor or platform option is published. Refresh both exact contents after
-source publication before accepting live destination content. Mocked browser link delivery
-and real repository content are separate evidence.
+Fresh authenticated GitHub readbacks after publication return exact local README and
+issue-template bytes, including the new requirements heading and matching `Web (Open Pen)`
+option. The repository's remote `HEAD` resolves to the published source commit; the private
+draft head and disabled Actions state also match. The proof retains both Git blob and
+SHA-256 identifiers in `scratch/support-browser-live-content-proof-2026-11-07.json`.
+Mocked browser link delivery and real repository content remain separate evidence. No issue
+is submitted, and browser-account access is not qualified.
 
 No user document, recovery store, profile, credential, installed app or OS configuration is
 changed. No new endpoint, baseline, timeout, retry, skip or global error filter is introduced.
