@@ -40,3 +40,4 @@
 - Use Open Pen product labels across supported translations, setup, notifications, startup guidance, document-format labels and CLI help while preserving third-party service names.
 
 - Software Update links to Open Pen’s change history and shows translated availability guidance with readable release-note placeholders.
+- Startup support notices link to Open Pen’s system requirements and issue form with matching diagnostic platform details.

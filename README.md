@@ -29,6 +29,18 @@ The [PRD](docs/PRD.md) defines the product and acceptance gates. The [task index
 
 Start with the [prompt gallery](docs/PROMPTS.md), [Cursor/VS Code setup](docs/EDITOR-INTEGRATIONS.md), or [local Codex runtime guide](docs/LOCAL-RUNTIME.md). These guides state their verification limits; visual IDE extensions remain open.
 
+## Open Pen system requirements
+
+The browser build targets Chrome 111+, Edge 111+, Firefox 128+, Safari 16.4+ and iOS 16.4+.
+Startup also checks WebAssembly, WebGL 2 and required JavaScript/CSS features; a browser
+policy or disabled feature can prevent startup even when its version meets the baseline.
+These are configured support thresholds, not evidence that every platform is qualified.
+
+The desktop notice requires macOS 13+ with current Safari updates, Linux WebKitGTK 2.40+,
+or a current Windows WebView2 runtime. Build from [this fork's instructions](#run-this-fork);
+this private fork has no published installer or update feed. [Report an Open Pen problem](https://github.com/jpoindexter/open-pen/issues/new?template=bug_report.yml)
+after reviewing any diagnostic details you include.
+
 ## Upstream documentation
 
 The following describes the upstream project. Its download links, hosted services and published packages are OpenPencil, rather than releases of this private fork.

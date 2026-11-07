@@ -18,9 +18,11 @@ export interface SupportLink {
   readonly url: string
 }
 
-export const SYSTEM_REQUIREMENTS_URL = 'https://openpencil.dev/getting-started#system-requirements'
+// Pre-boot guidance stays self-contained so links work without loading the app.
+const SUPPORT_REPOSITORY_URL = 'https://github.com/jpoindexter/open-pen'
+export const SYSTEM_REQUIREMENTS_URL = `${SUPPORT_REPOSITORY_URL}/blob/HEAD/README.md#open-pen-system-requirements`
 export const WEBVIEW2_DOWNLOAD_URL = 'https://developer.microsoft.com/microsoft-edge/webview2/'
-const ISSUE_URL = 'https://github.com/open-pencil/open-pencil/issues/new'
+const ISSUE_URL = `${SUPPORT_REPOSITORY_URL}/issues/new`
 
 export const MINIMUM_MACOS_VERSION = 13
 export const MINIMUM_WEBKITGTK_VERSION = '2.40'
@@ -68,7 +70,7 @@ const DESKTOP_ISSUE_PLATFORMS: Partial<Record<SupportEnvironment['os'], string>>
 }
 
 function issuePlatform(env: SupportEnvironment): string {
-  if (env.host === 'browser') return 'Web (app.openpencil.dev)'
+  if (env.host === 'browser') return 'Web (Open Pen)'
   return DESKTOP_ISSUE_PLATFORMS[env.os] ?? 'Not sure'
 }
 

@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test'
 test.describe('browser support gate', () => {
   test('explains a missing baseline feature instead of booting into a blank window', async ({
     page
-  }) => {
+  }, testInfo) => {
     await page.addInitScript(() => {
       // Playwright's Chromium is above the baseline, so remove one sentinel
       // feature to simulate an engine that cannot run the app.
@@ -18,24 +18,25 @@ test.describe('browser support gate', () => {
     await expect(notice).toContainText('String.prototype.isWellFormed')
     await expect(notice.getByRole('link', { name: 'System requirements' })).toHaveAttribute(
       'href',
-      'https://openpencil.dev/getting-started#system-requirements'
+      'https://github.com/jpoindexter/open-pen/blob/HEAD/README.md#open-pen-system-requirements'
     )
 
     const report = notice.getByRole('link', { name: 'Report a problem' })
     const href = new URL((await report.getAttribute('href')) ?? '')
-    expect(href.pathname).toBe('/open-pencil/open-pencil/issues/new')
+    expect(href.pathname).toBe('/jpoindexter/open-pen/issues/new')
     expect(href.searchParams.get('template')).toBe('bug_report.yml')
-    expect(href.searchParams.get('platform')).toBe('Web (app.openpencil.dev)')
+    expect(href.searchParams.get('platform')).toBe('Web (Open Pen)')
     expect(href.searchParams.get('logs')).toContain('Missing: String.prototype.isWellFormed')
 
     await notice.getByText('Details', { exact: true }).click()
     await expect(notice.locator('pre')).toContainText('User agent:')
     await expect(page.locator('canvas')).toHaveCount(0)
+    await notice.screenshot({ path: testInfo.outputPath('missing-feature.png') })
   })
 
   test('replaces a blank window with a boot failure notice when the app cannot load', async ({
     page
-  }) => {
+  }, testInfo) => {
     await page.addInitScript(() => {
       // Keep every sentinel intact but break an API the app needs while
       // booting, so the failure surfaces after the gate has passed.
@@ -49,13 +50,16 @@ test.describe('browser support gate', () => {
     await page.goto('/')
 
     const notice = page.getByRole('alert')
-    await expect(notice.getByRole('heading', { level: 1 })).toHaveText("OpenPencil couldn't start")
+    await expect(notice.getByRole('heading', { level: 1 })).toHaveText("Open Pen couldn't start")
     await expect(notice).toContainText('Chrome 111')
     await notice.getByText('Details', { exact: true }).click()
     await expect(notice.locator('pre')).toContainText('history is unavailable')
+    await notice.screenshot({ path: testInfo.outputPath('module-failure.png') })
   })
 
-  test('reports a component that fails while rendering the first route', async ({ page }) => {
+  test('reports a component that fails while rendering the first route', async ({
+    page
+  }, testInfo) => {
     await page.addInitScript(() => {
       // The editor store mints node ids inside component setup, so this
       // fails through Vue's error handler rather than module evaluation.
@@ -69,8 +73,9 @@ test.describe('browser support gate', () => {
     await page.goto('/')
 
     const notice = page.getByRole('alert')
-    await expect(notice.getByRole('heading', { level: 1 })).toHaveText("OpenPencil couldn't start")
+    await expect(notice.getByRole('heading', { level: 1 })).toHaveText("Open Pen couldn't start")
     await notice.getByText('Details', { exact: true }).click()
     await expect(notice.locator('pre')).toContainText('getRandomValues is unavailable')
+    await notice.screenshot({ path: testInfo.outputPath('component-failure.png') })
   })
 })
