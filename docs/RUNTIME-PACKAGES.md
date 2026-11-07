@@ -72,7 +72,7 @@ Authored Mermaid adapters remain included. The Kiwi schema below is not hidden b
 | Owner | Observed size | Bounded tasks |
 | --- | ---: | --- |
 | FIG importer `node-change/convert.ts` | 1,333 baseline; 1,155 candidate | [MOD-16](https://trello.com/c/P6y3uJe1) extracts text conversion into the existing text domain (187 lines); [MOD-19](https://trello.com/c/q0ZEZpOy) reviews the remaining coordinator afterward. |
-| FIG exporter `node-change/export/node.ts` | 1,017 | [MOD-17](https://trello.com/c/uGL3MDSH) extracts raw-payload preservation; [MOD-20](https://trello.com/c/BGyM2T9o) reviews the remaining coordinator afterward. |
+| FIG exporter `node-change/export/node.ts` | 1,017 baseline; 712 candidate | [MOD-17](https://trello.com/c/uGL3MDSH) extracts raw-payload preservation (312 physical lines); [MOD-20](https://trello.com/c/BGyM2T9o) reviews the remaining coordinator afterward. |
 | Kiwi runtime wire schema `fig/schema/fig.kiwi` | 5,628 data/declaration lines | [MOD-18](https://trello.com/c/3TOfol9P) reviews the contract owner, field/tag preservation and a justified exception or supported partition. It is parsed and validated by `packages/kiwi/src/fig/schema.ts`. |
 | Translated panel catalogs | de/es/fr/it: 679 each; ja/zh-cn: 672 each; pl/ru: 686 each | Existing MOD-08 owns these eight companions together with canonical `messages/panels.ts` (694). Key partitioning must preserve every locale, placeholder and consumer. |
 
@@ -88,6 +88,11 @@ scope has 3,612 code files, including 107 FIG owners, and twelve above 600. The
 original owner table above remains the dated baseline. [FIG text evidence](FIG-TEXT-OWNERSHIP.md)
 records preserved owner/archive/browser output and the retained visual/Figma gates;
 the new file does not accept the importer or its remaining coordinator.
+
+The raw-payload export candidate adds one more owner: 3,613 runtime code files,
+108 FIG owners, still twelve code files above 600. [Payload evidence](FIG-PAYLOAD-OWNERSHIP.md)
+records its executed before/after controls and unaccepted reference gates. Neither
+FIG coordinator receives a size exception from these incremental extractions.
 
 ## Reproduce code counts
 

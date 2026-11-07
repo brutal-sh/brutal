@@ -171,3 +171,18 @@ zero differences in two complete archive digests, four browser round trips in bo
 controls, and an identical actual wrapped-text PNG. The old stored visual control
 still fails, and required live Figma validation is unexecuted. MOD-16 stays Verify;
 line reduction and preserved before/after output do not close those gates.
+
+## Candidate awaiting reference acceptance: FIG raw payload export
+
+[MOD-17](https://trello.com/c/uGL3MDSH) moves raw payload preservation into the existing
+export domain: `node.ts` decreases from 1,017 to 712 physical lines; `raw-payload.ts`
+has 312 physical lines, 233 excluding blank/comment-only lines. Twenty declarations,
+context/cache identity, field precedence, remaining dispatcher order and public exports
+are retained. MOD-20 still owns the oversized coordinator review.
+
+[Payload evidence](FIG-PAYLOAD-OWNERSHIP.md) records the 761 owner and 26 Core patch
+checks and three complete saved archives. All decoded records, blob/image hashes and
+interpreted digests match; only the metadata export timestamp differs. The actual
+wrapped-text browser image is unchanged, while its failed stored control and required
+live Figma validation remain open. MOD-17 stays Verify. The expanded runtime candidate
+now has 3,613 files and twelve above 600; that count does not accept either FIG refactor.

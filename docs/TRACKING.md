@@ -56,6 +56,9 @@ shared native-link keyboard repair. Its bounded browser checks do not accept nat
 [FIG text ownership](FIG-TEXT-OWNERSHIP.md) records MOD-16 in Verify: 761 owner tests
 and two whole archives retain their output, while the unchanged saved-text visual failure
 and live Figma round trip stay open. A separate visual-control card retains that failure.
+[FIG payload ownership](FIG-PAYLOAD-OWNERSHIP.md) records MOD-17 in Verify: 761 owner
+and 26 Core patch tests pass, and three saved archives retain all decoded records,
+blob/image hashes and interpreted values. Live Figma and the visual-control gate remain open.
 This proves tracking coverage, not accepted product parity or exhaustive discovery of every native state.
 
 Planning publication, the reproducible runtime audit, own-brand assets, owned diagnostics/log
@@ -103,11 +106,11 @@ distinguishes two stale native test contracts from an unproven cross-file backdr
 criteria. The [control record](APP-TEST-CONTROLS.md) retains paired failures, the two-file
 reproduction, scoped cleanup and the subsequent 1,955 passing app-shard tests. Neither
 changes production behavior or accepts native delivery. Both remain required beta and
-terminal dependencies with linked evidence. FIG raw-payload export extraction (MOD-17) is the sole Building task; mixed WebKit reliability is Verify. Font and graph candidates remain Verify. A later native graph/text batch has
+terminal dependencies with linked evidence. Kiwi wire-schema ownership review (MOD-18) is the sole Building task; mixed WebKit reliability is Verify. Font and graph candidates remain Verify. A later native graph/text batch has
 four hidden-window failures; a fresh OS read confirms the desktop is locked again. Those
 failed/unexecuted input criteria do not erase the earlier successful native resource path.
 The interrupted zero-size icon work retains its failed wider-run receipts and dependencies.
-The delivery snapshot is 354 Backlog, 0 Ready, 1 Building, 8 Verify and 20 Executed, plus 17 milestones.
+The delivery snapshot is 353 Backlog, 0 Ready, 1 Building, 9 Verify and 20 Executed, plus 17 milestones.
 DELIVERY-LFS has bounded executed current-checkout fixture delivery: all twelve objects
 are fetched from the own private endpoint into empty independent storage, with matching
 SHA-256/sizes and LFS integrity checks. Historical object closure is not qualified.

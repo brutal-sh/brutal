@@ -47,7 +47,9 @@ modules, complete Open Pen branding and an executable Trello backlog.
   full app shard: 1,955 tests across 339 files, without application source changes.
   The FIG text-import candidate adds one owner (3,612 code files; twelve still above 600),
   preserves 761 owner tests and two whole-archive digests, and remains Verify for its retained
-  visual-control failure and required live Figma round trip.
+  visual-control failure and required live Figma round trip. The raw-payload export candidate
+  adds one more owner (3,613 files; twelve still above 600) and retains three complete
+  saved-archive controls, 761 owner tests and 26 Core patch tests, with the same open gates.
 - Initially observed: inherited web marks, localized product names, diagnostics labels and a native
   microphone explanation still identify the app as OpenPencil. The original violet Open Pen
   app-icon master already exists.
@@ -114,7 +116,7 @@ The fresh board contains 383 bounded execution tasks and 17 milestones. Every on
 
 | Horizon | Outcome | Evidence checkpoint |
 | --------------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Now | Extract raw FIG payload preservation from node export (MOD-17) | Capture export/raw-metadata/patch baselines and preserve authored/raw precedence, blob references, metadata and public exports; retain any unexecuted Figma acceptance. |
+| Now | Review Kiwi wire-schema ownership and size exception (MOD-18) | Record provenance, parse/codec consumers, exact schema/tag hash and actual coverage/round-trip checks; retain the declaration only with an owned contract exception. |
 | Next | Continue dependency-free branding and module work; retain native and mixed-run gates | The traced host-sleep failure has a passing awake control; the older mixed failure and native associated-file delivery remain unclassified or unexecuted. |
 | Then                  | Stabilize document switching and finish unaccepted icon, module and feature/screen tasks in dependency order | Each card has relevant owner tests, visual/native checks and a commit/evidence link before Executed; dependent renderer/input work waits for STAB-GPU. |
 | Release qualification | Deliver private beta, then complete the full parity gate | Clean normal build, install/restart/recovery and core journey; declared beta limitations. Later, no required parity state remains unaccepted. |
@@ -153,7 +155,7 @@ percentage is reported until its denominator and acceptance evidence are complet
 - 2026-11-06 — Jason requests explicit modularization goals, a PRD and smaller complete Trello tasks.
 - 2026-11-06 — Keep the full parity objective active; preserve broad cards as milestones and
   add traceable execution tasks rather than dropping unfinished work.
-- Next review: after the FIG raw-payload export extraction and its owner/browser controls.
+- Next review: after the wire-schema ownership disposition and its actual parser/codec controls.
   Codex will update counts, evidence and dependencies from fresh results.
 - Open: graphics context reuse/retirement, zero-to-positive icon redraw, exact glyph pixels,
   runtime resize and bindings, remaining native screens/menus and non-macOS qualification.
