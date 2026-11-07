@@ -113,14 +113,14 @@ types/catalogs into arbitrary microfiles or weaken validation to reduce line cou
 
 ## Delivery sequence
 
-The fresh board contains 387 bounded execution tasks and 17 milestones. Every one of the
+The fresh board contains 392 bounded execution tasks and 17 milestones. Every one of the
 164 catalog requirements and 22 native ledger rows is allocated; allocation is not acceptance.
 [Task index](TASKS.md) records the live-board states and dependencies.
 
 | Horizon | Outcome | Evidence checkpoint |
 | --------------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Now | Execute translated restart refusal, failure and retry feedback (BRAND-RESTART-COPY) | Connect the real component/controller through its typed test-owned backend in nine locales; retain versions and error detail without installing or restarting the user’s app. |
-| Next | Reconcile recovery/update/restart acceptance, then select a dependency-free branding child | Keep portal, support and other destinations separately scoped; native and the original mixed-run gates remain open. |
+| Now | Verify own-brand unsupported-browser guidance (BRAND-SUPPORT-BROWSER) | Exercise the real pre-boot notice, retained browser/version details, disclosure and support destinations with disposable fixtures; preserve detection thresholds. |
+| Next | Verify CLI/format output, ACP failure presentation and WebMCP metadata | Each is a separate Ready child of the support-copy gate. Native-engine advice has its own Backlog child; portal and native delivery remain separate. |
 | Then                  | Stabilize document switching and finish unaccepted icon, module and feature/screen tasks in dependency order | Each card has relevant owner tests, visual/native checks and a commit/evidence link before Executed; dependent renderer/input work waits for STAB-GPU. |
 | Release qualification | Deliver private beta, then complete the full parity gate | Clean normal build, install/restart/recovery and core journey; declared beta limitations. Later, no required parity state remains unaccepted. |
 

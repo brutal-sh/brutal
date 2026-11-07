@@ -1,6 +1,7 @@
 # Restart feedback identity and controller behavior
 
-Updated: 2026-11-07. Status: bounded browser criterion executed; publication pending for
+Updated: 2026-11-07. Status: bounded browser criterion executed and published at
+[`4006503a6`](https://github.com/jpoindexter/open-pen/commit/4006503a6f051a7a76e7517bf7d0c7d0d648ed99) for
 [BRAND-RESTART-COPY](https://trello.com/c/H4fe0dbb).
 Native restart, exact Pen geometry and full branding remain open.
 
@@ -21,8 +22,8 @@ Restart buttons. The fictitious update is `0.16.1`, with current version `0.16.0
   wrapper with the original test-owned error detail. Retry invokes approval and relaunch
   a second time and returns to the installed view. Check, download and install each remain
   at one call; Retry does not repeat them.
-- Later releases the pending update handle and closes the test-owned window backend once.
-  Neither operation occurs before the click.
+- Later invokes the pending-update close and close-window backends once.
+  Neither backend receives a call before the click; the fixture window itself stays open.
 
 The English release notes and `test-owned relaunch refused` error are deliberate fixture
 data. They qualify interpolation of supplied content, not translation of arbitrary backend

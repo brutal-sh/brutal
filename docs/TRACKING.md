@@ -6,7 +6,7 @@ Repository: [private Open Pen repository](https://github.com/jpoindexter/open-pe
 Board: [Open Pen — independent design editor](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor), private.
 
 The [PRD](PRD.md) owns the outcome, constraints and release criteria.
-The [task index](TASKS.md) links all 387 execution cards; the [modularity audit](MODULARITY.md)
+The [task index](TASKS.md) links all 392 execution cards; the [modularity audit](MODULARITY.md)
 records the measured review queue. Requirements come from the [feature catalog](pen-feature-reference/README.md)
 and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), using actual Pen 1.2.21 as the reference.
 
@@ -23,7 +23,7 @@ and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), using actual Pen 1.
 
 ## Verified planning snapshot
 
-A complete fresh board readback finds 404 open cards: 387 unique execution tasks and 17 milestones.
+A complete fresh board readback finds 409 open cards: 392 unique execution tasks and 17 milestones.
 All 164 catalog requirements and 22 exact native ledger rows map to real execution cards.
 There are no missing or duplicate task IDs, and the dependency graph is acyclic.
 All 15 originally oversized runtime modules have individual disposition tasks.
@@ -62,7 +62,7 @@ blob/image hashes and interpreted values. Live Figma and the visual-control gate
 [Kiwi schema ownership](KIWI-SCHEMA-OWNERSHIP.md) executes one named declaration
 disposition without changing source, size or schema version. The recovery/update gate
 now has three bounded children: recovery has bounded Executed browser copy/retention
-evidence; update prompts have bounded Executed component evidence and restart feedback is Building with source-copy
+evidence; update prompts and restart feedback have bounded Executed component/controller evidence with source-copy
 dependencies accepted. Their UI/controller fixtures do not
 qualify native installation or restart.
 This proves tracking coverage, not accepted product parity or exhaustive discovery of every native state.
@@ -112,11 +112,11 @@ distinguishes two stale native test contracts from an unproven cross-file backdr
 criteria. The [control record](APP-TEST-CONTROLS.md) retains paired failures, the two-file
 reproduction, scoped cleanup and the subsequent 1,955 passing app-shard tests. Neither
 changes production behavior or accepts native delivery. Both remain required beta and
-terminal dependencies with linked evidence. Restart feedback (BRAND-RESTART-COPY) is the sole Building task; mixed WebKit reliability is Verify. Font and graph candidates remain Verify. A later native graph/text batch has
+terminal dependencies with linked evidence. Browser support guidance (BRAND-SUPPORT-BROWSER) is the sole Building task; mixed WebKit reliability is Verify. Font and graph candidates remain Verify. A later native graph/text batch has
 four hidden-window failures; a fresh OS read confirms the desktop is locked again. Those
 failed/unexecuted input criteria do not erase the earlier successful native resource path.
 The interrupted zero-size icon work retains its failed wider-run receipts and dependencies.
-The delivery snapshot is 354 Backlog, 0 Ready, 1 Building, 9 Verify and 23 Executed, plus 17 milestones.
+The delivery snapshot is 354 Backlog, 3 Ready, 1 Building, 9 Verify and 25 Executed, plus 17 milestones.
 DELIVERY-LFS has bounded executed current-checkout fixture delivery: all twelve objects
 are fetched from the own private endpoint into empty independent storage, with matching
 SHA-256/sizes and LFS integrity checks. Historical object closure is not qualified.
@@ -125,7 +125,7 @@ UI-SPLIT-HEADER separately records toolbar/inspector overlap blocking pane Close
 FONT-EXPORT-BOUNDS, FONT-LOCAL-PICKER and FONT-CJK-REPAINT separately record existing
 font acceptance failures. Exact original-versus-refactor controls reproduce the same three
 broader workflow failures; ten named pre-refactor visual controls pass afterward in both engines.
-The terminal gate depends on all 386 other required execution tasks.
+The terminal gate depends on all 391 other required execution tasks.
 The board retains 17 milestones, 164 mapped requirements and 22 mapped native rows.
 No branding milestone or product-parity feature group is fully accepted.
 
@@ -148,10 +148,20 @@ baseline. The source and record are published at
 [`a289fe255`](https://github.com/jpoindexter/open-pen/commit/a289fe25500786f12e5ce9fe68070192bb295b29);
 the recovery card is Executed for this bounded criterion. Update prompts have bounded Executed component evidence published at
 [`9d399a4ab`](https://github.com/jpoindexter/open-pen/commit/9d399a4abaa9ba1c465b38fdaf00965535b82ed1);
-the [record](UPDATER-COPY.md) retains 36 passing cases and 234 inspected captures. Restart feedback is Building. [VERIFY-TOAST-SHORT](https://trello.com/c/f3kDECKO) allocates the
-unmeasured short-error grouping; the terminal gate now has all 386 other tasks as dependencies.
+the [record](UPDATER-COPY.md) retains 36 passing cases and 234 inspected captures. Restart feedback has bounded Executed controller/component evidence at
+[`4006503a6`](https://github.com/jpoindexter/open-pen/commit/4006503a6f051a7a76e7517bf7d0c7d0d648ed99);
+its [record](RESTART-COPY.md) retains 36 passing cases and 54 inspected captures. [VERIFY-TOAST-SHORT](https://trello.com/c/f3kDECKO) allocates the
+unmeasured short-error grouping; the terminal gate now has all 391 other tasks as dependencies.
 This is not a new beta feature prerequisite or actual-Pen visual acceptance.
 
 Fresh 2026-11-07 paginated inventories and permission readbacks verify Actions disabled on
 all 199 personal repositories and both previously authorized THEFT-DEV repositories (201 total).
 No setting change is needed. This refresh does not scan or claim cancellation of running jobs.
+
+
+The parent recovery/update/restart copy gate is Executed only for its three published
+children's copy criteria: 148 passing browser cases and 360 inspected captures across
+their explicitly documented locale/theme/engine scopes. Those totals do not broaden native
+or design acceptance. Support-copy work is split into five named owners rather than one
+implementation card; browser guidance is Building, CLI/ACP/WebMCP are Ready, and native-engine
+advice is Backlog. All original support criteria remain on the parent gate.

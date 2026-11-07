@@ -332,3 +332,22 @@ The source and record are published at
 [`9d399a4ab`](https://github.com/jpoindexter/open-pen/commit/9d399a4abaa9ba1c465b38fdaf00965535b82ed1). Typed mock emits and explicitly fictitious release data do not
 qualify controller transitions, a real release/feed/download/install, native restart,
 physical input, exact Pen geometry, human translation sign-off or full branding.
+
+
+## Restart feedback and support decomposition
+
+The [restart feedback record](RESTART-COPY.md) qualifies actual controller/component
+interaction through typed test-owned backends: 36 passing nine-locale/two-theme cases,
+54 inspected captures and thirty matching frozen hashes. Denial causes no relaunch;
+Retry after rejection does not repeat check/download/install; Later releases the pending
+handle and calls the test-owned close-window backend. Source and evidence are published at
+[`4006503a6`](https://github.com/jpoindexter/open-pen/commit/4006503a6f051a7a76e7517bf7d0c7d0d648ed99).
+Together with the published recovery and update-prompt children, this executes only the
+parent recovery/update/restart copy gate. Native approval/relaunch, exact Pen geometry
+and full branding remain unaccepted.
+
+The remaining support-copy gate has five bounded children: browser guidance, native-engine
+advice, ACP startup failure, WebMCP document metadata and CLI/format output. The pre-boot
+notice is intentionally English before locale boot; platform fixtures do not prove native
+delivery. Own browser guidance is the current task. Portal, support and other links remain
+separate open acceptance.
