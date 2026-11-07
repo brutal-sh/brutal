@@ -1,5 +1,11 @@
 # Runtime modularity audit
 
+The [expanded runtime inventory](RUNTIME-PACKAGES.md) measured on 2026-11-07 covers
+3,607 authored code files across twenty owners, including the additional packages and
+four native JavaScript helpers, two public OAuth callbacks and two browser alias stand-ins. It finds fourteen code files above 600 lines, plus a
+separate review queue for the Kiwi schema and eight translated catalogs. The original
+five-root measurement below is retained with its exact scope; it is not the whole app.
+
 Measured 2026-11-06 from the current source after the graph ownership candidate.
 This includes canvas, font and graph candidates whose native acceptance is pending; counts do not qualify behavior.
 This is a size/ownership review, not proof that all architecture or behavior is accepted.
@@ -8,9 +14,9 @@ The implementation uses OpenPencil's existing package boundaries; Open Pen-speci
 Scope: authored `.ts`, `.vue`, `.rs` and `.css` under `src`, `packages/core/src`,
 `packages/vue/src`, `packages/scene-graph/src` and `desktop/src`. Counts are physical lines.
 `.d.ts` declarations, tests and `.stories.ts` examples are excluded; authored catalogs are included.
-This does not yet inventory the other first-party format, CLI/MCP or service package owners.
-[MOD-AUDIT-CLOSURE](https://trello.com/c/R0oPWJAa) records that bounded follow-up and must
-allocate any further oversized-owner tasks before whole-app maintainability is accepted.
+This original scope excludes other first-party format, CLI/MCP and service package owners.
+[MOD-AUDIT-CLOSURE](https://trello.com/c/R0oPWJAa) adds their measured inventory and bounded
+MOD-16–MOD-20 follow-ups. Inventory acceptance does not accept those module dispositions.
 
 | Size | Files |
 | --- | ---: |

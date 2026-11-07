@@ -3,7 +3,7 @@
 Updated: 2026-11-07. All task links are verified by a fresh complete board readback.
 The full design AND functionality parity goal remains active; allocation does not establish accepted behavior.
 
-The breakdown contains **372 execution tasks**, covering all **164 documented requirements** and **22 native screen/menu rows**, plus branding, modularity and known residuals.
+The breakdown contains **377 execution tasks**, covering all **164 documented requirements** and **22 native screen/menu rows**, plus branding, modularity and known residuals.
 The board also preserves the 15 original cards as milestones and adds two milestones for branding and modularization.
 
 Ready is limited to three dependency-free tasks; Building to one current task. Each card contains its scope, owner, dependencies and concrete Done checks.
@@ -301,7 +301,7 @@ This table records the verified planning snapshot. Read the live board for later
 | MOD-05 | Split cohesive responsibilities: renderer.ts | PRD / native ledger | STAB-GPU | Backlog | [Card](https://trello.com/c/iHHP32LH/91-mod-05-split-cohesive-responsibilities-rendererts) |
 | MOD-06 | Split cohesive responsibilities: index.ts | PRD / native ledger | STAB-GPU | Backlog | [Card](https://trello.com/c/4BpMrJ8z/92-mod-06-split-cohesive-responsibilities-indexts) |
 | MOD-07 | Split cohesive responsibilities: spawn.ts | PRD / native ledger | None identified | Executed | [Card](https://trello.com/c/Z8yoNzfz/93-mod-07-split-cohesive-responsibilities-spawnts) |
-| MOD-08 | Review declaration/catalog ownership: panels.ts | PRD / native ledger | None identified | Backlog | [Card](https://trello.com/c/Sm6cJwgy/94-mod-08-review-declaration-catalog-ownership-panelsts) |
+| MOD-08 | Review declaration/catalog ownership: panels.ts | PRD / native ledger | None identified | Building | [Card](https://trello.com/c/Sm6cJwgy/94-mod-08-review-declaration-catalog-ownership-panelsts) |
 | MOD-09 | Split cohesive responsibilities: AssetsPanel.vue | PRD / native ledger | None identified | Backlog | [Card](https://trello.com/c/QNEY9RTi/95-mod-09-split-cohesive-responsibilities-assetspanelvue) |
 | MOD-10 | Split cohesive responsibilities: BrowserPreviewControl.vue | PRD / native ledger | STAB-GPU | Backlog | [Card](https://trello.com/c/8Juf837A/96-mod-10-split-cohesive-responsibilities-browserpreviewcontrolvue) |
 | MOD-11 | Split cohesive responsibilities: formats.ts | PRD / native ledger | None identified | Backlog | [Card](https://trello.com/c/yoCuhcXD/97-mod-11-split-cohesive-responsibilities-formatsts) |
@@ -383,10 +383,15 @@ This table records the verified planning snapshot. Read the live board for later
 | CLI-10-MANAGE | Manage imported libraries in the interactive shell | CLI-10 | None identified | Backlog | [Card](https://trello.com/c/YKqtpM1c/384-cli-10-manage-manage-imported-libraries-in-the-interactive-shell) |
 | AUTH-05-ADVANCED | Match custom-provider limits and completion options | AUTH-05 | None identified | Backlog | [Card](https://trello.com/c/Xv3V4jV7/385-auth-05-advanced-match-custom-provider-limits-and-completion-options) |
 | FMT-09-DRIFT | Qualify current schema changes against pinned2.21 | FMT-09 | None identified | Backlog | [Card](https://trello.com/c/eZXKvRhb/386-fmt-09-drift-qualify-current-schema-changes-against-pinned221) |
-| MOD-AUDIT-CLOSURE | Audit remaining first-party runtime package owners | PRD-03 / operational requirement | MOD-AUDIT | Building | [Card](https://trello.com/c/R0oPWJAa/387-mod-audit-closure-audit-remaining-first-party-runtime-package-owners) |
+| MOD-AUDIT-CLOSURE | Audit remaining first-party runtime package owners | PRD-03 / operational requirement | MOD-AUDIT | Executed | [Card](https://trello.com/c/R0oPWJAa/387-mod-audit-closure-audit-remaining-first-party-runtime-package-owners) |
 | DELIVERY-LFS | Verify current fixture delivery from our private fork | PRD operational requirement | PLAN-01 | Executed | [Card](https://trello.com/c/cvzyZ7Hw/363-delivery-lfs-verify-current-fixture-delivery-from-our-private-fork) |
 | UI-TOAST-SURFACE          | Keep floating warning text readable over the canvas              | PRD-02 / PRD-05 / PRD-06                               | UI-TOAST-REFLOW                                                                                                 | Executed | [Card](https://trello.com/c/FzA3qbsT/388-ui-toast-surface-keep-floating-warning-text-readable-over-the-canvas)            |
 | STAB-WEBKIT-MIXED | Stabilize WebKit checks after mixed editor workflows | PRD-04 / PRD-06 / PRD-09 | None identified | Backlog | [Card](https://trello.com/c/ech6H0Xm/389-stab-webkit-mixed-stabilize-webkit-checks-after-mixed-editor-workflows) |
+| MOD-16 | Extract FIG text import conversion from record dispatch | PRD-03 / runtime ownership | MOD-AUDIT-CLOSURE | Backlog | [Card](https://trello.com/c/P6y3uJe1/390-mod-16-extract-fig-text-import-conversion-from-record-dispatch) |
+| MOD-17 | Extract raw FIG payload preservation from node export | PRD-03 / runtime ownership | MOD-AUDIT-CLOSURE | Backlog | [Card](https://trello.com/c/uGL3MDSH/391-mod-17-extract-raw-fig-payload-preservation-from-node-export) |
+| MOD-18 | Review Kiwi wire-schema ownership and size exception | PRD-03 / runtime ownership | MOD-AUDIT-CLOSURE | Backlog | [Card](https://trello.com/c/3TOfol9P/392-mod-18-review-kiwi-wire-schema-ownership-and-size-exception) |
+| MOD-19 | Review remaining FIG importer coordination after text extraction | PRD-03 / runtime ownership | MOD-16 | Backlog | [Card](https://trello.com/c/q0ZEZpOy/393-mod-19-review-remaining-fig-importer-coordination-after-text-extraction) |
+| MOD-20 | Review remaining FIG exporter coordination after payload extraction | PRD-03 / runtime ownership | MOD-17 | Backlog | [Card](https://trello.com/c/BGyM2T9o/394-mod-20-review-remaining-fig-exporter-coordination-after-payload-extraction) |
 
 ## Native surface coverage
 
