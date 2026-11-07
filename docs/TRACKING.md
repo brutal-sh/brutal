@@ -92,13 +92,17 @@ is Verify: 150 owner tests and twelve browser controls pass before and after, wi
 public contracts and cleanup ordering. [Tab evidence](TAB-OWNERSHIP.md) retains the same
 three wider app-shard failures on original and extracted entries. The isolated control
 distinguishes two stale native test contracts from an unproven cross-file backdrop failure.
-[Native test contracts](https://trello.com/c/btVgS7TP) is the sole Building task;
-[backdrop isolation](https://trello.com/c/bd0qkKEQ) remains Backlog. Both are required beta
-and terminal dependencies. Font and graph candidates remain Verify. A later native graph/text batch has
+[Native test contracts](https://trello.com/c/btVgS7TP) and
+[backdrop isolation](https://trello.com/c/bd0qkKEQ) execute their bounded test-control
+criteria. The [control record](APP-TEST-CONTROLS.md) retains paired failures, the two-file
+reproduction, scoped cleanup and the subsequent 1,955 passing app-shard tests. Neither
+changes production behavior or accepts native delivery. Both remain required beta and
+terminal dependencies with linked evidence. Mixed WebKit reliability is the sole Building
+task. Font and graph candidates remain Verify. A later native graph/text batch has
 four hidden-window failures; a fresh OS read confirms the desktop is locked again. Those
 failed/unexecuted input criteria do not erase the earlier successful native resource path.
 The interrupted zero-size icon work retains its failed wider-run receipts and dependencies.
-The delivery snapshot is 357 Backlog, 0 Ready, 1 Building, 6 Verify and 16 Executed, plus 17 milestones.
+The delivery snapshot is 355 Backlog, 0 Ready, 1 Building, 6 Verify and 18 Executed, plus 17 milestones.
 DELIVERY-LFS has bounded executed current-checkout fixture delivery: all twelve objects
 are fetched from the own private endpoint into empty independent storage, with matching
 SHA-256/sizes and LFS integrity checks. Historical object closure is not qualified.

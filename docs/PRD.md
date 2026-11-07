@@ -42,7 +42,9 @@ modules, complete Open Pen branding and an executable Trello backlog.
   code files above 600 to thirteen, and has bounded owner/browser/native acceptance.
   The tab-ownership candidate adds two more files (3,611 total) and reduces code files
   above 600 to twelve; native tab acceptance remains open. Both original and extracted
-  full app shards retain the same three failures, allocated to two narrow repair tasks.
+  full app shards initially retain the same three failures, allocated to two narrow repair
+  tasks. Their [bounded test-control repairs](APP-TEST-CONTROLS.md) subsequently pass the
+  full app shard: 1,955 tests across 339 files, without application source changes.
 - Initially observed: inherited web marks, localized product names, diagnostics labels and a native
   microphone explanation still identify the app as OpenPencil. The original violet Open Pen
   app-icon master already exists.
@@ -105,7 +107,7 @@ types/catalogs into arbitrary microfiles or weaken validation to reduce line cou
 
 | Horizon | Outcome | Evidence checkpoint |
 | --------------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Now                   | Reconcile stale native save/watch acceptance controls | Preserve current PEN-first save and atomic replacement watching; execute real IPC contracts and retain the independent backdrop failure. |
+| Now                   | Resolve mixed WebKit font/decode acceptance stalls | Preserve the failed mixed matrix and passing cold controls; identify and repair the demonstrated cause under unchanged timing, data and error checks. |
 | Next                  | Continue dependency-free branding and mixed WebKit reliability checks                           | Warning surface has bounded executed evidence; native associated-file delivery and the failed mixed run remain open.                 |
 | Then                  | Stabilize document switching and finish unaccepted icon, module and feature/screen tasks in dependency order | Each card has relevant owner tests, visual/native checks and a commit/evidence link before Executed; dependent renderer/input work waits for STAB-GPU. |
 | Release qualification | Deliver private beta, then complete the full parity gate | Clean normal build, install/restart/recovery and core journey; declared beta limitations. Later, no required parity state remains unaccepted. |

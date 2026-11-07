@@ -98,10 +98,24 @@ describe('Tauri file actions', () => {
   test('watches Tauri files and ignores recent local writes', async () => {
     const watcher: { onEvent: ((event: unknown) => void) | null } = { onEvent: null }
     const calls: string[] = []
+    let lastWrite = 0
     await mockTauriIPC((cmd, args) => {
+      if (cmd === 'plugin:path|resolve') {
+        expect(args).toEqual({ paths: ['/tmp/design.fig'] })
+        return '/tmp/design.fig'
+      }
+      if (cmd === 'plugin:path|dirname') {
+        expect(args).toEqual({ path: '/tmp/design.fig' })
+        return '/tmp'
+      }
+      if (cmd === 'plugin:path|basename') return 'design.fig'
+      if (cmd === 'plugin:fs|stat') {
+        expect(args).toEqual({ path: '/tmp', options: undefined })
+        throw new Error('Directory identity unavailable')
+      }
       if (cmd === 'plugin:fs|watch') {
         expect(args).toMatchObject({
-          paths: ['/tmp/design.fig'],
+          paths: ['/tmp'],
           options: { delayMs: 500 }
         })
         watcher.onEvent = (
@@ -109,38 +123,38 @@ describe('Tauri file actions', () => {
         ).onEvent.onmessage
         return 7
       }
+      expect(cmd).toBe('plugin:resources|close')
+      expect(args).toEqual({ rid: 7 })
       calls.push(cmd)
       return null
     })
 
     const unwatch = await watchTauriFile(
       '/tmp/design.fig',
-      () => 0,
+      () => lastWrite,
       () => calls.push('reload')
     )
-    watcher.onEvent?.({ type: { modify: { kind: 'data' } } })
+    watcher.onEvent?.({ type: { modify: { kind: 'data' } }, paths: ['/tmp/design.fig'] })
     expect(calls).toEqual(['reload'])
-
-    await clearTauriMocks()
-    await mockTauriIPC((cmd, args) => {
-      if (cmd === 'plugin:fs|watch') {
-        watcher.onEvent = (
-          args as { onEvent: { onmessage: (event: unknown) => void } }
-        ).onEvent.onmessage
-        return 8
-      }
-      calls.push(cmd)
-      return null
+    watcher.onEvent?.({
+      type: { modify: { kind: 'rename', mode: 'both' } },
+      paths: ['/tmp/replacement', '/tmp/design.fig']
     })
+    expect(calls).toEqual(['reload', 'reload'])
     calls.length = 0
-    await watchTauriFile(
-      '/tmp/design.fig',
-      () => Date.now(),
-      () => calls.push('reload')
-    )
-    watcher.onEvent?.({ type: { modify: { kind: 'data' } } })
+    watcher.onEvent?.({
+      type: { access: { kind: 'open', mode: 'read' } },
+      paths: ['/tmp/design.fig']
+    })
+    watcher.onEvent?.({ type: 'any', paths: ['/tmp/sibling.fig'] })
+    lastWrite = Date.now()
+    watcher.onEvent?.({ type: 'any', paths: ['/tmp/design.fig'] })
     expect(calls).toEqual([])
 
     unwatch()
+    expect(calls).toEqual(['plugin:resources|close'])
+    lastWrite = 0
+    watcher.onEvent?.({ type: 'any', paths: ['/tmp/design.fig'] })
+    expect(calls).toEqual(['plugin:resources|close'])
   })
 })

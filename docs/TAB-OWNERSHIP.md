@@ -50,6 +50,11 @@ unproven. [Native test contracts](https://trello.com/c/btVgS7TP) and
 [backdrop isolation](https://trello.com/c/bd0qkKEQ) retain separate narrow repair criteria;
 the full-shard failures are not waived by the focused refactor controls.
 
+Subsequent [test-control repairs](APP-TEST-CONTROLS.md) correct the two inherited native
+expectations and restore a leaking Cloud fetch spy. The full app shard then passes all
+1,955 cases / 12,576 assertions across the same 339 files. This later result preserves
+the original paired failure evidence and does not execute native tab delivery.
+
 A fresh OS read last confirms the desktop locked. The earlier native GPU/PEN successes are
 separate receipts; a later native graph/text batch stops at visibility guards. No native
 retry, lock bypass, main-app installation or user profile/document/credential/recovery

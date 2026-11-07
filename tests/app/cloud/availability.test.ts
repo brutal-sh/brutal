@@ -11,14 +11,20 @@ import { cloudDiscoveryFixture } from '#tests/helpers/cloud/discovery'
 import { fetchStub } from '#tests/helpers/fetch'
 
 const EDITOR = 'https://app.example.com/'
+let serverFetch: ReturnType<typeof spyOn<typeof globalThis, 'fetch'>> | undefined
 
 function officialServer(answer: () => Response) {
-  spyOn(globalThis, 'fetch').mockImplementation(fetchStub(async () => answer()))
+  serverFetch = spyOn(globalThis, 'fetch').mockImplementation(fetchStub(async () => answer()))
 }
 
 afterEach(async () => {
-  officialServer(() => Response.error())
-  await checkCloudAvailability(`${EDITOR}?cloud=off`)
+  try {
+    officialServer(() => Response.error())
+    await checkCloudAvailability(`${EDITOR}?cloud=off`)
+  } finally {
+    serverFetch?.mockRestore()
+    serverFetch = undefined
+  }
 })
 
 describe('Cloud availability', () => {

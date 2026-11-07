@@ -73,21 +73,42 @@ describe('Tauri document IO helpers', () => {
     expect(savedVersions).toEqual([17])
   })
 
-  test('chooses a Tauri save path through plugin-dialog', async () => {
+  test.each([
+    {
+      suggestedName: undefined,
+      defaultPath: 'Untitled.pen',
+      filters: [
+        { name: 'Pen file', extensions: ['pen'] },
+        { name: 'Figma file', extensions: ['fig'] }
+      ]
+    },
+    {
+      suggestedName: 'Existing.fig',
+      defaultPath: 'Existing.fig',
+      filters: [
+        { name: 'Figma file', extensions: ['fig'] },
+        { name: 'Pen file', extensions: ['pen'] }
+      ]
+    }
+  ])('chooses a Tauri save path for $defaultPath through plugin-dialog', async (fixture) => {
     await mockTauriIPC((cmd, args) => {
       expect(cmd).toBe('plugin:dialog|save')
       expect(args).toEqual({
         options: {
-          defaultPath: 'Untitled.fig',
-          filters: [
-            { name: 'Figma file', extensions: ['fig'] },
-            { name: 'Pen file', extensions: ['pen'] }
-          ]
+          defaultPath: fixture.defaultPath,
+          filters: fixture.filters
         }
       })
-      return '/tmp/Untitled.fig'
+      return `/tmp/${fixture.defaultPath}`
     })
 
-    await expect(chooseTauriDocumentSavePath()).resolves.toBe('/tmp/Untitled.fig')
+    await expect(chooseTauriDocumentSavePath(fixture.suggestedName)).resolves.toBe(
+      `/tmp/${fixture.defaultPath}`
+    )
+  })
+
+  test('keeps a cancelled native save cancelled', async () => {
+    await mockTauriIPC(() => null)
+    await expect(chooseTauriDocumentSavePath()).resolves.toBeNull()
   })
 })
