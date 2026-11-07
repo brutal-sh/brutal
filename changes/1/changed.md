@@ -41,3 +41,4 @@
 
 - Software Update links to Open Pen’s change history and shows translated availability guidance with readable release-note placeholders.
 - Startup support notices link to Open Pen’s system requirements and issue form with matching diagnostic platform details.
+- CLI subcommand help shows the full command path instead of the local entry script path.

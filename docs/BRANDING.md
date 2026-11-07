@@ -361,3 +361,15 @@ All 35 browser cases pass with inspected captures and matching frozen sources; f
 authenticated remote contents match the new README and template exactly. Both requested
 color schemes retain existing dark pre-boot styling. The support parent and full links
 gate remain open for their other owners and uninspected destinations.
+
+
+## CLI help and format presentation
+
+The [CLI record](CLI-COPY.md) executes all forty-nine registered help paths through source
+Bun and packaged Node entries: 98 passing invocations, complete nested usage paths and
+seventy-four matching frozen source/compiled hashes. Format-list text and JSON remain
+byte-identical across all fourteen entries. The public command registry, compatibility
+executable/package IDs and format contracts remain unchanged. The CLI owner suite passes
+46 tests; final build/lint and source/Vue/test types pass. Publication is pending.
+The separate Storybook manifest error-label task remains open; compatibility filenames
+and namespaces are preserved. No full CLI, native or whole-brand acceptance is inferred.

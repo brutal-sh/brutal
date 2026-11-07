@@ -113,14 +113,14 @@ types/catalogs into arbitrary microfiles or weaken validation to reduce line cou
 
 ## Delivery sequence
 
-The fresh board contains 392 bounded execution tasks and 17 milestones. Every one of the
+The fresh board contains 393 bounded execution tasks and 17 milestones. Every one of the
 164 catalog requirements and 22 native ledger rows is allocated; allocation is not acceptance.
 [Task index](TASKS.md) records the live-board states and dependencies.
 
 | Horizon | Outcome | Evidence checkpoint |
 | --------------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Now | Verify actual CLI help and document-format presentation (BRAND-SUPPORT-CLI) | Execute the workspace CLI, inspect own display names and preserve command/package/format compatibility IDs; retain actual output and exit codes. |
-| Next | Verify ACP failure presentation and WebMCP metadata | Each is a separate Ready child of the support-copy gate. Native-engine advice has its own Backlog child; portal and native delivery remain separate. |
+| Next | Verify the discovered Storybook error label, ACP failure presentation and WebMCP metadata | Each is a separate Ready task. Preserve the Storybook compatibility filename/path namespace; native-engine advice and portal remain separate. |
 | Then                  | Stabilize document switching and finish unaccepted icon, module and feature/screen tasks in dependency order | Each card has relevant owner tests, visual/native checks and a commit/evidence link before Executed; dependent renderer/input work waits for STAB-GPU. |
 | Release qualification | Deliver private beta, then complete the full parity gate | Clean normal build, install/restart/recovery and core journey; declared beta limitations. Later, no required parity state remains unaccepted. |
 

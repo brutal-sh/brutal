@@ -6,7 +6,7 @@ Repository: [private Open Pen repository](https://github.com/jpoindexter/open-pe
 Board: [Open Pen — independent design editor](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor), private.
 
 The [PRD](PRD.md) owns the outcome, constraints and release criteria.
-The [task index](TASKS.md) links all 392 execution cards; the [modularity audit](MODULARITY.md)
+The [task index](TASKS.md) links all 393 execution cards; the [modularity audit](MODULARITY.md)
 records the measured review queue. Requirements come from the [feature catalog](pen-feature-reference/README.md)
 and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), using actual Pen 1.2.21 as the reference.
 
@@ -23,7 +23,7 @@ and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), using actual Pen 1.
 
 ## Verified planning snapshot
 
-A complete fresh board readback finds 409 open cards: 392 unique execution tasks and 17 milestones.
+A complete fresh board readback finds 410 open cards: 393 unique execution tasks and 17 milestones.
 All 164 catalog requirements and 22 exact native ledger rows map to real execution cards.
 There are no missing or duplicate task IDs, and the dependency graph is acyclic.
 All 15 originally oversized runtime modules have individual disposition tasks.
@@ -116,7 +116,7 @@ terminal dependencies with linked evidence. CLI/format presentation (BRAND-SUPPO
 four hidden-window failures; a fresh OS read confirms the desktop is locked again. Those
 failed/unexecuted input criteria do not erase the earlier successful native resource path.
 The interrupted zero-size icon work retains its failed wider-run receipts and dependencies.
-The delivery snapshot is 354 Backlog, 2 Ready, 1 Building, 9 Verify and 26 Executed, plus 17 milestones.
+The delivery snapshot is 354 Backlog, 3 Ready, 1 Building, 9 Verify and 26 Executed, plus 17 milestones.
 DELIVERY-LFS has bounded executed current-checkout fixture delivery: all twelve objects
 are fetched from the own private endpoint into empty independent storage, with matching
 SHA-256/sizes and LFS integrity checks. Historical object closure is not qualified.
@@ -125,7 +125,7 @@ UI-SPLIT-HEADER separately records toolbar/inspector overlap blocking pane Close
 FONT-EXPORT-BOUNDS, FONT-LOCAL-PICKER and FONT-CJK-REPAINT separately record existing
 font acceptance failures. Exact original-versus-refactor controls reproduce the same three
 broader workflow failures; ten named pre-refactor visual controls pass afterward in both engines.
-The terminal gate depends on all 391 other required execution tasks.
+The terminal gate depends on all 392 other required execution tasks.
 The board retains 17 milestones, 164 mapped requirements and 22 mapped native rows.
 No branding milestone or product-parity feature group is fully accepted.
 
@@ -151,7 +151,7 @@ the recovery card is Executed for this bounded criterion. Update prompts have bo
 the [record](UPDATER-COPY.md) retains 36 passing cases and 234 inspected captures. Restart feedback has bounded Executed controller/component evidence at
 [`4006503a6`](https://github.com/jpoindexter/open-pen/commit/4006503a6f051a7a76e7517bf7d0c7d0d648ed99);
 its [record](RESTART-COPY.md) retains 36 passing cases and 54 inspected captures. [VERIFY-TOAST-SHORT](https://trello.com/c/f3kDECKO) allocates the
-unmeasured short-error grouping; the terminal gate now has all 391 other tasks as dependencies.
+unmeasured short-error grouping; the terminal gate now has all 392 other tasks as dependencies.
 This is not a new beta feature prerequisite or actual-Pen visual acceptance.
 
 Fresh 2026-11-07 paginated inventories and permission readbacks verify Actions disabled on
@@ -172,3 +172,10 @@ remote README/template readback at `59e02516b`. All 35 browser cases and 65 live
 pass; all 35 captures are inspected. Modern UA/capability fixtures and intercepted link
 activation qualify this path only. Both requested color schemes keep the existing dark
 notice; distinct light styling, historical engines, native delivery and full branding remain open.
+
+
+CLI help inspection discovers missing subcommand metadata names: Citty falls back to the
+local entry script path. The current CLI card owns that observed help defect. A separate
+Ready task, BRAND-STORYBOOK-ERROR, owns one remaining inherited error-label sentence;
+its manifest filename and generated path namespace remain compatibility identities.
+The full branding and terminal gates depend on that new diagnostic task.
