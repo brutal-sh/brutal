@@ -20,7 +20,7 @@ const toastTheme = {
       default: { root: 'bg-accent text-on-accent', action: 'bg-black/20 hover:bg-black/30' },
       info: { root: 'border border-border bg-panel text-surface', action: 'hover:bg-hover' },
       warning: {
-        root: 'border border-warning-border bg-warning-bg text-warning',
+        root: 'border border-warning-border bg-panel text-warning',
         action: 'bg-current/10 hover:bg-current/15'
       },
       error: { root: 'bg-error-fill text-white', action: 'bg-black/20 hover:bg-black/30' }

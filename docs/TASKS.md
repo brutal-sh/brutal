@@ -1,9 +1,9 @@
 # Open Pen task index
 
-Updated: 2026-11-06. All task links are verified by a fresh complete board readback.
+Updated: 2026-11-07. All task links are verified by a fresh complete board readback.
 The full design AND functionality parity goal remains active; allocation does not establish accepted behavior.
 
-The breakdown contains **370 execution tasks**, covering all **164 documented requirements** and **22 native screen/menu rows**, plus branding, modularity and known residuals.
+The breakdown contains **372 execution tasks**, covering all **164 documented requirements** and **22 native screen/menu rows**, plus branding, modularity and known residuals.
 The board also preserves the 15 original cards as milestones and adds two milestones for branding and modularization.
 
 Ready is limited to three dependency-free tasks; Building to one current task. Each card contains its scope, owner, dependencies and concrete Done checks.
@@ -14,7 +14,7 @@ This table records the verified planning snapshot. Read the live board for later
 ## Execution tasks
 
 | ID | Task | Source | Dependencies | State | Trello |
-| --- | --- | --- | --- | --- | --- |
+| ------------------------- | ---------------------------------------------------------------- | ------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------- |
 | ENV-01-MAC | macOS package launch/version/update behavior | ENV-01 | None identified | Backlog | [Card](https://trello.com/c/hzrysOeC/16-env-01-mac-macos-package-launch-version-update-behavior) |
 | ENV-01-WIN | Windows package launch/version/update behavior | ENV-01 | None identified | Backlog | [Card](https://trello.com/c/jwvFrEBm/17-env-01-win-windows-package-launch-version-update-behavior) |
 | ENV-01-LINUX | Linux package launch/version/update behavior | ENV-01 | None identified | Backlog | [Card](https://trello.com/c/pUmVd8OH/18-env-01-linux-linux-package-launch-version-update-behavior) |
@@ -285,7 +285,7 @@ This table records the verified planning snapshot. Read the live board for later
 | BRAND-COPY | Replace inherited product labels in every app locale | PRD / native ledger | BRAND-COPY-SOURCE, BRAND-COPY-AI, BRAND-COPY-EDITOR, BRAND-COPY-RECOVERY, BRAND-COPY-PORTAL, BRAND-COPY-SUPPORT | Verify | [Card](https://trello.com/c/zU0zBEql/81-brand-copy-replace-inherited-product-labels-in-every-app-locale) |
 | BRAND-COPY-SOURCE | Replace canonical app labels across all nine locales | PRD-02 / BRAND-COPY | None identified | Executed | [Card](https://trello.com/c/SLVNhSXy/354-brand-copy-source-replace-canonical-app-labels-across-all-nine-locales) |
 | BRAND-COPY-AI | Verify translated AI setup and agent failure labels | PRD-02 / BRAND-COPY | BRAND-COPY-SOURCE, A11Y-COPY, UI-TOAST-REFLOW | Executed | [Card](https://trello.com/c/S0EQHPiD/355-brand-copy-ai-verify-translated-ai-setup-and-agent-failure-labels) |
-| BRAND-COPY-EDITOR | Verify translated editor menus and notification labels | PRD-02 / BRAND-COPY | BRAND-COPY-SOURCE | Building | [Card](https://trello.com/c/WB4Y2rWd/356-brand-copy-editor-verify-translated-editor-menus-and-notification-labels) |
+| BRAND-COPY-EDITOR         | Verify translated editor menus and notification labels           | PRD-02 / BRAND-COPY                                    | BRAND-COPY-SOURCE, UI-TOAST-SURFACE, STAB-WEBKIT-MIXED | Verify | [Card](https://trello.com/c/WB4Y2rWd/356-brand-copy-editor-verify-translated-editor-menus-and-notification-labels)        |
 | BRAND-COPY-RECOVERY | Verify translated recovery and update labels | PRD-02 / BRAND-COPY | BRAND-COPY-SOURCE | Backlog | [Card](https://trello.com/c/jAZkNGSW/357-brand-copy-recovery-verify-translated-recovery-and-update-labels) |
 | BRAND-COPY-PORTAL | Verify translated desktop-client names in cloud pages | PRD-02 / BRAND-COPY | BRAND-COPY-SOURCE | Backlog | [Card](https://trello.com/c/G83Ps06r/358-brand-copy-portal-verify-translated-desktop-client-names-in-cloud-pages) |
 | BRAND-COPY-SUPPORT | Verify own app names in support and automation output | PRD-02 / BRAND-COPY | BRAND-COPY-SOURCE | Backlog | [Card](https://trello.com/c/xVKd0YsW/359-brand-copy-support-verify-own-app-names-in-support-and-automation-output) |
@@ -355,8 +355,8 @@ This table records the verified planning snapshot. Read the live board for later
 | BROWSER-CLIP | Match fixed-device rim and browser clip-height resizing | IO-04 | None identified | Backlog | [Card](https://trello.com/c/Ou2ZtFCB/147-browser-clip-match-fixed-device-rim-and-browser-clip-height-resizing) |
 | BROWSER-FRAMES | Import iframe/shadow content or report precise unsupported scope | IO-04 | None identified | Backlog | [Card](https://trello.com/c/o8bvGU8E/148-browser-frames-import-iframe-shadow-content-or-report-precise-unsupported-scope) |
 | CONTEXT-DRAG | Native Context resize-handle delivery and exact geometry | UI-08 | None identified | Backlog | [Card](https://trello.com/c/dRLZalKf/149-context-drag-native-context-resize-handle-delivery-and-exact-geometry) |
-| BETA-01 | Qualify the private macOS core design journey | ENV-01, FIRST-01, FIRST-02, FIRST-03, FILE-07, FILE-08 | STAB-GPU, BRAND-VERIFY, FIRST-03, FILE-07, FILE-08 | Backlog | [Card](https://trello.com/c/sYpWJdvu/150-beta-01-qualify-the-private-macos-core-design-journey) |
-| PARITY-ALL | Audit every applicable requirement and surface for full parity | PRD / native ledger | Every other required execution task (369) | Backlog | [Card](https://trello.com/c/cr0YPLzZ/151-parity-all-audit-every-applicable-requirement-and-surface-for-full-parity) |
+| BETA-01 | Qualify the private macOS core design journey | ENV-01, FIRST-01, FIRST-02, FIRST-03, FILE-07, FILE-08 | STAB-GPU, BRAND-VERIFY, FIRST-03, FILE-07, FILE-08, STAB-WEBKIT-MIXED | Backlog | [Card](https://trello.com/c/sYpWJdvu/150-beta-01-qualify-the-private-macos-core-design-journey) |
+| PARITY-ALL                | Audit every applicable requirement and surface for full parity   | PRD / native ledger                                    | All other required execution tasks (370)                                                                        | Backlog | [Card](https://trello.com/c/cr0YPLzZ/151-parity-all-audit-every-applicable-requirement-and-surface-for-full-parity)       |
 | A11Y-COPY | Keep command-copy buttons readable in both themes | PRD-05 / PRD-09 | BRAND-COPY-SOURCE | Executed | [Card](https://trello.com/c/1e6Ou0e7/360-a11y-copy-keep-command-copy-buttons-readable-in-both-themes) |
 | UI-TOAST-REFLOW | Keep translated toast messages readable beside long actions | PRD-05 / PRD-09 | BRAND-COPY-SOURCE | Executed | [Card](https://trello.com/c/DjJkNW8V/361-ui-toast-reflow-keep-translated-toast-messages-readable-beside-long-actions) |
 | UI-SPLIT-HEADER | Keep pane controls reachable below floating workspace actions | PRD-04 / PRD-05 | STAB-GPU | Backlog | [Card](https://trello.com/c/Lz1r5iLo/362-ui-split-header-keep-pane-controls-reachable-below-floating-workspace-actions) |
@@ -383,15 +383,17 @@ This table records the verified planning snapshot. Read the live board for later
 | CLI-10-MANAGE | Manage imported libraries in the interactive shell | CLI-10 | None identified | Backlog | [Card](https://trello.com/c/YKqtpM1c/384-cli-10-manage-manage-imported-libraries-in-the-interactive-shell) |
 | AUTH-05-ADVANCED | Match custom-provider limits and completion options | AUTH-05 | None identified | Backlog | [Card](https://trello.com/c/Xv3V4jV7/385-auth-05-advanced-match-custom-provider-limits-and-completion-options) |
 | FMT-09-DRIFT | Qualify current schema changes against pinned2.21 | FMT-09 | None identified | Backlog | [Card](https://trello.com/c/eZXKvRhb/386-fmt-09-drift-qualify-current-schema-changes-against-pinned221) |
-| MOD-AUDIT-CLOSURE | Audit remaining first-party runtime package owners | PRD-03 / operational requirement | MOD-AUDIT | Backlog | [Card](https://trello.com/c/R0oPWJAa/387-mod-audit-closure-audit-remaining-first-party-runtime-package-owners) |
+| MOD-AUDIT-CLOSURE | Audit remaining first-party runtime package owners | PRD-03 / operational requirement | MOD-AUDIT | Building | [Card](https://trello.com/c/R0oPWJAa/387-mod-audit-closure-audit-remaining-first-party-runtime-package-owners) |
 | DELIVERY-LFS | Verify current fixture delivery from our private fork | PRD operational requirement | PLAN-01 | Executed | [Card](https://trello.com/c/cvzyZ7Hw/363-delivery-lfs-verify-current-fixture-delivery-from-our-private-fork) |
+| UI-TOAST-SURFACE          | Keep floating warning text readable over the canvas              | PRD-02 / PRD-05 / PRD-06                               | UI-TOAST-REFLOW                                                                                                 | Executed | [Card](https://trello.com/c/FzA3qbsT/388-ui-toast-surface-keep-floating-warning-text-readable-over-the-canvas)            |
+| STAB-WEBKIT-MIXED | Stabilize WebKit checks after mixed editor workflows | PRD-04 / PRD-06 / PRD-09 | None identified | Backlog | [Card](https://trello.com/c/ech6H0Xm/389-stab-webkit-mixed-stabilize-webkit-checks-after-mixed-editor-workflows) |
 
 ## Native surface coverage
 
 Each exact screen/menu ledger row has one or more execution cards. This does not claim every reachable state has already been discovered or accepted; REF-02 covers the remaining actual-app walkthrough.
 
 | Ledger row | Execution task IDs |
-| --- | --- |
+| --------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Home categories/composer/imports/documents | [SURF-HOME](https://trello.com/c/KY4RY62U/102-surf-home-home-tabs-search-and-import-composer-layout) |
 | Brand popup | [MENU-BRAND](https://trello.com/c/iW2YpYWO/143-menu-brand-top-left-brand-popup-menu-parity) |
 | Native File/Edit/View/Window/Help | [MENU-FILE](https://trello.com/c/WGWi4KGG/134-menu-file-file-and-recent-export-submenus-menu-parity), [MENU-EDIT](https://trello.com/c/EkeM4ygh/135-menu-edit-edit-and-clipboard-arrange-actions-menu-parity), [MENU-VIEW](https://trello.com/c/xL0gbxOT/138-menu-view-view-ui-visibility-and-preferences-menu-parity), [MENU-WINDOW](https://trello.com/c/hN2JmK4d/140-menu-window-window-tab-navigation-menu-parity), [MENU-HELP](https://trello.com/c/jhyrgS57/141-menu-help-help-guides-support-destinations-menu-parity) |

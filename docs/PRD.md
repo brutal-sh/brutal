@@ -1,7 +1,7 @@
 # Open Pen product requirements
 
 Decision owner: Jason Poindexter. Implementation and evidence owner: Codex.
-Updated: 2026-11-06. Status: active; full design and functionality parity is not achieved.
+Updated: 2026-11-07. Status: active; full design and functionality parity is not achieved.
 
 ## Product outcome
 
@@ -58,7 +58,7 @@ vendor account. Hosted inference and other external services retain their own co
 ## Requirements
 
 | ID | Required outcome | Acceptance |
-| --- | --- | --- |
+| ------ | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | PRD-01 | Complete traceability | Every catalog requirement, native surface/menu row, known residual bug, branding task and oversized-module review maps to a specific Trello task. No orphan requirement or unverified completed task. |
 | PRD-02 | Own product identity | Boot, Home, editor, settings, dialogs, menus, app icons, favicon/PWA assets and app-owned log/support exports identify Open Pen. Explicit license credits, compatible APIs, package IDs and truthful external-provider names are exceptions, documented by purpose. |
 | PRD-03 | Maintainable modules | Preserve existing package ownership and public exports. Separate responsibilities when touching large feature modules; keep typical controls/helpers focused around 50–200 lines and feature modules around 200–300 where useful. Review every runtime file above 600 lines; extract cohesive domains or record a specific declaration/catalog exception. Line counts alone do not prove good architecture. |
@@ -94,10 +94,10 @@ types/catalogs into arbitrary microfiles or weaken validation to reduce line cou
 ## Delivery sequence
 
 | Horizon | Outcome | Evidence checkpoint |
-| --- | --- | --- |
-| Now | Reconcile PRD, task coverage and board; preserve the interrupted work | Fresh board readback agrees with the task index, every source ID is allocated, and pending code/failed receipts remain identified. |
-| Next | Stabilize repeated document switching, publish verified zero-size preservation, complete own-brand assets/copy/logs | Reproduction fails before the fix and passes afterward; browser/native journeys and branded artifacts are inspected. |
-| Then | Refactor oversized runtime owners in small behavior-preserving changes and complete remaining feature/screen tasks | Each card has relevant owner tests, visual/native checks and a commit/evidence link before Executed. |
+| --------------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Now                   | Complete the remaining first-party runtime package audit                   | Enumerate runtime target/package closure and allocate narrow oversized-owner reviews; keep native acceptance separate.         |
+| Next                  | Continue dependency-free branding and mixed WebKit reliability checks                           | Warning surface has bounded executed evidence; native associated-file delivery and the failed mixed run remain open.                 |
+| Then                  | Stabilize document switching and finish unaccepted icon, module and feature/screen tasks in dependency order | Each card has relevant owner tests, visual/native checks and a commit/evidence link before Executed; dependent renderer/input work waits for STAB-GPU. |
 | Release qualification | Deliver private beta, then complete the full parity gate | Clean normal build, install/restart/recovery and core journey; declared beta limitations. Later, no required parity state remains unaccepted. |
 
 No fixed completion date is claimed. Re-estimate after the stability and branding tasks using
@@ -106,7 +106,7 @@ observed task throughput and the remaining acceptance work, including native/pla
 ## Four risks
 
 | Risk | Current evidence | Response and owner |
-| --- | --- | --- |
+| ----------- | ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Value | Jason needs the familiar Pen workflow and rejects approximations | Preserve the requested reference and prioritize visible mismatches. Jason owns changes to the product target. |
 | Usability | Menus, borders and some states still differ | Pair each visual task with an actual reference capture and a real interaction check. Codex owns evidence. |
 | Feasibility | Mature foundation exists; GPU lifecycle, file edges and platform delivery remain incomplete | Fix shared causes, preserve validation and use bounded native fixtures. Codex owns reproduction and implementation. |

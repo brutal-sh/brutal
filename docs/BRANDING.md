@@ -1,6 +1,6 @@
 # Open Pen identity acceptance
 
-Updated: 2026-11-06. Own-brand assets have executed output and browser checks.
+Updated: 2026-11-07. Own-brand assets have executed output and browser checks.
 Owned diagnostics/log names also have bounded executed checks below. Product copy, native
 identity, links and full cross-platform branding remain separate open tasks.
 
@@ -9,7 +9,7 @@ Historical teal SVG masters retain provenance but are no longer generator inputs
 Native generation retains its existing source and Tauri path; app geometry is unchanged.
 
 | Surface | Executed evidence | Limit |
-| --- | --- | --- |
+| ---------------------------------------- | ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
 | Main/micro marks and light/dark variants | Generator source-fidelity checks; inspected browser captures at 16/24/32px and larger sizes. | Chromium browser evidence; WebKit and full product branding remain open. |
 | Monochrome | Neutral-channel and retained light/dark feature checks; rendered output inspected. | Browser filter rendering is not separately qualified. |
 | Favicon and declarations | Real browser loads, both themes, 1x/2x captures; ICO sizes and no duplicate manifest checked. | No installed PWA acceptance is inferred. |
@@ -241,3 +241,58 @@ sign-in, native clipboard and exact Pen screen matching remain separate acceptan
 Together with the earlier source, access/cancel, component failure, network Retry, stale/denied
 callback and companion-version checks, this closes the bounded BRAND-COPY-AI copy task.
 The parent copy gate, whole branding milestone and full product parity remain open.
+
+## Editor copy and opaque warning surface
+
+Mixed WebKit execution remains unaccepted under [STAB-WEBKIT-MIXED](https://trello.com/c/ech6H0Xm).
+The attempted 117-case run records 90 passes, ten timeouts, one interrupted case and 16
+unexecuted cases. Its first English font case exhausts the unchanged 15-second limit after
+capture; later FIG cases can stay at decoding. A fresh command-nine/font-one prefix passes,
+and fresh file runs pass, without establishing the cause of the mixed failure. The editor,
+beta and terminal gates retain this dependency. Native queued-file delivery also remains open.
+
+The following browser branches have bounded passing receipts. The counts identify those
+branches; they do not turn the mixed run into an accepted suite.
+
+| Branch | Observed path and preservation | Limit |
+| --- | --- | --- |
+| Command search, nine languages and two engines | Actual description, search focus and Escape dismissal. | The own-brand description is accessibility text; this does not qualify all menu commands or Pen geometry. |
+| Unsupported font, nine languages and two engines | Real font-status branch from a synthetic host-loader failure; original family and text remain. | No native font-parser or all-format claim; the English mixed-run timeout remains open. |
+| Unsupported variable, nine languages and two engines | Actual inspector tooltip; full expression and cached width remain. | This branch checks in-memory preservation. |
+| Microphone denial, nine languages in Chromium | Browser permission refusal displays guidance and keeps the fixture out of a call. | Fake device; no real audio, OS permission panel or native delivery. |
+| Unreachable room, nine languages and two engines | A real local WebSocket closes normally; the actual 21-second status deadline is advanced, then Leave executes without browser errors. | Simulated elapsed time; reconnection is unaccepted. |
+| FIG import/save/reopen, nine languages, both themes and engines | File chooser triggers the real import warning; Close executes, height/background edits save through a real download, parsed bytes retain the expression and geometry, and the selected reopened tab retains the values. | Browser download fallback; no native file panel or associated-file delivery. |
+
+Fixtures use the browser-language setting while preserving the canonical first-run storage
+state. The app's existing plain theme setter selects the actual theme, which the test checks
+on the root. Merely setting the browser color scheme leaves this app's default dark theme;
+those earlier captures do not qualify light mode. Unknown HTTPS requests are blocked and
+reported; known metadata/Cloud services have local stand-ins. This is not a universal network
+firewall, provider login or real collaboration service acceptance.
+
+The real FIG-import warning exposes a separate floating-surface defect: its 10% background
+tint lets the file-support banner show through and yields 1.53:1 normal-text contrast over
+the light canvas in dark mode. The candidate replaces only the floating warning's background
+with the existing opaque panel token. Inline status tints, warning icon/border/text, geometry,
+controls, progress and lifetime retain their owners and behavior.
+
+Executed surface measurements: all 36 language/theme/engine variants report background alpha
+and settled opacity of one. Normal text contrast measures 8.3056:1 in dark mode and 6.0565:1
+in light mode, above the [normal-text minimum](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html).
+The four English before/after bounds remain 384×46 pixels at the same position. All 72 actual
+first/reopened captures are inspected; canvas pixel samples confirm the light and saved dark
+underlays. The warning remains readable without underlying text bleeding through it.
+
+Screenshots finish finite CSS animations for inspection; this does not change the app's motion.
+Earlier WebKit captures caught the entrance fade and are rejected as settled visual evidence.
+Their raw files, the actual before captures and failed matrix/traces remain retained. Existing
+toast component regression passes 24 cases: six baseline examples and 72 translated
+recovery captures at 320/384 pixels. All 78 captures are inspected. Story accessibility,
+control visibility, action-to-Copy-to-Close focus order and Enter dismissal execute. These
+static error-tone stories do not activate recovery actions, copy the clipboard or test
+lifetime; the actual warning-tone surface is qualified by the separate FIG journeys.
+The five existing progress/lifetime tests also pass, including determinate/indeterminate
+updates, paused expiry, resumed progress and dismissal after clearing progress. Their clock
+is simulated. Action activation and clipboard contents remain outside this check.
+[UI-TOAST-SURFACE](https://trello.com/c/FzA3qbsT) has executed this bounded surface criterion. Its bounded acceptance cannot close editor copy, native/Pen matching,
+mixed stability, the branding milestone or beta.

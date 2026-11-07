@@ -1,19 +1,19 @@
 # Tracking
 
-Updated: 2026-11-06. The full independent design and functionality parity goal remains active.
+Updated: 2026-11-07. The full independent design and functionality parity goal remains active.
 
 Repository: [private Open Pen repository](https://github.com/jpoindexter/open-pen), branch `feat/open-pen`.
 Board: [Open Pen — independent design editor](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor), private.
 
 The [PRD](PRD.md) owns the outcome, constraints and release criteria.
-The [task index](TASKS.md) links all 370 execution cards; the [modularity audit](MODULARITY.md)
+The [task index](TASKS.md) links all 372 execution cards; the [modularity audit](MODULARITY.md)
 records the measured review queue. Requirements come from the [feature catalog](pen-feature-reference/README.md)
 and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), using actual Pen 1.2.21 as the reference.
 
 ## Board organization
 
 | List | Purpose |
-| --- | --- |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Milestones | The 15 original cards retain their history; two new milestones track own branding and modularization. These broad cards are not executable units or current acceptance claims. |
 | Backlog | Bounded tasks with source, scope, owner, dependencies and observable Done criteria. |
 | Ready | At most three next tasks whose dependencies are accepted or absent. |
@@ -23,7 +23,7 @@ and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), using actual Pen 1.
 
 ## Verified planning snapshot
 
-A complete fresh board readback finds 387 open cards: 370 unique execution tasks and 17 milestones.
+A complete fresh board readback finds 389 open cards: 372 unique execution tasks and 17 milestones.
 All 164 catalog requirements and 22 exact native ledger rows map to real execution cards.
 There are no missing or duplicate task IDs, and the dependency graph is acyclic.
 All 15 originally oversized runtime modules have individual disposition tasks. Two dispositions
@@ -39,6 +39,9 @@ The six identity workstreams include a copy gate with six smaller source/accepta
 The initial runtime size scope excludes other first-party dependency/CLI/service owners.
 [MOD-AUDIT-CLOSURE](https://trello.com/c/R0oPWJAa) inventories those owners and allocates
 remaining review tasks before whole-app maintainability can be accepted.
+A separate [mixed WebKit reliability gate](https://trello.com/c/ech6H0Xm) retains the
+failed long-run font/decode paths and passing cold trace controls. Cold passes do not waive
+that open editor/beta/terminal dependency.
 This proves tracking coverage, not accepted product parity or exhaustive discovery of every native state.
 
 Planning publication, the reproducible runtime audit, own-brand assets, owned diagnostics/log
@@ -65,9 +68,13 @@ copy journeys have their own child cards.
 Documentation refresh (REF-01) has executed its inventory criterion. Graph ownership
 (MOD-04) is in Verify, with owner/history/browser/visual/build evidence and unexecuted
 native acceptance; [graph evidence](GRAPH-OWNERSHIP.md) records the limits.
-BRAND-COPY-EDITOR is the sole Building task. Font and graphics candidates remain in Verify.
+BRAND-COPY-EDITOR remains in Verify for native associated-file delivery and mixed WebKit
+reliability. The [warning-surface correction](https://trello.com/c/FzA3qbsT) has bounded
+executed evidence: actual FIG36 round trips, 72 settled captures, component24/78 captures
+and five progress/lifetime checks. Action activation and clipboard contents are not qualified.
+MOD-AUDIT-CLOSURE is the sole Building task. Font and graphics candidates remain in Verify.
 The interrupted zero-size icon work retains its failed wider-run receipts and dependencies.
-The delivery snapshot is 353 Backlog, 0 Ready, 1 Building, 4 Verify and 12 Executed, plus 17 milestones.
+The delivery snapshot is 353 Backlog, 0 Ready, 1 Building, 5 Verify and 13 Executed, plus 17 milestones.
 DELIVERY-LFS has bounded executed current-checkout fixture delivery: all twelve objects
 are fetched from the own private endpoint into empty independent storage, with matching
 SHA-256/sizes and LFS integrity checks. Historical object closure is not qualified.
@@ -76,7 +83,7 @@ UI-SPLIT-HEADER separately records toolbar/inspector overlap blocking pane Close
 FONT-EXPORT-BOUNDS, FONT-LOCAL-PICKER and FONT-CJK-REPAINT separately record existing
 font acceptance failures. Exact original-versus-refactor controls reproduce the same three
 broader workflow failures; ten named pre-refactor visual controls pass afterward in both engines.
-The terminal gate depends on all 369 other required execution tasks.
+The terminal gate depends on all 371 other required execution tasks.
 The board retains 17 milestones, 164 mapped requirements and 22 mapped native rows.
 No branding milestone or product-parity feature group is fully accepted.
 

@@ -25,6 +25,6 @@
 - Reload a browser page while its first response is pending without leaving navigation stuck, and discard frame errors from dismissed or replaced editor menus.
 
 - Keep command-copy buttons readable against their field background in both themes.
-- Keep translated toast messages readable when recovery actions need another row.
+- Warning toasts use an opaque surface over drawings, and translated messages remain readable when recovery actions need another row.
 
 - Reuse canvas contexts across document switches without retaining retired document renderers, and cancel initialization when its view closes.

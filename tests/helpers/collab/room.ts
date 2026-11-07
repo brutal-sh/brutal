@@ -13,6 +13,7 @@ export type TestRelay = {
   pause: () => void
   resume: () => void
   queuedCount: () => number
+  disconnectPeers: () => Promise<void>
   close: () => Promise<void>
 }
 
@@ -85,6 +86,17 @@ export async function startRelay(): Promise<TestRelay> {
       }
     },
     queuedCount: () => queuedMessages.length,
+    disconnectPeers: async () => {
+      await Promise.all(
+        [...sockets.keys()].map(
+          (socket) =>
+            new Promise<void>((resolve) => {
+              socket.once('close', () => resolve())
+              socket.close(1001, 'Fixture relay offline')
+            })
+        )
+      )
+    },
     close: async () => {
       for (const room of rooms.values()) for (const socket of room) socket.terminate()
       await new Promise<void>((resolve, reject) => {
