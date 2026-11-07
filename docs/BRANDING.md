@@ -374,3 +374,15 @@ executable/package IDs and format contracts remain unchanged. The CLI owner suit
 [`f5eef8e84`](https://github.com/jpoindexter/open-pen/commit/f5eef8e84a2e438d53a112e199240f895f92f303).
 The separate [Storybook manifest error-label record](STORYBOOK-ERROR-COPY.md) now has
 bounded Executed evidence at `881d0b7e5`; compatibility filenames and namespaces are preserved. No full CLI, native or whole-brand acceptance is inferred.
+
+
+## WebMCP metadata
+
+The [WebMCP record](WEBMCP-COPY.md) executes the actual registration service with a test-owned
+modelContext: 24 Inspect and 47 Edit payloads retain Core descriptions, schemas and access
+hints while naming Open Pen. Mode revocation, stop, missing context and partial rejection
+run without resolving a document. All eleven owner tests and source/Vue/test types pass.
+The complete string scan retains only two real OPENPENCIL_MCP_ROOT references as compatibility
+identifiers. Standalone format-list presentation remains the separately executed CLI path.
+Publication is pending; real browser-vendor, agent/document, native and full-brand acceptance
+are not inferred from these metadata controls.
