@@ -62,7 +62,7 @@ blob/image hashes and interpreted values. Live Figma and the visual-control gate
 [Kiwi schema ownership](KIWI-SCHEMA-OWNERSHIP.md) executes one named declaration
 disposition without changing source, size or schema version. The recovery/update gate
 now has three bounded children: recovery has bounded Executed browser copy/retention
-evidence; update prompts are Building and restart feedback is Ready with source-copy
+evidence; update prompts have bounded Executed component evidence and restart feedback is Building with source-copy
 dependencies accepted. Their UI/controller fixtures do not
 qualify native installation or restart.
 This proves tracking coverage, not accepted product parity or exhaustive discovery of every native state.
@@ -112,11 +112,11 @@ distinguishes two stale native test contracts from an unproven cross-file backdr
 criteria. The [control record](APP-TEST-CONTROLS.md) retains paired failures, the two-file
 reproduction, scoped cleanup and the subsequent 1,955 passing app-shard tests. Neither
 changes production behavior or accepts native delivery. Both remain required beta and
-terminal dependencies with linked evidence. Update-prompt copy (BRAND-UPDATER-COPY) is the sole Building task; mixed WebKit reliability is Verify. Font and graph candidates remain Verify. A later native graph/text batch has
+terminal dependencies with linked evidence. Restart feedback (BRAND-RESTART-COPY) is the sole Building task; mixed WebKit reliability is Verify. Font and graph candidates remain Verify. A later native graph/text batch has
 four hidden-window failures; a fresh OS read confirms the desktop is locked again. Those
 failed/unexecuted input criteria do not erase the earlier successful native resource path.
 The interrupted zero-size icon work retains its failed wider-run receipts and dependencies.
-The delivery snapshot is 354 Backlog, 1 Ready, 1 Building, 9 Verify and 22 Executed, plus 17 milestones.
+The delivery snapshot is 354 Backlog, 0 Ready, 1 Building, 9 Verify and 23 Executed, plus 17 milestones.
 DELIVERY-LFS has bounded executed current-checkout fixture delivery: all twelve objects
 are fetched from the own private endpoint into empty independent storage, with matching
 SHA-256/sizes and LFS integrity checks. Historical object closure is not qualified.
@@ -125,7 +125,7 @@ UI-SPLIT-HEADER separately records toolbar/inspector overlap blocking pane Close
 FONT-EXPORT-BOUNDS, FONT-LOCAL-PICKER and FONT-CJK-REPAINT separately record existing
 font acceptance failures. Exact original-versus-refactor controls reproduce the same three
 broader workflow failures; ten named pre-refactor visual controls pass afterward in both engines.
-The terminal gate depends on all 385 other required execution tasks.
+The terminal gate depends on all 386 other required execution tasks.
 The board retains 17 milestones, 164 mapped requirements and 22 mapped native rows.
 No branding milestone or product-parity feature group is fully accepted.
 
@@ -146,7 +146,9 @@ captures and unchanged retained-byte controls across nine locales and two engine
 [record](RECOVERY-COPY.md) preserves earlier failures and the intentionally interrupted
 baseline. The source and record are published at
 [`a289fe255`](https://github.com/jpoindexter/open-pen/commit/a289fe25500786f12e5ce9fe68070192bb295b29);
-the recovery card is Executed for this bounded criterion. Update prompts are Building. [VERIFY-TOAST-SHORT](https://trello.com/c/f3kDECKO) allocates the
+the recovery card is Executed for this bounded criterion. Update prompts have bounded Executed component evidence published at
+[`9d399a4ab`](https://github.com/jpoindexter/open-pen/commit/9d399a4abaa9ba1c465b38fdaf00965535b82ed1);
+the [record](UPDATER-COPY.md) retains 36 passing cases and 234 inspected captures. Restart feedback is Building. [VERIFY-TOAST-SHORT](https://trello.com/c/f3kDECKO) allocates the
 unmeasured short-error grouping; the terminal gate now has all 386 other tasks as dependencies.
 This is not a new beta feature prerequisite or actual-Pen visual acceptance.
 

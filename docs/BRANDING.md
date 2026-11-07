@@ -328,6 +328,7 @@ Unavailable guidance names Open Pen without publisher instructions. The empty-no
 uses an existing readable semantic token, correcting the observed dark contrast failure.
 
 Final normal build, source/Vue/test types, architecture/i18n and 23 owner tests pass.
-Publication is pending. Typed mock emits and explicitly fictitious release data do not
+The source and record are published at
+[`9d399a4ab`](https://github.com/jpoindexter/open-pen/commit/9d399a4abaa9ba1c465b38fdaf00965535b82ed1). Typed mock emits and explicitly fictitious release data do not
 qualify controller transitions, a real release/feed/download/install, native restart,
 physical input, exact Pen geometry, human translation sign-off or full branding.

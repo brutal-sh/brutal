@@ -119,8 +119,8 @@ The fresh board contains 387 bounded execution tasks and 17 milestones. Every on
 
 | Horizon | Outcome | Evidence checkpoint |
 | --------------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Now | Verify update-prompt identity and truthful availability guidance (BRAND-UPDATER-COPY) | Render real component states in all nine locales, retain version/progress/action contracts and qualify an own notes destination without inventing a feed, installer or release tag. |
-| Next | Execute translated restart refusal, failure and retry feedback (BRAND-RESTART-COPY) | Reuse the typed backend seam and real component/controller; no installation or restart of the user’s app. Native and the original mixed-run gates remain open. |
+| Now | Execute translated restart refusal, failure and retry feedback (BRAND-RESTART-COPY) | Connect the real component/controller through its typed test-owned backend in nine locales; retain versions and error detail without installing or restarting the user’s app. |
+| Next | Reconcile recovery/update/restart acceptance, then select a dependency-free branding child | Keep portal, support and other destinations separately scoped; native and the original mixed-run gates remain open. |
 | Then                  | Stabilize document switching and finish unaccepted icon, module and feature/screen tasks in dependency order | Each card has relevant owner tests, visual/native checks and a commit/evidence link before Executed; dependent renderer/input work waits for STAB-GPU. |
 | Release qualification | Deliver private beta, then complete the full parity gate | Clean normal build, install/restart/recovery and core journey; declared beta limitations. Later, no required parity state remains unaccepted. |
 
