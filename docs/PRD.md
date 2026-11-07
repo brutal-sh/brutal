@@ -119,8 +119,8 @@ The fresh board contains 387 bounded execution tasks and 17 milestones. Every on
 
 | Horizon | Outcome | Evidence checkpoint |
 | --------------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Now | Verify translated recovery identity through actual dialog outcomes (BRAND-RECOVERY-COPY) | Use fresh test-owned snapshots; inspect restore, Close, discard and failed-restore feedback and retained data in all nine locales. |
-| Next | Verify update-prompt identity and restart refusal/failure feedback through bounded children | Reuse the existing typed backend seam and real component/controller; no download, installation or restart of the user’s app. Native and the original mixed-run gates remain open. |
+| Now | Verify update-prompt identity and truthful availability guidance (BRAND-UPDATER-COPY) | Render real component states in all nine locales, retain version/progress/action contracts and qualify an own notes destination without inventing a feed, installer or release tag. |
+| Next | Execute translated restart refusal, failure and retry feedback (BRAND-RESTART-COPY) | Reuse the typed backend seam and real component/controller; no installation or restart of the user’s app. Native and the original mixed-run gates remain open. |
 | Then                  | Stabilize document switching and finish unaccepted icon, module and feature/screen tasks in dependency order | Each card has relevant owner tests, visual/native checks and a commit/evidence link before Executed; dependent renderer/input work waits for STAB-GPU. |
 | Release qualification | Deliver private beta, then complete the full parity gate | Clean normal build, install/restart/recovery and core journey; declared beta limitations. Later, no required parity state remains unaccepted. |
 
@@ -158,7 +158,7 @@ percentage is reported until its denominator and acceptance evidence are complet
 - 2026-11-06 — Jason requests explicit modularization goals, a PRD and smaller complete Trello tasks.
 - 2026-11-06 — Keep the full parity objective active; preserve broad cards as milestones and
   add traceable execution tasks rather than dropping unfinished work.
-- Next review: after the translated recovery copy journey and its snapshot-retention controls.
+- Next review: after the translated update-prompt states and their own notes destination.
   Codex will update counts, evidence and dependencies from fresh results.
 - Open: graphics context reuse/retirement, zero-to-positive icon redraw, exact glyph pixels,
   runtime resize and bindings, remaining native screens/menus and non-macOS qualification.

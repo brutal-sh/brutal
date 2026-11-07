@@ -307,7 +307,8 @@ and both browser engines: 76 cases pass, including four existing controls, and a
 are inspected. Close and failed Restore retain the disposable snapshot bytes; Restore recovers
 the named geometry; explicit Discard stays removed after reload. Failed recovery uses its
 existing translated message and retains parser details in the local warning. Eighteen owner
-tests, normal build, source/Vue/test types and focused lint pass. Publication is pending.
+tests, normal build, source/Vue/test types and focused lint pass. Source and evidence are published at
+[`a289fe255`](https://github.com/jpoindexter/open-pen/commit/a289fe25500786f12e5ce9fe68070192bb295b29).
 
 One short Chinese error toast stacks its icon, message and controls; the separate
 [reference task](https://trello.com/c/f3kDECKO) retains actual-Pen grouping adjudication.
