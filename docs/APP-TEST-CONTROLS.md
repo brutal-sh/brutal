@@ -68,8 +68,8 @@ They do not close native associated-file delivery, editor copy, beta or parity.
 
 With both FIG text-import and raw-payload export candidates present, the full app
 shard passes 1,955 tests across 339 files in 21.76s, with 12,444 assertions. The
-earlier 12,576 and 12,560 totals belong to their retained receipts; async assertion
-counts vary. No test body, error filter, timeout or screenshot baseline changes
+earlier 12,576 and 12,560 totals belong to their retained receipts; the assertion
+totals differ across these receipts. No test body, error filter, timeout or screenshot baseline changes
 are part of these extractions. The paired browser controls still retain the same
 wrapped-text visual failure, even though actual before/after pixels match.
 [Text](FIG-TEXT-OWNERSHIP.md) and [payload](FIG-PAYLOAD-OWNERSHIP.md) records preserve

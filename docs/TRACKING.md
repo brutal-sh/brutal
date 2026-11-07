@@ -6,7 +6,7 @@ Repository: [private Open Pen repository](https://github.com/jpoindexter/open-pe
 Board: [Open Pen — independent design editor](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor), private.
 
 The [PRD](PRD.md) owns the outcome, constraints and release criteria.
-The [task index](TASKS.md) links all 383 execution cards; the [modularity audit](MODULARITY.md)
+The [task index](TASKS.md) links all 386 execution cards; the [modularity audit](MODULARITY.md)
 records the measured review queue. Requirements come from the [feature catalog](pen-feature-reference/README.md)
 and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), using actual Pen 1.2.21 as the reference.
 
@@ -23,7 +23,7 @@ and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), using actual Pen 1.
 
 ## Verified planning snapshot
 
-A complete fresh board readback finds 400 open cards: 383 unique execution tasks and 17 milestones.
+A complete fresh board readback finds 403 open cards: 386 unique execution tasks and 17 milestones.
 All 164 catalog requirements and 22 exact native ledger rows map to real execution cards.
 There are no missing or duplicate task IDs, and the dependency graph is acyclic.
 All 15 originally oversized runtime modules have individual disposition tasks.
@@ -59,6 +59,11 @@ and live Figma round trip stay open. A separate visual-control card retains that
 [FIG payload ownership](FIG-PAYLOAD-OWNERSHIP.md) records MOD-17 in Verify: 761 owner
 and 26 Core patch tests pass, and three saved archives retain all decoded records,
 blob/image hashes and interpreted values. Live Figma and the visual-control gate remain open.
+[Kiwi schema ownership](KIWI-SCHEMA-OWNERSHIP.md) executes one named declaration
+disposition without changing source, size or schema version. The recovery/update gate
+now has three bounded children: recovery is Building; update prompts and restart feedback
+are Ready with their source-copy dependency accepted. Their UI/controller fixtures do not
+qualify native installation or restart.
 This proves tracking coverage, not accepted product parity or exhaustive discovery of every native state.
 
 Planning publication, the reproducible runtime audit, own-brand assets, owned diagnostics/log
@@ -106,11 +111,11 @@ distinguishes two stale native test contracts from an unproven cross-file backdr
 criteria. The [control record](APP-TEST-CONTROLS.md) retains paired failures, the two-file
 reproduction, scoped cleanup and the subsequent 1,955 passing app-shard tests. Neither
 changes production behavior or accepts native delivery. Both remain required beta and
-terminal dependencies with linked evidence. Kiwi wire-schema ownership review (MOD-18) is the sole Building task; mixed WebKit reliability is Verify. Font and graph candidates remain Verify. A later native graph/text batch has
+terminal dependencies with linked evidence. Recovery copy (BRAND-RECOVERY-COPY) is the sole Building task; mixed WebKit reliability is Verify. Font and graph candidates remain Verify. A later native graph/text batch has
 four hidden-window failures; a fresh OS read confirms the desktop is locked again. Those
 failed/unexecuted input criteria do not erase the earlier successful native resource path.
 The interrupted zero-size icon work retains its failed wider-run receipts and dependencies.
-The delivery snapshot is 353 Backlog, 0 Ready, 1 Building, 9 Verify and 20 Executed, plus 17 milestones.
+The delivery snapshot is 353 Backlog, 2 Ready, 1 Building, 9 Verify and 21 Executed, plus 17 milestones.
 DELIVERY-LFS has bounded executed current-checkout fixture delivery: all twelve objects
 are fetched from the own private endpoint into empty independent storage, with matching
 SHA-256/sizes and LFS integrity checks. Historical object closure is not qualified.
@@ -119,7 +124,7 @@ UI-SPLIT-HEADER separately records toolbar/inspector overlap blocking pane Close
 FONT-EXPORT-BOUNDS, FONT-LOCAL-PICKER and FONT-CJK-REPAINT separately record existing
 font acceptance failures. Exact original-versus-refactor controls reproduce the same three
 broader workflow failures; ten named pre-refactor visual controls pass afterward in both engines.
-The terminal gate depends on all 382 other required execution tasks.
+The terminal gate depends on all 385 other required execution tasks.
 The board retains 17 milestones, 164 mapped requirements and 22 mapped native rows.
 No branding milestone or product-parity feature group is fully accepted.
 

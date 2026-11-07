@@ -62,8 +62,9 @@ retain three actual exports, all decoded records/blob/image hashes and every
 captured interpreted node. Schema-source changes are absent from those runs.
 The raw hash and twelve schema/consumer/attribution file hashes remain unchanged.
 Local history, complete field inventory, binary hash, control source and receipts
-are retained in ignored evidence. Source/evidence publication closes this bounded
-disposition; it does not close the FIG visual or live Figma gates.
+are retained in ignored evidence. Source/evidence is published in private commit `441d587d4`, with matching remote/draft
+PR head and Actions disabled. MOD-18 executes this bounded disposition; it does not
+close the FIG visual or live Figma gates.
 
 ## Mandatory review triggers
 

@@ -65,7 +65,7 @@ They qualify these labels and affected layout, not all surrounding Pen geometry.
 
 The normal worktree build, source/Vue/shared-test types, architecture and owned lint
 pass. The full app shard passes 1,955 tests across 339 files with 12,560 assertions;
-assertion totals differ from the earlier 12,576 receipt because async paths vary.
+the earlier 12,576 total belongs to its separate retained receipt.
 The worktree build includes retained unrelated icon work and is not a clean release.
 
 The final grouped-footer run passes all 36 room cases in 175,338ms under unchanged

@@ -50,6 +50,9 @@ modules, complete Open Pen branding and an executable Trello backlog.
   visual-control failure and required live Figma round trip. The raw-payload export candidate
   adds one more owner (3,613 files; twelve still above 600) and retains three complete
   saved-archive controls, 761 owner tests and 26 Core patch tests, with the same open gates.
+  The [wire-schema disposition](KIWI-SCHEMA-OWNERSHIP.md) separately executes an owned
+  declaration exception with full parser/binary/table checks and 43 Kiwi tests; runtime
+  code counts and schema bytes remain unchanged.
 - Initially observed: inherited web marks, localized product names, diagnostics labels and a native
   microphone explanation still identify the app as OpenPencil. The original violet Open Pen
   app-icon master already exists.
@@ -83,7 +86,7 @@ vendor account. Hosted inference and other external services retain their own co
 | PRD-05 | Visual parity | Compare the same fixture, viewport, scale, theme and control state against actual Pen. Check geometry, borders, radii, type, glyphs and interaction states. Record raw image differences and remaining gaps; do not bless a mismatch by updating a baseline. |
 | PRD-06 | Data integrity | Preserve documents, references, resources, paints, variables, instances and recovery state. Refuse unsupported conversion with a clear diagnosis rather than silently losing data. Use disposable fixtures for destructive-path checks. |
 | PRD-07 | Native delivery | Qualify native menu, keyboard, pointer, file-panel, clipboard, Dock and restart paths separately from DOM/API automation. Packaging must preserve profile, credentials, recovery and source compatibility. |
-| PRD-08 | Sustainable tracking | One observable outcome per execution card, with source/owner, dependencies and a concrete Done check. Broad workstreams are milestones. Limit Building to one active implementation card and Ready to three dependency-free next actions. |
+| PRD-08 | Sustainable tracking | One observable outcome per execution card, with source/owner, dependencies and a concrete Done check. Broad workstreams are milestones. Limit Building to one active implementation card and Ready to three next actions whose dependencies are accepted or absent. |
 | PRD-09 | Honest release gate | Beta is a usable private release with explicit residual limits and no known data-loss, startup, save/recovery or core-editing blocker. Beta does not mean 100% parity. Full parity requires every applicable visual and functional gate accepted. |
 
 ## Scope and constraints
@@ -110,14 +113,14 @@ types/catalogs into arbitrary microfiles or weaken validation to reduce line cou
 
 ## Delivery sequence
 
-The fresh board contains 383 bounded execution tasks and 17 milestones. Every one of the
+The fresh board contains 386 bounded execution tasks and 17 milestones. Every one of the
 164 catalog requirements and 22 native ledger rows is allocated; allocation is not acceptance.
 [Task index](TASKS.md) records the live-board states and dependencies.
 
 | Horizon | Outcome | Evidence checkpoint |
 | --------------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Now | Review Kiwi wire-schema ownership and size exception (MOD-18) | Record provenance, parse/codec consumers, exact schema/tag hash and actual coverage/round-trip checks; retain the declaration only with an owned contract exception. |
-| Next | Continue dependency-free branding and module work; retain native and mixed-run gates | The traced host-sleep failure has a passing awake control; the older mixed failure and native associated-file delivery remain unclassified or unexecuted. |
+| Now | Verify translated recovery identity through actual dialog outcomes (BRAND-RECOVERY-COPY) | Use fresh test-owned snapshots; inspect restore, Close, discard and failed-restore feedback and retained data in all nine locales. |
+| Next | Verify update-prompt identity and restart refusal/failure feedback through bounded children | Reuse the existing typed backend seam and real component/controller; no download, installation or restart of the user’s app. Native and the original mixed-run gates remain open. |
 | Then                  | Stabilize document switching and finish unaccepted icon, module and feature/screen tasks in dependency order | Each card has relevant owner tests, visual/native checks and a commit/evidence link before Executed; dependent renderer/input work waits for STAB-GPU. |
 | Release qualification | Deliver private beta, then complete the full parity gate | Clean normal build, install/restart/recovery and core journey; declared beta limitations. Later, no required parity state remains unaccepted. |
 
@@ -155,7 +158,7 @@ percentage is reported until its denominator and acceptance evidence are complet
 - 2026-11-06 — Jason requests explicit modularization goals, a PRD and smaller complete Trello tasks.
 - 2026-11-06 — Keep the full parity objective active; preserve broad cards as milestones and
   add traceable execution tasks rather than dropping unfinished work.
-- Next review: after the wire-schema ownership disposition and its actual parser/codec controls.
+- Next review: after the translated recovery copy journey and its snapshot-retention controls.
   Codex will update counts, evidence and dependencies from fresh results.
 - Open: graphics context reuse/retirement, zero-to-positive icon redraw, exact glyph pixels,
   runtime resize and bindings, remaining native screens/menus and non-macOS qualification.
