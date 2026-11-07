@@ -73,7 +73,7 @@ Authored Mermaid adapters remain included. The Kiwi schema below is not hidden b
 | --- | ---: | --- |
 | FIG importer `node-change/convert.ts` | 1,333 baseline; 1,155 candidate | [MOD-16](https://trello.com/c/P6y3uJe1) extracts text conversion into the existing text domain (187 lines); [MOD-19](https://trello.com/c/q0ZEZpOy) reviews the remaining coordinator afterward. |
 | FIG exporter `node-change/export/node.ts` | 1,017 baseline; 712 candidate | [MOD-17](https://trello.com/c/uGL3MDSH) extracts raw-payload preservation (312 physical lines); [MOD-20](https://trello.com/c/BGyM2T9o) reviews the remaining coordinator afterward. |
-| Kiwi runtime wire schema `fig/schema/fig.kiwi` | 5,628 data/declaration lines | [MOD-18](https://trello.com/c/3TOfol9P) reviews the contract owner, field/tag preservation and a justified exception or supported partition. It is parsed and validated by `packages/kiwi/src/fig/schema.ts`. |
+| Kiwi runtime wire schema `fig/schema/fig.kiwi` | 5,628 data/declaration lines | [MOD-18](https://trello.com/c/3TOfol9P) records a named, reviewed contract-size exception with actual parser/codec/field/round-trip controls; see [schema ownership](KIWI-SCHEMA-OWNERSHIP.md). No source reduction or schema upgrade is claimed. |
 | Translated panel catalogs | de/es/fr/it: 679 each; ja/zh-cn: 672 each; pl/ru: 686 each | Existing MOD-08 owns these eight companions together with canonical `messages/panels.ts` (694). Key partitioning must preserve every locale, placeholder and consumer. |
 
 The schema and eight translated catalogs are nine additional data/declaration files above
@@ -93,6 +93,11 @@ The raw-payload export candidate adds one more owner: 3,613 runtime code files,
 108 FIG owners, still twelve code files above 600. [Payload evidence](FIG-PAYLOAD-OWNERSHIP.md)
 records its executed before/after controls and unaccepted reference gates. Neither
 FIG coordinator receives a size exception from these incremental extractions.
+
+The separate Kiwi declaration exception preserves all 605 definitions, 2,210
+non-enum fields and 1,604 enum values through actual parser/binary/table checks,
+with 43 passing Kiwi tests. Its publication closes a declaration disposition only;
+the eight translated catalogs remain open and runtime code counts do not change.
 
 ## Reproduce code counts
 

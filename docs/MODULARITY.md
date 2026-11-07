@@ -186,3 +186,18 @@ interpreted digests match; only the metadata export timestamp differs. The actua
 wrapped-text browser image is unchanged, while its failed stored control and required
 live Figma validation remain open. MOD-17 stays Verify. The expanded runtime candidate
 now has 3,613 files and twelve above 600; that count does not accept either FIG refactor.
+
+## Reviewed declaration exception: Kiwi wire schema
+
+[MOD-18](https://trello.com/c/3TOfol9P) retains the 5,628-line protocol declaration
+under a named exception, with ownership, provenance, pinned hashes and review triggers
+in [schema ownership](KIWI-SCHEMA-OWNERSHIP.md). This is a data-contract disposition,
+not code extraction or line reduction. The schema grammar has no include mechanism;
+adding a composition step solely for counts does not simplify its protocol model.
+
+The actual raw/parser/shipped schema, binary-schema round trip, codec bytes and
+compiled tables preserve all 605 definitions, 2,210 non-enum fields and 1,604 enum
+values. All 43 Kiwi tests and package types pass; twelve source hashes remain unchanged.
+Existing whole saved-archive controls retain records, blobs, images and interpreted
+values. Independent review finds no concrete blocker to the bounded exception after
+publication. This does not accept complete message semantics or native/Figma behavior.
