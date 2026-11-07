@@ -58,10 +58,10 @@ Canonical localized product labels have bounded source/CLI/nine-language browser
 The discovered command-copy contrast task has bounded executed evidence.
 BRAND-COPY-AI has bounded executed copy evidence, including nine code-callback/native-failure
 journeys with every provider tunnel rejected by a test-owned local proxy. No real provider
-authentication, credential save or inference is accepted. STAB-GPU has a browser-verified
-implementation; its native resource check is now Building after a fresh isolated PEN
-Script save/reopen test demonstrates a usable native test host. That one test does not
-qualify graphics acceptance. [Canvas evidence](CANVAS-LIFECYCLE.md) records the paths and limits.
+authentication, credential save or inference is accepted. STAB-GPU executes its bounded browser/native resource criterion: twelve document changes,
+original state and actual native drawing pixels, bounded contexts, resize, color-space
+changes and test-host teardown. The native probe reports no lost contexts or GL/JavaScript
+errors. Physical pointer drawing and full Pen UI remain separate. [Canvas evidence](CANVAS-LIFECYCLE.md) records the paths and limits.
 MOD-02 is an executed model-contract ownership exception, with no code extraction claimed.
 The [disposition](MODEL-OWNERSHIP.md) records its owner, checks and review trigger.
 MOD-03 font-manager responsibilities has bounded owner/browser evidence and pending native
@@ -87,10 +87,12 @@ all locale/public contracts, but inherited inspector controls require actual-Pen
 the4pass/3fail/13notrun inherited-control attempt. MOD-11 has executed its bounded
 format-ownership criterion:827owner tests before/after, four browser round trips before/after,
 and one isolated native Script-source save/reopen/watch/refusal journey.
-[Format evidence](FORMAT-OWNERSHIP.md) retains exact limits. STAB-GPU is the sole Building
-task for its remaining native resource acceptance. Font and graph candidates remain Verify.
+[Format evidence](FORMAT-OWNERSHIP.md) retains exact limits. MOD-06 tab-lifecycle ownership is the sole Building task, with its graphics dependency
+accepted. Font and graph candidates remain Verify. A later native graph/text batch has
+four hidden-window failures; a fresh OS read confirms the desktop is locked again. Those
+failed/unexecuted input criteria do not erase the earlier successful native resource path.
 The interrupted zero-size icon work retains its failed wider-run receipts and dependencies.
-The delivery snapshot is 357 Backlog, 0 Ready, 1 Building, 5 Verify and 15 Executed, plus 17 milestones.
+The delivery snapshot is 356 Backlog, 0 Ready, 1 Building, 5 Verify and 16 Executed, plus 17 milestones.
 DELIVERY-LFS has bounded executed current-checkout fixture delivery: all twelve objects
 are fetched from the own private endpoint into empty independent storage, with matching
 SHA-256/sizes and LFS integrity checks. Historical object closure is not qualified.

@@ -48,7 +48,9 @@ modules, complete Open Pen branding and an executable Trello backlog.
   branding acceptance remain open.
 - Observed: repeated document changes exhaust WebKit's context budget with eager context loss.
   The [canvas reuse candidate](CANVAS-LIFECYCLE.md) passes browser resource and pixel checks;
-  native acceptance is held by a confirmed locked desktop. STAB-GPU remains in Verify.
+  now has bounded browser/native resource acceptance. A later native graph/text batch
+  stops at hidden-window guards with a freshly confirmed locked desktop; those criteria
+  remain open.
   Four-pane checks also expose toolbar/inspector overlap blocking Close controls; a separate
   bounded task records that defect. Zero-size icon preservation remains unpublished/unaccepted.
 
@@ -100,7 +102,7 @@ types/catalogs into arbitrary microfiles or weaken validation to reduce line cou
 
 | Horizon | Outcome | Evidence checkpoint |
 | --------------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Now                   | Execute native graphics lifecycle acceptance                   | Twelve document switches retain drawing/state with bounded resources; verify resize, color-space and teardown in the isolated native host.         |
+| Now                   | Separate cohesive tab-lifecycle responsibilities                   | Preserve tab APIs, close/recovery state and storage ordering; compare owner and browser lifecycle controls before and after.         |
 | Next                  | Continue dependency-free branding and mixed WebKit reliability checks                           | Warning surface has bounded executed evidence; native associated-file delivery and the failed mixed run remain open.                 |
 | Then                  | Stabilize document switching and finish unaccepted icon, module and feature/screen tasks in dependency order | Each card has relevant owner tests, visual/native checks and a commit/evidence link before Executed; dependent renderer/input work waits for STAB-GPU. |
 | Release qualification | Deliver private beta, then complete the full parity gate | Clean normal build, install/restart/recovery and core journey; declared beta limitations. Later, no required parity state remains unaccepted. |

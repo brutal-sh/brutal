@@ -1,9 +1,9 @@
 # Canvas lifecycle verification
 
-Updated: 2026-11-06. [STAB-GPU](https://trello.com/c/F8qWzU8W) is in Verify.
-**Native acceptance remains unexecuted.** The isolated test app builds and its signature
-verifies, but macOS reports a locked desktop and its main WebView remains hidden.
-No native drawing result or full stability/parity acceptance is inferred.
+Updated: 2026-11-07. [STAB-GPU](https://trello.com/c/F8qWzU8W) has executed its
+bounded browser/native resource criterion. Source/evidence publication readback follows.
+Native drawing/resource evidence is bounded to the test below. It does not accept OS-level
+pointer drawing, all graphics diagnostics, normal delivery or full Pen design/functionality.
 
 ## Change and ownership
 
@@ -34,7 +34,8 @@ completed disposition of any oversized-module task. The current source-size audi
   preservation of the original 37×29 drawing, final 100×80 pointer drawing, destroyed old
   renderers/deleted surfaces, delayed CanvasKit startup, P3 negotiation, resize and split views.
   A single-pane document uses at most two observed canvas contexts plus the existing shared
-  CanvasKit parking context. No console errors are filtered.
+  CanvasKit parking context. No graphics errors are filtered; the shared browser helper retains its existing
+  official-Cloud-origin console exception.
 - Two additional four-pane cases pass in 31.3 seconds. Three expand/keyboard-close/new-document
   cycles retain at most eight pane contexts plus one shared parking context; eight are connected
   when expanded and two after collapse/new document. No observed context is lost. Final pointer
@@ -51,19 +52,35 @@ completed disposition of any oversized-module task. The current source-size audi
 Private raw receipts remain local under `local-evidence/gpu-reuse-2026-11-06/` and
 `scratch/gpu-reuse-*.log`. Tests and synthetic fixture/snapshots are reviewable in the repository.
 
-## Remaining acceptance
+## Executed native resource path
 
-The committed isolated native test covers twelve actual tab-button clicks, preservation of the
-original node, final red drawing capture, color-space changes and physical window resize/restore.
-It has not reached these steps. Three retained launch/activation/diagnostic attempts stop at
-visibility; an OS read confirms `CGSSessionScreenIsLocked=Yes`. No unlock bypass or main-app
-replacement is attempted. Dedicated native typing retains 67 existing errors and none in the
-new owned files; it is not a passing full-native type gate.
+A freshly built isolated native test binary executes the committed twelve-document case
+in 1.6s. It clicks twelve actual tab buttons, restores the original 160×120 node, changes
+P3/sRGB document settings, and resizes/restores the native window. All twelve recorded
+switch samples plus the final resize sample have at most three observed contexts, exactly
+two connected, no lost contexts, zero reported GL errors and no captured JavaScript errors.
+The shared parking context accounts for the disconnected third context. No console error
+is filtered or global GC forced.
 
-When desktop visibility returns, rebuild/sign the isolated Test app and run
-`tests/e2e/native/canvas-resources.spec.ts`. Inspect actual rendered samples, retained context
-bounds, resize and restored document before accepting STAB-GPU. Its JavaScript error probe
-and backend logs do not promise exhaustive capture of browser-internal graphics diagnostics.
+Both raw 2,560×1,600 native captures are inspected. Recorded native center coordinates sample
+red `(255, 0, 0)` after the twelve switches and the original default fill `(217, 217, 217)`
+after restoration. That gray matches `DEFAULT_SHAPE_FILL` in Core. These are real WebView
+canvas pixels; shapes are created through the editor API. This does not assert OS-level
+pointer drawing or wide-gamut color fidelity. The exact test-app PID is absent after exit.
+No main installation, user documents/profile, credentials or recovery state changes.
+
+The two earlier native artifacts are copied and hashed before the new test writes its
+existing output paths. Five new raw artifacts and their SHA-256 manifest are retained under
+`local-evidence/gpu-native-2026-11-07/current-run/`, with a separately executed pixel/resource
+receipt. The actual runner log is `scratch/gpu-native-resource-current-2026-11-07.log`.
+A missing optional external-driver diagnostic and post-session mock-store cleanup warning
+remain in the log; the embedded native driver session and all case assertions execute.
+
+Three earlier visibility-blocked attempts and their confirmed locked-desktop receipt remain
+historical evidence. They do not describe this successful run. Dedicated native typing's
+67 existing errors remain a separate non-passing gate. JavaScript probes and backend logs
+do not promise exhaustive capture of browser-internal graphics diagnostics. Actual native
+file panels, trusted clipboard and broad input coverage remain separate acceptance paths.
 
 A separate observed defect, [UI-SPLIT-HEADER](https://trello.com/c/Lz1r5iLo), records toolbar and
 inspector overlap blocking pane Close controls. Real pointer failures remain preserved. Keyboard

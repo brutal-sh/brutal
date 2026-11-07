@@ -81,3 +81,18 @@ parent, so existing named visual controls retain their graph provenance without 
 Native UI was last blocked by a confirmed locked desktop. No native interaction or whole
 product completion is claimed. Preserve the main installation, user profiles, credentials,
 recovery state and unrelated icon changes. The full design and functionality goal stays active.
+
+## Native recheck, 2026-11-07
+
+The fresh isolated native build successfully executes a PEN Script-source round trip and
+the separate twelve-document graphics resource case. A later graph/text recheck runs
+`edit-focus.spec.ts` and `text-editing.spec.ts`; all four cases stop at the hidden-window
+guard, so none qualifies its Context/text input/Undo assertions. The two specs report
+zero passes and four failures in 2m01s. A fresh `ioreg` read confirms
+`CGSSessionScreenIsLocked=Yes`; the exact test-app PID is absent after exit. The failed
+receipt is retained in `scratch/mod04-native-focus-input-2026-11-07.log`.
+
+MOD-04 remains Verify. No native visibility guard, keyboard assertion or screen lock is
+bypassed. Continue tab-lifecycle work while native access is unavailable; re-enter these
+same native cases when the desktop is available. Earlier successful graphics evidence is
+bounded to its own path and does not accept this graph/input criterion.
