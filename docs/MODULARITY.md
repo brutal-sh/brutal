@@ -141,3 +141,18 @@ measured source; this candidate adds two files (3,609) and reduces code files ab
 from fourteen to thirteen, without accepting behavior from counts. [Format evidence](FORMAT-OWNERSHIP.md)
 records the before/after controls, one executed isolated native save/reopen path and
 remaining native file-panel/full-format limits. Source publication/readback follows.
+
+## Candidate awaiting native verification: tab ownership
+
+[MOD-06](https://trello.com/c/4BpMrJ8z) separates lifecycle state and cover ownership from
+the opening/recovery entry: 715 lines become 495, 218 and 57. The same 31 public names,
+singleton refs, moved bodies and cleanup order are retained. The expanded baseline gains
+two more files, reaching 3,611, with twelve code files above 600: one reviewed model
+exception and eleven other oversized code owners. These counts include the unaccepted
+tab candidate and do not close its behavioral criterion.
+
+[Tab evidence](TAB-OWNERSHIP.md) records 150 owner tests and twelve browser controls before
+and after, source/consumer types, lint, architecture and build. Both full app-shard controls
+retain the same three failures; two narrow verification cards preserve those failures.
+MOD-06 remains Verify until fresh isolated native tab acceptance can run on an available
+desktop. The existing font and graph native criteria remain open too.

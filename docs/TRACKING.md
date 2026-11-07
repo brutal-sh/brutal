@@ -6,7 +6,7 @@ Repository: [private Open Pen repository](https://github.com/jpoindexter/open-pe
 Board: [Open Pen — independent design editor](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor), private.
 
 The [PRD](PRD.md) owns the outcome, constraints and release criteria.
-The [task index](TASKS.md) links all 378 execution cards; the [modularity audit](MODULARITY.md)
+The [task index](TASKS.md) links all 380 execution cards; the [modularity audit](MODULARITY.md)
 records the measured review queue. Requirements come from the [feature catalog](pen-feature-reference/README.md)
 and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), using actual Pen 1.2.21 as the reference.
 
@@ -23,7 +23,7 @@ and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), using actual Pen 1.
 
 ## Verified planning snapshot
 
-A complete fresh board readback finds 395 open cards: 378 unique execution tasks and 17 milestones.
+A complete fresh board readback finds 397 open cards: 380 unique execution tasks and 17 milestones.
 All 164 catalog requirements and 22 exact native ledger rows map to real execution cards.
 There are no missing or duplicate task IDs, and the dependency graph is acyclic.
 All 15 originally oversized runtime modules have individual disposition tasks.
@@ -33,8 +33,8 @@ dispositions have bounded executed criteria: MCP and PEN-adapter extractions, an
 explicit model-contract exception.
 The original five-root code scope has twelve files above 600 lines. The expanded
 3,607-file audit baseline has fourteen oversized code files. After the PEN-adapter
-extraction, the current scope has 3,609 files and thirteen above 600, including the reviewed
-model exception; twelve other oversized code owners remain open. Font and graph candidates are below 600 lines but their
+and tab extractions, the current scope has 3,611 files and twelve above 600, including the reviewed
+model exception; eleven other oversized code owners remain open. Tab, font and graph candidates are below 600 lines but their
 native acceptance remains open.
 REF-01 fetches all 24 historical URLs and current navigation: 29 successful requests resolve
 to 23 canonical pages. It preserves the original 152 requirements/evidence and adds 12
@@ -87,12 +87,18 @@ all locale/public contracts, but inherited inspector controls require actual-Pen
 the4pass/3fail/13notrun inherited-control attempt. MOD-11 has executed its bounded
 format-ownership criterion:827owner tests before/after, four browser round trips before/after,
 and one isolated native Script-source save/reopen/watch/refusal journey.
-[Format evidence](FORMAT-OWNERSHIP.md) retains exact limits. MOD-06 tab-lifecycle ownership is the sole Building task, with its graphics dependency
-accepted. Font and graph candidates remain Verify. A later native graph/text batch has
+[Format evidence](FORMAT-OWNERSHIP.md) retains exact limits. MOD-06 tab-lifecycle ownership
+is Verify: 150 owner tests and twelve browser controls pass before and after, with matching
+public contracts and cleanup ordering. [Tab evidence](TAB-OWNERSHIP.md) retains the same
+three wider app-shard failures on original and extracted entries. The isolated control
+distinguishes two stale native test contracts from an unproven cross-file backdrop failure.
+[Native test contracts](https://trello.com/c/btVgS7TP) is the sole Building task;
+[backdrop isolation](https://trello.com/c/bd0qkKEQ) remains Backlog. Both are required beta
+and terminal dependencies. Font and graph candidates remain Verify. A later native graph/text batch has
 four hidden-window failures; a fresh OS read confirms the desktop is locked again. Those
 failed/unexecuted input criteria do not erase the earlier successful native resource path.
 The interrupted zero-size icon work retains its failed wider-run receipts and dependencies.
-The delivery snapshot is 356 Backlog, 0 Ready, 1 Building, 5 Verify and 16 Executed, plus 17 milestones.
+The delivery snapshot is 357 Backlog, 0 Ready, 1 Building, 6 Verify and 16 Executed, plus 17 milestones.
 DELIVERY-LFS has bounded executed current-checkout fixture delivery: all twelve objects
 are fetched from the own private endpoint into empty independent storage, with matching
 SHA-256/sizes and LFS integrity checks. Historical object closure is not qualified.
@@ -101,7 +107,7 @@ UI-SPLIT-HEADER separately records toolbar/inspector overlap blocking pane Close
 FONT-EXPORT-BOUNDS, FONT-LOCAL-PICKER and FONT-CJK-REPAINT separately record existing
 font acceptance failures. Exact original-versus-refactor controls reproduce the same three
 broader workflow failures; ten named pre-refactor visual controls pass afterward in both engines.
-The terminal gate depends on all 377 other required execution tasks.
+The terminal gate depends on all 379 other required execution tasks.
 The board retains 17 milestones, 164 mapped requirements and 22 mapped native rows.
 No branding milestone or product-parity feature group is fully accepted.
 
