@@ -16,7 +16,7 @@ import AppButton from '@/components/ui/button/AppButton.vue'
 import AppAlert from '@/components/ui/feedback/AppAlert.vue'
 import AppPlaceholder from '@/components/ui/feedback/AppPlaceholder.vue'
 import AppProgress from '@/components/ui/feedback/AppProgress.vue'
-import { releaseNotesURL } from '@/constants'
+import { OPEN_PEN_RELEASE_NOTES_URL } from '@/constants'
 import { motionStyles } from '@/theme/motion/styles'
 import updatePromptStyles, { updateStatusUI } from '@/theme/updater'
 
@@ -97,7 +97,7 @@ function openNotesLink(event: MouseEvent) {
 
         <div :class="ui.notesHeader">
           <h2 :class="ui.notesLabel">{{ t.whatsNew }}</h2>
-          <ExternalLink :href="releaseNotesURL(release.version)" class="text-[11px]">
+          <ExternalLink :href="OPEN_PEN_RELEASE_NOTES_URL" class="text-[11px]">
             {{ t.fullReleaseNotes }}
           </ExternalLink>
         </div>

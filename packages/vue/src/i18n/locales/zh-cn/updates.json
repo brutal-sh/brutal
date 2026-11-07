@@ -20,6 +20,6 @@
   "downloadFailed": "无法下载更新：{error}",
   "installFailed": "无法安装更新：{error}",
   "restartFailed": "无法重新启动 Open Pen：{error}",
-  "unavailable": "更新暂不可用。请先发布包含 latest.json 的已签名版本。",
+  "unavailable": "更新暂不可用。你可以继续使用此版本的 Open Pen。",
   "checkFailed": "无法检查更新：{error}"
 }

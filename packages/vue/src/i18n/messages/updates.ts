@@ -24,7 +24,7 @@ export const updatesMessageDefaults = {
   downloadFailed: params('Could not download the update: {error}'),
   installFailed: params('Could not install the update: {error}'),
   restartFailed: params('Could not restart Open Pen: {error}'),
-  unavailable: 'Updates are not available yet. Publish a signed release with latest.json first.',
+  unavailable: 'Updates are currently unavailable. You can keep using this version of Open Pen.',
   checkFailed: params('Could not check for updates: {error}')
 } as const
 

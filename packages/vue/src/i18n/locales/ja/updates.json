@@ -20,6 +20,6 @@
   "downloadFailed": "アップデートをダウンロードできませんでした: {error}",
   "installFailed": "アップデートをインストールできませんでした: {error}",
   "restartFailed": "Open Pen を再起動できませんでした: {error}",
-  "unavailable": "アップデートはまだ利用できません。まず、latest.json を含む署名付きバージョンを公開してください。",
+  "unavailable": "現在、アップデートを利用できません。このバージョンの Open Pen は引き続き使用できます。",
   "checkFailed": "アップデートの確認中にエラーが発生しました: {error}"
 }

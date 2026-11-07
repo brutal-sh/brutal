@@ -20,6 +20,6 @@
   "downloadFailed": "Nie udało się pobrać aktualizacji: {error}",
   "installFailed": "Nie udało się zainstalować aktualizacji: {error}",
   "restartFailed": "Nie udało się ponownie uruchomić Open Pen: {error}",
-  "unavailable": "Aktualizacje nie są jeszcze dostępne. Najpierw opublikuj podpisane wydanie z latest.json.",
+  "unavailable": "Aktualizacje są obecnie niedostępne. Możesz nadal korzystać z tej wersji Open Pen.",
   "checkFailed": "Nie udało się sprawdzić aktualizacji: {error}"
 }

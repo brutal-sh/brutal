@@ -315,3 +315,19 @@ One short Chinese error toast stacks its icon, message and controls; the separat
 This receipt does not qualify native recovery, multiple-snapshot preservation, exact Pen
 geometry, every recovery workflow or full product identity. The failed-restore test proves
 retention through Close, not rediscovery after another launch.
+
+
+## Update prompt identity and guidance
+
+The [update prompt record](UPDATER-COPY.md) qualifies thirteen actual component states in
+nine locales and both themes: 36 runner cases pass with plays/axe, and all 234 captures
+are inspected. Versions, progress, failure placeholders and mock event actions retain their
+contracts. The notes link reaches the verified own changelog through an actual keyboard
+activation into a test-owned page; real repository-path and routing evidence remain separate.
+Unavailable guidance names Open Pen without publisher instructions. The empty-notes label
+uses an existing readable semantic token, correcting the observed dark contrast failure.
+
+Final normal build, source/Vue/test types, architecture/i18n and 23 owner tests pass.
+Publication is pending. Typed mock emits and explicitly fictitious release data do not
+qualify controller transitions, a real release/feed/download/install, native restart,
+physical input, exact Pen geometry, human translation sign-off or full branding.

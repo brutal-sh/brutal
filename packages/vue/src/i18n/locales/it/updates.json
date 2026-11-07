@@ -20,6 +20,6 @@
   "downloadFailed": "Impossibile scaricare l’aggiornamento: {error}",
   "installFailed": "Impossibile installare l’aggiornamento: {error}",
   "restartFailed": "Impossibile riavviare Open Pen: {error}",
-  "unavailable": "Gli aggiornamenti non sono ancora disponibili. Pubblica prima una release firmata con latest.json.",
+  "unavailable": "Gli aggiornamenti non sono al momento disponibili. Puoi continuare a usare questa versione di Open Pen.",
   "checkFailed": "Impossibile controllare gli aggiornamenti: {error}"
 }

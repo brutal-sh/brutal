@@ -11,7 +11,7 @@ export default {
     notesLabel: 'text-xs font-semibold text-surface',
     notes:
       'min-h-0 flex-1 overflow-y-auto rounded-lg border border-border bg-input px-3.5 py-3 select-text',
-    empty: 'text-xs text-muted',
+    empty: 'text-xs text-surface',
     spinner: 'size-4 text-muted',
     footer: 'flex min-h-14 shrink-0 items-center gap-2 border-t border-border px-5 py-3',
     progress: 'flex-1',

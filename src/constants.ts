@@ -111,10 +111,8 @@ export const MCP_CONNECTIONS_DOCS_URL = `${DOCS_ORIGIN}/programmable/ai-chat#ext
 export const CODING_AGENTS_GUIDE_URL = `${DOCS_ORIGIN}/programmable/coding-agents`
 export const PI_GUIDE_URL = `${CODING_AGENTS_GUIDE_URL}#pi`
 
-/** The published release page, with its full notes, for a desktop version. */
-export function releaseNotesURL(version: string): string {
-  return `https://github.com/open-pencil/open-pencil/releases/tag/v${version}`
-}
+// shortcut: no signed Open Pen releases, use the fork changelog until release publishing is configured.
+export const OPEN_PEN_RELEASE_NOTES_URL = `${OPEN_PEN_REPOSITORY_URL}/blob/HEAD/CHANGELOG.md`
 
 export function getShareURL(roomId: string): string {
   const base = IS_TAURI || !IS_BROWSER ? WEB_APP_ORIGIN : window.location.origin

@@ -20,6 +20,6 @@
   "downloadFailed": "No se pudo descargar la actualización: {error}",
   "installFailed": "No se pudo instalar la actualización: {error}",
   "restartFailed": "No se pudo reiniciar Open Pen: {error}",
-  "unavailable": "Las actualizaciones aún no están disponibles. Publica primero una versión firmada con latest.json.",
+  "unavailable": "Las actualizaciones no están disponibles por ahora. Puedes seguir usando esta versión de Open Pen.",
   "checkFailed": "Error al encontrar actualizaciones: {error}"
 }
