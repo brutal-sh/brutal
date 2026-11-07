@@ -1,4 +1,4 @@
-import { isButtonActivation } from './focus'
+import { isControlActivation } from './focus'
 import { shortcutCode } from './layout'
 
 const RESERVED_MOD_CODES = new Set([
@@ -37,5 +37,5 @@ export function preventReservedKeyboardDefaults(e: KeyboardEvent) {
   if (isReservedModShortcut(e)) e.preventDefault()
   if (e.code === 'Backspace' || e.code === 'Delete') e.preventDefault()
   if (e.code === 'BracketLeft' || e.code === 'BracketRight') e.preventDefault()
-  if (e.code === 'Space' && !isButtonActivation(e)) e.preventDefault()
+  if (e.code === 'Space' && !isControlActivation(e)) e.preventDefault()
 }

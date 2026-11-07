@@ -39,3 +39,27 @@ frame bytes, application source, fixture data, screenshot baseline or global err
 changes. Retained local logs identify each failed/control/after run. These repairs do not
 qualify native host behavior, the mixed WebKit font/decode gate, inherited inspector
 controls, full branding, beta or all-app parity. Tab native acceptance remains Verify.
+
+## Browser host interruption control
+
+The original mixed matrix retains 90 passes, ten timeouts, one interrupted case and
+16 unexecuted cases. Its individual causes remain unclassified; the subsequent
+host finding does not retrospectively explain that run.
+
+A fresh 20-case traced prefix passes. The full traced 117-case attempt then records
+116 passes and one timeout. Its Spanish WebKit command case starts at 03:21:36.946
+UTC; the OS power record shows Sleep at 03:21:36 and DarkWake at 03:37:59, a 983-second
+interval. The case lasts 983,098ms and its selector wait 982,457ms despite the
+unchanged 15-second test limit. Raw trace and power timestamps establish this run's
+host interruption; they do not establish an application deadlock.
+
+The same 117 cases subsequently pass in 515,551ms with utility-scoped
+`caffeinate -is`, no overlapping sleep events, zero skipped/flaky/unexpected cases,
+matching thirteen source hashes and unchanged timing/error checks. The two
+assertions and their owned process are absent after exit. No persistent power
+setting or display-wake assertion is installed. Independent review verifies all
+276 archived file hashes and raw results.
+
+These local receipts qualify that interruption diagnosis and awake control only.
+STAB-WEBKIT-MIXED remains Verify because the older failed matrix is unclassified.
+They do not close native associated-file delivery, editor copy, beta or parity.

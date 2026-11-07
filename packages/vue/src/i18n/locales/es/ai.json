@@ -340,7 +340,7 @@
   "aiSetupPiNoModel": "Pi no tiene un modelo predeterminado",
   "piModelHint": "Un modelo de Pi como provider/model. Déjalo vacío para usar el modelo predeterminado de Pi.",
   "aiSetupPiSignIn": "Para iniciar sesión en un proveedor o elegir un modelo predeterminado, ejecuta pi en una terminal y escribe /login o /model.",
-  "aiSetupGetDesktop": "Descargar la aplicación de escritorio",
+  "aiSetupGetDesktop": "Configurar la aplicación de escritorio",
   "aiSetupAgentNeedsAdapter": "instalado · falta el adaptador de Open Pen",
   "aiSetupAgentInstallAdapter": "Instalar adaptador",
   "aiSetupAgentInstallMCP": "Instalar servidor MCP",

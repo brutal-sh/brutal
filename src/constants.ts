@@ -92,8 +92,9 @@ export const OFFICIAL_CLOUD_URL =
 /** Whether this is the editor a Cloud server serves on its own address (`bun run build:cloud`). */
 export const IS_CLOUD_SITE =
   typeof __OPENPENCIL_CLOUD_SITE__ === 'boolean' && __OPENPENCIL_CLOUD_SITE__
-/** Where the desktop app's installers are published. */
-export const DESKTOP_DOWNLOAD_URL = 'https://github.com/open-pencil/open-pencil/releases/latest'
+export const OPEN_PEN_REPOSITORY_URL = 'https://github.com/jpoindexter/open-pen'
+/** Desktop setup instructions while this fork has no published installer. */
+export const DESKTOP_DOWNLOAD_URL = `${OPEN_PEN_REPOSITORY_URL}#run-this-fork`
 export const NODE_DOWNLOAD_URL = 'https://nodejs.org/en/download'
 
 /**
@@ -101,7 +102,6 @@ export const NODE_DOWNLOAD_URL = 'https://nodejs.org/en/download'
  * at the end of the section description; alerts link only to the fix, never to docs.
  */
 const DOCS_ORIGIN = 'https://openpencil.dev'
-export const OPEN_PEN_REPOSITORY_URL = 'https://github.com/jpoindexter/open-pen'
 export const OPEN_PEN_CLI_GUIDE_URL = `${OPEN_PEN_REPOSITORY_URL}#cli`
 export const MCP_SERVER_DOCS_URL = `${DOCS_ORIGIN}/programmable/mcp-server`
 /** The guide to OpenPencil Cloud, linked from the Cloud server's own pages. */

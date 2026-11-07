@@ -67,7 +67,7 @@ const statusText = computed(() =>
   <div class="mt-3 flex items-center justify-between gap-2 border-t border-border pt-3">
     <p
       v-if="room.desktopLink.value"
-      class="flex shrink-0 items-center gap-1.5 text-[11px] whitespace-nowrap text-muted"
+      class="flex min-w-0 flex-wrap items-center gap-x-1.5 gap-y-1 text-[11px] text-muted"
     >
       <a
         :href="room.desktopLink.value"
@@ -76,7 +76,7 @@ const statusText = computed(() =>
       >
         {{ collab.messages.openInDesktopApp }}
       </a>
-      <template v-if="room.downloadURL.value">
+      <span v-if="room.downloadURL.value" class="inline-flex min-w-0 items-baseline gap-1.5">
         <span aria-hidden="true">·</span>
         <a
           :href="room.downloadURL.value"
@@ -87,7 +87,7 @@ const statusText = computed(() =>
         >
           {{ collab.messages.downloadDesktopApp }}
         </a>
-      </template>
+      </span>
     </p>
     <span v-else />
     <AppButton

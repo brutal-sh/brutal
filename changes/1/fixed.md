@@ -28,3 +28,4 @@
 - Warning toasts use an opaque surface over drawings, and translated messages remain readable when recovery actions need another row.
 
 - Reuse canvas contexts across document switches without retaining retired document renderers, and cancel initialization when its view closes.
+- Desktop setup links open this Open Pen fork’s build instructions with translated setup labels.

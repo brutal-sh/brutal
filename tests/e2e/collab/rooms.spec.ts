@@ -55,10 +55,27 @@ test('a share link opens the room in its own tab, waiting until someone with it 
       'href',
       `openpen://join?room=${ROOM_ID}`
     )
-    await expect(guest.page.getByRole('link', { name: 'Download' })).toHaveAttribute(
+    await expect(guest.page.getByRole('link', { name: 'Desktop setup' })).toHaveAttribute(
       'href',
-      'https://github.com/open-pencil/open-pencil/releases/latest'
+      'https://github.com/jpoindexter/open-pen#run-this-fork'
     )
+
+    const setupURL = 'https://github.com/jpoindexter/open-pen#run-this-fork'
+    await guest.page
+      .context()
+      .route('https://github.com/jpoindexter/open-pen', (route) =>
+        route.fulfill({ contentType: 'text/html', body: '<title>Open Pen desktop setup</title>' })
+      )
+    const opening = guest.page.waitForEvent('popup')
+    await guest.page.getByRole('link', { name: 'Desktop setup', exact: true }).focus()
+    await guest.page.keyboard.press('Enter')
+    const setup = await opening
+    try {
+      await expect(setup).toHaveURL(setupURL)
+    } finally {
+      await setup.close()
+    }
+    await expect(screen).toHaveAttribute('data-status', 'waiting')
 
     host = await createPeer(browser, 'Host', relay.url)
     const nodeId = await addRectangle(host.page, 'Shared card')

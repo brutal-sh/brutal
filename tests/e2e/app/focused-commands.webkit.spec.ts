@@ -3,6 +3,7 @@ import type { EditorCommandId } from '@open-pencil/vue/editor/commands'
 import type { runFocusedCommand } from '@/app/shell/commands/focused'
 
 import { expect, test, useEditorSetup } from '#tests/e2e/fixtures'
+import { CanvasHelper } from '#tests/helpers/canvas'
 import { openAppMenu } from '#tests/helpers/menu'
 import { getSelectedNode } from '#tests/helpers/store'
 
@@ -84,11 +85,7 @@ test('Delete edits selected canvas text instead of dispatching layer deletion', 
   expect(await runAsNativeMenu('selection.delete')).toEqual([])
   await expect.poll(async () => (await getSelectedNode(editor.page))?.text).toBe('Edit  sample')
   expect((await getSelectedNode(editor.page))?.id).toBe(before?.id)
-  await (
-    await openAppMenu(editor.page, 'Edit')
-  )
-    .getByRole('menuitem', { name: /^Undo\b/ })
-    .click()
+  await (await openAppMenu(editor.page, 'Edit')).getByRole('menuitem', { name: /^Undo\b/ }).click()
   await expect.poll(async () => (await getSelectedNode(editor.page))?.text).toBe('Edit text sample')
 })
 
@@ -121,4 +118,36 @@ test('a page field keeps its edits while a canvas text edit stays open', async (
   expect(await runAsNativeMenu('selection.duplicate')).toEqual([])
   expect(await runAsNativeMenu('edit.undo')).toEqual([])
   await expect(field).toHaveValue('')
+})
+
+test('native button activation retains Enter and Space while canvas Space still pans', async ({
+  page
+}) => {
+  await page.goto('/?test')
+  const canvas = new CanvasHelper(page)
+  await canvas.waitForInit()
+  const move = page.getByTestId('toolbar').getByRole('button', { name: 'Move', exact: true })
+  const activeTool = () => page.evaluate(() => window.openPencil?.getStore?.().state.activeTool)
+
+  for (const key of ['Enter', 'NumpadEnter', 'Space']) {
+    await page.mouse.click(500, 400)
+    await page.keyboard.press('r')
+    expect(await activeTool()).toBe('RECTANGLE')
+    await move.focus()
+    if (key === 'Space') {
+      await page.keyboard.down(key)
+      expect(await activeTool()).toBe('RECTANGLE')
+      await page.keyboard.up(key)
+    } else {
+      await page.keyboard.press(key)
+    }
+    expect(await activeTool()).toBe('SELECT')
+  }
+
+  await page.mouse.click(500, 400)
+  await page.keyboard.down('Space')
+  expect(await activeTool()).toBe('HAND')
+  await page.keyboard.up('Space')
+  expect(await activeTool()).toBe('SELECT')
+  canvas.assertNoErrors()
 })

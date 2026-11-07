@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { expect, fn, userEvent, within } from 'storybook/test'
 
 import type { PendingRoomStatus } from '@/app/collab/room/status'
+import { DESKTOP_DOWNLOAD_URL } from '@/constants'
 
 import RoomScreen from './RoomScreen.vue'
 
@@ -69,7 +70,7 @@ export const Waiting: Story = {}
 export const WaitingInDesktopBrowser: Story = {
   args: {
     desktopLink: 'openpen://join?room=abcdefghijklmnopqrstuvwxyz012345',
-    downloadURL: 'https://github.com/open-pencil/open-pencil/releases/latest'
+    downloadURL: DESKTOP_DOWNLOAD_URL
   }
 }
 

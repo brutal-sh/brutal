@@ -340,7 +340,7 @@
   "aiSetupPiNoModel": "W Pi nie ustawiono domyślnego modelu",
   "piModelHint": "Model Pi, np. provider/model. Pozostaw puste, aby użyć domyślnego modelu Pi.",
   "aiSetupPiSignIn": "Aby zalogować się do dostawcy lub wybrać domyślny model, uruchom pi w terminalu i wpisz /login lub /model.",
-  "aiSetupGetDesktop": "Pobierz aplikację na komputer",
+  "aiSetupGetDesktop": "Konfiguracja aplikacji komputerowej",
   "aiSetupAgentNeedsAdapter": "zainstalowany · brak adaptera Open Pen",
   "aiSetupAgentInstallAdapter": "Zainstaluj adapter",
   "aiSetupAgentInstallMCP": "Zainstaluj serwer MCP",

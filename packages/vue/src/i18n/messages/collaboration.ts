@@ -54,7 +54,7 @@ export const collaborationMessageDefaults = {
   leftRoomDescription: 'This is now a local copy. Save it to keep it.',
   dismiss: 'Dismiss',
   openInDesktopApp: 'Open in desktop app',
-  downloadDesktopApp: 'Download',
+  downloadDesktopApp: 'Desktop setup',
   appearsAs: params('You’ll appear as {name}'),
   changeName: 'Change',
   joinRoomEllipsis: 'Join room…',

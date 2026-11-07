@@ -16,7 +16,7 @@ import { TOOL_SHORTCUTS } from '@/app/editor/session'
 import { openSettingsDialog } from '@/app/settings/dialog'
 import { setSnappingPreference } from '@/app/settings/preferences/apply'
 import {
-  isButtonActivation,
+  isControlActivation,
   isEditing,
   isToggleInput,
   overlayHandlesKeyboard
@@ -116,7 +116,7 @@ function shouldIgnoreShortcut(
     event.isComposing ||
     // The scrubbing field cancels on document capture, after this window listener.
     (event.code === 'Escape' && document.querySelector('[data-scrubbing]') !== null) ||
-    isButtonActivation(event) ||
+    isControlActivation(event) ||
     overlayHandlesKeyboard(event, history) ||
     (!documentHistory && (isEditing(event) || options.inputFocused.value)) ||
     (!history && options.store.state.editingTextId !== null && event.code !== 'Escape') ||

@@ -13,10 +13,17 @@ export function isToggleInput(target: EventTarget | null | undefined): boolean {
   )
 }
 
-export function isButtonActivation(event: KeyboardEvent): boolean {
+export function isControlActivation(event: KeyboardEvent): boolean {
   if (event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) return false
-  if (event.code !== 'Enter' && event.code !== 'Space') return false
-  return event.composedPath().some((target) => target instanceof HTMLButtonElement)
+  const enter = event.code === 'Enter' || event.code === 'NumpadEnter'
+  if (!enter && event.code !== 'Space') return false
+  return event
+    .composedPath()
+    .some(
+      (target) =>
+        target instanceof HTMLButtonElement ||
+        (enter && target instanceof HTMLAnchorElement && target.hasAttribute('href'))
+    )
 }
 
 export function isEditing(event: Event) {

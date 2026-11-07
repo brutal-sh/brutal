@@ -3,6 +3,8 @@
 Updated: 2026-11-07. Own-brand assets have executed output and browser checks.
 Owned diagnostics/log names also have bounded executed checks below. Product copy, native
 identity, links and full cross-platform branding remain separate open tasks.
+The [desktop-link record](DESKTOP-LINKS.md) tracks the own setup destination,
+translated wrapping and shared native-link keyboard acceptance separately.
 
 The original `assets/brand/open-pen-app.png` is the source for shipped artwork.
 Historical teal SVG masters retain provenance but are no longer generator inputs.

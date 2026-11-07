@@ -355,7 +355,7 @@ export const aiMessageDefaults = {
   piModelHint: 'A Pi model such as provider/model. Leave empty to use Pi’s default model.',
   aiSetupPiSignIn:
     'To sign in to a provider or pick a default model, run pi in a terminal and type /login or /model.',
-  aiSetupGetDesktop: 'Get the desktop app',
+  aiSetupGetDesktop: 'Desktop setup',
   aiSetupMeteredNote:
     'OpenRouter gives you models from several vendors with one account and one key.',
   aiSetupSkillsTitle: 'Skills from your coding agents',

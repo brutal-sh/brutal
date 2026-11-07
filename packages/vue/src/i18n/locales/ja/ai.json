@@ -340,7 +340,7 @@
   "aiSetupPiNoModel": "Pi にデフォルトモデルが設定されていません",
   "piModelHint": "provider/model 形式の Pi モデル。空欄にすると Pi のデフォルトモデルを使います。",
   "aiSetupPiSignIn": "プロバイダーにサインインするかデフォルトモデルを選ぶには、ターミナルで pi を実行して /login または /model と入力します。",
-  "aiSetupGetDesktop": "デスクトップアプリを入手",
+  "aiSetupGetDesktop": "デスクトップ版のセットアップ",
   "aiSetupAgentNeedsAdapter": "インストール済み・Open Pen アダプターがありません",
   "aiSetupAgentInstallAdapter": "アダプターをインストール",
   "aiSetupAgentInstallMCP": "MCP サーバーをインストール",

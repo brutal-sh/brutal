@@ -340,7 +340,7 @@
   "aiSetupPiNoModel": "Pi 中未设置默认模型",
   "piModelHint": "Pi 模型，例如 provider/model。留空则使用 Pi 的默认模型。",
   "aiSetupPiSignIn": "要登录提供商或选择默认模型，请在终端中运行 pi 并输入 /login 或 /model。",
-  "aiSetupGetDesktop": "获取桌面应用",
+  "aiSetupGetDesktop": "桌面版设置",
   "aiSetupAgentNeedsAdapter": "已安装 · 缺少 Open Pen 适配器",
   "aiSetupAgentInstallAdapter": "安装适配器",
   "aiSetupAgentInstallMCP": "安装 MCP 服务器",

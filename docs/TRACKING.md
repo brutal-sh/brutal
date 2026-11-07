@@ -6,7 +6,7 @@ Repository: [private Open Pen repository](https://github.com/jpoindexter/open-pe
 Board: [Open Pen — independent design editor](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor), private.
 
 The [PRD](PRD.md) owns the outcome, constraints and release criteria.
-The [task index](TASKS.md) links all 380 execution cards; the [modularity audit](MODULARITY.md)
+The [task index](TASKS.md) links all 382 execution cards; the [modularity audit](MODULARITY.md)
 records the measured review queue. Requirements come from the [feature catalog](pen-feature-reference/README.md)
 and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), using actual Pen 1.2.21 as the reference.
 
@@ -23,7 +23,7 @@ and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), using actual Pen 1.
 
 ## Verified planning snapshot
 
-A complete fresh board readback finds 397 open cards: 380 unique execution tasks and 17 milestones.
+A complete fresh board readback finds 399 open cards: 382 unique execution tasks and 17 milestones.
 All 164 catalog requirements and 22 exact native ledger rows map to real execution cards.
 There are no missing or duplicate task IDs, and the dependency graph is acyclic.
 All 15 originally oversized runtime modules have individual disposition tasks.
@@ -50,6 +50,8 @@ The new module dispositions remain unaccepted.
 A separate [mixed WebKit reliability gate](https://trello.com/c/ech6H0Xm) retains the
 failed long-run font/decode paths and passing cold trace controls. Cold passes do not waive
 that open editor/beta/terminal dependency.
+[Desktop setup links](DESKTOP-LINKS.md) records the own destination, translated wrapping and
+shared native-link keyboard repair. Its bounded browser checks do not accept native installation.
 This proves tracking coverage, not accepted product parity or exhaustive discovery of every native state.
 
 Planning publication, the reproducible runtime audit, own-brand assets, owned diagnostics/log
@@ -97,12 +99,11 @@ distinguishes two stale native test contracts from an unproven cross-file backdr
 criteria. The [control record](APP-TEST-CONTROLS.md) retains paired failures, the two-file
 reproduction, scoped cleanup and the subsequent 1,955 passing app-shard tests. Neither
 changes production behavior or accepts native delivery. Both remain required beta and
-terminal dependencies with linked evidence. Mixed WebKit reliability is the sole Building
-task. Font and graph candidates remain Verify. A later native graph/text batch has
+terminal dependencies with linked evidence. Native-link Enter activation is the sole Building task; mixed WebKit reliability is Verify. Font and graph candidates remain Verify. A later native graph/text batch has
 four hidden-window failures; a fresh OS read confirms the desktop is locked again. Those
 failed/unexecuted input criteria do not erase the earlier successful native resource path.
 The interrupted zero-size icon work retains its failed wider-run receipts and dependencies.
-The delivery snapshot is 355 Backlog, 0 Ready, 1 Building, 6 Verify and 18 Executed, plus 17 milestones.
+The delivery snapshot is 355 Backlog, 0 Ready, 1 Building, 8 Verify and 18 Executed, plus 17 milestones.
 DELIVERY-LFS has bounded executed current-checkout fixture delivery: all twelve objects
 are fetched from the own private endpoint into empty independent storage, with matching
 SHA-256/sizes and LFS integrity checks. Historical object closure is not qualified.
@@ -111,7 +112,7 @@ UI-SPLIT-HEADER separately records toolbar/inspector overlap blocking pane Close
 FONT-EXPORT-BOUNDS, FONT-LOCAL-PICKER and FONT-CJK-REPAINT separately record existing
 font acceptance failures. Exact original-versus-refactor controls reproduce the same three
 broader workflow failures; ten named pre-refactor visual controls pass afterward in both engines.
-The terminal gate depends on all 379 other required execution tasks.
+The terminal gate depends on all 381 other required execution tasks.
 The board retains 17 milestones, 164 mapped requirements and 22 mapped native rows.
 No branding milestone or product-parity feature group is fully accepted.
 

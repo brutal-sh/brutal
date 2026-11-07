@@ -105,10 +105,14 @@ types/catalogs into arbitrary microfiles or weaken validation to reduce line cou
 
 ## Delivery sequence
 
+The fresh board contains 382 bounded execution tasks and 17 milestones. Every one of the
+164 catalog requirements and 22 native ledger rows is allocated; allocation is not acceptance.
+[Task index](TASKS.md) records the live-board states and dependencies.
+
 | Horizon | Outcome | Evidence checkpoint |
 | --------------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Now                   | Resolve mixed WebKit font/decode acceptance stalls | Preserve the failed mixed matrix and passing cold controls; identify and repair the demonstrated cause under unchanged timing, data and error checks. |
-| Next                  | Continue dependency-free branding and mixed WebKit reliability checks                           | Warning surface has bounded executed evidence; native associated-file delivery and the failed mixed run remain open.                 |
+| Now | Finish desktop-link and shared Enter activation acceptance | Use the real own-repository instructions, retain translations and document state, inspect wrapping and publish the bounded Chromium/WebKit evidence. |
+| Next | Continue dependency-free branding and module work; retain native and mixed-run gates | The traced host-sleep failure has a passing awake control; the older mixed failure and native associated-file delivery remain unclassified or unexecuted. |
 | Then                  | Stabilize document switching and finish unaccepted icon, module and feature/screen tasks in dependency order | Each card has relevant owner tests, visual/native checks and a commit/evidence link before Executed; dependent renderer/input work waits for STAB-GPU. |
 | Release qualification | Deliver private beta, then complete the full parity gate | Clean normal build, install/restart/recovery and core journey; declared beta limitations. Later, no required parity state remains unaccepted. |
 
