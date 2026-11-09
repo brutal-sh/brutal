@@ -1,7 +1,7 @@
 # Menu catalog ownership candidate
 
 Updated: 2026-11-09. [MOD-13](https://trello.com/c/dqmI6X9G) remains Verify.
-Source candidate: `c6c86dae5` (publication/readback follows).
+Source candidate: `c6c86dae5` (published to the private draft PR with exact blob/head readback).
 This is a declaration split, not current Pen design or native-delivery acceptance.
 
 The original 621-line `src/app/shell/menu/schema.ts` becomes 106 physical lines,

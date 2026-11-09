@@ -126,8 +126,8 @@ The fresh board contains 412 bounded execution tasks and 17 milestones. Every on
 
 | Horizon | Outcome | Evidence checkpoint |
 | --------------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Now | Publish the Pen 1.2.22 reference inventory (REF-03) | Complete verified extraction, source-anchored catalog, narrow new/existing card allocation, independent review and metadata-only publication; retain static/native limits. |
-| Next | Unblock menu verification (TEST-PAGE-NAV, then STAB-COMMAND-MENU) | Reveal the actual Layers surface in the page driver, then classify the Commands detachment with an equivalent original-source control; MOD-13 remains Verify. |
+| Now | Repair the page-navigation driver (TEST-PAGE-NAV) | Reveal the actual Layers surface, preserve exact page selection and run all affected canonical journeys without timeout/retry changes. |
+| Next | Classify Commands submenu detachment (STAB-COMMAND-MENU) | Minimize the pointer sequence with equivalent original/current controls; repair the demonstrated owner while preserving real pointer/keyboard behavior. MOD-13 remains Verify. |
 | Following | Re-enter mixed WebKit reliability (STAB-WEBKIT-MIXED, Verify) | Classify the retained mixed-run failures and unrun cases; preserve timing, snapshots and the editor-copy dependency. |
 | Then                  | Stabilize document switching and finish unaccepted icon, module and feature/screen tasks in dependency order | Each card has relevant owner tests, visual/native checks and a commit/evidence link before Executed; dependent renderer/input work waits for STAB-GPU. |
 | Release qualification | Deliver private beta, then complete the full parity gate | Clean normal build, install/restart/recovery and core journey; declared beta limitations. Later, no required parity state remains unaccepted. |
@@ -182,3 +182,8 @@ percentage is reported until its denominator and acceptance evidence are complet
 
 The [tracking index](TRACKING.md), [feature catalog](FEATURES.md), [screen/menu ledger](PARITY-STATE-MATRIX.md)
 and [task index](TASKS.md) are the reviewable sources of scope. The active goal is not complete.
+
+[REF-03](https://trello.com/c/l9y1fz5C/413-ref-03-catalog-installed-pen-1222-update) has bounded Executed inventory evidence at
+`cc33e07c9`: exact extracted/outer bytes, versioned findings, independent review and live-board
+allocation are published. This does not accept the new workflows, opaque binary semantics
+or full current-reference parity. TEST-PAGE-NAV is the sole Building task.

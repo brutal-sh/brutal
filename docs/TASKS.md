@@ -409,7 +409,7 @@ This table records the verified planning snapshot. Read the live board for later
 | BRAND-SUPPORT-WEBMCP | Verify own-brand WebMCP document metadata | PRD-02 / BRAND-COPY-SUPPORT | BRAND-COPY-SOURCE | Executed | [Card](https://trello.com/c/ac7FOKXp/408-brand-support-webmcp-verify-own-brand-webmcp-document-metadata) |
 | BRAND-SUPPORT-CLI | Verify own-brand CLI help and document-format presentation | PRD-02 / BRAND-COPY-SUPPORT | BRAND-COPY-SOURCE | Executed | [Card](https://trello.com/c/wrXD3Fum/409-brand-support-cli-verify-own-brand-cli-help-and-document-format-presentation) |
 | BRAND-STORYBOOK-ERROR | Replace inherited Storybook manifest error presentation | PRD-02 / BRAND-VERIFY | BRAND-COPY-SOURCE, BRAND-LOGS | Executed | [Card](https://trello.com/c/0FF3JZ3g/410-brand-storybook-error-replace-inherited-storybook-manifest-error-presentation) |
-| TEST-PAGE-NAV | Reveal Layers before navigating pages in browser tests | PRD operational requirement | None identified | Backlog | [Card](https://trello.com/c/NIjUHghm/411-test-page-nav-reveal-layers-before-navigating-pages-in-browser-tests) |
+| TEST-PAGE-NAV | Reveal Layers before navigating pages in browser tests | PRD operational requirement | None identified | Building | [Card](https://trello.com/c/NIjUHghm/411-test-page-nav-reveal-layers-before-navigating-pages-in-browser-tests) |
 | STAB-COMMAND-MENU | Classify Commands submenu detachment during pointer navigation | PRD operational requirement | None identified | Backlog | [Card](https://trello.com/c/6WTOPIdh/412-stab-command-menu-classify-commands-submenu-detachment-during-pointer-navigation) |
 | UPD22-GUIDE-COMPETE | Competitive research guide | PRD operational requirement / Pen1.2.22 supplement | REF-03 | Backlog | [Card](https://trello.com/c/f3xegAZL/414-upd22-guide-compete-competitive-research-guide) |
 | UPD22-GUIDE-RECRUIT | Recruiting profile comparison guide | PRD operational requirement / Pen1.2.22 supplement | REF-03 | Backlog | [Card](https://trello.com/c/wHIF8NR6/415-upd22-guide-recruit-recruiting-profile-comparison-guide) |
@@ -427,7 +427,7 @@ This table records the verified planning snapshot. Read the live board for later
 | UPD22-BROWSER-SPACING | Browser per-side spacing copy surface | PRD operational requirement / Pen1.2.22 supplement | REF-03 | Backlog | [Card](https://trello.com/c/jCASBuX9/427-upd22-browser-spacing-browser-per-side-spacing-copy-surface) |
 | UPD22-BROWSER-SECOND | Browser second-press input interception | PRD operational requirement / Pen1.2.22 supplement | REF-03 | Backlog | [Card](https://trello.com/c/z6FwQjSA/428-upd22-browser-second-browser-second-press-input-interception) |
 | UPD22-AI-FEEDBACK | Model-result feedback controls and retraction | PRD operational requirement / Pen1.2.22 supplement | REF-03 | Backlog | [Card](https://trello.com/c/ngJgAska/429-upd22-ai-feedback-model-result-feedback-controls-and-retraction) |
-| REF-03 | Catalog installed Pen 1.2.22 update | PRD operational requirement / Pen1.2.22 supplement | None identified | Building | [Card](https://trello.com/c/l9y1fz5C/413-ref-03-catalog-installed-pen-1222-update) |
+| REF-03 | Catalog installed Pen 1.2.22 update | PRD operational requirement / Pen1.2.22 supplement | None identified | Executed | [Card](https://trello.com/c/l9y1fz5C/413-ref-03-catalog-installed-pen-1222-update) |
 
 ## Native surface coverage
 
