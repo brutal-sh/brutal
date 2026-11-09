@@ -4,6 +4,7 @@ Updated: 2026-11-09. BRAND-COPY-SUPPORT is the aggregate acceptance gate for fiv
 published owners. Its original browser/native advice, ACP failure, WebMCP description
 and CLI/format scope is preserved. This record does not accept the branding milestone,
 physical native delivery, private beta or full Pen parity.
+The reconciliation is published at `d30381b1678ef7790dd3768bd81434468a9f71e5`.
 
 | Owner | Published source/evidence | Executed criterion and limit |
 | --- | --- | --- |

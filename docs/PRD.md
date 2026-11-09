@@ -119,8 +119,8 @@ The fresh board contains 393 bounded execution tasks and 17 milestones. Every on
 
 | Horizon | Outcome | Evidence checkpoint |
 | --------------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Now | Reconcile the support-copy acceptance gate (BRAND-COPY-SUPPORT) | Verify all five published owners against the original scope, retaining compatibility identities and each unit's physical/native limits. |
-| Next | Verify portal client copy | The Ready task checks the changed translated client labels with test-owned approval/account fixtures; preserve real service identities. Full branding stays open. |
+| Now | Verify portal client copy (BRAND-COPY-PORTAL) | Render the ten changed labels across nine locales with test-owned approval/account fixtures; preserve interpolated fields and real service identities. |
+| Next | Modularize menu-schema ownership (MOD-13) | Inspect the 621-line owner and its callers, split cohesive menu responsibilities using existing patterns, and preserve command/schema/native behavior with bounded evidence. |
 | Then                  | Stabilize document switching and finish unaccepted icon, module and feature/screen tasks in dependency order | Each card has relevant owner tests, visual/native checks and a commit/evidence link before Executed; dependent renderer/input work waits for STAB-GPU. |
 | Release qualification | Deliver private beta, then complete the full parity gate | Clean normal build, install/restart/recovery and core journey; declared beta limitations. Later, no required parity state remains unaccepted. |
 
@@ -158,9 +158,9 @@ percentage is reported until its denominator and acceptance evidence are complet
 - 2026-11-06 — Jason requests explicit modularization goals, a PRD and smaller complete Trello tasks.
 - 2026-11-06 — Keep the full parity objective active; preserve broad cards as milestones and
   add traceable execution tasks rather than dropping unfinished work.
-- Next review: after the translated update-prompt states and their own notes destination.
+- Next review: after the portal client-label journeys and menu-schema modularization.
   Codex will update counts, evidence and dependencies from fresh results.
-- Open: graphics context reuse/retirement, zero-to-positive icon redraw, exact glyph pixels,
+- Open: remaining lifecycle/reliability states beyond the bounded canvas criterion, zero-to-positive icon redraw, exact glyph pixels,
   runtime resize and bindings, remaining native screens/menus and non-macOS qualification.
 - Open: mixed-script export bounds, local-font picker acceptance and delayed CJK repaint
   acceptance. Exact original-versus-refactor controls reproduce the same failures; the
