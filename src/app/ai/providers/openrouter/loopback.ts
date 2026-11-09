@@ -6,7 +6,8 @@ import { aiMessages } from '@open-pencil/vue/i18n'
 import { openExternalLink } from '@/app/shell/ui'
 
 import type { SignInCallback } from '../sign-in/attempt'
-import { loopbackOutcomeSchema, loopbackURLSchema } from './schema'
+import { loopbackOutcomeSchema } from '../sign-in/schema'
+import { loopbackURLSchema } from './schema'
 
 /** Reuses the native state-checked listener on a free port; no hosted relay receives the code. */
 export async function openRouterLoopback(state: string): Promise<{
