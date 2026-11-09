@@ -8,6 +8,7 @@ import { removeUnusedIconComponents } from './icons'
 import { createImageStore } from './images'
 import { inAncestorThemes, populateInstances } from './instances'
 import { createSceneNode, redrawIconAtLaidOutSize, type Build, type PenIconSource } from './nodes'
+import { normalizeNoteReferences } from './notes/normalize'
 import { placeLayers } from './placement'
 import { penFileSchema, type PenDocument, type PenNode } from './schema'
 import { installPenSlots } from './slots'
@@ -82,6 +83,7 @@ export function parsePenDocument(json: string): PenDocument {
 /** Builds the scene graph of a document `parsePenDocument` read. */
 export function buildPenGraph(doc: PenDocument, options: PenReadOptions = {}): SceneGraph {
   assertPenCompatible(doc)
+  doc = normalizeNoteReferences(doc)
   const graph = new SceneGraph()
 
   for (const page of graph.getPages(true)) {

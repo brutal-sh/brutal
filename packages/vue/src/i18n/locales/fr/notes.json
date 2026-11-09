@@ -1,0 +1,17 @@
+{
+  "title": "Note",
+  "color": "Couleur",
+  "colorHex": "Couleur de la note",
+  "yellow": "Jaune",
+  "orange": "Orange",
+  "coral": "Corail",
+  "pink": "Rose",
+  "purple": "Violet",
+  "blue": "Bleu",
+  "green": "Vert",
+  "gray": "Gris",
+  "addFlexLayout": "Ajouter une disposition flexible",
+  "createComponent": "Créer un composant",
+  "detachComponent": "Détacher le composant",
+  "dimensions": "Dimensions"
+}

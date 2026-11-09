@@ -10,6 +10,7 @@ import { HAND_GRAB_CURSOR } from '#vue/editor/tool-cursor'
 import { attachModifiers, startConnectorDraw } from '#vue/shared/input/connector/draw'
 import { parentSpace, startShapeDraw, startTextDraw } from '#vue/shared/input/draw'
 import { findDrawParent } from '#vue/shared/input/drop-target'
+import { startNotePlacement } from '#vue/shared/input/notes/place'
 import { startPanDrag } from '#vue/shared/input/pan/drag'
 import { handleSelectDown } from '#vue/shared/input/select'
 import type { HitTestFns } from '#vue/shared/input/select'
@@ -115,6 +116,11 @@ export function handleToolMouseDown({
       .catch((error: unknown) => {
         console.error('Failed to place icon', error)
       })
+    return
+  }
+
+  if (tool === 'NOTE') {
+    startNotePlacement(cx, cy, editor)
     return
   }
 

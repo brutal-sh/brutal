@@ -18,6 +18,7 @@ export const EDITOR_TOOLS: EditorToolDef[] = [
   },
   { key: 'PEN', label: 'Pen', shortcut: 'P', flyout: ['PEN', 'PENCIL'] },
   { key: 'TEXT', label: 'Text', shortcut: 'T' },
+  { key: 'NOTE', label: 'Sticky Note', shortcut: 'N' },
   // Figma's S is Slice, and FigJam's sticky tool has no key in Figma Design.
   { key: 'STICKY', label: 'Sticky note', shortcut: '' },
   // FigJam's R; here R is the rectangle, as in Figma Design.
@@ -38,6 +39,7 @@ export const TOOL_SHORTCUTS: Partial<Record<string, Tool>> = {
   KeyO: 'ELLIPSE',
   KeyL: 'LINE',
   KeyT: 'TEXT',
+  KeyN: 'NOTE',
   KeyP: 'PEN',
   'Shift+KeyP': 'PENCIL',
   KeyH: 'HAND',

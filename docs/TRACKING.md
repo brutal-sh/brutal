@@ -6,7 +6,7 @@ Repository: [private Open Pen repository](https://github.com/jpoindexter/open-pe
 Board: [Open Pen — independent design editor](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor), private.
 
 The [PRD](PRD.md) owns the outcome, constraints and release criteria.
-The [task index](TASKS.md) links all 414 execution cards; the [modularity audit](MODULARITY.md)
+The [task index](TASKS.md) links all 420 execution cards; the [modularity audit](MODULARITY.md)
 records the measured review queue. Requirements come from the [feature catalog](pen-feature-reference/README.md)
 and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), preserving historical Pen 1.2.21 evidence and the current [1.2.22 update inventory](pen-feature-reference/update-1.2.22-2026-11-09.md).
 
@@ -262,3 +262,11 @@ compares all 39 retained changed native files: 38 match outside signature data; 
 helper has code changes. All 5,897 Hopper procedure artifacts are verified, and named Go
 metadata corroborates the existing URI/save tasks. Compiler entries without exact Hopper
 matches, unbaselined files, runtime availability and full native/source parity stay open.
+
+## Note qualification breakdown, 2026-11-09
+
+Five new independently scoped cards split Note reference round-trip, Fill sizing, component controls, reusable-ref promotion and strict rendering acceptance. Each description is read back exactly after creation; all remain Backlog with explicit current implementation/evidence limits, and their links are in TASKS.md. The prior 431-card readback is retained as history; adding these cards yields 436 open cards and 419 execution tasks before a fresh complete reconciliation. No feature is accepted by card creation.
+
+## Note candidate and native type-gate reconciliation
+
+The final complete board readback returns 437 open cards: 420 execution tasks and 17 milestones, with 369 Backlog, 0 Ready, 2 Building, 12 Verify and 37 Executed. The five Note cards retain their separate scope; VERIFY-NATIVE-TYPES separately records 67 errors in eight other native test files. The Note unit reports 0 errors in that compilation boundary, but the full native type gate still fails. The independent candidate executes 422 owner tests, 35 browser cases and one isolated native component/history workflow; these do not waive remaining Note Fill, reusable-ref promotion, strict raster, exact UI or full native acceptance. Historical planning snapshots above remain retained.

@@ -13,9 +13,10 @@ const { panels } = useI18n()
 <template>
   <div
     class="grid"
+    :data-alpha="ctx.showAlpha"
     :class="
       ctx.compact
-        ? 'grid-cols-4 gap-1'
+        ? 'grid-cols-3 gap-1 data-[alpha=true]:grid-cols-4'
         : 'grid-cols-3 gap-px overflow-hidden rounded border border-border bg-border'
     "
   >
@@ -50,7 +51,7 @@ const { panels } = useI18n()
       @change="ctx.updateHSLChannelValue('l', inputNumberValue($event))"
     />
     <input
-      v-if="ctx.compact"
+      v-if="ctx.compact && ctx.showAlpha"
       type="number"
       :aria-label="panels.alpha"
       class="min-w-0 rounded bg-input px-2 py-1 text-xs text-surface outline-none"

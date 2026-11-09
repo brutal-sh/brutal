@@ -16,6 +16,7 @@ export {
   useFontMessages,
   useMediaMessages,
   useMenuMessages,
+  useNoteMessages,
   usePageMessages,
   usePanelMessages,
   useRecoveryMessages,

@@ -3,6 +3,7 @@ import type { SceneGraph } from '../graph'
 import { scriptOfNode } from '../scripts'
 import type { NodeType, SceneNode } from '../types'
 import type { GeneratedFrameKind } from './kind'
+import { NOTE_KIND, noteOfNode } from './notes'
 import { SHAPE_WITH_TEXT_KIND } from './shape-with-text'
 import { STICKY_KIND } from './sticky'
 
@@ -41,12 +42,15 @@ type GeneratedCandidate = Pick<SceneNode, 'type'> & Partial<Pick<SceneNode, 'plu
 
 /** Whether a layer owns derived children, including a linked Script stored on a frame. */
 export function hasGeneratedContent(node: GeneratedCandidate): boolean {
-  return isGeneratedFrame(node) || scriptOfNode(node) !== undefined
+  return (
+    isGeneratedFrame(node) || scriptOfNode(node) !== undefined || noteOfNode(node) !== undefined
+  )
 }
 
 /** What a generated frame's type says about it, or undefined for any other layer. */
 export function generatedFrameKind(node: GeneratedCandidate): GeneratedFrameKind | undefined {
   if (scriptOfNode(node)) return SCRIPT_KIND
+  if (noteOfNode(node)) return NOTE_KIND
   return isGeneratedFrame(node) ? GENERATED_FRAME_KINDS[node.type] : undefined
 }
 
@@ -97,3 +101,4 @@ export function layerStrokesAndEffects(node: Pick<SceneNode, 'type'>): boolean {
 export type { GeneratedFrameKind } from './kind'
 export * from './shape-with-text'
 export * from './sticky'
+export * from './notes'

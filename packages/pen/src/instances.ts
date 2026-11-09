@@ -12,13 +12,9 @@ import {
 import { claimSlotContent, slotScope } from '@open-pencil/scene-graph/slots'
 
 import { PenImportError } from './compatibility'
-import {
-  applyPenProperties,
-  createSceneNode,
-  fieldsSetBy,
-  isLinkedComponent,
-  type Build
-} from './nodes'
+import { fieldsSetBy } from './fields'
+import { applyPenProperties, createSceneNode, isLinkedComponent, type Build } from './nodes'
+import { claimNoteContent, readNote } from './notes'
 import type { PenNode, PenOverride } from './schema'
 
 /** Fills an instance read from `.pen`, after the instances inside its component. */
@@ -176,6 +172,10 @@ function overrideLayer(build: Build, target: SceneNode, override: PenOverride): 
     const leave = merged.theme ? ctx.enterTheme(merged.theme) : undefined
     try {
       applyPenProperties(target, merged, build)
+      if (merged.type === 'note') {
+        if (target.type === 'INSTANCE') readNote(target, merged, build)
+        claimNoteContent(target, override, build)
+      }
       recordChangedFields(graph, target, before, fields)
       if (children) {
         const scope = slotScope(graph, target.id)
@@ -269,6 +269,11 @@ export function populateInstances(build: Build): void {
       if (graph.isDescendant(nested, component.id)) populate(nested)
     }
     populateInstanceChildren(graph, instance.id, component.id)
+    const fields = build.effective.get(instance.id)
+    if (fields?.type === 'note') {
+      readNote(instance, fields, build)
+      claimNoteContent(instance, ref, build)
+    }
     recordOwnFields(graph, instance, ref)
     inheritCopyFields(build, instance)
     applyDescendants(build, instance, ref.descendants, populate)

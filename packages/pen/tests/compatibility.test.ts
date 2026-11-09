@@ -105,7 +105,7 @@ describe('.pen import compatibility', () => {
     }
   )
 
-  test.each(['note', 'prompt', 'context'])(
+  test.each(['prompt', 'context'])(
     'keeps unsupported schema 2.22 %s data intact when refusing import',
     (type) => {
       const doc: PenDocument = {

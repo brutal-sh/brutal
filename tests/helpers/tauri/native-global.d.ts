@@ -23,7 +23,7 @@ type NativeTestNode = {
   height?: number
   x?: number
   y?: number
-  fills?: Array<{ type: string; imageHash?: string }>
+  fills?: SceneNode['fills']
   vectorNetwork?: SceneNode['vectorNetwork']
 }
 
@@ -33,6 +33,7 @@ type NativeTestStore = {
   hasUnsavedChanges: EditorStore['hasUnsavedChanges']
   saveFigFileToPath: EditorStore['saveFigFileToPath']
   createScript: EditorStore['createScript']
+  createNote: EditorStore['createNote']
   resetIcon: EditorStore['resetIcon']
   swapIconGlyph: EditorStore['swapIconGlyph']
   createInstanceFromComponent: EditorStore['createInstanceFromComponent']

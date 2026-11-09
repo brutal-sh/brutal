@@ -37,6 +37,7 @@ const { panels } = useI18n()
     />
 
     <StandardColorSlider
+      v-if="ctx.showAlpha"
       :label="panels.alpha"
       :model-value="ctx.rekaColor"
       channel="alpha"

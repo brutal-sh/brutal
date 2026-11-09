@@ -135,7 +135,7 @@ export const EDITOR_COMMAND_METADATA = {
   'view.zoom100': { shortcut: 'MOD+0', keybinding: ['$mod+Digit0', 'Shift+Digit0'] },
   'view.zoomFit': { shortcut: 'SHIFT+1', keybinding: ['$mod+Digit1', 'Shift+Digit1'] },
   'view.zoomSelection': { shortcut: 'SHIFT+2', keybinding: ['$mod+Digit2', 'Shift+Digit2'] },
-  'view.zoomNextFrame': { shortcut: 'N', keybinding: 'KeyN' },
+  'view.zoomNextFrame': {},
   'view.zoomPreviousFrame': { shortcut: 'SHIFT+N', keybinding: 'Shift+KeyN' },
   'view.nextPage': { shortcut: '⇟', keybinding: 'PageDown' },
   'view.previousPage': { shortcut: '⇞', keybinding: 'PageUp' }

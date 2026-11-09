@@ -29,6 +29,12 @@ export const BUNDLED_FONTS: Record<string, string> = {
     ])
   ),
   'Anton|Regular': '/Anton-Regular.ttf',
+  ...Object.fromEntries(
+    ['Regular', 'Medium', 'SemiBold', 'Bold'].map((weight) => [
+      `Instrument Sans|${weight}`,
+      '/InstrumentSansVariable.ttf'
+    ])
+  ),
   ...Object.fromEntries(INTER_WEIGHTS.map((weight) => [`Inter|${weight}`, '/InterVariable.ttf'])),
   ...Object.fromEntries(
     INTER_WEIGHTS.map((weight) => [`Inter|${weight} Italic`, '/InterVariable-Italic.ttf'])

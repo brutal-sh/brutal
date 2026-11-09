@@ -53,6 +53,7 @@ export const toolIcons: Record<Tool, Component> = {
   PENCIL: IconPencil,
   TEXT: IconType,
   STICKY: IconStickyNote,
+  NOTE: IconStickyNote,
   SCRIPT: IconCode,
   ICON: IconPuzzle,
   SHAPE_WITH_TEXT: IconShapes,

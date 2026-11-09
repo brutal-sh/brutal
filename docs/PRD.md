@@ -36,6 +36,12 @@ modules, complete Open Pen branding and an executable Trello backlog.
   URI targeting, feedback and cloud contracts have explicit dispositions. Historical 1.2.21
   receipts stay versioned; current-reference checks use 1.2.22. Static inventory does not accept
   backend availability, workflow behavior or schema migration.
+- Native Note qualification on 2026-11-09 separately measures plain reusable Notes,
+  direct and nested refs, explicit/equal overrides, component detachment and the
+  differing actions offered on prototype refs versus resolved instance copies.
+  Creating a reusable Note ref and Fill sizing remain distinct unaccepted contracts.
+  Five narrow [Note tasks](TASKS.md) retain separate persistence, UI and strict raster
+  checks; [reference control](NOTE-REFERENCE-CONTROL.md) records the observations.
 - Observed: the current 2026-11-06 source-size audit counts 2,935 runtime files across the app, Core,
   Vue SDK, Scene Graph and native shell. Median size is 65 physical lines; 2,762 are at most
   300 lines and 12 exceed 600: one has a reviewed model-contract exception, 11 remain open.
@@ -124,12 +130,12 @@ The fresh board contains 414 bounded execution tasks and 17 milestones. Every on
 164 catalog requirements and 22 native ledger rows is allocated; allocation is not acceptance.
 [Task index](TASKS.md) records the live-board states and dependencies.
 
-| Horizon               | Outcome                                                                                                      | Evidence checkpoint                                                                                                                                    |
-| --------------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Now | Qualify the 2.22 reader prerequisite (FMT-09-DRIFT) | The actual Pen-saved SVG fixture fails at `/version`; admit unchanged supported shapes with explicit unsupported-data and future-version guards, then execute the real import path. |
-| Next | Continue SVG export parity (IO-13-EXPORT, Verify) | Actual reference exports text paths and a ZIP for multiple selections; current app exports live text and a combined SVG. Retain these concrete gaps and the format dependency. |
-| Then                  | Stabilize document switching and finish unaccepted icon, module and feature/screen tasks in dependency order | Each card has relevant owner tests, visual/native checks and a commit/evidence link before Executed; dependent renderer/input work waits for STAB-GPU. |
-| Release qualification | Deliver private beta, then complete the full parity gate                                                     | Clean normal build, install/restart/recovery and core journey; declared beta limitations. Later, no required parity state remains unaccepted.          |
+| Horizon               | Outcome                                                                                                      | Evidence checkpoint                                                                                                                                                                 |
+| --------------------- | ------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Now                   | Qualify the 2.22 reader prerequisite (FMT-09-DRIFT)                                                          | The actual Pen-saved SVG fixture fails at `/version`; admit unchanged supported shapes with explicit unsupported-data and future-version guards, then execute the real import path. |
+| Next                  | Continue SVG export parity (IO-13-EXPORT, Verify)                                                            | Actual reference exports text paths and a ZIP for multiple selections; current app exports live text and a combined SVG. Retain these concrete gaps and the format dependency.      |
+| Then                  | Stabilize document switching and finish unaccepted icon, module and feature/screen tasks in dependency order | Each card has relevant owner tests, visual/native checks and a commit/evidence link before Executed; dependent renderer/input work waits for STAB-GPU.                              |
+| Release qualification | Deliver private beta, then complete the full parity gate                                                     | Clean normal build, install/restart/recovery and core journey; declared beta limitations. Later, no required parity state remains unaccepted.                                       |
 
 No fixed completion date is claimed. Re-estimate after the stability and branding tasks using
 observed task throughput and the remaining acceptance work, including native/platform checks.

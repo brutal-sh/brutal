@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed, useSlots } from 'vue'
+import { computed, useSlots, watch } from 'vue'
 
+import { getNodeEditCapability } from '@open-pencil/core'
 import { variableText } from '@open-pencil/scene-graph/variables'
 import { useEditor } from '@open-pencil/vue'
 import { useI18n } from '@open-pencil/vue/i18n'
@@ -31,10 +32,27 @@ const config = BOUND_LAYER_FIELDS[field]
 const binding = useBindableValue()
 const property = usePropertyBinding(field)
 const { panels, common } = useI18n()
+const editable = computed(() => {
+  void editor.state.sceneVersion
+  return !editor.state.readOnly && getNodeEditCapability(editor.graph, nodeId).editable
+})
+watch(
+  editable,
+  (value) => {
+    if (!value) binding.actions.closePicker()
+  },
+  { flush: 'sync' }
+)
+watch(
+  () => nodeId,
+  () => binding.actions.closePicker(),
+  { flush: 'sync' }
+)
 
 const open = computed({
   get: () => binding.open.value,
-  set: (value: boolean) => (value ? binding.actions.openPicker() : binding.actions.closePicker())
+  set: (value: boolean) =>
+    value && editable.value ? binding.actions.openPicker() : binding.actions.closePicker()
 })
 
 const properties = computed(() => (property.available.value ? property.compatible.value : []))
@@ -60,13 +78,13 @@ const items = computed<AppPickerItem[]>(() => {
       value: `${PROPERTY}${definition.id}`,
       label: definition.name,
       group,
-      disabled: !property.editable.value
+      disabled: !editable.value || !property.editable.value
     })),
     ...binding.variables.value.map((variable) => ({
       value: variable.id,
       label: variable.name,
       group: binding.provider.collectionName?.(variable),
-      disabled: lockedToProperty.value
+      disabled: !editable.value || lockedToProperty.value
     }))
   ]
 })
@@ -90,6 +108,7 @@ function variableType(value: string) {
 
 /** A layer follows one source at a time, so choosing one lets go of the other in the same step. */
 function select(value: string) {
+  if (!editable.value) return
   if (value.startsWith(PROPERTY) ? !property.editable.value : lockedToProperty.value) return
   editor.undo.runBatch(config.undoLabel, () => {
     if (value.startsWith(PROPERTY)) {
@@ -103,6 +122,7 @@ function select(value: string) {
 }
 
 function createProperty() {
+  if (!editable.value) return
   open.value = false
   editor.undo.runBatch(config.undoLabel, () => {
     if (binding.state.value !== 'unbound') binding.actions.unbind()
@@ -111,6 +131,7 @@ function createProperty() {
 }
 
 function detach() {
+  if (!editable.value) return
   open.value = false
   binding.actions.unbind()
 }
@@ -139,7 +160,7 @@ function openPicker() {
     <template v-if="ownButton" #trigger>
       <IconButton
         :label="buttonLabel"
-        :disabled="property.available.value && !property.editable.value"
+        :disabled="!editable || (property.available.value && !property.editable.value)"
         :active="open"
       >
         <icon-lucide-diamond-plus class="size-3.5" />
@@ -165,6 +186,7 @@ function openPicker() {
         v-if="binding.state.value !== 'unbound'"
         size="xs"
         class="w-full justify-start"
+        :disabled="!editable"
         @click="detach"
       >
         <template #leading><icon-lucide-unlink class="size-3" /></template>
@@ -174,7 +196,7 @@ function openPicker() {
         v-if="property.available.value"
         size="xs"
         class="w-full justify-start"
-        :disabled="!property.editable.value"
+        :disabled="!editable || !property.editable.value"
         @click="createProperty"
       >
         <template #leading><icon-lucide-plus class="size-3" /></template>

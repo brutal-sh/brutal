@@ -1,0 +1,17 @@
+{
+  "title": "便签",
+  "color": "颜色",
+  "colorHex": "便签颜色",
+  "yellow": "黄色",
+  "orange": "橙色",
+  "coral": "珊瑚色",
+  "pink": "粉色",
+  "purple": "紫色",
+  "blue": "蓝色",
+  "green": "绿色",
+  "gray": "灰色",
+  "addFlexLayout": "添加弹性布局",
+  "createComponent": "创建组件",
+  "detachComponent": "分离组件",
+  "dimensions": "尺寸"
+}

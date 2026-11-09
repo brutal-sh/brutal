@@ -216,7 +216,7 @@ const { pending: roomPending } = useRoomActions()
           </div>
           <EditorToolbar>
             <template #afterTool="{ tool }">
-              <ToolbarButton v-if="tool === 'STICKY' && IS_TAURI" as-child>
+              <ToolbarButton v-if="tool === 'NOTE' && IS_TAURI" as-child>
                 <IconButton label="Browser" size="md" class="size-7" @click="browserOpen = true"
                   ><icon-lucide-globe class="size-4"
                 /></IconButton>

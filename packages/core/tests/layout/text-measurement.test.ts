@@ -60,4 +60,17 @@ describe('measureTextForLayout', () => {
     setTextMeasurer(() => null)
     expect(measureTextForLayout(node, 100)).toEqual(estimate)
   })
+
+  test('fallback measurement preserves explicit paragraphs, empty lines and wrapping', () => {
+    const multiline = graph.createNode('TEXT', graph.getPages()[0].id, {
+      text: 'First\n\nLast\n',
+      fontFamily: 'Unavailable measurement fixture',
+      fontSize: 15,
+      lineHeight: { value: 22, unit: 'PIXELS' }
+    })
+    setTextMeasurer(() => null)
+    expect(measureTextForLayout(multiline, 202)).toEqual({ width: 45, height: 88 })
+    graph.updateNode(multiline.id, { text: '123456\n123456' })
+    expect(measureTextForLayout(multiline, 30)).toEqual({ width: 30, height: 88 })
+  })
 })

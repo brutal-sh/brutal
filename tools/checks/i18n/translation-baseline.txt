@@ -24,6 +24,7 @@ de:diagnostics.categoryRenderer
 de:diagnostics.durationMs
 de:editor.cornerRadius
 de:menu.text
+de:notes.orange
 de:panels.alpha
 de:panels.blendModeNormal
 de:panels.chroma
@@ -90,6 +91,8 @@ es:common.tokens
 es:diagnostics.categoryMCP
 es:diagnostics.durationMs
 es:diagnostics.runtimeError
+es:notes.color
+es:notes.coral
 es:panels.auto
 es:panels.blendModeColor
 es:panels.blendModeNormal
@@ -138,6 +141,9 @@ fr:designCheck.scopeDocument
 fr:designCheck.scopePage
 fr:designCheck.suggestions
 fr:diagnostics.title
+fr:notes.orange
+fr:notes.dimensions
+fr:notes.title
 fr:pages.pageName
 fr:pages.pages
 fr:panels.alpha

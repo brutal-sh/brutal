@@ -1,0 +1,17 @@
+{
+  "title": "Notiz",
+  "color": "Farbe",
+  "colorHex": "Notizfarbe",
+  "yellow": "Gelb",
+  "orange": "Orange",
+  "coral": "Koralle",
+  "pink": "Rosa",
+  "purple": "Lila",
+  "blue": "Blau",
+  "green": "Grün",
+  "gray": "Grau",
+  "addFlexLayout": "Flex-Layout hinzufügen",
+  "createComponent": "Komponente erstellen",
+  "detachComponent": "Komponente lösen",
+  "dimensions": "Abmessungen"
+}

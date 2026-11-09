@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { VNode } from 'vue'
+import { computed } from 'vue'
 
 import type { Color } from '@open-pencil/scene-graph/primitives'
 import type { OkHCLControls } from '@open-pencil/vue/controls/color-model'
@@ -13,8 +14,16 @@ const { panels } = useI18n()
 const {
   color,
   okhcl = null,
-  compact = false
-} = defineProps<{ color: Color; okhcl?: OkHCLControls | null; compact?: boolean }>()
+  compact = false,
+  showAlpha = true,
+  mixed = false
+} = defineProps<{
+  color: Color
+  okhcl?: OkHCLControls | null
+  compact?: boolean
+  showAlpha?: boolean
+  mixed?: boolean
+}>()
 defineSlots<{
   trigger?(props: { style: { background: string } }): VNode[]
 }>()
@@ -24,6 +33,10 @@ const emit = defineEmits<{
   cancel: []
 }>()
 const cls = usePopoverUI()
+const contentSize = computed(() => {
+  if (!compact) return 'w-56 p-2'
+  return showAlpha ? 'w-[264px] p-3' : 'w-56 p-3'
+})
 </script>
 
 <template>
@@ -31,7 +44,7 @@ const cls = usePopoverUI()
     :color="color"
     :label="panels.editColor"
     :ui="{
-      content: `${cls.content} ${compact ? 'w-[264px] p-3' : 'w-56 p-2'}`,
+      content: `${cls.content} ${contentSize}`,
       swatch: 'size-5 shrink-0 cursor-pointer rounded border border-border p-0'
     }"
     @update="emit('update', $event)"
@@ -46,6 +59,8 @@ const cls = usePopoverUI()
         :color="currentColor"
         :okhcl="okhcl"
         :compact="compact"
+        :show-alpha="showAlpha"
+        :mixed="mixed"
         @update="emit('update', $event)"
       />
     </template>

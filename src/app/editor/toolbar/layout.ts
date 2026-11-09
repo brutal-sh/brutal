@@ -23,6 +23,7 @@ export const PINNED_TOOLBAR_ENTRY: ToolbarEntry = 'SELECT'
 const HIDDEN_BY_DEFAULT: readonly ToolbarEntry[] = [
   'SHAPE_WITH_TEXT',
   'CONNECTOR',
+  'STICKY',
   'insert-icon',
   'PENCIL',
   'SECTION',
@@ -36,7 +37,7 @@ const DEFAULT_TOOL_ORDER: readonly Tool[] = [
   'PEN',
   'TEXT',
   'FRAME',
-  'STICKY',
+  'NOTE',
   'HAND',
   'COMMENT'
 ]
@@ -101,11 +102,15 @@ export function normalizeToolbarLayout(
   storedGroups: readonly (readonly unknown[])[],
   storedHidden: readonly unknown[]
 ): ToolbarLayout {
+  // Older app layouts used the FigJam tool in Pen's Note position.
+  const upgradeNote = !storedGroups.some((group) => group.includes('NOTE'))
+  const entryOf = (entry: unknown) => (upgradeNote && entry === 'STICKY' ? 'NOTE' : entry)
   const groups: ToolbarEntry[][] = []
   const placed = new Set<ToolbarEntry>()
   for (const stored of storedGroups) {
     let group: ToolbarEntry[] = []
-    for (const value of stored) {
+    for (const storedValue of stored) {
+      const value = entryOf(storedValue)
       if (!isToolbarEntry(value) || placed.has(value)) continue
       placed.add(value)
       if (!isToolbarAction(value)) {
@@ -121,9 +126,10 @@ export function normalizeToolbarLayout(
   const missing = ENTRIES.filter((entry) => !placed.has(entry))
   for (const entry of missing) placeMissing(groups, entry)
   const hiddenMissing = missing.filter((entry) => HIDDEN_BY_DEFAULT.includes(entry))
-  const hidden = uniq([...storedHidden.filter(isToolbarEntry), ...hiddenMissing]).filter(
-    (entry) => entry !== PINNED_TOOLBAR_ENTRY
-  )
+  const hidden = uniq([
+    ...storedHidden.map(entryOf).filter(isToolbarEntry),
+    ...hiddenMissing
+  ]).filter((entry) => entry !== PINNED_TOOLBAR_ENTRY)
   return { groups, hidden }
 }
 

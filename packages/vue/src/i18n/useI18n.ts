@@ -21,6 +21,7 @@ import {
   fontsMessages,
   mediaMessages,
   menuMessages,
+  noteMessages,
   pageMessages,
   panelMessages,
   recoveryMessages,
@@ -58,6 +59,7 @@ export const useFileMessages = () => useI18nNamespace(filesMessages)
 export const useFontMessages = () => useI18nNamespace(fontsMessages)
 export const useMediaMessages = () => useI18nNamespace(mediaMessages)
 export const useMenuMessages = () => useI18nNamespace(menuMessages)
+export const useNoteMessages = () => useI18nNamespace(noteMessages)
 export const usePageMessages = () => useI18nNamespace(pageMessages)
 export const usePanelMessages = () => useI18nNamespace(panelMessages)
 export const useRecoveryMessages = () => useI18nNamespace(recoveryMessages)

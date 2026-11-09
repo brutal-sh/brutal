@@ -37,6 +37,7 @@ function commit(event: Event) {
   const node = id ? store.graph.getNode(id) : undefined
   if (
     !node ||
+    store.state.readOnly ||
     !(event.target instanceof HTMLTextAreaElement) ||
     !getNodeEditCapability(store.graph, node.id).editable
   )
@@ -75,7 +76,7 @@ function stopEditing(event: FocusEvent) {
       class="field-sizing-content min-h-14 max-h-20 resize! rounded-sm! bg-input/30! px-2! py-[3px]! text-[11px]! leading-4! text-panel-foreground! focus:ring-0! hover:not-focus:border-border!"
       aria-label="Context information"
       placeholder="Context information"
-      :disabled="!getNodeEditCapability(store.graph, nodeId).editable"
+      :disabled="store.state.readOnly || !getNodeEditCapability(store.graph, nodeId).editable"
       @focus="editingId = nodeId"
       @change="commit"
       @blur="stopEditing"

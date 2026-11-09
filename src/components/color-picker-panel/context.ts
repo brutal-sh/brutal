@@ -2,7 +2,7 @@ import { useLocalStorage } from '@vueuse/core'
 import { computed, inject, onScopeDispose, provide, proxyRefs, ref, watch } from 'vue'
 import type { InjectionKey, ShallowUnwrapRef } from 'vue'
 
-import { colorToCSSRGBA, tryParseColor } from '@open-pencil/scene-graph/color'
+import { colorToCSS, colorToCSSRGBA, tryParseColor } from '@open-pencil/scene-graph/color'
 import type { Color } from '@open-pencil/scene-graph/primitives'
 import { useColorModel, type OkHCLControls } from '@open-pencil/vue/controls/color-model'
 import { useI18n } from '@open-pencil/vue/i18n'
@@ -13,6 +13,8 @@ interface ColorPanelProps {
   color: Color
   okhcl?: OkHCLControls | null
   compact?: boolean
+  showAlpha?: boolean
+  mixed?: boolean
 }
 
 type ColorPanelEmit = (event: 'update', color: Color) => void
@@ -22,6 +24,7 @@ function createColorPickerPanelContext(props: ColorPanelProps, emit: ColorPanelE
   const color = computed(() => props.color)
   const okhcl = computed(() => props.okhcl ?? null)
   const compact = computed(() => props.compact ?? false)
+  const showAlpha = computed(() => props.showAlpha ?? true)
   const savedFormat = useLocalStorage('open-pen-color-picker-format', 'rgb')
   const textError = ref(false)
   const sampling = ref(false)
@@ -49,7 +52,8 @@ function createColorPickerPanelContext(props: ColorPanelProps, emit: ColorPanelE
     textError.value = false
   })
   const colorModel = useColorModel({
-    color,
+    color: () => (showAlpha.value ? color.value : { ...color.value, a: 1 }),
+    mixed: () => props.mixed ?? false,
     okhcl: () => okhcl.value?.okhcl,
     format: () => {
       if (compact.value)
@@ -57,7 +61,8 @@ function createColorPickerPanelContext(props: ColorPanelProps, emit: ColorPanelE
       const format = okhcl.value?.fieldFormat
       return format
     },
-    onUpdate: (nextColor) => emit('update', nextColor),
+    onUpdate: (nextColor) =>
+      emit('update', showAlpha.value ? nextColor : { ...nextColor, a: color.value.a }),
     onUpdateOkHCL: (patch) => okhcl.value?.updateOkHCL(patch),
     onFormatChange: (format) => {
       if (compact.value) savedFormat.value = format
@@ -67,7 +72,7 @@ function createColorPickerPanelContext(props: ColorPanelProps, emit: ColorPanelE
   const fieldOptions = computed(() =>
     compact.value
       ? [
-          { value: 'rgb', label: 'RGBA' },
+          { value: 'rgb', label: showAlpha.value ? 'RGBA' : 'RGB' },
           { value: 'hex', label: 'HEX' },
           { value: 'css', label: 'CSS' },
           { value: 'hsl', label: 'HSL' }
@@ -79,7 +84,9 @@ function createColorPickerPanelContext(props: ColorPanelProps, emit: ColorPanelE
         ])
   )
   const isOkHCLFormat = computed(() => colorModel.format.value === 'okhcl' && okhcl.value)
-  const css = computed(() => colorToCSSRGBA(color.value))
+  const css = computed(() =>
+    showAlpha.value ? colorToCSSRGBA(color.value) : colorToCSS({ ...color.value, a: 1 })
+  )
 
   function updateColorText(input: string) {
     const value = input.trim()
@@ -87,7 +94,7 @@ function createColorPickerPanelContext(props: ColorPanelProps, emit: ColorPanelE
     const parsed = tryParseColor(hex && !value.startsWith('#') ? `#${value}` : value)
     textError.value = !parsed || !Object.values(parsed).every(Number.isFinite)
     if (!parsed || textError.value) return
-    colorModel.updateColor(hex ? { ...parsed, a: color.value.a } : parsed)
+    colorModel.updateColor(hex || !showAlpha.value ? { ...parsed, a: color.value.a } : parsed)
   }
 
   function setFieldFormat(value: string) {
@@ -103,6 +110,7 @@ function createColorPickerPanelContext(props: ColorPanelProps, emit: ColorPanelE
     pickScreenColor,
     color,
     compact,
+    showAlpha,
     hex: colorModel.hex,
     css,
     updateColorText,

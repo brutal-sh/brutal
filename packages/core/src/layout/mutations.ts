@@ -20,9 +20,7 @@ export function createLayoutRunner(getGraph: () => SceneGraph) {
 
     let parent = node.parentId ? graph.getNode(node.parentId) : undefined
     while (parent) {
-      if (parent.layoutMode !== 'NONE') {
-        computeLayout(graph, parent.id)
-      }
+      computeLayout(graph, parent.id)
       parent = parent.parentId ? graph.getNode(parent.parentId) : undefined
     }
   }

@@ -196,6 +196,7 @@ const nodeFields = {
   viewBox: v.optional(v.tuple([v.number(), v.number(), v.number(), v.number()])),
 
   content: v.optional(strSchema),
+  color: v.optional(strSchema),
   textGrowth: v.optional(strSchema),
   fontFamily: v.optional(strSchema),
   fontSize: v.optional(numSchema),

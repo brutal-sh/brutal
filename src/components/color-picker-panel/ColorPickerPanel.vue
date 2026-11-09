@@ -10,11 +10,15 @@ import HueAlphaSliders from '@/components/color-picker-panel/HueAlphaSliders.vue
 const {
   color,
   okhcl = null,
-  compact = false
+  compact = false,
+  showAlpha = true,
+  mixed = false
 } = defineProps<{
   color: Color
   okhcl?: OkHCLControls | null
   compact?: boolean
+  showAlpha?: boolean
+  mixed?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -31,6 +35,12 @@ provideColorPickerPanel(
     },
     get compact() {
       return compact
+    },
+    get showAlpha() {
+      return showAlpha
+    },
+    get mixed() {
+      return mixed
     }
   },
   emit

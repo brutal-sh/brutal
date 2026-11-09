@@ -16,7 +16,8 @@ const ctx = useColorPickerPanelContext()
     @update:color="ctx.onRekaColorUpdate"
   >
     <ColorAreaArea
-      class="relative w-full cursor-crosshair"
+      class="relative w-full cursor-crosshair data-[alpha=false]:h-[200px]"
+      :data-alpha="ctx.showAlpha"
       :class="ctx.compact ? 'h-[194px] rounded-md' : 'h-[140px] rounded'"
       :style="style"
     >

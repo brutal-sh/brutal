@@ -46,6 +46,7 @@ export type Tool =
   | 'STAR'
   | 'TEXT'
   | 'STICKY'
+  | 'NOTE'
   | 'SCRIPT'
   | 'ICON'
   | 'SHAPE_WITH_TEXT'

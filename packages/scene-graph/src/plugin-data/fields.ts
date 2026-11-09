@@ -6,6 +6,7 @@ import { commentThreadsSchema } from '../comments/schema'
 import { isExportFormatId, type ExportFormatId } from '../export-format'
 import { clampExportScale } from '../export-scale'
 import { FIG_COMPRESSIONS } from '../fig-compression'
+import { noteDefinitionSchema } from '../generated/notes/schema'
 import {
   iconFillsSchema,
   iconPaintSourceSchema,
@@ -154,6 +155,7 @@ const sourceLibraryPublicationSchema: v.GenericSchema<unknown, SourceLibraryPubl
  */
 export const OPEN_PENCIL_PLUGIN_DATA = {
   script: jsonPluginDataField('script', 'content', scriptDefinitionSchema),
+  note: jsonPluginDataField('note', 'content', noteDefinitionSchema),
   shaderSlots: jsonPluginDataField(
     'shaderSlots',
     'format',

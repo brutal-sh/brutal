@@ -1,4 +1,5 @@
 import { expect, test, useEditorSetupWithClear } from '#tests/e2e/fixtures'
+import { openAppMenu } from '#tests/helpers/menu'
 
 const editor = useEditorSetupWithClear()
 
@@ -61,7 +62,7 @@ test('Tab keeps moving focus while a panel control holds it', async () => {
   await expect(button).not.toBeFocused()
 })
 
-test('N and Shift+N zoom to the next and previous top-level frame', async () => {
+test('the View menu and Shift+N zoom to the next and previous top-level frame', async () => {
   const frames = await editor.page.evaluate(() => {
     const store = window.openPencil?.getStore?.()
     if (!store) throw new Error('OpenPencil store not initialized')
@@ -71,9 +72,17 @@ test('N and Shift+N zoom to the next and previous top-level frame', async () => 
     )
   })
 
-  await editor.page.keyboard.press('n')
+  await (
+    await openAppMenu(editor.page, 'View')
+  )
+    .getByRole('menuitem', { name: /^Zoom to next frame$/i })
+    .click()
   expect(await selectedIds()).toEqual([frames[0]])
-  await editor.page.keyboard.press('n')
+  await (
+    await openAppMenu(editor.page, 'View')
+  )
+    .getByRole('menuitem', { name: /^Zoom to next frame$/i })
+    .click()
   expect(await selectedIds()).toEqual([frames[1]])
   await editor.page.keyboard.press('Shift+N')
   expect(await selectedIds()).toEqual([frames[0]])

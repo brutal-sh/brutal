@@ -1,0 +1,17 @@
+{
+  "title": "Notatka",
+  "color": "Kolor",
+  "colorHex": "Kolor notatki",
+  "yellow": "Żółty",
+  "orange": "Pomarańczowy",
+  "coral": "Koralowy",
+  "pink": "Różowy",
+  "purple": "Fioletowy",
+  "blue": "Niebieski",
+  "green": "Zielony",
+  "gray": "Szary",
+  "addFlexLayout": "Dodaj układ elastyczny",
+  "createComponent": "Utwórz komponent",
+  "detachComponent": "Odłącz komponent",
+  "dimensions": "Wymiary"
+}

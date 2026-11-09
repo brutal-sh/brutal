@@ -2,8 +2,8 @@ import type { RenderColorSpace } from '@open-pencil/scene-graph/color'
 import { hasIconFills } from '@open-pencil/scene-graph/icons'
 import { assertScriptOutputs } from '@open-pencil/scene-graph/scripts'
 import { assertFragmentFrames } from '@open-pencil/scene-graph/shaders'
-import { resolvedPaintBindings } from '@open-pencil/scene-graph/variables'
 
+import { resolvedNodePaints } from '#core/canvas/node-paints'
 import { normalizeDashPattern } from '#core/canvas/strokes'
 import { lineStrokePath } from '#core/canvas/strokes/line'
 import { fittedDashPattern } from '#core/canvas/strokes/sides'
@@ -414,7 +414,7 @@ function exportedFill(
 
 function renderNode(node: SceneNode, ctx: SVGExportContext): SVGNode | null {
   if (!node.visible) return null
-  node = { ...node, ...resolvedPaintBindings(ctx.graph, node) }
+  node = { ...node, ...resolvedNodePaints(ctx.graph, node) }
 
   const { attrs: groupAttrs, clipId } = buildGroupAttrs(node, ctx)
 

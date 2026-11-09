@@ -1,6 +1,7 @@
 import { isEqual } from 'es-toolkit'
 
 import type { SceneGraph, SceneNode } from '@open-pencil/scene-graph'
+import { noteOfNode } from '@open-pencil/scene-graph/generated'
 import { createDefaultNode } from '@open-pencil/scene-graph/node-defaults'
 import {
   contentPluginData,
@@ -170,6 +171,8 @@ function inspectPluginContent(node: SceneNode, add: NodeProblem) {
     add('sizing', 'Invalid Hug fallback metadata cannot be exported.')
   if (hasPluginData(node.pluginData, OPEN_PENCIL_PLUGIN_DATA.script) && !scriptOfNode(node))
     add('script', 'Invalid Script metadata cannot be exported.')
+  if (hasPluginData(node.pluginData, OPEN_PENCIL_PLUGIN_DATA.note) && !noteOfNode(node))
+    add('note', 'Invalid Note metadata cannot be exported.')
   if (
     contentPluginData(
       withoutPluginData(node.pluginData, [
@@ -178,6 +181,7 @@ function inspectPluginContent(node: SceneNode, add: NodeProblem) {
           : []),
         OPEN_PENCIL_PLUGIN_DATA.nodeContext,
         ...(scriptOfNode(node) ? [OPEN_PENCIL_PLUGIN_DATA.script] : []),
+        ...(noteOfNode(node) ? [OPEN_PENCIL_PLUGIN_DATA.note] : []),
         OPEN_PENCIL_PLUGIN_DATA.meshPaints,
         OPEN_PENCIL_PLUGIN_DATA.deferredFill,
         OPEN_PENCIL_PLUGIN_DATA.hugFallback,

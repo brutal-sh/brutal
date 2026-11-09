@@ -20,12 +20,13 @@ export interface PanelHeaderSlots {
 
 <script setup lang="ts">
 import { tv } from 'tailwind-variants'
+import { computed } from 'vue'
 
 import theme from '@/theme/panel/header'
 
 const { component = false, class: className, ui } = defineProps<PanelHeaderProps>()
 const slots = defineSlots<PanelHeaderSlots>()
-const styles = tv(theme)({ component })
+const styles = computed(() => tv(theme)({ component }))
 </script>
 
 <template>

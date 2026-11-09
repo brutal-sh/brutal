@@ -29,6 +29,8 @@ export interface OkHCLControls {
 
 export interface UseColorModelOptions {
   color: MaybeRefOrGetter<Color>
+  /** Explicit input unifies a selection whose colors differ. */
+  mixed?: MaybeRefOrGetter<boolean>
   okhcl?: MaybeRefOrGetter<OkHCLColor | null | undefined>
   format?: MaybeRefOrGetter<ColorFieldFormat | undefined>
   defaultFormat?: ColorFieldFormat

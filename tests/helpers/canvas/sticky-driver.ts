@@ -44,9 +44,13 @@ export function stickyDriver(page: () => Page) {
       return page().evaluate((origin) => {
         const store = window.openPencil?.getStore?.()
         if (!store) throw new Error('OpenPencil store not initialized')
+        const canvas = document.querySelector('[data-test-id="canvas-element"]')
+        if (!canvas) throw new Error('Canvas unavailable')
+        const bounds = canvas.getBoundingClientRect()
+        // Align the fixture origin with the screen pixels mouse events can address.
         store.state.zoom = 1
-        store.state.panX = origin
-        store.state.panY = origin
+        store.state.panX = origin + Math.floor(bounds.left) - bounds.left
+        store.state.panY = origin + Math.floor(bounds.top) - bounds.top
         store.requestRender()
       }, ORIGIN)
     },
@@ -125,7 +129,7 @@ export function stickyDriver(page: () => Page) {
       await page().getByRole('menuitem', { name: 'Customize toolbar…' }).click()
       await page()
         .getByTestId('settings-toolbar-panel')
-        .getByRole('switch', { name: 'Show Sticky note', exact: true })
+        .getByRole('switch', { name: 'Show Sticky note (FigJam)', exact: true })
         .click()
       await page().getByTestId('app-settings-done').click()
       await expect(button).toBeVisible()

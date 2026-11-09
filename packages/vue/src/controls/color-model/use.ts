@@ -50,7 +50,8 @@ export function useColorModel(options: UseColorModelOptions) {
   const okhclSliderGradient = computed(() => createOkHCLSliderGradientModel(value.value.okhcl))
 
   function emitColor(nextColor: Color): Color {
-    if (!colorsEqual(color.value, nextColor)) options.onUpdate?.(nextColor)
+    if (toValue(options.mixed) || !colorsEqual(color.value, nextColor))
+      options.onUpdate?.(nextColor)
     return nextColor
   }
 

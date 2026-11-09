@@ -44,7 +44,12 @@ const UPGRADED_SHAPES: ToolbarEntry[] = [
 ]
 const UPGRADED_GROUPS: ToolbarEntry[][] = [
   ['SELECT', 'SCALE'],
-  ...LEGACY_GROUPS.slice(1).map((group) => (group === SHAPES ? UPGRADED_SHAPES : group))
+  ...LEGACY_GROUPS.slice(1, -1).map((group): ToolbarEntry[] => {
+    if (group === SHAPES) return UPGRADED_SHAPES
+    return group.map((entry) => (entry === 'STICKY' ? 'NOTE' : entry))
+  }),
+  ['STICKY'],
+  ['insert-icon']
 ]
 const SHORTCUTS = toolShortcutLabels('mac')
 const LABELS = { ...SHORTCUTS }
@@ -62,10 +67,15 @@ describe('normalizeToolbarLayout', () => {
 
   test('preserves stored order, flyouts and visibility when the defaults change', () => {
     const hidden: ToolbarEntry[] = ['STICKY', 'SHAPE_WITH_TEXT', 'CONNECTOR']
-    expect(layout(LEGACY_GROUPS, hidden)).toEqual({ groups: UPGRADED_GROUPS, hidden })
-    expect(layout([...LEGACY_GROUPS].reverse(), ['COMMENT']).groups).toEqual(
-      [...UPGRADED_GROUPS].reverse()
-    )
+    expect(layout(LEGACY_GROUPS, hidden)).toEqual({
+      groups: UPGRADED_GROUPS,
+      hidden: ['NOTE', 'SHAPE_WITH_TEXT', 'CONNECTOR', 'STICKY']
+    })
+    expect(
+      layout([...LEGACY_GROUPS].reverse(), ['COMMENT']).groups.filter(
+        (group) => !group.includes('STICKY')
+      )
+    ).toEqual([...UPGRADED_GROUPS].reverse().filter((group) => !group.includes('STICKY')))
   })
 
   test('drops unknown entries, repeats and empty groups', () => {
@@ -113,12 +123,13 @@ describe('normalizeToolbarLayout', () => {
     expect(layout(stored).groups).toEqual([
       ['TEXT'],
       ['FRAME', 'SECTION'],
-      ['STICKY'],
+      ['NOTE'],
       ['SELECT', 'SCALE'],
       UPGRADED_SHAPES,
       ['PEN', 'PENCIL'],
       ['HAND'],
       ['COMMENT'],
+      ['STICKY'],
       ['SHAPE_WITH_TEXT'],
       ['CONNECTOR'],
       ['insert-icon']
@@ -135,9 +146,10 @@ describe('tools hidden by default', () => {
     expect(layout(DEFAULT_TOOLBAR_LAYOUT.groups, []).hidden).toEqual([])
   })
 
-  test('sticky is available immediately and the hidden icon action can be restored', () => {
+  test('Pen Note is available immediately and FigJam sticky remains optional', () => {
     const shown = toolbarItems(DEFAULT_TOOLBAR_LAYOUT, LABELS, SHORTCUTS)
-    expect(shown.some((item) => item.kind === 'tool' && item.tool.key === 'STICKY')).toBe(true)
+    expect(shown.some((item) => item.kind === 'tool' && item.tool.key === 'NOTE')).toBe(true)
+    expect(shown.some((item) => item.kind === 'tool' && item.tool.key === 'STICKY')).toBe(false)
     expect(shown.some((item) => item.kind === 'action' && item.action === 'insert-icon')).toBe(
       false
     )
@@ -146,6 +158,16 @@ describe('tools hidden by default', () => {
       kind: 'action',
       action: 'insert-icon'
     })
+  })
+
+  test('upgrading preserves the old Note position and hidden state exactly once', () => {
+    const old: ToolbarEntry[][] = [['HAND'], ['STICKY', 'TEXT'], ['SELECT']]
+    const upgraded = layout(old, ['STICKY'])
+    expect(upgraded.groups).toContainEqual(['NOTE', 'TEXT'])
+    expect(upgraded.hidden).toContain('NOTE')
+    expect(upgraded.hidden).toContain('STICKY')
+    const customized = setToolbarEntryHidden(upgraded, 'STICKY', false)
+    expect(layout(customized.groups, customized.hidden)).toEqual(customized)
   })
 })
 

@@ -49,6 +49,7 @@ import { createIconActions } from './icons'
 import { createDesignIssueActions } from './issues'
 import { createLineEndActions } from './line-ends'
 import { createNodeActions } from './nodes'
+import { createNoteActions } from './notes/actions'
 import { createPageActions } from './pages'
 import { createPlayActions } from './play/actions'
 import { createReadOnlyActions, guardReadOnly, guardUndo, READ_ONLY_TOOLS } from './read-only'
@@ -305,6 +306,7 @@ export function createEditor(options?: EditorOptions) {
   const vectorize = createVectorizeActions(ctx)
   const icons = createIconActions(ctx, nodes.beginNodePreview)
   const stickies = createStickyActions(ctx)
+  const notes = createNoteActions(ctx, nodes.beginNodePreview)
   const shapesWithText = createShapeWithTextActions(ctx)
   const generatedText = createGeneratedTextActions(ctx)
   const statuses = createStatusActions(ctx)
@@ -490,6 +492,7 @@ export function createEditor(options?: EditorOptions) {
     ...vectorize,
     ...icons,
     ...stickies,
+    ...notes,
     ...shapesWithText,
     ...generatedText,
     statusWorkflow: statuses.statusWorkflow,

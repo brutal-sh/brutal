@@ -1,12 +1,13 @@
 import { isEqual } from 'es-toolkit'
 
 import type { SceneGraph, SceneNode } from '@open-pencil/scene-graph'
+import { noteOfNode, noteBody } from '@open-pencil/scene-graph/generated'
 import { instanceMainComponent } from '@open-pencil/scene-graph/instances'
 import { copiedComponentLayerId } from '@open-pencil/scene-graph/instances/overrides'
 import { scriptOfNode } from '@open-pencil/scene-graph/scripts'
 import { ownsSlotContent, slotPropertyId } from '@open-pencil/scene-graph/slots'
 
-import { fieldsSetBy } from '../nodes'
+import { fieldsSetBy } from '../fields'
 import type { PenNode, PenOverride } from '../schema'
 import type { PenExportDiagnostic } from './diagnostics'
 
@@ -65,7 +66,8 @@ export function writeInstance(
   }
   const target = properties(instance, path, topLevel, true)
   const source = properties(component, `${path}/component`, false, false)
-  const own = delta(target, source, instance.instanceOverrides.self, true)
+  const ownClaims = claimsFor(instance, undefined, instance, component)
+  const own = delta(target, source, ownClaims, true)
   const descendants: Record<string, PenOverride> = {}
 
   function inspectClaims(
@@ -83,7 +85,7 @@ export function writeInstance(
         add(node, at, `Instance override ${field} cannot be preserved by this writer.`)
     }
   }
-  inspectClaims(instance, target, instance.instanceOverrides.self, 'overrides')
+  inspectClaims(instance, target, ownClaims, 'overrides')
   inspectClearedProperties(instance, target, source, 'overrides')
 
   function inspectClearedProperties(node: SceneNode, target: PenNode, source: PenNode, at: string) {
@@ -99,16 +101,33 @@ export function writeInstance(
     copy: SceneNode,
     original: SceneNode
   ) {
-    const inherited = sourceOwner?.instanceOverrides.descendants.get(original.id)
-    const claims = new Map(
-      [...(owner.instanceOverrides.descendants.get(copy.id) ?? [])].filter(
-        ([field]) => !inherited?.has(field)
-      )
-    )
-    if (copy.type === 'INSTANCE') {
+    const parent = copy.parentId ? graph.getNode(copy.parentId) : undefined
+    const generatedNoteBody = parent && noteBody(graph, parent)?.id === copy.id
+    const inherited =
+      noteOfNode(copy) || generatedNoteBody
+        ? undefined
+        : sourceOwner?.instanceOverrides.descendants.get(original.id)
+    const own =
+      copy.id === owner.id
+        ? owner.instanceOverrides.self
+        : owner.instanceOverrides.descendants.get(copy.id)
+    const claims = new Map([...(own ?? [])].filter(([field]) => !inherited?.has(field)))
+    if (copy.type === 'INSTANCE' && copy.id !== owner.id) {
       for (const [field, value] of copy.instanceOverrides.self) {
-        if (!original.instanceOverrides.self.has(field)) claims.set(field, value)
+        if (noteOfNode(copy) || !original.instanceOverrides.self.has(field))
+          claims.set(field, value)
       }
+    }
+    const body = noteBody(graph, copy)
+    const originalBody = noteBody(graph, original)
+    if (body && originalBody) {
+      const bodyClaims = claimsFor(
+        copy.type === 'INSTANCE' ? copy : owner,
+        copy.type === 'INSTANCE' ? original : sourceOwner,
+        body,
+        originalBody
+      )
+      if (bodyClaims.has('text')) claims.set('text', body.text)
     }
     return claims
   }
@@ -132,7 +151,7 @@ export function writeInstance(
     sourceOwner?: SceneNode,
     prefix = ''
   ) {
-    if (scriptOfNode(from)) return
+    if (scriptOfNode(from) || noteOfNode(from)) return
     const originals = graph.getChildren(from.id)
     const copies = graph.getChildren(to.id)
     const definitions = graph.getChildren(definition.id)

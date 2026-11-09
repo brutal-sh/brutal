@@ -31,7 +31,8 @@ function captureGeometry(ctx: EditorContext, nodes: SceneNode[]): Map<string, Re
 export function wrapInAutoLayout(
   ctx: EditorContext,
   selectedNodes: SceneNode[],
-  preserveSpacing = false
+  preserveSpacing = false,
+  clearSelectionOnUndo = preserveSpacing
 ): string | null {
   const wrapParent = wrapParentId(ctx, selectedNodes)
   const parent = wrapParent ? ctx.graph.getNode(wrapParent) : undefined
@@ -146,9 +147,11 @@ export function wrapInAutoLayout(
       ctx.graph.deleteNode(frameId)
       order.forEach((id, index) => ctx.graph.insertChildAt(id, parentId, index))
       for (const [id, fields] of sizing) ctx.graph.updateNode(id, fields)
-      for (const [id, rect] of geometry) ctx.graph.updateNode(id, rect)
+      ctx.graph.withLayoutMutations(() => {
+        for (const [id, rect] of geometry) ctx.graph.updateNode(id, rect)
+      })
       ctx.runLayoutForNode(parentId)
-      ctx.setSelectedIds(preserveSpacing ? new Set() : prevSelection)
+      ctx.setSelectedIds(clearSelectionOnUndo ? new Set() : prevSelection)
     }
   })
   return frameId

@@ -1,4 +1,5 @@
 import type { NodeCloneMode } from '../copy'
+import { syncNoteFields } from '../generated/notes/instances'
 import type { SceneGraph } from '../graph'
 import {
   SCRIPT_OVERRIDE_FIELDS,
@@ -9,6 +10,7 @@ import {
 import { hasShaderPaint, withSyncedShaderPaints } from '../shaders/model'
 import { detachOwnedSlotContent, restoreOwnedSlotContent } from '../slots/frames'
 import type { SceneNode } from '../types'
+import { cloneChildrenWithMapping } from './clone'
 import { keepOwnContentSize } from './content-size'
 import { createInstanceSyncContext, groupCopyRemovals, removeLeftoverCopies } from './copies'
 import { canCreateInstance } from './cycles'
@@ -22,15 +24,13 @@ import {
 } from './overrides'
 import {
   bindingProtection,
-  cloneChildrenWithMapping,
   copyProp,
-  enclosingInstanceOverrideFields,
   isProtectedSyncField,
   sourceInTargetCoordinates,
   syncBindingFields,
-  syncChildren,
   updateSyncedProps
-} from './sync'
+} from './properties'
+import { enclosingInstanceOverrideFields, syncChildren } from './sync'
 
 export { canCreateInstance, createsComponentCycle, cycleSafeParent } from './cycles'
 export { instanceMainComponent } from './main-component'
@@ -45,6 +45,12 @@ export {
 export function copyInstanceComponentProps(component: SceneNode): Partial<SceneNode> {
   const props: Partial<SceneNode> = {}
   for (const key of INSTANCE_SYNC_PROPS) copyProp(props, component, key)
+  syncNoteFields(
+    { type: 'INSTANCE', pluginData: props.pluginData ?? [] },
+    component,
+    props,
+    () => false
+  )
   if (hasShaderPaint(component))
     props.pluginData = withSyncedShaderPaints(
       { fills: [], strokes: [], pluginData: [] },
@@ -225,6 +231,7 @@ function syncInstancesOf(
         if (hasShaderPaint(instance) || hasShaderPaint(source))
           updates.pluginData = withSyncedShaderPaints(instance, source, updates)
         syncScriptFields(instance, source, updates, protectedField)
+        syncNoteFields(instance, source, updates, protectedField)
         // An instance that hugs its layers sizes to what it shows, not to the component.
         keepOwnContentSize(graph, updates, instance, source)
         updateSyncedProps(graph, instance, updates)

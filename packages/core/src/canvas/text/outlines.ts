@@ -42,13 +42,18 @@ export function textGlyphPaths(r: SkiaRenderer, node: SceneNode): Path[] | null 
   })
 }
 
-export function textNodeToOutlinePath(r: SkiaRenderer, node: SceneNode): Path | null {
+export function textNodeToOutlinePath(
+  r: SkiaRenderer,
+  node: SceneNode,
+  baseline: 'preserve' | 'pixel' = 'preserve'
+): Path | null {
   const glyphs = shapedOutlines(r, node) ?? textNodeToOutlineLayout(node)?.glyphs
   if (!glyphs) return null
 
   const path = new r.ck.PathBuilder()
   for (const glyph of glyphs) {
-    for (const command of glyph.commands) appendOutlineCommand(path, command, glyph.x, glyph.y)
+    const y = baseline === 'pixel' ? Math.round(glyph.y) : glyph.y
+    for (const command of glyph.commands) appendOutlineCommand(path, command, glyph.x, y)
   }
   return path.detachAndDelete()
 }

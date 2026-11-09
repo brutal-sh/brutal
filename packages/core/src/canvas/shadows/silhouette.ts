@@ -6,10 +6,10 @@ import { hasIconFills } from '@open-pencil/scene-graph/icons'
 import Matrix from '@open-pencil/scene-graph/matrix'
 import { OPEN_PENCIL_PLUGIN_DATA, withoutPluginData } from '@open-pencil/scene-graph/plugin-data'
 import type { Rect } from '@open-pencil/scene-graph/primitives'
-import { resolvedPaintBindings } from '@open-pencil/scene-graph/variables'
 
 import { paintBooleanOperation } from '#core/canvas/boolean'
 import { renderMaskedChildIds } from '#core/canvas/masks'
+import { resolvedNodePaints } from '#core/canvas/node-paints'
 import type { SkiaRenderer } from '#core/canvas/renderer'
 import { nodeHasRadius, nodeHasSmoothCorners } from '#core/canvas/shapes'
 import { strokeAlignShare } from '#core/canvas/strokes/sides'
@@ -127,7 +127,7 @@ export function drawSilhouette(
   mode: SilhouetteMode,
   includeChildren: boolean
 ): void {
-  const paints = resolvedPaintBindings(graph, node)
+  const paints = resolvedNodePaints(graph, node)
   if (paints.fills || paints.strokes) node = { ...node, ...paints }
   const proxy = silhouetteProxy(node, mode)
   if (proxy?.type === 'BOOLEAN_OPERATION') paintBooleanOperation(r, canvas, proxy, graph)

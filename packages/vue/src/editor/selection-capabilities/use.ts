@@ -1,6 +1,7 @@
 import { computed, shallowRef } from 'vue'
 
 import { canMakeBooleanSourceNode, layersToOutline } from '@open-pencil/core/canvas'
+import { isNoteInstanceCopy } from '@open-pencil/scene-graph/generated'
 
 import { useEditorEvent } from '#vue/editor/events/use'
 import { useSelectionState } from '#vue/editor/selection-state/use'
@@ -44,7 +45,10 @@ export function useSelectionCapabilities() {
       () => hasSelection.value && selectedNode.value?.type !== 'COMPONENT'
     ),
     canCreateComponentSet: selection.canCreateComponentSet,
-    canDetachInstance: computed(() => selection.isInstance.value),
+    canDetachInstance: useSceneComputed(() => {
+      const node = selectedNode.value
+      return !!node && selection.isInstance.value && !isNoteInstanceCopy(editor.graph, node)
+    }),
     canDetachIcon: computed(() => selection.isIcon.value),
     canWrapInAutoLayout: computed(() => hasSelection.value),
     canToggleMask: computed(() => hasSelection.value),

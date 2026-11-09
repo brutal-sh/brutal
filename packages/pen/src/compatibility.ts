@@ -1,5 +1,7 @@
 import * as v from 'valibot'
 
+import { inspectNote } from './notes'
+import { inspectNoteReferences } from './notes/references'
 import { isLegacyStroke, mapBlendMode } from './paints'
 import { penMeshPaintSchema, penShaderPaintSchema } from './schema'
 import type { PenDocument, PenOverride, PenPaints } from './schema'
@@ -32,7 +34,8 @@ const NODE_TYPES = new Set([
   'line',
   'icon',
   'ref',
-  'script'
+  'script',
+  'note'
 ])
 const GRADIENT_TYPES = new Set(['linear', 'radial', 'angular'])
 const EFFECT_TYPES = new Set(['blur', 'background_blur', 'shadow'])
@@ -176,7 +179,8 @@ export function inspectPenCompatibility(doc: PenDocument): PenImportDiagnostic[]
       )
     }
     inspectScript(node, path, nodeId)
-    if (node.reusable && node.type !== 'frame' && node.type !== 'script') {
+    diagnostics.push(...inspectNote(node, doc, { path }))
+    if (node.reusable && node.type !== 'frame' && node.type !== 'script' && node.type !== 'note') {
       add(
         'unsupported-component',
         `${path}/reusable`,
@@ -208,6 +212,7 @@ export function inspectPenCompatibility(doc: PenDocument): PenImportDiagnostic[]
     }
   }
 
+  diagnostics.push(...inspectNoteReferences(doc))
   doc.children.forEach((node, index) => visit(node, `/children/${index}`))
   return diagnostics
 }

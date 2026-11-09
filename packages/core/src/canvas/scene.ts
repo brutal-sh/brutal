@@ -12,8 +12,9 @@ import { hasIconFills } from '@open-pencil/scene-graph/icons'
 import Matrix from '@open-pencil/scene-graph/matrix'
 import type { Color } from '@open-pencil/scene-graph/primitives'
 import { textLinesOverflow } from '@open-pencil/scene-graph/text'
-import { resolvedPaintBindings } from '@open-pencil/scene-graph/variables'
 
+import { resolvedNodePaints } from '#core/canvas/node-paints'
+import { drawNoteText } from '#core/canvas/text/notes'
 import { createSceneGeometry, nodeOrientationMatrix, projectedNode } from '#core/geometry'
 import { shownText } from '#core/text/case'
 import { mayHoldEmoji } from '#core/text/emoji'
@@ -72,7 +73,7 @@ function drawVisibleFills(
   draw: (fill: Fill) => void
 ): void {
   if (hasIconFills(node)) return
-  paintFills(r, resolvedPaintBindings(graph, node).fills ?? node.fills, node, graph, draw)
+  paintFills(r, resolvedNodePaints(graph, node).fills ?? node.fills, node, graph, draw)
 }
 
 function hasNodeTransform(node: SceneNode): boolean {
@@ -432,7 +433,7 @@ function forVisibleStrokes(
   graph: SceneGraph,
   draw: (stroke: SceneNode['strokes'][number], color: Color) => void
 ): void {
-  const strokes = resolvedPaintBindings(graph, node).strokes ?? node.strokes
+  const strokes = resolvedNodePaints(graph, node).strokes ?? node.strokes
   for (let index = 0; index < strokes.length; index++) {
     const stroke = strokes[index]
     if (!stroke.visible) continue
@@ -1002,7 +1003,9 @@ export function paintShapeContent(
   const isolated = afterFills !== undefined && isolatesInnerShadows(node)
   if (isolated) canvas.saveLayer()
   if (!drawVectorMultiStyleFills(r, canvas, node, graph)) {
-    drawVisibleFills(r, node, graph, (fill) => r.drawNodeFill(canvas, node, fill))
+    drawVisibleFills(r, node, graph, (fill) => {
+      if (!drawNoteText(r, canvas, node, graph)) r.drawNodeFill(canvas, node, fill)
+    })
   }
   if (node.type === 'TEXT') drawTextEmoji(r, canvas, node)
   afterFills?.()

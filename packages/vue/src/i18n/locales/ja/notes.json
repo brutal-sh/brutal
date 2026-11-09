@@ -1,0 +1,17 @@
+{
+  "title": "ノート",
+  "color": "色",
+  "colorHex": "ノートの色",
+  "yellow": "黄",
+  "orange": "オレンジ",
+  "coral": "コーラル",
+  "pink": "ピンク",
+  "purple": "紫",
+  "blue": "青",
+  "green": "緑",
+  "gray": "グレー",
+  "addFlexLayout": "フレックスレイアウトを追加",
+  "createComponent": "コンポーネントを作成",
+  "detachComponent": "コンポーネントを解除",
+  "dimensions": "寸法"
+}

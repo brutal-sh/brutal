@@ -2,6 +2,7 @@ import harfBuzzSubset from 'harfbuzzjs/dist/harfbuzz-subset.wasm?url'
 
 import anton from '@open-pencil/core/assets/Anton-Regular.ttf?url'
 import geistMono from '@open-pencil/core/assets/GeistMonoVariable.ttf?url'
+import instrumentSans from '@open-pencil/core/assets/InstrumentSansVariable.ttf?url'
 import interSemiBold from '@open-pencil/core/assets/Inter-SemiBold.ttf?url'
 import interVariableItalic from '@open-pencil/core/assets/InterVariable-Italic.ttf?url'
 import interVariable from '@open-pencil/core/assets/InterVariable.ttf?url'
@@ -21,6 +22,7 @@ const BUNDLED_FONT_URLS: Record<string, string> = {
   'GeistMonoVariable.ttf': geistMono,
   'JetBrainsMonoVariable.ttf': jetBrainsMono,
   'InterVariable.ttf': interVariable,
+  'InstrumentSansVariable.ttf': instrumentSans,
   'InterVariable-Italic.ttf': interVariableItalic,
   'Inter-SemiBold.ttf': interSemiBold,
   'NotoNaskhArabic-Regular.ttf': notoNaskhArabic,

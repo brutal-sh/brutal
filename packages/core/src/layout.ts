@@ -41,6 +41,7 @@ import { connectorSublayers, layoutConnector } from '@open-pencil/scene-graph/co
 import { isGeneratedFrame } from '@open-pencil/scene-graph/generated'
 import { layoutJustification, layoutSizing } from '@open-pencil/scene-graph/layout'
 
+import { layoutNote } from './layout/notes'
 import { fitShapeWithTextFrame } from './layout/shape-with-text'
 import { estimateTextSize, getTextMeasurer, measureTextForLayout } from './layout/text-measurement'
 import {
@@ -63,7 +64,7 @@ export function computeLayout(graph: SceneGraph, frameId: string): void {
 
 function computeLayoutInternal(graph: SceneGraph, frameId: string): void {
   const frame = graph.getNode(frameId)
-  if (!frame || frame.layoutMode === 'NONE') return
+  if (!frame || layoutNote(graph, frame) || frame.layoutMode === 'NONE') return
   // A shape with text takes its size from its label before laying the label out in it.
   fitShapeWithTextFrame(graph, frame)
 
@@ -150,6 +151,8 @@ function computeLayoutsBottomUp(graph: SceneGraph, nodeId: string, visited: Set<
   for (const childId of node.childIds) {
     computeLayoutsBottomUp(graph, childId, visited)
   }
+
+  if (layoutNote(graph, node)) return
 
   if (node.layoutMode !== 'NONE' && !preservesImportedInstanceLayout(node)) {
     computeLayout(graph, nodeId)

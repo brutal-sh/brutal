@@ -1,3 +1,5 @@
+import { maxBy, sumBy } from 'es-toolkit'
+
 import type { SceneNode } from '@open-pencil/scene-graph'
 import { weightToStyle } from '@open-pencil/scene-graph/font-style'
 import { lineHeightPixels } from '@open-pencil/scene-graph/text'
@@ -17,6 +19,13 @@ export function estimateTextSize(
   node: SceneNode,
   maxWidth?: number
 ): { width: number; height: number } {
+  if (node.text.includes('\n')) {
+    const lines = node.text.split('\n').map((text) => estimateTextSize({ ...node, text }, maxWidth))
+    return {
+      width: maxBy(lines, (line) => line.width)?.width ?? 0,
+      height: sumBy(lines, (line) => line.height)
+    }
+  }
   const fontSize = node.fontSize || 14
   const family = node.fontFamily || 'Inter'
   const style = weightToStyle(node.fontWeight || 400, node.italic)

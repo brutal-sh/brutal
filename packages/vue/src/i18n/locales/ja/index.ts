@@ -18,6 +18,7 @@ import files from './files.json'
 import fonts from './fonts.json'
 import media from './media.json'
 import menu from './menu.json'
+import notes from './notes.json'
 import pages from './pages.json'
 import panels from './panels.json'
 import recovery from './recovery.json'
@@ -51,6 +52,7 @@ export default {
   fonts,
   media,
   menu,
+  notes,
   pages,
   panels,
   recovery,

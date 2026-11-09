@@ -19,6 +19,7 @@ import { filesMessageDefaults, filesMessages } from '#vue/i18n/messages/files'
 import { fontsMessageDefaults, fontsMessages } from '#vue/i18n/messages/fonts'
 import { mediaMessageDefaults, mediaMessages } from '#vue/i18n/messages/media'
 import { menuMessageDefaults, menuMessages } from '#vue/i18n/messages/menu'
+import { noteMessageDefaults, noteMessages } from '#vue/i18n/messages/notes'
 import { pageMessageDefaults, pageMessages } from '#vue/i18n/messages/pages'
 import { panelMessageDefaults, panelMessages } from '#vue/i18n/messages/panels'
 import { recoveryMessageDefaults, recoveryMessages } from '#vue/i18n/messages/recovery'
@@ -53,6 +54,7 @@ export {
   fontsMessages,
   mediaMessages,
   menuMessages,
+  noteMessages,
   pageMessages,
   panelMessages,
   recoveryMessages,
@@ -87,6 +89,7 @@ export const messageDefaults = {
   fonts: fontsMessageDefaults,
   media: mediaMessageDefaults,
   menu: menuMessageDefaults,
+  notes: noteMessageDefaults,
   pages: pageMessageDefaults,
   panels: panelMessageDefaults,
   recovery: recoveryMessageDefaults,

@@ -1,11 +1,13 @@
 import type { SceneNode } from '@open-pencil/scene-graph'
 import { getAxisAlignedWorldBounds, getWorldMatrix } from '@open-pencil/scene-graph/coordinate'
+import { noteOfNode } from '@open-pencil/scene-graph/generated'
 import { canCreateInstance } from '@open-pencil/scene-graph/instances'
 import { cloneInstanceOverrideState } from '@open-pencil/scene-graph/instances/overrides'
 import Matrix from '@open-pencil/scene-graph/matrix'
 import type { Vector } from '@open-pencil/scene-graph/primitives'
 
 import { prepareSlotEdits } from '#core/editor/components/slots'
+import { detachNoteInstance } from '#core/editor/notes/components'
 import type { EditorContext } from '#core/editor/types'
 
 type InstanceCreateSnapshot = Partial<SceneNode> & { id: string }
@@ -111,6 +113,7 @@ export function createComponentInstanceActions(ctx: EditorContext) {
 
   function detachInstance(selectedNode: SceneNode | undefined) {
     if (selectedNode?.type !== 'INSTANCE') return
+    if (noteOfNode(selectedNode)) return detachNoteInstance(ctx, selectedNode)
 
     const prevComponentId = selectedNode.componentId
     const previousOverrides = cloneInstanceOverrideState(selectedNode.instanceOverrides)
