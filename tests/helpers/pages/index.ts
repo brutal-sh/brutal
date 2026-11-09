@@ -20,6 +20,7 @@ export function currentPageName(page: Page): Promise<string | undefined> {
 
 /** Driver: open a page from the Pages panel, as a user would. */
 export async function visitPage(page: Page, name: string): Promise<void> {
+  await page.getByRole('tab', { name: 'Layers', exact: true }).click()
   // Exact text, so "Chapter 1" does not also match "Chapter 10".
   await page
     .getByTestId('pages-row')
