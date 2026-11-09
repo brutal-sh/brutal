@@ -39,5 +39,10 @@ outside this unit. The full combined gate, native typing, clean delivery and ful
 
 The subsequent [page-driver control](PAGE-NAVIGATION-CONTROL.md) at `3bf51b270` passes
 all five palette journeys and eleven menu controls once. TEST-PAGE-NAV is Executed;
-STAB-COMMAND-MENU is Building. This does not classify the prior detachment or accept
+STAB-COMMAND-MENU remains unaccepted in Verify after the subsequent paired traced control. This does not classify the prior detachment or accept
 MOD-13/native/current-Pen parity.
+
+The [paired traced menu control](COMMAND-MENU-CONTROL.md) passes all 16 cases with
+current and original schema, preserving focus/pointer events and complete traces. It does
+not reproduce or classify the retained detachment; no production fix or MOD-13 acceptance
+is claimed. SVG qualification proceeds independently while this causal gate remains open.

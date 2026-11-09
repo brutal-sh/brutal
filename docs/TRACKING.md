@@ -12,14 +12,14 @@ and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), preserving historic
 
 ## Board organization
 
-| List | Purpose |
+| List       | Purpose                                                                                                                                                                        |
 | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Milestones | The 15 original cards retain their history; two new milestones track own branding and modularization. These broad cards are not executable units or current acceptance claims. |
-| Backlog | Bounded tasks with source, scope, owner, dependencies and observable Done criteria. |
-| Ready | At most three next tasks whose dependencies are accepted or absent. |
-| Building | One current task; record its last result and exact re-entry action before switching. |
-| Verify | Implementation or artifact exists; the actual Done criterion still needs evidence. |
-| Executed | The task's real acceptance path has run, with result, artifact/commit and residual limits linked. |
+| Backlog    | Bounded tasks with source, scope, owner, dependencies and observable Done criteria.                                                                                            |
+| Ready      | At most three next tasks whose dependencies are accepted or absent.                                                                                                            |
+| Building   | One current task; record its last result and exact re-entry action before switching.                                                                                           |
+| Verify     | Implementation or artifact exists; the actual Done criterion still needs evidence.                                                                                             |
+| Executed   | The task's real acceptance path has run, with result, artifact/commit and residual limits linked.                                                                              |
 
 ## Verified planning snapshot
 
@@ -112,11 +112,11 @@ distinguishes two stale native test contracts from an unproven cross-file backdr
 criteria. The [control record](APP-TEST-CONTROLS.md) retains paired failures, the two-file
 reproduction, scoped cleanup and the subsequent 1,955 passing app-shard tests. Neither
 changes production behavior or accepts native delivery. Both remain required beta and
-terminal dependencies with linked evidence. Menu-schema modularization (MOD-13) is Verify behind two narrow browser blockers; STAB-COMMAND-MENU is the sole Building task. Mixed WebKit reliability is Verify. Font and graph candidates remain Verify. An earlier native graph/text batch has
+terminal dependencies with linked evidence. Menu-schema modularization (MOD-13) remains Verify behind the Commands causal gate; TEST-PAGE-NAV is Executed. IO-13-EXPORT is the sole Building task; STAB-COMMAND-MENU remains unaccepted in Verify. Mixed WebKit reliability is Verify. Font and graph candidates remain Verify. An earlier native graph/text batch has
 four hidden-window failures; that run's OS read found the desktop locked. Those
 failed/unexecuted input criteria do not erase the earlier successful native resource path.
 The interrupted zero-size icon work retains its failed wider-run receipts and dependencies.
-The delivery snapshot is 366 Backlog, 0 Ready, 1 Building, 10 Verify and 35 Executed, plus 17 milestones.
+The delivery snapshot is 365 Backlog, 0 Ready, 1 Building, 11 Verify and 35 Executed, plus 17 milestones.
 DELIVERY-LFS has bounded executed current-checkout fixture delivery: all twelve objects
 are fetched from the own private endpoint into empty independent storage, with matching
 SHA-256/sizes and LFS integrity checks. Historical object closure is not qualified.
@@ -140,7 +140,6 @@ The new full-parity execution gate depends on every other required task. A priva
 separate core-journey gate and explicit limits. Neither a green build nor published documentation
 earns feature acceptance. GitHub Actions remains disabled; the PR stays draft.
 
-
 Recovery copy has executed its bounded browser criterion: 76 passing cases, 72 inspected
 captures and unchanged retained-byte controls across nine locales and two engines. The
 [record](RECOVERY-COPY.md) preserves earlier failures and the intentionally interrupted
@@ -158,7 +157,6 @@ Fresh 2026-11-07 paginated inventories and permission readbacks verify Actions d
 all 199 personal repositories and both previously authorized THEFT-DEV repositories (201 total).
 No setting change is needed. This refresh does not scan or claim cancellation of running jobs.
 
-
 The parent recovery/update/restart copy gate is Executed only for its three published
 children's copy criteria: 148 passing browser cases and 360 inspected captures across
 their explicitly documented locale/theme/engine scopes. Those totals do not broaden native
@@ -166,13 +164,11 @@ or design acceptance. Support-copy work is split into five named owners rather t
 implementation card; browser guidance, CLI and WebMCP metadata have bounded Executed evidence.
 ACP and native-engine advice have bounded Executed evidence; their support acceptance gate has bounded Executed reconciliation and portal copy has bounded Executed evidence. All original support criteria remain on the parent gate.
 
-
 [Browser support](BROWSER-SUPPORT-COPY.md) has published source and exact post-publication
 remote README/template readback at `59e02516b`. All 35 browser cases and 65 live owner tests
 pass; all 35 captures are inspected. Modern UA/capability fixtures and intercepted link
 activation qualify this path only. Both requested color schemes keep the existing dark
 notice; distinct light styling, historical engines, native delivery and full branding remain open.
-
 
 CLI help inspection discovers missing subcommand metadata names: Citty falls back to the
 local entry script path. The CLI card publishes its bounded fix at `f5eef8e84`; [evidence](CLI-COPY.md) retains
@@ -198,9 +194,8 @@ against the preserved original criteria at `d30381b16`; portal copy is Executed 
 [Portal copy](PORTAL-COPY.md) has bounded Executed evidence at `5e68a7668`: 72 browser
 cases, 324 inspected region/cell captures, 360 canonical-label checks and 21 portal-owner
 tests. Actual pages/controllers use local document-routing and API fixtures, not real
-authentication/backend/native delivery. Real service identities remain. STAB-COMMAND-MENU is the sole
-Building task; editor-copy remains Verify behind the unchanged mixed WebKit reliability gate.
-
+authentication/backend/native delivery. Real service identities remain. IO-13-EXPORT is the sole
+Building task; STAB-COMMAND-MENU remains unaccepted in Verify; editor-copy remains Verify behind the unchanged mixed WebKit reliability gate.
 
 [Pen 1.2.22 inventory](pen-feature-reference/update-1.2.22-2026-11-09.md) preserves the
 complete REA extraction and 182 changed-path dispositions, with 31 source-anchored findings.
@@ -221,5 +216,11 @@ and Actions-off checks pass. New workflow, semantic/backend and full parity gate
 
 [Page-navigation control](PAGE-NAVIGATION-CONTROL.md) is Executed at `3bf51b270`, with
 16 canonical Chromium passes, source/caller review and unchanged timing/assertions.
-STAB-COMMAND-MENU is the sole Building task. The additional prior detachment remains
+IO-13-EXPORT is the sole Building task; STAB-COMMAND-MENU remains unaccepted in Verify. The additional prior detachment remains
 unclassified; MOD-13 and mixed WebKit reliability remain Verify.
+
+The [traced menu control](COMMAND-MENU-CONTROL.md) executes the same 16 canonical cases
+with current and original schema: both pass with scoped focus/pointer instrumentation.
+No detachment reproduces and no production fix is made. STAB-COMMAND-MENU moves to Verify
+with its causal criteria unmet; MOD-13 remains Verify. IO-13-EXPORT is the active bounded
+1.2.22 parity unit. All temporary test/schema changes are restored byte-exactly.
