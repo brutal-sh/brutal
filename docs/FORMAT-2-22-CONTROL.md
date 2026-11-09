@@ -53,3 +53,9 @@ reference screenshots/SVG/ZIP outputs, source/tool observations, red/green and c
 owner logs, original/failed/successful browser traces and app-exported SVGs. The native
 reference test document is saved/closed and Pen is restored to Home/Recents. Existing
 user documents are not edited.
+
+The subsequent [text round-trip repair](PEN-TEXT-ROUNDTRIP.md) executes a bounded
+cold/warm text control and actual Pen reopen. It catches and repairs both font-metric
+instability and numeric weight serialization; the native saved-copy SVG/fixture pixels
+then exactly equal the originals. This supersedes the unexecuted persistence statement
+only for that owned fixture. General format/Note/native Open Pen qualification remains open.

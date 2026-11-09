@@ -179,6 +179,9 @@ describe('bounded .pen writer', () => {
     graph.updateNode('box', { width: 120, x: 25 })
     graph.updateNode('text', { text: 'Edited text', fontWeight: 700 })
     const source = writePenFile(graph)
+    expect(
+      parsePenDocument(source).children[0]?.children?.find((node) => node.id === 'text')?.fontWeight
+    ).toBe('700')
     const read = parsePenFile(source)
     expect(writePenDocument(read).version).toBe('2.21')
     expect(read.getNode('frame')?.childIds).toEqual(['box', 'text'])

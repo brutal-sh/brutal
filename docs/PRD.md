@@ -120,7 +120,7 @@ types/catalogs into arbitrary microfiles or weaken validation to reduce line cou
 
 ## Delivery sequence
 
-The fresh board contains 412 bounded execution tasks and 17 milestones. Every one of the
+The fresh board contains 414 bounded execution tasks and 17 milestones. Every one of the
 164 catalog requirements and 22 native ledger rows is allocated; allocation is not acceptance.
 [Task index](TASKS.md) records the live-board states and dependencies.
 
@@ -191,3 +191,8 @@ or full current-reference parity. FMT-09-DRIFT is the sole Building task; the Co
 `3bf51b270`: the real Layers-tab interaction reveals the page row, and all five palette
 journeys plus eleven menu controls pass once without retries. [Control record](PAGE-NAVIGATION-CONTROL.md)
 preserves the original failures and separate Commands/native/Pen limits.
+
+The [PEN text round-trip record](PEN-TEXT-ROUNDTRIP.md) adds two narrow repair tasks
+for first-import metrics and weight serialization. Their own-field and actual-native-Pen
+controls do not accept full typography, SVG or schema migration; FMT-09-DRIFT remains the
+active broader qualification task.

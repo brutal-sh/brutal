@@ -6,7 +6,7 @@ Repository: [private Open Pen repository](https://github.com/jpoindexter/open-pe
 Board: [Open Pen — independent design editor](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor), private.
 
 The [PRD](PRD.md) owns the outcome, constraints and release criteria.
-The [task index](TASKS.md) links all 412 execution cards; the [modularity audit](MODULARITY.md)
+The [task index](TASKS.md) links all 414 execution cards; the [modularity audit](MODULARITY.md)
 records the measured review queue. Requirements come from the [feature catalog](pen-feature-reference/README.md)
 and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), preserving historical Pen 1.2.21 evidence and the current [1.2.22 update inventory](pen-feature-reference/update-1.2.22-2026-11-09.md).
 
@@ -23,7 +23,7 @@ and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), preserving historic
 
 ## Verified planning snapshot
 
-A complete fresh board readback finds 429 open cards: 412 unique execution tasks and 17 milestones.
+A complete fresh board readback finds 431 open cards: 414 unique execution tasks and 17 milestones.
 All 164 catalog requirements and 22 exact native ledger rows map to real execution cards.
 There are no missing or duplicate task IDs, and the dependency graph is acyclic.
 All 15 originally oversized runtime modules have individual disposition tasks.
@@ -116,7 +116,7 @@ terminal dependencies with linked evidence. Menu-schema modularization (MOD-13) 
 four hidden-window failures; that run's OS read found the desktop locked. Those
 failed/unexecuted input criteria do not erase the earlier successful native resource path.
 The interrupted zero-size icon work retains its failed wider-run receipts and dependencies.
-The delivery snapshot is 364 Backlog, 0 Ready, 1 Building, 12 Verify and 35 Executed, plus 17 milestones.
+The delivery snapshot is 364 Backlog, 0 Ready, 1 Building, 14 Verify and 35 Executed, plus 17 milestones.
 DELIVERY-LFS has bounded executed current-checkout fixture delivery: all twelve objects
 are fetched from the own private endpoint into empty independent storage, with matching
 SHA-256/sizes and LFS integrity checks. Historical object closure is not qualified.
@@ -125,7 +125,7 @@ UI-SPLIT-HEADER separately records toolbar/inspector overlap blocking pane Close
 FONT-EXPORT-BOUNDS, FONT-LOCAL-PICKER and FONT-CJK-REPAINT separately record existing
 font acceptance failures. Exact original-versus-refactor controls reproduce the same three
 broader workflow failures; ten named pre-refactor visual controls pass afterward in both engines.
-The terminal gate depends on all 411 other required execution tasks.
+The terminal gate depends on all 413 other required execution tasks.
 The board retains 17 milestones, 164 mapped requirements and 22 mapped native rows.
 No branding milestone or product-parity feature group is fully accepted.
 
@@ -150,7 +150,7 @@ the recovery card is Executed for this bounded criterion. Update prompts have bo
 the [record](UPDATER-COPY.md) retains 36 passing cases and 234 inspected captures. Restart feedback has bounded Executed controller/component evidence at
 [`4006503a6`](https://github.com/jpoindexter/open-pen/commit/4006503a6f051a7a76e7517bf7d0c7d0d648ed99);
 its [record](RESTART-COPY.md) retains 36 passing cases and 54 inspected captures. [VERIFY-TOAST-SHORT](https://trello.com/c/f3kDECKO) allocates the
-unmeasured short-error grouping; the terminal gate now has all 411 other tasks as dependencies.
+unmeasured short-error grouping; the terminal gate now has all 413 other tasks as dependencies.
 This is not a new beta feature prerequisite or actual-Pen visual acceptance.
 
 Fresh 2026-11-07 paginated inventories and permission readbacks verify Actions disabled on
@@ -230,3 +230,10 @@ SVG/ZIP outputs, a real FileOpen rejection, owner red/green checks and a success
 browser import/export capture after the bounded reader candidate. Current SVG output
 still contains live text and merges multiple targets; neither SVG nor full format parity
 is accepted. Notes/Prompt/Context and native round-trip criteria remain open.
+
+Two independently bounded [PEN text repairs](PEN-TEXT-ROUNDTRIP.md) add
+IO-PEN-TEXT-METRICS and IO-PEN-FONT-WEIGHT in Verify pending publication. All 414 task IDs
+and 413 terminal dependencies reconcile against the complete 431-card readback. Font
+readiness/ambient measurement and weight wire type have separate actual regressions,
+owner checks, browser controls and native-Pen saved-copy comparisons. General typography,
+FMT-09-DRIFT, SVG, native Open Pen and full parity remain open.

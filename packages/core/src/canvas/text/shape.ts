@@ -10,12 +10,13 @@ import {
 } from '@open-pencil/fig/node-change'
 import type { SceneGraph, SceneNode } from '@open-pencil/scene-graph'
 
-import { buildParagraph, textVerticalOffset } from '#core/canvas/text'
+import { buildParagraph, measureTextNode, textVerticalOffset } from '#core/canvas/text'
 import { textDecorationRects, type DecoratedGlyph } from '#core/canvas/text/decorations'
 import { outlineInk, savedGlyphInk } from '#core/canvas/text/ink'
 import { COMBINING_KEYCAP, keycapFrame } from '#core/canvas/text/keycap'
 import { characterFamily, laidOutGlyphs, type LaidOutGlyph } from '#core/canvas/text/placed'
 import { getCanvasKit } from '#core/canvaskit'
+import type { TextMeasurer } from '#core/layout/text-measurement'
 import { shownText } from '#core/text/case'
 import { EMOJI_METRICS_FAMILY } from '#core/text/emoji'
 import type { OutlineCommand } from '#core/text/font/glyphs'
@@ -200,7 +201,7 @@ const shaperProviderUsers = new Map<TypefaceFontProvider, number>()
  */
 export async function withTextShaper<T>(
   canvasKit: CanvasKit,
-  use: (shape: (node: SceneNode) => ShapedText | null) => Promise<T>
+  use: (shape: (node: SceneNode) => ShapedText | null, measure: TextMeasurer) => Promise<T>
 ): Promise<T> {
   const attached = fontManager.providerFor(canvasKit)
   const provider = attached ?? canvasKit.TypefaceFontProvider.Make()
@@ -208,7 +209,15 @@ export async function withTextShaper<T>(
   const shared = !attached || shaperProviderUsers.has(provider)
   if (shared) shaperProviderUsers.set(provider, (shaperProviderUsers.get(provider) ?? 0) + 1)
   try {
-    return await use((node) => shapeText(canvasKit, provider, node))
+    return await use(
+      (node) => shapeText(canvasKit, provider, node),
+      (node, maxWidth) =>
+        measureTextNode(
+          { ck: canvasKit, fontProvider: provider, fontsLoaded: true },
+          node,
+          maxWidth
+        )
+    )
   } finally {
     if (shared) {
       const users = (shaperProviderUsers.get(provider) ?? 1) - 1

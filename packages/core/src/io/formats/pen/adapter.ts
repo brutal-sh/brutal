@@ -9,11 +9,15 @@ import {
 import type { SceneGraph } from '@open-pencil/scene-graph'
 import { MAX_FRAGMENT_SOURCE_LENGTH } from '@open-pencil/scene-graph/shaders'
 
+import { withTextShaper } from '#core/canvas/text/shape'
+import { getCanvasKit } from '#core/canvaskit'
 import { defaultIcons } from '#core/icons'
 import { EXPORT_EVERY_TARGET, FIXED_SIZE_EXPORT, lowerExt } from '#core/io/formats/shared'
 import { extractExportGraph } from '#core/io/subgraph'
 import type { ExportResult, IOFormatAdapter, ReadDocumentInput } from '#core/io/types'
 import { layoutAuthoredNodes } from '#core/layout'
+import { withTextMeasurer } from '#core/layout/text-measurement'
+import { prepareGraphFonts } from '#core/text/prepare'
 
 import { loadPenIcons } from './icons'
 
@@ -114,6 +118,15 @@ export const penFormat: IOFormatAdapter<'pen'> = {
       })
     let graph = build()
     if (await icons.loadMissing()) graph = build()
+    const pages = graph.getPages().map((page) => page.id)
+    const fonts = await prepareGraphFonts(graph, pages)
+    if (fonts.faces.length) {
+      const ck = context?.canvasKit ?? (await getCanvasKit())
+      // Pen text uses the canvas paragraph metrics regardless of other open documents.
+      await withTextShaper(ck, async (_shape, measure) =>
+        withTextMeasurer(measure, () => layoutAuthoredNodes(graph, pages))
+      )
+    }
     return { graph, sourceFormat: 'pen' }
   }
 }

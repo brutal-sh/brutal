@@ -166,7 +166,7 @@ export function writePenDocument(graph: SceneGraph): PenDocument {
         content: node.text,
         fontFamily: node.fontFamily,
         fontSize: node.fontSize,
-        fontWeight: node.fontWeight,
+        fontWeight: String(node.fontWeight),
         fontStyle: node.italic ? 'italic' : 'normal',
         textAlign:
           node.textAlignHorizontal === 'JUSTIFIED'
