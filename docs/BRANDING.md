@@ -351,7 +351,8 @@ advice, ACP startup failure, WebMCP document metadata and CLI/format output. The
 notice is intentionally English before locale boot; platform fixtures do not prove native
 delivery. Browser guidance, CLI/format output, WebMCP metadata and the Storybook manifest
 error label have bounded Executed evidence. ACP startup failure presentation also has bounded
-Executed evidence at `c65a7374f`; native-engine support advice is the current task. Portal,
+Executed evidence at `c65a7374f`; native-engine advice is Executed at `368f67444` and the
+support-copy acceptance gate is the current task. Portal,
 support and other links remain
 separate open acceptance.
 
@@ -410,3 +411,7 @@ link intent. Ten frozen inputs match. Both requested color schemes retain the ex
 notice; this does not accept distinct light styling, actual OS detection, Tauri opener delivery
 or physical unsupported engines. All 65 support-owner tests and test types, focused lint/format,
 docs and architecture checks pass. Production source is unchanged.
+
+The [support-copy gate record](SUPPORT-COPY-ACCEPTANCE.md) reconciles the original support,
+ACP, WebMCP and CLI/format criteria against all five published owners. It preserves the
+scope and delivery limits; portal and the broader copy/branding gates remain separate.

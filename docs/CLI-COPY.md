@@ -65,7 +65,8 @@ cases and manifest). `scratch/cli-help-*-2026-11-07.*` retains build/owner/type 
 The source scan separately discovers one inherited Storybook invalid-manifest error label.
 BRAND-STORYBOOK-ERROR owns that diagnostic. `.openpencil-stories.json` and generated
 `openpencil/*` paths remain compatibility/data-preservation identities; the error's prose
-does not. This CLI help unit does not accept that queued label or every diagnostic.
+does not. The separate diagnostic correction is published at `881d0b7e5`; see the
+[parser/writer record](STORYBOOK-ERROR-COPY.md). This CLI help unit does not accept every diagnostic.
 
 Owner tests use local fixtures and app stand-ins; help output is not actual native IPC,
 provider authentication, beta, clean-release or Pen-parity acceptance. The normal worktree

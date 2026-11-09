@@ -1,7 +1,7 @@
 # WebMCP registration identity and metadata
 
-Updated: 2026-11-07. Status: bounded service/metadata criterion executed; publication pending
-for BRAND-SUPPORT-WEBMCP. The browser-provided API, actual document execution and native
+Updated: 2026-11-09. Status: bounded service/metadata criterion executed and published at
+`c85c151201f1933f8e89d78274811fe78a2fc6de` for BRAND-SUPPORT-WEBMCP. The browser-provided API, actual document execution and native
 delivery remain unaccepted by this unit.
 
 ## Executed path

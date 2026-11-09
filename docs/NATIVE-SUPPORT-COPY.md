@@ -3,6 +3,7 @@
 Updated: 2026-11-09. Scope: BRAND-SUPPORT-NATIVE, the existing unsupported desktop
 advice rendered with test-owned environments. Production copy and thresholds are unchanged.
 This record does not accept physical native delivery or actual Pen design parity.
+Source fixture and initial evidence are published at `368f67444eb6c2199f96f02804c336e5f357cf0d`.
 
 ## Executed matrix
 
