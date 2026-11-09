@@ -4,6 +4,7 @@ Updated: 2026-11-09. Scope: BRAND-COPY-PORTAL, the ten changed own-client labels
 optional Cloud portal. Production messages, views, styles and contracts are unchanged by this
 verification unit. Real OpenPencil Cloud service/product and host identities remain intact.
 This does not accept every branding surface, real authentication or full Pen parity.
+Source fixture and initial evidence are published at `5e68a76682b8ec9e0cf2f8c9cdf59b0a92da599d`.
 
 ## Executed pages and labels
 

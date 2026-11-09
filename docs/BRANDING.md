@@ -352,8 +352,9 @@ notice is intentionally English before locale boot; platform fixtures do not pro
 delivery. Browser guidance, CLI/format output, WebMCP metadata and the Storybook manifest
 error label have bounded Executed evidence. ACP startup failure presentation also has bounded
 Executed evidence at `c65a7374f`; native-engine advice is Executed at `368f67444` and the
-support-copy acceptance gate has bounded Executed reconciliation at `d30381b16`. Portal is
-the current task; remaining links and broader branding acceptance stay open.
+support-copy acceptance gate has bounded Executed reconciliation at `d30381b16`. Portal has
+bounded Executed evidence at `5e68a7668`; editor/native identity, remaining links and broader
+branding acceptance stay open. The editor-copy gate retains its mixed WebKit dependency.
 
 
 The [browser support record](BROWSER-SUPPORT-COPY.md) publishes the own requirements/report

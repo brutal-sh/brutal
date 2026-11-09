@@ -119,8 +119,8 @@ The fresh board contains 393 bounded execution tasks and 17 milestones. Every on
 
 | Horizon | Outcome | Evidence checkpoint |
 | --------------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Now | Verify portal client copy (BRAND-COPY-PORTAL) | Render the ten changed labels across nine locales with test-owned approval/account fixtures; preserve interpolated fields and real service identities. |
-| Next | Modularize menu-schema ownership (MOD-13) | Inspect the 621-line owner and its callers, split cohesive menu responsibilities using existing patterns, and preserve command/schema/native behavior with bounded evidence. |
+| Now | Modularize menu-schema ownership (MOD-13) | Inspect the 621-line owner and callers, split cohesive menu responsibilities using existing patterns, and preserve command/schema/native behavior with bounded evidence. |
+| Next | Re-enter the mixed WebKit reliability gate (STAB-WEBKIT-MIXED, Verify) | Classify the retained mixed-run failures and unrun cases against recorded controls; preserve existing timing, snapshots and the editor-copy dependency. |
 | Then                  | Stabilize document switching and finish unaccepted icon, module and feature/screen tasks in dependency order | Each card has relevant owner tests, visual/native checks and a commit/evidence link before Executed; dependent renderer/input work waits for STAB-GPU. |
 | Release qualification | Deliver private beta, then complete the full parity gate | Clean normal build, install/restart/recovery and core journey; declared beta limitations. Later, no required parity state remains unaccepted. |
 

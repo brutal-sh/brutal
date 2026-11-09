@@ -112,11 +112,11 @@ distinguishes two stale native test contracts from an unproven cross-file backdr
 criteria. The [control record](APP-TEST-CONTROLS.md) retains paired failures, the two-file
 reproduction, scoped cleanup and the subsequent 1,955 passing app-shard tests. Neither
 changes production behavior or accepts native delivery. Both remain required beta and
-terminal dependencies with linked evidence. Portal client identity verification (BRAND-COPY-PORTAL) is the sole Building task; mixed WebKit reliability is Verify. Font and graph candidates remain Verify. An earlier native graph/text batch has
+terminal dependencies with linked evidence. Menu-schema modularization (MOD-13) is the sole Building task; mixed WebKit reliability is Verify. Font and graph candidates remain Verify. An earlier native graph/text batch has
 four hidden-window failures; that run's OS read found the desktop locked. Those
 failed/unexecuted input criteria do not erase the earlier successful native resource path.
 The interrupted zero-size icon work retains its failed wider-run receipts and dependencies.
-The delivery snapshot is 350 Backlog, 1 Ready, 1 Building, 9 Verify and 32 Executed, plus 17 milestones.
+The delivery snapshot is 350 Backlog, 0 Ready, 1 Building, 9 Verify and 33 Executed, plus 17 milestones.
 DELIVERY-LFS has bounded executed current-checkout fixture delivery: all twelve objects
 are fetched from the own private endpoint into empty independent storage, with matching
 SHA-256/sizes and LFS integrity checks. Historical object closure is not qualified.
@@ -164,7 +164,7 @@ children's copy criteria: 148 passing browser cases and 360 inspected captures a
 their explicitly documented locale/theme/engine scopes. Those totals do not broaden native
 or design acceptance. Support-copy work is split into five named owners rather than one
 implementation card; browser guidance, CLI and WebMCP metadata have bounded Executed evidence.
-ACP and native-engine advice have bounded Executed evidence; their support acceptance gate has bounded Executed reconciliation and portal copy is Building. All original support criteria remain on the parent gate.
+ACP and native-engine advice have bounded Executed evidence; their support acceptance gate has bounded Executed reconciliation and portal copy has bounded Executed evidence. All original support criteria remain on the parent gate.
 
 
 [Browser support](BROWSER-SUPPORT-COPY.md) has published source and exact post-publication
@@ -193,4 +193,10 @@ All 201 authorized repositories read back with GitHub Actions disabled on 2026-1
 at `368f67444`: 24 cases and inspected captures, 65 support-owner tests and ten matching
 frozen inputs. Direct environment fixtures bypass detection and physical native opening.
 The [parent support record](SUPPORT-COPY-ACCEPTANCE.md) reconciles all five published owners
-against the preserved original criteria at `d30381b16`; portal copy is now Building.
+against the preserved original criteria at `d30381b16`; portal copy is Executed at `5e68a7668`; MOD-13 is now Building.
+
+[Portal copy](PORTAL-COPY.md) has bounded Executed evidence at `5e68a7668`: 72 browser
+cases, 324 inspected region/cell captures, 360 canonical-label checks and 21 portal-owner
+tests. Actual pages/controllers use local document-routing and API fixtures, not real
+authentication/backend/native delivery. Real service identities remain. MOD-13 is the sole
+Building task; editor-copy remains Verify behind the unchanged mixed WebKit reliability gate.
