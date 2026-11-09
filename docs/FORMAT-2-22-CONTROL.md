@@ -61,9 +61,11 @@ then exactly equal the originals. This supersedes the unexecuted persistence sta
 only for that owned fixture. General format/Note/native Open Pen qualification remains open.
 
 The [Note reference control](NOTE-REFERENCE-CONTROL.md) records actual default/custom
-colors, authored-versus-rendered sizing, content growth and raster SVG output. It retains
-a placement disagreement and unsaved document-service state explicitly. Native Note
-input/persistence and legacy Prompt/Context migration remain unexecuted.
+colors, authored-versus-rendered sizing, content growth and raster SVG output. Its initial
+phase retains a placement disagreement and unsaved service state. The later actual Pen
+native edit/history and Save As/Close/FileOpen follow-up retains identical frame pixels
+and reports Y24 bounds after reopen. Open Pen Note input/interchange, legacy Prompt/Context
+migration and remaining native states stay open.
 
 The [SVG selection control](SVG-SELECTION-CONTROL.md) repairs the combined-selection
 delivery mismatch through the existing batch exporter. Its visible File-menu downloads

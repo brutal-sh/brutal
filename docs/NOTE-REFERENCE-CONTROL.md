@@ -63,3 +63,30 @@ selection/toolbar states and full format parity remain open.
 
 Private receipts and all PNG/SVG outputs stay in
 `local-evidence/note-contract-2026-11-09/`; raw reference assets are not published.
+
+## Subsequent native reference follow-up
+
+Native access becomes available later the same day. The owned service document opens
+in Pen with its three Notes. Selecting the default Note shows native inspector X/Y
+24/24 and dimensions 250/219. Its eight preset buttons expose these exact hex values:
+Yellow `#FEE484`, Orange `#FFCC98`, Coral `#FFBEB2`, Pink `#FDC0D7`, Purple `#DCC5F9`,
+Blue `#AEDEFF`, Green `#B3EBBD` and Gray `#DBDEE1`. The custom hex field observes
+`#ABCDEF` → Undo `#FEE484` → Redo `#ABCDEF` → restore `#FEE484` after commit/blur;
+individual custom/preset body pixels are not independently checked.
+
+Native double-click/type/Escape edits the text. Read-only document Get then verifies
+edited content, native Undo restores both original lines, and native Redo restores the
+edit. One further Undo restores the original content. An earlier probe reenters text
+editing between history keys and does not observe Redo; it is retained as an intrusive,
+unaccepted control, without assigning a cause.
+
+Native Save As creates `native-notes.pen`; closing it and reopening through the actual
+File dialog retains all three Notes. Its 920 × 500 export has exactly the same decoded
+RGBA bytes as the pre-save reference frame. The reopened Get now reports Note bounds
+at Y24. This supersedes the earlier unsaved-state limitation for this named fixture;
+the initial Y74 receipt remains, with its cause unknown. No cold process restart is tested.
+
+Pen returns to Home/Recents after closing the owned saved document. Send to Agent is
+visible above the selected Note and is not invoked. Raw observations, text/history
+receipts and `native-reopen-comparison.json` remain in the same private evidence folder.
+Open Pen Note creation/interchange, native editing states and full parity remain open.

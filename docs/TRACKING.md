@@ -243,11 +243,12 @@ and Actions disabled. Both child cards execute only their defined fixture/contra
 FMT-09-DRIFT stays Building for current Note and preserved legacy Prompt/Context
 qualification; SVG, menu and mixed WebKit gates remain unaccepted.
 
-The [actual Note control](NOTE-REFERENCE-CONTROL.md) adds current-reference rendered
-color/sizing/export evidence while native input is blocked by the locked Mac. Exported
-artifacts are retained, but the document-service mutations are not saved to the copied
-source file. No Note adapter or state promotion follows; the legacy Context-named fixture
-contains a frame and does not establish removed Context-node migration.
+The [initial Note control](NOTE-REFERENCE-CONTROL.md) adds rendered color/sizing/export
+evidence while the Mac is locked. Its service mutations are initially unsaved. A later
+native reference follow-up observes color fields, text/history and Save As/Close/FileOpen
+for the owned fixture, with identical reopened frame RGBA bytes. No Open Pen Note adapter
+or state promotion follows; the legacy Context-named fixture contains a frame and does
+not establish removed Context-node migration.
 
 The [SVG selection repair](SVG-SELECTION-CONTROL.md) reuses batch ZIP delivery and adds
 SVG to the generated native export menu. New File-menu download checks pass in Chromium
@@ -255,3 +256,9 @@ and WebKit. The broader run retains 30 passes, one WebKit store-not-ready failur
 unrun serial case; isolated original/candidate WebKit controls both pass all 15 cases.
 That failure remains unclassified. IO-13-EXPORT stays Verify, MENU-FILE stays Backlog,
 and full native/menu/rendering acceptance is unchanged.
+
+The [REA/Hopper native catalog](pen-feature-reference/native-1.2.22-2026-11-09.md)
+compares all 39 retained changed native files: 38 match outside signature data; the MCP
+helper has code changes. All 5,897 Hopper procedure artifacts are verified, and named Go
+metadata corroborates the existing URI/save tasks. Compiler entries without exact Hopper
+matches, unbaselined files, runtime availability and full native/source parity stay open.

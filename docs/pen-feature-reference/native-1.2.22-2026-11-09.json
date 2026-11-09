@@ -1,0 +1,596 @@
+{
+  "date": "2026-11-09",
+  "referenceVersion": "1.2.22",
+  "method": "REA Hopper provider on verified thin byte copies; metadata/PC-table decoding and exact old/new native comparisons. No copied target execution.",
+  "nativeComparison": {
+    "compared": 39,
+    "identicalOutsideSignatureData": 38,
+    "codeChanged": ["Contents/Resources/app.asar.unpacked/out/mcp-server-darwin-arm64"],
+    "coverage": "All retained changed thin Mach-O64 files outside ASAR, including separately retained ShipIt. Unbaselined outer files remain unknown.",
+    "files": [
+      {
+        "path": "Contents/Frameworks/Squirrel.framework/Versions/A/Resources/ShipIt",
+        "oldBytes": 143904,
+        "newBytes": 143904,
+        "oldSHA256": "a3dda4b0f9d43904afbb10f9412299094ef4ec81144b0e730ea51715e5358560",
+        "newSHA256": "c591b2552108756970cfbe432ef620c9b667ea66ef4ff89d25dd2b18c605e5db",
+        "allFileBackedSectionsIdentical": true,
+        "changedSections": [],
+        "allBytesOutsideSignatureIdentical": true
+      },
+      {
+        "path": "Contents/Resources/app.asar.unpacked/node_modules/@anthropic-ai/claude-agent-sdk-darwin-arm64/claude",
+        "oldBytes": 236330224,
+        "newBytes": 236330224,
+        "oldSHA256": "b7c12d2f1f29c587b31b05cce3e638e237389f62b95caab2d8575188e1f2560f",
+        "newSHA256": "51e1c903d5c934428c22f86a9f700138f23af986671bdaace4ca97405eb2dd1d",
+        "allFileBackedSectionsIdentical": true,
+        "changedSections": [],
+        "allBytesOutsideSignatureIdentical": true
+      },
+      {
+        "path": "Contents/Resources/app.asar.unpacked/node_modules/@cursor/sdk-darwin-arm64/bin/cursorsandbox",
+        "oldBytes": 3327760,
+        "newBytes": 3327760,
+        "oldSHA256": "9fe5473fd98e00cf68d1fba0d2612fe585b04cb53e104eeaed5a505c25f5e1e1",
+        "newSHA256": "d80af7fed6dcb13a426bb3c15d578f3ef0340bed3ed16390a00755a5c725f6e9",
+        "allFileBackedSectionsIdentical": true,
+        "changedSections": [],
+        "allBytesOutsideSignatureIdentical": true
+      },
+      {
+        "path": "Contents/Resources/app.asar.unpacked/node_modules/@cursor/sdk-darwin-arm64/bin/rg",
+        "oldBytes": 4583632,
+        "newBytes": 4583632,
+        "oldSHA256": "7003cc43466a6e926c0db0e7035107321e2094c847d56feec4558ee350b99d54",
+        "newSHA256": "6e027f1fae4371641c62ee529cad2ccbdb1bce71cb11f86b790f9e512dde3624",
+        "allFileBackedSectionsIdentical": true,
+        "changedSections": [],
+        "allBytesOutsideSignatureIdentical": true
+      },
+      {
+        "path": "Contents/Resources/app.asar.unpacked/node_modules/@cursor/sdk-darwin-x64/bin/cursorsandbox",
+        "oldBytes": 3535712,
+        "newBytes": 3535712,
+        "oldSHA256": "8b6cc4e62fc29bf5579af232bea12f54994e2c36c3bdd744df0273305cf80f9e",
+        "newSHA256": "c9796195f83c5bced2308b09168c69a3754a039d4cde13f253fd9a9520147dac",
+        "allFileBackedSectionsIdentical": true,
+        "changedSections": [],
+        "allBytesOutsideSignatureIdentical": true
+      },
+      {
+        "path": "Contents/Resources/app.asar.unpacked/node_modules/@cursor/sdk-darwin-x64/bin/rg",
+        "oldBytes": 5161136,
+        "newBytes": 5161136,
+        "oldSHA256": "a84fc2d5c29c52d0d66de1c2cb7cba394a7f6e387686165c226c728c3065ba60",
+        "newSHA256": "795d94d367f7f6d43d08dce357d91bdcd496129fcd9fc2b83ddb25b2cea2e40b",
+        "allFileBackedSectionsIdentical": true,
+        "changedSections": [],
+        "allBytesOutsideSignatureIdentical": true
+      },
+      {
+        "path": "Contents/Resources/app.asar.unpacked/node_modules/@earendil-works/pi-tui/native/darwin/prebuilds/darwin-arm64/darwin-platform.node",
+        "oldBytes": 70000,
+        "newBytes": 70000,
+        "oldSHA256": "bbde7b623f7f75dfb644ffd9e42b033478373b0cb63bc5cbb3b048f24d9855de",
+        "newSHA256": "cbb5c93735b46779a675a03d71c37200f1456aed6d055ef92ab2f185cff04fc7",
+        "allFileBackedSectionsIdentical": true,
+        "changedSections": [],
+        "allBytesOutsideSignatureIdentical": true
+      },
+      {
+        "path": "Contents/Resources/app.asar.unpacked/node_modules/@earendil-works/pi-tui/native/darwin/prebuilds/darwin-x64/darwin-platform.node",
+        "oldBytes": 41376,
+        "newBytes": 41376,
+        "oldSHA256": "ce86e8670f1e65f08ebe8f487fe41ca45d644b9e0ecbdf9724fd59b647775224",
+        "newSHA256": "bd3582f8a25d2a536968bf4726e68ae1918b5df7c486a53532102e6c75d00cab",
+        "allFileBackedSectionsIdentical": true,
+        "changedSections": [],
+        "allBytesOutsideSignatureIdentical": true
+      },
+      {
+        "path": "Contents/Resources/app.asar.unpacked/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex",
+        "oldBytes": 260315120,
+        "newBytes": 260315120,
+        "oldSHA256": "b7402a0c57b413a2cb316074b1988a53c1be3cac3fb0312357a185af86bc42c6",
+        "newSHA256": "de300226dc8031c65821b95dc709a3a95df9ba263896018f8b094677ef553111",
+        "allFileBackedSectionsIdentical": true,
+        "changedSections": [],
+        "allBytesOutsideSignatureIdentical": true
+      },
+      {
+        "path": "Contents/Resources/app.asar.unpacked/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex-code-mode-host",
+        "oldBytes": 68147088,
+        "newBytes": 68147088,
+        "oldSHA256": "ef7d03dc2c2e1981f854902d430da97aff221dd715a68afa06bbb7be862efb65",
+        "newSHA256": "6b555dcb1581d9ae94beddd4598dd8bdb9c30972ec304cfaf16e17f7918997ad",
+        "allFileBackedSectionsIdentical": true,
+        "changedSections": [],
+        "allBytesOutsideSignatureIdentical": true
+      },
+      {
+        "path": "Contents/Resources/app.asar.unpacked/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-path/rg",
+        "oldBytes": 4010144,
+        "newBytes": 4010144,
+        "oldSHA256": "33cf92352723496a643cd51e36ae5e5a06cd64229be9734da89a4b9b0c11bffb",
+        "newSHA256": "47755f6dfe562491532c6613557cdafdf5177cde0dc24b5fa597466ac35cd086",
+        "allFileBackedSectionsIdentical": true,
+        "changedSections": [],
+        "allBytesOutsideSignatureIdentical": true
+      },
+      {
+        "path": "Contents/Resources/app.asar.unpacked/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/bin/codex-voice-host",
+        "oldBytes": 9936688,
+        "newBytes": 9936688,
+        "oldSHA256": "2340716b52e2f4a934aa86774608ac50151b64512d9a6bfbe98cdb5b57de8af4",
+        "newSHA256": "baa7b3d877a15624410dd560b2fa7510dd79119a9eed4a05e76652c933003f8c",
+        "allFileBackedSectionsIdentical": true,
+        "changedSections": [],
+        "allBytesOutsideSignatureIdentical": true
+      },
+      {
+        "path": "Contents/Resources/app.asar.unpacked/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/lib/libffi.8.dylib",
+        "oldBytes": 138000,
+        "newBytes": 138000,
+        "oldSHA256": "73cdb188239350e66cf9b120865184c72a5f2af9d677a486367f32c35ac95811",
+        "newSHA256": "d9c26876ab6a3f384f7949c4d05e2518a34249fd9977b837cbdfd50af3088f07",
+        "allFileBackedSectionsIdentical": true,
+        "changedSections": [],
+        "allBytesOutsideSignatureIdentical": true
+      },
+      {
+        "path": "Contents/Resources/app.asar.unpacked/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/lib/libgio-2.0.0.dylib",
+        "oldBytes": 1894336,
+        "newBytes": 1894336,
+        "oldSHA256": "75821ead55a3ea104c3c8f1b07b93a48f6c60a3f7b5356f2f13065e228060d39",
+        "newSHA256": "d8ab5755938561f470c96b886b626a00ea321546b97580a141120d7a881d99df",
+        "allFileBackedSectionsIdentical": true,
+        "changedSections": [],
+        "allBytesOutsideSignatureIdentical": true
+      },
+      {
+        "path": "Contents/Resources/app.asar.unpacked/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/lib/libglib-2.0.0.dylib",
+        "oldBytes": 1348384,
+        "newBytes": 1348384,
+        "oldSHA256": "acec42a15b7b51a7b953c832503b68d7d8c7dfc32520496e8f5a2f80c2787406",
+        "newSHA256": "8bd64fb6dec818a4c6ffd3ab52eb03589ecdebb523a75fdb59d1072f030072e5",
+        "allFileBackedSectionsIdentical": true,
+        "changedSections": [],
+        "allBytesOutsideSignatureIdentical": true
+      },
+      {
+        "path": "Contents/Resources/app.asar.unpacked/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/lib/libgmodule-2.0.0.dylib",
+        "oldBytes": 70864,
+        "newBytes": 70864,
+        "oldSHA256": "05c97e9b35d6905d9e20689e016456b61cce2502fb70bd6fe13299ded104e043",
+        "newSHA256": "34a9b33e7c96b57d2367a4b98f832161e4c78cfd3bcaa432453595cf78107ece",
+        "allFileBackedSectionsIdentical": true,
+        "changedSections": [],
+        "allBytesOutsideSignatureIdentical": true
+      },
+      {
+        "path": "Contents/Resources/app.asar.unpacked/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/lib/libgobject-2.0.0.dylib",
+        "oldBytes": 416640,
+        "newBytes": 416640,
+        "oldSHA256": "cc567e4dc67305a7b6b90a892b537bbaf4fd2a5a16bdc02b7e0a433406bbc185",
+        "newSHA256": "555de77d8aed7efec79c30263fe812d4000a98d1cb907e691c31c46406dc9e87",
+        "allFileBackedSectionsIdentical": true,
+        "changedSections": [],
+        "allBytesOutsideSignatureIdentical": true
+      },
+      {
+        "path": "Contents/Resources/app.asar.unpacked/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/lib/libgstapp-1.0.0.dylib",
+        "oldBytes": 153264,
+        "newBytes": 153264,
+        "oldSHA256": "c6291b5027d4008ac7bceb2d68496528648a4989a43c4e0e289e97dd1ceb6b71",
+        "newSHA256": "118fd82a752990f55101acb4508426192bf545c88c5e3c9ba95ba7fb2f989445",
+        "allFileBackedSectionsIdentical": true,
+        "changedSections": [],
+        "allBytesOutsideSignatureIdentical": true
+      },
+      {
+        "path": "Contents/Resources/app.asar.unpacked/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/lib/libgstaudio-1.0.0.dylib",
+        "oldBytes": 559312,
+        "newBytes": 559312,
+        "oldSHA256": "f50dcbf7aa410dbf97dba611986cf87b1bbf7fcf84f099fb3896860f54ef999a",
+        "newSHA256": "60a8f9396e6e5fad346973af7e2bbe7fd48d7d367d4dd944e2acf34b3a27f499",
+        "allFileBackedSectionsIdentical": true,
+        "changedSections": [],
+        "allBytesOutsideSignatureIdentical": true
+      },
+      {
+        "path": "Contents/Resources/app.asar.unpacked/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/lib/libgstbase-1.0.0.dylib",
+        "oldBytes": 519152,
+        "newBytes": 519152,
+        "oldSHA256": "84ef7df436673681536ff1993a6eb18abff1f49323ad58fce1e65caff01c87a1",
+        "newSHA256": "6ad8d673d9b19b6ed57e24688f8ebadd42dc5ba92a5736582f2482bfcf467731",
+        "allFileBackedSectionsIdentical": true,
+        "changedSections": [],
+        "allBytesOutsideSignatureIdentical": true
+      },
+      {
+        "path": "Contents/Resources/app.asar.unpacked/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/lib/libgstnet-1.0.0.dylib",
+        "oldBytes": 117136,
+        "newBytes": 117136,
+        "oldSHA256": "909fb30cfc95df6a568dcb84c5e9d6561ee19d1fddb7dfe272f66eabf3946428",
+        "newSHA256": "b744f6d30f8c8f7d04286e9f8ef757af33bb27aa17b91290e9ea598dce2e0c97",
+        "allFileBackedSectionsIdentical": true,
+        "changedSections": [],
+        "allBytesOutsideSignatureIdentical": true
+      },
+      {
+        "path": "Contents/Resources/app.asar.unpacked/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/lib/libgstpbutils-1.0.0.dylib",
+        "oldBytes": 324128,
+        "newBytes": 324128,
+        "oldSHA256": "405e0b9a9db635ce7292cbf1ee2b807f16e71de6f1dfe99a1cf410c60dfe450a",
+        "newSHA256": "4174ff6308967fbac0a41dea2f5268ea51189394a6ccc954196d16ff47f2b16e",
+        "allFileBackedSectionsIdentical": true,
+        "changedSections": [],
+        "allBytesOutsideSignatureIdentical": true
+      },
+      {
+        "path": "Contents/Resources/app.asar.unpacked/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/lib/libgstreamer-1.0.0.dylib",
+        "oldBytes": 1335696,
+        "newBytes": 1335696,
+        "oldSHA256": "a3608d15e9ac0af17c111318407f58b440a038b45897123b42c515ea05f0b771",
+        "newSHA256": "7511841a3b76d680acbf8aa145eed71a9c8b50e953a203df0b12cb082fce6f0e",
+        "allFileBackedSectionsIdentical": true,
+        "changedSections": [],
+        "allBytesOutsideSignatureIdentical": true
+      },
+      {
+        "path": "Contents/Resources/app.asar.unpacked/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/lib/libgstrtp-1.0.0.dylib",
+        "oldBytes": 222560,
+        "newBytes": 222560,
+        "oldSHA256": "d2f1500dad8ca561d3fbba940201f3b573a869294a5143e4be2551214e4e48f5",
+        "newSHA256": "eeb62bd8aeb4f2e4ba3132f2e0fe714bf28478a667cfbbfb7de4fc6a4a073268",
+        "allFileBackedSectionsIdentical": true,
+        "changedSections": [],
+        "allBytesOutsideSignatureIdentical": true
+      },
+      {
+        "path": "Contents/Resources/app.asar.unpacked/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/lib/libgsttag-1.0.0.dylib",
+        "oldBytes": 283792,
+        "newBytes": 283792,
+        "oldSHA256": "6174d49b134579180ff42cf7fcdc17b6c5cbbb90bde7f7fac3427090993c9477",
+        "newSHA256": "31afa2195846c9071671072b3033ba712fd6ac2850c2fa93b1f825b5849338c6",
+        "allFileBackedSectionsIdentical": true,
+        "changedSections": [],
+        "allBytesOutsideSignatureIdentical": true
+      },
+      {
+        "path": "Contents/Resources/app.asar.unpacked/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/lib/libgstvideo-1.0.0.dylib",
+        "oldBytes": 929136,
+        "newBytes": 929136,
+        "oldSHA256": "165ccb622cb6f7141faff43858f5b0a00801f915be4b154a17aae7b6ce35951c",
+        "newSHA256": "88b9944c3e81acd1ff6ac9268b444c27e417f47b7480c77fae54a883070d43ab",
+        "allFileBackedSectionsIdentical": true,
+        "changedSections": [],
+        "allBytesOutsideSignatureIdentical": true
+      },
+      {
+        "path": "Contents/Resources/app.asar.unpacked/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/lib/libintl.8.dylib",
+        "oldBytes": 52192,
+        "newBytes": 52192,
+        "oldSHA256": "fba5e493067bd16dd85448a6f0b96b98e7dc0d77ca2217362ebf7e7ec5d57738",
+        "newSHA256": "0631c7bbfff7aeed646d40101af9fda21e3891284eb1e7b96027a7de476e0b92",
+        "allFileBackedSectionsIdentical": true,
+        "changedSections": [],
+        "allBytesOutsideSignatureIdentical": true
+      },
+      {
+        "path": "Contents/Resources/app.asar.unpacked/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/lib/libopus.0.dylib",
+        "oldBytes": 502960,
+        "newBytes": 502960,
+        "oldSHA256": "48f468233f2305d61e413b8e65471ef4748115ea4eec5d79d6dfa1056632f0c2",
+        "newSHA256": "2f2f6158c9aff4692c7c3deb46a1e5d4d8ba83aca9dd99213c8cde6f25dc9641",
+        "allFileBackedSectionsIdentical": true,
+        "changedSections": [],
+        "allBytesOutsideSignatureIdentical": true
+      },
+      {
+        "path": "Contents/Resources/app.asar.unpacked/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/lib/libpcre2-8.0.dylib",
+        "oldBytes": 456624,
+        "newBytes": 456624,
+        "oldSHA256": "e529192380e26b073ec9648744d4a8ecc7178541055fef224e19cc79904540e5",
+        "newSHA256": "2cffd74711e76362cf98bc3b710c69ca99023ce406ace7cfd0938b510c00b336",
+        "allFileBackedSectionsIdentical": true,
+        "changedSections": [],
+        "allBytesOutsideSignatureIdentical": true
+      },
+      {
+        "path": "Contents/Resources/app.asar.unpacked/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/lib/libz.1.dylib",
+        "oldBytes": 124512,
+        "newBytes": 124512,
+        "oldSHA256": "de97bd987436c641135b9db21dd33d5f25a16aafa80589ab413983d48e947ba4",
+        "newSHA256": "10b4c799c38baaea34299c4edf8612b8af1b9095a1873a87710a116f63cd8cd1",
+        "allFileBackedSectionsIdentical": true,
+        "changedSections": [],
+        "allBytesOutsideSignatureIdentical": true
+      },
+      {
+        "path": "Contents/Resources/app.asar.unpacked/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/plugins/libgstapp.dylib",
+        "oldBytes": 51984,
+        "newBytes": 51984,
+        "oldSHA256": "7a70fd553335c3ce69b43b8ae33a1024f6984d5a5e64998bb945f3f82b98ae24",
+        "newSHA256": "4b250d2edbee8fd930e8f621e6603f8c26fec2855315656416fed7611b12472d",
+        "allFileBackedSectionsIdentical": true,
+        "changedSections": [],
+        "allBytesOutsideSignatureIdentical": true
+      },
+      {
+        "path": "Contents/Resources/app.asar.unpacked/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/plugins/libgstaudioconvert.dylib",
+        "oldBytes": 94512,
+        "newBytes": 94512,
+        "oldSHA256": "56ef295906532d2b5bfac56be616a68af4a48128b7febc9f7db0e6c83846cf7b",
+        "newSHA256": "2e30cefad71ef73f12c76d9c5da97fd1ac106db596e196ad3f0f6e3f2215362b",
+        "allFileBackedSectionsIdentical": true,
+        "changedSections": [],
+        "allBytesOutsideSignatureIdentical": true
+      },
+      {
+        "path": "Contents/Resources/app.asar.unpacked/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/plugins/libgstaudioresample.dylib",
+        "oldBytes": 92864,
+        "newBytes": 92864,
+        "oldSHA256": "4a42fe7e7c494ff69eb649a4df39ca92bc37568759f55d458a21e6750600819e",
+        "newSHA256": "2aafc38a146a06efe0d872bb6cbb1931f099111468c9cfa43437db378427da46",
+        "allFileBackedSectionsIdentical": true,
+        "changedSections": [],
+        "allBytesOutsideSignatureIdentical": true
+      },
+      {
+        "path": "Contents/Resources/app.asar.unpacked/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/plugins/libgstcoreelements.dylib",
+        "oldBytes": 458592,
+        "newBytes": 458592,
+        "oldSHA256": "7ff243ff716f321c59f24905499e6d3a7d1b3ea870a3d6b59045ea31d72cb5d2",
+        "newSHA256": "f84246c41e88b3a10192b32dc39656ea812dbc267fb8cf9ef9719158abd8f3d7",
+        "allFileBackedSectionsIdentical": true,
+        "changedSections": [],
+        "allBytesOutsideSignatureIdentical": true
+      },
+      {
+        "path": "Contents/Resources/app.asar.unpacked/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/plugins/libgstopus.dylib",
+        "oldBytes": 132336,
+        "newBytes": 132336,
+        "oldSHA256": "22795a89d181665bddd083fa4a43f5be9581ea63bb9200bf551c34023749dbbd",
+        "newSHA256": "c165198edfe174054f4c4e3ba69eba5868779dbf527d6f9e73df7317eb0ec439",
+        "allFileBackedSectionsIdentical": true,
+        "changedSections": [],
+        "allBytesOutsideSignatureIdentical": true
+      },
+      {
+        "path": "Contents/Resources/app.asar.unpacked/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/plugins/libgstrtp.dylib",
+        "oldBytes": 673072,
+        "newBytes": 673072,
+        "oldSHA256": "26a3428cc251c7a9fc4b9db315d48e173d42b868b1af99db6fbbb77537460eb5",
+        "newSHA256": "bd905524e2e8db11dd2680559811a67b10f1ad08ca5fd2daa76eda9956123078",
+        "allFileBackedSectionsIdentical": true,
+        "changedSections": [],
+        "allBytesOutsideSignatureIdentical": true
+      },
+      {
+        "path": "Contents/Resources/app.asar.unpacked/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/plugins/libgstrtpmanager.dylib",
+        "oldBytes": 537312,
+        "newBytes": 537312,
+        "oldSHA256": "5b7a4d0c612d4ce95283e506db95dd43695c646140cac4fb12661d6281cd6183",
+        "newSHA256": "5c74d58ed826afbeeedcc31e1e072701f50a05910d7eacf5334482220690f1ce",
+        "allFileBackedSectionsIdentical": true,
+        "changedSections": [],
+        "allBytesOutsideSignatureIdentical": true
+      },
+      {
+        "path": "Contents/Resources/app.asar.unpacked/node_modules/@vscode/ripgrep-darwin-arm64/bin/rg",
+        "oldBytes": 4521072,
+        "newBytes": 4521072,
+        "oldSHA256": "aa823f17cb7cee4d655954a5c2acd5c177a800451565ab0a52d41517f9aa8320",
+        "newSHA256": "4838ee103ca31488c9da624691d657d23be3f5208c873d7189bfa6f1671a7837",
+        "allFileBackedSectionsIdentical": true,
+        "changedSections": [],
+        "allBytesOutsideSignatureIdentical": true
+      },
+      {
+        "path": "Contents/Resources/app.asar.unpacked/out/mcp-server-darwin-arm64",
+        "oldBytes": 4941632,
+        "newBytes": 4958048,
+        "oldSHA256": "2599ff67710f2186e3ceed739ae52d5a8a126875b8d1ac4d99df18c61270dedd",
+        "newSHA256": "3564672ceeec0c62b4c6558680c586274f5d458a5541a188c70d87827869f6a1",
+        "allFileBackedSectionsIdentical": false,
+        "changedSections": [
+          "__DATA/__data",
+          "__DATA/__go_buildinfo",
+          "__DATA/__go_fipsinfo",
+          "__DATA/__go_module",
+          "__DATA/__noptrdata",
+          "__DATA_CONST/__got",
+          "__DATA_CONST/__itablink",
+          "__DATA_CONST/__rodata",
+          "__DATA_CONST/__typelink",
+          "__TEXT/__gopclntab",
+          "__TEXT/__rodata",
+          "__TEXT/__symbol_stub1",
+          "__TEXT/__text"
+        ],
+        "allBytesOutsideSignatureIdentical": false
+      }
+    ]
+  },
+  "hopper": {
+    "launcherProcedures": 9,
+    "launcherImportStubs": 7,
+    "helperProcedures": 5888,
+    "verifiedPseudocodeFiles": 5897,
+    "provider": "hopper",
+    "launcherEvidence": "ev_1a33f5a8ea050cb7530ccdf099e03c0a875a24edb836a59d727741a9063b2105",
+    "helperCompletedEvidence": "ev_15819fefa0e87a833efa6a2d07ae451df6c9e983f004745bf43e8379c4bdcc86",
+    "upstreamProfiles": [
+      {
+        "directory": "main-decompile",
+        "procedures": 9,
+        "verifiedFiles": 9,
+        "targetSHA256": "da04ecdbe12fe22221be20ab943e3db87a0990fb63965c68015cf0ed8a256c28",
+        "provider": {
+          "id": "hopper",
+          "name": "Hopper Disassembler",
+          "version": "launcher-sha256:2e004c26f552d670800a8fe4ce8766f9ee99af5bd0356e03b28e2d7b2bb667df"
+        },
+        "analysisProfileDigest": "7b83e8b89de31542c1be6b24af27a2dc1002b9dd5c4f443ffce6c0ee01973ed9"
+      },
+      {
+        "directory": "mcp-decompile",
+        "procedures": 5888,
+        "verifiedFiles": 5888,
+        "targetSHA256": "3564672ceeec0c62b4c6558680c586274f5d458a5541a188c70d87827869f6a1",
+        "provider": {
+          "id": "hopper",
+          "name": "Hopper Disassembler",
+          "version": "launcher-sha256:2e004c26f552d670800a8fe4ce8766f9ee99af5bd0356e03b28e2d7b2bb667df"
+        },
+        "analysisProfileDigest": "037944b306cd4341f4e28babf16e30ebe68ae5a8282af7023d2c8e475d8f49b6"
+      }
+    ]
+  },
+  "goMetadata": {
+    "oldEntries": 4974,
+    "newEntries": 4982,
+    "duplicateNameGroupsOld": 26,
+    "duplicateNameGroupsNew": 26,
+    "addedNames": [
+      "github.com/highagency/ha/servers/mcp/tools.BrowserTool.withURIOption.Description.func22",
+      "github.com/highagency/ha/servers/mcp/tools.BrowserTool.withURIOption.Required.func21",
+      "github.com/highagency/ha/servers/mcp/tools.BrowserTool.withURIOption.WithString.func23",
+      "github.com/highagency/ha/servers/mcp/tools.ExecuteTool.withURIOption.Description.func13",
+      "github.com/highagency/ha/servers/mcp/tools.ExecuteTool.withURIOption.Required.func12",
+      "github.com/highagency/ha/servers/mcp/tools.ExecuteTool.withURIOption.WithString.func14",
+      "github.com/highagency/ha/servers/mcp/tools.HandleSave",
+      "github.com/highagency/ha/servers/mcp/tools.SaveTool",
+      "github.com/highagency/ha/servers/mcp/tools.SaveTool.WithDescription.func1",
+      "github.com/highagency/ha/servers/mcp/tools.SaveTool.withToolHints.WithToolAnnotation.func2",
+      "github.com/highagency/ha/servers/mcp/tools.SaveTool.withURIOption.Description.func4",
+      "github.com/highagency/ha/servers/mcp/tools.SaveTool.withURIOption.Required.func3",
+      "github.com/highagency/ha/servers/mcp/tools.SaveTool.withURIOption.WithString.func5",
+      "github.com/highagency/ha/servers/mcp/tools.SpawnAgentsTool.withURIOption.Description.func8",
+      "github.com/highagency/ha/servers/mcp/tools.SpawnAgentsTool.withURIOption.Required.func7",
+      "github.com/highagency/ha/servers/mcp/tools.SpawnAgentsTool.withURIOption.WithString.func9",
+      "main.main.main.func1.func11"
+    ],
+    "removedNames": [
+      "github.com/highagency/ha/servers/mcp/tools.BrowserTool.withFilePathOption.Description.func22",
+      "github.com/highagency/ha/servers/mcp/tools.BrowserTool.withFilePathOption.Required.func21",
+      "github.com/highagency/ha/servers/mcp/tools.BrowserTool.withFilePathOption.WithString.func23",
+      "github.com/highagency/ha/servers/mcp/tools.ExecuteTool.withFilePathOption.Description.func13",
+      "github.com/highagency/ha/servers/mcp/tools.ExecuteTool.withFilePathOption.Required.func12",
+      "github.com/highagency/ha/servers/mcp/tools.ExecuteTool.withFilePathOption.WithString.func14",
+      "github.com/highagency/ha/servers/mcp/tools.SpawnAgentsTool.withFilePathOption.Description.func8",
+      "github.com/highagency/ha/servers/mcp/tools.SpawnAgentsTool.withFilePathOption.Required.func7",
+      "github.com/highagency/ha/servers/mcp/tools.SpawnAgentsTool.withFilePathOption.WithString.func9"
+    ],
+    "firstPartyEntries": 128,
+    "firstPartyOwners": {
+      "main": 15,
+      "mcp/transport": 28,
+      "mcp/tools": 85
+    },
+    "exactHopperEntryMatches": 3502,
+    "noExactHopperEntryMatch": 1480,
+    "parserReference": "https://go.dev/src/debug/gosym/pclntab.go",
+    "embeddedBuildVersionBoth": "go1.26.10",
+    "embeddedModuleMetadataBytesIdentical": true
+  },
+  "anchors": [
+    {
+      "name": "github.com/highagency/ha/servers/mcp/tools.SaveTool",
+      "address": "0x10018ac40",
+      "end": "0x10018ae80",
+      "fileOffset": 1616960,
+      "bytes": 576,
+      "possibleHopperFragments": [
+        {
+          "address": "0x10018ac40",
+          "value": "sub_10018ac40"
+        },
+        {
+          "address": "0x10018ac50",
+          "value": "sub_10018ac50"
+        }
+      ]
+    },
+    {
+      "name": "github.com/highagency/ha/servers/mcp/tools.HandleSave",
+      "address": "0x10018b220",
+      "end": "0x10018b510",
+      "fileOffset": 1618464,
+      "bytes": 752,
+      "possibleHopperFragments": [
+        {
+          "address": "0x10018b220",
+          "value": "0x10018b220"
+        },
+        {
+          "address": "0x10018b23c",
+          "value": "sub_10018b23c"
+        }
+      ]
+    },
+    {
+      "name": "main.main",
+      "address": "0x1001a66a0",
+      "end": "0x1001a7200",
+      "fileOffset": 1730208,
+      "bytes": 2912,
+      "possibleHopperFragments": [
+        {
+          "address": "0x1001a66a0",
+          "value": "0x1001a66a0"
+        },
+        {
+          "address": "0x1001a6a4c",
+          "value": "sub_1001a6a4c"
+        },
+        {
+          "address": "0x1001a6b64",
+          "value": "sub_1001a6b64"
+        },
+        {
+          "address": "0x1001a6c7c",
+          "value": "sub_1001a6c7c"
+        },
+        {
+          "address": "0x1001a6d94",
+          "value": "sub_1001a6d94"
+        },
+        {
+          "address": "0x1001a6eb4",
+          "value": "sub_1001a6eb4"
+        },
+        {
+          "address": "0x1001a6fd4",
+          "value": "sub_1001a6fd4"
+        },
+        {
+          "address": "0x1001a70f8",
+          "value": "sub_1001a70f8"
+        }
+      ]
+    }
+  ],
+  "featureAllocations": [
+    {
+      "catalogId": "UPD22-22",
+      "tasks": ["MCP-05", "MCP-03-EXECUTE"],
+      "observation": "URI-option wrapper names replace file-path-option wrapper names for BrowserTool, ExecuteTool and SpawnAgentsTool. Packaged compiled evidence; live invocation remains unaccepted."
+    },
+    {
+      "catalogId": "UPD22-23",
+      "tasks": ["MCP-06-SAVE"],
+      "observation": "New SaveTool and HandleSave compiler entries; Hopper reads save name/description and handler response/failure strings. Availability/client gating and save behavior remain unaccepted."
+    }
+  ],
+  "limits": [
+    "Provider pseudocode is not original source or proof of complete function-body recovery.",
+    "Hopper public API exposes no complete function body ranges; Go entry matching and within-range fragments are separate metadata.",
+    "38 exact outside-signature matches do not establish signature validity, signing cause or whole-app runtime equivalence.",
+    "The launcher has no retained old bytes; current analysis is not historical delta proof.",
+    "Unbaselined native files, opaque/unread behavior, tool availability, backend operation and full Pen parity remain unaccepted."
+  ],
+  "privateOutputRoot": "local-evidence/pen-native-decomposition-2026-11-09/"
+}

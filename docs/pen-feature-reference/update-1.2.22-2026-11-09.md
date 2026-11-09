@@ -74,9 +74,17 @@ The raw 182-path ledger includes 25 package/dependency files, 77 internal-packag
 
 New workflows receive 16 narrow applicability-first cards; existing language, SVG, note, targeting, save-gate, menu and other cards are reused. Cloud entries each separate conversion, access, catalog, handoff or live refresh. Each card requires actual applicability evidence before independent implementation and executed acceptance. Historical 1.2.21 receipts retain their original scope; future current-reference checks record 1.2.22 explicitly. Schema upgrade/migration remains gated by FMT-09 rather than silently replacing old document data.
 
-The subsequent [Note control](../NOTE-REFERENCE-CONTROL.md) executes default/custom color,
-sizing/content-growth and raster-export probes through the actual app's document tools.
-It preserves the authored-versus-measured placement disagreement and explicitly unsaved
-state; physical native input and migration remain unqualified.
+The subsequent [Note control](../NOTE-REFERENCE-CONTROL.md) first executes default/custom
+color, sizing/content-growth and raster-export probes through the actual document tools,
+retaining the initial unsaved state and placement disagreement. Its later native reference
+follow-up observes preset/custom hex fields, text/history and Save As/Close/FileOpen for
+the named fixture; reopened frame RGBA bytes match exactly. The reopened bounds report Y24,
+while the earlier Y74 cause stays unknown. Open Pen Note interchange, migration, remaining
+native states and full parity remain unqualified.
 
 No full workflow, undisplayed screen/menu state, native clipboard, note migration, SVG fidelity, cloud backend, agent guide result or full Pen parity is accepted by this extraction.
+
+The subsequent [REA/Hopper native pass](native-1.2.22-2026-11-09.md) classifies 39
+retained native deltas and exports 5,897 provider procedure artifacts. It isolates actual
+code changes in the MCP helper, corroborates URI/save findings and retains the Go/Hopper
+coverage gaps explicitly. It does not convert packaged declarations into runtime acceptance.
