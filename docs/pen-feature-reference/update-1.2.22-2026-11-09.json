@@ -1,0 +1,942 @@
+{
+  "date": "2026-11-09",
+  "referenceApp": "/Applications/Pen.app",
+  "oldVersion": "1.2.21",
+  "installedVersion": "1.2.22",
+  "archiveSHA256": "1c6d0129dc9dda08f2f0da5dde23aa8cc52df11858fec1e35cd3bd2647bcf407",
+  "extractionEvidence": "ev_91ee022d75cee8e844941c6805f837db4a1381c642f4161e6c7374c6aa4af617",
+  "coverage": {
+    "oldFilesRehashed": 20800,
+    "newFilesRehashed": 20856,
+    "added": 59,
+    "removed": 3,
+    "changedSamePath": 120,
+    "unchanged": 20677,
+    "changedPathRecordsIncludingRemoved": 182,
+    "ownershipNote": "The raw delta firstParty field is only an out/package path heuristic. This catalogue includes internal node_modules/@ha owners explicitly.",
+    "uniqueRendererMessageIds": 2241,
+    "rendererMessageOccurrences": 2341,
+    "newEnglishMessageIdsNotEqualToOldLiterals": 266,
+    "semanticCompleteness": "Not established by file inventories or message IDs; opaque binary and bundled-code changes retain residual review.",
+    "outerBundle": {
+      "currentRegularFilesOutsideArchive": 432,
+      "copiedBytes": 944945261,
+      "oldRetainedRegularFiles": 181,
+      "comparison": {
+        "old-bytes-not-retained": 251,
+        "unchanged": 136,
+        "changed": 45
+      },
+      "symlinksRecordedNotFollowed": 14,
+      "limitation": "Old-byte absence is baseline coverage absence, not a new vendor file. This is a sequence of verified copies, not an atomic app snapshot. Archive entries and unpacked mirrors overlap by design."
+    }
+  },
+  "findings": [
+    {
+      "id": "UPD22-01",
+      "title": "Four explicit interface locales plus System",
+      "kind": "UI-observed",
+      "change": "English, Czech, Japanese and Simplified Chinese; System preference resolves language tags with English fallback. Native menu labels and desktop dialogs now use the shared localization owner.",
+      "basis": [
+        {
+          "version": "1.2.22",
+          "path": "node_modules/@ha/i18n/src/index.ts",
+          "line": 18,
+          "sha256": "de08e9f3c88f06acdd43ce1fb98b4c1aaef2a88d02d4d71f787689233208a4f7"
+        },
+        {
+          "version": "1.2.22",
+          "path": "out/menu.js",
+          "line": 724,
+          "sha256": "7d75b730155a51ea6e19ad6729edd8402c3576395cc0546a2e58516b64752f13"
+        }
+      ],
+      "taskIds": ["UI-10-LANGUAGE"],
+      "nativeObservation": [
+        "settings-language-options.txt",
+        "menu-app.txt",
+        "menu-file.txt",
+        "menu-edit.txt",
+        "menu-view.txt",
+        "menu-window.txt",
+        "menu-help.txt"
+      ],
+      "acceptance": "Unaccepted; resource declarations and observed UI availability do not prove the full workflow.",
+      "trello": [
+        {
+          "taskId": "UI-10-LANGUAGE",
+          "url": "https://trello.com/c/2nCgZnj8/369-ui-10-language-match-language-selection-and-system-fallback"
+        }
+      ]
+    },
+    {
+      "id": "UPD22-02",
+      "title": "SVG in native export and execute Export",
+      "kind": "UI-observed",
+      "change": "The native File export list gains SVG. Packaged execute reference adds SVG and describes scale-independent vector-path output; actual export fidelity is still unexecuted.",
+      "basis": [
+        {
+          "version": "1.2.22",
+          "path": "out/menu.js",
+          "line": 295,
+          "sha256": "7d75b730155a51ea6e19ad6729edd8402c3576395cc0546a2e58516b64752f13"
+        },
+        {
+          "version": "1.2.22",
+          "path": "out/skills/pen-dev/execute.md",
+          "line": 54,
+          "sha256": "2e8583f401427241141454614c6dcdc8926d397b2008e506e5d5d897c11b2144"
+        },
+        {
+          "version": "1.2.22",
+          "path": "out/skills/pen-dev/execute.md",
+          "line": 225,
+          "sha256": "2e8583f401427241141454614c6dcdc8926d397b2008e506e5d5d897c11b2144"
+        }
+      ],
+      "taskIds": ["IO-13-EXPORT", "IO-13-CLIPBOARD", "CLI-04-SVG"],
+      "nativeObservation": ["menu-file.txt"],
+      "acceptance": "Unaccepted; resource declarations and observed UI availability do not prove the full workflow.",
+      "trello": [
+        {
+          "taskId": "IO-13-EXPORT",
+          "url": "https://trello.com/c/6XfIejZR/376-io-13-export-match-svg-file-and-multi-selection-output"
+        },
+        {
+          "taskId": "IO-13-CLIPBOARD",
+          "url": "https://trello.com/c/EqlS8NXr/377-io-13-clipboard-deliver-selection-svg-through-the-native-clipboard"
+        },
+        {
+          "taskId": "CLI-04-SVG",
+          "url": "https://trello.com/c/xmz1m9jf/378-cli-04-svg-export-explicit-svg-from-the-independent-cli"
+        }
+      ]
+    },
+    {
+      "id": "UPD22-03",
+      "title": "Removed native design-to-code guide entry",
+      "kind": "changed-menu",
+      "change": "File removes its design-to-code guide entry; the Figma guide remains. Preserve the old contract and compare current menu membership before changing Open Pen.",
+      "basis": [
+        {
+          "version": "1.2.22",
+          "path": "out/menu.js",
+          "line": 359,
+          "sha256": "7d75b730155a51ea6e19ad6729edd8402c3576395cc0546a2e58516b64752f13"
+        },
+        {
+          "version": "1.2.21",
+          "path": "out/menu.js",
+          "line": 219,
+          "sha256": "5f41435a20207ae846751af1ffd9333420d5d574eab053683fd760888ab84c1f"
+        }
+      ],
+      "taskIds": ["MENU-FILE"],
+      "nativeObservation": ["menu-file.txt"],
+      "acceptance": "Unaccepted; resource declarations and observed UI availability do not prove the full workflow.",
+      "trello": [
+        {
+          "taskId": "MENU-FILE",
+          "url": "https://trello.com/c/WGWi4KGG/134-menu-file-file-and-recent-export-submenus-menu-parity"
+        }
+      ]
+    },
+    {
+      "id": "UPD22-04",
+      "title": "Schema 2.22 sticky-note shape",
+      "kind": "changed-serialization",
+      "change": "Note adds color with documented default #FEE484 and drops TextStyle inheritance. Prompt and Context leave the published unions. Keep older data and gate migration/round-trip behavior explicitly.",
+      "basis": [
+        {
+          "version": "1.2.22",
+          "path": "node_modules/@ha/schema/src/generated-types-public.ts",
+          "line": 317,
+          "sha256": "082c8af9c2c72b4b4a499b40fa0210a6faead592a245561576bcd252de576ea3"
+        },
+        {
+          "version": "1.2.22",
+          "path": "out/skills/pen-dev/pen-schema.md",
+          "line": 223,
+          "sha256": "e3469647c3e15bca16f6ba1ece8bfe1fb2c0b5b240c69f95451616c33048a2d3"
+        }
+      ],
+      "taskIds": ["FMT-09-DRIFT", "DRAW-16-AUTHOR"],
+      "nativeObservation": null,
+      "acceptance": "Unaccepted; resource declarations and observed UI availability do not prove the full workflow.",
+      "trello": [
+        {
+          "taskId": "FMT-09-DRIFT",
+          "url": "https://trello.com/c/eZXKvRhb/386-fmt-09-drift-qualify-current-schema-changes-against-pinned221"
+        },
+        {
+          "taskId": "DRAW-16-AUTHOR",
+          "url": "https://trello.com/c/Tg89QoKD/370-draw-16-author-match-note-creation-text-and-color-editing"
+        }
+      ]
+    },
+    {
+      "id": "UPD22-05",
+      "title": "Sticky-note Send to Agent surface",
+      "kind": "changed-renderer",
+      "change": "The shipped renderer has a sticky-note Send to Agent control and revised sticky tool labels. Selection, history, migration, typography and send-context behavior need owned-fixture execution.",
+      "basis": [
+        {
+          "version": "1.2.22",
+          "path": "out/editor/assets/index.js",
+          "line": 459,
+          "column": 198657,
+          "messageId": "canvas.stickyNote.sendToAgent",
+          "sha256": "9287a8a40617929bc99c059e7a408e0ffa905e9531f320ee6e99943379fc031a"
+        }
+      ],
+      "taskIds": ["DRAW-16-SEND", "SURF-TOOLS-STICKY"],
+      "nativeObservation": null,
+      "acceptance": "Unaccepted; resource declarations and observed UI availability do not prove the full workflow.",
+      "trello": [
+        {
+          "taskId": "DRAW-16-SEND",
+          "url": "https://trello.com/c/NFU4Am1a/371-draw-16-send-send-selected-note-text-to-the-intended-agent"
+        },
+        {
+          "taskId": "SURF-TOOLS-STICKY",
+          "url": "https://trello.com/c/pTyOIc5U/122-surf-tools-sticky-sticky-surface-visual-and-interaction-states"
+        }
+      ]
+    },
+    {
+      "id": "UPD22-06",
+      "title": "Competitive research guide",
+      "kind": "new-bundled-guide",
+      "change": "A newly packaged workflow guide is registered as a non-custom pen.dev skill. Registry presence is verified; native slash discovery and agent output are not accepted.",
+      "basis": [
+        {
+          "version": "1.2.22",
+          "path": "out/skills-manager.js",
+          "line": 60,
+          "sha256": "8731eb5f7529cd88bfb271b4c095e8f7b53cae5459e7d2283666bf9aa848f2ed"
+        },
+        {
+          "version": "1.2.22",
+          "path": "out/skills/pen-dev/competitive-research.md",
+          "line": 1,
+          "sha256": "dc2200529fd263834557277648f6ecf01e30a643ffdac3bddf8d93d8d3b9fc1d"
+        }
+      ],
+      "taskIds": ["UPD22-GUIDE-COMPETE"],
+      "nativeObservation": null,
+      "acceptance": "Unaccepted; resource declarations and observed UI availability do not prove the full workflow.",
+      "trello": [
+        {
+          "taskId": "UPD22-GUIDE-COMPETE",
+          "url": "https://trello.com/c/f3xegAZL/414-upd22-guide-compete-competitive-research-guide"
+        }
+      ]
+    },
+    {
+      "id": "UPD22-07",
+      "title": "Recruiting profile comparison guide",
+      "kind": "new-bundled-guide",
+      "change": "A newly packaged workflow guide is registered as a non-custom pen.dev skill. Registry presence is verified; native slash discovery and agent output are not accepted.",
+      "basis": [
+        {
+          "version": "1.2.22",
+          "path": "out/skills-manager.js",
+          "line": 65,
+          "sha256": "8731eb5f7529cd88bfb271b4c095e8f7b53cae5459e7d2283666bf9aa848f2ed"
+        },
+        {
+          "version": "1.2.22",
+          "path": "out/skills/pen-dev/recruiting-profiles.md",
+          "line": 1,
+          "sha256": "2a41b4c8c5aad7714af89e47f22c608ae0091227e2e01ba433e846e67fb635f8"
+        }
+      ],
+      "taskIds": ["UPD22-GUIDE-RECRUIT"],
+      "nativeObservation": null,
+      "acceptance": "Unaccepted; resource declarations and observed UI availability do not prove the full workflow.",
+      "trello": [
+        {
+          "taskId": "UPD22-GUIDE-RECRUIT",
+          "url": "https://trello.com/c/wHIF8NR6/415-upd22-guide-recruit-recruiting-profile-comparison-guide"
+        }
+      ]
+    },
+    {
+      "id": "UPD22-08",
+      "title": "Website sitemap guide",
+      "kind": "new-bundled-guide",
+      "change": "A newly packaged workflow guide is registered as a non-custom pen.dev skill. Registry presence is verified; native slash discovery and agent output are not accepted.",
+      "basis": [
+        {
+          "version": "1.2.22",
+          "path": "out/skills-manager.js",
+          "line": 70,
+          "sha256": "8731eb5f7529cd88bfb271b4c095e8f7b53cae5459e7d2283666bf9aa848f2ed"
+        },
+        {
+          "version": "1.2.22",
+          "path": "out/skills/pen-dev/sitemap.md",
+          "line": 1,
+          "sha256": "355f0b5c1c607b17d04136172af17556b94ebd7e95b22f4196b93589bfd8c779"
+        }
+      ],
+      "taskIds": ["UPD22-GUIDE-SITEMAP"],
+      "nativeObservation": null,
+      "acceptance": "Unaccepted; resource declarations and observed UI availability do not prove the full workflow.",
+      "trello": [
+        {
+          "taskId": "UPD22-GUIDE-SITEMAP",
+          "url": "https://trello.com/c/tHaexdJ1/416-upd22-guide-sitemap-website-sitemap-guide"
+        }
+      ]
+    },
+    {
+      "id": "UPD22-09",
+      "title": "Travel planning guide",
+      "kind": "new-bundled-guide",
+      "change": "A newly packaged workflow guide is registered as a non-custom pen.dev skill. Registry presence is verified; native slash discovery and agent output are not accepted.",
+      "basis": [
+        {
+          "version": "1.2.22",
+          "path": "out/skills-manager.js",
+          "line": 75,
+          "sha256": "8731eb5f7529cd88bfb271b4c095e8f7b53cae5459e7d2283666bf9aa848f2ed"
+        },
+        {
+          "version": "1.2.22",
+          "path": "out/skills/pen-dev/travel-plan.md",
+          "line": 1,
+          "sha256": "bfc5b242ee021bafbf47fb051c775cc647d58aa926bd7934c8fbf7b340f03592"
+        }
+      ],
+      "taskIds": ["UPD22-GUIDE-TRAVEL"],
+      "nativeObservation": null,
+      "acceptance": "Unaccepted; resource declarations and observed UI availability do not prove the full workflow.",
+      "trello": [
+        {
+          "taskId": "UPD22-GUIDE-TRAVEL",
+          "url": "https://trello.com/c/gIR9UQcj/417-upd22-guide-travel-travel-planning-guide"
+        }
+      ]
+    },
+    {
+      "id": "UPD22-10",
+      "title": "Responsive website reflow guide",
+      "kind": "new-bundled-guide",
+      "change": "A newly packaged workflow guide is registered as a non-custom pen.dev skill. Registry presence is verified; native slash discovery and agent output are not accepted.",
+      "basis": [
+        {
+          "version": "1.2.22",
+          "path": "out/skills-manager.js",
+          "line": 80,
+          "sha256": "8731eb5f7529cd88bfb271b4c095e8f7b53cae5459e7d2283666bf9aa848f2ed"
+        },
+        {
+          "version": "1.2.22",
+          "path": "out/skills/pen-dev/guide/make-website-responsive.md",
+          "line": 6,
+          "sha256": "b98a2fd8687ee1187bdcbef1b0da7bf16a8c4ac3bde9ce63a961c5dca34e4783"
+        }
+      ],
+      "taskIds": ["UPD22-GUIDE-RESPONSIVE"],
+      "nativeObservation": null,
+      "acceptance": "Unaccepted; resource declarations and observed UI availability do not prove the full workflow.",
+      "trello": [
+        {
+          "taskId": "UPD22-GUIDE-RESPONSIVE",
+          "url": "https://trello.com/c/0Qkmap7m/418-upd22-guide-responsive-responsive-website-reflow-guide"
+        }
+      ]
+    },
+    {
+      "id": "UPD22-11",
+      "title": "Stacked entrances and scroll reveals guide",
+      "kind": "new-bundled-guide",
+      "change": "A newly packaged workflow guide is registered as a non-custom pen.dev skill. Registry presence is verified; native slash discovery and agent output are not accepted.",
+      "basis": [
+        {
+          "version": "1.2.22",
+          "path": "out/skills-manager.js",
+          "line": 85,
+          "sha256": "8731eb5f7529cd88bfb271b4c095e8f7b53cae5459e7d2283666bf9aa848f2ed"
+        },
+        {
+          "version": "1.2.22",
+          "path": "out/skills/pen-dev/guide/add-stacked-animations.md",
+          "line": 6,
+          "sha256": "29b3ae97b336deeede7e19c0a5192a597e74a16a5d0de1b6febdcb0b896f6ae8"
+        }
+      ],
+      "taskIds": ["UPD22-GUIDE-ANIMATIONS"],
+      "nativeObservation": null,
+      "acceptance": "Unaccepted; resource declarations and observed UI availability do not prove the full workflow.",
+      "trello": [
+        {
+          "taskId": "UPD22-GUIDE-ANIMATIONS",
+          "url": "https://trello.com/c/SUNGrRuI/419-upd22-guide-animations-stacked-entrances-and-scroll-reveals-guide"
+        }
+      ]
+    },
+    {
+      "id": "UPD22-12",
+      "title": "Website implementation and canvas/site iteration guide",
+      "kind": "new-guide-reference",
+      "change": "The packaged skill index adds code-website, describing a running site beside its design in browser nodes and request-driven iteration. It is not one of the six newly registered PEN_GUIDES menu entries.",
+      "basis": [
+        {
+          "version": "1.2.22",
+          "path": "out/skills/pen-dev/SKILL.md",
+          "line": 25,
+          "sha256": "46f856171f8af41aef233faf3c87cf27c66f6cf63bac7537ab27a54f576a2bff"
+        },
+        {
+          "version": "1.2.22",
+          "path": "out/skills/pen-dev/code-website.md",
+          "line": 1,
+          "sha256": "55ec04e8ce6482c3784ecee7f73fae5fa3274dcf2fa6fac0a8d82a68e2a82411"
+        }
+      ],
+      "taskIds": ["UPD22-GUIDE-WEBSITE"],
+      "nativeObservation": null,
+      "acceptance": "Unaccepted; resource declarations and observed UI availability do not prove the full workflow.",
+      "trello": [
+        {
+          "taskId": "UPD22-GUIDE-WEBSITE",
+          "url": "https://trello.com/c/joNq51wt/420-upd22-guide-website-website-implementation-and-canvas-site-iteration-guide"
+        }
+      ]
+    },
+    {
+      "id": "UPD22-13",
+      "title": "Whiteboard workflow revision and example",
+      "kind": "changed-guide-reference",
+      "change": "Research instructions prioritize selected/existing sources, with a new whiteboard-example appendix. This is guidance content, not proof of a new browser capability.",
+      "basis": [
+        {
+          "version": "1.2.22",
+          "path": "out/skills/pen-dev/whiteboard.md",
+          "line": 1,
+          "sha256": "e55b143feed85f3d6a0b955800f58806f5661ad1df6eefceead9f484b5ec0b7c"
+        },
+        {
+          "version": "1.2.22",
+          "path": "out/skills/pen-dev/guide/whiteboard-example.md",
+          "line": 1,
+          "sha256": "27095714f6fc73f5e0e577ad3452efe2de65c3220f7769b75dd6ed9df8c23e62"
+        }
+      ],
+      "taskIds": ["AI-07", "MCP-03-READSKILL"],
+      "nativeObservation": null,
+      "acceptance": "Unaccepted; resource declarations and observed UI availability do not prove the full workflow.",
+      "trello": [
+        {
+          "taskId": "AI-07",
+          "url": "https://trello.com/c/drOvPVmM/222-ai-07-skills"
+        },
+        {
+          "taskId": "MCP-03-READSKILL",
+          "url": "https://trello.com/c/py0nmCOL/59-mcp-03-readskill-readskill-public-tool-contract"
+        }
+      ]
+    },
+    {
+      "id": "UPD22-14",
+      "title": "Snapshot/cloud share-kind conversion",
+      "kind": "packaged-contract",
+      "change": "Share status declares snapshot versus cloud; an owner conversion API preserves link identity and describes freezing/clearing edit grants. Backend availability and visible conversion controls are unverified.",
+      "basis": [
+        {
+          "version": "1.2.22",
+          "path": "node_modules/@ha/api/src/share.ts",
+          "line": 8,
+          "sha256": "5c01e21b4d71eb40b660cfc7c38cbf082b89756298641106f1ccca503dc87394"
+        },
+        {
+          "version": "1.2.22",
+          "path": "node_modules/@ha/api/src/share.ts",
+          "line": 358,
+          "sha256": "5c01e21b4d71eb40b660cfc7c38cbf082b89756298641106f1ccca503dc87394"
+        }
+      ],
+      "taskIds": ["UPD22-CLOUD-CONVERT"],
+      "nativeObservation": null,
+      "acceptance": "Unaccepted; resource declarations and observed UI availability do not prove the full workflow.",
+      "trello": [
+        {
+          "taskId": "UPD22-CLOUD-CONVERT",
+          "url": "https://trello.com/c/Qs6ElOzD/421-upd22-cloud-convert-snapshot-cloud-share-kind-conversion"
+        }
+      ]
+    },
+    {
+      "id": "UPD22-15",
+      "title": "Cloud document resolution and edit capabilities",
+      "kind": "packaged-contract",
+      "change": "Share manifests/resolution add edit, sign-in requirements and ACL-aware resolution by share ID. A shipped schema does not establish server enforcement.",
+      "basis": [
+        {
+          "version": "1.2.22",
+          "path": "node_modules/@ha/api/src/share.ts",
+          "line": 383,
+          "sha256": "5c01e21b4d71eb40b660cfc7c38cbf082b89756298641106f1ccca503dc87394"
+        }
+      ],
+      "taskIds": ["UPD22-CLOUD-ACCESS"],
+      "nativeObservation": null,
+      "acceptance": "Unaccepted; resource declarations and observed UI availability do not prove the full workflow.",
+      "trello": [
+        {
+          "taskId": "UPD22-CLOUD-ACCESS",
+          "url": "https://trello.com/c/z0j57bU7/422-upd22-cloud-access-cloud-document-resolution-and-edit-capabilities"
+        }
+      ]
+    },
+    {
+      "id": "UPD22-16",
+      "title": "Workspace cloud catalog and Shared with me",
+      "kind": "packaged-contract",
+      "change": "New list contracts distinguish workspace-visible cloud documents and externally shared edit grants, with owner/editor/viewer roles.",
+      "basis": [
+        {
+          "version": "1.2.22",
+          "path": "node_modules/@ha/api/src/share.ts",
+          "line": 441,
+          "sha256": "5c01e21b4d71eb40b660cfc7c38cbf082b89756298641106f1ccca503dc87394"
+        },
+        {
+          "version": "1.2.22",
+          "path": "node_modules/@ha/api/src/share.ts",
+          "line": 462,
+          "sha256": "5c01e21b4d71eb40b660cfc7c38cbf082b89756298641106f1ccca503dc87394"
+        }
+      ],
+      "taskIds": ["UPD22-CLOUD-CATALOG"],
+      "nativeObservation": null,
+      "acceptance": "Unaccepted; resource declarations and observed UI availability do not prove the full workflow.",
+      "trello": [
+        {
+          "taskId": "UPD22-CLOUD-CATALOG",
+          "url": "https://trello.com/c/mIJtuvZK/423-upd22-cloud-catalog-workspace-cloud-catalog-and-shared-with-me"
+        }
+      ]
+    },
+    {
+      "id": "UPD22-17",
+      "title": "Web editor one-time session handoff",
+      "kind": "packaged-contract",
+      "change": "New mint/exchange API contracts describe a one-time code exchanged for a web-editor device session. No account, token or handoff was exercised.",
+      "basis": [
+        {
+          "version": "1.2.22",
+          "path": "node_modules/@ha/api/src/share.ts",
+          "line": 606,
+          "sha256": "5c01e21b4d71eb40b660cfc7c38cbf082b89756298641106f1ccca503dc87394"
+        }
+      ],
+      "taskIds": ["UPD22-CLOUD-HANDOFF"],
+      "nativeObservation": null,
+      "acceptance": "Unaccepted; resource declarations and observed UI availability do not prove the full workflow.",
+      "trello": [
+        {
+          "taskId": "UPD22-CLOUD-HANDOFF",
+          "url": "https://trello.com/c/RvEbQ35g/424-upd22-cloud-handoff-web-editor-one-time-session-handoff"
+        }
+      ]
+    },
+    {
+      "id": "UPD22-18",
+      "title": "Live share refresh and document provider",
+      "kind": "packaged-implementation",
+      "change": "New shared document/provider code reads bounded zstd document bytes, uses etag/204 cache and optional version pins, and separates API authorization from signed object fetches. A visible-page five-second poller compares fingerprints; failed apply stays eligible for retry. Renderer copy includes sync/sign-in/error/edit-access-lost states; actual remote sync is unexecuted.",
+      "basis": [
+        {
+          "version": "1.2.22",
+          "path": "node_modules/@ha/shared/src/share-live-update.ts",
+          "line": 4,
+          "sha256": "6b96c45c62b70070bb11754a5ef2d76816dd05cd31f46e08e93fda826210f785"
+        },
+        {
+          "version": "1.2.22",
+          "path": "node_modules/@ha/shared/src/shared-document-provider.ts",
+          "line": 12,
+          "sha256": "9996e9980b2c619b6c7f6bfd76a21e511cdbdb2ccdf10f60d0a8fbea2d002db3"
+        }
+      ],
+      "taskIds": ["UPD22-CLOUD-LIVE"],
+      "nativeObservation": null,
+      "acceptance": "Unaccepted; resource declarations and observed UI availability do not prove the full workflow.",
+      "trello": [
+        {
+          "taskId": "UPD22-CLOUD-LIVE",
+          "url": "https://trello.com/c/4RazN4kT/425-upd22-cloud-live-live-share-refresh-and-document-provider"
+        }
+      ]
+    },
+    {
+      "id": "UPD22-19",
+      "title": "Native browser box-model and layout overlays",
+      "kind": "packaged-implementation",
+      "change": "The browser picker adds native CDP overlay rendering, content/padding/border/margin and flex/grid spacing labels. Capture temporarily suspends overlays and refreshes on zoom/chrome changes.",
+      "basis": [
+        {
+          "version": "1.2.22",
+          "path": "node_modules/@ha/electron-browser-import/src/native-picker-overlay.ts",
+          "line": 29,
+          "sha256": "079b0c9eac4576b10e9ab9b2d54423b0ae13d3ccee2274e5d5c3513a7de77f42"
+        },
+        {
+          "version": "1.2.22",
+          "path": "node_modules/@ha/electron-browser-import/src/spacing-labels.ts",
+          "line": 7,
+          "sha256": "b592501a0504907de9911abed6f763b6ff2dc464100f49fdb4fe8f3fdc9f0487"
+        }
+      ],
+      "taskIds": ["UPD22-BROWSER-OVERLAY"],
+      "nativeObservation": null,
+      "acceptance": "Unaccepted; resource declarations and observed UI availability do not prove the full workflow.",
+      "trello": [
+        {
+          "taskId": "UPD22-BROWSER-OVERLAY",
+          "url": "https://trello.com/c/cKWrFiKG/426-upd22-browser-overlay-native-browser-box-model-and-layout-overlays"
+        }
+      ]
+    },
+    {
+      "id": "UPD22-20",
+      "title": "Browser per-side spacing copy surface",
+      "kind": "changed-renderer",
+      "change": "Renderer labels identify separate padding and margin sides, copy feedback and selected-component names. Source labels are inventoried; exact hit targets and copied values remain unverified.",
+      "basis": [
+        {
+          "version": "1.2.22",
+          "path": "out/editor/assets/index.js",
+          "line": 6891,
+          "column": 114656,
+          "messageId": "browser.styleStrip.label.paddingTop",
+          "sha256": "9287a8a40617929bc99c059e7a408e0ffa905e9531f320ee6e99943379fc031a"
+        },
+        {
+          "version": "1.2.22",
+          "path": "node_modules/@ha/browser-inject/src/spacing-label.ts",
+          "line": 1,
+          "sha256": "b90525f80848d76075ef7320b8f5dcf03b5844642a178b39a0921701f0425922"
+        }
+      ],
+      "taskIds": ["UPD22-BROWSER-SPACING"],
+      "nativeObservation": null,
+      "acceptance": "Unaccepted; resource declarations and observed UI availability do not prove the full workflow.",
+      "trello": [
+        {
+          "taskId": "UPD22-BROWSER-SPACING",
+          "url": "https://trello.com/c/jCASBuX9/427-upd22-browser-spacing-browser-per-side-spacing-copy-surface"
+        }
+      ]
+    },
+    {
+      "id": "UPD22-21",
+      "title": "Browser second-press input interception",
+      "kind": "packaged-implementation",
+      "change": "New guest-WebContents handling intercepts a left second press before a deadline, swallows the matching mouse-up, and notifies the host. Native selection/focus timing needs a fixture.",
+      "basis": [
+        {
+          "version": "1.2.22",
+          "path": "out/browser-node-ipc.js",
+          "line": 598,
+          "sha256": "06b7bee2493ba8af8e5d052cc35841bca600b65c9d3fe5383351bd1a297e6cb7"
+        }
+      ],
+      "taskIds": ["UPD22-BROWSER-SECOND"],
+      "nativeObservation": null,
+      "acceptance": "Unaccepted; resource declarations and observed UI availability do not prove the full workflow.",
+      "trello": [
+        {
+          "taskId": "UPD22-BROWSER-SECOND",
+          "url": "https://trello.com/c/z6FwQjSA/428-upd22-browser-second-browser-second-press-input-interception"
+        }
+      ]
+    },
+    {
+      "id": "UPD22-22",
+      "title": "URI-first tool document targeting",
+      "kind": "changed-contract",
+      "change": "ToolDocument adds uri with legacy filePath fallback. Agent streaming and host routing propagate uri; desktop agent opening now converts file URLs. Do not equate schema presence with correct multi-document mutation.",
+      "basis": [
+        {
+          "version": "1.2.22",
+          "path": "node_modules/@ha/shared/src/agent.ts",
+          "line": 926,
+          "sha256": "3a5230ffd03c9d55e542cdd21f67d8a0b92b8b33712ffce57930db75c2c6987c"
+        },
+        {
+          "version": "1.2.22",
+          "path": "node_modules/@ha/ipc/src/ipc-device-manager.ts",
+          "line": 1341,
+          "sha256": "02df2a374c6101d6ec6851d495ee41170da33602f14444afede9544fd8fd3c8d"
+        }
+      ],
+      "taskIds": ["MCP-05", "MCP-03-EXECUTE"],
+      "nativeObservation": null,
+      "acceptance": "Unaccepted; resource declarations and observed UI availability do not prove the full workflow.",
+      "trello": [
+        {
+          "taskId": "MCP-05",
+          "url": "https://trello.com/c/Emr6EgtS/64-mcp-05-document-targeting"
+        },
+        {
+          "taskId": "MCP-03-EXECUTE",
+          "url": "https://trello.com/c/hN4jl4nX/61-mcp-03-execute-execute-public-tool-contract"
+        }
+      ]
+    },
+    {
+      "id": "UPD22-23",
+      "title": "Internal Codex save-tool availability",
+      "kind": "changed-provider-gate",
+      "change": "The packaged Codex integration explicitly sets disableSaveTool:true when constructing its MCP configuration. External tool availability remains a separate contract.",
+      "basis": [
+        {
+          "version": "1.2.22",
+          "path": "node_modules/@ha/agent/src/codex/index.ts",
+          "line": 475,
+          "sha256": "7a1cfaddb99726fdd63e85f372c2cec09e7216fe7f2b4623c5ca663b8878f88c"
+        }
+      ],
+      "taskIds": ["MCP-06-SAVE"],
+      "nativeObservation": null,
+      "acceptance": "Unaccepted; resource declarations and observed UI availability do not prove the full workflow.",
+      "trello": [
+        {
+          "taskId": "MCP-06-SAVE",
+          "url": "https://trello.com/c/PpBoc7BY/382-mcp-06-save-match-save-tool-availability-and-document-targeting"
+        }
+      ]
+    },
+    {
+      "id": "UPD22-24",
+      "title": "Model-result feedback controls and retraction",
+      "kind": "packaged-implementation",
+      "change": "Eligible hosted-model runs carry conversation/turn feedback targets. Renderer adds Good/Bad result and optional comment controls; source defines submit/retract. No feedback or user conversation was transmitted.",
+      "basis": [
+        {
+          "version": "1.2.22",
+          "path": "node_modules/@ha/shared/src/inference.ts",
+          "line": 71,
+          "sha256": "ccc3892bb49206f56bcb11e326d60f744afa6652cd4add5f9ee661c86adda7cb"
+        },
+        {
+          "version": "1.2.22",
+          "path": "node_modules/@ha/agent/src/pi/session-events.ts",
+          "line": 132,
+          "sha256": "8c382864becf8081be6614f06623dcee17f6fba6164456a3f55055c955ad383b"
+        },
+        {
+          "version": "1.2.22",
+          "path": "out/editor/assets/index.js",
+          "line": 7120,
+          "column": 76861,
+          "messageId": "agent.chat.feedback.good",
+          "sha256": "9287a8a40617929bc99c059e7a408e0ffa905e9531f320ee6e99943379fc031a"
+        }
+      ],
+      "taskIds": ["UPD22-AI-FEEDBACK"],
+      "nativeObservation": null,
+      "acceptance": "Unaccepted; resource declarations and observed UI availability do not prove the full workflow.",
+      "trello": [
+        {
+          "taskId": "UPD22-AI-FEEDBACK",
+          "url": "https://trello.com/c/ngJgAska/429-upd22-ai-feedback-model-result-feedback-controls-and-retraction"
+        }
+      ]
+    },
+    {
+      "id": "UPD22-25",
+      "title": "Hosted inference payload compression and older-image omission",
+      "kind": "vendor-service-change",
+      "change": "The Pen-hosted provider adapter adds gzip request bodies and omits oldest images above its proxy limits, plus oversized-request classification. Catalog only for this specific provider; do not copy its host/limits or silently drop Open Pen CLI context.",
+      "basis": [
+        {
+          "version": "1.2.22",
+          "path": "node_modules/@ha/agent/src/pi/pencil-provider.ts",
+          "line": 73,
+          "sha256": "d1e66d38b08c7c346c6c346a558b766e2c0f0a24cfbc40f59e06fc6df3f99350"
+        },
+        {
+          "version": "1.2.22",
+          "path": "node_modules/@ha/shared/src/inference.ts",
+          "line": 162,
+          "sha256": "ccc3892bb49206f56bcb11e326d60f744afa6652cd4add5f9ee661c86adda7cb"
+        }
+      ],
+      "taskIds": ["AUTH-05-ADVANCED"],
+      "nativeObservation": null,
+      "acceptance": "Unaccepted; resource declarations and observed UI availability do not prove the full workflow.",
+      "trello": [
+        {
+          "taskId": "AUTH-05-ADVANCED",
+          "url": "https://trello.com/c/Xv3V4jV7/385-auth-05-advanced-match-custom-provider-limits-and-completion-options"
+        }
+      ]
+    },
+    {
+      "id": "UPD22-26",
+      "title": "Hosted title model and legacy aliases",
+      "kind": "vendor-service-change",
+      "change": "Hosted title-model/default aliases change to deepseek-v4.1-flash. This is not proof that the model is available on an existing Codex/Claude login, and does not change Open Pen provider choices.",
+      "basis": [
+        {
+          "version": "1.2.22",
+          "path": "node_modules/@ha/shared/src/inference.ts",
+          "line": 32,
+          "sha256": "ccc3892bb49206f56bcb11e326d60f744afa6652cd4add5f9ee661c86adda7cb"
+        }
+      ],
+      "taskIds": ["AUTH-06"],
+      "nativeObservation": null,
+      "acceptance": "Unaccepted; resource declarations and observed UI availability do not prove the full workflow.",
+      "trello": [
+        {
+          "taskId": "AUTH-06",
+          "url": "https://trello.com/c/3ATZT3BQ/55-auth-06-connection-lifecycle"
+        }
+      ]
+    },
+    {
+      "id": "UPD22-27",
+      "title": "Bundled kit classification replaces description field",
+      "kind": "changed-metadata",
+      "change": "The same five bundled kits now use ComponentKit/DesignSystem category values; native dashboard still presents the five corresponding kits. No new kit file is added.",
+      "basis": [
+        {
+          "version": "1.2.22",
+          "path": "node_modules/@ha/shared/src/bundled-documents.ts",
+          "line": 5,
+          "sha256": "673f0b2fb28c15658d533662daf8588f3681746abc2c932b5a159de1ec597026"
+        }
+      ],
+      "taskIds": ["FILE-02"],
+      "nativeObservation": ["design-systems.txt"],
+      "acceptance": "Unaccepted; resource declarations and observed UI availability do not prove the full workflow.",
+      "trello": [
+        {
+          "taskId": "FILE-02",
+          "url": "https://trello.com/c/J8UZort9/69-file-02-dashboard-categories"
+        }
+      ]
+    },
+    {
+      "id": "UPD22-28",
+      "title": "Tab hover/focus and CSS utility changes",
+      "kind": "changed-styles",
+      "change": "CSS has 69 added,58 removed selector/context keys and one changed declaration group. The changed root group removes six utility variables; retained root values are unchanged. Added masks/focus/coarse-pointer rules need component-level state comparison; utility presence alone does not prove a screen change.",
+      "basis": [
+        {
+          "version": "1.2.22",
+          "path": "out/editor/assets/index-J5bM-og-.css",
+          "line": 1,
+          "sha256": "f1e33120c1521a168d5fa19c17860f587f1a970371434025ca981aea054696d6"
+        }
+      ],
+      "taskIds": ["SURF-HOME", "SURF-NATIVE", "MENU-BRAND"],
+      "nativeObservation": null,
+      "acceptance": "Unaccepted; resource declarations and observed UI availability do not prove the full workflow.",
+      "trello": [
+        {
+          "taskId": "SURF-HOME",
+          "url": "https://trello.com/c/KY4RY62U/102-surf-home-home-tabs-search-and-import-composer-layout"
+        },
+        {
+          "taskId": "SURF-NATIVE",
+          "url": "https://trello.com/c/RIrbEFXN/118-surf-native-native-package-dock-and-window-chrome"
+        },
+        {
+          "taskId": "MENU-BRAND",
+          "url": "https://trello.com/c/iW2YpYWO/143-menu-brand-top-left-brand-popup-menu-parity"
+        }
+      ]
+    },
+    {
+      "id": "UPD22-29",
+      "title": "Hosted payment-failure presentation",
+      "kind": "vendor-billing-copy",
+      "change": "Renderer adds payment-failure advice and a payment-method action. Editor subscriptions/licensing remain excluded from Open Pen scope; no payment/account action was taken.",
+      "basis": [
+        {
+          "version": "1.2.22",
+          "path": "out/editor/assets/index.js",
+          "line": 8152,
+          "column": 35335,
+          "messageId": "settings.usage.paymentIssueTitle",
+          "sha256": "9287a8a40617929bc99c059e7a408e0ffa905e9531f320ee6e99943379fc031a"
+        }
+      ],
+      "taskIds": [],
+      "nativeObservation": null,
+      "acceptance": "Unaccepted; resource declarations and observed UI availability do not prove the full workflow.",
+      "trello": []
+    },
+    {
+      "id": "UPD22-30",
+      "title": "Copy selection as SVG command",
+      "kind": "new-renderer-command",
+      "change": "The renderer registers copy-as-svg in addition to native file export. Clipboard bytes, multi-selection behavior and trusted native delivery remain unexecuted.",
+      "basis": [
+        {
+          "version": "1.2.22",
+          "path": "out/editor/assets/index.js",
+          "line": 471,
+          "sha256": "9287a8a40617929bc99c059e7a408e0ffa905e9531f320ee6e99943379fc031a"
+        }
+      ],
+      "taskIds": ["IO-13-CLIPBOARD"],
+      "nativeObservation": null,
+      "acceptance": "Unaccepted; resource declarations and observed UI availability do not prove the full workflow.",
+      "trello": [
+        {
+          "taskId": "IO-13-CLIPBOARD",
+          "url": "https://trello.com/c/EqlS8NXr/377-io-13-clipboard-deliver-selection-svg-through-the-native-clipboard"
+        }
+      ]
+    },
+    {
+      "id": "UPD22-31",
+      "title": "Chat command label renames",
+      "kind": "changed-menu-copy",
+      "change": "Existing new-agent and show-agent-chat commands are relabeled New chat and Show chat. These are renamed surfaces, not new command capabilities.",
+      "basis": [
+        {
+          "version": "1.2.22",
+          "path": "out/editor/assets/index.js",
+          "line": 471,
+          "sha256": "9287a8a40617929bc99c059e7a408e0ffa905e9531f320ee6e99943379fc031a"
+        },
+        {
+          "version": "1.2.22",
+          "path": "out/editor/assets/index.js",
+          "line": 471,
+          "sha256": "9287a8a40617929bc99c059e7a408e0ffa905e9531f320ee6e99943379fc031a"
+        }
+      ],
+      "taskIds": ["SURF-AGENT", "UI-13-PALETTE"],
+      "nativeObservation": null,
+      "acceptance": "Unaccepted; resource declarations and observed UI availability do not prove the full workflow.",
+      "trello": [
+        {
+          "taskId": "SURF-AGENT",
+          "url": "https://trello.com/c/odtTtoGR/103-surf-agent-agent-composer-layout-and-focus-states"
+        },
+        {
+          "taskId": "UI-13-PALETTE",
+          "url": "https://trello.com/c/81hEAPER/368-ui-13-palette-match-command-search-states-and-execution"
+        }
+      ]
+    }
+  ],
+  "residuals": [
+    "Native asset catalog retains23records with7added/7removed rendition digests; exact rendered icon differences are unverified. Discovery coverage remains unknown beneath symlinks.",
+    "All38integrity mismatch paths exist in both versions; all38observed hashes differ. Packaging/signing cause and executable semantic equivalence are unproven. None of these copied binaries was executed.",
+    "Current and old loose visual assets match:477measured images/SVG/fonts,99CSSfiles,0metadata errors. Native CAR rendition changes remain separate.",
+    "The6registered guides did not appear in two native home-slash probes. Empty composer and Recents were restored; no model request was sent.",
+    "Native menu screenshots were unavailable while the menu itself held focus; complete AX menu captures remain. About/home/General/language/kit captures are retained and inspected.",
+    "Cloud contracts, provider transports, note migration, export fidelity and all undisplayed screen/menu states still require end-to-end checks."
+  ]
+}

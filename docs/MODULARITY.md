@@ -201,3 +201,14 @@ values. All 43 Kiwi tests and package types pass; twelve source hashes remain un
 Existing whole saved-archive controls retain records, blobs, images and interpreted
 values. Independent review finds no concrete blocker to the bounded exception after
 publication. This does not accept complete message semantics or native/Figma behavior.
+
+
+## Candidate awaiting browser/native verification: menu catalog
+
+[MOD-13](https://trello.com/c/dqmI6X9G) reduces the 621-line declaration owner to 106 lines
+plus file/settings (118), view preferences (120), and editing/selection/text/arrangement
+(296) catalogs. All four are below 300 nonblank/noncomment lines. Original exports, data,
+shortcuts and generated native artifacts are retained; 24 owner checks and the normal
+build/type/architecture controls pass. [Ownership evidence](MENU-SCHEMA-OWNERSHIP.md)
+retains both browser runs and the two explicit blockers. Counts are a candidate measurement,
+not acceptance or an update to the historical global-size snapshots above.

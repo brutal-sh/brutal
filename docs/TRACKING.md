@@ -6,9 +6,9 @@ Repository: [private Open Pen repository](https://github.com/jpoindexter/open-pe
 Board: [Open Pen — independent design editor](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor), private.
 
 The [PRD](PRD.md) owns the outcome, constraints and release criteria.
-The [task index](TASKS.md) links all 393 execution cards; the [modularity audit](MODULARITY.md)
+The [task index](TASKS.md) links all 412 execution cards; the [modularity audit](MODULARITY.md)
 records the measured review queue. Requirements come from the [feature catalog](pen-feature-reference/README.md)
-and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), using actual Pen 1.2.21 as the reference.
+and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), preserving historical Pen 1.2.21 evidence and the current [1.2.22 update inventory](pen-feature-reference/update-1.2.22-2026-11-09.md).
 
 ## Board organization
 
@@ -23,7 +23,7 @@ and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), using actual Pen 1.
 
 ## Verified planning snapshot
 
-A complete fresh board readback finds 410 open cards: 393 unique execution tasks and 17 milestones.
+A complete fresh board readback finds 429 open cards: 412 unique execution tasks and 17 milestones.
 All 164 catalog requirements and 22 exact native ledger rows map to real execution cards.
 There are no missing or duplicate task IDs, and the dependency graph is acyclic.
 All 15 originally oversized runtime modules have individual disposition tasks.
@@ -112,11 +112,11 @@ distinguishes two stale native test contracts from an unproven cross-file backdr
 criteria. The [control record](APP-TEST-CONTROLS.md) retains paired failures, the two-file
 reproduction, scoped cleanup and the subsequent 1,955 passing app-shard tests. Neither
 changes production behavior or accepts native delivery. Both remain required beta and
-terminal dependencies with linked evidence. Menu-schema modularization (MOD-13) is the sole Building task; mixed WebKit reliability is Verify. Font and graph candidates remain Verify. An earlier native graph/text batch has
+terminal dependencies with linked evidence. Menu-schema modularization (MOD-13) is Verify behind two narrow browser blockers; REF-03 is the sole Building task. Mixed WebKit reliability is Verify. Font and graph candidates remain Verify. An earlier native graph/text batch has
 four hidden-window failures; that run's OS read found the desktop locked. Those
 failed/unexecuted input criteria do not erase the earlier successful native resource path.
 The interrupted zero-size icon work retains its failed wider-run receipts and dependencies.
-The delivery snapshot is 350 Backlog, 0 Ready, 1 Building, 9 Verify and 33 Executed, plus 17 milestones.
+The delivery snapshot is 368 Backlog, 0 Ready, 1 Building, 10 Verify and 33 Executed, plus 17 milestones.
 DELIVERY-LFS has bounded executed current-checkout fixture delivery: all twelve objects
 are fetched from the own private endpoint into empty independent storage, with matching
 SHA-256/sizes and LFS integrity checks. Historical object closure is not qualified.
@@ -125,7 +125,7 @@ UI-SPLIT-HEADER separately records toolbar/inspector overlap blocking pane Close
 FONT-EXPORT-BOUNDS, FONT-LOCAL-PICKER and FONT-CJK-REPAINT separately record existing
 font acceptance failures. Exact original-versus-refactor controls reproduce the same three
 broader workflow failures; ten named pre-refactor visual controls pass afterward in both engines.
-The terminal gate depends on all 392 other required execution tasks.
+The terminal gate depends on all 411 other required execution tasks.
 The board retains 17 milestones, 164 mapped requirements and 22 mapped native rows.
 No branding milestone or product-parity feature group is fully accepted.
 
@@ -151,7 +151,7 @@ the recovery card is Executed for this bounded criterion. Update prompts have bo
 the [record](UPDATER-COPY.md) retains 36 passing cases and 234 inspected captures. Restart feedback has bounded Executed controller/component evidence at
 [`4006503a6`](https://github.com/jpoindexter/open-pen/commit/4006503a6f051a7a76e7517bf7d0c7d0d648ed99);
 its [record](RESTART-COPY.md) retains 36 passing cases and 54 inspected captures. [VERIFY-TOAST-SHORT](https://trello.com/c/f3kDECKO) allocates the
-unmeasured short-error grouping; the terminal gate now has all 392 other tasks as dependencies.
+unmeasured short-error grouping; the terminal gate now has all 411 other tasks as dependencies.
 This is not a new beta feature prerequisite or actual-Pen visual acceptance.
 
 Fresh 2026-11-07 paginated inventories and permission readbacks verify Actions disabled on
@@ -193,10 +193,24 @@ All 201 authorized repositories read back with GitHub Actions disabled on 2026-1
 at `368f67444`: 24 cases and inspected captures, 65 support-owner tests and ten matching
 frozen inputs. Direct environment fixtures bypass detection and physical native opening.
 The [parent support record](SUPPORT-COPY-ACCEPTANCE.md) reconciles all five published owners
-against the preserved original criteria at `d30381b16`; portal copy is Executed at `5e68a7668`; MOD-13 is now Building.
+against the preserved original criteria at `d30381b16`; portal copy is Executed at `5e68a7668`; MOD-13 is Verify.
 
 [Portal copy](PORTAL-COPY.md) has bounded Executed evidence at `5e68a7668`: 72 browser
 cases, 324 inspected region/cell captures, 360 canonical-label checks and 21 portal-owner
 tests. Actual pages/controllers use local document-routing and API fixtures, not real
-authentication/backend/native delivery. Real service identities remain. MOD-13 is the sole
+authentication/backend/native delivery. Real service identities remain. REF-03 is the sole
 Building task; editor-copy remains Verify behind the unchanged mixed WebKit reliability gate.
+
+
+[Pen 1.2.22 inventory](pen-feature-reference/update-1.2.22-2026-11-09.md) preserves the
+complete REA extraction and 182 changed-path dispositions, with 31 source-anchored findings.
+Sixteen new workflow cards and REF-03 join the existing card allocations; all 412 task IDs
+and dependencies are reconciled against a complete 429-card readback. Current-reference
+checks name 1.2.22; historical 1.2.21 receipts retain their original scope. The schema and
+backend/runtime gaps remain gated. Raw proprietary resources/private native captures stay
+ignored local evidence. No migration or new provider/service behavior is implemented by this catalog.
+
+The [menu catalog candidate](MENU-SCHEMA-OWNERSHIP.md) has passing declaration, owner,
+build and type/architecture controls. Its retained before/after browser failures remain open
+on TEST-PAGE-NAV and STAB-COMMAND-MENU; it is not accepted from line reduction or native
+JSON equality. The new reference adds distinct menu membership changes, including SVG.

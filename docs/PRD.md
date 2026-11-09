@@ -6,7 +6,7 @@ Updated: 2026-11-09. Status: active; full design and functionality parity is not
 ## Product outcome
 
 Open Pen is an independent local design app built on the MIT OpenPencil foundation.
-Jason should be able to use the workflows available in installed Pen 1.2.21 with the same
+Jason should be able to use the workflows available in installed Pen 1.2.22 with the same
 interaction and visual behavior, without editor subscriptions or license activation.
 Open Pen uses its own name and visual identity. Required engine and third-party attribution
 remain accessible. This identity difference is intentional; it does not waive layout or behavior parity.
@@ -24,11 +24,18 @@ modules, complete Open Pen branding and an executable Trello backlog.
 - Initially observed: 152 documented requirements across 23 chapters are recorded in the
   [feature catalog](pen-feature-reference/README.md), with a 2026-10-30 snapshot. The official
   [documentation index](https://docs.pen.dev/) is rechecked on 2026-11-06. The installed reference
-  still reports 1.2.21. Documentation coverage does not prove runtime coverage.
+  reported 1.2.21 on that date. Documentation coverage does not prove runtime coverage.
 - Refreshed: all historical/current documentation routes are fetched on 2026-11-06. The
-  catalog now has 164 requirements, including 12 unaccepted documentary deltas. Current
-  schema 2.22 differs from the unchanged installed archive’s 2.21. Applicability-first
+  catalog now has 164 requirements, including 12 unaccepted documentary deltas. At that refresh, documented
+  schema 2.22 differed from the then-installed archive’s 2.21. Applicability-first
   tasks preserve the pinned target; see the [refresh](pen-feature-reference/refresh-2026-11-06.md).
+- Refreshed on 2026-11-09: REA and the running About panel confirm Pen 1.2.22. The
+  [update catalog](pen-feature-reference/update-1.2.22-2026-11-09.md) records 31 bounded
+  additions/changes/service findings and all 182 changed file paths. Six registered guides,
+  website-code guidance, locale/menu changes, note/schema changes, SVG, browser inspection,
+  URI targeting, feedback and cloud contracts have explicit dispositions. Historical 1.2.21
+  receipts stay versioned; current-reference checks use 1.2.22. Static inventory does not accept
+  backend availability, workflow behavior or schema migration.
 - Observed: the current 2026-11-06 source-size audit counts 2,935 runtime files across the app, Core,
   Vue SDK, Scene Graph and native shell. Median size is 65 physical lines; 2,762 are at most
   300 lines and 12 exceed 600: one has a reviewed model-contract exception, 11 remain open.
@@ -113,14 +120,15 @@ types/catalogs into arbitrary microfiles or weaken validation to reduce line cou
 
 ## Delivery sequence
 
-The fresh board contains 393 bounded execution tasks and 17 milestones. Every one of the
+The fresh board contains 412 bounded execution tasks and 17 milestones. Every one of the
 164 catalog requirements and 22 native ledger rows is allocated; allocation is not acceptance.
 [Task index](TASKS.md) records the live-board states and dependencies.
 
 | Horizon | Outcome | Evidence checkpoint |
 | --------------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Now | Modularize menu-schema ownership (MOD-13) | Inspect the 621-line owner and callers, split cohesive menu responsibilities using existing patterns, and preserve command/schema/native behavior with bounded evidence. |
-| Next | Re-enter the mixed WebKit reliability gate (STAB-WEBKIT-MIXED, Verify) | Classify the retained mixed-run failures and unrun cases against recorded controls; preserve existing timing, snapshots and the editor-copy dependency. |
+| Now | Publish the Pen 1.2.22 reference inventory (REF-03) | Complete verified extraction, source-anchored catalog, narrow new/existing card allocation, independent review and metadata-only publication; retain static/native limits. |
+| Next | Unblock menu verification (TEST-PAGE-NAV, then STAB-COMMAND-MENU) | Reveal the actual Layers surface in the page driver, then classify the Commands detachment with an equivalent original-source control; MOD-13 remains Verify. |
+| Following | Re-enter mixed WebKit reliability (STAB-WEBKIT-MIXED, Verify) | Classify the retained mixed-run failures and unrun cases; preserve timing, snapshots and the editor-copy dependency. |
 | Then                  | Stabilize document switching and finish unaccepted icon, module and feature/screen tasks in dependency order | Each card has relevant owner tests, visual/native checks and a commit/evidence link before Executed; dependent renderer/input work waits for STAB-GPU. |
 | Release qualification | Deliver private beta, then complete the full parity gate | Clean normal build, install/restart/recovery and core journey; declared beta limitations. Later, no required parity state remains unaccepted. |
 
@@ -146,6 +154,10 @@ applicable child tasks and integration checks are accepted. Historical comments 
 Before switching tasks, record current outcome, last verified result, failure/blocker and exact
 re-entry action. Review the board at each completed card, after a meaningful interruption and
 when new evidence changes scope. Reconcile new requirements before creating more work.
+The 1.2.22 supplement adds 16 applicability-first workflow cards and REF-03, reusing existing
+language, SVG, note, targeting and save gates. Hosted subscriptions/licensing stay excluded.
+Current-reference comparisons record the new version; historical card wording and Executed
+receipts preserve their original scope and do not establish newer-reference acceptance.
 
 Track allocated requirements versus total, verified states versus required states, unresolved
 data-integrity/stability failures, oversized-module dispositions and remaining own-brand hits.

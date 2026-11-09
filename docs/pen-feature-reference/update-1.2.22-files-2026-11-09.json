@@ -1,0 +1,1654 @@
+{
+  "date": "2026-11-09",
+  "oldVersion": "1.2.21",
+  "newVersion": "1.2.22",
+  "meaning": "Every changed path is accounted for; domain tags are not full semantic-change or runtime acceptance. A path without a finding remains a concrete residual under REF-03, not an assertion of no feature change.",
+  "counts": {
+    "package-or-third-party-dependency": 25,
+    "internal-first-party-package": 77,
+    "desktop-source-or-entry": 15,
+    "compiled-renderer-or-style": 15,
+    "bundled-guide-content": 12,
+    "opaque-native-digest-change": 38
+  },
+  "paths": [
+    {
+      "path": "node_modules/@formatjs/fast-memoize/LICENSE.md",
+      "change": "added",
+      "domain": "package-or-third-party-dependency",
+      "oldSHA256": null,
+      "newSHA256": "b1cc980e28e9e48f377db191578a9361494ca7117185b69dd66cabaf5b460fb7",
+      "findingIds": [],
+      "limit": "Packaging/dependency content; no independent feature claim from a changed file alone."
+    },
+    {
+      "path": "node_modules/@formatjs/fast-memoize/index.js",
+      "change": "added",
+      "domain": "package-or-third-party-dependency",
+      "oldSHA256": null,
+      "newSHA256": "bc7aa788e52c49b3038e91d26c42121dca9635bdb4ed861701cdf01ab1f4c486",
+      "findingIds": [],
+      "limit": "Packaging/dependency content; no independent feature claim from a changed file alone."
+    },
+    {
+      "path": "node_modules/@formatjs/fast-memoize/package.json",
+      "change": "added",
+      "domain": "package-or-third-party-dependency",
+      "oldSHA256": null,
+      "newSHA256": "0be774483a344465602697dd72bc50bcab0cd8d04b18693ac260d765af0dc550",
+      "findingIds": [],
+      "limit": "Packaging/dependency content; no independent feature claim from a changed file alone."
+    },
+    {
+      "path": "node_modules/@formatjs/icu-messageformat-parser/LICENSE.md",
+      "change": "added",
+      "domain": "package-or-third-party-dependency",
+      "oldSHA256": null,
+      "newSHA256": "b1cc980e28e9e48f377db191578a9361494ca7117185b69dd66cabaf5b460fb7",
+      "findingIds": [],
+      "limit": "Packaging/dependency content; no independent feature claim from a changed file alone."
+    },
+    {
+      "path": "node_modules/@formatjs/icu-messageformat-parser/index.js",
+      "change": "added",
+      "domain": "package-or-third-party-dependency",
+      "oldSHA256": null,
+      "newSHA256": "643043d27d3117c2d22513d706259f6d65bd463a1901b1d32f06b4361d3a3268",
+      "findingIds": [],
+      "limit": "Packaging/dependency content; no independent feature claim from a changed file alone."
+    },
+    {
+      "path": "node_modules/@formatjs/icu-messageformat-parser/manipulator.js",
+      "change": "added",
+      "domain": "package-or-third-party-dependency",
+      "oldSHA256": null,
+      "newSHA256": "f0e45f2e904005e283c09acb356df72801a73b4a7fca731422d76730ec79de92",
+      "findingIds": [],
+      "limit": "Packaging/dependency content; no independent feature claim from a changed file alone."
+    },
+    {
+      "path": "node_modules/@formatjs/icu-messageformat-parser/no-parser.js",
+      "change": "added",
+      "domain": "package-or-third-party-dependency",
+      "oldSHA256": null,
+      "newSHA256": "4733dbfed2ce27b954d135031b8d18a6c9c78a297ad630b126e31c463f76b7bc",
+      "findingIds": [],
+      "limit": "Packaging/dependency content; no independent feature claim from a changed file alone."
+    },
+    {
+      "path": "node_modules/@formatjs/icu-messageformat-parser/package.json",
+      "change": "added",
+      "domain": "package-or-third-party-dependency",
+      "oldSHA256": null,
+      "newSHA256": "6392cb89a488f392c9fa28fbbbdab85e254b33bc4ae28884b6727660b13b27d1",
+      "findingIds": [],
+      "limit": "Packaging/dependency content; no independent feature claim from a changed file alone."
+    },
+    {
+      "path": "node_modules/@formatjs/icu-messageformat-parser/printer.js",
+      "change": "added",
+      "domain": "package-or-third-party-dependency",
+      "oldSHA256": null,
+      "newSHA256": "a3f3e42511d6d918770500c1b7fcd942b888cc9ecbda78afee762505c2b17da5",
+      "findingIds": [],
+      "limit": "Packaging/dependency content; no independent feature claim from a changed file alone."
+    },
+    {
+      "path": "node_modules/@formatjs/icu-skeleton-parser/LICENSE.md",
+      "change": "added",
+      "domain": "package-or-third-party-dependency",
+      "oldSHA256": null,
+      "newSHA256": "b1cc980e28e9e48f377db191578a9361494ca7117185b69dd66cabaf5b460fb7",
+      "findingIds": [],
+      "limit": "Packaging/dependency content; no independent feature claim from a changed file alone."
+    },
+    {
+      "path": "node_modules/@formatjs/icu-skeleton-parser/index.js",
+      "change": "added",
+      "domain": "package-or-third-party-dependency",
+      "oldSHA256": null,
+      "newSHA256": "fc9d2c350311bc1ebad5803fa98bcd0e08d0897d9cf0008ca55c061e1984cffb",
+      "findingIds": [],
+      "limit": "Packaging/dependency content; no independent feature claim from a changed file alone."
+    },
+    {
+      "path": "node_modules/@formatjs/icu-skeleton-parser/package.json",
+      "change": "added",
+      "domain": "package-or-third-party-dependency",
+      "oldSHA256": null,
+      "newSHA256": "3262de3e96398c7caa8e7435d160406cbe89f8dca070a322b18c9447dc932e75",
+      "findingIds": [],
+      "limit": "Packaging/dependency content; no independent feature claim from a changed file alone."
+    },
+    {
+      "path": "node_modules/@formatjs/intl/LICENSE.md",
+      "change": "added",
+      "domain": "package-or-third-party-dependency",
+      "oldSHA256": null,
+      "newSHA256": "b1cc980e28e9e48f377db191578a9361494ca7117185b69dd66cabaf5b460fb7",
+      "findingIds": [],
+      "limit": "Packaging/dependency content; no independent feature claim from a changed file alone."
+    },
+    {
+      "path": "node_modules/@formatjs/intl/index.js",
+      "change": "added",
+      "domain": "package-or-third-party-dependency",
+      "oldSHA256": null,
+      "newSHA256": "3e402994f3f9f920b380a861f4c4e45eefddd64219d28c8b0ea2743a6f46e2b7",
+      "findingIds": [],
+      "limit": "Packaging/dependency content; no independent feature claim from a changed file alone."
+    },
+    {
+      "path": "node_modules/@formatjs/intl/package.json",
+      "change": "added",
+      "domain": "package-or-third-party-dependency",
+      "oldSHA256": null,
+      "newSHA256": "d36c78a2323ca49676776777cfaab33f09a18c346178f7f50bfbed2b9d32b831",
+      "findingIds": [],
+      "limit": "Packaging/dependency content; no independent feature claim from a changed file alone."
+    },
+    {
+      "path": "node_modules/@ha/browser-inject/dist/page-api.iife-BIOjVvdA.mjs",
+      "change": "added",
+      "domain": "internal-first-party-package",
+      "oldSHA256": null,
+      "newSHA256": "45838577ead2e1189748f3987e404ea18c5921162d17257bcf09574f8820378e",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/browser-inject/src/spacing-label.ts",
+      "change": "added",
+      "domain": "internal-first-party-package",
+      "oldSHA256": null,
+      "newSHA256": "b90525f80848d76075ef7320b8f5dcf03b5844642a178b39a0921701f0425922",
+      "findingIds": ["UPD22-20"],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/electron-browser-import/src/native-picker-overlay.ts",
+      "change": "added",
+      "domain": "internal-first-party-package",
+      "oldSHA256": null,
+      "newSHA256": "079b0c9eac4576b10e9ab9b2d54423b0ae13d3ccee2274e5d5c3513a7de77f42",
+      "findingIds": ["UPD22-19"],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/electron-browser-import/src/spacing-labels.ts",
+      "change": "added",
+      "domain": "internal-first-party-package",
+      "oldSHA256": null,
+      "newSHA256": "b592501a0504907de9911abed6f763b6ff2dc464100f49fdb4fe8f3fdc9f0487",
+      "findingIds": ["UPD22-19"],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/i18n/dist/index.d.mts",
+      "change": "added",
+      "domain": "internal-first-party-package",
+      "oldSHA256": null,
+      "newSHA256": "17108688248afc62fed0bb615fefe2b188925e6a071e0829ad1ba0fe4aadf95b",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/i18n/dist/index.mjs",
+      "change": "added",
+      "domain": "internal-first-party-package",
+      "oldSHA256": null,
+      "newSHA256": "8b5203245f6ae13600e72f26ec36a8ec94a93781508b67155191fac5a4027c43",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/i18n/lang/cs.json",
+      "change": "added",
+      "domain": "internal-first-party-package",
+      "oldSHA256": null,
+      "newSHA256": "356e25c72a73d425fc38efda0a7fc3d3225937222eff5f65a14c82bc6f7d1631",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/i18n/lang/ja.json",
+      "change": "added",
+      "domain": "internal-first-party-package",
+      "oldSHA256": null,
+      "newSHA256": "94b3e200ba610a51791d39a5d9ae54443da15ad5d62a9458b75e4ba93e80008c",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/i18n/lang/zh-CN.json",
+      "change": "added",
+      "domain": "internal-first-party-package",
+      "oldSHA256": null,
+      "newSHA256": "38f48d45c553a2d5df7347374b817cb32a0cd7b3eab0264ee26b64e07d2996ab",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/i18n/package.json",
+      "change": "added",
+      "domain": "internal-first-party-package",
+      "oldSHA256": null,
+      "newSHA256": "92484f6beb2bb046e8333d568ef6787bb112c9c0358ac41cbe9d87037acfb484",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/i18n/scripts/compile.mts",
+      "change": "added",
+      "domain": "internal-first-party-package",
+      "oldSHA256": null,
+      "newSHA256": "f8fa11f527fd5f32a1ad8e5da63775acc5014b4881bc1043354c65a96e36d121",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/i18n/scripts/extract.mts",
+      "change": "added",
+      "domain": "internal-first-party-package",
+      "oldSHA256": null,
+      "newSHA256": "6e3432401e488dddace05c5f6b399b1fd5d700870aa732a6c929e80e6a3406bc",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/i18n/scripts/messages.mts",
+      "change": "added",
+      "domain": "internal-first-party-package",
+      "oldSHA256": null,
+      "newSHA256": "57d3f5a5dc5c4377dc7a94e4c5737a83955b343963fcab20d500abbc1a6ee046",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/i18n/src/index.test.ts",
+      "change": "added",
+      "domain": "internal-first-party-package",
+      "oldSHA256": null,
+      "newSHA256": "30dba88c35e32f26b992a85bbf08dc7be8ae165a55150b1a98e7712bfa485fae",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/i18n/src/index.ts",
+      "change": "added",
+      "domain": "internal-first-party-package",
+      "oldSHA256": null,
+      "newSHA256": "de08e9f3c88f06acdd43ce1fb98b4c1aaef2a88d02d4d71f787689233208a4f7",
+      "findingIds": ["UPD22-01"],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/i18n/src/messages.test.ts",
+      "change": "added",
+      "domain": "internal-first-party-package",
+      "oldSHA256": null,
+      "newSHA256": "4a96c43d2b1507fcf3d8a6a2eb7260b72dace7222419f24464d9c70c2a8c56c1",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/i18n/src/relative-time.ts",
+      "change": "added",
+      "domain": "internal-first-party-package",
+      "oldSHA256": null,
+      "newSHA256": "c187cd61a3105db9ad8539e82f63ec32a01731952ec788bff3f69d77211b2264",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/i18n/tsconfig.json",
+      "change": "added",
+      "domain": "internal-first-party-package",
+      "oldSHA256": null,
+      "newSHA256": "9e0fdc0e8a13051150ac7e538d4db17eb864de58403f2a288f6ef3f47fe47144",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/i18n/tsdown.config.mts",
+      "change": "added",
+      "domain": "internal-first-party-package",
+      "oldSHA256": null,
+      "newSHA256": "693ee4af4d667656604a47dcdf4b2d6b08cb6f80c686f3cee6b0781943ac96f6",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/mcp/dist/schemas-FZHc2sXP.mjs",
+      "change": "added",
+      "domain": "internal-first-party-package",
+      "oldSHA256": null,
+      "newSHA256": "b7777cdf97604c209602975b9b1b8b682f1bcf3d3b557abee9539fcce6379020",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/shared/src/share-live-update.test.ts",
+      "change": "added",
+      "domain": "internal-first-party-package",
+      "oldSHA256": null,
+      "newSHA256": "28b79cc5f809204c559e8c7c9f8b11709dee7d64ec8ab34cce030d76d2d9328a",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/shared/src/share-live-update.ts",
+      "change": "added",
+      "domain": "internal-first-party-package",
+      "oldSHA256": null,
+      "newSHA256": "6b96c45c62b70070bb11754a5ef2d76816dd05cd31f46e08e93fda826210f785",
+      "findingIds": ["UPD22-18"],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/shared/src/shared-document-provider-zstd.test.ts",
+      "change": "added",
+      "domain": "internal-first-party-package",
+      "oldSHA256": null,
+      "newSHA256": "12fc9bc20f9bbed2f20ae152315dbfc1b4ab8661b8bf28ec25e38af2c9e952c6",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/shared/src/shared-document-provider.test.ts",
+      "change": "added",
+      "domain": "internal-first-party-package",
+      "oldSHA256": null,
+      "newSHA256": "04e6762f17c0d3cdcd7dca22414697b76be6f987c62eb3dca805000debcaaa24",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/shared/src/shared-document-provider.ts",
+      "change": "added",
+      "domain": "internal-first-party-package",
+      "oldSHA256": null,
+      "newSHA256": "9996e9980b2c619b6c7f6bfd76a21e511cdbdb2ccdf10f60d0a8fbea2d002db3",
+      "findingIds": ["UPD22-18"],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@woov/rl-sdk/LICENSE",
+      "change": "added",
+      "domain": "package-or-third-party-dependency",
+      "oldSHA256": null,
+      "newSHA256": "69e44ca18d15e923458e1a9f0f4d221421f72d367428b00dcc476527a7061308",
+      "findingIds": [],
+      "limit": "Packaging/dependency content; no independent feature claim from a changed file alone."
+    },
+    {
+      "path": "node_modules/@woov/rl-sdk/dist/index.cjs",
+      "change": "added",
+      "domain": "package-or-third-party-dependency",
+      "oldSHA256": null,
+      "newSHA256": "7187d40409dba186ec91895a11586f5d389793fb51afc6127ba2ddb5a9ca79d6",
+      "findingIds": [],
+      "limit": "Packaging/dependency content; no independent feature claim from a changed file alone."
+    },
+    {
+      "path": "node_modules/@woov/rl-sdk/dist/index.d.cts",
+      "change": "added",
+      "domain": "package-or-third-party-dependency",
+      "oldSHA256": null,
+      "newSHA256": "97ce454e4ef0aac57f14392ae83fd35a8a360273944b7456f85877c980795fe1",
+      "findingIds": [],
+      "limit": "Packaging/dependency content; no independent feature claim from a changed file alone."
+    },
+    {
+      "path": "node_modules/@woov/rl-sdk/dist/index.js",
+      "change": "added",
+      "domain": "package-or-third-party-dependency",
+      "oldSHA256": null,
+      "newSHA256": "68301515d70fa97543d4bb97b65bd3fc1b0dae571f4126d02eca7e3798aeb747",
+      "findingIds": [],
+      "limit": "Packaging/dependency content; no independent feature claim from a changed file alone."
+    },
+    {
+      "path": "node_modules/@woov/rl-sdk/package.json",
+      "change": "added",
+      "domain": "package-or-third-party-dependency",
+      "oldSHA256": null,
+      "newSHA256": "f0014608e24c2942733eddb36bc1ea92860a3a0a4829bbf4d561ea8b7e5c9131",
+      "findingIds": [],
+      "limit": "Packaging/dependency content; no independent feature claim from a changed file alone."
+    },
+    {
+      "path": "node_modules/intl-messageformat/LICENSE.md",
+      "change": "added",
+      "domain": "package-or-third-party-dependency",
+      "oldSHA256": null,
+      "newSHA256": "cc4143615b27c66eafbe913f132a9e41ac14c1e2ec6b2df24dafeaa97f028850",
+      "findingIds": [],
+      "limit": "Packaging/dependency content; no independent feature claim from a changed file alone."
+    },
+    {
+      "path": "node_modules/intl-messageformat/index.js",
+      "change": "added",
+      "domain": "package-or-third-party-dependency",
+      "oldSHA256": null,
+      "newSHA256": "3ceb9d7ec736c5d3e4efb05b76878f633b80d3315d1ce75cdf15984d1269e78d",
+      "findingIds": [],
+      "limit": "Packaging/dependency content; no independent feature claim from a changed file alone."
+    },
+    {
+      "path": "node_modules/intl-messageformat/intl-messageformat.iife.js",
+      "change": "added",
+      "domain": "package-or-third-party-dependency",
+      "oldSHA256": null,
+      "newSHA256": "c0cf6473708cf3d96126532ab00e1fe7d11a63a1a7cd7311c69d71506fb14bd6",
+      "findingIds": [],
+      "limit": "Packaging/dependency content; no independent feature claim from a changed file alone."
+    },
+    {
+      "path": "node_modules/intl-messageformat/package.json",
+      "change": "added",
+      "domain": "package-or-third-party-dependency",
+      "oldSHA256": null,
+      "newSHA256": "c3c4bc02d2560f2ce38a718b8c26ca6a1d9104f88bbef97674ec2b989c73029b",
+      "findingIds": [],
+      "limit": "Packaging/dependency content; no independent feature claim from a changed file alone."
+    },
+    {
+      "path": "out/dialog-messages.js",
+      "change": "added",
+      "domain": "desktop-source-or-entry",
+      "oldSHA256": null,
+      "newSHA256": "b9fa29640aa2a123bee6a521ec87698bb58314ea7dccf7c99bfc5a74208011ff",
+      "findingIds": [],
+      "limit": "Native/desktop source delta; only named retained UI observations are accepted as observed."
+    },
+    {
+      "path": "out/editor/assets/index-J5bM-og-.css",
+      "change": "added",
+      "domain": "compiled-renderer-or-style",
+      "oldSHA256": null,
+      "newSHA256": "f1e33120c1521a168d5fa19c17860f587f1a970371434025ca981aea054696d6",
+      "findingIds": ["UPD22-28"],
+      "limit": "Message/CSS deltas are indexed; complete bundled-code semantics are unverified."
+    },
+    {
+      "path": "out/skills/pen-dev/code-website.md",
+      "change": "added",
+      "domain": "bundled-guide-content",
+      "oldSHA256": null,
+      "newSHA256": "55ec04e8ce6482c3784ecee7f73fae5fa3274dcf2fa6fac0a8d82a68e2a82411",
+      "findingIds": ["UPD22-12"],
+      "limit": "Workflow guidance, not executed model behavior."
+    },
+    {
+      "path": "out/skills/pen-dev/competitive-research.md",
+      "change": "added",
+      "domain": "bundled-guide-content",
+      "oldSHA256": null,
+      "newSHA256": "dc2200529fd263834557277648f6ecf01e30a643ffdac3bddf8d93d8d3b9fc1d",
+      "findingIds": ["UPD22-06"],
+      "limit": "Workflow guidance, not executed model behavior."
+    },
+    {
+      "path": "out/skills/pen-dev/guide/add-stacked-animations.md",
+      "change": "added",
+      "domain": "bundled-guide-content",
+      "oldSHA256": null,
+      "newSHA256": "29b3ae97b336deeede7e19c0a5192a597e74a16a5d0de1b6febdcb0b896f6ae8",
+      "findingIds": ["UPD22-11"],
+      "limit": "Workflow guidance, not executed model behavior."
+    },
+    {
+      "path": "out/skills/pen-dev/guide/make-website-responsive.md",
+      "change": "added",
+      "domain": "bundled-guide-content",
+      "oldSHA256": null,
+      "newSHA256": "b98a2fd8687ee1187bdcbef1b0da7bf16a8c4ac3bde9ce63a961c5dca34e4783",
+      "findingIds": ["UPD22-10"],
+      "limit": "Workflow guidance, not executed model behavior."
+    },
+    {
+      "path": "out/skills/pen-dev/guide/whiteboard-example.md",
+      "change": "added",
+      "domain": "bundled-guide-content",
+      "oldSHA256": null,
+      "newSHA256": "27095714f6fc73f5e0e577ad3452efe2de65c3220f7769b75dd6ed9df8c23e62",
+      "findingIds": ["UPD22-13"],
+      "limit": "Workflow guidance, not executed model behavior."
+    },
+    {
+      "path": "out/skills/pen-dev/recruiting-profiles.md",
+      "change": "added",
+      "domain": "bundled-guide-content",
+      "oldSHA256": null,
+      "newSHA256": "2a41b4c8c5aad7714af89e47f22c608ae0091227e2e01ba433e846e67fb635f8",
+      "findingIds": ["UPD22-07"],
+      "limit": "Workflow guidance, not executed model behavior."
+    },
+    {
+      "path": "out/skills/pen-dev/sitemap.md",
+      "change": "added",
+      "domain": "bundled-guide-content",
+      "oldSHA256": null,
+      "newSHA256": "355f0b5c1c607b17d04136172af17556b94ebd7e95b22f4196b93589bfd8c779",
+      "findingIds": ["UPD22-08"],
+      "limit": "Workflow guidance, not executed model behavior."
+    },
+    {
+      "path": "out/skills/pen-dev/travel-plan.md",
+      "change": "added",
+      "domain": "bundled-guide-content",
+      "oldSHA256": null,
+      "newSHA256": "bfc5b242ee021bafbf47fb051c775cc647d58aa926bd7934c8fbf7b340f03592",
+      "findingIds": ["UPD22-09"],
+      "limit": "Workflow guidance, not executed model behavior."
+    },
+    {
+      "path": "node_modules/@ha/browser-inject/dist/page-api.iife-TIu9bfr_.mjs",
+      "change": "removed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "5de7f6758d617fdce29001ce2cc079f7bfb2176b46f645ca4758ec1e8df3d055",
+      "newSHA256": null,
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/mcp/dist/schemas-DvujrUYo.mjs",
+      "change": "removed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "30600cd30b998a14f9aeab40a0f736ede9f9a98f23d0a356cd0b27df2d3b7a00",
+      "newSHA256": null,
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "out/editor/assets/index-DTgIVMRT.css",
+      "change": "removed",
+      "domain": "compiled-renderer-or-style",
+      "oldSHA256": "f62ed913156b171fdbe571b7f6a9d74ba37a7eb5583183dfaa97ecb579ce70cd",
+      "newSHA256": null,
+      "findingIds": [],
+      "limit": "Message/CSS deltas are indexed; complete bundled-code semantics are unverified."
+    },
+    {
+      "path": "node_modules/@anthropic-ai/claude-agent-sdk-darwin-arm64/claude",
+      "change": "changed",
+      "domain": "opaque-native-digest-change",
+      "oldSHA256": "b7c12d2f1f29c587b31b05cce3e638e237389f62b95caab2d8575188e1f2560f",
+      "newSHA256": "51e1c903d5c934428c22f86a9f700138f23af986671bdaace4ca97405eb2dd1d",
+      "findingIds": [],
+      "limit": "Binary semantics and mismatch cause are unverified."
+    },
+    {
+      "path": "node_modules/@cursor/sdk-darwin-arm64/bin/cursorsandbox",
+      "change": "changed",
+      "domain": "opaque-native-digest-change",
+      "oldSHA256": "9fe5473fd98e00cf68d1fba0d2612fe585b04cb53e104eeaed5a505c25f5e1e1",
+      "newSHA256": "d80af7fed6dcb13a426bb3c15d578f3ef0340bed3ed16390a00755a5c725f6e9",
+      "findingIds": [],
+      "limit": "Binary semantics and mismatch cause are unverified."
+    },
+    {
+      "path": "node_modules/@cursor/sdk-darwin-arm64/bin/rg",
+      "change": "changed",
+      "domain": "opaque-native-digest-change",
+      "oldSHA256": "7003cc43466a6e926c0db0e7035107321e2094c847d56feec4558ee350b99d54",
+      "newSHA256": "6e027f1fae4371641c62ee529cad2ccbdb1bce71cb11f86b790f9e512dde3624",
+      "findingIds": [],
+      "limit": "Binary semantics and mismatch cause are unverified."
+    },
+    {
+      "path": "node_modules/@cursor/sdk-darwin-x64/bin/cursorsandbox",
+      "change": "changed",
+      "domain": "opaque-native-digest-change",
+      "oldSHA256": "8b6cc4e62fc29bf5579af232bea12f54994e2c36c3bdd744df0273305cf80f9e",
+      "newSHA256": "c9796195f83c5bced2308b09168c69a3754a039d4cde13f253fd9a9520147dac",
+      "findingIds": [],
+      "limit": "Binary semantics and mismatch cause are unverified."
+    },
+    {
+      "path": "node_modules/@cursor/sdk-darwin-x64/bin/rg",
+      "change": "changed",
+      "domain": "opaque-native-digest-change",
+      "oldSHA256": "a84fc2d5c29c52d0d66de1c2cb7cba394a7f6e387686165c226c728c3065ba60",
+      "newSHA256": "795d94d367f7f6d43d08dce357d91bdcd496129fcd9fc2b83ddb25b2cea2e40b",
+      "findingIds": [],
+      "limit": "Binary semantics and mismatch cause are unverified."
+    },
+    {
+      "path": "node_modules/@earendil-works/pi-tui/native/darwin/prebuilds/darwin-arm64/darwin-platform.node",
+      "change": "changed",
+      "domain": "opaque-native-digest-change",
+      "oldSHA256": "bbde7b623f7f75dfb644ffd9e42b033478373b0cb63bc5cbb3b048f24d9855de",
+      "newSHA256": "cbb5c93735b46779a675a03d71c37200f1456aed6d055ef92ab2f185cff04fc7",
+      "findingIds": [],
+      "limit": "Binary semantics and mismatch cause are unverified."
+    },
+    {
+      "path": "node_modules/@earendil-works/pi-tui/native/darwin/prebuilds/darwin-x64/darwin-platform.node",
+      "change": "changed",
+      "domain": "opaque-native-digest-change",
+      "oldSHA256": "ce86e8670f1e65f08ebe8f487fe41ca45d644b9e0ecbdf9724fd59b647775224",
+      "newSHA256": "bd3582f8a25d2a536968bf4726e68ae1918b5df7c486a53532102e6c75d00cab",
+      "findingIds": [],
+      "limit": "Binary semantics and mismatch cause are unverified."
+    },
+    {
+      "path": "node_modules/@ha/agent/dist/index.mjs",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "d8a1819d58401591f280bfc730db2af59473374e54aafb3b5ac8a495f57ba7ff",
+      "newSHA256": "a40050186dfdcaa6cf74eeb3047d91b97857fbe5c1bfdaac92ee01a7fa8adf79",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/agent/package.json",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "a01688fc292e1968ea6e26f0a9d132329b858e4bae7552f5ccaa07819edc852a",
+      "newSHA256": "40e53f83a13fc2d2df71119d40dd960956dca50761d6d369ea748c3bc375ea4d",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/agent/src/auth-store.ts",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "65c13b5028cb54c09a2c54f52360374c23db7577c733e66af0a840614e3af89a",
+      "newSHA256": "bf76e8696f68b7045be85f2aa21cc2b1367d50c183f489d156598028cdab2a60",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/agent/src/claude/index.ts",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "482887d71c2409f1c1a8d8a45275538c90129224f08eae439d2bd6ed5ede7bbc",
+      "newSHA256": "ca20fa3252d3b7876f28d7c46cfcadaf8c12759d138905e82ff34e2bf2aa06d6",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/agent/src/codex/index.ts",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "7c85e2b5e0b4605f376225acb5724b4d8d5b512bebf7b857218b9d72d01e72fa",
+      "newSHA256": "7a1cfaddb99726fdd63e85f372c2cec09e7216fe7f2b4623c5ca663b8878f88c",
+      "findingIds": ["UPD22-23"],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/agent/src/cursor/index.ts",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "4ab7d1edf7c50ef268b8b82df42ccf93c78b237ab35e0139a8e21b4be44b03d3",
+      "newSHA256": "33f73ebc20fe6eb01d34e386d695719f3bd424b6de9d48642317751a880b151f",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/agent/src/pi/index.ts",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "1536f04d588fce2983ef76377c34fe7817de0ad98307fffc007828905d3346de",
+      "newSHA256": "25dfed2ac4105127d21581a59e664cac0ba6197ce87b5f64d29a01ca9a51b112",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/agent/src/pi/pencil-provider.ts",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "eb7abe71dc4f72773780314ca6947b0d0ec8cb02cbef3b6b935ea9fab87612cc",
+      "newSHA256": "d1e66d38b08c7c346c6c346a558b766e2c0f0a24cfbc40f59e06fc6df3f99350",
+      "findingIds": ["UPD22-25"],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/agent/src/pi/session-events.ts",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "658f1f62e0589009970d2ed23e7393138bc038c2d892260e706f05e8be9741d0",
+      "newSHA256": "8c382864becf8081be6614f06623dcee17f6fba6164456a3f55055c955ad383b",
+      "findingIds": ["UPD22-24"],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/api/dist/index.d.mts",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "ff0576c4e52b9d038af272be6501434e8b56ee29829f65c80ea49db02151ea6c",
+      "newSHA256": "9c52f2603a45d873caabbaf7ca6276909ec9e6405871deba93cd5776bc802583",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/api/dist/index.mjs",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "338db4c8baee3cbff2b57fdc0edaba8d05ae4c429907256548d9844642a01c21",
+      "newSHA256": "2c08cca3e34f25d36bb13cf7071a46bc90d23e2d41bdbf177b8cc090bc614a5c",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/api/src/index.ts",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "41fd94519d24763acbd9a7db52c2f877d091447528ec987b8a7df47fb26039f7",
+      "newSHA256": "dde0847346d0b3e16886248304ca7bfa5f46e58f963ba45707af7086e95a8dd3",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/api/src/share.ts",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "6ca707e305f27985a253dd2938a8562b66aee88d47a76af6b5f12b85e11f16da",
+      "newSHA256": "5c01e21b4d71eb40b660cfc7c38cbf082b89756298641106f1ccca503dc87394",
+      "findingIds": ["UPD22-14", "UPD22-15", "UPD22-16", "UPD22-17"],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/api/src/upgrade-options.ts",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "ea566c554ae9ab0c59eedf4a496eccffcf2a2ea25ae3397df1c0ca8053d15b76",
+      "newSHA256": "1d6731a062949ac3075c96d49229972566e15a007874f7f97716ba547d37fbb6",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/browser-inject/dist/index.d.mts",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "57658d48d4cd4cfeecddf9dd6fb5bc6c9dc72e36e267b845901596ecc2fbbe13",
+      "newSHA256": "5bf508d39224a7340809ffb0bc64e128060a6a3e349b11aa39ef97e37c3b699c",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/browser-inject/dist/index.mjs",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "7d83f5baeec03aedad9030407227a41151119c1fa7dbd2f363b38a5ea3bd4a01",
+      "newSHA256": "8cd1944855c0426d58a52df0735979416e5da04ad0926c0e3a3d0fe7f37ba98c",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/browser-inject/src/dom-picker.test.ts",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "646882986978c5ed4ceea35bb02e427b3320f8d7f498b8f1b08ba9645c3a630d",
+      "newSHA256": "a544a0d500d942a696e531526afe8f35c1d5fe5ce14a8270fff9b1b1627c3f8e",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/browser-inject/src/dom-picker.ts",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "948e3c5df45c56d87816dbc23a15b669ecee0581af95d9e38a6c179cf4c8be90",
+      "newSHA256": "78605f4f42f3456a13fbcbf1525e7139c89e30b23bcbb6116ba5ea365b814a18",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/browser-inject/src/page-api-source.ts",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "e494f61f18822f89356f2c5b17adaaf1852e6e94fb17acb9df7cc69df4bd6e3d",
+      "newSHA256": "beaf978e6d2cd188bf2f4d56779c63fb551ea0cb3feed2a7841e5e57642e28f9",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/electron-browser-import/dist/index.d.mts",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "d56d5ec9ae9fb9bab837043d184265294fb6801d219433afd718ff568f5a552e",
+      "newSHA256": "b110503eb48bdeed2be5c8b62ea9ed23e4188f2bf3bdcff27b34eed138d30294",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/electron-browser-import/dist/index.mjs",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "ad2841d52c8b9cccf54d9752fadf81573990d77352e15abc2816ec12fa31dc09",
+      "newSHA256": "a476de3ba24eab8203a3016d76b3c950f497dab9cb27f692184fb612b240ba89",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/electron-browser-import/src/pen-capturer.test.ts",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "f11a1f144a736893c918186f8ca58aa3f6863b8925250379f53e01687776f128",
+      "newSHA256": "b09702fd3942e2a2a5cbd39fb8dc778f8c05425abdeb449a1b80f7f87032f405",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/electron-browser-import/src/pen-capturer.ts",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "ac1d4c69b271887ae2d16558ea1c1ccd4df7082f4c299f7400dc256cb37712f8",
+      "newSHA256": "f44fb7fba98f2bb337bbdbbaa52ae01cdb0ccafbc7744d6c028a54bd9268f047",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/headless/dist/preview-process.mjs",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "ad7656179b38dea259826e3e92a9f763667936299adb9220b3dd856888d8f055",
+      "newSHA256": "8fa3bde362df497d46ca91eb8f3b7a4aae95ff4e364f90106071cdfe43b30f56",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/ipc/dist/index.d.mts",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "774a74cd4719a34fbca75f11b72ea09047a278319b71bbee20af68b5af421399",
+      "newSHA256": "528198ea261a769f67ef840aff46fd2bed8a141f4cfc48799fb3a37f8abb0c5d",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/ipc/dist/index.mjs",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "9bab77e6f91740bc9b835c2064eb81a14f67a673baaecccb1c7275e22510f6c2",
+      "newSHA256": "096e7da493d5cd6ba5ce80488b1291e51d08df539261cefeab0b2cd259de5482",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/ipc/src/ipc-device-manager.ts",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "f3091f0b76ca5a9164a0df40c979c63333ef1950e499b2504b05627ddbfd5ed7",
+      "newSHA256": "02df2a374c6101d6ec6851d495ee41170da33602f14444afede9544fd8fd3c8d",
+      "findingIds": ["UPD22-22"],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/mcp/dist/index.d.mts",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "cac468917247ae5d0e84cbbba14926b321cc48c29a9c87414e80870512e765dc",
+      "newSHA256": "85fafea58c4637a9383f03ca17da2c190dd35405c6adeff1fd41b1fa6d84e037",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/mcp/dist/index.mjs",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "ab0ad8ebe66d0d782f102552156f6f886a20be146b324d46cc2a817c5f77371a",
+      "newSHA256": "536116870deb57e3d55a0ea5b1992c8de002732cb3145633415449da1ca58e32",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/mcp/dist/schemas.d.mts",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "bca8d74f7735cf1071d880280ec3d9b4fec5521cf671e1ff3d6d99fe609df6b6",
+      "newSHA256": "3bfecaff8a7ff49695796cedbd46b5012ff92d7161168ce4bf3ca593e1b70c20",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/mcp/dist/schemas.mjs",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "eea17abd3f7cd59793c6e94b11454ff11f5150874318ba9aab653facbcc21ea9",
+      "newSHA256": "11d87a95510566db6d7ae7fc41d61b7c3d44c2a1cffc4c7b17f9ab85509ff6f2",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/schema/dist/index.d.mts",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "0d77e302c6c4af401ab7ec87459afa7df540ead3bf57fd9db8ddefb865c9bbca",
+      "newSHA256": "e8e1f46e80cc810fd890af34c812aab04c0558b00ac4fe2c5598c3a8d947b7fa",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/schema/dist/index.mjs",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "d9d0944c2a22f7b5508ebf6962cbdcfd75273b0863715a4c54ec71b3cd5f566b",
+      "newSHA256": "3dac56b91d2a684b964af08d647521e7657e28c1c937400bba9b24367a236ce2",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/schema/dist/validator.d.mts",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "c81a3d57d7c86e5df499883a19462b5dd77bb7e7218b58b5f4d4ae859bd44451",
+      "newSHA256": "7985963707b25bc5ecdf441ca153b5c5f05523e4db22cb8a2c97bbc044b97241",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/schema/dist/validator.mjs",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "72068f78804c75261364d99d209933066b0975bc9f1de68a60b095cb412e6f45",
+      "newSHA256": "91e70d4e0cc95be38712507de98146ce186119e849655c31f82f70fbe8ca6937",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/schema/generated-schema.md",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "1ca56119a20d0fe58e33a50139aa83c4e9d470584d73f28cef840c626570f3a7",
+      "newSHA256": "e3469647c3e15bca16f6ba1ece8bfe1fb2c0b5b240c69f95451616c33048a2d3",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/schema/pen.schema.json",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "3618becd7c7d88d0a13a2253c8307a5e5374778a9a4bd383a7bbebe5c82a2517",
+      "newSHA256": "99f7c20c208eeb7b2798982b8dc767b6c1123b5a3f9b331653adcf6613d840bc",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/schema/src/generated-types-private.ts",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "a2025bc200b21a84b0dce7e0f3e5aac3ea2846dce1560add8aa313aecc61249e",
+      "newSHA256": "6bae3345f9989ecdd4516744bf6b139a83c9f546d0f3c9f99ff67b340d4f067b",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/schema/src/generated-types-public.ts",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "0428455464c01084589236d43a4e12e67fc192bb8b9c03f55bd34947cadb3a67",
+      "newSHA256": "082c8af9c2c72b4b4a499b40fa0210a6faead592a245561576bcd252de576ea3",
+      "findingIds": ["UPD22-04"],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/schema/src/generated-validator.ts",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "797d17a83b944dc5c89fce6b1d36edb2e923b87d31b30f684b47aa15350fe0fa",
+      "newSHA256": "6d76588446b6eb28450e4f79ee08cda60987081982cd55143a4768cec6c693bf",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/schema/src/index.ts",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "3a420e497730d8a3e5fbdb7e5d3fe4704685c8c3fb1d06996bc698e0b14e288e",
+      "newSHA256": "1696a36b2fa866b838f12f167a9f5d3dc9de4f7c77acdb55ad692c24628fd20c",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/shared/dist/index.d.mts",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "afac33f1c2e060ca90b204ab0fa2626abf739fab45737bd1f69736e1f2eeba28",
+      "newSHA256": "ecedb09d0693feaccaff88bfcedbd212b815e22e24d2cf68dc9226fae975eb68",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/shared/dist/index.mjs",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "2354421ed7ed12585b6a338974e71db6aa9a6e6395fbff9c1a6aaa8ffca3e9cb",
+      "newSHA256": "b89d3fd9895a72939cfeb3bbaa1d98aca17c010f44fa9c1b2982d8ab70ea6baf",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/shared/src/agent.ts",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "dab1d13c94702a2c934764b206dc5105e4cc7b7c463a3ee3e49d4e702297367d",
+      "newSHA256": "3a5230ffd03c9d55e542cdd21f67d8a0b92b8b33712ffce57930db75c2c6987c",
+      "findingIds": ["UPD22-22"],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/shared/src/bundled-documents.ts",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "8a7f7f82d823676fa4c5e0e088e0a6f2fe6227580be26545ab6f68ba39997a0c",
+      "newSHA256": "673f0b2fb28c15658d533662daf8588f3681746abc2c932b5a159de1ec597026",
+      "findingIds": ["UPD22-27"],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/shared/src/chat-sessions.ts",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "4e214091a7b693f349dc01de77f0d1aea17b4ba58c08ed2b206b415051530f10",
+      "newSHA256": "9b929b514e28cb5606912b5d02c7700a114d1d7f31ddfd6f4ff914cee4a1fe53",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/shared/src/document.ts",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "c0d38c46df08c75b3aff6a4617f12d362f3a09ffa1714d1469ab4c87b7ac8d6c",
+      "newSHA256": "f5b7309603327a1423097274e13779f034fc3b69e25baab65894d15b5ce41e4a",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/shared/src/index.ts",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "6f0903c6bf6dc8266c5fa6a6f71e06ecc3fb064eb3a8016fe68c38e1900dd45b",
+      "newSHA256": "226515faa7414ba147a896bac7d2aea8d93cbf9823455442571b9740ee5b1de0",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/shared/src/inference.test.ts",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "ad4013649552b8abed01341b247f84d7e07bae71c0a4eb09ddffdc84bb3350c3",
+      "newSHA256": "1a9c568d162501a36dfeac77df38480336daf064dd3624d1df182d2601a77c7a",
+      "findingIds": [],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@ha/shared/src/inference.ts",
+      "change": "changed",
+      "domain": "internal-first-party-package",
+      "oldSHA256": "9b7e25e498c31e7ec2de157664f6e9b7fb4d4ebb93cf3108773edb44ba599f57",
+      "newSHA256": "ccc3892bb49206f56bcb11e326d60f744afa6652cd4add5f9ee661c86adda7cb",
+      "findingIds": ["UPD22-24", "UPD22-25", "UPD22-26"],
+      "limit": "Internal shipped source/compiled declaration; contract and runtime acceptance remain separate."
+    },
+    {
+      "path": "node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex",
+      "change": "changed",
+      "domain": "opaque-native-digest-change",
+      "oldSHA256": "b7402a0c57b413a2cb316074b1988a53c1be3cac3fb0312357a185af86bc42c6",
+      "newSHA256": "de300226dc8031c65821b95dc709a3a95df9ba263896018f8b094677ef553111",
+      "findingIds": [],
+      "limit": "Binary semantics and mismatch cause are unverified."
+    },
+    {
+      "path": "node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex-code-mode-host",
+      "change": "changed",
+      "domain": "opaque-native-digest-change",
+      "oldSHA256": "ef7d03dc2c2e1981f854902d430da97aff221dd715a68afa06bbb7be862efb65",
+      "newSHA256": "6b555dcb1581d9ae94beddd4598dd8bdb9c30972ec304cfaf16e17f7918997ad",
+      "findingIds": [],
+      "limit": "Binary semantics and mismatch cause are unverified."
+    },
+    {
+      "path": "node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-path/rg",
+      "change": "changed",
+      "domain": "opaque-native-digest-change",
+      "oldSHA256": "33cf92352723496a643cd51e36ae5e5a06cd64229be9734da89a4b9b0c11bffb",
+      "newSHA256": "47755f6dfe562491532c6613557cdafdf5177cde0dc24b5fa597466ac35cd086",
+      "findingIds": [],
+      "limit": "Binary semantics and mismatch cause are unverified."
+    },
+    {
+      "path": "node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/bin/codex-voice-host",
+      "change": "changed",
+      "domain": "opaque-native-digest-change",
+      "oldSHA256": "2340716b52e2f4a934aa86774608ac50151b64512d9a6bfbe98cdb5b57de8af4",
+      "newSHA256": "baa7b3d877a15624410dd560b2fa7510dd79119a9eed4a05e76652c933003f8c",
+      "findingIds": [],
+      "limit": "Binary semantics and mismatch cause are unverified."
+    },
+    {
+      "path": "node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/lib/libffi.8.dylib",
+      "change": "changed",
+      "domain": "opaque-native-digest-change",
+      "oldSHA256": "73cdb188239350e66cf9b120865184c72a5f2af9d677a486367f32c35ac95811",
+      "newSHA256": "d9c26876ab6a3f384f7949c4d05e2518a34249fd9977b837cbdfd50af3088f07",
+      "findingIds": [],
+      "limit": "Binary semantics and mismatch cause are unverified."
+    },
+    {
+      "path": "node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/lib/libgio-2.0.0.dylib",
+      "change": "changed",
+      "domain": "opaque-native-digest-change",
+      "oldSHA256": "75821ead55a3ea104c3c8f1b07b93a48f6c60a3f7b5356f2f13065e228060d39",
+      "newSHA256": "d8ab5755938561f470c96b886b626a00ea321546b97580a141120d7a881d99df",
+      "findingIds": [],
+      "limit": "Binary semantics and mismatch cause are unverified."
+    },
+    {
+      "path": "node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/lib/libglib-2.0.0.dylib",
+      "change": "changed",
+      "domain": "opaque-native-digest-change",
+      "oldSHA256": "acec42a15b7b51a7b953c832503b68d7d8c7dfc32520496e8f5a2f80c2787406",
+      "newSHA256": "8bd64fb6dec818a4c6ffd3ab52eb03589ecdebb523a75fdb59d1072f030072e5",
+      "findingIds": [],
+      "limit": "Binary semantics and mismatch cause are unverified."
+    },
+    {
+      "path": "node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/lib/libgmodule-2.0.0.dylib",
+      "change": "changed",
+      "domain": "opaque-native-digest-change",
+      "oldSHA256": "05c97e9b35d6905d9e20689e016456b61cce2502fb70bd6fe13299ded104e043",
+      "newSHA256": "34a9b33e7c96b57d2367a4b98f832161e4c78cfd3bcaa432453595cf78107ece",
+      "findingIds": [],
+      "limit": "Binary semantics and mismatch cause are unverified."
+    },
+    {
+      "path": "node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/lib/libgobject-2.0.0.dylib",
+      "change": "changed",
+      "domain": "opaque-native-digest-change",
+      "oldSHA256": "cc567e4dc67305a7b6b90a892b537bbaf4fd2a5a16bdc02b7e0a433406bbc185",
+      "newSHA256": "555de77d8aed7efec79c30263fe812d4000a98d1cb907e691c31c46406dc9e87",
+      "findingIds": [],
+      "limit": "Binary semantics and mismatch cause are unverified."
+    },
+    {
+      "path": "node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/lib/libgstapp-1.0.0.dylib",
+      "change": "changed",
+      "domain": "opaque-native-digest-change",
+      "oldSHA256": "c6291b5027d4008ac7bceb2d68496528648a4989a43c4e0e289e97dd1ceb6b71",
+      "newSHA256": "118fd82a752990f55101acb4508426192bf545c88c5e3c9ba95ba7fb2f989445",
+      "findingIds": [],
+      "limit": "Binary semantics and mismatch cause are unverified."
+    },
+    {
+      "path": "node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/lib/libgstaudio-1.0.0.dylib",
+      "change": "changed",
+      "domain": "opaque-native-digest-change",
+      "oldSHA256": "f50dcbf7aa410dbf97dba611986cf87b1bbf7fcf84f099fb3896860f54ef999a",
+      "newSHA256": "60a8f9396e6e5fad346973af7e2bbe7fd48d7d367d4dd944e2acf34b3a27f499",
+      "findingIds": [],
+      "limit": "Binary semantics and mismatch cause are unverified."
+    },
+    {
+      "path": "node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/lib/libgstbase-1.0.0.dylib",
+      "change": "changed",
+      "domain": "opaque-native-digest-change",
+      "oldSHA256": "84ef7df436673681536ff1993a6eb18abff1f49323ad58fce1e65caff01c87a1",
+      "newSHA256": "6ad8d673d9b19b6ed57e24688f8ebadd42dc5ba92a5736582f2482bfcf467731",
+      "findingIds": [],
+      "limit": "Binary semantics and mismatch cause are unverified."
+    },
+    {
+      "path": "node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/lib/libgstnet-1.0.0.dylib",
+      "change": "changed",
+      "domain": "opaque-native-digest-change",
+      "oldSHA256": "909fb30cfc95df6a568dcb84c5e9d6561ee19d1fddb7dfe272f66eabf3946428",
+      "newSHA256": "b744f6d30f8c8f7d04286e9f8ef757af33bb27aa17b91290e9ea598dce2e0c97",
+      "findingIds": [],
+      "limit": "Binary semantics and mismatch cause are unverified."
+    },
+    {
+      "path": "node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/lib/libgstpbutils-1.0.0.dylib",
+      "change": "changed",
+      "domain": "opaque-native-digest-change",
+      "oldSHA256": "405e0b9a9db635ce7292cbf1ee2b807f16e71de6f1dfe99a1cf410c60dfe450a",
+      "newSHA256": "4174ff6308967fbac0a41dea2f5268ea51189394a6ccc954196d16ff47f2b16e",
+      "findingIds": [],
+      "limit": "Binary semantics and mismatch cause are unverified."
+    },
+    {
+      "path": "node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/lib/libgstreamer-1.0.0.dylib",
+      "change": "changed",
+      "domain": "opaque-native-digest-change",
+      "oldSHA256": "a3608d15e9ac0af17c111318407f58b440a038b45897123b42c515ea05f0b771",
+      "newSHA256": "7511841a3b76d680acbf8aa145eed71a9c8b50e953a203df0b12cb082fce6f0e",
+      "findingIds": [],
+      "limit": "Binary semantics and mismatch cause are unverified."
+    },
+    {
+      "path": "node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/lib/libgstrtp-1.0.0.dylib",
+      "change": "changed",
+      "domain": "opaque-native-digest-change",
+      "oldSHA256": "d2f1500dad8ca561d3fbba940201f3b573a869294a5143e4be2551214e4e48f5",
+      "newSHA256": "eeb62bd8aeb4f2e4ba3132f2e0fe714bf28478a667cfbbfb7de4fc6a4a073268",
+      "findingIds": [],
+      "limit": "Binary semantics and mismatch cause are unverified."
+    },
+    {
+      "path": "node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/lib/libgsttag-1.0.0.dylib",
+      "change": "changed",
+      "domain": "opaque-native-digest-change",
+      "oldSHA256": "6174d49b134579180ff42cf7fcdc17b6c5cbbb90bde7f7fac3427090993c9477",
+      "newSHA256": "31afa2195846c9071671072b3033ba712fd6ac2850c2fa93b1f825b5849338c6",
+      "findingIds": [],
+      "limit": "Binary semantics and mismatch cause are unverified."
+    },
+    {
+      "path": "node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/lib/libgstvideo-1.0.0.dylib",
+      "change": "changed",
+      "domain": "opaque-native-digest-change",
+      "oldSHA256": "165ccb622cb6f7141faff43858f5b0a00801f915be4b154a17aae7b6ce35951c",
+      "newSHA256": "88b9944c3e81acd1ff6ac9268b444c27e417f47b7480c77fae54a883070d43ab",
+      "findingIds": [],
+      "limit": "Binary semantics and mismatch cause are unverified."
+    },
+    {
+      "path": "node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/lib/libintl.8.dylib",
+      "change": "changed",
+      "domain": "opaque-native-digest-change",
+      "oldSHA256": "fba5e493067bd16dd85448a6f0b96b98e7dc0d77ca2217362ebf7e7ec5d57738",
+      "newSHA256": "0631c7bbfff7aeed646d40101af9fda21e3891284eb1e7b96027a7de476e0b92",
+      "findingIds": [],
+      "limit": "Binary semantics and mismatch cause are unverified."
+    },
+    {
+      "path": "node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/lib/libopus.0.dylib",
+      "change": "changed",
+      "domain": "opaque-native-digest-change",
+      "oldSHA256": "48f468233f2305d61e413b8e65471ef4748115ea4eec5d79d6dfa1056632f0c2",
+      "newSHA256": "2f2f6158c9aff4692c7c3deb46a1e5d4d8ba83aca9dd99213c8cde6f25dc9641",
+      "findingIds": [],
+      "limit": "Binary semantics and mismatch cause are unverified."
+    },
+    {
+      "path": "node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/lib/libpcre2-8.0.dylib",
+      "change": "changed",
+      "domain": "opaque-native-digest-change",
+      "oldSHA256": "e529192380e26b073ec9648744d4a8ecc7178541055fef224e19cc79904540e5",
+      "newSHA256": "2cffd74711e76362cf98bc3b710c69ca99023ce406ace7cfd0938b510c00b336",
+      "findingIds": [],
+      "limit": "Binary semantics and mismatch cause are unverified."
+    },
+    {
+      "path": "node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/lib/libz.1.dylib",
+      "change": "changed",
+      "domain": "opaque-native-digest-change",
+      "oldSHA256": "de97bd987436c641135b9db21dd33d5f25a16aafa80589ab413983d48e947ba4",
+      "newSHA256": "10b4c799c38baaea34299c4edf8612b8af1b9095a1873a87710a116f63cd8cd1",
+      "findingIds": [],
+      "limit": "Binary semantics and mismatch cause are unverified."
+    },
+    {
+      "path": "node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/plugins/libgstapp.dylib",
+      "change": "changed",
+      "domain": "opaque-native-digest-change",
+      "oldSHA256": "7a70fd553335c3ce69b43b8ae33a1024f6984d5a5e64998bb945f3f82b98ae24",
+      "newSHA256": "4b250d2edbee8fd930e8f621e6603f8c26fec2855315656416fed7611b12472d",
+      "findingIds": [],
+      "limit": "Binary semantics and mismatch cause are unverified."
+    },
+    {
+      "path": "node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/plugins/libgstaudioconvert.dylib",
+      "change": "changed",
+      "domain": "opaque-native-digest-change",
+      "oldSHA256": "56ef295906532d2b5bfac56be616a68af4a48128b7febc9f7db0e6c83846cf7b",
+      "newSHA256": "2e30cefad71ef73f12c76d9c5da97fd1ac106db596e196ad3f0f6e3f2215362b",
+      "findingIds": [],
+      "limit": "Binary semantics and mismatch cause are unverified."
+    },
+    {
+      "path": "node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/plugins/libgstaudioresample.dylib",
+      "change": "changed",
+      "domain": "opaque-native-digest-change",
+      "oldSHA256": "4a42fe7e7c494ff69eb649a4df39ca92bc37568759f55d458a21e6750600819e",
+      "newSHA256": "2aafc38a146a06efe0d872bb6cbb1931f099111468c9cfa43437db378427da46",
+      "findingIds": [],
+      "limit": "Binary semantics and mismatch cause are unverified."
+    },
+    {
+      "path": "node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/plugins/libgstcoreelements.dylib",
+      "change": "changed",
+      "domain": "opaque-native-digest-change",
+      "oldSHA256": "7ff243ff716f321c59f24905499e6d3a7d1b3ea870a3d6b59045ea31d72cb5d2",
+      "newSHA256": "f84246c41e88b3a10192b32dc39656ea812dbc267fb8cf9ef9719158abd8f3d7",
+      "findingIds": [],
+      "limit": "Binary semantics and mismatch cause are unverified."
+    },
+    {
+      "path": "node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/plugins/libgstopus.dylib",
+      "change": "changed",
+      "domain": "opaque-native-digest-change",
+      "oldSHA256": "22795a89d181665bddd083fa4a43f5be9581ea63bb9200bf551c34023749dbbd",
+      "newSHA256": "c165198edfe174054f4c4e3ba69eba5868779dbf527d6f9e73df7317eb0ec439",
+      "findingIds": [],
+      "limit": "Binary semantics and mismatch cause are unverified."
+    },
+    {
+      "path": "node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/plugins/libgstrtp.dylib",
+      "change": "changed",
+      "domain": "opaque-native-digest-change",
+      "oldSHA256": "26a3428cc251c7a9fc4b9db315d48e173d42b868b1af99db6fbbb77537460eb5",
+      "newSHA256": "bd905524e2e8db11dd2680559811a67b10f1ad08ca5fd2daa76eda9956123078",
+      "findingIds": [],
+      "limit": "Binary semantics and mismatch cause are unverified."
+    },
+    {
+      "path": "node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-resources/voice/plugins/libgstrtpmanager.dylib",
+      "change": "changed",
+      "domain": "opaque-native-digest-change",
+      "oldSHA256": "5b7a4d0c612d4ce95283e506db95dd43695c646140cac4fb12661d6281cd6183",
+      "newSHA256": "5c74d58ed826afbeeedcc31e1e072701f50a05910d7eacf5334482220690f1ce",
+      "findingIds": [],
+      "limit": "Binary semantics and mismatch cause are unverified."
+    },
+    {
+      "path": "node_modules/@vscode/ripgrep-darwin-arm64/bin/rg",
+      "change": "changed",
+      "domain": "opaque-native-digest-change",
+      "oldSHA256": "aa823f17cb7cee4d655954a5c2acd5c177a800451565ab0a52d41517f9aa8320",
+      "newSHA256": "4838ee103ca31488c9da624691d657d23be3f5208c873d7189bfa6f1671a7837",
+      "findingIds": [],
+      "limit": "Binary semantics and mismatch cause are unverified."
+    },
+    {
+      "path": "out/app-window.js",
+      "change": "changed",
+      "domain": "desktop-source-or-entry",
+      "oldSHA256": "9cb886e4919f6f3491130573430807b13655b42afa987a7fbf040edb934508e4",
+      "newSHA256": "fa8ea29c5d634ebec964d438447921a55ce3786cf74113a8a52b6d82d54cf18f",
+      "findingIds": [],
+      "limit": "Native/desktop source delta; only named retained UI observations are accepted as observed."
+    },
+    {
+      "path": "out/app.js",
+      "change": "changed",
+      "domain": "desktop-source-or-entry",
+      "oldSHA256": "4eb894bf71c548ccdcb553e79963352c8164fc31a9a5a13ddd0a66103bd33d40",
+      "newSHA256": "8c11d2a6b6a48564950cfc36b5bbe4458d6afd7ca6e021e35fcb5a7dde4f37c7",
+      "findingIds": [],
+      "limit": "Native/desktop source delta; only named retained UI observations are accepted as observed."
+    },
+    {
+      "path": "out/browser-node-capture.js",
+      "change": "changed",
+      "domain": "desktop-source-or-entry",
+      "oldSHA256": "eae325863a43d3574fa772d2fcf0c2c2892bc5a36393f50f107860816439c446",
+      "newSHA256": "1e7842ccbe1aff05f61e45d7c6f91aaaf4ae16babc5db67155644e504fdb9ca6",
+      "findingIds": [],
+      "limit": "Native/desktop source delta; only named retained UI observations are accepted as observed."
+    },
+    {
+      "path": "out/browser-node-ipc.js",
+      "change": "changed",
+      "domain": "desktop-source-or-entry",
+      "oldSHA256": "345a4925206872f7d84397fd833709d2e0029ec4287dfd6051dfbde5e76ed11c",
+      "newSHA256": "06b7bee2493ba8af8e5d052cc35841bca600b65c9d3fe5383351bd1a297e6cb7",
+      "findingIds": ["UPD22-21"],
+      "limit": "Native/desktop source delta; only named retained UI observations are accepted as observed."
+    },
+    {
+      "path": "out/browser-popups.js",
+      "change": "changed",
+      "domain": "desktop-source-or-entry",
+      "oldSHA256": "bc47fa5ecb32460ddfa26d4d133a38a854483b17dfd02b3d1bbc9f62d7120f9a",
+      "newSHA256": "24e4f25e6528d9b43bc5caa078b36c4dd2e8d07de2c988354fb1d6938651b25a",
+      "findingIds": [],
+      "limit": "Native/desktop source delta; only named retained UI observations are accepted as observed."
+    },
+    {
+      "path": "out/config.js",
+      "change": "changed",
+      "domain": "desktop-source-or-entry",
+      "oldSHA256": "6b10d283d3ce63fc3a30ca9ce6c6c87e2916f995d298143746755995219c505a",
+      "newSHA256": "42f09c5d45041820316e62fddb7393d9a0751e8d8db37786bafa614d64ef9f2e",
+      "findingIds": [],
+      "limit": "Native/desktop source delta; only named retained UI observations are accepted as observed."
+    },
+    {
+      "path": "out/dashboard-documents.js",
+      "change": "changed",
+      "domain": "desktop-source-or-entry",
+      "oldSHA256": "703b6b2afc4f52a284dc08176e7562aaa398f18e9bb6e248ba18400a012aaae2",
+      "newSHA256": "f4789f2e82955b170372459c142a055db8b953faeed47a9e2a1496a99b8d43ac",
+      "findingIds": [],
+      "limit": "Native/desktop source delta; only named retained UI observations are accepted as observed."
+    },
+    {
+      "path": "out/dashboard.js",
+      "change": "changed",
+      "domain": "desktop-source-or-entry",
+      "oldSHA256": "d737f118027d87305d7d63d6c14cb2514a5acb481a04f35f960eb6c3c88fee6c",
+      "newSHA256": "e1ea76cc9699115294034a412ec70651adfaaf6c01ef319c2b660c473219f55d",
+      "findingIds": [],
+      "limit": "Native/desktop source delta; only named retained UI observations are accepted as observed."
+    },
+    {
+      "path": "out/desktop-resource-device.js",
+      "change": "changed",
+      "domain": "desktop-source-or-entry",
+      "oldSHA256": "34e0716dbf60d51316fa309819c26cdf677d2f35205882f431b8126855ec876b",
+      "newSHA256": "193ca62ac394f189d47e66ed9de7236bae69b3543a235a40698b23c56ba9b4fa",
+      "findingIds": [],
+      "limit": "Native/desktop source delta; only named retained UI observations are accepted as observed."
+    },
+    {
+      "path": "out/editor/assets/browserAll.js",
+      "change": "changed",
+      "domain": "compiled-renderer-or-style",
+      "oldSHA256": "651cc8b2ca7fd262dd9cbcb0059c8ffa6f5c9bcee873708bf4796ec25c3e4b09",
+      "newSHA256": "f390e67f95f1946ed2619df71e1df53e7bc15e4536ce321399b21e4c96c6c5de",
+      "findingIds": [],
+      "limit": "Message/CSS deltas are indexed; complete bundled-code semantics are unverified."
+    },
+    {
+      "path": "out/editor/assets/emscripten-module.browser.js",
+      "change": "changed",
+      "domain": "compiled-renderer-or-style",
+      "oldSHA256": "e5545f0c8b707c430c28102428fd8d9fec5d6c18fc552781cecb9b548b4e1a18",
+      "newSHA256": "3a244979b5254816ec48e77ac75d06e836cabf4a84e233c30758acafac5196d9",
+      "findingIds": [],
+      "limit": "Message/CSS deltas are indexed; complete bundled-code semantics are unverified."
+    },
+    {
+      "path": "out/editor/assets/emscripten-module2.browser.js",
+      "change": "changed",
+      "domain": "compiled-renderer-or-style",
+      "oldSHA256": "5b9fd225ff6f22eb3514a442bb8fa9cf1e71281f6f4637c30b041f16e86e6fb4",
+      "newSHA256": "b779c36a2843319bc1225281fac02952e6ecc55857df62de1c00248cf0d18bb1",
+      "findingIds": [],
+      "limit": "Message/CSS deltas are indexed; complete bundled-code semantics are unverified."
+    },
+    {
+      "path": "out/editor/assets/ffi.js",
+      "change": "changed",
+      "domain": "compiled-renderer-or-style",
+      "oldSHA256": "4a8a75f793e5ff37dfe8617b4530537b1680aaafe2011b70b91c473cee62f83a",
+      "newSHA256": "dcec68b9db67e05b87b17c31444bc3649fa93fbc37ffcc0e3adfc800af7356e6",
+      "findingIds": [],
+      "limit": "Message/CSS deltas are indexed; complete bundled-code semantics are unverified."
+    },
+    {
+      "path": "out/editor/assets/ffi2.js",
+      "change": "changed",
+      "domain": "compiled-renderer-or-style",
+      "oldSHA256": "9af290f6e1807f6f230a3ac84947e4493f734410d5dd3f9499a2380259c581d2",
+      "newSHA256": "1cf7a899cf9cea66b12b6324718bd54662e2e0d733a2a0c03d3912d1b172930d",
+      "findingIds": [],
+      "limit": "Message/CSS deltas are indexed; complete bundled-code semantics are unverified."
+    },
+    {
+      "path": "out/editor/assets/highlighted-body-OFNGDK62.js",
+      "change": "changed",
+      "domain": "compiled-renderer-or-style",
+      "oldSHA256": "66d29246cb73ef8720a729ec059fd45d7fbf100c3ac9b19c7a260f69b92cd9ee",
+      "newSHA256": "7a0bb907dfc811aaf5f0cbaae9d870c2bb4133f2fe39bf0b8c5525e0a038bbcd",
+      "findingIds": [],
+      "limit": "Message/CSS deltas are indexed; complete bundled-code semantics are unverified."
+    },
+    {
+      "path": "out/editor/assets/html.js",
+      "change": "changed",
+      "domain": "compiled-renderer-or-style",
+      "oldSHA256": "b5404163630d51f03f0a801ecfb995254cc97248adc0c960b2e8bdb4ca805fdb",
+      "newSHA256": "473c068768ba1cd75c48c1f9966b8e360581fae49a3cb76508d9e46420362688",
+      "findingIds": [],
+      "limit": "Message/CSS deltas are indexed; complete bundled-code semantics are unverified."
+    },
+    {
+      "path": "out/editor/assets/index.js",
+      "change": "changed",
+      "domain": "compiled-renderer-or-style",
+      "oldSHA256": "afacb701b827dbf5205596e50645d4840f3f08244e60ad486e88f700e3a102ff",
+      "newSHA256": "9287a8a40617929bc99c059e7a408e0ffa905e9531f320ee6e99943379fc031a",
+      "findingIds": ["UPD22-05", "UPD22-20", "UPD22-24", "UPD22-29", "UPD22-30", "UPD22-31"],
+      "limit": "Message/CSS deltas are indexed; complete bundled-code semantics are unverified."
+    },
+    {
+      "path": "out/editor/assets/index2.js",
+      "change": "changed",
+      "domain": "compiled-renderer-or-style",
+      "oldSHA256": "e1d83a7646d280e8167b0b38c1d35c027e8a3e715326db2f78472da6ca0b363c",
+      "newSHA256": "8808c993bef870c7f14243869334aa524fa56e311c90fc9c36ad6ea3de3be32b",
+      "findingIds": [],
+      "limit": "Message/CSS deltas are indexed; complete bundled-code semantics are unverified."
+    },
+    {
+      "path": "out/editor/assets/module-ES6BEMUI.js",
+      "change": "changed",
+      "domain": "compiled-renderer-or-style",
+      "oldSHA256": "3cd1de3440e012b1b77231523cde345082b5bb94bd226a5fa12eee35a18197cc",
+      "newSHA256": "d2dda22405e00835392d4a62cd863d9b1130e168c485be22f6ebf028c81dd289",
+      "findingIds": [],
+      "limit": "Message/CSS deltas are indexed; complete bundled-code semantics are unverified."
+    },
+    {
+      "path": "out/editor/assets/module-asyncify-2EFITU5U.js",
+      "change": "changed",
+      "domain": "compiled-renderer-or-style",
+      "oldSHA256": "89646e6c5fd72efc5c925b09fe8ad5562cccee283879a6cec9364cda744e885f",
+      "newSHA256": "0abacc0335f7dc56286ffbdab39c3f3b252554f46e9db6665b73a28d7fba9526",
+      "findingIds": [],
+      "limit": "Message/CSS deltas are indexed; complete bundled-code semantics are unverified."
+    },
+    {
+      "path": "out/editor/assets/standalone.js",
+      "change": "changed",
+      "domain": "compiled-renderer-or-style",
+      "oldSHA256": "c4670e8303e88ac0ec146f88c678506be4ff477f6f1167f65340f86e63360afa",
+      "newSHA256": "c404a81869c3ee524517fe1a8a0253030a62ecac94f147717ae26c35511bbc3d",
+      "findingIds": [],
+      "limit": "Message/CSS deltas are indexed; complete bundled-code semantics are unverified."
+    },
+    {
+      "path": "out/editor/assets/webworkerAll.js",
+      "change": "changed",
+      "domain": "compiled-renderer-or-style",
+      "oldSHA256": "ed714aececa43f9ff9b78f7b47a54f6b6a449120cd973c7238cc19e0d573ed2e",
+      "newSHA256": "b169537e96951da5ee064cead0420c2fabc4a5798074eb318fb140f1dfcbeb07",
+      "findingIds": [],
+      "limit": "Message/CSS deltas are indexed; complete bundled-code semantics are unverified."
+    },
+    {
+      "path": "out/editor/index.html",
+      "change": "changed",
+      "domain": "desktop-source-or-entry",
+      "oldSHA256": "8e80ed9faf8ebcaf06358e8c522638e5a1d74895d835dc739dc0b353a41788c5",
+      "newSHA256": "bbfc192dc5d86f524afaa6c5e24b703a5a1ff27420376a7cca19d948767a2d52",
+      "findingIds": [],
+      "limit": "Native/desktop source delta; only named retained UI observations are accepted as observed."
+    },
+    {
+      "path": "out/file-storage.js",
+      "change": "changed",
+      "domain": "desktop-source-or-entry",
+      "oldSHA256": "eba4e9dbb2dd8a88706b4886ff6f3296252a7f913983d61ed5e958f9f669a846",
+      "newSHA256": "050b1ebf61b473d396f42d7ab26b5d03ce4efb4760c167078ce9c3dc2338017f",
+      "findingIds": [],
+      "limit": "Native/desktop source delta; only named retained UI observations are accepted as observed."
+    },
+    {
+      "path": "out/main.js",
+      "change": "changed",
+      "domain": "desktop-source-or-entry",
+      "oldSHA256": "defeab196b0804cef4e639e7a0784272ccbde3860319ea05aa8ea0d3166b8527",
+      "newSHA256": "9fad05c145f67fa2f22ff7ad647c61a18cdd633ab92ebd044b969b7e5e3de6f8",
+      "findingIds": [],
+      "limit": "Native/desktop source delta; only named retained UI observations are accepted as observed."
+    },
+    {
+      "path": "out/mcp-server-darwin-arm64",
+      "change": "changed",
+      "domain": "opaque-native-digest-change",
+      "oldSHA256": "2599ff67710f2186e3ceed739ae52d5a8a126875b8d1ac4d99df18c61270dedd",
+      "newSHA256": "3564672ceeec0c62b4c6558680c586274f5d458a5541a188c70d87827869f6a1",
+      "findingIds": [],
+      "limit": "Binary semantics and mismatch cause are unverified."
+    },
+    {
+      "path": "out/menu.js",
+      "change": "changed",
+      "domain": "desktop-source-or-entry",
+      "oldSHA256": "5f41435a20207ae846751af1ffd9333420d5d574eab053683fd760888ab84c1f",
+      "newSHA256": "7d75b730155a51ea6e19ad6729edd8402c3576395cc0546a2e58516b64752f13",
+      "findingIds": ["UPD22-01", "UPD22-02", "UPD22-03"],
+      "limit": "Native/desktop source delta; only named retained UI observations are accepted as observed."
+    },
+    {
+      "path": "out/skills-manager.js",
+      "change": "changed",
+      "domain": "desktop-source-or-entry",
+      "oldSHA256": "c2ef2e6383ab883dc842274c37ebd9ed934b262348893fa5d74e84bd4f0d09aa",
+      "newSHA256": "8731eb5f7529cd88bfb271b4c095e8f7b53cae5459e7d2283666bf9aa848f2ed",
+      "findingIds": ["UPD22-06", "UPD22-07", "UPD22-08", "UPD22-09", "UPD22-10", "UPD22-11"],
+      "limit": "Native/desktop source delta; only named retained UI observations are accepted as observed."
+    },
+    {
+      "path": "out/skills/pen-dev/SKILL.md",
+      "change": "changed",
+      "domain": "bundled-guide-content",
+      "oldSHA256": "bf71b2d3bacc1083c26c871a1c8a31cd21124223faf79d1dc4c8461f9deefccd",
+      "newSHA256": "46f856171f8af41aef233faf3c87cf27c66f6cf63bac7537ab27a54f576a2bff",
+      "findingIds": ["UPD22-12"],
+      "limit": "Workflow guidance, not executed model behavior."
+    },
+    {
+      "path": "out/skills/pen-dev/execute.md",
+      "change": "changed",
+      "domain": "bundled-guide-content",
+      "oldSHA256": "de953341486a02a35f9158caa36fe0a344d1a10438894c9e63fde9d765892f83",
+      "newSHA256": "2e8583f401427241141454614c6dcdc8926d397b2008e506e5d5d897c11b2144",
+      "findingIds": ["UPD22-02"],
+      "limit": "Workflow guidance, not executed model behavior."
+    },
+    {
+      "path": "out/skills/pen-dev/pen-schema.md",
+      "change": "changed",
+      "domain": "bundled-guide-content",
+      "oldSHA256": "1ca56119a20d0fe58e33a50139aa83c4e9d470584d73f28cef840c626570f3a7",
+      "newSHA256": "e3469647c3e15bca16f6ba1ece8bfe1fb2c0b5b240c69f95451616c33048a2d3",
+      "findingIds": ["UPD22-04"],
+      "limit": "Workflow guidance, not executed model behavior."
+    },
+    {
+      "path": "out/skills/pen-dev/whiteboard.md",
+      "change": "changed",
+      "domain": "bundled-guide-content",
+      "oldSHA256": "b0367b30782a634ff5dafc71f398b2eb530ab8342a9c147b6f07fe57ad09d768",
+      "newSHA256": "e55b143feed85f3d6a0b955800f58806f5661ad1df6eefceead9f484b5ec0b7c",
+      "findingIds": ["UPD22-13"],
+      "limit": "Workflow guidance, not executed model behavior."
+    },
+    {
+      "path": "package.json",
+      "change": "changed",
+      "domain": "package-or-third-party-dependency",
+      "oldSHA256": "5de1286cd7a3556b792ab7f12f301c0aca2a8f089a6b88559602d652ce805bb1",
+      "newSHA256": "092880f782c0846e27562902989afb4ca164194de5c5cbdf2586ad452e6aa5ac",
+      "findingIds": [],
+      "limit": "Packaging/dependency content; no independent feature claim from a changed file alone."
+    }
+  ]
+}
