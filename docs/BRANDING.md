@@ -400,3 +400,13 @@ a rejected tool-connection watcher stops the starting child before returning its
 Ten isolated checks, 33 owner tests, the normal build/lint, source/Vue/test types and focused
 format/docs/changelog checks pass. Real processes, provider accounts, native
 chat rendering and full ACP/Pen parity are not accepted by these simulated startup paths.
+
+## Native-engine support notices
+
+The [native-support record](NATIVE-SUPPORT-COPY.md) exercises six named desktop environments
+through the real notice owners in Chromium and WebKit. All 24 cases and inspected captures
+retain Open Pen naming, technical fields, engine/package identities and keyboard disclosure/
+link intent. Ten frozen inputs match. Both requested color schemes retain the existing dark
+notice; this does not accept distinct light styling, actual OS detection, Tauri opener delivery
+or physical unsupported engines. All 65 support-owner tests and test types, focused lint/format,
+docs and architecture checks pass. Production source is unchanged.
