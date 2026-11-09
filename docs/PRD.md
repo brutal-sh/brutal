@@ -126,9 +126,8 @@ The fresh board contains 412 bounded execution tasks and 17 milestones. Every on
 
 | Horizon | Outcome | Evidence checkpoint |
 | --------------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Now | Repair the page-navigation driver (TEST-PAGE-NAV) | Reveal the actual Layers surface, preserve exact page selection and run all affected canonical journeys without timeout/retry changes. |
-| Next | Classify Commands submenu detachment (STAB-COMMAND-MENU) | Minimize the pointer sequence with equivalent original/current controls; repair the demonstrated owner while preserving real pointer/keyboard behavior. MOD-13 remains Verify. |
-| Following | Re-enter mixed WebKit reliability (STAB-WEBKIT-MIXED, Verify) | Classify the retained mixed-run failures and unrun cases; preserve timing, snapshots and the editor-copy dependency. |
+| Now | Classify Commands submenu detachment (STAB-COMMAND-MENU) | Minimize the pointer sequence with equivalent original/current controls; repair the demonstrated owner while preserving real pointer/keyboard behavior. MOD-13 remains Verify. |
+| Next | Re-enter mixed WebKit reliability (STAB-WEBKIT-MIXED, Verify) | Classify the retained mixed-run failures and unrun cases; preserve timing, snapshots and the editor-copy dependency. |
 | Then                  | Stabilize document switching and finish unaccepted icon, module and feature/screen tasks in dependency order | Each card has relevant owner tests, visual/native checks and a commit/evidence link before Executed; dependent renderer/input work waits for STAB-GPU. |
 | Release qualification | Deliver private beta, then complete the full parity gate | Clean normal build, install/restart/recovery and core journey; declared beta limitations. Later, no required parity state remains unaccepted. |
 
@@ -186,4 +185,9 @@ and [task index](TASKS.md) are the reviewable sources of scope. The active goal 
 [REF-03](https://trello.com/c/l9y1fz5C/413-ref-03-catalog-installed-pen-1222-update) has bounded Executed inventory evidence at
 `cc33e07c9`: exact extracted/outer bytes, versioned findings, independent review and live-board
 allocation are published. This does not accept the new workflows, opaque binary semantics
-or full current-reference parity. TEST-PAGE-NAV is the sole Building task.
+or full current-reference parity. STAB-COMMAND-MENU is the sole Building task.
+
+[TEST-PAGE-NAV](https://trello.com/c/NIjUHghm) has bounded Executed driver evidence at
+`3bf51b270`: the real Layers-tab interaction reveals the page row, and all five palette
+journeys plus eleven menu controls pass once without retries. [Control record](PAGE-NAVIGATION-CONTROL.md)
+preserves the original failures and separate Commands/native/Pen limits.

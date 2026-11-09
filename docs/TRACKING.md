@@ -112,11 +112,11 @@ distinguishes two stale native test contracts from an unproven cross-file backdr
 criteria. The [control record](APP-TEST-CONTROLS.md) retains paired failures, the two-file
 reproduction, scoped cleanup and the subsequent 1,955 passing app-shard tests. Neither
 changes production behavior or accepts native delivery. Both remain required beta and
-terminal dependencies with linked evidence. Menu-schema modularization (MOD-13) is Verify behind two narrow browser blockers; TEST-PAGE-NAV is the sole Building task. Mixed WebKit reliability is Verify. Font and graph candidates remain Verify. An earlier native graph/text batch has
+terminal dependencies with linked evidence. Menu-schema modularization (MOD-13) is Verify behind two narrow browser blockers; STAB-COMMAND-MENU is the sole Building task. Mixed WebKit reliability is Verify. Font and graph candidates remain Verify. An earlier native graph/text batch has
 four hidden-window failures; that run's OS read found the desktop locked. Those
 failed/unexecuted input criteria do not erase the earlier successful native resource path.
 The interrupted zero-size icon work retains its failed wider-run receipts and dependencies.
-The delivery snapshot is 367 Backlog, 0 Ready, 1 Building, 10 Verify and 34 Executed, plus 17 milestones.
+The delivery snapshot is 366 Backlog, 0 Ready, 1 Building, 10 Verify and 35 Executed, plus 17 milestones.
 DELIVERY-LFS has bounded executed current-checkout fixture delivery: all twelve objects
 are fetched from the own private endpoint into empty independent storage, with matching
 SHA-256/sizes and LFS integrity checks. Historical object closure is not qualified.
@@ -198,7 +198,7 @@ against the preserved original criteria at `d30381b16`; portal copy is Executed 
 [Portal copy](PORTAL-COPY.md) has bounded Executed evidence at `5e68a7668`: 72 browser
 cases, 324 inspected region/cell captures, 360 canonical-label checks and 21 portal-owner
 tests. Actual pages/controllers use local document-routing and API fixtures, not real
-authentication/backend/native delivery. Real service identities remain. TEST-PAGE-NAV is the sole
+authentication/backend/native delivery. Real service identities remain. STAB-COMMAND-MENU is the sole
 Building task; editor-copy remains Verify behind the unchanged mixed WebKit reliability gate.
 
 
@@ -218,3 +218,8 @@ JSON equality. The new reference adds distinct menu membership changes, includin
 REF-03 records bounded Executed inventory evidence at `cc33e07c9`. Its complete archive/outer
 byte comparisons and 31 findings are independently reviewed; private draft PR/blob readback
 and Actions-off checks pass. New workflow, semantic/backend and full parity gates stay open.
+
+[Page-navigation control](PAGE-NAVIGATION-CONTROL.md) is Executed at `3bf51b270`, with
+16 canonical Chromium passes, source/caller review and unchanged timing/assertions.
+STAB-COMMAND-MENU is the sole Building task. The additional prior detachment remains
+unclassified; MOD-13 and mixed WebKit reliability remain Verify.

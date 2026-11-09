@@ -36,3 +36,8 @@ Native JSON equality does not qualify actual native input, persistence, current 
 membership or geometry. The installed reference is now 1.2.22; its [update inventory](pen-feature-reference/update-1.2.22-2026-11-09.md)
 separates SVG/menu changes from this behavior-preserving refactor. Unrelated icon WIP remains
 outside this unit. The full combined gate, native typing, clean delivery and full parity stay open.
+
+The subsequent [page-driver control](PAGE-NAVIGATION-CONTROL.md) at `3bf51b270` passes
+all five palette journeys and eleven menu controls once. TEST-PAGE-NAV is Executed;
+STAB-COMMAND-MENU is Building. This does not classify the prior detachment or accept
+MOD-13/native/current-Pen parity.
