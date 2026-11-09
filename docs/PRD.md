@@ -1,7 +1,7 @@
 # Open Pen product requirements
 
 Decision owner: Jason Poindexter. Implementation and evidence owner: Codex.
-Updated: 2026-11-07. Status: active; full design and functionality parity is not achieved.
+Updated: 2026-11-09. Status: active; full design and functionality parity is not achieved.
 
 ## Product outcome
 
@@ -119,8 +119,8 @@ The fresh board contains 393 bounded execution tasks and 17 milestones. Every on
 
 | Horizon | Outcome | Evidence checkpoint |
 | --------------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Now | Verify WebMCP document metadata (BRAND-SUPPORT-WEBMCP) | Register through the real service with a test-owned modelContext, inspect own descriptions and retained schemas; avoid user-document mutations and distinguish browser-vendor delivery. |
-| Next | Verify ACP failure presentation | Its Ready task uses local stand-ins and preserves external agent/command identities. Native-engine advice and portal remain separate; full branding stays open. |
+| Now | Verify ACP failure presentation (BRAND-SUPPORT-ACP) | Exercise startup failures through the real transport with isolated SDK/process seams; retain external identities, error details and the no-prompt guard. Native delivery remains separate. |
+| Next | Verify native-engine support advice | The Ready task renders named platform fixtures through the real notice owner. Portal remains separate; full branding stays open. |
 | Then                  | Stabilize document switching and finish unaccepted icon, module and feature/screen tasks in dependency order | Each card has relevant owner tests, visual/native checks and a commit/evidence link before Executed; dependent renderer/input work waits for STAB-GPU. |
 | Release qualification | Deliver private beta, then complete the full parity gate | Clean normal build, install/restart/recovery and core journey; declared beta limitations. Later, no required parity state remains unaccepted. |
 

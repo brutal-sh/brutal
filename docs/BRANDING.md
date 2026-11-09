@@ -1,6 +1,6 @@
 # Open Pen identity acceptance
 
-Updated: 2026-11-07. Own-brand assets have executed output and browser checks.
+Updated: 2026-11-09. Own-brand assets have executed output and browser checks.
 Owned diagnostics/log names also have bounded executed checks below. Product copy, native
 identity, links and full cross-platform branding remain separate open tasks.
 The [desktop-link record](DESKTOP-LINKS.md) tracks the own setup destination,
@@ -349,8 +349,9 @@ and full branding remain unaccepted.
 The remaining support-copy gate has five bounded children: browser guidance, native-engine
 advice, ACP startup failure, WebMCP document metadata and CLI/format output. The pre-boot
 notice is intentionally English before locale boot; platform fixtures do not prove native
-delivery. Browser guidance now has bounded Executed evidence; CLI/format output has bounded Executed evidence; the Storybook manifest error label has bounded Executed evidence. WebMCP metadata is the
-current task. Portal, support and other links remain
+delivery. Browser guidance, CLI/format output, WebMCP metadata and the Storybook manifest
+error label have bounded Executed evidence. ACP startup failure presentation is the current
+task. Portal, support and other links remain
 separate open acceptance.
 
 
@@ -384,5 +385,17 @@ hints while naming Open Pen. Mode revocation, stop, missing context and partial 
 run without resolving a document. All eleven owner tests and source/Vue/test types pass.
 The complete string scan retains only two real OPENPENCIL_MCP_ROOT references as compatibility
 identifiers. Standalone format-list presentation remains the separately executed CLI path.
-Publication is pending; real browser-vendor, agent/document, native and full-brand acceptance
+Source/evidence is published at `c85c15120`; real browser-vendor, agent/document, native and full-brand acceptance
 are not inferred from these metadata controls.
+
+## ACP startup errors
+
+The [ACP record](ACP-FAILURE-COPY.md) exercises nine startup failure paths through the real
+transport with isolated SDK streams. Own messages name Open Pen and preserve Codex, protocol
+identifiers and agent-reported reasons; all nine cases reject before a prompt is delivered.
+The run also reproduces and corrects structured JSON-RPC errors collapsing to `[object Object]`.
+Only validated message/text details are displayed, auth codes retain sign-in guidance, and
+a rejected tool-connection watcher stops the starting child before returning its error.
+Ten isolated checks, 33 owner tests, the normal build/lint, source/Vue/test types and focused
+format/docs/changelog checks pass. Real processes, provider accounts, native
+chat rendering and full ACP/Pen parity are not accepted by these simulated startup paths.

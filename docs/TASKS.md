@@ -1,6 +1,6 @@
 # Open Pen task index
 
-Updated: 2026-11-07. All task links are verified by a fresh complete board readback.
+Updated: 2026-11-09. All task links are verified by a fresh complete board readback.
 The full design AND functionality parity goal remains active; allocation does not establish accepted behavior.
 
 The breakdown contains **393 execution tasks**, covering all **164 documented requirements** and **22 native screen/menu rows**, plus branding, modularity and known residuals.
@@ -403,9 +403,9 @@ This table records the verified planning snapshot. Read the live board for later
 | BRAND-RESTART-COPY | Verify translated restart refusal, failure and retry feedback | PRD-02 / PRD-04 / PRD-06 | BRAND-COPY-SOURCE | Executed | [Card](https://trello.com/c/H4fe0dbb/403-brand-restart-copy-verify-translated-restart-refusal-failure-and-retry-feedback) |
 | VERIFY-TOAST-SHORT | Compare short translated error-toast wrapping with Pen | PRD-02 / PRD-05 | UI-TOAST-REFLOW | Backlog | [Card](https://trello.com/c/f3kDECKO/404-verify-toast-short-compare-short-translated-error-toast-wrapping-with-pen) |
 | BRAND-SUPPORT-BROWSER | Verify own-brand unsupported-browser guidance and support routing | PRD-02 / BRAND-COPY-SUPPORT | BRAND-COPY-SOURCE | Executed | [Card](https://trello.com/c/Cf9wKQQ1/405-brand-support-browser-verify-own-brand-unsupported-browser-guidance-and-support-routing) |
-| BRAND-SUPPORT-NATIVE | Verify own-brand native-engine support notices with platform fixtures | PRD-02 / BRAND-COPY-SUPPORT | BRAND-COPY-SOURCE | Backlog | [Card](https://trello.com/c/BWUh9SmY/406-brand-support-native-verify-own-brand-native-engine-support-notices-with-platform-fixtures) |
-| BRAND-SUPPORT-ACP | Verify own-brand ACP startup failure presentation | PRD-02 / BRAND-COPY-SUPPORT | BRAND-COPY-SOURCE | Ready | [Card](https://trello.com/c/7zYWysn3/407-brand-support-acp-verify-own-brand-acp-startup-failure-presentation) |
-| BRAND-SUPPORT-WEBMCP | Verify own-brand WebMCP document metadata | PRD-02 / BRAND-COPY-SUPPORT | BRAND-COPY-SOURCE | Building | [Card](https://trello.com/c/ac7FOKXp/408-brand-support-webmcp-verify-own-brand-webmcp-document-metadata) |
+| BRAND-SUPPORT-NATIVE | Verify own-brand native-engine support notices with platform fixtures | PRD-02 / BRAND-COPY-SUPPORT | BRAND-COPY-SOURCE | Ready | [Card](https://trello.com/c/BWUh9SmY/406-brand-support-native-verify-own-brand-native-engine-support-notices-with-platform-fixtures) |
+| BRAND-SUPPORT-ACP | Verify own-brand ACP startup failure presentation | PRD-02 / BRAND-COPY-SUPPORT | BRAND-COPY-SOURCE | Building | [Card](https://trello.com/c/7zYWysn3/407-brand-support-acp-verify-own-brand-acp-startup-failure-presentation) |
+| BRAND-SUPPORT-WEBMCP | Verify own-brand WebMCP document metadata | PRD-02 / BRAND-COPY-SUPPORT | BRAND-COPY-SOURCE | Executed | [Card](https://trello.com/c/ac7FOKXp/408-brand-support-webmcp-verify-own-brand-webmcp-document-metadata) |
 | BRAND-SUPPORT-CLI | Verify own-brand CLI help and document-format presentation | PRD-02 / BRAND-COPY-SUPPORT | BRAND-COPY-SOURCE | Executed | [Card](https://trello.com/c/wrXD3Fum/409-brand-support-cli-verify-own-brand-cli-help-and-document-format-presentation) |
 | BRAND-STORYBOOK-ERROR | Replace inherited Storybook manifest error presentation | PRD-02 / BRAND-VERIFY | BRAND-COPY-SOURCE, BRAND-LOGS | Executed | [Card](https://trello.com/c/0FF3JZ3g/410-brand-storybook-error-replace-inherited-storybook-manifest-error-presentation) |
 

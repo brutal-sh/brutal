@@ -326,6 +326,34 @@ describe('formatConnectionError', () => {
     expect(msg).toBe('Something unexpected')
   })
 
+  test('structured ACP rejections preserve the message and textual details', () => {
+    expect(
+      formatConnectionError({
+        code: -32603,
+        message: 'Internal error',
+        data: { details: 'Session rejected by test agent' }
+      })
+    ).toBe('Internal error: Session rejected by test agent')
+    expect(
+      formatConnectionError({
+        code: -32603,
+        message: 'Agent unavailable',
+        data: { details: { private: 'not display text' } }
+      })
+    ).toBe('Agent unavailable')
+    expect(
+      formatConnectionError(
+        {
+          code: -32000,
+          message: 'Authentication required',
+          data: { details: 'Credential lookup timeout' }
+        },
+        claudeAgent
+      )
+    ).toContain('Claude Code is not signed in')
+    expect(formatConnectionError({ message: 42 })).toBe('[object Object]')
+  })
+
   test('non-Error values converted to string', () => {
     const msg = formatConnectionError('raw string error')
     expect(msg).toBe('raw string error')

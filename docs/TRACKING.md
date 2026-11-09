@@ -1,6 +1,6 @@
 # Tracking
 
-Updated: 2026-11-07. The full independent design and functionality parity goal remains active.
+Updated: 2026-11-09. The full independent design and functionality parity goal remains active.
 
 Repository: [private Open Pen repository](https://github.com/jpoindexter/open-pen), branch `feat/open-pen`.
 Board: [Open Pen — independent design editor](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor), private.
@@ -112,11 +112,11 @@ distinguishes two stale native test contracts from an unproven cross-file backdr
 criteria. The [control record](APP-TEST-CONTROLS.md) retains paired failures, the two-file
 reproduction, scoped cleanup and the subsequent 1,955 passing app-shard tests. Neither
 changes production behavior or accepts native delivery. Both remain required beta and
-terminal dependencies with linked evidence. WebMCP document metadata (BRAND-SUPPORT-WEBMCP) is the sole Building task; mixed WebKit reliability is Verify. Font and graph candidates remain Verify. A later native graph/text batch has
-four hidden-window failures; a fresh OS read confirms the desktop is locked again. Those
+terminal dependencies with linked evidence. ACP startup failure presentation (BRAND-SUPPORT-ACP) is the sole Building task; mixed WebKit reliability is Verify. Font and graph candidates remain Verify. An earlier native graph/text batch has
+four hidden-window failures; that run's OS read found the desktop locked. Those
 failed/unexecuted input criteria do not erase the earlier successful native resource path.
 The interrupted zero-size icon work retains its failed wider-run receipts and dependencies.
-The delivery snapshot is 354 Backlog, 1 Ready, 1 Building, 9 Verify and 28 Executed, plus 17 milestones.
+The delivery snapshot is 353 Backlog, 1 Ready, 1 Building, 9 Verify and 29 Executed, plus 17 milestones.
 DELIVERY-LFS has bounded executed current-checkout fixture delivery: all twelve objects
 are fetched from the own private endpoint into empty independent storage, with matching
 SHA-256/sizes and LFS integrity checks. Historical object closure is not qualified.
@@ -163,8 +163,8 @@ The parent recovery/update/restart copy gate is Executed only for its three publ
 children's copy criteria: 148 passing browser cases and 360 inspected captures across
 their explicitly documented locale/theme/engine scopes. Those totals do not broaden native
 or design acceptance. Support-copy work is split into five named owners rather than one
-implementation card; browser guidance has bounded Executed evidence, CLI has bounded Executed evidence, ACP is Ready and WebMCP is Building, and native-engine
-advice is Backlog. All original support criteria remain on the parent gate.
+implementation card; browser guidance, CLI and WebMCP metadata have bounded Executed evidence.
+ACP is Building and native-engine advice is Ready. All original support criteria remain on the parent gate.
 
 
 [Browser support](BROWSER-SUPPORT-COPY.md) has published source and exact post-publication

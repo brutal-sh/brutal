@@ -77,8 +77,22 @@ function missingCommandMessage(agentDef?: ACPAgentDef): string {
   return `"${agentDef.command}" is not installed. Install it with: ${agentDef.installCommand}`
 }
 
+const connectionErrorSchema = v.object({
+  message: v.string(),
+  data: v.optional(v.unknown())
+})
+const connectionErrorDetailsSchema = v.object({ details: v.string() })
+
 export function formatConnectionError(e: unknown, agentDef?: ACPAgentDef): string {
-  const msg = e instanceof Error ? e.message : String(e)
+  if (isAuthRequiredError(e)) {
+    return `${agentDef?.name ?? 'The agent'} is not signed in. Sign in from Set up AI, then try again.`
+  }
+  const error = v.safeParse(connectionErrorSchema, e)
+  const details = error.success
+    ? v.safeParse(connectionErrorDetailsSchema, error.output.data)
+    : null
+  let msg = error.success ? error.output.message : String(e)
+  if (details?.success && details.output.details) msg += `: ${details.output.details}`
   if (
     msg.includes('ECONNREFUSED') ||
     msg.includes('fetch failed') ||
@@ -91,9 +105,6 @@ export function formatConnectionError(e: unknown, agentDef?: ACPAgentDef): strin
   }
   if (isMissingCommandError(msg)) {
     return missingCommandMessage(agentDef)
-  }
-  if (isAuthRequiredError(e)) {
-    return `${agentDef?.name ?? 'The agent'} is not signed in. Sign in from Set up AI, then try again.`
   }
   return msg
 }
@@ -385,6 +396,7 @@ export class ACPChatTransport implements ChatTransport<UIMessage> {
       outcome = await untilStopped(tools.outcome())
     } catch (e) {
       tools.stop()
+      await child.kill().catch(() => undefined)
       throw startupError(e, this.agentDef)
     }
     // Destroyed while starting, as when the chat closes: the agent must not get a prompt.
