@@ -185,3 +185,9 @@ saved and closed after action probes, and Pen returns to Home/Recents. The owned
 alias fixture remains edited in a background tab; the unrelated edited font
 reference is preserved. Fill interchange, reusable-ref promotion, Send to Agent,
 the existing strict raster mismatch and native Open Pen acceptance remain open.
+
+## Independent candidate checkout
+
+Commit `5ca1e4344` is checked in a separate checkout without the unrelated icon work. Its normal build, source/Vue types, documentation and commit validation pass. The same owner selection executes 419 tests across 52 files; the three additional shared-workspace cases belong to the excluded icon work. Six additional Chromium/WebKit component cases execute creation, native-shaped action availability, history and File save/reopen in that checkout. The broader shared-workspace run remains 35 passing browser cases, and the isolated native component/history workflow passes on its latest run.
+
+The strict Core comparison is rerun unchanged and still reports 12,792 differing channels. Full `bun run check` stops at the native type gate: 67 errors in eight other native test files; the new Note test/declarations report none. These failures remain unaccepted. VERIFY-NATIVE-TYPES becomes the one Building card; the Note/format acceptance work returns to Backlog with its observations and remaining gates preserved. No production installation, merge or release occurs.
