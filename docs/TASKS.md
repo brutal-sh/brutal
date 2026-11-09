@@ -428,8 +428,8 @@ This table records the verified planning snapshot. Read the live board for later
 | UPD22-BROWSER-SECOND | Browser second-press input interception | PRD operational requirement / Pen1.2.22 supplement | REF-03 | Backlog | [Card](https://trello.com/c/z6FwQjSA/428-upd22-browser-second-browser-second-press-input-interception) |
 | UPD22-AI-FEEDBACK | Model-result feedback controls and retraction | PRD operational requirement / Pen1.2.22 supplement | REF-03 | Backlog | [Card](https://trello.com/c/ngJgAska/429-upd22-ai-feedback-model-result-feedback-controls-and-retraction) |
 | REF-03 | Catalog installed Pen 1.2.22 update | PRD operational requirement / Pen1.2.22 supplement | None identified | Executed | [Card](https://trello.com/c/l9y1fz5C/413-ref-03-catalog-installed-pen-1222-update) |
-| IO-PEN-TEXT-METRICS | Keep cold and reopened Pen text bounds consistent | FMT-05, DRAW-04 | REF-03 | Verify | [Card](https://trello.com/c/OsoRigTT/430-io-pen-text-metrics-keep-cold-and-reopened-pen-text-bounds-consistent) |
-| IO-PEN-FONT-WEIGHT | Preserve text weight when Pen reopens our saved file | FMT-05, DRAW-05 | REF-03 | Verify | [Card](https://trello.com/c/eZdtP6HB/431-io-pen-font-weight-preserve-text-weight-when-pen-reopens-our-saved-file) |
+| IO-PEN-TEXT-METRICS | Keep cold and reopened Pen text bounds consistent | FMT-05, DRAW-04 | REF-03 | Executed | [Card](https://trello.com/c/OsoRigTT/430-io-pen-text-metrics-keep-cold-and-reopened-pen-text-bounds-consistent) |
+| IO-PEN-FONT-WEIGHT | Preserve text weight when Pen reopens our saved file | FMT-05, DRAW-05 | REF-03 | Executed | [Card](https://trello.com/c/eZdtP6HB/431-io-pen-font-weight-preserve-text-weight-when-pen-reopens-our-saved-file) |
 
 
 ## Native surface coverage

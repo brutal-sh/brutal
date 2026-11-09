@@ -2,7 +2,7 @@
 
 Updated: 2026-11-09. The bounded repair cards are
 [IO-PEN-TEXT-METRICS](https://trello.com/c/OsoRigTT) and
-[IO-PEN-FONT-WEIGHT](https://trello.com/c/eZdtP6HB). Both remain Verify pending publication;
+[IO-PEN-FONT-WEIGHT](https://trello.com/c/eZdtP6HB). Both have bounded Executed evidence at `85f730dff`;
 FMT-09-DRIFT and the broader typography/format requirements are not accepted here.
 
 ## Reproduced differences

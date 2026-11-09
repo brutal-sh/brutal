@@ -116,7 +116,7 @@ terminal dependencies with linked evidence. Menu-schema modularization (MOD-13) 
 four hidden-window failures; that run's OS read found the desktop locked. Those
 failed/unexecuted input criteria do not erase the earlier successful native resource path.
 The interrupted zero-size icon work retains its failed wider-run receipts and dependencies.
-The delivery snapshot is 364 Backlog, 0 Ready, 1 Building, 14 Verify and 35 Executed, plus 17 milestones.
+The delivery snapshot is 364 Backlog, 0 Ready, 1 Building, 12 Verify and 37 Executed, plus 17 milestones.
 DELIVERY-LFS has bounded executed current-checkout fixture delivery: all twelve objects
 are fetched from the own private endpoint into empty independent storage, with matching
 SHA-256/sizes and LFS integrity checks. Historical object closure is not qualified.
@@ -232,8 +232,13 @@ still contains live text and merges multiple targets; neither SVG nor full forma
 is accepted. Notes/Prompt/Context and native round-trip criteria remain open.
 
 Two independently bounded [PEN text repairs](PEN-TEXT-ROUNDTRIP.md) add
-IO-PEN-TEXT-METRICS and IO-PEN-FONT-WEIGHT in Verify pending publication. All 414 task IDs
+IO-PEN-TEXT-METRICS and IO-PEN-FONT-WEIGHT with bounded Executed evidence at `85f730dff`. All 414 task IDs
 and 413 terminal dependencies reconcile against the complete 431-card readback. Font
 readiness/ambient measurement and weight wire type have separate actual regressions,
 owner checks, browser controls and native-Pen saved-copy comparisons. General typography,
 FMT-09-DRIFT, SVG, native Open Pen and full parity remain open.
+
+The text repairs are published at `85f730dff` with exact private draft head/body readback
+and Actions disabled. Both child cards execute only their defined fixture/contracts.
+FMT-09-DRIFT stays Building for current Note and preserved legacy Prompt/Context
+qualification; SVG, menu and mixed WebKit gates remain unaccepted.
