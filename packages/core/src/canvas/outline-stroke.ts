@@ -6,6 +6,7 @@ import { getNodeLocalMatrix, localTransformFromWorld } from '@open-pencil/scene-
 import { copyFills } from '@open-pencil/scene-graph/copy'
 import Matrix from '@open-pencil/scene-graph/matrix'
 import { parseSVGPath } from '@open-pencil/scene-graph/parse-path'
+import type { Rect } from '@open-pencil/scene-graph/primitives'
 
 import {
   baseShapePath,
@@ -54,14 +55,7 @@ function strokePaints(node: SceneNode): Fill[] {
   )
 }
 
-interface Box {
-  x: number
-  y: number
-  width: number
-  height: number
-}
-
-function boundsOf(paths: readonly Path[]): Box | null {
+function boundsOf(paths: readonly Path[]): Rect | null {
   let [left, top, right, bottom] = [Infinity, Infinity, -Infinity, -Infinity]
   for (const path of paths) {
     const [l, t, r, b] = path.getBounds()
@@ -75,7 +69,7 @@ function boundsOf(paths: readonly Path[]): Box | null {
 }
 
 /** A path as a vector network, moved so `box` starts at the origin. */
-function networkIn(r: SkiaRenderer, path: Path, box: Box): SceneNode['vectorNetwork'] {
+function networkIn(r: SkiaRenderer, path: Path, box: Rect): SceneNode['vectorNetwork'] {
   const builder = new r.ck.PathBuilder()
   builder.addPath(path, r.ck.Matrix.translated(-box.x, -box.y))
   const moved = builder.detachAndDelete()
@@ -88,7 +82,7 @@ function networkIn(r: SkiaRenderer, path: Path, box: Box): SceneNode['vectorNetw
  * A box of the layer's own axes as a layer in its parent: turned and mirrored with the layer, so
  * the outline lies where the layer drew it.
  */
-function placedLike(node: SceneNode, box: Box): Partial<SceneNode> {
+function placedLike(node: SceneNode, box: Rect): Partial<SceneNode> {
   const world = Matrix.multiply(getNodeLocalMatrix(node), Matrix.translated(box.x, box.y))
   const sized = { ...node, type: 'VECTOR' as const, width: box.width, height: box.height }
   const placement = localTransformFromWorld(sized, world, Matrix.identity())

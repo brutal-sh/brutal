@@ -1,21 +1,16 @@
+import type { Rect } from '@open-pencil/scene-graph/primitives'
+
 import { PREVIEW_PRESETS, type PreviewPreset } from './schema'
 
-export interface PreviewBounds {
-  x: number
-  y: number
-  width: number
-  height: number
-}
-
 export interface PreviewViewport {
-  bounds: PreviewBounds
+  bounds: Rect
   zoom: number
   viewport: { width: number; height: number }
 }
 
 /** CSS pixels and Tauri logical pixels share the main webview's unzoomed coordinate space. */
 export function previewDockViewport(
-  rect: PreviewBounds,
+  rect: Rect,
   preset: PreviewPreset['value'],
   windowWidth: number,
   windowHeight: number,
