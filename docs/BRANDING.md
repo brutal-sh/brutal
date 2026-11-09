@@ -350,8 +350,9 @@ The remaining support-copy gate has five bounded children: browser guidance, nat
 advice, ACP startup failure, WebMCP document metadata and CLI/format output. The pre-boot
 notice is intentionally English before locale boot; platform fixtures do not prove native
 delivery. Browser guidance, CLI/format output, WebMCP metadata and the Storybook manifest
-error label have bounded Executed evidence. ACP startup failure presentation is the current
-task. Portal, support and other links remain
+error label have bounded Executed evidence. ACP startup failure presentation also has bounded
+Executed evidence at `c65a7374f`; native-engine support advice is the current task. Portal,
+support and other links remain
 separate open acceptance.
 
 

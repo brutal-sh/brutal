@@ -2,6 +2,7 @@
 
 Updated: 2026-11-09. Scope: BRAND-SUPPORT-ACP, own-app naming and retained startup errors.
 This does not accept native CLI delivery, provider authentication, inference or Pen parity.
+Source and initial evidence are published at `c65a7374fc4a92fc01ee4235fbe032adae90d3be`.
 
 ## Executed path
 

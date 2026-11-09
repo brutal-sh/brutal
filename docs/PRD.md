@@ -119,8 +119,8 @@ The fresh board contains 393 bounded execution tasks and 17 milestones. Every on
 
 | Horizon | Outcome | Evidence checkpoint |
 | --------------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Now | Verify ACP failure presentation (BRAND-SUPPORT-ACP) | Exercise startup failures through the real transport with isolated SDK/process seams; retain external identities, error details and the no-prompt guard. Native delivery remains separate. |
-| Next | Verify native-engine support advice | The Ready task renders named platform fixtures through the real notice owner. Portal remains separate; full branding stays open. |
+| Now | Verify native-engine support advice (BRAND-SUPPORT-NATIVE) | Render each existing platform branch through the real notice owner with test-owned environments; exercise disclosures/link intent while distinguishing physical native delivery. |
+| Next | Verify portal client copy | The Ready task checks the changed translated client labels with test-owned approval/account fixtures; preserve real service identities. Full branding stays open. |
 | Then                  | Stabilize document switching and finish unaccepted icon, module and feature/screen tasks in dependency order | Each card has relevant owner tests, visual/native checks and a commit/evidence link before Executed; dependent renderer/input work waits for STAB-GPU. |
 | Release qualification | Deliver private beta, then complete the full parity gate | Clean normal build, install/restart/recovery and core journey; declared beta limitations. Later, no required parity state remains unaccepted. |
 

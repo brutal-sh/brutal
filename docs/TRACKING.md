@@ -112,11 +112,11 @@ distinguishes two stale native test contracts from an unproven cross-file backdr
 criteria. The [control record](APP-TEST-CONTROLS.md) retains paired failures, the two-file
 reproduction, scoped cleanup and the subsequent 1,955 passing app-shard tests. Neither
 changes production behavior or accepts native delivery. Both remain required beta and
-terminal dependencies with linked evidence. ACP startup failure presentation (BRAND-SUPPORT-ACP) is the sole Building task; mixed WebKit reliability is Verify. Font and graph candidates remain Verify. An earlier native graph/text batch has
+terminal dependencies with linked evidence. Native-engine support advice (BRAND-SUPPORT-NATIVE) is the sole Building task; mixed WebKit reliability is Verify. Font and graph candidates remain Verify. An earlier native graph/text batch has
 four hidden-window failures; that run's OS read found the desktop locked. Those
 failed/unexecuted input criteria do not erase the earlier successful native resource path.
 The interrupted zero-size icon work retains its failed wider-run receipts and dependencies.
-The delivery snapshot is 353 Backlog, 1 Ready, 1 Building, 9 Verify and 29 Executed, plus 17 milestones.
+The delivery snapshot is 352 Backlog, 1 Ready, 1 Building, 9 Verify and 30 Executed, plus 17 milestones.
 DELIVERY-LFS has bounded executed current-checkout fixture delivery: all twelve objects
 are fetched from the own private endpoint into empty independent storage, with matching
 SHA-256/sizes and LFS integrity checks. Historical object closure is not qualified.
@@ -164,7 +164,7 @@ children's copy criteria: 148 passing browser cases and 360 inspected captures a
 their explicitly documented locale/theme/engine scopes. Those totals do not broaden native
 or design acceptance. Support-copy work is split into five named owners rather than one
 implementation card; browser guidance, CLI and WebMCP metadata have bounded Executed evidence.
-ACP is Building and native-engine advice is Ready. All original support criteria remain on the parent gate.
+ACP has bounded Executed evidence; native-engine advice is Building and portal copy is Ready. All original support criteria remain on the parent gate.
 
 
 [Browser support](BROWSER-SUPPORT-COPY.md) has published source and exact post-publication
@@ -182,3 +182,9 @@ Executed task, BRAND-STORYBOOK-ERROR, publishes its inherited error-label correc
 unrelated file bytes while changing only the app name.
 Its manifest filename and generated path namespace remain compatibility identities.
 The full branding and terminal gates depend on that new diagnostic task.
+
+[ACP failure presentation](ACP-FAILURE-COPY.md) has bounded Executed controller/SDK evidence
+at `c65a7374f`: ten isolated checks and 33 owner tests pass. Structured error context and
+auth guidance are retained, with early child cleanup for the simulated rejected-outcome
+seam. No natural watcher rejection, physical CLI/provider/native UI or full parity is inferred.
+All 201 authorized repositories read back with GitHub Actions disabled on 2026-11-09.
