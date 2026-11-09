@@ -1,121 +1,31 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { expect, within } from 'storybook/test'
 
-import { ACP_AGENTS, type ACPAgentID } from '@open-pencil/core/constants'
-
-import type { AgentAccount } from '@/app/ai/agents/setup/accounts'
-import type { DetectedAgent } from '@/app/ai/agents/setup/discovery'
-import type { AgentSetupState, PiSetupState } from '@/app/ai/agents/setup/view'
-
 import AISetupConnection from './AISetupConnection.vue'
-
-interface Args {
-  providerID:
-    | 'openrouter'
-    | 'anthropic'
-    | 'openai-compatible'
-    | 'acp:claude-code'
-    | 'acp:codex'
-    | 'harness:pi'
-  signInStatus: 'idle' | 'waiting' | 'verifying' | 'blocked' | 'cancelled' | 'expired' | 'failed'
-  account: { label: string; freeTier: boolean } | null
-  agentSetup?: AgentSetupState
-  piSetup?: PiSetupState
-  hasSavedKey: boolean
-  recommended: boolean
-}
-
-function detected(id: ACPAgentID, status: DetectedAgent['status']): DetectedAgent {
-  const definition = ACP_AGENTS.find((agent) => agent.id === id) ?? ACP_AGENTS[0]
-  return {
-    definition,
-    cliPath:
-      status === 'needs-adapter'
-        ? `/usr/local/bin/${definition.cliCommand ?? definition.command}`
-        : null,
-    adapterPath: null,
-    status
-  }
-}
-
-function agentSetup(overrides: Partial<AgentSetupState>): AgentSetupState {
-  return {
-    supported: true,
-    checked: true,
-    scanning: false,
-    detected: null,
-    bridge: false,
-    bridgeOutdated: false,
-    bridgeCommand: 'npm i -g @open-pencil/mcp@0.15.1',
-    npm: true,
-    installingAgent: false,
-    installingBridge: false,
-    error: null,
-    ...overrides
-  }
-}
-
-function account(overrides: Partial<AgentAccount>): AgentAccount {
-  return {
-    checking: false,
-    status: { kind: 'none', label: 'Not logged in' },
-    adapter: { name: '@agentclientprotocol/claude-agent-acp', version: '0.93.0' },
-    canSignIn: true,
-    signingIn: false,
-    signInURL: null,
-    acceptsCode: false,
-    tools: null,
-    error: null,
-    ...overrides
-  }
-}
-
-function piSetup(overrides: Partial<PiSetupState>): PiSetupState {
-  return {
-    supported: true,
-    checked: true,
-    scanning: false,
-    companion: false,
-    companionOutdated: false,
-    companionCommand: 'npm i -g @open-pencil/harness@0.15.1',
-    bridge: false,
-    bridgeOutdated: false,
-    bridgeCommand: 'npm i -g @open-pencil/mcp@0.15.1',
-    npm: true,
-    installingCompanion: false,
-    installingBridge: false,
-    defaultModel: null,
-    error: null,
-    ...overrides
-  }
-}
+import {
+  account,
+  agentSetup,
+  codexToolsUnavailable,
+  connectionDefaults,
+  connectionState,
+  detected,
+  piSetup,
+  type ConnectionStoryArgs
+} from './stories/connection-fixtures'
 
 const meta = {
   title: 'App/Settings/AI Setup/Connection',
-  args: {
-    providerID: 'openrouter',
-    signInStatus: 'idle',
-    hasSavedKey: false,
-    recommended: true,
-    account: null
-  },
+  args: connectionDefaults,
   render: (args) => ({
     components: { AISetupConnection },
     setup: () => ({
       args,
-      state: {
-        apiKey: args.account ? 'sk-or-story' : '',
-        customBaseURL: '',
-        customModelID: '',
-        test: 'idle',
-        reason: null,
-        account: args.account
-      }
+      state: connectionState(args.account)
     }),
     template:
       '<div class="w-[30rem] max-w-full"><AISetupConnection v-bind="args" :state="state" /></div>'
   })
-} satisfies Meta<Args>
+} satisfies Meta<ConnectionStoryArgs>
 
 export default meta
 type Story = StoryObj<typeof meta>
@@ -238,19 +148,7 @@ export const CodingAgentToolsUnreachable: Story = {
   args: {
     providerID: 'acp:codex',
     recommended: false,
-    agentSetup: agentSetup({
-      detected: detected('codex', 'available'),
-      bridge: true,
-      account: account({
-        status: { kind: 'account', label: 'ChatGPT Pro', account: { email: 'ada@example.com' } },
-        adapter: { name: '@agentclientprotocol/codex-acp', version: '2.2.2' },
-        tools: {
-          connected: false,
-          reason:
-            '[codex-acp] MCP server `open-pencil` was not started, because the Codex config already defines an MCP server with this name.'
-        }
-      })
-    })
+    agentSetup: codexToolsUnavailable()
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
@@ -379,22 +277,7 @@ export const CopyStates: Story = {
         { id: 'manual-mcp', args: CodingAgentNeedsNpm.args },
         {
           id: 'tools',
-          args: {
-            providerID: 'acp:codex',
-            agentSetup: agentSetup({
-              detected: detected('codex', 'available'),
-              bridge: true,
-              account: account({
-                status: {
-                  kind: 'account',
-                  label: 'ChatGPT Pro',
-                  account: { email: 'ada@example.com' }
-                },
-                adapter: { name: '@agentclientprotocol/codex-acp', version: '2.2.2' },
-                tools: { connected: false, reason: null }
-              })
-            })
-          }
+          args: { providerID: 'acp:codex', agentSetup: codexToolsUnavailable(null) }
         },
         { id: 'other-adapter', args: CodingAgentOtherAdapter.args },
         { id: 'pi', args: PiNeedsCompanion.args },
@@ -410,14 +293,7 @@ export const CopyStates: Story = {
           }
         }
       ].map((entry) => ({ ...entry, args: { ...meta.args, ...entry.args } })),
-      state: {
-        apiKey: '',
-        customBaseURL: '',
-        customModelID: '',
-        test: 'idle',
-        reason: null,
-        account: null
-      }
+      state: connectionState(null)
     }),
     template: `<div class="grid max-w-[30rem] gap-8">
       <section v-for="entry in cases" :key="entry.id" :data-copy-state="entry.id">
