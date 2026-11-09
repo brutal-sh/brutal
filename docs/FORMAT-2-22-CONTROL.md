@@ -64,3 +64,8 @@ The [Note reference control](NOTE-REFERENCE-CONTROL.md) records actual default/c
 colors, authored-versus-rendered sizing, content growth and raster SVG output. It retains
 a placement disagreement and unsaved document-service state explicitly. Native Note
 input/persistence and legacy Prompt/Context migration remain unexecuted.
+
+The [SVG selection control](SVG-SELECTION-CONTROL.md) repairs the combined-selection
+delivery mismatch through the existing batch exporter. Its visible File-menu downloads
+execute in Chromium and WebKit; outlined text, native delivery and full SVG parity remain
+open, along with an unclassified failure in the broader WebKit export cohort.

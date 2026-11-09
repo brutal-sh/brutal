@@ -34,6 +34,10 @@
             "label": "PDF"
           },
           {
+            "id": "export-svg",
+            "label": "SVG"
+          },
+          {
             "id": "export-png",
             "label": "PNG"
           },

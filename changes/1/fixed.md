@@ -34,3 +34,4 @@
 - Open supported designs saved by Pen 1.2.22 while retaining explicit errors for unsupported content.
 - Imported .pen text uses prepared paragraph metrics so supported fonts retain their bounds after saving and reopening.
 - Saved .pen text retains its font weight when opened in Pen.
+- Export multiple selected objects as separate SVG files in one ZIP, and offer SVG in the desktop File export menu.

@@ -153,7 +153,12 @@ export function createDocumentExportActions(
   }
 
   async function exportSelection(scale: number, formatId: BuiltinIOFormatId) {
-    await exportTarget(getSelectionExportTarget(), formatId, { scale })
+    const target = getSelectionExportTarget()
+    if (formatId === 'svg' && target.scope === 'selection' && target.nodeIds.length > 1)
+      return exportTargets(
+        target.nodeIds.map((nodeId) => ({ target: { scope: 'node', nodeId }, formatId }))
+      )
+    await exportTarget(target, formatId, { scale })
   }
 
   return {

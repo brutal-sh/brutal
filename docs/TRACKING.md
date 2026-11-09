@@ -248,3 +248,10 @@ color/sizing/export evidence while native input is blocked by the locked Mac. Ex
 artifacts are retained, but the document-service mutations are not saved to the copied
 source file. No Note adapter or state promotion follows; the legacy Context-named fixture
 contains a frame and does not establish removed Context-node migration.
+
+The [SVG selection repair](SVG-SELECTION-CONTROL.md) reuses batch ZIP delivery and adds
+SVG to the generated native export menu. New File-menu download checks pass in Chromium
+and WebKit. The broader run retains 30 passes, one WebKit store-not-ready failure and one
+unrun serial case; isolated original/candidate WebKit controls both pass all 15 cases.
+That failure remains unclassified. IO-13-EXPORT stays Verify, MENU-FILE stays Backlog,
+and full native/menu/rendering acceptance is unchanged.

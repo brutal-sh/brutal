@@ -29,7 +29,7 @@ export const NATIVE_MENU_SCHEMA: AppMenuGroupSchema[] = [
       command('import-canvas'),
       {
         ...command('export-selection', 'Export Selection to…'),
-        sub: ['pdf', 'png', 'jpeg', 'webp'].map((format) => command(`export-${format}`))
+        sub: ['pdf', 'svg', 'png', 'jpeg', 'webp'].map((format) => command(`export-${format}`))
       },
       command('export-snapshot'),
       command('guide-export-code'),
