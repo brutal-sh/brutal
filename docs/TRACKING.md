@@ -242,3 +242,9 @@ The text repairs are published at `85f730dff` with exact private draft head/body
 and Actions disabled. Both child cards execute only their defined fixture/contracts.
 FMT-09-DRIFT stays Building for current Note and preserved legacy Prompt/Context
 qualification; SVG, menu and mixed WebKit gates remain unaccepted.
+
+The [actual Note control](NOTE-REFERENCE-CONTROL.md) adds current-reference rendered
+color/sizing/export evidence while native input is blocked by the locked Mac. Exported
+artifacts are retained, but the document-service mutations are not saved to the copied
+source file. No Note adapter or state promotion follows; the legacy Context-named fixture
+contains a frame and does not establish removed Context-node migration.

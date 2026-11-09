@@ -59,3 +59,8 @@ cold/warm text control and actual Pen reopen. It catches and repairs both font-m
 instability and numeric weight serialization; the native saved-copy SVG/fixture pixels
 then exactly equal the originals. This supersedes the unexecuted persistence statement
 only for that owned fixture. General format/Note/native Open Pen qualification remains open.
+
+The [Note reference control](NOTE-REFERENCE-CONTROL.md) records actual default/custom
+colors, authored-versus-rendered sizing, content growth and raster SVG output. It retains
+a placement disagreement and unsaved document-service state explicitly. Native Note
+input/persistence and legacy Prompt/Context migration remain unexecuted.
