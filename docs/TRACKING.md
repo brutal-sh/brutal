@@ -6,7 +6,7 @@ Repository: [private Open Pen repository](https://github.com/jpoindexter/open-pe
 Board: [Open Pen — independent design editor](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor), private.
 
 The [PRD](PRD.md) owns the outcome, constraints and release criteria.
-The [task index](TASKS.md) links all 421 execution cards; the [modularity audit](MODULARITY.md)
+The [task index](TASKS.md) links all 427 execution cards; the [modularity audit](MODULARITY.md)
 records the measured review queue. Requirements come from the [feature catalog](pen-feature-reference/README.md)
 and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), preserving historical Pen 1.2.21 evidence and the current [1.2.22 update inventory](pen-feature-reference/update-1.2.22-2026-11-09.md).
 
@@ -280,3 +280,15 @@ The [native type control](NATIVE-TEST-TYPE-CONTROL.md) executes the strict nativ
 A fresh complete board readback returns 438 open cards: 421 execution tasks and 17 milestones, with 370 Backlog, 0 Ready, 1 Building, 12 Verify and 38 Executed. STAB-NATIVE-SEQUENCE is the only Building task and is added to PARITY-ALL. No Note rendering, Fill, reusable-reference or full-parity gate is accepted by this type repair.
 
 The combined workspace check reaches secret scanning and fails on ten Graphify cache hash entries; each is recomputed as the corresponding current file's path-salted content digest. The scanner remains unchanged. The clean candidate checkout is the publication check; its result is recorded separately. Private cache/evidence and unrelated icon work stay outside the candidate.
+
+## Canonical rectangle publication gate
+
+Clean candidate `960b3ec1e` passes native typing and the unchanged secret scan, then stops at the existing duplicate Box/PreviewBounds shape. [MOD-RECT](https://trello.com/c/OJdXzRFc) replaces those two declarations with the shared Scene Graph Rect contract in `1306f6cf2`. Emitted JavaScript is byte-identical in both files; the exact candidate owner selection executes 13 tests and 52 assertions across two files, and the unchanged shape checker reports no duplicates. The earlier unqualified Bun path selection also discovered the comparison checkout; its 26-pass result is retained as old/current evidence rather than candidate-only acceptance.
+
+The complete 439-card readback has 422 execution tasks and 17 milestones: 371 Backlog, 0 Ready, 1 Building, 12 Verify, 38 Executed. MOD-RECT is Building while the clean combined check runs; STAB-NATIVE-SEQUENCE returns to Backlog with its failed and cold-control receipts intact. PARITY-ALL includes the new gate. Full parity remains open.
+
+## Final clean gate and bounded dispositions
+
+Candidate `1306f6cf2` completes the full clean combined check with a red result at its final unchanged duplication gate: five groups, 39 lines. All preceding gates pass, including native/source/general typing, secrets, type shapes, architecture and tool suites. MOD-RECT is Executed for its bounded criterion with the independent later failures recorded. The next repairs separate OAuth outcome validation, an agent-connection story fixture, Script render-target capture, PEN mesh-point projection and visible generated-output traversal; each has its own owner, preserved semantics and unchanged-checker acceptance.
+
+The fresh complete board readback returns 444 open cards: 427 execution tasks and 17 milestones, with 375 Backlog, 0 Ready, 1 Building, 12 Verify and 39 Executed. MOD-DUPES-AUTH is the only Building task. All five new duplication tasks and MOD-RECT are terminal dependencies of PARITY-ALL. The native retained-session failure remains separate and unclassified; none of these dispositions accepts full native, Note raster, beta or full Pen parity.

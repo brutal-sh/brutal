@@ -30,3 +30,23 @@ The combined shared-workspace check advances beyond native typing through depend
 Private receipts are retained under `local-evidence/note-sizing-components-2026-11-09/`: `native-types-canonical-third.log`, `native-types-{source,general,architecture}-check.log`, the failed `native-types-runtime-first.log`, `native-types-picker-cold.log`, `native-types-cold-receipts.json`, per-spec cold logs, `full-check-native-types-candidate.log` and redacted secret classification. No raw vendor source, pseudocode, local cache or private UI evidence is published.
 
 The full native suite, retained-app reliability, strict Note raster differences and all remaining Pen screens/features remain unaccepted. No production installation, merge or release occurs.
+
+## Canonical rectangle follow-up
+
+Clean candidate `960b3ec1e` passes the native compiler and unchanged secret scan, then fails the duplicate-shape gate on private Box in stroke outlines and PreviewBounds in the browser dock. [MOD-RECT](https://trello.com/c/OJdXzRFc) replaces both with Rect from Scene Graph's public primitives entry in `1306f6cf2`; the complete caller search finds no outside PreviewBounds consumer, and Box is private.
+
+Both edited files emit byte-identical JavaScript to their originals. The unchanged shape checker passes, and the exact two owner paths execute 13 tests with 52 assertions. The first Bun command without explicit relative paths also discovers the comparison checkout; its 26-pass/four-file result is preserved with that limit. Independent review finds no concrete ownership, caller or emitted-code defect. The combined clean-candidate result remains a separate gate.
+
+## Final clean combined-check result
+
+The complete clean check of `1306f6cf2` exits one at its final unchanged `test:dupes` gate: five groups and 39 duplicated lines. Every preceding command passes, including source/Vue/native/general types, dependency audit, secrets, type shapes, architecture, documentation and tool checks/tests. This is a red combined-check result, not an all-green candidate.
+
+The separate remaining owners are:
+
+- [MOD-DUPES-AUTH](https://trello.com/c/rHuSzPNP): Share the validated OAuth loopback outcome contract.
+- [MOD-DUPES-STORIES](https://trello.com/c/puywggSM): Reuse the unreachable agent connection fixture.
+- [MOD-DUPES-SCRIPT](https://trello.com/c/W3z3nbdP): Share Script render target capture.
+- [MOD-DUPES-PAINT](https://trello.com/c/3S2nu6UI): Share PEN mesh-point projection.
+- [MOD-DUPES-GENERATED](https://trello.com/c/bUTrlzXd): Reuse visible generated-output traversal.
+
+No checker threshold, exclusion or assertion is changed. MOD-RECT satisfies its bounded criterion with these independent later failures recorded. Its exact 13 owner cases and the earlier 22 native cases remain scoped receipts, not full unit/browser/native acceptance. `canonical-rect-clean-full-check.log` retains the complete failed command; `native-types-final-board.json` retains the complete current board allocation.

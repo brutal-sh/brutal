@@ -212,3 +212,9 @@ shortcuts and generated native artifacts are retained; 24 owner checks and the n
 build/type/architecture controls pass. [Ownership evidence](MENU-SCHEMA-OWNERSHIP.md)
 retains both browser runs and the two explicit blockers. Counts are a candidate measurement,
 not acceptance or an update to the historical global-size snapshots above.
+
+## Executed criterion: canonical rectangle types
+
+MOD-RECT reuses Scene Graph's Rect contract in stroke outlines and browser dock bounds, removing two parallel declarations in `1306f6cf2`. No external app consumer of PreviewBounds exists and Box was private. Emitted JavaScript is byte-identical in both files; the unchanged object-shape checker passes and the exact owner selection executes 13 tests with 52 assertions across two files. This does not rerun or close the complete size audit.
+
+The full clean combined check subsequently reaches its final unchanged duplication gate and reports five groups/39 lines. MOD-DUPES-AUTH, MOD-DUPES-STORIES, MOD-DUPES-SCRIPT, MOD-DUPES-PAINT and MOD-DUPES-GENERATED each own one group with explicit preserved behavior and verification. They remain unaccepted; their links and states are in TASKS.md. No broad baseline/threshold exception is introduced, and full native/design/functionality parity remains open.
