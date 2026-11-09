@@ -79,7 +79,9 @@ const failure = computed(() => {
           <span v-if="detail" :class="styles.signInDetail()">{{ detail }}</span>
         </span>
       </p>
-      <AppButton size="xs" @click="emit('signOut')">{{ ai.aiSetupSignInChange }}</AppButton>
+      <AppButton size="xs" :class="styles.signInAction()" @click="emit('signOut')">{{
+        ai.aiSetupSignInChange
+      }}</AppButton>
     </div>
     <AppAlert
       v-if="account.provider === 'openrouter' && account.freeTier"
@@ -97,7 +99,9 @@ const failure = computed(() => {
         <AppButton v-if="status === 'waiting'" size="xs" variant="outline" @click="emit('reopen')">
           {{ ai.aiSetupSignInReopen }}
         </AppButton>
-        <AppButton size="xs" @click="emit('cancel')">{{ common.cancel }}</AppButton>
+        <AppButton size="xs" :class="styles.signInAction()" @click="emit('cancel')">{{
+          common.cancel
+        }}</AppButton>
       </div>
     </div>
     <AppButton
