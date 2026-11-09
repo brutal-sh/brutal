@@ -112,7 +112,7 @@ it('delivers native picking, selected pixels and editable subtree import without
       store.graph
         .getChildren(id)
         .flatMap((node) => (node.type === 'TEXT' ? [node.text ?? ''] : textIn(node.id)))
-    async function captureSelection() {
+    const captureSelection = async () => {
       const png = await invoke<ArrayBuffer>('browser_preview_capture', {
         url: origin + '/page',
         selected: true
@@ -156,7 +156,7 @@ it('delivers native picking, selected pixels and editable subtree import without
       await wait(() => !!control('Select an element'), 'capture clears picker')
       return { width, height }
     }
-    async function importSelection() {
+    const importSelection = async () => {
       store.undoAction()
       store.select(selected)
       await pick('first')
@@ -175,7 +175,7 @@ it('delivers native picking, selected pixels and editable subtree import without
       store.undoAction()
       store.select(selected)
     }
-    async function captureAdditionalSelection(id: string, width: number, height: number) {
+    const captureAdditionalSelection = async (id: string, width: number, height: number) => {
       await pick(id)
       await wait(
         () => !control('Screenshot the selection onto the canvas (Cmd+Enter)')?.disabled,
@@ -205,7 +205,7 @@ it('delivers native picking, selected pixels and editable subtree import without
       store.undoAction()
       store.select(selected)
     }
-    async function reloadSelection() {
+    const reloadSelection = async () => {
       await pick('offscreen')
       let refused = false
       try {

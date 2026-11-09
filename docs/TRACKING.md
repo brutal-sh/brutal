@@ -6,7 +6,7 @@ Repository: [private Open Pen repository](https://github.com/jpoindexter/open-pe
 Board: [Open Pen — independent design editor](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor), private.
 
 The [PRD](PRD.md) owns the outcome, constraints and release criteria.
-The [task index](TASKS.md) links all 420 execution cards; the [modularity audit](MODULARITY.md)
+The [task index](TASKS.md) links all 421 execution cards; the [modularity audit](MODULARITY.md)
 records the measured review queue. Requirements come from the [feature catalog](pen-feature-reference/README.md)
 and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), preserving historical Pen 1.2.21 evidence and the current [1.2.22 update inventory](pen-feature-reference/update-1.2.22-2026-11-09.md).
 
@@ -272,3 +272,11 @@ Five new independently scoped cards split Note reference round-trip, Fill sizing
 The final complete board readback returns 437 open cards: 420 execution tasks and 17 milestones, with 369 Backlog, 0 Ready, 2 Building, 12 Verify and 37 Executed. The five Note cards retain their separate scope; VERIFY-NATIVE-TYPES separately records 67 errors in eight other native test files. The Note unit reports 0 errors in that compilation boundary, but the full native type gate still fails. The independent candidate executes 422 owner tests, 35 browser cases and one isolated native component/history workflow; these do not waive remaining Note Fill, reusable-ref promotion, strict raster, exact UI or full native acceptance. Historical planning snapshots above remain retained.
 
 The subsequent single-task handoff keeps all 437 cards open and unaccepted state unchanged except scheduling: 370 Backlog, 0 Ready, 1 Building, 12 Verify, 37 Executed and 17 milestones. VERIFY-NATIVE-TYPES is the only Building card; DRAW-16-AUTHOR and FMT-09-DRIFT return to Backlog with their partial evidence intact. Their six new dependencies remain included in PARITY-ALL. The isolated Note candidate is published to the private draft; Actions remains disabled.
+
+## Native compiler boundary, 2026-11-09
+
+The [native type control](NATIVE-TEST-TYPE-CONTROL.md) executes the strict native compiler with zero errors after replacing the hand-maintained store facade with canonical app declarations. Source/Vue and general test types, architecture and 22 fresh-process native cases pass. The former 67-error gate is Executed for that bounded criterion. The failed retained-app sequence is preserved under a new independent task; cold passes do not establish its cause or close mixed-session acceptance.
+
+A fresh complete board readback returns 438 open cards: 421 execution tasks and 17 milestones, with 370 Backlog, 0 Ready, 1 Building, 12 Verify and 38 Executed. STAB-NATIVE-SEQUENCE is the only Building task and is added to PARITY-ALL. No Note rendering, Fill, reusable-reference or full-parity gate is accepted by this type repair.
+
+The combined workspace check reaches secret scanning and fails on ten Graphify cache hash entries; each is recomputed as the corresponding current file's path-salted content digest. The scanner remains unchanged. The clean candidate checkout is the publication check; its result is recorded separately. Private cache/evidence and unrelated icon work stay outside the candidate.

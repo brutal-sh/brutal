@@ -1,7 +1,7 @@
 import { strict as assert } from 'node:assert'
 import { createServer, type Server } from 'node:http'
 
-import type { Rect } from '@open-pencil/scene-graph'
+import type { Rect } from '@open-pencil/scene-graph/primitives'
 
 import { createNativeLayerFixture } from '#tests/helpers/tauri/editor-snapshot'
 
@@ -108,7 +108,7 @@ it('uses real page zoom, fixed CSS device dimensions, disabled menu states and t
         if (!rect) throw new Error('Missing browser surface')
         return JSON.stringify([rect.x, rect.y, rect.width, rect.height])
       }
-      async function captureQuarter(current: Pick<Rect, 'width' | 'height'>) {
+      const captureQuarter = async (current: Pick<Rect, 'width' | 'height'>) => {
         for (const level of [0.9, 0.75, 0.5, 0.3, 0.25]) {
           await more()
           item('Zoom Out')

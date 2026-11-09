@@ -1,7 +1,8 @@
 import { strict as assert } from 'node:assert'
 import { createServer, type Server } from 'node:http'
 
-import type { Rect } from '@open-pencil/scene-graph'
+import type { SceneNode } from '@open-pencil/scene-graph'
+import type { Rect } from '@open-pencil/scene-graph/primitives'
 
 import { createNativeLayerFixture } from '#tests/helpers/tauri/editor-snapshot'
 import { invokeNative } from '#tests/helpers/tauri/invoke'
@@ -135,9 +136,7 @@ it('imports full-page slices at CSS size, joins native pixels, restores scrollin
         if (Number(await (await fetch(origin + '/scroll-y')).text()) !== 200)
           throw new Error('Preparing menu moved page scroll')
       }
-      function validateFrame(
-        frame: ReturnType<typeof store.graph.getNode>
-      ): asserts frame is NonNullable<ReturnType<typeof store.graph.getNode>> {
+      function validateFrame(frame: SceneNode | undefined): asserts frame is SceneNode {
         if (
           !frame ||
           frame.type !== 'FRAME' ||
@@ -150,7 +149,7 @@ it('imports full-page slices at CSS size, joins native pixels, restores scrollin
             `Wrong screenshot placement: ${JSON.stringify(frame && { type: frame.type, width: frame.width, height: frame.height, x: frame.x, y: frame.y, parentId: frame.parentId })}`
           )
       }
-      async function inspectSlices(frame: NonNullable<ReturnType<typeof store.graph.getNode>>) {
+      const inspectSlices = async (frame: SceneNode) => {
         const slices = store.graph.getChildren(frame.id)
         if (slices.length < 2) throw new Error('Tall capture did not create multiple slices')
         let y = 0

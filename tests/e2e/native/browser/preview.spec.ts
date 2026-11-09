@@ -571,7 +571,7 @@ describe('native embedded browser preview', () => {
         if (!node) throw new Error('Capture layer disappeared')
         const hash = node.fills?.find((fill) => fill.type === 'IMAGE')?.imageHash
         const bytes = hash ? store.graph.images.get(hash)?.byteLength : 0
-        async function verifyOverlayFocus() {
+        const verifyOverlayFocus = async () => {
           await invoke('browser_preview_action', { action: 'focus' })
           await wait(() => !document.hasFocus(), 'native browser owns focus')
           const overlay = document.createElement('div')

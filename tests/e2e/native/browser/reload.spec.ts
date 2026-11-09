@@ -66,7 +66,7 @@ it('reloads a first navigation before its response commits and subsequently capt
         if (!button || button.disabled) throw new Error(`Unavailable ${label}`)
         button.click()
       }
-      async function verifyCapturedPage() {
+      const verifyCapturedPage = async () => {
         const node = store.graph
           .getChildren(store.state.currentPageId)
           .find((node) => !ids.includes(node.id))

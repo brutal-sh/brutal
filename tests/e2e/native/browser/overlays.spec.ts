@@ -156,7 +156,7 @@ it('prepares fresh page pixels beneath the first and subsequent editor menus wit
 })
 
 it('delivers an enabled screenshot choice while a later image decode is slow', async () => {
-  const result = await browser.executeAsync<{ failure?: string }>(async (done) => {
+  const result = await browser.executeAsync<{ failure?: string }, []>(async (done) => {
     const invoke = window.__TAURI__?.core.invoke
     const store = window.openPencil?.getStore?.()
     if (!invoke || !store) return done({ failure: 'Missing native editor' })

@@ -191,7 +191,7 @@ and [task index](TASKS.md) are the reviewable sources of scope. The active goal 
 [REF-03](https://trello.com/c/l9y1fz5C/413-ref-03-catalog-installed-pen-1222-update) has bounded Executed inventory evidence at
 `cc33e07c9`: exact extracted/outer bytes, versioned findings, independent review and live-board
 allocation are published. This does not accept the new workflows, opaque binary semantics
-or full current-reference parity. FMT-09-DRIFT is the sole Building task; the Commands causal gate stays unaccepted in Verify.
+or full current-reference parity. At that inventory handoff, FMT-09-DRIFT was the sole Building task; the Commands causal gate stays unaccepted in Verify.
 
 [TEST-PAGE-NAV](https://trello.com/c/NIjUHghm) has bounded Executed driver evidence at
 `3bf51b270`: the real Layers-tab interaction reveals the page row, and all five palette
@@ -202,3 +202,5 @@ The [PEN text round-trip record](PEN-TEXT-ROUNDTRIP.md) adds two narrow repair t
 for first-import metrics and weight serialization. Their own-field and actual-native-Pen
 controls do not accept full typography, SVG or schema migration; FMT-09-DRIFT remains the
 active broader qualification task.
+
+The [native type control](NATIVE-TEST-TYPE-CONTROL.md) subsequently clears the full native compilation boundary and executes 22 fresh-process native cases. STAB-NATIVE-SEQUENCE is the current Building task, separating the failed retained-app sequence from this bounded typing repair. The five Note qualification cards and full design/functionality parity remain open; current scheduling is in TASKS.md and the live board.
