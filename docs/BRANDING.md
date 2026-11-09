@@ -414,3 +414,13 @@ docs and architecture checks pass. Production source is unchanged.
 The [support-copy gate record](SUPPORT-COPY-ACCEPTANCE.md) reconciles the original support,
 ACP, WebMCP and CLI/format criteria against all five published owners. It preserves the
 scope and delivery limits; portal and the broader copy/branding gates remain separate.
+
+## Portal client labels
+
+The [portal-copy record](PORTAL-COPY.md) renders all ten changed client/welcome/device/session
+labels in nine locales through the real portal pages and local API fixtures. All 72 browser
+cases and 360 canonical-label checks pass; all 324 captures are inspected across 54 sheets.
+The real device controller handles test-owned rejection/retry/approval, denial and failed-lookup
+expiry feedback, retaining email/code values. Real OpenPencil Cloud service names and hosts
+remain; direct navigation and local responses do not accept real sign-in, verification,
+backend/native/CLI/provider delivery or full branding/Pen parity. Portal production source is unchanged.
