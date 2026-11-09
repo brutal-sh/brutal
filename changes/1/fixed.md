@@ -31,3 +31,4 @@
 - Desktop setup links open this Open Pen fork’s build instructions with translated setup labels.
 - Failed recovery uses translated document-recovery feedback while retaining parser details in the local diagnostic warning.
 - ACP connection failures retain structured agent messages and textual error details, and stop the starting agent when its tool-connection check fails.
+- Open supported designs saved by Pen 1.2.22 while retaining explicit errors for unsupported content.

@@ -112,11 +112,11 @@ distinguishes two stale native test contracts from an unproven cross-file backdr
 criteria. The [control record](APP-TEST-CONTROLS.md) retains paired failures, the two-file
 reproduction, scoped cleanup and the subsequent 1,955 passing app-shard tests. Neither
 changes production behavior or accepts native delivery. Both remain required beta and
-terminal dependencies with linked evidence. Menu-schema modularization (MOD-13) remains Verify behind the Commands causal gate; TEST-PAGE-NAV is Executed. IO-13-EXPORT is the sole Building task; STAB-COMMAND-MENU remains unaccepted in Verify. Mixed WebKit reliability is Verify. Font and graph candidates remain Verify. An earlier native graph/text batch has
+terminal dependencies with linked evidence. Menu-schema modularization (MOD-13) remains Verify behind the Commands causal gate; TEST-PAGE-NAV is Executed. FMT-09-DRIFT is the sole Building task; IO-13-EXPORT is Verify behind it; STAB-COMMAND-MENU remains unaccepted in Verify. Mixed WebKit reliability is Verify. Font and graph candidates remain Verify. An earlier native graph/text batch has
 four hidden-window failures; that run's OS read found the desktop locked. Those
 failed/unexecuted input criteria do not erase the earlier successful native resource path.
 The interrupted zero-size icon work retains its failed wider-run receipts and dependencies.
-The delivery snapshot is 365 Backlog, 0 Ready, 1 Building, 11 Verify and 35 Executed, plus 17 milestones.
+The delivery snapshot is 364 Backlog, 0 Ready, 1 Building, 12 Verify and 35 Executed, plus 17 milestones.
 DELIVERY-LFS has bounded executed current-checkout fixture delivery: all twelve objects
 are fetched from the own private endpoint into empty independent storage, with matching
 SHA-256/sizes and LFS integrity checks. Historical object closure is not qualified.
@@ -194,8 +194,8 @@ against the preserved original criteria at `d30381b16`; portal copy is Executed 
 [Portal copy](PORTAL-COPY.md) has bounded Executed evidence at `5e68a7668`: 72 browser
 cases, 324 inspected region/cell captures, 360 canonical-label checks and 21 portal-owner
 tests. Actual pages/controllers use local document-routing and API fixtures, not real
-authentication/backend/native delivery. Real service identities remain. IO-13-EXPORT is the sole
-Building task; STAB-COMMAND-MENU remains unaccepted in Verify; editor-copy remains Verify behind the unchanged mixed WebKit reliability gate.
+authentication/backend/native delivery. Real service identities remain. FMT-09-DRIFT is the sole
+Building task; IO-13-EXPORT is Verify behind it; STAB-COMMAND-MENU remains unaccepted in Verify; editor-copy remains Verify behind the unchanged mixed WebKit reliability gate.
 
 [Pen 1.2.22 inventory](pen-feature-reference/update-1.2.22-2026-11-09.md) preserves the
 complete REA extraction and 182 changed-path dispositions, with 31 source-anchored findings.
@@ -216,11 +216,17 @@ and Actions-off checks pass. New workflow, semantic/backend and full parity gate
 
 [Page-navigation control](PAGE-NAVIGATION-CONTROL.md) is Executed at `3bf51b270`, with
 16 canonical Chromium passes, source/caller review and unchanged timing/assertions.
-IO-13-EXPORT is the sole Building task; STAB-COMMAND-MENU remains unaccepted in Verify. The additional prior detachment remains
+FMT-09-DRIFT is the sole Building task; IO-13-EXPORT is Verify behind it; STAB-COMMAND-MENU remains unaccepted in Verify. The additional prior detachment remains
 unclassified; MOD-13 and mixed WebKit reliability remain Verify.
 
 The [traced menu control](COMMAND-MENU-CONTROL.md) executes the same 16 canonical cases
 with current and original schema: both pass with scoped focus/pointer instrumentation.
 No detachment reproduces and no production fix is made. STAB-COMMAND-MENU moves to Verify
-with its causal criteria unmet; MOD-13 remains Verify. IO-13-EXPORT is the active bounded
-1.2.22 parity unit. All temporary test/schema changes are restored byte-exactly.
+with its causal criteria unmet; MOD-13 remains Verify. SVG checks expose the current 2.22 reader prerequisite;
+FMT-09-DRIFT is now Building and IO-13-EXPORT is Verify behind it. All temporary test/schema changes are restored byte-exactly.
+
+The [2.22 reader control](FORMAT-2-22-CONTROL.md) retains the actual native reference
+SVG/ZIP outputs, a real FileOpen rejection, owner red/green checks and a successful
+browser import/export capture after the bounded reader candidate. Current SVG output
+still contains live text and merges multiple targets; neither SVG nor full format parity
+is accepted. Notes/Prompt/Context and native round-trip criteria remain open.

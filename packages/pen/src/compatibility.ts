@@ -50,11 +50,11 @@ export function inspectPenCompatibility(doc: PenDocument): PenImportDiagnostic[]
     const parts = /^(\d+)(?:\.(\d+))?$/.exec(doc.version)
     const major = Number(parts?.[1])
     const minor = Number(parts?.[2] ?? 0)
-    if (!parts || major > 2 || (major === 2 && minor > 21)) {
+    if (!parts || major > 2 || (major === 2 && minor > 22)) {
       add(
         'unsupported-version',
         '/version',
-        `Schema ${doc.version} is not supported; the reader targets 2.21 and legacy forms.`
+        `Schema ${doc.version} is not supported; the reader targets 2.22 and legacy forms.`
       )
     }
   }

@@ -126,8 +126,8 @@ The fresh board contains 412 bounded execution tasks and 17 milestones. Every on
 
 | Horizon               | Outcome                                                                                                      | Evidence checkpoint                                                                                                                                    |
 | --------------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Now                   | Qualify SVG export against actual Pen 1.2.22 (IO-13-EXPORT)                                                  | Compare disposable matched fixtures and actual SVG bytes/renders, including multi-selection and failures; repair demonstrated differences.             |
-| Next                  | Re-enter unclassified menu and mixed WebKit failures (STAB-COMMAND-MENU / STAB-WEBKIT-MIXED, Verify)         | Preserve causal traces on the next reproduction; paired green controls do not close either dependency. MOD-13 remains Verify.                          |
+| Now | Qualify the 2.22 reader prerequisite (FMT-09-DRIFT) | The actual Pen-saved SVG fixture fails at `/version`; admit unchanged supported shapes with explicit unsupported-data and future-version guards, then execute the real import path. |
+| Next | Continue SVG export parity (IO-13-EXPORT, Verify) | Actual reference exports text paths and a ZIP for multiple selections; current app exports live text and a combined SVG. Retain these concrete gaps and the format dependency. |
 | Then                  | Stabilize document switching and finish unaccepted icon, module and feature/screen tasks in dependency order | Each card has relevant owner tests, visual/native checks and a commit/evidence link before Executed; dependent renderer/input work waits for STAB-GPU. |
 | Release qualification | Deliver private beta, then complete the full parity gate                                                     | Clean normal build, install/restart/recovery and core journey; declared beta limitations. Later, no required parity state remains unaccepted.          |
 
@@ -185,7 +185,7 @@ and [task index](TASKS.md) are the reviewable sources of scope. The active goal 
 [REF-03](https://trello.com/c/l9y1fz5C/413-ref-03-catalog-installed-pen-1222-update) has bounded Executed inventory evidence at
 `cc33e07c9`: exact extracted/outer bytes, versioned findings, independent review and live-board
 allocation are published. This does not accept the new workflows, opaque binary semantics
-or full current-reference parity. STAB-COMMAND-MENU is the sole Building task.
+or full current-reference parity. FMT-09-DRIFT is the sole Building task; the Commands causal gate stays unaccepted in Verify.
 
 [TEST-PAGE-NAV](https://trello.com/c/NIjUHghm) has bounded Executed driver evidence at
 `3bf51b270`: the real Layers-tab interaction reveals the page row, and all five palette

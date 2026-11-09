@@ -9,7 +9,7 @@ import {
 } from '@open-pencil/scene-graph/shaders'
 
 /**
- * The `.pen` document as pen.dev writes it (schema 2.21), plus the older forms still found in
+ * The supported `.pen` shapes from schemas 2.21 and 2.22, plus the older forms still found in
  * files: the object `stroke` of 2.8 and `icon_font` nodes. Properties typed `…OrVariable` hold a
  * `$name` reference in place of the value. Enumerated values stay strings so a value this reader
  * does not know falls back to the default instead of rejecting the document.

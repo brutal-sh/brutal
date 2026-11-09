@@ -78,13 +78,13 @@ describe('.pen import compatibility', () => {
     expect(parsePenDocument(JSON.stringify(doc))).toEqual(doc)
   })
 
-  test.each(['3.0', '2.22', 'future'])('rejects unrecognized schema %s', (version) => {
+  test.each(['3.0', '2.23', 'future'])('rejects unrecognized schema %s', (version) => {
     expect(inspectPenCompatibility({ version, children: [frame] })[0]?.code).toBe(
       'unsupported-version'
     )
   })
 
-  test.each([undefined, '1', '2.8', '2.14', '2.17', '2.21'])(
+  test.each([undefined, '1', '2.8', '2.14', '2.17', '2.21', '2.22'])(
     'keeps existing supported content readable for version %s',
     (version) => {
       const doc: PenDocument = {
@@ -102,6 +102,22 @@ describe('.pen import compatibility', () => {
       }
       expect(inspectPenCompatibility(doc)).toEqual([])
       expect(buildPenGraph(doc).getNode('frame')?.type).toBe('COMPONENT')
+    }
+  )
+
+  test.each(['note', 'prompt', 'context'])(
+    'keeps unsupported schema 2.22 %s data intact when refusing import',
+    (type) => {
+      const doc: PenDocument = {
+        version: '2.22',
+        children: [{ id: 'unsupported', type, content: 'Keep this text', color: '#FEE484' }]
+      }
+      const original = structuredClone(doc)
+      expect(inspectPenCompatibility(doc).map(({ code, path }) => ({ code, path }))).toEqual([
+        { code: 'unsupported-node', path: '/children/0/type' }
+      ])
+      expect(() => buildPenGraph(doc)).toThrow(PenImportError)
+      expect(doc).toEqual(original)
     }
   )
 
