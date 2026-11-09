@@ -50,3 +50,11 @@ The separate remaining owners are:
 - [MOD-DUPES-GENERATED](https://trello.com/c/bUTrlzXd): Reuse visible generated-output traversal.
 
 No checker threshold, exclusion or assertion is changed. MOD-RECT satisfies its bounded criterion with these independent later failures recorded. Its exact 13 owner cases and the earlier 22 native cases remain scoped receipts, not full unit/browser/native acceptance. `canonical-rect-clean-full-check.log` retains the complete failed command; `native-types-final-board.json` retains the complete current board allocation.
+
+## Shared native callback validation follow-up
+
+`cf9d319cf` moves the byte-identical ChatGPT/OpenRouter native loopback outcome initializers to the shared sign-in schema owner. The native callback bodies and provider-specific URL restriction are unchanged. Both callers import the owning schema directly; the broader browser callback mismatch outcome stays separate. The new validator tests cover native results and malformed or non-native outcomes.
+
+Exact owner selections execute 39 tests with 93 assertions across nine files in the shared workspace and clean checkout. Source/Vue/general/native types, architecture, the clean normal bundle build, staged secret scan and bounded independent review pass. The first fixture typing failure is corrected with literal cases and retained as an earlier failed receipt. No browser login, live account, credential or real OAuth flow is exercised or accepted.
+
+Both unchanged scoped duplication checks now report four other groups and 31 lines; the auth group is absent. The last complete clean combined check remains the prior red result at five groups. MOD-DUPES-AUTH meets its bounded criterion; MOD-DUPES-STORIES becomes Building. Private receipts use the `dupes-auth-` prefix under the same evidence folder, including the exact owner, final types, clean build and clean duplicate logs; `dupes-auth-final-board.json` retains the current complete allocation. Full combined-check and full native/Pen parity acceptance remain open.
