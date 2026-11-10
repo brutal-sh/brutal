@@ -1,6 +1,6 @@
 # Script parity
 
-Target: installed `/Applications/Pen.app`1.2.21, independently implemented behavior. This workflow is open; no inert menu entry counts as delivery.
+Target: current installed `/Applications/Pen.app` 1.2.22, independently implemented behavior. The historical observations below retain their Pen 1.2.21 scope. This workflow is open; no inert menu entry counts as delivery.
 
 ## Observed reference
 
@@ -204,3 +204,14 @@ The subsequent viewport correction reruns physical native open→two Zoom Out cl
 
 
 Compatible export surfaces2026-11-02: WebKit diagnostic residuals versus actual Pen decrease to1,922runtime and896missing-file pixels; Chromium residuals2,118/953. Six owned export baselines change while the selected journeys' canvas baselines remain unchanged. Exact font/icon pixels remain open. Earlier zero-tolerance matcher receipts do not prove raw antialiased edge equality; the new independent fractional reference compares decoded RGBA channels explicitly. See EXPORT-PARITY.md for native GPU execution and pending wider qualification.
+
+
+## Runtime ownership continuation — 2026-11-10
+
+`56ce0e655` and its typed-callback follow-up `bc6d56c3b` separate Script rendering/materialization, declared-input and upload resolution, authored placeholder data and runtime contracts from the scheduling/source-watch coordinator. Normal output retains the current run/graph/definition/dimensions/component/variable guards; empty output retains its original weaker guard. Source loading/watch and schedule-through-dispose behavior are preserved. The coordinator is 294 nonblank lines; the largest extracted module is 203, and newly extracted functions are at most 50 lines. Its existing factory still contains nested lifecycle functions; this does not accept a whole-app function-size claim.
+
+The exact original and current runtimes submit byte-identical placeholder IO payloads at standard, zero, narrow and fractional sizes (seven requests across four controls). Source/Vue/general/native types, architecture, lint and bounded independent review pass. Two new owner cases hold normal/empty materialization across replacement with the same Script ID and verify only the replacement graph receives an adoption through the receiver-sensitive callback. The final owner selection passes 24 tests/134 assertions across six files. The added test cleanup disposes both runtime and editor; earlier fixture lint and cleanup findings are retained in the private evidence.
+
+All 34 Chromium/WebKit workflows pass without skips, failures or retries, including strict unchanged placeholder/diagnostic/reference/generated snapshots, variable/history edits, authored save/reopen, cancellation, source repair and conversion. Both actual placeholder exports are inspected; sampled borders retain alpha 255 and interiors alpha 26. The initial baseline exhaustion timeout remains failed and unclassified; fresh VM-only and same complete owner controls pass with sleep prevention. No timeout or assertion is weakened.
+
+The unchanged duplication gate reports two other groups/15 lines, with the Script capture group absent. Private receipts are under `local-evidence/script-runtime-dedup-2026-11-10/`. The first clean normal build fails full typed lint on receiver-free callback declarations and implicit no-result returns. The follow-up declares callback-valued properties and explicit `undefined` results; review and the matching typed scoped lint/24-owner run pass without changing guards or method receivers. The failed receipts remain retained. The clean normal candidate build and the same 24 owner cases pass; its unchanged duplicate check reports the same two other groups. The isolated native build and its single fresh macOS Script case pass: linked-source save, close/Recents reopen, ordinary and atomic source updates, retained clean state and outside-folder refusal. Source attachment/save use fixture/store APIs; initial OS picker and File-menu Save delivery are not established by that case; these bounded results do not accept full native delivery, the full combined check, strict raw reference pixels or full Script/Pen parity. Installed Pen is rechecked as 1.2.22 with the same archive hash as the versioned REA catalog; no fresh Script reference UI workflow is inferred from that hash.
