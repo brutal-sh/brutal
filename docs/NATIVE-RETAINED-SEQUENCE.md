@@ -119,3 +119,15 @@ macOS child/discovery/true-close controls. The broader retained run still fails
 seven of 14 specs (18 passing cases, nine failures), starting with editor readiness
 after reload. No NoWindow response appears. WebDriver Enter and trusted OS input
 remain separate open gates. See NATIVE-DRIVER-MULTIWEBVIEW.md for exact evidence.
+
+
+After `954f68b8a` passes the complete tracked-clean quality gate, the driver card
+moves Verify with its remaining platform/input limits. This parent resumes
+Building at the earliest history reload readiness failure; a failure-only observer
+retains canonical assertions and timeouts. No later cascade is waived.
+
+
+The unchanged three-case history run with a failure-only observer passes in
+12 seconds on the same candidate image. The observer does not fire. This cold
+pass does not explain or clear the earlier retained-run readiness failure;
+that intermittent gate remains Building with the failed receipt preserved.

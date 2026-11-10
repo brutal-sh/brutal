@@ -236,3 +236,8 @@ macOS child/discovery/true-close controls. The broader retained run still fails
 seven of 14 specs (18 passing cases, nine failures), starting with editor readiness
 after reload. No NoWindow response appears. WebDriver Enter and trusted OS input
 remain separate open gates. See NATIVE-DRIVER-MULTIWEBVIEW.md for exact evidence.
+
+
+Current scheduling after source `954f68b8a` passes the complete clean check:
+driver repair Verify; broader native-sequence parent Building. The current
+reference remains actual Pen 1.2.22 with historical 1.2.21 evidence preserved.

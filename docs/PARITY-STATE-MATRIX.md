@@ -1,8 +1,17 @@
 # Pen parity state matrix
 
-Outcome: full functionality and design parity against installed `/Applications/Pen.app`1.2.21, excluding subscriptions/licensing. Open Pen retains truthful independent identity.
+Outcome: full functionality and design parity against installed `/Applications/Pen.app` 1.2.22, excluding subscriptions/licensing. Open Pen retains truthful independent identity. Historical 1.2.21 measurements retain their version boundary.
 
 Must: inspect actual application, reproduce behavior independently, verify rendered states and executed workflows. Must not: label uninspected screens or implementation-only paths accepted. Authority: explicit user continuation,2026-10-30. Done evidence: every enumerated applicable state has both a visual match and an end-to-end behavior result; no residual unsupported required behavior.
+
+Current reference refresh—2026-11-10: installed version and archive hash still match
+[the 1.2.22 update catalog](pen-feature-reference/update-1.2.22-2026-11-09.md).
+REA extraction and 5,897 hash-verified Hopper pseudocode exports are recorded in
+[the native decomposition](pen-feature-reference/native-1.2.22-2026-11-09.md).
+Its 31 bounded change findings link to acceptance tasks; extraction does not accept
+runtime behavior, full source recovery or design parity. The local native-test
+driver repair preserves the editor handle with a browser child, while the broader
+retained session, strict Note pixels and remaining screen/menu states stay open.
 
 Current continuation—2026-11-04: named icon controls and export have bounded evidence in
 [the icon comparison](ICON-PARITY.md). Six libraries map to verified square and centered rectangular source drawings;

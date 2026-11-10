@@ -103,3 +103,9 @@ Private controls, original-source hashes, binaries and failures are under
 `local-evidence/native-retained-focus-2026-11-10/`. No vendor Pen implementation is
 part of the driver repair. Strict Note pixels, remaining visual states, full
 native behavior and full Pen parity remain open.
+
+
+Source `954f68b8a` passes the complete tracked-clean `bun run check`, including
+literal zero clones, after the bounded native controls above. The driver card is
+Verify because cross-platform and trusted-input limits remain. Its native-sequence
+parent returns to Building to investigate the earlier reload readiness failure.

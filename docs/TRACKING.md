@@ -469,6 +469,22 @@ Original compiler/control failures remain retained; global dependencies and
 production applications/profiles are unchanged. See the driver record for limits.
 
 The fresh complete board has 453 open cards: 436 execution tasks and 17
-milestones; 370 Backlog, one Building, 13 Verify and 52 Executed. The new driver
-card is the sole Building task; its native parent is Verify and depends on it.
+milestones; 370 Backlog, one Building, 13 Verify and 52 Executed. The driver
+card is Verify; its native parent is the sole Building task and depends on it.
 All 435 other execution IDs remain terminal dependencies.
+
+
+Source `954f68b8a` passes the complete tracked-clean `bun run check`, including
+literal `Found 0 clones.`. The original checkout-hook PATH failure and corrected
+receipt-parser word order are retained without changing the observed gate result.
+Fresh board readback keeps 453 open cards / 436 execution rows / 435 terminal
+dependencies: driver Verify, native-sequence parent sole Building, and the same
+370 Backlog / 13 Verify / 52 Executed counts. No execution acceptance is added.
+Fresh complete owner/admin inventory reads 201/201 Actions disabled, zero unknowns.
+The earliest reload case now has a failure-only observer with unchanged assertions.
+
+
+The unchanged three-case history run with a failure-only observer passes in
+12 seconds on the same candidate image. The observer does not fire. This cold
+pass does not explain or clear the earlier retained-run readiness failure;
+that intermittent gate remains Building with the failed receipt preserved.
