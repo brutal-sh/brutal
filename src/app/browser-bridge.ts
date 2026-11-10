@@ -9,6 +9,8 @@ import { appRuntimeConfig } from '@/app/runtime/config'
 import { IS_BROWSER } from '@/constants'
 
 export interface OpenPencilTestHooks {
+  /** Startup recovery discovery and its first rendered state have settled. */
+  recoveryReady?: Promise<void>
   writeCount?: () => number
   mockHandle?: FileSystemFileHandle
   savedOpen?: Window['open']
@@ -45,6 +47,12 @@ function windowAPI(): OpenPencilWindowAPI {
     return activeStore
   }
   return window.openPencil
+}
+
+export function exposeRecoveryReadiness(ready: Promise<void>): void {
+  if (!IS_BROWSER || (import.meta.env.MODE !== 'native-test' && !appRuntimeConfig.test)) return
+  const hooks = (windowAPI().test ??= {})
+  hooks.recoveryReady = ready
 }
 
 export function setOpenPencilStore(store: EditorStore) {

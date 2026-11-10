@@ -268,12 +268,14 @@ it('delivers native picking, selected pixels and editable subtree import without
     let resumeFrames: () => void = () => undefined
     try {
       button('Import Web via Browser')
-      await wait(
-        () => !!document.querySelector('input[aria-label="Web address"]'),
-        'inline address'
-      )
+      await wait(() => {
+        const input = document.querySelector<HTMLInputElement>('input[aria-label="Web address"]')
+        return !!input && !input.disabled
+      }, 'inline address')
       const address = document.querySelector<HTMLInputElement>('input[aria-label="Web address"]')
       if (!address) throw new Error('Missing address')
+      address.focus()
+      address.select()
       address.value = origin + '/page'
       address.dispatchEvent(new Event('input', { bubbles: true }))
       await new Promise((resolve) => {

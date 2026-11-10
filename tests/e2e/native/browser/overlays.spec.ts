@@ -106,11 +106,17 @@ it('prepares fresh page pixels beneath the first and subsequent editor menus wit
       let result: { failure?: string } = {}
       try {
         click('Import Web via Browser')
-        await wait(() => !!document.querySelector('[aria-label="Web address"]'), 'browser dock')
+        await wait(() => {
+          const input = document.querySelector<HTMLInputElement>('[aria-label="Web address"]')
+          return !!input && !input.disabled
+        }, 'browser dock')
         const input = document.querySelector<HTMLInputElement>('[aria-label="Web address"]')
         if (!input) throw new Error('Missing address')
+        input.focus()
+        input.select()
         input.value = origin + '/page'
         input.dispatchEvent(new Event('input', { bubbles: true }))
+        await Promise.resolve()
         input
           .closest('form')
           ?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
@@ -261,11 +267,17 @@ function verifyStaleFrameFailure(reopen: boolean) {
             document
               .querySelector<HTMLButtonElement>('[aria-label="Import Web via Browser"]')
               ?.click()
-            await wait(() => !!document.querySelector('[aria-label="Web address"]'), 'browser dock')
+            await wait(() => {
+              const input = document.querySelector<HTMLInputElement>('[aria-label="Web address"]')
+              return !!input && !input.disabled
+            }, 'browser dock')
             const input = document.querySelector<HTMLInputElement>('[aria-label="Web address"]')
             if (!input) throw new Error('Missing address')
+            input.focus()
+            input.select()
             input.value = origin + '/page'
             input.dispatchEvent(new Event('input', { bubbles: true }))
+            await Promise.resolve()
             input
               .closest('form')
               ?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))

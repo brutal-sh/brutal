@@ -2,6 +2,7 @@ import { strict as assert } from 'node:assert'
 
 import { createNativeLayerFixture } from '#tests/helpers/tauri/editor-snapshot'
 import { invokeNative } from '#tests/helpers/tauri/invoke'
+import { reloadNativeEditor } from '#tests/helpers/tauri/navigation'
 
 async function selectOption(selector: string, label: string) {
   const trigger = await $(selector)
@@ -147,14 +148,7 @@ describe('native chat text size', () => {
       await closeSettings()
       await expectFont(pixels, markdownPixels, composerSize)
     }
-    const pageOrigin = await browser.execute(() => performance.timeOrigin)
-    await browser.refresh()
-    await browser.waitUntil(
-      async () => browser.execute((origin) => performance.timeOrigin !== origin, pageOrigin),
-      {
-        timeoutMsg: 'Native reload did not replace the document'
-      }
-    )
+    await reloadNativeEditor()
     await createNativeLayerFixture()
     await $('[role="tablist"][aria-label="Workspace panels"] [role="tab"]').waitForDisplayed()
     await $('[role="tablist"][aria-label="Workspace panels"] [role="tab"]').click()

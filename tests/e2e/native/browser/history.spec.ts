@@ -5,6 +5,7 @@ import * as v from 'valibot'
 
 import { createNativeLayerFixture } from '#tests/helpers/tauri/editor-snapshot'
 import { invokeNative } from '#tests/helpers/tauri/invoke'
+import { reloadNativeEditor } from '#tests/helpers/tauri/navigation'
 
 let server: Server
 let heldPage: ServerResponse | undefined
@@ -347,30 +348,7 @@ it('restores saved history after reloading the native editor and persists its de
   assert.equal(recorded.failure, undefined, recorded.failure)
   await $(`button=${new URL(origin).host}/reload`).waitForDisplayed()
   async function reloadEditor() {
-    const before = await browser.execute(() => performance.timeOrigin)
-    await browser.refresh()
-    await browser.waitUntil(async () =>
-      browser.execute((origin) => performance.timeOrigin !== origin, before)
-    )
-    // Reloads can offer recovery for this test's unsaved fixture; Close preserves those bytes.
-    await browser.waitUntil(
-      async () =>
-        browser.execute(() => {
-          const recovery = document.querySelector(
-            '[data-test-id="recovery-dialog"][data-state="open"]'
-          )
-          if (recovery) {
-            recovery.querySelector<HTMLButtonElement>('[data-slot="dialog-footer"] button')?.click()
-            return false
-          }
-          const home = document.querySelector('[data-test-id="home-new-document"]')
-          return Boolean(
-            home?.getClientRects().length ||
-            (document.querySelector('canvas') && window.openPencil?.getStore?.()?.textEditor)
-          )
-        }),
-      { timeout: 30000, timeoutMsg: 'Reloaded test editor did not leave Home/recovery setup' }
-    )
+    await reloadNativeEditor()
     const fixture = await createNativeLayerFixture()
     await browser.execute((id) => window.openPencil?.getStore?.().select([id]), fixture.first)
     await $('button[aria-label="Import Web via Browser"]').click()

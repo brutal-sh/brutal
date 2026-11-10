@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { AlertDialogCancel, AlertDialogDescription, AlertDialogTitle } from 'reka-ui'
-import { onMounted, ref } from 'vue'
+import { nextTick, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { useI18n } from '@open-pencil/vue/i18n'
 
+import { exposeRecoveryReadiness } from '@/app/browser-bridge'
 import type { RecoverySnapshotMeta } from '@/app/document/recovery'
 import { recoveryEnabled } from '@/app/document/recovery/preferences'
 import { useDateFormat } from '@/app/i18n/date'
+import { createDeferred } from '@/app/runtime/deferred'
 import { toast } from '@/app/shell/ui'
 import { formatStorageBytes } from '@/app/storage/format-bytes'
 import { discardRecoverySnapshot, listRecoverySnapshots, restoreRecoverySnapshot } from '@/app/tabs'
@@ -18,6 +20,8 @@ const route = useRoute()
 const snapshots = ref<RecoverySnapshotMeta[]>([])
 const busyId = ref<string | null>(null)
 const open = ref(false)
+const startup = createDeferred<undefined>()
+exposeRecoveryReadiness(startup.promise)
 
 const dates = useDateFormat()
 const updatedLabel = (snapshot: RecoverySnapshotMeta) =>
@@ -54,12 +58,15 @@ async function discard(snapshot: RecoverySnapshotMeta): Promise<void> {
 }
 
 onMounted(async () => {
-  if (route.path !== '/' || !recoveryEnabled.value) return
   try {
+    if (route.path !== '/' || !recoveryEnabled.value) return
     snapshots.value = await listRecoverySnapshots()
     open.value = snapshots.value.length > 0
   } catch (error) {
     console.warn('[Recovery] Failed to list snapshots:', error)
+  } finally {
+    await nextTick()
+    startup.resolve(undefined)
   }
 })
 </script>

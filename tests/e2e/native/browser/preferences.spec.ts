@@ -1,6 +1,7 @@
 import { strict as assert } from 'node:assert'
 
 import { createNativeLayerFixture } from '#tests/helpers/tauri/editor-snapshot'
+import { reloadNativeEditor } from '#tests/helpers/tauri/navigation'
 
 before(async () => {
   const fixture = await createNativeLayerFixture()
@@ -128,28 +129,7 @@ it('retains device choice and the separate responsive zoom across documents and 
   )
   assert.equal(selected.failure, undefined, selected.failure)
   assert.ok(selected.zoom)
-  const before = await browser.execute(() => performance.timeOrigin)
-  await browser.refresh()
-  await browser.waitUntil(async () =>
-    browser.execute((origin) => performance.timeOrigin !== origin, before)
-  )
-  await browser.waitUntil(
-    async () =>
-      browser.execute(() => {
-        const recovery = document.querySelector(
-          '[data-test-id="recovery-dialog"][data-state="open"]'
-        )
-        if (recovery) {
-          recovery.querySelector<HTMLButtonElement>('[data-slot="dialog-footer"] button')?.click()
-          return false
-        }
-        return Boolean(
-          document.querySelector('[data-test-id="home-new-document"]')?.getClientRects().length ||
-          (document.querySelector('canvas') && window.openPencil?.getStore?.()?.textEditor)
-        )
-      }),
-    { timeout: 30000, timeoutMsg: 'Reloaded test editor did not leave Home/recovery setup' }
-  )
+  await reloadNativeEditor()
   const fixture = await createNativeLayerFixture()
   await browser.execute((id) => window.openPencil?.getStore?.().select([id]), fixture.first)
   const restored = await browser.executeAsync<{ failure?: string }, []>(async (done) => {

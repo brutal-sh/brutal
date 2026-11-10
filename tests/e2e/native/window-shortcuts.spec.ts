@@ -1,6 +1,7 @@
 import { strict as assert } from 'node:assert'
 
 import { createNativeLayerFixture } from '#tests/helpers/tauri/editor-snapshot'
+import { reloadNativeEditor } from '#tests/helpers/tauri/navigation'
 
 const modifier = process.platform === 'darwin' ? 'Meta' : 'Control'
 
@@ -17,12 +18,7 @@ async function selectDocument(digit: string, name: string) {
 
 it('selects desktop documents by number while retaining zoom, Home and input state', async () => {
   // Numbered tabs need their own document sequence when the native process is reused.
-  const pageOrigin = await browser.execute(() => performance.timeOrigin)
-  await browser.refresh()
-  await browser.waitUntil(
-    async () => browser.execute((origin) => performance.timeOrigin !== origin, pageOrigin),
-    { timeoutMsg: 'Native reload did not replace the document' }
-  )
+  await reloadNativeEditor()
   let secondLayer = ''
   for (const name of ['Shortcut A', 'Shortcut B', 'Shortcut C']) {
     if (name !== 'Shortcut A') await $('button[aria-label="New design"]').click()

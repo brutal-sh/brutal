@@ -1,4 +1,5 @@
 import { invokeNative } from './invoke'
+import { settleNativeRecovery } from './recovery'
 
 export type NativeLayerFixture = {
   first: string
@@ -15,6 +16,7 @@ export async function ensureNativeEditorReady(): Promise<void> {
     timeout: 30_000,
     timeoutMsg: 'Native test window remained hidden'
   })
+  await settleNativeRecovery()
   await browser.waitUntil(
     async () =>
       browser.execute(() => {

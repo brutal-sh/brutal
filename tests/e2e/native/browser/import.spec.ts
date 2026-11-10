@@ -1,5 +1,5 @@
 import { strict as assert } from 'node:assert'
-import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
+import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { createServer, type Server } from 'node:http'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -26,6 +26,7 @@ type ImportResult = {
 describe('native editable browser import', () => {
   before(async function () {
     if (process.platform !== 'darwin') this.skip()
+    await mkdir('local-evidence', { recursive: true })
     const font = await readFile(repoPath('packages/core/assets/InterVariable.ttf'))
     const image = await readFile(repoPath('tests/fixtures/vectorize/python_logo.png'))
     imageServer = createServer((_request, response) => {
@@ -134,6 +135,20 @@ describe('native editable browser import', () => {
           }, 'completed page import control')
           button('Import editable page')
         }
+        const importRefused = async (diagnostic: string, label: string) => {
+          const previous = new Map(
+            [...document.querySelectorAll('[role="alert"]')].map((node) => [node, node.textContent])
+          )
+          await importPage()
+          await wait(
+            () =>
+              [...document.querySelectorAll('[role="alert"]')].some(
+                (node) =>
+                  node.textContent?.includes(diagnostic) && previous.get(node) !== node.textContent
+              ),
+            label
+          )
+        }
         try {
           const store = window.openPencil?.getStore?.()
           if (!store) throw new Error('Missing design')
@@ -176,13 +191,7 @@ describe('native editable browser import', () => {
             .join(',')
           const selected = [...store.state.selectedIds].join(',')
           await navigate('/cross-image')
-          await importPage()
-          await wait(
-            () =>
-              document.querySelector('[role="alert"]')?.textContent?.includes('cross-origin') ??
-              false,
-            'unreadable cross-origin image diagnostic'
-          )
+          await importRefused('cross-origin', 'unreadable cross-origin image diagnostic')
           if (
             before !==
             store.graph
@@ -192,12 +201,7 @@ describe('native editable browser import', () => {
           )
             throw new Error('Cross-origin image refusal changed the design')
           await navigate('/unsupported')
-          await importPage()
-          await wait(
-            () =>
-              document.querySelector('[role="alert"]')?.textContent?.includes('iframe') ?? false,
-            'unsupported diagnostic'
-          )
+          await importRefused('iframe', 'unsupported diagnostic')
           const rejectedWithoutChange =
             before ===
               store.graph
