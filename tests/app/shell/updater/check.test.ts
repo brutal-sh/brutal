@@ -27,6 +27,7 @@ afterEach(async () => {
 describe('checkForAppUpdate', () => {
   test('does not schedule an update request in a build without update endpoints', async () => {
     const calls: string[] = []
+    const previousToasts = toast.toasts.value.map((entry) => ({ ...entry }))
     await mockTauriIPC((cmd) => {
       calls.push(cmd)
       return null
@@ -38,7 +39,7 @@ describe('checkForAppUpdate', () => {
     })
 
     expect(calls).toEqual([])
-    expect(toast.toasts.value).toEqual([])
+    expect(toast.toasts.value).toEqual(previousToasts)
   })
 
   test('returns quietly when no update is available', async () => {
