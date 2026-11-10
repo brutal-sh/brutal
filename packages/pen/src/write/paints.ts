@@ -13,6 +13,7 @@ import type { Vector } from '@open-pencil/scene-graph/primitives'
 import { fragmentShaderOf, shaderOfPaint } from '@open-pencil/scene-graph/shaders'
 
 import { penBlendMode } from '../paints'
+import { projectMeshPoint } from '../paints/mesh-point'
 import type { PenGradientPaint, PenImagePaint, PenMeshPaint, PenPaint } from '../schema'
 
 export type PaintProblem = (path: string, message: string) => void
@@ -82,13 +83,7 @@ function meshGradient(fill: Fill, path: string, problem: PaintProblem): PenMeshP
     columns: mesh.columns,
     rows: mesh.rows,
     colors: mesh.colors.map((color) => colorToHex8(color)),
-    points: mesh.points.map((point) => ({
-      position: vector(point.position),
-      ...(point.leftHandle && { leftHandle: vector(point.leftHandle) }),
-      ...(point.rightHandle && { rightHandle: vector(point.rightHandle) }),
-      ...(point.topHandle && { topHandle: vector(point.topHandle) }),
-      ...(point.bottomHandle && { bottomHandle: vector(point.bottomHandle) })
-    })),
+    points: mesh.points.map((point) => projectMeshPoint(point, vector)),
     opacity: fill.opacity
   }
 }
