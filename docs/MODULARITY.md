@@ -222,3 +222,8 @@ The full clean combined check subsequently reaches its final unchanged duplicati
 ## Executed criterion: shared native callback schema
 
 MOD-DUPES-AUTH moves the identical native callback validation to the existing shared sign-in domain in `cf9d319cf`, retaining both callback bodies and provider-specific redirect checks. Both owner selections execute 39 tests/93 assertions across nine files; types, architecture, clean bundle and bounded review pass. The unchanged duplicate check now reports four other groups/31 lines. Live OAuth and the whole modularity/full-parity goals remain unaccepted; MOD-DUPES-STORIES is the next bounded owner task.
+
+
+## Connection fixture ownership follow-up
+
+MOD-DUPES-STORIES uses one owning builder for the unreachable Codex state, retaining distinct long/null diagnostics and fresh nested state per call. Original and extracted captures for all 25 stories match exactly; the story file is 299 nonblank lines and its fixture owner is 112. The canonical all-story sweep remains intact. The actual family walk reveals four pre-existing dark sign-in contrast failures, reproduced by the original story source; the separate A11Y-SIGNIN-CONTRAST repair preserves geometry and actions through local theme styling. Final play/axe execution passes all 25 states in both themes and all 18 translated grids. [Executed scope and limits](NATIVE-TEST-TYPE-CONTROL.md#connection-fixture-and-contrast-follow-up) retain the failed baseline and distinguish UI evidence from real OAuth and Pen parity. The unchanged scoped duplicate gate now reports three other groups/20 lines; no checker exemption is introduced.

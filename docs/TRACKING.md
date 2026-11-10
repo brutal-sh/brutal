@@ -6,7 +6,7 @@ Repository: [private Open Pen repository](https://github.com/jpoindexter/open-pe
 Board: [Open Pen — independent design editor](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor), private.
 
 The [PRD](PRD.md) owns the outcome, constraints and release criteria.
-The [task index](TASKS.md) links all 427 execution cards; the [modularity audit](MODULARITY.md)
+The [task index](TASKS.md) links all 428 execution cards; the [modularity audit](MODULARITY.md)
 records the measured review queue. Requirements come from the [feature catalog](pen-feature-reference/README.md)
 and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), preserving historical Pen 1.2.21 evidence and the current [1.2.22 update inventory](pen-feature-reference/update-1.2.22-2026-11-09.md).
 
@@ -298,3 +298,12 @@ The fresh complete board readback returns 444 open cards: 427 execution tasks an
 `cf9d319cf` consolidates the identical native callback schema into the shared sign-in owner. Both callbacks import it directly; the provider-specific redirect and callback bodies retain their original semantics. The native result still rejects browser-only mismatch outcomes. Exact owner selections pass 39 tests and 93 assertions across nine files in both workspaces; source/Vue/general/native types, architecture, clean normal build and independent review pass. The initial fixture typing failure is retained and corrected with literal inputs. No live OAuth, account or credential behavior is accepted by these checks.
 
 The unchanged duplication check in both workspaces now reports four other groups and 31 lines. MOD-DUPES-AUTH is Executed for its bounded criterion; MOD-DUPES-STORIES is the only Building task. The complete board remains 444 open cards and 427 unique execution tasks plus 17 milestones: 374 Backlog, 0 Ready, 1 Building, 12 Verify and 40 Executed. The last complete clean combined check remains `1306f6cf2`, red at five groups; the scoped follow-up does not replace it with an all-green result. Remaining duplication, native mixed-session, Note raster and full parity acceptance stay open.
+
+
+## Connection fixture and readable sign-in actions
+
+Source `b3c3ab6a1` shares the connection fixture while retaining all 25 original data/setup/template/play captures byte-exactly. Its real UI walk discovers four dark sign-in contrast errors, reproduced by the exact original story source. The separate `c16ce89b6` repair changes only the local Cancel/Change foreground. The final canonical run passes all 25 connection states per theme and all 18 translated grids (20 cases, no skips, retries or failures), with changed-state captures inspected. Source/Vue/general types, architecture, lint, bounded independent review and the clean normal candidate build pass. Unchanged duplicate checks in both workspaces retain three other groups/20 lines; the story group is absent.
+
+The complete readback finds 445 open cards: 428 unique execution tasks and 17 milestones, with 373 Backlog, 0 Ready, 1 Building, 12 Verify and 42 Executed. MOD-DUPES-STORIES and A11Y-SIGNIN-CONTRAST meet their bounded criteria. MOD-DUPES-SCRIPT is the sole Building task; PAINT and GENERATED remain Backlog. The new contrast task is indexed and included in PARITY-ALL's 427 other execution dependencies. Private receipts and the minimal complete board readback remain under `local-evidence/story-fixture-dedup-2026-11-09/`.
+
+The last complete clean combined check is still `1306f6cf2`, red at its final five-group duplication gate. The scoped clean build/duplication follow-up does not establish an all-green combined check. Real OAuth, native retained-session reliability, strict Note raster and full design/functionality parity remain unaccepted. No production install, merge or release.
