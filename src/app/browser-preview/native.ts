@@ -6,6 +6,7 @@ import { imageHeader } from '@open-pencil/scene-graph/images'
 import { readBrowserCapture, type BrowserCapture, type BrowserCaptureScope } from './capture'
 import type { PreviewViewport } from './dock'
 import { validateExtractedPage, type ExtractedPage } from './dom/schema'
+import { nativePreviewViewport } from './layout'
 import type { BrowserPickerNative } from './picker/controller'
 import { validateBrowserPicker } from './picker/schema'
 import { captureBytes, previewStatusSchema } from './schema'
@@ -47,7 +48,7 @@ export function createBrowserPreviewNative(
     return next
   }
   const requireBounds = () => {
-    const result = viewport()
+    const result = nativePreviewViewport(viewport())
     if (disposed || !result) throw new Error('The browser dock is not visible. Try again.')
     return result
   }
@@ -151,7 +152,7 @@ export function createBrowserPreviewNative(
     syncBounds: () =>
       enqueue(async () => {
         if (!disposed) {
-          const current = viewport()
+          const current = nativePreviewViewport(viewport())
           await callNative('browser_preview_layout', current ? { ...current } : { bounds: null })
         }
       }),

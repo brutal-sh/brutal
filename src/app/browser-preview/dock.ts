@@ -1,9 +1,10 @@
-import type { Rect } from '@open-pencil/scene-graph/primitives'
+import type { Rect, Vector } from '@open-pencil/scene-graph/primitives'
 
 import { PREVIEW_PRESETS, type PreviewPreset } from './schema'
 
 export interface PreviewViewport {
   bounds: Rect
+  layoutOrigin?: Vector
   zoom: number
   viewport: { width: number; height: number }
 }
@@ -41,6 +42,7 @@ export function previewDockViewport(
   const width = device.width * fit
   const fittedHeight = device.height * fit
   return {
+    layoutOrigin: { x: rect.x, y: rect.y },
     bounds: {
       x: rect.x + (availableWidth - width) / 2,
       y: rect.y + (height - fittedHeight) / 2,
