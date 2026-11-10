@@ -1,0 +1,14 @@
+{
+  "version": "2.22",
+  "children": [
+    {
+      "id": "reference", "type": "frame", "layout": "vertical", "width": 600, "height": 500,
+      "padding": 20,
+      "children": [
+        { "id": "gold", "type": "note", "content": "Fill sizing", "width": "fill_container", "height": "fill_container" },
+        { "id": "purple", "type": "note", "content": "Second Note", "width": "fill_container", "height": "fill_container", "color": "#DCC5F9" }
+      ]
+    },
+    { "id": "long", "type": "note", "x": 700, "content": "Root fallback", "width": "fill_container(200)", "height": "fill_container(550)" }
+  ]
+}

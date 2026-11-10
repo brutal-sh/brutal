@@ -70,7 +70,6 @@ session snapshots remain private under `local-evidence/pen-native-decomposition-
 Its `index.html` provides the module index. Both owned Hopper analysis sessions are closed;
 copied target executables are not run. No vendor implementation is shipped in Open Pen.
 
-
 ## Fresh verification, 2026-11-10
 
 The installed plist still reports 1.2.22 and its ASAR SHA-256 still matches
@@ -81,3 +80,10 @@ The independent Hopper export check rehashes all 5,897 files against their
 provider manifests. No duplicate extraction or vendor implementation import
 is needed for these unchanged reference bytes. These checks preserve the
 semantic, runtime and exact visual coverage limits above.
+
+A further current-byte REA inventory and explicit Hopper reopen reproduce the same
+archive identity and 5,888 helper procedures. The Save entry at `0x10018ac40` remains
+a bounded provider dossier, not complete recovered source. Fresh private receipts are
+`current-asar-recheck-2026-11-10.json`, `current-hopper-recheck-2026-11-10.json` and
+`current-recheck-summary-2026-11-10.json` under the native evidence directory above;
+both owned REA sessions are closed after export.

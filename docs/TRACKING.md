@@ -10,6 +10,12 @@ The [task index](TASKS.md) links all 438 execution cards; the [modularity audit]
 records the measured review queue. Requirements come from the [feature catalog](pen-feature-reference/README.md)
 and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), preserving historical Pen 1.2.21 evidence and the current [1.2.22 update inventory](pen-feature-reference/update-1.2.22-2026-11-09.md).
 
+The latest board readback retains 455 open cards: 438 execution tasks and 17
+milestones. The Note Fill and MOD-14 implementation artifacts move to Verify,
+leaving 368 Backlog, one Building, 16 Verify and 53 Executed. The backdrop task
+remains Building for its matched-reference criterion. Earlier snapshots below
+retain their historical counts and scope.
+
 ## Board organization
 
 | List       | Purpose                                                                                                                                                                        |
@@ -432,7 +438,6 @@ workflows. The normal build and scoped static/review gates pass. Complete curren
 clean quality and full unit reruns remain separate pending gates. No visual or
 native parity is inferred. APP-TEST-CONTROLS.md retains precise evidence limits.
 
-
 The fresh complete board readback reconciles 452 open cards: 435 execution tasks
 and 17 milestones; 370 Backlog, one Building, 12 Verify and 52 Executed. All 434
 other task IDs remain terminal dependencies. The library repair is Executed for
@@ -440,19 +445,16 @@ its bounded criterion; STAB-NATIVE-SEQUENCE resumes sole Building. Owned-reposit
 inventory is refreshed from authenticated owner/admin-organization listings:
 201/201 Actions disabled, zero enabled and zero unknown. No settings mutation.
 
-
 The complete current clean check at `18a464656` exits zero, including literal
 zero clones. The full canonical unit runner is then started from the same exact
 tracked-clean checkout. No native/browser run overlaps its build/check cycle.
 Native retained-session and strict Note acceptance remain open.
-
 
 The complete unit run at `18a464656` finishes with exit one and sole distinct
 failure: strict Note reference raster (expected zero, observed 12,792 changed
 channels). Shader/toast/library failures are absent from the complete rerun.
 This is current failed whole-unit evidence, replacing no historical failures
 and accepting neither exact Note pixels nor native/full Pen parity.
-
 
 Native re-entry retains passing canonical and observer nine-case prefixes but
 reproduces a direct-input NoWindow before address input. The native-command
@@ -473,7 +475,6 @@ milestones; 370 Backlog, one Building, 13 Verify and 52 Executed. The driver
 card is Verify; its native parent is the sole Building task and depends on it.
 All 435 other execution IDs remain terminal dependencies.
 
-
 Source `954f68b8a` passes the complete tracked-clean `bun run check`, including
 literal `Found 0 clones.`. The original checkout-hook PATH failure and corrected
 receipt-parser word order are retained without changing the observed gate result.
@@ -483,12 +484,10 @@ dependencies: driver Verify, native-sequence parent sole Building, and the same
 Fresh complete owner/admin inventory reads 201/201 Actions disabled, zero unknowns.
 The earliest reload case now has a failure-only observer with unchanged assertions.
 
-
 The unchanged three-case history run with a failure-only observer passes in
 12 seconds on the same candidate image. The observer does not fire. This cold
 pass does not explain or clear the earlier retained-run readiness failure;
 that intermittent gate remains Building with the failed receipt preserved.
-
 
 ## Native fixture and host qualification — 2026-11-10
 
@@ -509,7 +508,6 @@ All 436 other execution IDs remain terminal dependencies. SURF-BROWSER retains
 the measured fractional fixed-device backdrop width residual. REA/Hopper catalog
 checks revalidate installed 1.2.22, all 31 findings/54 anchors and 5,897 exported
 procedure files; static extraction is not semantic or visual acceptance.
-
 
 ## Native run ownership correction — 2026-11-10
 
@@ -536,7 +534,6 @@ new hidden-app regression; both fail history canvas readiness after reload.
 Source a4f9462b4 saves the runner fixes locally. It does not accept the host or
 sequence card, packaging-only causation, or full product parity.
 
-
 The follow-up observer still reproduces history reload after exact orphan
 termination. A proposed offer-autofocus readiness change builds and passes the
 recovery payload-preservation case but does not resolve history. Its stricter
@@ -550,7 +547,6 @@ with zero clones (`bd2e92311` / identical main tree `a4f9462b4`). A later focuse
 history observer passes three cases against the preserved baseline binary at an
 explicit evidence path; the failure callback does not run. This is narrower than
 canonical retained-sequence acceptance and does not establish a cause or fix.
-
 
 ## Canonical macOS host execution — 2026-11-10
 
@@ -580,7 +576,6 @@ the current dock/viewport/backdrop owners. Done evidence requires the original
 strict assertions at two fixed-device sizes and the parent reference comparison;
 a Desktop fixture pass does not waive this gate.
 
-
 The fixed-device candidate is saved at `e552c2622`: both original native
 regression cases fail and both candidate cases pass exact dimensions; unchanged
 full Phone/Tablet capture controls pass four cases. The earlier mixed native sequence
@@ -605,3 +600,12 @@ Pen's menus but cannot obtain its window screenshot in this follow-up; the
 matched-reference criterion and Building card remain open. Original logs and
 identity/count manifests remain private under
 `local-evidence/native-browser-availability-2026-11-10/`.
+
+The [Note Fill follow-up](NOTE-FILL.md) adds measured fixed-parent/root fallback
+handling, preserves entered fallback values while Fill remains selected, and
+separates Core and Vue layout ownership. Its 24 browser cases and the rebuilt
+two-spec native Note pair pass. The full unit run records 10,102 passes, one
+Windows-only skip and the unchanged 12,792-channel Note raster failure. No
+threshold is waived. FMT-08-NOTE-FILL and MOD-14 are Verify; their complete
+reference, dependency and rendering criteria remain open. Final source
+publication and the clean combined gate are recorded with the implementation.

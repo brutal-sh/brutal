@@ -222,7 +222,6 @@ keeps intermittent menu-focus/window loss open. Full unit, strict Note raster,
 exact remaining visual states and full Pen parity are not accepted by these
 bounded controls. Current scheduling is in TASKS.md and the live board.
 
-
 The [native driver control](NATIVE-DRIVER-MULTIWEBVIEW.md) adds one narrow repair
 task after actual original-image discovery checks: a browser child makes the
 embedded driver omit the still-live editor. STAB-NATIVE-DRIVER-CHILD is Building;
@@ -230,18 +229,15 @@ the retained-session parent is Verify. This is not a product crash finding or
 acceptance of the separate intermittent menu-focus behavior. The complete task
 index now has 436 execution tasks, with all 435 others required by PARITY-ALL.
 
-
 The paired native-test driver/companion candidate builds and executes two durable
 macOS child/discovery/true-close controls. The broader retained run still fails
 seven of 14 specs (18 passing cases, nine failures), starting with editor readiness
 after reload. No NoWindow response appears. WebDriver Enter and trusted OS input
 remain separate open gates. See NATIVE-DRIVER-MULTIWEBVIEW.md for exact evidence.
 
-
 Earlier scheduling after source `954f68b8a` passes the complete clean check:
 driver repair Verify; broader native-sequence parent Building. The current
 reference remains actual Pen 1.2.22 with historical 1.2.21 evidence preserved.
-
 
 Current native qualification: runner source `a4f9462b4` isolates the driver port
 and blocks fixtures unless the process returns the exact run directory and MCP
@@ -258,7 +254,6 @@ for exact fractional fixed-device geometry. The complete index has 438 execution
 rows and 437 terminal dependencies. Strict Note raster, full native reliability,
 remaining platforms and design/functionality requirements stay open.
 
-
 Latest geometry qualification: `d5b8cc1b1` passes the complete clean quality gate,
 11 focused unit cases, paired native dimension regressions at Phone and Tablet,
 and four unchanged full capture controls. Its earlier mixed 16-spec run passes 12 specs
@@ -274,3 +269,10 @@ Subsequently, the unchanged canonical 16-spec sequence at `5ef81a295` passes all
 so STAB-NATIVE-SEQUENCE stays Verify. CUA cannot capture the actual Pen window
 in the follow-up; matched-reference visual acceptance remains open. These
 controls make no product or fixture repair and do not accept full native parity.
+
+The subsequent [Note Fill follow-up](NOTE-FILL.md) implements measured fixed-parent
+and root fallback behavior, retains authored size separately from intrinsic text height,
+and separates layout/control responsibilities. Its browser and native acceptance paths
+cover field editing, history, save/reopen and read-only refusal. The full Note feature
+remains open for exact reference pixels, Hug-parent qualification and unsupported linked
+replacement structures; these bounded paths do not change the terminal parity criterion.

@@ -4,6 +4,8 @@ Headless Vue 3 primitives and composables; the root app is one consumer. Primiti
 
 ## Property primitives
 
+- Layout controls share one preview in `src/controls/layout/actions/index.ts`; property, sizing, axis-size and alignment actions consume that context. Numeric size changes compose fixed-axis metadata before `withGeneratedFrameSize`, preserving authored Note size and history (`packages/vue/tests/controls/layout/note-sizing.test.ts`).
+
 - Fields compose variable/token binding through `BindingProvider` (`packages/vue/src/controls/binding-provider/`) and `BindableValue` (`packages/vue/src/primitives/BindableValue/`). Keep numeric interaction in `NumberField`; providers own binding lookup, mutation, and undo batching.
 - `PropertySection`, `SegmentedControl`, and `PropertyList` under `packages/vue/src/primitives/` are controlled and editor-agnostic. Connect PropertyList events to selection and undo through `useEditorPropertyList()` or an app adapter; never call `useEditor()` from a primitive.
 - Compose property rows from `PanelGrid`, `PanelFieldGroup`, `PanelItemRow`, and `PropertyItemRow`; use `BindableValue`, `FillRoot`, and `FillSwatch` rather than rebuilding binding or picker infrastructure.

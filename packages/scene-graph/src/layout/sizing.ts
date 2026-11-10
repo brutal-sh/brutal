@@ -151,18 +151,7 @@ export function layoutSizingUpdates(
   const deferred = readPluginData(node.pluginData, OPEN_PENCIL_PLUGIN_DATA.deferredFill)
   if (deferred?.[axis]) updates.pluginData = deferredFillData(node, axis, false)
   const parent = fillingParent(graphParent(graph, node), node)
-  if (parent && parent.layoutMode !== 'NONE') {
-    const fill = value === 'FILL'
-    if (axis === primaryAxis(parent.layoutMode)) {
-      if (fill !== node.layoutGrow > 0) updates.layoutGrow = fill ? 1 : 0
-    } else if (fill && node.layoutAlignSelf !== 'STRETCH') {
-      updates.layoutAlignSelf = 'STRETCH'
-    } else if (!fill && fills(parent, node, axis)) {
-      // A flex parent set to stretch its children stretches this one too unless it opts out.
-      const inheritsStretch = parent.layoutMode !== 'GRID' && parent.counterAxisAlign === 'STRETCH'
-      updates.layoutAlignSelf = inheritsStretch ? 'MIN' : 'AUTO'
-    }
-  }
+  if (parent) Object.assign(updates, parentFillSizingUpdates(parent, node, axis, value))
   const field = ownSizingField(node, axis)
   if (field) {
     const own = value === 'HUG' ? 'HUG' : 'FIXED'
@@ -170,6 +159,23 @@ export function layoutSizingUpdates(
   }
   if (node.type === 'TEXT') Object.assign(updates, textSizingUpdates(graph, node, axis, value))
   return updates
+}
+
+function parentFillSizingUpdates(
+  parent: SceneNode,
+  node: SceneNode,
+  axis: LayoutSizingAxis,
+  value: LayoutSizing
+): Partial<SceneNode> {
+  if (parent.layoutMode === 'NONE') return {}
+  const fill = value === 'FILL'
+  if (axis === primaryAxis(parent.layoutMode))
+    return fill !== node.layoutGrow > 0 ? { layoutGrow: fill ? 1 : 0 } : {}
+  if (fill) return node.layoutAlignSelf === 'STRETCH' ? {} : { layoutAlignSelf: 'STRETCH' }
+  if (!fills(parent, node, axis)) return {}
+  // A stretching flex parent requires an explicit opt-out when its child stops filling.
+  const inheritsStretch = parent.layoutMode !== 'GRID' && parent.counterAxisAlign === 'STRETCH'
+  return { layoutAlignSelf: inheritsStretch ? 'MIN' : 'AUTO' }
 }
 
 function deferredFillData(node: SceneNode, axis: LayoutSizingAxis, fill: boolean) {
@@ -201,20 +207,29 @@ export function authoredLayoutSizing(
   return layoutSizing(graph, node, axis)
 }
 
-export function authoredLayoutSizingUpdates(
+function usesDeferredHug(
+  parent: SceneNode | undefined,
+  node: SceneNode,
+  value: LayoutSizing
+): boolean {
+  return (
+    value === 'HUG' &&
+    node.layoutMode === 'NONE' &&
+    (node.type !== 'TEXT' || !parent || parent.layoutMode === 'NONE')
+  )
+}
+
+function baseAuthoredSizingUpdates(
   graph: SceneGraph,
   node: SceneNode,
   axis: LayoutSizingAxis,
   value: LayoutSizing
-): Partial<SceneNode> {
+): Partial<SceneNode> | null {
   const parent = graphParent(graph, node)
-  const deferredHug =
-    value === 'HUG' &&
-    node.layoutMode === 'NONE' &&
-    (node.type !== 'TEXT' || !parent || parent.layoutMode === 'NONE')
+  const deferredHug = usesDeferredHug(parent, node, value)
   let updates: Partial<SceneNode>
   if (!deferredHug && ((parent && parent.layoutMode !== 'NONE') || value === 'HUG')) {
-    if (layoutSizingError(graph, node, value)) return {}
+    if (layoutSizingError(graph, node, value)) return null
     updates = layoutSizingUpdates(graph, node, axis, value)
   } else {
     updates = {
@@ -223,6 +238,39 @@ export function authoredLayoutSizingUpdates(
     }
     if (deferredHug && node.type === 'TEXT') updates.textAutoResize = 'NONE'
   }
+  return updates
+}
+
+function noteFillSizingUpdates(
+  node: SceneNode,
+  axis: LayoutSizingAxis,
+  updates: Partial<SceneNode>
+): Partial<SceneNode> {
+  const note = readPluginData(node.pluginData, OPEN_PENCIL_PLUGIN_DATA.note)
+  if (!note) return updates
+  const dimension = axis === 'HORIZONTAL' ? 'width' : 'height'
+  const size = node[dimension]
+  // A Note instance claims this axis even when its current size equals its master's.
+  updates[dimension] = size
+  updates.pluginData = withPluginData(
+    updates.pluginData ?? node.pluginData,
+    OPEN_PENCIL_PLUGIN_DATA.note,
+    {
+      ...note,
+      [dimension]: `fill_container(${size})`
+    }
+  )
+  return updates
+}
+
+export function authoredLayoutSizingUpdates(
+  graph: SceneGraph,
+  node: SceneNode,
+  axis: LayoutSizingAxis,
+  value: LayoutSizing
+): Partial<SceneNode> {
+  const updates = baseAuthoredSizingUpdates(graph, node, axis, value)
+  if (!updates) return {}
   const fallback = { ...readPluginData(node.pluginData, OPEN_PENCIL_PLUGIN_DATA.hugFallback) }
   const size = axis === 'HORIZONTAL' ? node.width : node.height
   fallback[axis] = value === 'HUG' ? size : undefined
@@ -231,7 +279,7 @@ export function authoredLayoutSizingUpdates(
     OPEN_PENCIL_PLUGIN_DATA.hugFallback,
     fallback.HORIZONTAL !== undefined || fallback.VERTICAL !== undefined ? fallback : undefined
   )
-  return updates
+  return value === 'FILL' ? noteFillSizingUpdates(node, axis, updates) : updates
 }
 
 /** An empty Pen flex frame keeps its fallback; content, when present, determines the Hug size. */

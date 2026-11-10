@@ -83,6 +83,7 @@ function handleSelect(value: SizeSelectValue) {
       :model-value="ctx.node[axis]"
       :precision="2"
       :min="0"
+      :disabled="ctx.editor.state.readOnly"
       :node-id="ctx.node.id"
       :binding-path="axis"
       @update:model-value="ctx.updateAxisSize(axis, $event, compact)"
@@ -93,6 +94,7 @@ function handleSelect(value: SizeSelectValue) {
         <SelectRoot
           v-model:open="popupOpen"
           :model-value="sizing()"
+          :disabled="ctx.editor.state.readOnly"
           @update:model-value="handleSelect($event as SizeSelectValue)"
         >
           <SelectTrigger

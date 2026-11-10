@@ -11,6 +11,15 @@ This includes canvas, font and graph candidates whose native acceptance is pendi
 This is a size/ownership review, not proof that all architecture or behavior is accepted.
 The implementation uses OpenPencil's existing package boundaries; Open Pen-specific behavior is added to the owning domain.
 
+The subsequent [Note Fill ownership follow-up](NOTE-FILL.md) reduces the layout
+coordinator from 622 physical lines to 128 (102 code lines), with flex construction,
+child sizing, leaf measurement and geometry writes in their owning domains. Vue layout
+actions retain one preview owner across focused property, sizing and alignment modules.
+All 18 changed TypeScript source modules pass the strict 300-code-line, 50-function-line,
+complexity-10, four-parameter and depth-four checks. Comments and blank lines are excluded;
+this does not assert that all runtime owners meet those limits. MOD-14 remains unaccepted
+pending its complete behavior/rendering criterion and GPU dependency.
+
 Scope: authored `.ts`, `.vue`, `.rs` and `.css` under `src`, `packages/core/src`,
 `packages/vue/src`, `packages/scene-graph/src` and `desktop/src`. Counts are physical lines.
 `.d.ts` declarations, tests and `.stories.ts` examples are excluded; authored catalogs are included.

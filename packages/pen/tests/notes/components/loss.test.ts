@@ -7,7 +7,7 @@ for (const override of [
   { cornerRadius: 4 },
   { children: [] },
   { content: '$unqualified' },
-  { width: 'fill_container' },
+  { width: 'fit_content' },
   { color: 'unparseable-color' }
 ]) {
   test(`typed Note ref replacements refuse unqualified overrides: ${JSON.stringify(override)}`, () => {

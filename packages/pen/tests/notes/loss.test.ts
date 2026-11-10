@@ -34,11 +34,11 @@ test('custom Note body paints are refused before returning lossy output', () => 
   expect(body.fills[0].color.r).toBe(1)
 })
 
-test('unqualified string dimensions and width bindings are explicit export errors', () => {
+test('unqualified Hug dimensions and width bindings are explicit export errors', () => {
   const { graph, note } = fixture()
   graph.updateNode(note.id, {
     pluginData: withPluginData(note.pluginData, OPEN_PENCIL_PLUGIN_DATA.note, {
-      width: 'fill_container'
+      width: 'fit_content'
     })
   })
   expect(() => writePenDocument(graph)).toThrow(/Note dimensions/)
@@ -53,12 +53,19 @@ test('unqualified string dimensions and width bindings are explicit export error
   expect(() => writePenDocument(graph)).toThrow(/Note dimensions/)
 })
 
-test.each([{ layoutGrow: 1 }, { layoutAlignSelf: 'STRETCH' as const }])(
-  'non-fixed Note sizing does not silently become fixed on save: %j',
-  (changes) => {
+test.each([
+  { changes: { layoutGrow: 1 }, dimension: 'width' as const, expected: 'fill_container(250)' },
+  {
+    changes: { layoutAlignSelf: 'STRETCH' as const },
+    dimension: 'height' as const,
+    expected: 'fill_container(219)'
+  }
+])(
+  'Fill Note sizing does not silently become fixed on save: %j',
+  ({ changes, dimension, expected }) => {
     const { graph, note } = fixture()
     graph.updateNode(note.id, changes)
-    expect(() => writePenDocument(graph)).toThrow(/Non-fixed Note sizing/)
+    expect(writePenDocument(graph).children[0].children?.[0][dimension]).toBe(expected)
   }
 )
 

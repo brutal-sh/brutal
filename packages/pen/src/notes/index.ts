@@ -5,6 +5,7 @@ import { recordInstanceOverride } from '@open-pencil/scene-graph/instances'
 import type { Color } from '@open-pencil/scene-graph/primitives'
 
 import type { PenImportDiagnostic } from '../compatibility'
+import { parseSize } from '../layout'
 import type { Build } from '../nodes'
 import type { PenOverride, PenNode, PenDocument } from '../schema'
 import { bindIfVar, isVarRef } from '../variables'
@@ -44,12 +45,9 @@ export function inspectNote(
   const unsupported = Object.keys(node).filter((key) => !NOTE_FIELDS.has(key))
   if (unsupported.length) problems.push(`Unqualified Note fields: ${unsupported.join(', ')}.`)
   if (isVarRef(node.content)) problems.push('Variable Note content is not yet supported.')
-  if (node.color !== undefined && !isVarRef(node.color) && !tryParseColor(node.color))
-    problems.push('The Note color cannot be parsed.')
-  if (isVarRef(node.color) && !validColorReference(node.color, document))
-    problems.push('The Note color requires valid color variables and aliases.')
+  problems.push(...noteColorProblems(node, document))
   for (const axis of ['width', 'height'] as const) {
-    if (typeof node[axis] === 'string')
+    if (typeof node[axis] === 'string' && parseSize(node[axis], 0).sizing !== 'FILL')
       problems.push(`Variable or keyword Note ${axis} is not yet supported.`)
     if (typeof node[axis] === 'number' && !Number.isFinite(node[axis]))
       problems.push(`Note ${axis} must be finite.`)
@@ -60,6 +58,15 @@ export function inspectNote(
     nodeId: node.id,
     message
   }))
+}
+
+function noteColorProblems(node: PenOverride, document: PenDocument): string[] {
+  const problems: string[] = []
+  if (node.color !== undefined && !isVarRef(node.color) && !tryParseColor(node.color))
+    problems.push('The Note color cannot be parsed.')
+  if (isVarRef(node.color) && !validColorReference(node.color, document))
+    problems.push('The Note color requires valid color variables and aliases.')
+  return problems
 }
 
 function validColorReference(reference: string, document: PenDocument): boolean {

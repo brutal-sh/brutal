@@ -14,6 +14,7 @@ import { authoredLayoutSizing } from '@open-pencil/scene-graph/layout'
 import { createDefaultNode } from '@open-pencil/scene-graph/node-defaults'
 import { resolvedPaintBindings } from '@open-pencil/scene-graph/variables'
 
+import { parseSize } from '../layout'
 import type { PenNode } from '../schema'
 import { isVarRef } from '../variables'
 import { nodeDiagnostics, type PenExportDiagnostic } from './diagnostics'
@@ -75,6 +76,31 @@ export function finishNote(
   const path = `/nodes/${node.id}`
   const problem = (message: string) => diagnostics.push({ nodeId: node.id, path, message })
   inspectFrame(graph, node, definition, problem)
+  finishNoteBody(graph, node, result, diagnostics)
+  finishNoteColor(result, problem)
+  for (const [dimension, axis] of [
+    ['width', 'HORIZONTAL'],
+    ['height', 'VERTICAL']
+  ] as const) {
+    const authored = definition[dimension]
+    if (authoredLayoutSizing(graph, node, axis) === 'FILL') {
+      result[dimension] =
+        typeof authored === 'number'
+          ? `fill_container(${authored})`
+          : (authored ?? result[dimension])
+    } else result[dimension] = typeof authored === 'string' ? node[dimension] : authored
+  }
+  return { ...omit(result, DERIVED_FIELDS), id: result.id, type: result.type }
+}
+
+function finishNoteBody(
+  graph: SceneGraph,
+  node: SceneNode,
+  result: PenNode,
+  diagnostics: PenExportDiagnostic[]
+): void {
+  const path = `/nodes/${node.id}`
+  const problem = (message: string) => diagnostics.push({ nodeId: node.id, path, message })
   const body = noteBody(graph, node)
   const background = (resolvedPaintBindings(graph, node).fills ?? node.fills).at(0)
   if (!body) problem('The Note must have exactly one generated text body.')
@@ -88,13 +114,13 @@ export function finishNote(
       problem('Custom Note body paints cannot be preserved.')
     if (isVarRef(body.text)) problem('Variable-looking Note content is not yet supported.')
   }
+}
+
+function finishNoteColor(result: PenNode, problem: (message: string) => unknown): void {
   const paint = Array.isArray(result.fill) ? result.fill[0] : result.fill
   if (typeof paint === 'string') result.color = paint
   else if (paint?.type === 'color' && typeof paint.color === 'string') result.color = paint.color
   else problem('The Note background color cannot be written.')
-  result.width = definition.width
-  result.height = definition.height
-  return { ...omit(result, DERIVED_FIELDS), id: result.id, type: result.type }
 }
 
 function inspectFrame(
@@ -103,24 +129,42 @@ function inspectFrame(
   definition: NoteDefinition,
   problem: (message: string) => unknown
 ): void {
-  if (node.fills.length !== 1 || node.fills[0]?.type !== 'SOLID' || !node.fills[0]?.visible)
-    problem('A Note requires one visible solid background color.')
+  inspectNoteBackground(node, problem)
   for (const field of Object.keys(NOTE_FRAME_STYLE) as (keyof typeof NOTE_FRAME_STYLE)[]) {
     if (!isEqual(node[field], NOTE_FRAME_STYLE[field]))
       problem(`Custom Note ${field} cannot be preserved.`)
   }
+  inspectNoteDimensions(graph, node, definition, problem)
+  if (node.fills[0]?.blendMode && !['NORMAL', 'PASS_THROUGH'].includes(node.fills[0].blendMode))
+    problem('Custom Note background blending cannot be preserved.')
+}
+
+function inspectNoteBackground(node: SceneNode, problem: (message: string) => unknown): void {
+  const fill = node.fills.at(0)
+  if (node.fills.length !== 1 || fill?.type !== 'SOLID' || !fill.visible)
+    problem('A Note requires one visible solid background color.')
+}
+
+function unsupportedNoteDimension(value: NoteDefinition['width']): boolean {
+  return typeof value === 'string' && parseSize(value, 0).sizing !== 'FILL'
+}
+
+function inspectNoteDimensions(
+  graph: SceneGraph,
+  node: SceneNode,
+  definition: NoteDefinition,
+  problem: (message: string) => unknown
+): void {
   if (
-    typeof definition.width === 'string' ||
-    typeof definition.height === 'string' ||
+    unsupportedNoteDimension(definition.width) ||
+    unsupportedNoteDimension(definition.height) ||
     node.boundVariables.width ||
     node.boundVariables.height
   )
-    problem('Variable or keyword Note dimensions are not yet supported.')
+    problem('Variable or Hug Note dimensions are not yet supported.')
   if (
-    authoredLayoutSizing(graph, node, 'HORIZONTAL') !== 'FIXED' ||
-    authoredLayoutSizing(graph, node, 'VERTICAL') !== 'FIXED'
+    authoredLayoutSizing(graph, node, 'HORIZONTAL') === 'HUG' ||
+    authoredLayoutSizing(graph, node, 'VERTICAL') === 'HUG'
   )
-    problem('Non-fixed Note sizing cannot yet be preserved.')
-  if (node.fills[0]?.blendMode && !['NORMAL', 'PASS_THROUGH'].includes(node.fills[0].blendMode))
-    problem('Custom Note background blending cannot be preserved.')
+    problem('Hug Note sizing cannot yet be preserved.')
 }
