@@ -452,3 +452,23 @@ failure: strict Note reference raster (expected zero, observed 12,792 changed
 channels). Shader/toast/library failures are absent from the complete rerun.
 This is current failed whole-unit evidence, replacing no historical failures
 and accepting neither exact Note pixels nor native/full Pen parity.
+
+
+Native re-entry retains passing canonical and observer nine-case prefixes but
+reproduces a direct-input NoWindow before address input. The native-command
+control demonstrates handles main → empty → main around a loaded child while
+the same editor realm/store/canvas stays alive. Frozen 3f76 and current original
+9d10742a images both execute that control. NATIVE-DRIVER-MULTIWEBVIEW.md records
+the confirmed driver classification and excludes broader crash/focus claims.
+The original and paired test-only builds pass. The local driver and companion
+repair retains main handles during a loaded child and refuses a truly destroyed
+context; two durable native cases pass after cleanup corrections and independent
+review. The broader 14-spec retained run still has seven failed specs (18 passing
+cases, nine failures), beginning with reload readiness, and no NoWindow response.
+Original compiler/control failures remain retained; global dependencies and
+production applications/profiles are unchanged. See the driver record for limits.
+
+The fresh complete board has 453 open cards: 436 execution tasks and 17
+milestones; 370 Backlog, one Building, 13 Verify and 52 Executed. The new driver
+card is the sole Building task; its native parent is Verify and depends on it.
+All 435 other execution IDs remain terminal dependencies.

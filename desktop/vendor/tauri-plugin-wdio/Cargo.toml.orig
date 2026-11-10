@@ -1,0 +1,50 @@
+[package]
+name = "tauri-plugin-wdio"
+version = "1.3.0"
+description = "A Tauri plugin for WebDriverIO testing with execute and mocking capabilities"
+authors = [ "WebDriverIO Community" ]
+license = "MIT OR Apache-2.0"
+edition = "2021"
+rust-version = "1.70"
+include = [ "/Cargo.toml", "/src/**/*", "/build.rs", "/README.md", "/permissions/**/*" ]
+links = "tauri-plugin-wdio"
+repository = "https://github.com/webdriverio/desktop-mobile"
+homepage = "https://github.com/webdriverio/desktop-mobile/tree/main/packages/tauri-plugin"
+documentation = "https://github.com/webdriverio/desktop-mobile/tree/main/packages/tauri-plugin"
+readme = "README.md"
+keywords = [ "tauri", "webdriverio", "testing", "automation" ]
+categories = [ "gui", "development-tools::testing" ]
+
+[dependencies]
+serde_json = "1.0"
+thiserror = "1.0"
+tauri-plugin = "2.0"
+
+[dependencies.log]
+version = "0.4"
+features = [ "std" ]
+
+[dependencies.uuid]
+version = "1"
+features = [ "v4" ]
+
+[dependencies.tokio]
+version = "1"
+features = [ "sync", "time" ]
+
+[dependencies.tauri]
+version = "2.0.0"
+
+[dependencies.serde]
+version = "1.0"
+features = [ "derive" ]
+
+[build-dependencies.tauri-build]
+version = "2.0.0"
+
+[build-dependencies.tauri-plugin]
+version = "2.0.0"
+features = [ "build" ]
+
+[features]
+custom-protocol = [ "tauri/custom-protocol" ]

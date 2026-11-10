@@ -1,0 +1,58 @@
+# WebDriverIO Tauri Plugin Permissions
+#
+# This file defines the ACL (Access Control List) permissions for the wdio plugin.
+# These permissions control which commands apps can invoke from the frontend.
+#
+# Permission Structure:
+# - [default]: The default permission set that includes all plugin commands
+# - [allow-*]: Individual permissions for each command
+#
+# Usage in Apps:
+# Add `"wdio:default"` to your app's capabilities file (e.g.,
+# capabilities/default.json) to grant access to all plugin commands. Individual
+# `wdio:allow-*` permissions are also exposed if you need finer-grained control.
+#
+# For more on Tauri v2 permissions: https://v2.tauri.app/security/capabilities/
+
+"$schema" = "https://schema.tauri.app/permissions/2"
+
+[default]
+description = "Allows all WebDriverIO plugin commands for testing"
+permissions = [
+  "wdio:allow-execute",
+  "wdio:allow-log-frontend",
+  "wdio:allow-debug-plugin",
+  "wdio:allow-get-active-window-label",
+  "wdio:allow-get-window-states",
+  "wdio:allow-list-windows"
+]
+
+[wdio_allow_execute]
+identifier = "wdio:allow-execute"
+description = "Allow executing scripts via the wdio plugin"
+commands = { allow = ["execute"], deny = [] }
+
+[wdio_allow_log_frontend]
+identifier = "wdio:allow-log-frontend"
+description = "Allow logging frontend messages to stderr"
+commands = { allow = ["log_frontend"], deny = [] }
+
+[wdio_allow_debug_plugin]
+identifier = "wdio:allow-debug-plugin"
+description = "Allow debug plugin command"
+commands = { allow = ["debug_plugin"], deny = [] }
+
+[wdio_allow_get_active_window_label]
+identifier = "wdio:allow-get-active-window-label"
+description = "Allow get_active_window_label command"
+commands = { allow = ["get_active_window_label"], deny = [] }
+
+[wdio_allow_get_window_states]
+identifier = "wdio:allow-get-window-states"
+description = "Allow get_window_states command"
+commands = { allow = ["get_window_states"], deny = [] }
+
+[wdio_allow_list_windows]
+identifier = "wdio:allow-list-windows"
+description = "Allow list_windows command"
+commands = { allow = ["list_windows"], deny = [] }

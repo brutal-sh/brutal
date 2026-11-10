@@ -203,7 +203,7 @@ for first-import metrics and weight serialization. Their own-field and actual-na
 controls do not accept full typography, SVG or schema migration; FMT-09-DRIFT remains the
 active broader qualification task.
 
-The [native type control](NATIVE-TEST-TYPE-CONTROL.md) subsequently clears the full native compilation boundary and executes 22 fresh-process native cases. The failed retained-app sequence is separate from this bounded typing repair. MOD-RECT subsequently executes its bounded canonical-type criterion. The complete clean check reaches five duplication groups at its final gate; MOD-DUPES-AUTH subsequently executes its bounded shared-validator criterion; MOD-DUPES-STORIES and the independently discovered A11Y-SIGNIN-CONTRAST subsequently execute their bounded fixture/readability criteria; MOD-DUPES-SCRIPT subsequently executes its bounded rendering-ownership criterion, including one fresh native save/reopen/source-watch case; MOD-DUPES-PAINT subsequently executes its bounded format-ownership criterion; MOD-DUPES-GENERATED subsequently executes its bounded traversal criterion; VERIFY-DUPES-ZERO subsequently executes its strict exit-policy criterion with an entire clean combined check. STAB-NATIVE-SEQUENCE is the current Building task; full native retained-session behavior remains unaccepted. The five Note qualification cards and full design/functionality parity remain open; current scheduling is in TASKS.md and the live board.
+The [native type control](NATIVE-TEST-TYPE-CONTROL.md) subsequently clears the full native compilation boundary and executes 22 fresh-process native cases. The failed retained-app sequence is separate from this bounded typing repair. MOD-RECT subsequently executes its bounded canonical-type criterion. The complete clean check reaches five duplication groups at its final gate; MOD-DUPES-AUTH subsequently executes its bounded shared-validator criterion; MOD-DUPES-STORIES and the independently discovered A11Y-SIGNIN-CONTRAST subsequently execute their bounded fixture/readability criteria; MOD-DUPES-SCRIPT subsequently executes its bounded rendering-ownership criterion, including one fresh native save/reopen/source-watch case; MOD-DUPES-PAINT subsequently executes its bounded format-ownership criterion; MOD-DUPES-GENERATED subsequently executes its bounded traversal criterion; VERIFY-DUPES-ZERO subsequently executes its strict exit-policy criterion with an entire clean combined check. STAB-NATIVE-SEQUENCE remains unaccepted; full native retained-session behavior remains unaccepted. The five Note qualification cards and full design/functionality parity remain open; current scheduling is in TASKS.md and the live board.
 
 The subsequent [engine contract controls](ENGINE-TEST-CONTROLS.md) execute CLI
 manifest refusal without prose coupling, exact unit-file selection and renderer
@@ -221,3 +221,18 @@ instance workflows pass in Chromium and WebKit. The complete app shard passes
 keeps intermittent menu-focus/window loss open. Full unit, strict Note raster,
 exact remaining visual states and full Pen parity are not accepted by these
 bounded controls. Current scheduling is in TASKS.md and the live board.
+
+
+The [native driver control](NATIVE-DRIVER-MULTIWEBVIEW.md) adds one narrow repair
+task after actual original-image discovery checks: a browser child makes the
+embedded driver omit the still-live editor. STAB-NATIVE-DRIVER-CHILD is Building;
+the retained-session parent is Verify. This is not a product crash finding or
+acceptance of the separate intermittent menu-focus behavior. The complete task
+index now has 436 execution tasks, with all 435 others required by PARITY-ALL.
+
+
+The paired native-test driver/companion candidate builds and executes two durable
+macOS child/discovery/true-close controls. The broader retained run still fails
+seven of 14 specs (18 passing cases, nine failures), starting with editor readiness
+after reload. No NoWindow response appears. WebDriver Enter and trusted OS input
+remain separate open gates. See NATIVE-DRIVER-MULTIWEBVIEW.md for exact evidence.

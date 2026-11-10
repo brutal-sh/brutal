@@ -103,3 +103,19 @@ change the native runtime criterion or classify the first window-loss cause.
 The full unit rerun at `18a464656` finishes with exit one and the sole distinct
 strict Note raster failure (12,792 changed channels); the three app failures
 are absent. Retained native focus/window-loss remains a separate runtime gap.
+
+
+The subsequent [multiwebview driver control](NATIVE-DRIVER-MULTIWEBVIEW.md)
+confirms a distinct cause of the reproduced WebDriver NoWindow response: Tauri's
+single-webview window list excludes the still-alive editor while its browser
+child exists. Frozen and current original-image controls both observe that
+classification. This does not classify every historical failure or the separate
+intermittent DOM menu-focus criterion. STAB-NATIVE-DRIVER-CHILD is the narrow
+Building repair; this parent remains Verify pending its own runtime criterion.
+
+
+The paired native-test driver/companion candidate builds and executes two durable
+macOS child/discovery/true-close controls. The broader retained run still fails
+seven of 14 specs (18 passing cases, nine failures), starting with editor readiness
+after reload. No NoWindow response appears. WebDriver Enter and trusted OS input
+remain separate open gates. See NATIVE-DRIVER-MULTIWEBVIEW.md for exact evidence.
