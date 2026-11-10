@@ -1,3 +1,4 @@
+import { visibleSubtree } from '#scene-graph/graph/visible-subtree'
 import { sha1 } from '@noble/hashes/legacy.js'
 import { bytesToHex, utf8ToBytes } from '@noble/hashes/utils.js'
 
@@ -137,15 +138,8 @@ export function assertFragmentPaintFrame(
 }
 
 export function assertFragmentFrames(graph: SceneGraph, nodeIds: readonly string[]) {
-  const pending = [...nodeIds]
-  const seen = new Set<string>()
-  for (const id of pending) {
-    if (seen.has(id)) continue
-    seen.add(id)
-    const node = graph.getNode(id)
-    if (!node?.visible || node.opacity <= 0) continue
+  for (const node of visibleSubtree(graph, nodeIds)) {
     for (const paint of [...node.fills, ...node.strokes])
       assertFragmentPaintFrame(graph, node, paint)
-    pending.push(...node.childIds)
   }
 }

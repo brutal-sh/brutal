@@ -1,3 +1,4 @@
+import { visibleSubtree } from '#scene-graph/graph/visible-subtree'
 import { isEqual } from 'es-toolkit/predicate'
 
 import type { SceneGraph } from '../graph'
@@ -79,18 +80,11 @@ export function copyScriptOutputState(
 
 /** Refuse snapshots of missing/stale Script output rather than silently exporting blank or old layers. */
 export function assertScriptOutputs(graph: SceneGraph, nodeIds: readonly string[]) {
-  const pending = [...nodeIds]
-  const seen = new Set<string>()
-  for (const id of pending) {
-    if (seen.has(id)) continue
-    seen.add(id)
-    const node = graph.getNode(id)
-    if (!node?.visible || node.opacity <= 0) continue
+  for (const node of visibleSubtree(graph, nodeIds)) {
     const script = graph.closest(node.id, (ancestor) => !!scriptOfNode(ancestor))
     if (script && !isCurrentPresentation(outputs.get(graph)?.get(script.id), script))
       throw new Error(
         `Script “${script.name}” has no current generated output. Regenerate it in the editor before exporting.`
       )
-    pending.push(...node.childIds)
   }
 }
