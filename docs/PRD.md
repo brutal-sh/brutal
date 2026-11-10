@@ -204,3 +204,10 @@ controls do not accept full typography, SVG or schema migration; FMT-09-DRIFT re
 active broader qualification task.
 
 The [native type control](NATIVE-TEST-TYPE-CONTROL.md) subsequently clears the full native compilation boundary and executes 22 fresh-process native cases. The failed retained-app sequence is separate from this bounded typing repair. MOD-RECT subsequently executes its bounded canonical-type criterion. The complete clean check reaches five duplication groups at its final gate; MOD-DUPES-AUTH subsequently executes its bounded shared-validator criterion; MOD-DUPES-STORIES and the independently discovered A11Y-SIGNIN-CONTRAST subsequently execute their bounded fixture/readability criteria; MOD-DUPES-SCRIPT subsequently executes its bounded rendering-ownership criterion, including one fresh native save/reopen/source-watch case; MOD-DUPES-PAINT subsequently executes its bounded format-ownership criterion; MOD-DUPES-GENERATED subsequently executes its bounded traversal criterion; VERIFY-DUPES-ZERO subsequently executes its strict exit-policy criterion with an entire clean combined check. STAB-NATIVE-SEQUENCE is the current Building task; full native retained-session behavior remains unaccepted. The five Note qualification cards and full design/functionality parity remain open; current scheduling is in TASKS.md and the live board.
+
+The subsequent [engine contract controls](ENGINE-TEST-CONTROLS.md) execute CLI
+manifest refusal without prose coupling, exact unit-file selection and renderer
+Surface disposal assertions. Complete CLI and render shards pass their bounded
+criteria; the historical full-unit failure remains retained. Native retained
+behavior and strict Note pixels still require acceptance. TASKS.md and the live
+board retain the full terminal dependency set.

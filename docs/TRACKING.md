@@ -362,3 +362,22 @@ After those two residual allocations, the final complete readback is 448 open ca
 431 unique execution tasks plus 17 milestones; 372 Backlog, 0 Ready, 1 Building,
 12 Verify and 46 Executed. All IDs, states, links and 430 terminal dependencies
 reconcile exactly; the native-session card remains sole Building.
+
+## Exact unit selection and contract controls — 2026-11-10
+
+[Engine test controls](ENGINE-TEST-CONTROLS.md) execute the bounded CLI refusal,
+unit runner selection and renderer Surface-double criteria. The complete exact
+CLI shard passes122cases/25files and complete render shard passes391cases/66files,
+including heavy cache. A nested-copy control proves the runner excludes ignored
+historical copies and still propagates a selected failure. Original failures,
+initial formatting rejection and independent reviews remain retained. No
+production renderer, parser, output format or baseline is changed. The last full
+unit receipt remains failed; these scoped follow-ups do not replace that result.
+
+A complete449-card readback reconciles432executiontasks and17milestones:370Backlog,
+0Ready,1Building,12Verify and49Executed. All431otherexecutiontasks are terminal
+dependencies; the new exact-path runner card is included. STAB-NATIVE-SEQUENCE
+resumes soleBuilding after explicit shared-desktop release, with system mute
+preserved. Its recovery/reload candidate remains uncommitted and full retained
+native acceptance remains open. Current Pen1.2.22 archive/native extraction is
+reverified locally; full design/functionality parity stays open.
