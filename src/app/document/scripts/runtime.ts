@@ -3,54 +3,28 @@ import { shallowReactive, watch } from 'vue'
 
 import type { Editor } from '@open-pencil/core'
 import type { IORegistry } from '@open-pencil/core/io'
-import { parseScriptHeader, type ScriptInput } from '@open-pencil/core/scripts/header'
-import { scriptReferenceDocument } from '@open-pencil/core/scripts/references'
 import {
   markScriptOutputCurrent,
   scriptOfNode,
-  resolveScriptInputVariables,
   type ScriptDefinition
 } from '@open-pencil/scene-graph/scripts'
 
 import { watchTauriFile } from '@/app/document/io/watch/targets'
-import { scriptExcerpt } from '@/app/document/scripts/diagnostics'
-import type { evaluateCanvasScript } from '@/app/document/scripts/evaluate'
 import { loadCanvasScriptSource } from '@/app/document/scripts/source'
-import { scriptErrorGraph } from '@/app/document/scripts/status'
 
-interface ScriptRuntimeState {
-  loading: boolean
-  definitions: ScriptInput[]
-  error?: string
-}
-interface ScriptRun {
-  controller: AbortController
-  timer?: ReturnType<typeof setTimeout>
-  key: string
-}
-interface ScriptSource {
-  source?: string
-  promise?: Promise<string>
-  stop?: () => void
-  version: number
-}
-interface ScriptRuntimeOptions {
-  getDocumentPath: () => string | null
-  adoptChanges<T>(apply: () => T): T
-  loadSource?: typeof loadCanvasScriptSource
-  evaluate?: typeof evaluateCanvasScript
-  watchSource?: (path: string, changed: () => void) => Promise<() => void>
-}
+import { scriptInputKey } from './runtime/inputs'
+import { createScriptRenderer } from './runtime/render'
+import type {
+  ScriptRun,
+  ScriptRuntimeState,
+  ScriptRuntimeOptions,
+  ScriptSource
+} from './runtime/state'
+import { sharedScriptUpload } from './runtime/uploads'
 
 /** One runtime per document; stale executions never reach a replacement graph or edited Script. */
 export function createScriptRuntime(editor: Editor, io: IORegistry, options: ScriptRuntimeOptions) {
   const load = options.loadSource ?? loadCanvasScriptSource
-  const evaluate =
-    options.evaluate ??
-    (async (...args: Parameters<typeof evaluateCanvasScript>) => {
-      const { evaluateCanvasScript } = await import('@/app/document/scripts/evaluate')
-      return evaluateCanvasScript(...args)
-    })
   const watchSource =
     options.watchSource ?? ((path, changed) => watchTauriFile(path, () => 0, changed))
   const states = shallowReactive(new Map<string, ScriptRuntimeState>())
@@ -77,18 +51,8 @@ export function createScriptRuntime(editor: Editor, io: IORegistry, options: Scr
     if (own !== undefined) return own
     const inherited = inheritedUploads.get(id)?.get(uri)
     if (inherited !== undefined) return inherited
-    const candidates = new Set(
-      [...uploads.entries()].flatMap(([owner, files]) => {
-        const source = files.get(uri)
-        const node = editor.graph.getNode(owner)
-        return source !== undefined && node && scriptOfNode(node)?.uri === uri ? [source] : []
-      })
-    )
-    if (candidates.size === 1) return [...candidates][0]
-    if (candidates.size > 1)
-      throw new Error(
-        'Choose the source for this Script; its filename matches different uploaded files.'
-      )
+    const shared = sharedScriptUpload(editor, uploads, uri)
+    if (shared !== undefined) return shared
     const key = keyFor(uri)
     let entry = sources.get(key)
     if (!entry) {
@@ -126,182 +90,18 @@ export function createScriptRuntime(editor: Editor, io: IORegistry, options: Scr
     return active.promise
   }
 
-  function inputKey(id: string, definition: ScriptDefinition) {
-    const node = editor.graph.getNode(id)
-    if (!node) return ''
-    return JSON.stringify(
-      Object.entries(definition.inputs).map(([name, value]) => {
-        try {
-          return [name, resolveScriptInputVariables(editor.graph, node, { [name]: value })[name]]
-        } catch (error) {
-          return [name, String(error)]
-        }
-      })
-    )
-  }
+  const inputKey = (id: string, definition: ScriptDefinition) =>
+    scriptInputKey(editor, id, definition)
 
-  async function render(id: string, definition: ScriptDefinition, run: ScriptRun) {
-    const graph = editor.graph
-    const node = graph.getNode(id)
-    if (!node) return
-    const size = { width: node.width, height: node.height }
-    const componentId = node.componentId
-    const variables = inputKey(id, definition)
-    const current = () =>
-      !disposed &&
-      !run.controller.signal.aborted &&
-      runs.get(id) === run &&
-      editor.graph === graph &&
-      isEqual(scriptOfNode(graph.getNode(id) ?? node), definition) &&
-      graph.getNode(id)?.width === size.width &&
-      graph.getNode(id)?.height === size.height &&
-      graph.getNode(id)?.componentId === componentId &&
-      inputKey(id, definition) === variables
-    let definitions: ScriptInput[] = []
-    let source: string | undefined
-    let errorLine: number | undefined
-    let errorStack: string | undefined
-    let errorName = 'Error'
-    try {
-      source = await sourceFor(definition.uri, id)
-      if (!current()) return
-      definitions = parseScriptHeader(source)
-      states.set(id, { loading: true, definitions })
-      const result = await evaluate(
-        source,
-        size.width,
-        size.height,
-        resolveScriptInputVariables(
-          graph,
-          node,
-          Object.fromEntries(
-            Object.entries(definition.inputs).filter(([name]) =>
-              definitions.some((input) => input.name === name)
-            )
-          )
-        ),
-        run.controller.signal,
-        true,
-        definition.uri
-      )
-      if (!current()) return
-      if (!result.ok) {
-        errorLine = result.line
-        errorStack = result.stack
-        errorName = result.errorName ?? 'Error'
-        throw new Error(result.error)
-      }
-      const dependencies = new Set<string>()
-      references.set(id, dependencies)
-      const context = scriptReferenceDocument(graph, id, result.nodes, dependencies)
-      const document = await io.readDocument({
-        name: 'script-output.pen',
-        data: new TextEncoder().encode(JSON.stringify(context.penDocument))
-      })
-      if (!current()) return
-      if (context.dependencyId) document.graph.deleteNode(context.dependencyId)
-      options.adoptChanges(() => editor.replaceScriptOutput(id, definition, size, document.graph))
-      states.set(id, { loading: false, definitions: result.definitions })
-    } catch (error) {
-      if (!current()) return
-      const message = (error instanceof Error ? error.message : String(error)).slice(0, 2_000)
-      try {
-        const status = await scriptErrorGraph(
-          io,
-          size,
-          {
-            title: source === undefined ? 'Script not found' : 'Script runtime error',
-            description:
-              source === undefined
-                ? `We could not find “${definition.uri}” at this path. Check for typos or missing folders.`
-                : `${errorName}: ${message}${errorStack ? `\n${errorStack}` : ''}`,
-            code: source !== undefined && errorLine ? scriptExcerpt(source, errorLine) : undefined
-          },
-          () => (current() ? editor.renderer : null)
-        )
-        if (!current()) return
-        options.adoptChanges(() => {
-          editor.replaceScriptOutput(id, definition, size, status)
-          markScriptOutputCurrent(graph, id, 'diagnostic')
-        })
-      } catch (statusError) {
-        console.warn('Script diagnostic could not be rendered.', statusError)
-      }
-      if (current())
-        states.set(id, {
-          loading: false,
-          definitions,
-          error: message
-        })
-    }
-  }
-
-  async function renderEmpty(id: string, definition: ScriptDefinition, run: ScriptRun) {
-    const graph = editor.graph
-    const node = graph.getNode(id)
-    if (!node) return
-    const size = { width: node.width, height: node.height }
-    const scale = Math.min(
-      1,
-      Math.max(0, size.width - 16) / 200,
-      Math.max(0, size.height - 16) / 38
-    )
-    const top = (size.height - 38 * scale) / 2
-    const document = await io.readDocument({
-      name: 'script-placeholder.pen',
-      data: new TextEncoder().encode(
-        JSON.stringify({
-          version: '2.21',
-          children: [
-            {
-              type: 'rectangle',
-              id: 'background',
-              width: size.width,
-              height: size.height,
-              fill: '#36B25F1A',
-              stroke: '#36B25F',
-              strokeWidth: 1,
-              strokeAlignment: 'inner'
-            },
-            {
-              type: 'path',
-              id: 'code',
-              width: 16 * scale,
-              height: 16 * scale,
-              x: (size.width - 16 * scale) / 2,
-              y: top + 4 * scale,
-              viewBox: [0, 0, 24, 24],
-              geometry: 'M 16 6 L 22 12 L 16 18 M 8 6 L 2 12 L 8 18',
-              stroke: { thickness: scale, fill: '#1F9947', cap: 'round', join: 'round' }
-            },
-            {
-              type: 'text',
-              id: 'message',
-              content: 'No script file selected',
-              textGrowth: 'fixed-width-height',
-              fontFamily: 'Inter',
-              fontSize: 10 * scale,
-              fontWeight: 500,
-              lineHeight: 1,
-              x: 0,
-              y: top + 24 * scale,
-              width: size.width,
-              height: 10 * scale,
-              textAlign: 'center',
-              fill: '#1F9947'
-            }
-          ]
-        })
-      )
-    })
-    if (
-      !disposed &&
-      !run.controller.signal.aborted &&
-      editor.graph === graph &&
-      runs.get(id) === run
-    )
-      options.adoptChanges(() => editor.replaceScriptOutput(id, definition, size, document.graph))
-  }
+  const { render, renderEmpty } = createScriptRenderer(editor, io, {
+    states,
+    references,
+    sourceFor,
+    inputKey,
+    evaluate: options.evaluate,
+    currentRun: (id, run) => !disposed && !run.controller.signal.aborted && runs.get(id) === run,
+    adoptChanges: (apply) => options.adoptChanges(apply)
+  })
 
   function schedule(id: string, force = false) {
     if (disposed) return

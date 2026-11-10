@@ -8,6 +8,7 @@ Root Tauri/Vite app. Services and state live under `src/app/**`, views under `sr
 - Use editor actions (`clearSelection()`, `select()`, `setTool()`), never direct state assignments (`packages/core/AGENTS.md`, Editor).
 - File System Access APIs are browser APIs, not Tauri-only. Keep the Safari download fallback and defer `revokeObjectURL`.
 - Vectorize provider clients, preferences, and lazy credential resolution live under `src/app/editor/vectorize/`; conversion itself is in Core.
+- Keep Script scheduling and source-watch orchestration in `src/app/document/scripts/runtime.ts`, with rendering/materialization, input/upload resolution, authored placeholder content and shared contracts in its `runtime/` domain (`tests/app/document/scripts/runtime/render.test.ts`).
 
 ## Settings, credentials, storage
 
