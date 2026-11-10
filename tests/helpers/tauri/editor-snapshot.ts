@@ -11,6 +11,7 @@ export type NativeLayerFixture = {
 export async function ensureNativeEditorReady(): Promise<void> {
   // Keep the chosen editor handle instead of recovering focus by its changing title.
   await browser.switchToWindow(await browser.getWindowHandle())
+  if (process.platform === 'darwin') await invokeNative('plugin:app|app_show')
   await invokeNative('plugin:window|set_focus', { label: 'main' })
   await browser.waitUntil(() => browser.execute(() => !document.hidden), {
     timeout: 30_000,

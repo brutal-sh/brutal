@@ -22,16 +22,23 @@ if (!process.env.OPENPENCIL_NATIVE_TEST_DIRECTORY) {
   process.env.OPENPENCIL_NATIVE_TEST_DIRECTORY = await mkdtemp(
     join(tmpdir(), 'openpen-native-test-')
   )
+  process.env.OPENPENCIL_NATIVE_TEST_MCP_PORT = String(await allocatePort())
+}
+if (!process.env.OPENPENCIL_NATIVE_TEST_DRIVER_PORT) {
+  process.env.OPENPENCIL_NATIVE_TEST_DRIVER_PORT = String(await allocatePort())
+}
+
+async function allocatePort(): Promise<number> {
   const server = createServer()
   await new Promise<void>((resolve) => {
     server.listen(0, '127.0.0.1', resolve)
   })
   const address = server.address()
-  if (!address || typeof address === 'string') throw new Error('No test MCP port allocated')
-  process.env.OPENPENCIL_NATIVE_TEST_MCP_PORT = String(address.port)
+  if (!address || typeof address === 'string') throw new Error('No native test port allocated')
   await new Promise<void>((resolve, reject) => {
     server.close((error) => (error ? reject(error) : resolve()))
   })
+  return address.port
 }
 
 if (process.env.OPENPENCIL_NATIVE_COMPANION_VERSIONS === '1' && process.platform !== 'win32') {
@@ -53,6 +60,7 @@ export const config: WebdriverIO.Config = {
       {
         appBinaryPath: appBinary,
         driverProvider: 'embedded',
+        embeddedPort: Number(process.env.OPENPENCIL_NATIVE_TEST_DRIVER_PORT),
         startTimeout: 120_000
       }
     ]
@@ -63,5 +71,9 @@ export const config: WebdriverIO.Config = {
   waitforTimeout: 20_000,
   connectionRetryTimeout: 120_000,
   connectionRetryCount: 1,
-  mochaOpts: { ui: 'bdd', timeout: 60_000 }
+  mochaOpts: {
+    ui: 'bdd',
+    timeout: 60_000,
+    require: [join(root, 'tests/helpers/tauri/session.ts')]
+  }
 }
