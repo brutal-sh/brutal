@@ -42,10 +42,13 @@ if (lightGroups.length === 0 && heavyFiles.length === 0) {
 }
 
 async function runBunTest(files: string[], args: string[]): Promise<number> {
-  const child = Bun.spawn([process.execPath, 'test', ...args, ...files], {
-    stdio: ['inherit', 'inherit', 'inherit'],
-    env: { ...process.env, BUN_HEAVY_TESTS: includeHeavy ? 'true' : 'false' }
-  })
+  const child = Bun.spawn(
+    [process.execPath, 'test', ...args, ...files.map((file) => `./${file}`)],
+    {
+      stdio: ['inherit', 'inherit', 'inherit'],
+      env: { ...process.env, BUN_HEAVY_TESTS: includeHeavy ? 'true' : 'false' }
+    }
+  )
   return child.exited
 }
 
