@@ -570,9 +570,10 @@ fractional fixed-device mismatch. Every other 437 execution ID remains a termina
 dependency. Owner/admin post-push readback confirms 201/201 repositories with
 Actions disabled and zero unknowns; the repository remains private and PR draft.
 
-Active outcome: full independent Pen design/functionality parity. Now: reproduce
-and measure the fractional Phone backdrop mismatch. Next: fix its demonstrated
-owner and execute exact native rectangles, capture and overlay behavior. Later:
+Active outcome: full independent Pen design/functionality parity. Now: qualify
+the actual Pen fixed-device reference after the numerical backdrop repair.
+Next: match window geometry and retain failure-only diagnostics for the still
+unclassified native intermittence. Later:
 actual Pen surface comparison and remaining inspector/menu/provider/platform
 criteria. Re-entry: the narrow Trello card, the retained failed fixture log and
 the current dock/viewport/backdrop owners. Done evidence requires the original
@@ -580,9 +581,9 @@ strict assertions at two fixed-device sizes and the parent reference comparison;
 a Desktop fixture pass does not waive this gate.
 
 
-The fixed-device candidate is saved locally at `e552c2622`: both original native
+The fixed-device candidate is saved at `e552c2622`: both original native
 regression cases fail and both candidate cases pass exact dimensions; unchanged
-full Phone/Tablet capture controls pass four cases. The new mixed native sequence
+full Phone/Tablet capture controls pass four cases. The earlier mixed native sequence
 has 12/16 passing specs and 25/30 passing cases, with history/focus/address failures
 still open on the native-sequence parent. Actual Pen menu behavior is observed
 on owned local content, with an explicit unmatched-window limit. The backdrop
@@ -594,3 +595,13 @@ zero clones. Main `d5b8cc1b1` and verified isolated `e552c2622` have identical
 Git trees; the six unrelated icon changes remain excluded. The backdrop card
 continues Building for matched-reference checks, with numerical and global
 reliability acceptance kept separate.
+
+The unchanged canonical current-source run at `5ef81a295` subsequently passes
+all 16 native specs/30 cases in 66 reported seconds (69 wall seconds). History
+passes three cases alone; the failure-only diagnostic sequence also passes
+16 specs/30 cases. No product or fixture repair is inferred, and the earlier
+failures remain unclassified, keeping STAB-NATIVE-SEQUENCE in Verify. CUA reads
+Pen's menus but cannot obtain its window screenshot in this follow-up; the
+matched-reference criterion and Building card remain open. Original logs and
+identity/count manifests remain private under
+`local-evidence/native-browser-availability-2026-11-10/`.

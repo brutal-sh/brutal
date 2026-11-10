@@ -1,5 +1,25 @@
 # Retained native session qualification
 
+## Unchanged current-source execution — 2026-11-10
+
+At `5ef81a295`, the canonical unmodified 16-spec sequence passes all 30 cases
+in 66 reported seconds (69 wall seconds), using the retained geometry binary
+`b0739bfa6b555ca5cb9b404b9ede4ea4e7be36cd381c65d359b844b4a2d2f355`.
+History also passes its three cases alone. A preceding private diagnostic run
+passes the same 16 specs/30 cases; its four copied specs only add failure payloads
+inside catches, so those probes do not execute on the successful paths.
+
+No product, fixture, timeout, retry, tolerance or assertion repair is made in
+this follow-up. The earlier 12/16-spec result below remains valid evidence of
+intermittence; these successful controls do not identify its cause. The sequence
+parent therefore stays Verify. Logs, source/binary identity, test-copy hashes
+and counts remain in `local-evidence/native-browser-availability-2026-11-10/`.
+Process readback finds no remaining owned native test process after both runs.
+
+Pen's menus remain readable, but CUA reports its screenshot unavailable in the
+subsequent reference attempt. No matched-window visual comparison is accepted;
+Pen remains at Home and no reference document or preference is changed.
+
 ## Host ownership and visibility control — 2026-11-10
 
 A later standard run connects to an orphan test-bundle process listening on the

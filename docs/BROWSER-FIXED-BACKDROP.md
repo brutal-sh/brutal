@@ -39,10 +39,14 @@ permission, timeout, retry, screenshot baseline or comparison tolerance changes.
   animation, scroll restoration and Undo.
 - Focused unit group: 11 cases and 51 assertions pass. Native/general test types,
   scoped lint and formatting pass.
-- The broader 16-spec retained candidate passes 12 specs and fails four
+- The earlier broader 16-spec retained candidate passes 12 specs and fails four
   (25 cases pass, five fail). History availability, overlay focus, preview focus
   and reload address remain unclassified here. The geometry cases pass in that
   sequence. These results neither attribute nor waive the separate failures.
+- At the unchanged current source `5ef81a295`, the canonical original 16-spec
+  sequence subsequently passes all 30 cases in 66 reported seconds. A preceding
+  failure-only diagnostic copy also passes. No repair is made; the earlier
+  intermittent causes remain unclassified on the sequence parent.
 
 Actual `/Applications/Pen.app` 1.2.22 is checked on the same owned local content:
 Phone Screenshot offers Full Page and Visible Area, and fixed-device zoom actions
@@ -50,6 +54,8 @@ are disabled. The original Tablet preference and Home view are restored; only
 the newly created reference tab is closed, and the owned server is stopped.
 Its physical 3000×1874 window is not matched to the 1280×800 logical test fixture;
 no exact Pen pixel or geometry comparison is claimed.
+The subsequent reference attempt can read menus but CUA reports its screenshot
+unavailable. Home remains unchanged; that attempt supplies no new visual evidence.
 
 REA additionally parses the selected packaged `out/app-window.js`: one source,
 33 findings, no parse failure. Its semantic analysis remains partial, with

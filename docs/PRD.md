@@ -261,10 +261,16 @@ remaining platforms and design/functionality requirements stay open.
 
 Latest geometry qualification: `d5b8cc1b1` passes the complete clean quality gate,
 11 focused unit cases, paired native dimension regressions at Phone and Tablet,
-and four unchanged full capture controls. Its mixed 16-spec run passes 12 specs
+and four unchanged full capture controls. Its earlier mixed 16-spec run passes 12 specs
 and 25 cases, with four specs/five cases failing in history availability, focus
 and reload-address paths. These remain on the retained-sequence parent. Actual
 Pen menu behavior is observed on the controlled local page, but the viewport is
 not matched, so exact visual acceptance remains open. The numerical implementation
 and the remaining limits are recorded in
 [BROWSER-FIXED-BACKDROP.md](BROWSER-FIXED-BACKDROP.md).
+
+Subsequently, the unchanged canonical 16-spec sequence at `5ef81a295` passes all
+30 cases in 66 reported seconds. The historical failure causes remain unknown,
+so STAB-NATIVE-SEQUENCE stays Verify. CUA cannot capture the actual Pen window
+in the follow-up; matched-reference visual acceptance remains open. These
+controls make no product or fixture repair and do not accept full native parity.
