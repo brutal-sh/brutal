@@ -39,7 +39,7 @@ packaging-only fix is accepted. Their original outputs and differing browser
 failures remain under `host-activation/`; no tolerance or assertion changes.
 
 
-Current qualification, 2026-11-10: runner source `a4f9462b4` executes the
+Earlier host qualification, 2026-11-10: runner source `a4f9462b4` executes the
 standard retained 15-spec/28-case sequence in 58 seconds (60.52 wall seconds),
 without manual Raise, changed assertions, retries or deadlines. The rebuilt raw
 baseline is SHA-256 `4865ecf974f113cee846cb2bc9a8f4e1db406ece90f7e48aa3a054874043aa73`.
@@ -231,3 +231,21 @@ The latter records all 36 named file-backed sections identical, test-only
 identifier, no document associations, per-run route equality, exact native URL
 with loading false, and observed native Zoom In feedback. Linux/Windows runtime,
 trusted clipboard/IME and full native-suite acceptance remain separate.
+
+
+## Fixed-device follow-up — 2026-11-10
+
+Local source `e552c2622` adds a native CSS-layout adapter and durable Phone/Tablet
+backdrop regressions. The original binary fails both exact dimension checks;
+the candidate passes both and all four unchanged full capture controls. The
+new mixed 16-spec run passes 12 specs and fails four (25 cases pass, five fail).
+History availability, overlay/preview focus and reload address remain separate
+unclassified failures. The earlier 15-spec pass remains a dated bounded receipt,
+not a universal reliability assertion. The macOS host scope stays Executed;
+the retained-sequence parent stays Verify. Numerical, source and reference limits
+are separated in [BROWSER-FIXED-BACKDROP.md](BROWSER-FIXED-BACKDROP.md).
+
+The geometry source is now `d5b8cc1b1`, tree-identical to isolated `e552c2622`,
+and its complete tracked-and-untracked-clean quality gate exits zero with literal
+zero clones. This source acceptance does not waive the four failed mixed specs
+or the unmatched Pen reference viewport.

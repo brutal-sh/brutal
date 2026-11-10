@@ -578,3 +578,19 @@ criteria. Re-entry: the narrow Trello card, the retained failed fixture log and
 the current dock/viewport/backdrop owners. Done evidence requires the original
 strict assertions at two fixed-device sizes and the parent reference comparison;
 a Desktop fixture pass does not waive this gate.
+
+
+The fixed-device candidate is saved locally at `e552c2622`: both original native
+regression cases fail and both candidate cases pass exact dimensions; unchanged
+full Phone/Tablet capture controls pass four cases. The new mixed native sequence
+has 12/16 passing specs and 25/30 passing cases, with history/focus/address failures
+still open on the native-sequence parent. Actual Pen menu behavior is observed
+on owned local content, with an explicit unmatched-window limit. The backdrop
+card remains Building while source and matched-reference checks continue. See
+[BROWSER-FIXED-BACKDROP.md](BROWSER-FIXED-BACKDROP.md); no full parity acceptance.
+
+The geometry source's complete isolated clean quality gate passes with literal
+zero clones. Main `d5b8cc1b1` and verified isolated `e552c2622` have identical
+Git trees; the six unrelated icon changes remain excluded. The backdrop card
+continues Building for matched-reference checks, with numerical and global
+reliability acceptance kept separate.

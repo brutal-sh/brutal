@@ -257,3 +257,14 @@ and narrower controls remain evidence. The sole Building task is
 for exact fractional fixed-device geometry. The complete index has 438 execution
 rows and 437 terminal dependencies. Strict Note raster, full native reliability,
 remaining platforms and design/functionality requirements stay open.
+
+
+Latest geometry qualification: `d5b8cc1b1` passes the complete clean quality gate,
+11 focused unit cases, paired native dimension regressions at Phone and Tablet,
+and four unchanged full capture controls. Its mixed 16-spec run passes 12 specs
+and 25 cases, with four specs/five cases failing in history availability, focus
+and reload-address paths. These remain on the retained-sequence parent. Actual
+Pen menu behavior is observed on the controlled local page, but the viewport is
+not matched, so exact visual acceptance remains open. The numerical implementation
+and the remaining limits are recorded in
+[BROWSER-FIXED-BACKDROP.md](BROWSER-FIXED-BACKDROP.md).
