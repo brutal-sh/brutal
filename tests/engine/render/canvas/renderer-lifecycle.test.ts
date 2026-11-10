@@ -72,7 +72,7 @@ function createRenderer() {
     labelParagraphCache: asDouble<SkiaRenderer['labelParagraphCache']>({ clear: mock() }),
     _flashPaint: null,
     profiler: { destroy: mock() } as Partial<SkiaRenderer['profiler']> as SkiaRenderer['profiler'],
-    surface: deletable<Surface>()
+    surface: asDouble<Surface>({ flush: mock(), delete: mock() })
   }
   return asRenderer(renderer)
 }
@@ -80,6 +80,8 @@ function createRenderer() {
 test('destroyRenderer releases tiled resources before deleting the main surface', () => {
   const renderer = createRenderer()
   const teardown: string[] = []
+  renderer.surface.flush = mock(() => teardown.push('flush'))
+  renderer.fillPaint.delete = mock(() => teardown.push('paint'))
   renderer.textPreparationCache.clear = mock(() => {
     teardown.push('text')
   })
@@ -87,10 +89,12 @@ test('destroyRenderer releases tiled resources before deleting the main surface'
   renderer.surface.delete = mock(() => teardown.push('surface')) as typeof renderer.surface.delete
 
   destroyRenderer(renderer)
+  destroyRenderer(renderer)
 
   expect(renderer.tiledScene.destroy).toHaveBeenCalledTimes(1)
   expect(renderer.surface.delete).toHaveBeenCalledTimes(1)
-  expect(teardown).toEqual(['text', 'tiled', 'surface'])
+  expect(renderer.destroyed).toBe(true)
+  expect(teardown).toEqual(['flush', 'paint', 'text', 'tiled', 'surface'])
 })
 
 test('destroyRenderer deletes all renderer-owned paints and label fonts', () => {
