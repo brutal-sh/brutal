@@ -1,57 +1,23 @@
 import { strict as assert } from 'node:assert'
-import { createServer, type Server } from 'node:http'
+import type { Server } from 'node:http'
 
 import type { SceneNode } from '@open-pencil/scene-graph'
 import type { Rect } from '@open-pencil/scene-graph/primitives'
 
+import { prepareNativeBrowserViewport } from '#tests/helpers/tauri/browser/preferences'
+import { createNativeScreenshotFixture } from '#tests/helpers/tauri/browser/screenshot-fixture'
 import { createNativeLayerFixture } from '#tests/helpers/tauri/editor-snapshot'
 import { invokeNative } from '#tests/helpers/tauri/invoke'
 
 let server: Server
 let origin: string
-let scrolling = 0
-let lastY = 200
-let animationPauses = 0
 let mainHandle: string
 
 before(async () => {
-  server = createServer((request, response) => {
-    response.setHeader('Access-Control-Allow-Origin', '*')
-    if (request.url === '/animation-paused') {
-      animationPauses++
-      response.end('ok')
-      return
-    }
-    if (request.url === '/pause-count') {
-      response.end(String(animationPauses))
-      return
-    }
-    if (request.url?.startsWith('/scroll?')) {
-      scrolling++
-      lastY = Number(new URL(request.url, 'http://fixture.test').searchParams.get('y'))
-      response.end('ok')
-      return
-    }
-    if (request.url === '/scroll-count') {
-      response.end(String(scrolling))
-      return
-    }
-    if (request.url === '/scroll-y') {
-      response.end(String(lastY))
-      return
-    }
-    response.writeHead(200, { 'Content-Type': 'text/html' })
-    // oxlint-disable-next-line open-pencil/no-hand-rolled-color -- Exact native screenshot pixels.
-    response.end(
-      `<!doctype html><title>Tall capture fixture</title><style>html,body{margin:0}body{height:1800px;background:linear-gradient(to bottom,#112233 0px,#112233 600px,#22aa55 600px,#22aa55 1200px,#3344cc 1200px,#3344cc 1800px)}header{position:fixed;left:0;top:0;height:30px;width:100%;background:#ff0000}</style><header></header><script>const pause=Animation.prototype.pause;Animation.prototype.pause=function(){fetch('/animation-paused');return pause.call(this)};const animator=document.createElement('i');document.body.append(animator);animator.animate([{transform:'translateX(0)'},{transform:'translateX(1px)'}],{duration:1000,iterations:Infinity});scrollTo(0,200);addEventListener('scroll',()=>fetch('/scroll?y='+scrollY));</script>`
-    )
-  })
-  await new Promise<void>((resolve) => {
-    server.listen(0, '127.0.0.1', resolve)
-  })
-  const address = server.address()
-  if (!address || typeof address === 'string') throw new Error('Missing screenshot fixture address')
-  origin = `http://127.0.0.1:${address.port}`
+  await prepareNativeBrowserViewport()
+  const page = await createNativeScreenshotFixture()
+  server = page.server
+  origin = page.origin
   const fixture = await createNativeLayerFixture()
   mainHandle = await browser.getWindowHandle()
   await browser.execute((id) => window.openPencil?.getStore?.().select([id]), fixture.first)
@@ -187,11 +153,15 @@ it('imports full-page slices at CSS size, joins native pixels, restores scrollin
         )
         const input = document.querySelector<HTMLInputElement>('[aria-label="Web address"]')
         if (!input) throw new Error('Missing browser address')
+        await wait(() => !input.disabled, 'browser address enabled')
+        input.focus()
+        input.select()
         input.value = origin + '/page'
         input.dispatchEvent(new Event('input', { bubbles: true }))
-        input
-          .closest('form')
-          ?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+        await new Promise<void>((resolve) => {
+          queueMicrotask(resolve)
+        })
+        input.form?.requestSubmit()
         await wait(async () => {
           const status = await invoke<{ url: string; loading: boolean } | null>(
             'browser_preview_status'

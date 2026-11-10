@@ -3,6 +3,7 @@ import { createServer, type Server } from 'node:http'
 
 import type { Rect } from '@open-pencil/scene-graph/primitives'
 
+import { prepareNativeBrowserViewport } from '#tests/helpers/tauri/browser/preferences'
 import { createNativeLayerFixture } from '#tests/helpers/tauri/editor-snapshot'
 
 let server: Server
@@ -10,6 +11,7 @@ let origin: string
 let dimensions = ''
 
 before(async () => {
+  await prepareNativeBrowserViewport()
   server = createServer((request, response) => {
     response.setHeader('Access-Control-Allow-Origin', '*')
     if (request.url?.startsWith('/report?')) {
@@ -189,11 +191,15 @@ it('uses real page zoom, fixed CSS device dimensions, disabled menu states and t
         await wait(() => !!document.querySelector('[aria-label="Web address"]'), 'browser dock')
         const input = document.querySelector<HTMLInputElement>('[aria-label="Web address"]')
         if (!input) throw new Error('Missing address')
+        await wait(() => !input.disabled, 'browser address enabled')
+        input.focus()
+        input.select()
         input.value = origin + '/page'
         input.dispatchEvent(new Event('input', { bubbles: true }))
-        input
-          .closest('form')
-          ?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+        await new Promise<void>((resolve) => {
+          queueMicrotask(resolve)
+        })
+        input.form?.requestSubmit()
         await wait(async () => {
           const current = await status()
           return current?.url === origin + '/page' && !current.loading

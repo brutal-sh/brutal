@@ -105,11 +105,15 @@ it('reloads a first navigation before its response commits and subsequently capt
         await wait(() => !!document.querySelector('[aria-label="Web address"]'), 'browser dock')
         const input = document.querySelector<HTMLInputElement>('[aria-label="Web address"]')
         if (!input) throw new Error('Missing address')
+        await wait(() => !input.disabled, 'browser address enabled')
+        input.focus()
+        input.select()
         input.value = origin + '/pending'
         input.dispatchEvent(new Event('input', { bubbles: true }))
-        input
-          .closest('form')
-          ?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+        await new Promise<void>((resolve) => {
+          queueMicrotask(resolve)
+        })
+        input.form?.requestSubmit()
         await wait(async () => {
           const status = await invoke<{ url: string; loading: boolean } | null>(
             'browser_preview_status'

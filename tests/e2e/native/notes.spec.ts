@@ -1,8 +1,16 @@
 import { strict as assert } from 'node:assert'
+import { mkdir } from 'node:fs/promises'
+import { join } from 'node:path'
 
 import { repoPath } from '#tests/helpers/paths'
 import { ensureNativeEditorReady } from '#tests/helpers/tauri/editor-snapshot'
 import { emitNativeMenuAction } from '#tests/helpers/tauri/invoke'
+
+const SCREENSHOT_DIRECTORY = repoPath('test-results/native/notes')
+
+before(async () => {
+  await mkdir(SCREENSHOT_DIRECTORY, { recursive: true })
+})
 
 it('creates, recolors and detaches a Note component with native menu history', async () => {
   await ensureNativeEditorReady()
@@ -25,9 +33,7 @@ it('creates, recolors and detaches a Note component with native menu history', a
       return color?.r === 220 / 255 && color.g === 197 / 255
     }, id)
   )
-  await browser.saveScreenshot(
-    repoPath('local-evidence/note-sizing-components-2026-11-09/native-component-inspector.png')
-  )
+  await browser.saveScreenshot(join(SCREENSHOT_DIRECTORY, 'component-inspector.png'))
   await detach.click()
   const state = () =>
     browser.execute((nodeId) => {
@@ -44,11 +50,7 @@ it('creates, recolors and detaches a Note component with native menu history', a
   const restoredDetach = await $('button=Detach Component')
   await restoredDetach.scrollIntoView()
   await restoredDetach.waitForDisplayed()
-  await browser.saveScreenshot(
-    repoPath(
-      'local-evidence/note-sizing-components-2026-11-09/native-restored-component-header.png'
-    )
-  )
+  await browser.saveScreenshot(join(SCREENSHOT_DIRECTORY, 'restored-component-header.png'))
   await emitNativeMenuAction('edit.redo')
   await browser.waitUntil(async () => (await state()).type === 'FRAME')
   assert.deepEqual((await state()).selected, [id])

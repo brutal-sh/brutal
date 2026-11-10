@@ -1,9 +1,11 @@
 import { strict as assert } from 'node:assert'
 
+import { prepareNativeBrowserViewport } from '#tests/helpers/tauri/browser/preferences'
 import { createNativeLayerFixture } from '#tests/helpers/tauri/editor-snapshot'
 import { reloadNativeEditor } from '#tests/helpers/tauri/navigation'
 
 before(async () => {
+  await prepareNativeBrowserViewport()
   const fixture = await createNativeLayerFixture()
   await browser.execute((id) => window.openPencil?.getStore?.().select([id]), fixture.first)
 })
