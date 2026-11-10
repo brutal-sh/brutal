@@ -1,6 +1,6 @@
 # Mesh paint parity
 
-Reference: actual `/Applications/Pen.app` 1.2.21, inspected 2026-10-30. OpenPencil supplies implementation infrastructure, never reference behavior. Full Mesh design/functionality acceptance remains open.
+Historical Mesh observations below use actual `/Applications/Pen.app` 1.2.21, inspected 2026-10-30. The current installed target is 1.2.22, retained in the [versioned update catalog](pen-feature-reference/update-1.2.22-2026-11-09.md). OpenPencil supplies implementation infrastructure, never reference behavior. Full Mesh design/functionality acceptance remains open.
 
 ## Observed reference behavior
 
@@ -49,3 +49,14 @@ Export comparison of the saved3×3, displaced-center,80%-opaque fixture: actual 
 ## Curved sampling diagnostic
 
 A separate synthetic 3×3 probe compared direct vertices, picture Linear/Nearest sampling, and 512px versus 1024px rendering downsampled to512px. All retained the measured RGB discrepancy against Pen’s lossless output. Plausible center-coordinate rounding variants likewise did not remove it; CPU-versus-native differences reached two RGB levels. These experiments do not justify changing the production sampling filter. The displaced multi-patch render gap remains open. Private scripts: mesh-sampling-probe.ts and mesh-center-*-probe.ts.
+
+
+## PEN point projection ownership — 2026-11-10
+
+`56d3e4c85` shares the reader/writer's inverse tuple/Vector projection through the canonical MeshPoint keys, retaining the separate legacy tuple reader branch and optional-handle omissions. The private gradient table/transform/stops owner keeps the reader at 295 nonblank lines; new helpers are 51 and 14 nonblank lines. No public package export, schema, color binding, paint ordering or validation boundary changes.
+
+Three original/current reader → writer → reopen controls are byte-identical (31,981 bytes), including explicit handles, default points, variable colors and disabled strokes. Expanded focused controls pass 23 tests/77 assertions across three files in both the original-source control and candidate. All four asymmetric handles include a zero vector; malformed counts, short/null tuples, authored numeric JSON overflow and a non-finite writer-model handle are refused. The original-source control restores candidate bytes with SHA guards. The shared package run passes 322 tests/1,031 assertions; the clean candidate passes 319/1,028 across 28 files. The three additional shared cases are preserved unrelated zero-size icon work.
+
+Package/source/Vue/general/native types, typed lint, architecture, clean normal bundle and independent review pass. Fourteen Chromium controls pass, including File Open through the actual format reader, mesh sampling, canvas/curve controls, palette edits and Undo. Two clean import/render controls pass again, and their actual trace frames are inspected. Existing visual baselines remain unchanged. These are bounded format and regression checks, not fresh Pen/native mesh design acceptance; the earlier displaced multi-patch RGB discrepancy remains open.
+
+The unchanged full duplication command exits zero but still reports one separate generated-output clone: eight lines/122 tokens with reported percentage zero. The same pair alone fails at 3.24%; a full-root JSON control using the installed `--exitCode 1` policy fails with the same literal clone count. [VERIFY-DUPES-ZERO](https://trello.com/c/gCIRAHJR) tracks that strict exit policy separately; [MOD-DUPES-GENERATED](https://trello.com/c/bUTrlzXd) remains open. No scanner threshold, input, suppression or baseline changes in this extraction. Private receipts, original/candidate contracts, control hashes, logs and actual frames remain under `local-evidence/pen-mesh-projection-2026-11-10/`. Full Mesh and full design/functionality parity remain unaccepted.

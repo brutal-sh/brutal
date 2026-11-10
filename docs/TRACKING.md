@@ -6,7 +6,7 @@ Repository: [private Open Pen repository](https://github.com/jpoindexter/open-pe
 Board: [Open Pen — independent design editor](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor), private.
 
 The [PRD](PRD.md) owns the outcome, constraints and release criteria.
-The [task index](TASKS.md) links all 428 execution cards; the [modularity audit](MODULARITY.md)
+The [task index](TASKS.md) links all 429 execution cards; the [modularity audit](MODULARITY.md)
 records the measured review queue. Requirements come from the [feature catalog](pen-feature-reference/README.md)
 and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), preserving historical Pen 1.2.21 evidence and the current [1.2.22 update inventory](pen-feature-reference/update-1.2.22-2026-11-09.md).
 
@@ -314,3 +314,12 @@ The last complete clean combined check is still `1306f6cf2`, red at its final fi
 `56ce0e655` separates Script materialization from scheduling/source-watch orchestration; `bc6d56c3b` corrects receiver-free callback declarations and explicit no-result returns found by the clean build's full typed lint. The first failed build and initial baseline QuickJS timeout remain retained, without weakened assertions or thresholds. Both current workspaces pass 24 owner cases/134 assertions across six files. Source/Vue/general/native types, architecture, appropriate lint, bounded independent review and the clean normal bundle build pass. All 34 Chromium/WebKit workflows pass on the extracted behavior with strict existing baselines unchanged; the callback follow-up preserves runtime semantics. Seven paired placeholder IO requests remain byte-identical, and actual placeholder exports are inspected.
 
 The unchanged duplicate check now reports two other groups/15 lines; Script capture is absent. The fresh isolated native build and single Script save/reopen/source-watch/refusal case pass. MOD-DUPES-SCRIPT meets its bounded criterion and is Executed; MOD-DUPES-PAINT is the sole Building task, with MOD-DUPES-GENERATED in Backlog. The complete board readback returns 445 open cards: 428 unique execution tasks plus 17 milestones, with 372 Backlog, 0 Ready, 1 Building, 12 Verify and 43 Executed. The task table and all 427 terminal dependencies reconcile with this allocation. [Scope and live qualification](SCRIPT-PARITY.md#runtime-ownership-continuation--2026-11-10) retain the exact checks and limits. The last complete clean combined check remains `1306f6cf2`, red at its final five-group duplication gate. Full native, strict reference raster and full design/functionality parity remain open.
+
+
+## PEN projection and literal duplicate counts — 2026-11-10
+
+`56d3e4c85` executes MOD-DUPES-PAINT's bounded format-ownership criterion: original/current codec/reopen bytes match, 23 focused controls pass, shared/clean package selections pass 322/319 cases, clean bundle and types/typed lint/architecture pass, and 14 browser controls plus two clean repeats retain their existing baselines. Actual clean frames are inspected. Three additional shared cases belong to unrelated preserved icon work. [Mesh scope and limits](MESH-PARITY.md#pen-point-projection-ownership--2026-11-10) retain the corrected overflow test, paired original control and raw reference mismatch.
+
+The unchanged full duplicate command now exits zero while reporting one known generated-output clone/eight lines at percentage zero. A whole-root JSON report confirms that count; the installed explicit nonzero-on-clone policy exits one. VERIFY-DUPES-ZERO records that separate gate correction and depends on GENERATED for the final current zero-clone corpus control. No threshold/filter/suppression changes are part of the paint extraction, and neither exit zero nor bounded task acceptance establishes a green complete quality gate.
+
+The fresh complete board readback contains 446 open cards: 429 unique execution tasks plus 17 milestones, with 372 Backlog, 0 Ready, 1 Building, 12 Verify and 44 Executed. MOD-DUPES-PAINT is Executed, MOD-DUPES-GENERATED is the sole Building task, and VERIFY-DUPES-ZERO stays Backlog. The index and all 428 terminal dependencies reconcile. The last complete clean combined check remains the earlier `1306f6cf2` receipt; source extraction, native mixed-session reliability, strict reference pixels and full design/functionality parity remain separate open gates.
