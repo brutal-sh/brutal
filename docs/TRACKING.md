@@ -6,7 +6,7 @@ Repository: [private Open Pen repository](https://github.com/jpoindexter/open-pe
 Board: [Open Pen — independent design editor](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor), private.
 
 The [PRD](PRD.md) owns the outcome, constraints and release criteria.
-The [task index](TASKS.md) links all 431 execution cards; the [modularity audit](MODULARITY.md)
+The [task index](TASKS.md) links all 438 execution cards; the [modularity audit](MODULARITY.md)
 records the measured review queue. Requirements come from the [feature catalog](pen-feature-reference/README.md)
 and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), preserving historical Pen 1.2.21 evidence and the current [1.2.22 update inventory](pen-feature-reference/update-1.2.22-2026-11-09.md).
 
@@ -550,3 +550,31 @@ with zero clones (`bd2e92311` / identical main tree `a4f9462b4`). A later focuse
 history observer passes three cases against the preserved baseline binary at an
 explicit evidence path; the failure callback does not run. This is narrower than
 canonical retained-sequence acceptance and does not establish a cause or fix.
+
+
+## Canonical macOS host execution — 2026-11-10
+
+The rebuilt baseline executes the standard 15-spec/28-case retained sequence in
+58 seconds without manual Raise or assertion/deadline changes. A same-payload
+owned app bundle separately passes native Return navigation and More-menu Zoom
+In (50% to 75%), with matching live process, session and isolated route, exact
+loaded URL and verified process exit. Complete clean quality gate passes with
+zero clones. The macOS host scope is Executed; the sequence parent stays Verify
+because older intermittent causes are not all classified. This does not accept
+full native, non-macOS, strict Note or full product parity.
+
+The complete board has 455 open cards: 438 execution tasks and 17 milestones,
+with 370 Backlog, one Building, 14 Verify and 53 Executed. The sole Building task
+is STAB-BROWSER-BACKDROP-FIXED, a narrow child of SURF-BROWSER for the measured
+fractional fixed-device mismatch. Every other 437 execution ID remains a terminal
+dependency. Owner/admin post-push readback confirms 201/201 repositories with
+Actions disabled and zero unknowns; the repository remains private and PR draft.
+
+Active outcome: full independent Pen design/functionality parity. Now: reproduce
+and measure the fractional Phone backdrop mismatch. Next: fix its demonstrated
+owner and execute exact native rectangles, capture and overlay behavior. Later:
+actual Pen surface comparison and remaining inspector/menu/provider/platform
+criteria. Re-entry: the narrow Trello card, the retained failed fixture log and
+the current dock/viewport/backdrop owners. Done evidence requires the original
+strict assertions at two fixed-device sizes and the parent reference comparison;
+a Desktop fixture pass does not waive this gate.

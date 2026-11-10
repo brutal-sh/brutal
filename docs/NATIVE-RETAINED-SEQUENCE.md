@@ -39,16 +39,21 @@ packaging-only fix is accepted. Their original outputs and differing browser
 failures remain under `host-activation/`; no tolerance or assertion changes.
 
 
-Current qualification, 2026-11-10: runner source `a4f9462b4` isolates the
-WebDriver port and blocks fixtures unless the process reports the exact run
-routing. A fresh cold Note workflow and hidden-app restoration regression pass.
-The current raw 15-spec control passes nine and fails six; its same-payload
-bundled control passes ten and fails five. The standard history reload still
-fails canvas initialization in both. [STAB-NATIVE-HOST](https://trello.com/c/1MlXULnM)
-remains the sole Building card; the retained-sequence parent is Verify.
-The earlier 14-spec/27-case bundled pass and complete clean quality gate at
-`e7517262f` remain historical evidence. A later Note pass and exposed CUA Raise
-lack process binding and do not establish a causal relationship.
+Current qualification, 2026-11-10: runner source `a4f9462b4` executes the
+standard retained 15-spec/28-case sequence in 58 seconds (60.52 wall seconds),
+without manual Raise, changed assertions, retries or deadlines. The rebuilt raw
+baseline is SHA-256 `4865ecf974f113cee846cb2bc9a8f4e1db406ece90f7e48aa3a054874043aa73`.
+Its exact source tree passes the complete clean gate with zero clones.
+A same-payload private test bundle separately executes real Return navigation
+and More-menu Zoom In, changing 50% to 75%; the route/session and live PID are
+bound before CUA, and the harness confirms the exact URL with loading false.
+Its owned process exits after the held check. No production installation occurs.
+[STAB-NATIVE-HOST](https://trello.com/c/1MlXULnM) is Executed for the macOS scope.
+The retained-sequence parent remains Verify because not every earlier intermittent
+cause is classified. The sole Building task is the narrow
+[fractional backdrop geometry residual](https://trello.com/c/j6yjFgIw).
+Earlier failed, rejected, bundled and process-unbound Raise controls remain below;
+this bounded execution does not accept full native, strict Note or Pen parity.
 
 The owned bundle uses the same compiled input as the earlier raw test binary:
 all 36 file-backed named Mach-O sections match, while ad-hoc signing changes its
@@ -217,3 +222,12 @@ against the preserved 73cf binary at an explicit owned evidence path, so its
 failure callback does not execute. This narrower pass does not classify the
 previous failures or accept the canonical sequence. No runtime fix follows from
 an intermittent pass.
+
+
+Final canonical and process-bound input receipts are in
+`local-evidence/native-retained-focus-2026-11-10/host-activation/` under
+`baseline-final-15.log`, `baseline-final-15-result.json` and `baseline-bundle/`.
+The latter records all 36 named file-backed sections identical, test-only
+identifier, no document associations, per-run route equality, exact native URL
+with loading false, and observed native Zoom In feedback. Linux/Windows runtime,
+trusted clipboard/IME and full native-suite acceptance remain separate.

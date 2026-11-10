@@ -238,19 +238,22 @@ after reload. No NoWindow response appears. WebDriver Enter and trusted OS input
 remain separate open gates. See NATIVE-DRIVER-MULTIWEBVIEW.md for exact evidence.
 
 
-Current scheduling after source `954f68b8a` passes the complete clean check:
+Earlier scheduling after source `954f68b8a` passes the complete clean check:
 driver repair Verify; broader native-sequence parent Building. The current
 reference remains actual Pen 1.2.22 with historical 1.2.21 evidence preserved.
 
 
-Current native qualification: `e7517262f` passes the complete clean quality gate
-and a historical 14-spec/27-case bundled retained sequence. Runner source
-`a4f9462b4` isolates the driver port and blocks fixtures unless the process returns
-the exact run directory and MCP port; a stale-port negative control fails before
-tests. A fresh cold Note workflow and hidden-app restoration regression execute.
-The newer raw 15-spec control passes nine and fails six; its same-payload bundled
-control passes ten and fails five. History reload remains a failure in both.
-STAB-NATIVE-HOST remains Building and its retained-sequence parent is Verify.
-The complete index has 437 execution rows and 436 terminal dependencies.
-Fractional fixed-device backdrop geometry, strict Note raster, full native
-reliability and remaining design/functionality requirements stay open.
+Current native qualification: runner source `a4f9462b4` isolates the driver port
+and blocks fixtures unless the process returns the exact run directory and MCP
+port. The rebuilt baseline executes the standard retained 15-spec/28-case
+sequence in 58 seconds without manual Raise, weakened assertions or deadlines.
+Its exact source tree passes the complete clean quality gate with zero clones.
+A same-payload owned bundle separately executes native Return navigation and
+More-menu zoom feedback, bound to the live process and run route. The macOS
+STAB-NATIVE-HOST scope is Executed; STAB-NATIVE-SEQUENCE stays Verify because
+not every historical intermittent cause is classified. Earlier failed, rejected
+and narrower controls remain evidence. The sole Building task is
+[STAB-BROWSER-BACKDROP-FIXED](https://trello.com/c/j6yjFgIw), split from SURF-BROWSER
+for exact fractional fixed-device geometry. The complete index has 438 execution
+rows and 437 terminal dependencies. Strict Note raster, full native reliability,
+remaining platforms and design/functionality requirements stay open.
