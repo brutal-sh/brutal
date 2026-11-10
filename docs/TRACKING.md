@@ -509,3 +509,44 @@ All 436 other execution IDs remain terminal dependencies. SURF-BROWSER retains
 the measured fractional fixed-device backdrop width residual. REA/Hopper catalog
 checks revalidate installed 1.2.22, all 31 findings/54 anchors and 5,897 exported
 procedure files; static extraction is not semantic or visual acceptance.
+
+
+## Native run ownership correction — 2026-11-10
+
+A later raw-run control connects to an orphan test bundle on default driver port
+4445 rather than the requested fresh executable. Its routing command rejects
+missing run-directory environment. The candidate allocates a separate driver
+port and uses a required Mocha root hook to validate the exact test directory
+and MCP port before fixtures. The intentionally stale-port root-hook control
+fails before the spec; the rejected WebdriverIO before-hook variant logged its
+error and continued. A fresh cold raw Note workflow passes without CUA.
+
+The independent hidden-app control fails with window focus alone and passes
+with test-only application show before focus, preserving the same editor realm,
+page, scene version and selection. This does not explain every historical cold
+failure. CUA Raise/Note-pass association lacks process binding and is not causal
+proof. STAB-NATIVE-HOST stays Building while the canonical retained sequence is
+requalified; its first history reload still reports missing canvas initialization.
+No assertions, deadlines, retry settings, profiles or reference pixels change.
+
+The canonical raw 15-spec candidate completes with nine passing and six failing
+specs; the same-payload bundled control completes with ten passing and five
+failing specs. All 36 named file-backed sections match. Both pass Note and the
+new hidden-app regression; both fail history canvas readiness after reload.
+Source a4f9462b4 saves the runner fixes locally. It does not accept the host or
+sequence card, packaging-only causation, or full product parity.
+
+
+The follow-up observer still reproduces history reload after exact orphan
+termination. A proposed offer-autofocus readiness change builds and passes the
+recovery payload-preservation case but does not resolve history. Its stricter
+mounted-offer assertion also passes the original build. Independent review finds
+an additional conditional-event deadlock risk in that candidate. All three
+candidate files are reverted; its patch, binary and failed control are retained.
+Only the separately verified runner fixes are committed.
+
+The runner fix's exact tree passes the complete isolated clean `bun run check`
+with zero clones (`bd2e92311` / identical main tree `a4f9462b4`). A later focused
+history observer passes three cases against the preserved baseline binary at an
+explicit evidence path; the failure callback does not run. This is narrower than
+canonical retained-sequence acceptance and does not establish a cause or fix.

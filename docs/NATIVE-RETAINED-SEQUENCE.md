@@ -1,13 +1,54 @@
 # Retained native session qualification
 
-Current qualification, 2026-11-10: fixture source `e7517262f` executes 27 cases
-across the 14-spec bundled retained sequence in 71 seconds, without assertion,
-timeout, retry or pixel-tolerance changes. Complete tracked-clean `bun run check`
-passes with literal zero clones. This parent is Verify. The standard unassisted
-cold host remains open on [STAB-NATIVE-HOST](https://trello.com/c/1MlXULnM), the
-sole Building card; its cold Note control stops at window-hidden before input.
-A separate exposed CUA Raise control completes that Note workflow and writes two
-captures under `test-results/native/notes`, preserving dated historical evidence.
+## Host ownership and visibility control — 2026-11-10
+
+A later standard run connects to an orphan test-bundle process listening on the
+service's default port 4445. Its native routing command rejects the missing
+isolated-directory environment. A separate-port control reaches the newly
+built raw executable and returns the current run's directory and MCP port.
+This invalidates the earlier inference that newly compiled app permissions were
+ignored; that denial came from a different process. Preserve the earlier output.
+
+The candidate allocates a separate driver port and requires a Mocha root hook to
+match the run directory and MCP port before any fixtures. An intentionally stale
+port control fails in that hook without executing the spec. A WebdriverIO before
+hook is insufficient: its failed control logs the exception and still runs the
+spec, so that implementation is rejected.
+
+The visibility comparison preserves the same editor realm, page, scene version
+and selection. After hiding only the isolated test app, window focus leaves it
+hidden for the original 30-second limit; application show followed by window
+focus restores it. The native regression fails with the original helper and
+passes with show-before-focus. The show/hide permissions are restricted to the
+native-test main webview. A cold isolated raw Note run also passes before this
+helper change, so show is not established as the cause of the cold Note recovery.
+
+The previous CUA Raise and later Note pass do not establish which process was
+raised. No causal association is claimed without run-ownership evidence. The
+older bundled 14-spec receipt precedes that orphan process's observed start;
+its recorded behavior is retained, while the canonical sequence is requalified
+with process ownership checked. Full Pen parity remains open.
+
+The candidate's canonical raw run executes 15 specs: nine pass and six fail.
+The same compiled payload inside an owned app bundle has all 36 named file-backed
+Mach-O sections identical; its 15-spec control passes ten and fails five. The
+bundle has the test identifier, no document associations, and is not installed.
+Both runs pass the new hidden-app regression and Note workflow. History reload
+still fails canvas readiness in both, so neither a full-sequence pass nor a
+packaging-only fix is accepted. Their original outputs and differing browser
+failures remain under `host-activation/`; no tolerance or assertion changes.
+
+
+Current qualification, 2026-11-10: runner source `a4f9462b4` isolates the
+WebDriver port and blocks fixtures unless the process reports the exact run
+routing. A fresh cold Note workflow and hidden-app restoration regression pass.
+The current raw 15-spec control passes nine and fails six; its same-payload
+bundled control passes ten and fails five. The standard history reload still
+fails canvas initialization in both. [STAB-NATIVE-HOST](https://trello.com/c/1MlXULnM)
+remains the sole Building card; the retained-sequence parent is Verify.
+The earlier 14-spec/27-case bundled pass and complete clean quality gate at
+`e7517262f` remain historical evidence. A later Note pass and exposed CUA Raise
+lack process binding and do not establish a causal relationship.
 
 The owned bundle uses the same compiled input as the earlier raw test binary:
 all 36 file-backed named Mach-O sections match, while ad-hoc signing changes its
@@ -158,3 +199,21 @@ The unchanged three-case history run with a failure-only observer passes in
 12 seconds on the same candidate image. The observer does not fire. This cold
 pass does not explain or clear the earlier retained-run readiness failure;
 that intermittent gate remains Building with the failed receipt preserved.
+
+
+The follow-up observer still reproduces history reload after exact orphan
+termination. A proposed offer-autofocus readiness change builds and passes the
+recovery payload-preservation case but does not resolve history. Its stricter
+mounted-offer assertion also passes the original build. Independent review finds
+an additional conditional-event deadlock risk in that candidate. All three
+candidate files are reverted; its patch, binary and failed control are retained.
+Only the separately verified runner fixes are committed.
+
+
+The committed runner tree `a4f9462b4` is identical to isolated `bd2e92311`;
+the complete tracked-and-untracked-clean `bun run check` exits zero with literal
+zero clones. The subsequent focused history observer passes all three cases
+against the preserved 73cf binary at an explicit owned evidence path, so its
+failure callback does not execute. This narrower pass does not classify the
+previous failures or accept the canonical sequence. No runtime fix follows from
+an intermittent pass.

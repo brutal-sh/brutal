@@ -244,8 +244,13 @@ reference remains actual Pen 1.2.22 with historical 1.2.21 evidence preserved.
 
 
 Current native qualification: `e7517262f` passes the complete clean quality gate
-and a 14-spec/27-case bundled retained sequence. Actual native Return navigation
-also executes. Unassisted cold visibility remains open as STAB-NATIVE-HOST;
-its retained-sequence parent is Verify. The complete index has 437 execution
-rows and 436 terminal dependencies. Fractional fixed-device backdrop geometry,
-strict Note raster and remaining design/functionality requirements stay open.
+and a historical 14-spec/27-case bundled retained sequence. Runner source
+`a4f9462b4` isolates the driver port and blocks fixtures unless the process returns
+the exact run directory and MCP port; a stale-port negative control fails before
+tests. A fresh cold Note workflow and hidden-app restoration regression execute.
+The newer raw 15-spec control passes nine and fails six; its same-payload bundled
+control passes ten and fails five. History reload remains a failure in both.
+STAB-NATIVE-HOST remains Building and its retained-sequence parent is Verify.
+The complete index has 437 execution rows and 436 terminal dependencies.
+Fractional fixed-device backdrop geometry, strict Note raster, full native
+reliability and remaining design/functionality requirements stay open.
