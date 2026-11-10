@@ -21,16 +21,16 @@ import type { ScriptRun, ScriptRuntimeState } from './state'
 function captureScriptTarget(editor: Editor, id: string) {
   const graph = editor.graph
   const node = graph.getNode(id)
-  if (!node) return
+  if (!node) return undefined
   return { graph, node, size: { width: node.width, height: node.height } }
 }
 
 interface ScriptRenderingOptions {
   states: Map<string, ScriptRuntimeState>
   references: Map<string, Set<string>>
-  sourceFor(uri: string, id: string): Promise<string>
-  inputKey(id: string, definition: ScriptDefinition): string
-  currentRun(id: string, run: ScriptRun): boolean
+  sourceFor: (uri: string, id: string) => Promise<string>
+  inputKey: (id: string, definition: ScriptDefinition) => string
+  currentRun: (id: string, run: ScriptRun) => boolean
   adoptChanges<T>(apply: () => T): T
   evaluate?: typeof evaluateCanvasScript
 }
@@ -49,7 +49,7 @@ interface ScriptRequest {
 type ScriptTarget = NonNullable<ReturnType<typeof captureScriptTarget>>
 interface ScriptFailure {
   target: ScriptTarget
-  current(): boolean
+  current: () => boolean
   definitions: ScriptInput[]
   source?: string
   errorLine?: number

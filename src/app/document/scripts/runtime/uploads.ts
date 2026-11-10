@@ -18,4 +18,5 @@ export function sharedScriptUpload(
     throw new Error(
       'Choose the source for this Script; its filename matches different uploaded files.'
     )
+  return undefined
 }
