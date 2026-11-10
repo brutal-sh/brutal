@@ -241,3 +241,11 @@ remain separate open gates. See NATIVE-DRIVER-MULTIWEBVIEW.md for exact evidence
 Current scheduling after source `954f68b8a` passes the complete clean check:
 driver repair Verify; broader native-sequence parent Building. The current
 reference remains actual Pen 1.2.22 with historical 1.2.21 evidence preserved.
+
+
+Current native qualification: `e7517262f` passes the complete clean quality gate
+and a 14-spec/27-case bundled retained sequence. Actual native Return navigation
+also executes. Unassisted cold visibility remains open as STAB-NATIVE-HOST;
+its retained-sequence parent is Verify. The complete index has 437 execution
+rows and 436 terminal dependencies. Fractional fixed-device backdrop geometry,
+strict Note raster and remaining design/functionality requirements stay open.

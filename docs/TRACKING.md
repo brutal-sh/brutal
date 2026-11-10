@@ -488,3 +488,24 @@ The unchanged three-case history run with a failure-only observer passes in
 12 seconds on the same candidate image. The observer does not fire. This cold
 pass does not explain or clear the earlier retained-run readiness failure;
 that intermittent gate remains Building with the failed receipt preserved.
+
+
+## Native fixture and host qualification — 2026-11-10
+
+Source `e7517262f` passes the complete tracked-clean `bun run check` with literal
+zero clones, excluding six unrelated icon changes. The owned bundled retained
+sequence executes 27 cases across 14 specs in 71 seconds. Earlier 7/14, 11/14
+and 13/14 failures are retained; no assertion, timeout, retry or baseline waiver.
+Actual native CUA Return loads the local fixture and the harness confirms its URL.
+Standalone cold Note stops at window-hidden; a separate exposed Raise control
+passes its workflow and writes two captures under test-results. No unassisted
+cold or whole-product acceptance follows from the assisted control.
+
+The complete board now has 454 open cards: 437 execution tasks and 17 milestones,
+with 370 Backlog, one Building, 14 Verify and 52 Executed. New STAB-NATIVE-HOST
+is sole Building for the canonical test-app launch/visibility criterion. The
+retained-sequence parent is Verify and depends on it and the driver repair.
+All 436 other execution IDs remain terminal dependencies. SURF-BROWSER retains
+the measured fractional fixed-device backdrop width residual. REA/Hopper catalog
+checks revalidate installed 1.2.22, all 31 findings/54 anchors and 5,897 exported
+procedure files; static extraction is not semantic or visual acceptance.

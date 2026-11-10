@@ -88,3 +88,15 @@ The subsequent [REA/Hopper native pass](native-1.2.22-2026-11-09.md) classifies 
 retained native deltas and exports 5,897 provider procedure artifacts. It isolates actual
 code changes in the MCP helper, corroborates URI/save findings and retains the Go/Hopper
 coverage gaps explicitly. It does not convert packaged declarations into runtime acceptance.
+
+
+## Fresh verification, 2026-11-10
+
+The installed plist still reports 1.2.22 and its ASAR SHA-256 still matches
+`1c6d0129dc9dda08f2f0da5dde23aa8cc52df11858fec1e35cd3bd2647bcf407`.
+The retained catalog check revalidates all 31 findings, 54 source anchors and
+182 changed path dispositions, plus 432 outer files and 14 recorded symlinks.
+The independent Hopper export check rehashes all 5,897 files against their
+provider manifests. No duplicate extraction or vendor implementation import
+is needed for these unchanged reference bytes. These checks preserve the
+semantic, runtime and exact visual coverage limits above.

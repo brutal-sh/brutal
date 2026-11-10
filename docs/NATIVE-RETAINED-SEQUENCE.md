@@ -1,5 +1,32 @@
 # Retained native session qualification
 
+Current qualification, 2026-11-10: fixture source `e7517262f` executes 27 cases
+across the 14-spec bundled retained sequence in 71 seconds, without assertion,
+timeout, retry or pixel-tolerance changes. Complete tracked-clean `bun run check`
+passes with literal zero clones. This parent is Verify. The standard unassisted
+cold host remains open on [STAB-NATIVE-HOST](https://trello.com/c/1MlXULnM), the
+sole Building card; its cold Note control stops at window-hidden before input.
+A separate exposed CUA Raise control completes that Note workflow and writes two
+captures under `test-results/native/notes`, preserving dated historical evidence.
+
+The owned bundle uses the same compiled input as the earlier raw test binary:
+all 36 file-backed named Mach-O sections match, while ad-hoc signing changes its
+whole-file hash. Its test identifier, incognito WebView and memory credentials
+remain isolated, with no document associations or production installation.
+Native CUA click/type/Return reaches the expected green local page, and the
+harness confirms the matching URL with loading false. The synthetic WebDriver
+Enter failure is a separate tool-path limitation, not native-key acceptance.
+
+Address fixtures now wait for enabled input, focus/select, settle the input
+update and submit the existing form. Workflows that require Desktop 50% declare
+that one fixture-owned preference before their later persistence assertions.
+The screenshot server's state is factory-owned. The earlier fractional
+fixed-device backdrop equality failure remains separately OPEN on SURF-BROWSER;
+Desktop capture success does not accept it, strict Note pixels or full Pen parity.
+Private controls and failed attempts remain in
+`local-evidence/native-retained-focus-2026-11-10/bundled-host/`.
+
+
 [STAB-NATIVE-SEQUENCE](https://trello.com/c/bQp0Q9x6) remains open. The 13-file native
 candidate is saved at `c791e333a` and remains under qualification. This record
 separates demonstrated fixture defects from unproven native lifecycle causes.

@@ -69,3 +69,15 @@ Raw binaries, pseudocode, compiler maps, complete comparisons, REA Evidence and 
 session snapshots remain private under `local-evidence/pen-native-decomposition-2026-11-09/`.
 Its `index.html` provides the module index. Both owned Hopper analysis sessions are closed;
 copied target executables are not run. No vendor implementation is shipped in Open Pen.
+
+
+## Fresh verification, 2026-11-10
+
+The installed plist still reports 1.2.22 and its ASAR SHA-256 still matches
+`1c6d0129dc9dda08f2f0da5dde23aa8cc52df11858fec1e35cd3bd2647bcf407`.
+The retained catalog check revalidates all 31 findings, 54 source anchors and
+182 changed path dispositions, plus 432 outer files and 14 recorded symlinks.
+The independent Hopper export check rehashes all 5,897 files against their
+provider manifests. No duplicate extraction or vendor implementation import
+is needed for these unchanged reference bytes. These checks preserve the
+semantic, runtime and exact visual coverage limits above.

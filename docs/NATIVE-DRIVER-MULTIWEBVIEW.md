@@ -85,8 +85,8 @@ address form: two cases in nine seconds, including native browser-backdrop pixel
 changes without scene or selection changes. This does not accept Enter: the
 original WebDriver Enter variant still fails navigation. This driver dispatches
 JavaScript keyboard events; no trusted operating-system input is established.
-CUA cannot bind the unbundled test binary, so that separate native input gate stays
-open without asking the user to unlock or interact with the app.
+CUA initially cannot bind the unbundled test binary; the subsequent owned-bundle
+control below executes native address input without user intervention.
 
 ## Remaining retained-session failures
 
@@ -109,3 +109,19 @@ Source `954f68b8a` passes the complete tracked-clean `bun run check`, including
 literal zero clones, after the bounded native controls above. The driver card is
 Verify because cross-platform and trusted-input limits remain. Its native-sequence
 parent returns to Building to investigate the earlier reload readiness failure.
+
+
+## Bundled continuation
+
+The owned native-test bundle reuses the same compiled image; all 36 named
+file-backed Mach-O sections match, with only signing/bundle metadata differing.
+It has the native-test identifier and no document associations or installation.
+Actual CUA native click/type/Return loads the expected local page; the independent
+harness confirms its URL and completed loading (one case, 28 seconds).
+Fixture source `e7517262f` then passes the 14-spec/27-case bundled retained
+sequence and the complete tracked-clean quality gate with literal zero clones.
+This does not accept the default unassisted cold launch: a separate Note run
+still fails window-hidden before input, whereas an exposed CUA Raise control
+passes. STAB-NATIVE-HOST owns canonical launch/visibility; the driver and retained
+parent remain Verify. Other platforms, remaining input/menu states, fractional
+fixed-device geometry, strict Note pixels and full parity remain open.
