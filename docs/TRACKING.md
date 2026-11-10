@@ -1,12 +1,12 @@
 # Tracking
 
-Updated: 2026-11-09. The full independent design and functionality parity goal remains active.
+Updated: 2026-11-10. The full independent design and functionality parity goal remains active.
 
 Repository: [private Open Pen repository](https://github.com/jpoindexter/open-pen), branch `feat/open-pen`.
 Board: [Open Pen — independent design editor](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor), private.
 
 The [PRD](PRD.md) owns the outcome, constraints and release criteria.
-The [task index](TASKS.md) links all 429 execution cards; the [modularity audit](MODULARITY.md)
+The [task index](TASKS.md) links all 431 execution cards; the [modularity audit](MODULARITY.md)
 records the measured review queue. Requirements come from the [feature catalog](pen-feature-reference/README.md)
 and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), preserving historical Pen 1.2.21 evidence and the current [1.2.22 update inventory](pen-feature-reference/update-1.2.22-2026-11-09.md).
 
@@ -299,7 +299,6 @@ The fresh complete board readback returns 444 open cards: 427 execution tasks an
 
 The unchanged duplication check in both workspaces now reports four other groups and 31 lines. MOD-DUPES-AUTH is Executed for its bounded criterion; MOD-DUPES-STORIES is the only Building task. The complete board remains 444 open cards and 427 unique execution tasks plus 17 milestones: 374 Backlog, 0 Ready, 1 Building, 12 Verify and 40 Executed. The last complete clean combined check remains `1306f6cf2`, red at five groups; the scoped follow-up does not replace it with an all-green result. Remaining duplication, native mixed-session, Note raster and full parity acceptance stay open.
 
-
 ## Connection fixture and readable sign-in actions
 
 Source `b3c3ab6a1` shares the connection fixture while retaining all 25 original data/setup/template/play captures byte-exactly. Its real UI walk discovers four dark sign-in contrast errors, reproduced by the exact original story source. The separate `c16ce89b6` repair changes only the local Cancel/Change foreground. The final canonical run passes all 25 connection states per theme and all 18 translated grids (20 cases, no skips, retries or failures), with changed-state captures inspected. Source/Vue/general types, architecture, lint, bounded independent review and the clean normal candidate build pass. Unchanged duplicate checks in both workspaces retain three other groups/20 lines; the story group is absent.
@@ -308,13 +307,11 @@ The complete readback finds 445 open cards: 428 unique execution tasks and 17 mi
 
 The last complete clean combined check is still `1306f6cf2`, red at its final five-group duplication gate. The scoped clean build/duplication follow-up does not establish an all-green combined check. Real OAuth, native retained-session reliability, strict Note raster and full design/functionality parity remain unaccepted. No production install, merge or release.
 
-
 ## Script runtime candidate — 2026-11-10
 
 `56ce0e655` separates Script materialization from scheduling/source-watch orchestration; `bc6d56c3b` corrects receiver-free callback declarations and explicit no-result returns found by the clean build's full typed lint. The first failed build and initial baseline QuickJS timeout remain retained, without weakened assertions or thresholds. Both current workspaces pass 24 owner cases/134 assertions across six files. Source/Vue/general/native types, architecture, appropriate lint, bounded independent review and the clean normal bundle build pass. All 34 Chromium/WebKit workflows pass on the extracted behavior with strict existing baselines unchanged; the callback follow-up preserves runtime semantics. Seven paired placeholder IO requests remain byte-identical, and actual placeholder exports are inspected.
 
 The unchanged duplicate check now reports two other groups/15 lines; Script capture is absent. The fresh isolated native build and single Script save/reopen/source-watch/refusal case pass. MOD-DUPES-SCRIPT meets its bounded criterion and is Executed; MOD-DUPES-PAINT is the sole Building task, with MOD-DUPES-GENERATED in Backlog. The complete board readback returns 445 open cards: 428 unique execution tasks plus 17 milestones, with 372 Backlog, 0 Ready, 1 Building, 12 Verify and 43 Executed. The task table and all 427 terminal dependencies reconcile with this allocation. [Scope and live qualification](SCRIPT-PARITY.md#runtime-ownership-continuation--2026-11-10) retain the exact checks and limits. The last complete clean combined check remains `1306f6cf2`, red at its final five-group duplication gate. Full native, strict reference raster and full design/functionality parity remain open.
-
 
 ## PEN projection and literal duplicate counts — 2026-11-10
 
@@ -323,3 +320,45 @@ The unchanged duplicate check now reports two other groups/15 lines; Script capt
 The unchanged full duplicate command now exits zero while reporting one known generated-output clone/eight lines at percentage zero. A whole-root JSON report confirms that count; the installed explicit nonzero-on-clone policy exits one. VERIFY-DUPES-ZERO records that separate gate correction and depends on GENERATED for the final current zero-clone corpus control. No threshold/filter/suppression changes are part of the paint extraction, and neither exit zero nor bounded task acceptance establishes a green complete quality gate.
 
 The fresh complete board readback contains 446 open cards: 429 unique execution tasks plus 17 milestones, with 372 Backlog, 0 Ready, 1 Building, 12 Verify and 44 Executed. MOD-DUPES-PAINT is Executed, MOD-DUPES-GENERATED is the sole Building task, and VERIFY-DUPES-ZERO stays Backlog. The index and all 428 terminal dependencies reconcile. The last complete clean combined check remains the earlier `1306f6cf2` receipt; source extraction, native mixed-session reliability, strict reference pixels and full design/functionality parity remain separate open gates.
+
+## Generated-output traversal — 2026-11-10
+
+Source `865f693c3` shares visible descendant traversal while retaining Script/GLSL
+readiness, errors and ordering. Original/current expanded owner controls both pass
+1,373 cases/10,475 assertions, repeated in the clean checkout. Normal build, types,
+architecture, corrected test lint and six rebuilt Chromium export workflows pass.
+The unchanged detector reports zero clones. MOD-DUPES-GENERATED is Executed.
+
+VERIFY-DUPES-ZERO is Building at `4bfdeae7c`: the actual canonical full-root command
+now rejects the original one-clone/displayed-zero-percent control and accepts the
+restored zero-clone candidate. Its complete clean combined check exits zero with
+literal zero clones. The first full-unit run has incomplete LFS fixtures; those
+failures stay retained pending materialization and a qualified rerun.
+[Evidence boundaries](GENERATED-OUTPUT-OWNERSHIP.md) preserve original failures,
+source restoration, current scanner limits and unexecuted native/reference gates.
+
+The complete clean combined check at `4bfdeae7c` exits zero through its stricter final
+zero-clone gate. VERIFY-DUPES-ZERO is Executed; STAB-NATIVE-SEQUENCE is the sole Building
+task for cold/retained native lifecycle controls. All 12 clean-checkout LFS pointers
+are materialized locally and hash-verified before the separate full-unit rerun.
+Actions readback confirms all 199 owned repositories disabled, with zero unknowns.
+No native runtime or full product acceptance follows from these engineering gates.
+
+Fresh complete readback: 446 open cards = 429 execution tasks plus 17 milestones;
+370 Backlog, 0 Ready, 1 Building, 12 Verify and 46 Executed. All 429 task IDs,
+list states and links reconcile with the task table. The 428 terminal dependencies
+remain required; PARITY-ALL stays Backlog and the active full goal remains open.
+
+The materialized canonical full-unit rerun exits one in CLI/Core/render: one inherited
+Storybook prose assertion, three incomplete renderer Surface doubles and the known
+strict Note mismatch (12,792 channels). All five reproduce at previous `57928f502`
+using the same real fixtures; no affected production/test path changes in this unit.
+Outside-manifest fixture files are independently read back unchanged. New narrow
+Backlog cards VERIFY-STORYBOOK-REFUSAL and VERIFY-GPU-SURFACE-CONTRACTS own the stale
+contracts; DRAW-16-NOTE-RASTER retains the actual pixel gap. Full unit acceptance
+remains failed, not waived by the clean static check.
+
+After those two residual allocations, the final complete readback is 448 open cards:
+431 unique execution tasks plus 17 milestones; 372 Backlog, 0 Ready, 1 Building,
+12 Verify and 46 Executed. All IDs, states, links and 430 terminal dependencies
+reconcile exactly; the native-session card remains sole Building.

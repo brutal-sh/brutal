@@ -18,13 +18,13 @@ This original scope excludes other first-party format, CLI/MCP and service packa
 [MOD-AUDIT-CLOSURE](https://trello.com/c/R0oPWJAa) adds their measured inventory and bounded
 MOD-16–MOD-20 follow-ups. Inventory acceptance does not accept those module dispositions.
 
-| Size | Files |
-| --- | ---: |
-| 1–50 | 1,192 |
-| 51–200 | 1,365 |
-| 201–300 | 205 |
-| 301–600 | 161 |
-| Above 600 | 12 |
+| Size      | Files |
+| --------- | ----: |
+| 1–50      | 1,192 |
+| 51–200    | 1,365 |
+| 201–300   |   205 |
+| 301–600   |   161 |
+| Above 600 |    12 |
 
 Total: 2,935. Median: 65. At most 300 lines: 2,762 (94%).
 
@@ -42,20 +42,20 @@ There is no universal industry file-size standard. Use 50–200 lines as a usefu
 focused helpers/controls and 200–300 for a cohesive feature module, not a compulsory split.
 The repository's configured review warning is 600 lines. Some inherited files have exceptions.
 
-| File | Lines | Required review |
-| --- | ---: | --- |
-| `packages/core/src/canvas/scene.ts` | 1,140 | Separate cohesive scene drawing responsibilities; retain pixels and order. |
-| `packages/scene-graph/src/types.ts` | 1,107 | Reviewed model-contract exception; see MOD-02 disposition below. |
-| `packages/core/src/canvas/renderer.ts` | 752 | Separate lifecycle/state responsibilities using existing renderer domains. |
-| `src/app/tabs/index.ts` | 715 | Separate tab lifecycle, persistence and selection ownership. |
-| `packages/vue/src/i18n/messages/panels.ts` | 694 | Review catalog domain ownership; a declaration/catalog exception needs a reason. |
-| `src/components/assets-panel/AssetsPanel.vue` | 669 | Separate asset browsing, selection and operations by responsibility. |
-| `src/components/browser-preview/BrowserPreviewControl.vue` | 658 | Separate browser toolbar/menu workflows while preserving native dock geometry. |
-| `packages/core/src/io/formats.ts` | 650 | Extract format-owned loading/export helpers; preserve registry contracts. |
-| `packages/vue/src/canvas/useCanvasInput.ts` | 632 | Separate input domains; retain focus, modifiers and cancellation. |
-| `src/app/shell/menu/schema.ts` | 621 | Review menu domains while retaining shared IDs/order/native parity. |
-| `packages/core/src/layout.ts` | 619 | Separate layout coordination domains; retain authored geometry. |
-| `packages/core/src/figma-api/index.ts` | 606 | Review facade versus domain implementation; retain public API. |
+| File                                                       | Lines | Required review                                                                  |
+| ---------------------------------------------------------- | ----: | -------------------------------------------------------------------------------- |
+| `packages/core/src/canvas/scene.ts`                        | 1,140 | Separate cohesive scene drawing responsibilities; retain pixels and order.       |
+| `packages/scene-graph/src/types.ts`                        | 1,107 | Reviewed model-contract exception; see MOD-02 disposition below.                 |
+| `packages/core/src/canvas/renderer.ts`                     |   752 | Separate lifecycle/state responsibilities using existing renderer domains.       |
+| `src/app/tabs/index.ts`                                    |   715 | Separate tab lifecycle, persistence and selection ownership.                     |
+| `packages/vue/src/i18n/messages/panels.ts`                 |   694 | Review catalog domain ownership; a declaration/catalog exception needs a reason. |
+| `src/components/assets-panel/AssetsPanel.vue`              |   669 | Separate asset browsing, selection and operations by responsibility.             |
+| `src/components/browser-preview/BrowserPreviewControl.vue` |   658 | Separate browser toolbar/menu workflows while preserving native dock geometry.   |
+| `packages/core/src/io/formats.ts`                          |   650 | Extract format-owned loading/export helpers; preserve registry contracts.        |
+| `packages/vue/src/canvas/useCanvasInput.ts`                |   632 | Separate input domains; retain focus, modifiers and cancellation.                |
+| `src/app/shell/menu/schema.ts`                             |   621 | Review menu domains while retaining shared IDs/order/native parity.              |
+| `packages/core/src/layout.ts`                              |   619 | Separate layout coordination domains; retain authored geometry.                  |
+| `packages/core/src/figma-api/index.ts`                     |   606 | Review facade versus domain implementation; retain public API.                   |
 
 Every original oversized file has its own review/refactor task. Eleven listed oversized dispositions
 remain open; `types.ts` is the reviewed exception. The font and graph candidates are below the size warning
@@ -165,8 +165,7 @@ Seven helpers and their private type retain their implementations; dispatcher or
 other declarations and public exports are unchanged. The remaining coordinator
 still exceeds the review threshold and belongs to MOD-19.
 
-The expanded source candidate now has 3,612 runtime code files and twelve above
-600. [FIG text evidence](FIG-TEXT-OWNERSHIP.md) records 761 owner tests before/after,
+The expanded source candidate now has 3,612 runtime code files and twelve above 600. [FIG text evidence](FIG-TEXT-OWNERSHIP.md) records 761 owner tests before/after,
 zero differences in two complete archive digests, four browser round trips in both
 controls, and an identical actual wrapped-text PNG. The old stored visual control
 still fails, and required live Figma validation is unexecuted. MOD-16 stays Verify;
@@ -202,7 +201,6 @@ Existing whole saved-archive controls retain records, blobs, images and interpre
 values. Independent review finds no concrete blocker to the bounded exception after
 publication. This does not accept complete message semantics or native/Figma behavior.
 
-
 ## Candidate awaiting browser/native verification: menu catalog
 
 [MOD-13](https://trello.com/c/dqmI6X9G) reduces the 621-line declaration owner to 106 lines
@@ -223,17 +221,30 @@ The full clean combined check subsequently reaches its final unchanged duplicati
 
 MOD-DUPES-AUTH moves the identical native callback validation to the existing shared sign-in domain in `cf9d319cf`, retaining both callback bodies and provider-specific redirect checks. Both owner selections execute 39 tests/93 assertions across nine files; types, architecture, clean bundle and bounded review pass. The unchanged duplicate check now reports four other groups/31 lines. Live OAuth and the whole modularity/full-parity goals remain unaccepted; MOD-DUPES-STORIES is the next bounded owner task.
 
-
 ## Connection fixture ownership follow-up
 
 MOD-DUPES-STORIES uses one owning builder for the unreachable Codex state, retaining distinct long/null diagnostics and fresh nested state per call. Original and extracted captures for all 25 stories match exactly; the story file is 299 nonblank lines and its fixture owner is 112. The canonical all-story sweep remains intact. The actual family walk reveals four pre-existing dark sign-in contrast failures, reproduced by the original story source; the separate A11Y-SIGNIN-CONTRAST repair preserves geometry and actions through local theme styling. Final play/axe execution passes all 25 states in both themes and all 18 translated grids. [Executed scope and limits](NATIVE-TEST-TYPE-CONTROL.md#connection-fixture-and-contrast-follow-up) retain the failed baseline and distinguish UI evidence from real OAuth and Pen parity. The unchanged scoped duplicate gate now reports three other groups/20 lines; no checker exemption is introduced.
-
 
 ## Script runtime ownership follow-up
 
 Candidate `56ce0e655` and its typed-callback follow-up `bc6d56c3b` separate Script materialization from scheduling/source-watch orchestration, sharing graph/node/size capture while retaining distinct normal/empty guards. The coordinator falls from 506 raw lines to 294 nonblank lines; the largest extracted module is 203. Newly extracted functions are at most 50 lines, while the existing coordinator factory still contains nested lifecycle functions. This bounded extraction does not establish whole-app function-size acceptance. Source/general/native types, architecture, lint, 24 owner cases and 34 Chromium/WebKit workflows pass. Placeholder IO payloads remain byte-identical in seven original/current requests; strict existing visual baselines remain unchanged. The clean normal/native builds and one fresh native save/reopen/source-watch/refusal case also pass. The unchanged duplicate gate now reports two other groups/15 lines. [Executed scope and remaining qualification](SCRIPT-PARITY.md#runtime-ownership-continuation--2026-11-10) distinguish these checks from full Script/Pen acceptance.
 
-
 ## PEN paint projection follow-up
 
 `56d3e4c85` shares inverse point/handle projection through canonical MeshPoint-derived keys and moves the unchanged private gradient reader concern into its own owner. The reader falls from 349 to 295 nonblank lines, with no public export, validation or binding change. Three codec/reopen controls retain exact bytes; focused 23-case controls pass against original and candidate sources. The shared/clean package selections pass 322/319 cases, and clean bundle, types, typed lint and browser controls pass. [Qualification and remaining pixel/native limits](MESH-PARITY.md#pen-point-projection-ownership--2026-11-10) distinguish this extraction from full Mesh acceptance. The paint clone is absent, but one known eight-line generated-output clone remains even though the whole-repo percentage rounds to zero and the unchanged CLI exits zero. Strict-count hardening has its own task; no all-green combined-check or whole-app modularity acceptance is inferred.
+
+## Generated-output traversal and strict clone policy
+
+MOD-DUPES-GENERATED shares the private visible subtree owner in `865f693c3`, retaining
+Script/GLSL readiness checks, subtree pruning, cycle protection and consumer mutation
+timing. Original/current expanded owner controls both pass 1,373 cases/10,475 assertions;
+the clean checkout repeats them. Normal build, types, architecture and six Chromium
+export workflows pass. The unchanged scanner reports literal zero clones.
+[Executed scope and limits](GENERATED-OUTPUT-OWNERSHIP.md) keep native/reference and
+full modularity acceptance separate.
+
+VERIFY-DUPES-ZERO adds only the existing CLI's `--exitCode 1` policy in `4bfdeae7c`.
+The actual full-root command rejects the controlled original one-clone/zero-percent
+corpus and accepts the restored zero-clone candidate. Its complete clean combined check at that commit exits zero and reports literal zero
+clones; historical false-green and five-group failures stay retained. Full-unit fixture
+materialization and native/reference acceptance remain separate controls.
