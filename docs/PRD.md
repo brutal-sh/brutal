@@ -211,3 +211,13 @@ Surface disposal assertions. Complete CLI and render shards pass their bounded
 criteria; the historical full-unit failure remains retained. Native retained
 behavior and strict Note pixels still require acceptance. TASKS.md and the live
 board retain the full terminal dependency set.
+
+The [app acceptance controls](APP-TEST-CONTROLS.md) preserve original/current
+failures and execute the shader request, startup-toast and library publication
+repairs. Source `18a464656` retains stored revision integrity while excluding
+runtime text measurement from publishable edits; source save/reopen and offline
+instance workflows pass in Chromium and WebKit. The complete app shard passes
+1,964 cases. The [native retained-session record](NATIVE-RETAINED-SEQUENCE.md)
+keeps intermittent menu-focus/window loss open. Full unit, strict Note raster,
+exact remaining visual states and full Pen parity are not accepted by these
+bounded controls. Current scheduling is in TASKS.md and the live board.

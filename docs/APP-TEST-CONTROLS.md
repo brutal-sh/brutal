@@ -1,7 +1,9 @@
 # App acceptance controls
 
-2026-11-07. These are bounded test-control repairs, not product behavior changes or
-native delivery acceptance. Actual Pen 1.2.21 remains the product reference.
+Updated: 2026-11-10. These bounded controls distinguish fixture repairs from the
+library discovery correction below. They do not establish native delivery or
+product parity. Current reference is actual Pen 1.2.22; historical 1.2.21 receipts
+retain their original scope.
 
 The original 715-line tab entry and extracted 495-line entry both produce 1,950 passes
 and the same three failures across 1,953 app-shard tests / 339 files. Their failing titles
@@ -74,3 +76,74 @@ are part of these extractions. The paired browser controls still retain the same
 wrapped-text visual failure, even though actual before/after pixels match.
 [Text](FIG-TEXT-OWNERSHIP.md) and [payload](FIG-PAYLOAD-OWNERSHIP.md) records preserve
 that control and the separate live Figma gates. The app shard cannot accept them.
+
+## Request and toast attribution controls
+
+The complete app shard at prior `5d1a81a5f` and native candidate `c791e333a`
+reports the same three failures; their three owner files pass nine cases together
+in isolation. This establishes a pre-existing cross-file influence, not a native
+candidate regression or a production credential leak.
+
+[VERIFY-SHADER-FETCH-ISOLATION](https://trello.com/c/Hr27ct7F) snapshots the existing
+fetch-spy call count and checks the single new shader request with credentials
+omitted. Source, oversized-length and invalid UTF-8 refusals remain. A seeded
+prior call makes the original assertion fail without network; the corrected
+owner and seeded control each pass one case/four assertions. The complete app
+shard then passes 1,962 cases and retains two other failures. Source `f478dc76f`.
+
+[VERIFY-UPDATER-TOAST-STATE](https://trello.com/c/1TLbRL6H) snapshots copied existing
+toast records before scheduling and requires them unchanged afterward, together
+with zero native requests and the original 2,600ms wait. A real existing-toast
+seed gives the original five passes/one failure; corrected owner and seed each
+pass six cases/ten assertions. The complete app shard then passes 1,963 cases
+with the library failure remaining. No production toast clearing or updater
+change is made. This checks no new feedback, not deep action/progress-object
+immutability. Source `2a15a2431`.
+
+## Library measurement and publication
+
+[STAB-LIBRARY-HASH-ORDER](https://trello.com/c/1Usfscrb) is a production discovery
+correction. The failing full-app observation identifies exactly one canonical
+field delta after real FIG round-trip: a child TEXT node's `derivedTextHeight`
+changes from null to 17.060546875. This is measured text cache, not authored
+geometry. Source `18a464656` compares authored content only for raw modified
+assets, including children and component dependencies; name/description changes
+remain renames and actual authored changes remain modifications. Returned
+revision descriptors and stored hashes retain their existing representation.
+
+Five new regressions cover direct and dependency measurement, rename plus cache,
+authored records with the same field name, and stored-cache tampering. Against
+the original source they produce three failures/two passes. The corrected library
+cohort passes 54 cases/136 assertions across 19 files. Original/current wire
+controls have identical stored descriptor hashes and revision IDs in both
+measurement states, and real serialization/validation passes. This does not
+claim whole serialized graph-byte identity or a performance benchmark.
+
+The complete app shard passes all 1,964 cases/12,479 assertions across 342 files.
+The normal package/app build, source/general test types, architecture, owned
+lint/format and independent reviews pass. An initial ad hoc typed-lint command
+incorrectly includes test-only compilation boundaries and fails; the canonical
+source typed lint, test structural lint and shared test compiler pass separately.
+
+Two actual browser cases pass in Chromium (14.0s) and WebKit (16.4s):
+source publication, FIG save/reopen without false edits, a subsequent authored
+modification/revision, and offline multidimensional instance consumption and
+reopen. Tests use the current Libraries/Components tabs and keyboard grid
+insertion; original save and integrity assertions remain. The canonical WebKit
+project now includes this exact workflow file. Earlier stale-navigation failures
+remain retained. No screenshot tolerance, baseline, timeout or retry changes.
+
+Private receipts are under `local-evidence/library-hash-order-2026-11-10/`,
+`shader-fetch-isolation-2026-11-10/` and `updater-toast-state-2026-11-10/`.
+These bounded results do not establish exact Pen visual design, native delivery,
+the strict Note raster criterion, the whole unit suite or full product parity.
+
+
+The complete clean `bun run check` at `18a464656` subsequently passes every
+configured gate through literal zero detected clones. Its tracked checkout is
+clean and excludes unrelated icon work. The complete canonical unit rerun then
+exits one: its sole distinct failing title is the strict Note native-reference
+raster comparison, expecting zero and observing 12,792 changed channels. The
+runner repeats failed-group output; these repeated log lines are not separate
+root causes. The three app failures are absent from this complete rerun. Full
+unit success remains unaccepted.

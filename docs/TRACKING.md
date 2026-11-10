@@ -381,3 +381,74 @@ resumes soleBuilding after explicit shared-desktop release, with system mute
 preserved. Its recovery/reload candidate remains uncommitted and full retained
 native acceptance remains open. Current Pen1.2.22 archive/native extraction is
 reverified locally; full design/functionality parity stays open.
+
+[Retained native qualification](NATIVE-RETAINED-SEQUENCE.md) records the uncommitted
+recovery/reload and address-input candidate, preserved recovery payloads and paired
+native controls. The retained prefix passes8cases and fails1menu-focus case; a
+shorter diagnostic pass does not accept that intermittent behavior. The native
+sequence remains soleBuilding while its complete retained control runs. Fresh
+owned-repository inventory now reads201/201Actionsdisabled,0unknown; previous
+199-repository receipts above remain historical.
+
+The full retained native attempt subsequently fails first at an import notification
+check, with later window-loss cascades retained. Failure-only observation finds
+the required cross-origin error present beside an older success alert. The
+assertion now searches the alert collection without weakening graph/selection/page
+invariants; complete native import passes. The bounded follow-up passes5cases and
+fails1editor-menu-focus case. Neither that pass nor source review accepts full
+retained reliability; the13-file candidate stays uncommitted.
+
+The13-file native candidate is subsequently saved at`c791e333a` for review and
+recovery, without accepting STAB-NATIVE-SEQUENCE. Fresh-diagnostic import executes
+its complete native case successfully; an unchanged existing alert cannot satisfy
+the check. A diagnostic prefix passes9cases while the canonical menu-focus failure
+and later native WebDriver window loss remain open. The separate checkout advances
+to that source for the complete clean check. An initial check accidentally started
+from the shared directory is interrupted and retained as non-acceptance evidence;
+the corrected invocation verifies its isolated directory and exact HEAD first.
+
+The corrected complete clean check at`c791e333a` exits0 through its strict final
+duplication gate with literal0clones; unrelated icon work is excluded and the
+tracked comparison tree is clean. A complete unit rerun is now separate work.
+No native reliability or full-parity gate is accepted by the engineering result.
+
+The complete clean unit run at`c791e333a` exits1 with the strict Note raster
+mismatch plus three app cases: shader-URL credentials, representation-only library
+hash normalization and startup-update toast state. The three app owners pass all
+9cases together in isolation, so cross-file influence remains under investigation.
+The prior-source full-app control is required before attributing these failures
+to the native candidate or declaring them resolved. No full-unit acceptance.
+
+Prior-source full-app control at `5d1a81a5f` reproduces the same three failures
+(1,961 passes/three failures/342 files). Separate shader request attribution
+(`f478dc76f`) and existing-toast state (`2a15a2431`) controls execute their seeded
+original/current criteria without production loader/updater changes.
+
+Library source `18a464656` corrects the identified child TEXT measurement delta
+while preserving stored hashes, descriptors, authored changes and integrity
+validation. The library cohort passes 54 cases; complete app passes 1,964;
+Chromium and WebKit each pass both actual publish/save/reopen/offline consumption
+workflows. The normal build and scoped static/review gates pass. Complete current
+clean quality and full unit reruns remain separate pending gates. No visual or
+native parity is inferred. APP-TEST-CONTROLS.md retains precise evidence limits.
+
+
+The fresh complete board readback reconciles 452 open cards: 435 execution tasks
+and 17 milestones; 370 Backlog, one Building, 12 Verify and 52 Executed. All 434
+other task IDs remain terminal dependencies. The library repair is Executed for
+its bounded criterion; STAB-NATIVE-SEQUENCE resumes sole Building. Owned-repository
+inventory is refreshed from authenticated owner/admin-organization listings:
+201/201 Actions disabled, zero enabled and zero unknown. No settings mutation.
+
+
+The complete current clean check at `18a464656` exits zero, including literal
+zero clones. The full canonical unit runner is then started from the same exact
+tracked-clean checkout. No native/browser run overlaps its build/check cycle.
+Native retained-session and strict Note acceptance remain open.
+
+
+The complete unit run at `18a464656` finishes with exit one and sole distinct
+failure: strict Note reference raster (expected zero, observed 12,792 changed
+channels). Shader/toast/library failures are absent from the complete rerun.
+This is current failed whole-unit evidence, replacing no historical failures
+and accepting neither exact Note pixels nor native/full Pen parity.
