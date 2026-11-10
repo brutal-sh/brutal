@@ -81,6 +81,7 @@ export default defineConfig({
       testMatch: [
         '**/*.webkit.spec.ts',
         '**/canvas/split-views.spec.ts',
+        '**/components/library-lifecycle.spec.ts',
         '**/design/panel.spec.ts',
         '**/design/retained-panel.spec.ts',
         '**/export/basic.spec.ts',

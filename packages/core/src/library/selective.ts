@@ -1,8 +1,12 @@
+import { compact } from 'es-toolkit/array'
+
 import { SceneGraph } from '@open-pencil/scene-graph'
 
 import { diffLibraryManifests } from './diff'
+import { canonicalJSONString } from './hash'
 import { copyLibraryTree, libraryDependencyRoots } from './materialize'
 import { createLibraryRevision } from './revision'
+import { canonicalLibraryNode } from './snapshot'
 import type {
   ComponentLibraryRevision,
   LibraryAssetChange,
@@ -19,6 +23,29 @@ export interface SelectiveLibraryRevisionInput extends Omit<
   selectedAssetKeys: ReadonlySet<string>
 }
 
+function publishableChange(
+  previous: ComponentLibraryRevision,
+  current: ComponentLibraryRevision,
+  change: LibraryAssetChange
+): LibraryAssetChange | null {
+  if (change.kind !== 'modified') return change
+  const before = previous.graph.getNode(change.previous.sourceNodeId)
+  const after = current.graph.getNode(change.asset.sourceNodeId)
+  if (!before || !after) return change
+  // Compare authored content while retaining the stored revision's existing integrity hashes.
+  const beforeContent = canonicalJSONString(
+    canonicalLibraryNode(previous.graph, before, new Set([before.id]), 'content')
+  )
+  const afterContent = canonicalJSONString(
+    canonicalLibraryNode(current.graph, after, new Set([after.id]), 'content')
+  )
+  if (beforeContent !== afterContent) return change
+  return change.previous.name !== change.asset.name ||
+    change.previous.description !== change.asset.description
+    ? { ...change, kind: 'renamed' }
+    : null
+}
+
 export async function discoverPublishableLibraryChanges(
   previous: ComponentLibraryRevision,
   sourceGraph: SceneGraph
@@ -30,7 +57,14 @@ export async function discoverPublishableLibraryChanges(
     previousRevisionId: previous.manifest.revisionId,
     publishedAt: previous.manifest.publishedAt
   })
-  return { current, changes: diffLibraryManifests(previous.manifest, current.manifest) }
+  return {
+    current,
+    changes: compact(
+      diffLibraryManifests(previous.manifest, current.manifest).map((change) =>
+        publishableChange(previous, current, change)
+      )
+    )
+  }
 }
 
 function copyAssets(

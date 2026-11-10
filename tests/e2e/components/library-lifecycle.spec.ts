@@ -6,10 +6,11 @@ import { CanvasHelper } from '#tests/helpers/canvas'
 const publicationSchema = v.pipe(v.string(), v.parseJson(), v.object({ revisionId: v.string() }))
 
 async function openAssets(page: Page) {
-  await page.getByTestId('left-panel-assets-tab').click()
+  await page.getByRole('tab', { name: 'Components', exact: true }).click()
 }
 
 async function openLibraries(page: Page) {
+  await page.getByRole('tab', { name: 'Libraries', exact: true }).click()
   await page.getByRole('button', { name: 'Manage libraries' }).click()
 }
 
@@ -22,12 +23,19 @@ test('preserves source publication identity across FIG save and reopen', async (
     if (!store) throw new Error('OpenPencil store not initialized')
     const pageNode = store.graph.getNode(store.state.currentPageId)
     if (!pageNode) throw new Error('Current page missing')
-    return store.graph.createNode('COMPONENT', pageNode.id, {
+    const component = store.graph.createNode('COMPONENT', pageNode.id, {
       name: 'Source button',
       componentKey: 'source-button',
       width: 80,
       height: 32
-    }).id
+    })
+    store.graph.createNode('TEXT', component.id, {
+      name: 'Source label',
+      text: 'Source label',
+      width: 60,
+      height: 20
+    })
+    return component.id
   })
 
   await openAssets(page)
@@ -211,9 +219,9 @@ test('publishes, consumes, saves, and reopens a multidimensional library instanc
   await page.keyboard.press('Escape')
   await expect(page.getByTestId('asset-libraries-dialog')).toBeHidden()
 
-  await page.getByRole('button', { name: 'List view' }).click()
+  await openAssets(page)
   const asset = page.getByTestId('asset-item').filter({ hasText: 'Button' })
-  await asset.getByTestId('asset-insert').click()
+  await asset.press('Enter')
   await canvas.waitForRender()
   const variants = page.getByRole('region', { name: 'Variants' })
   await variants.getByRole('combobox', { name: 'Size' }).click()

@@ -144,13 +144,15 @@ function normalizedLibraryField(key: string, value: unknown): unknown {
 export function canonicalLibraryNode(
   graph: SceneGraph,
   node: SceneNode,
-  dependencyStack = new Set<string>()
+  dependencyStack = new Set<string>(),
+  projection: 'stored' | 'content' = 'stored'
 ): unknown {
   const visualFields = Object.fromEntries(
     Object.entries(node)
       .filter(
         ([key]) =>
           !VOLATILE_NODE_FIELDS.has(key) &&
+          !(projection === 'content' && key === 'derivedTextHeight') &&
           key !== 'componentId' &&
           key !== 'instanceIndex' &&
           key !== 'name' &&
@@ -171,7 +173,12 @@ export function canonicalLibraryNode(
       : null
   const dependency =
     component && dependencyKey && !dependencyStack.has(component.id)
-      ? canonicalLibraryNode(graph, component, new Set([...dependencyStack, component.id]))
+      ? canonicalLibraryNode(
+          graph,
+          component,
+          new Set([...dependencyStack, component.id]),
+          projection
+        )
       : null
   return {
     ...visualFields,
@@ -179,7 +186,7 @@ export function canonicalLibraryNode(
     componentDependency: dependency,
     children: node.childIds.flatMap((id) => {
       const child = graph.getNode(id)
-      return child ? [canonicalLibraryNode(graph, child, dependencyStack)] : []
+      return child ? [canonicalLibraryNode(graph, child, dependencyStack, projection)] : []
     })
   }
 }
