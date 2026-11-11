@@ -12,8 +12,8 @@ import {
 } from '@open-pencil/scene-graph/generated'
 import { resolvedPaintBindings } from '@open-pencil/scene-graph/variables'
 
-import { measureTextForLayout } from './text-measurement'
-import { mapAlignSelf } from './yoga-helpers'
+import { measureTextForLayout } from '#core/layout/text-measurement'
+import { mapAlignSelf } from '#core/layout/yoga-helpers'
 
 function noteSize(body: SceneNode, availableWidth: number) {
   const width = Math.max(NOTE_MIN_WIDTH, availableWidth)

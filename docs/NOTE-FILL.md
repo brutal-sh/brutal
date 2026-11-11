@@ -21,9 +21,75 @@ functional acceptance and the parent Note-reference task remain open.
 
 The reference tool initially reports an extra 50 on child Y positions in unsaved
 state. Exported body pixels and newly reopened copies report the positions above.
-The cause remains unknown; no compensating offset is added to Open Pen. A separate
-Hug-height parent probe reports zero parent height in unsaved state; that probe does
-not qualify Hug-parent behavior or justify changing the shared Hug algorithm.
+The cause remains unknown; no compensating offset is added to Open Pen.
+
+## Hug-parent candidate, 2026-11-11
+
+The saved matrix is copied byte-for-byte to a new owned URI and reopened through
+the actual Pen document tools. Eight controls confirm that Fill-height Notes do not
+contribute to the parent's Hug height, while their visible bodies remain intrinsic:
+
+| Control | Parent height | Note allocation |
+| --- | --- | --- |
+| Row, all Fill, fallback 500 | 500 | Y20, height219. |
+| Row, Fill Note and fixed 50-high rectangle | 90 | Y20, height219. |
+| Column, two Fill Notes, first 14 hard lines | 500 | Heights356/219, Y20/376. |
+| Column, first Fill and second fixed219 | 259 | Heights356/219, Y20/376. |
+| Same column, both authored fixed219 | 615 | Heights356/219, Y20/376. |
+| Row, fixed Note | 259 | Y20, height219. |
+| Mixed row, centered | 90 | Note Y−64.5. |
+| Mixed column, centered, gap12 | 259 | Notes Y−164/204. |
+
+The initial independent regression records five failures in eight cases. The
+unpublished candidate resolves the Note-specific contribution, then asks Yoga to
+place the intrinsic bodies inside the resolved parent. Ordinary wrapping keeps its
+existing Yoga behavior; a review-discovered wrapped-row regression has a dedicated
+test. The candidate does not change authored Fill strings or serialize measured body
+sizes as parent fallback values.
+
+Additional actual Pen observations report a zero fallback with parent height0 and
+Note Y20/376; fallback20 with centered children gives Y−277.5/78.5. A nested Hug
+ancestor reports279 with inner259. These are saved after observation but not freshly
+reopened: the next Pen MCP call returns a plan-usage block. They remain weaker
+reference evidence than the eight reopened controls. The candidate's zero/small
+fallback tests exercise a Yoga padding projection; fresh native reference acceptance,
+asymmetric padding and other alignment states remain open.
+
+The grouped candidate passes 119 focused engine/editor cases, including 13 new Hug
+regressions. Independent review finds and resolves a wrapped-row correction and a
+minimum-height/distributed-spacing case. The layout implementation is grouped under
+`layout/notes/`; the browser Note driver retains all 11 methods while separating
+setup, selection, components, paints and read probes. All seven touched TypeScript
+modules satisfy the 300 code-line, 50 function-line and complexity10 checks.
+
+Six Chromium/WebKit sizing/Hug cases pass. The two Hug snapshots cover the complete
+frame and overflow at 710×750; the existing sizing snapshots cover 650×650. Both use
+zero pixel tolerance. The retained-Fill journeys assert save/reopen values without an
+additional snapshot. The session avatar sits outside the Hug canvas crop.
+The broader inspector and component states belong to the complete Note cohort and
+remain separate from this six-case sizing/Hug result.
+After the driver grouping, the complete cohort passes 26 Chromium/WebKit cases,
+including Note creation, inspector/context actions, components, sizing and Hug.
+The rebuilt native candidate executes the new Hug case and the original sizing and
+component cases: three specs pass on binary SHA-256
+`dfd5ebb62bab074040bb51ff2bb0cc5e618636e6e0b7c4a7f33fd1727c09d92a`.
+The native path imports through the existing drop fixture, saves through the native
+file API and closes/reopens through Recents; trusted OS File Open/Save As dialogs are
+not qualified by that path.
+
+The first full quality run stops at an ATTW Vue prepack failure. Isolated Vue ATTW
+then passes; the original failure remains unclassified. Separate MCP startup logs
+contain a CodeMirror override error and do not establish that packaging failure's
+cause. No dependency manifest, lockfile, timeout or threshold is changed. The complete
+canonical unit command, including heavy fixtures, records 10,115 passes, one Windows-only
+skip and the same strict Note raster failure at 12,792 changed channels (exit1).
+Completed quality and browser receipts are retained with the grouped source manifest;
+earlier failed runs stay separate. Source and tests retain these qualification boundaries.
+The final complete `bun run check` exits zero with zero duplicate-code groups using
+the established Bun, Git LFS and Gitleaks toolchain; the earlier missing-scanner PATH
+failure is retained separately. Scanner rules and thresholds are unchanged.
+This section does not extend the previous published commit's acceptance or establish
+complete Hug/Note parity.
 
 ## Independent implementation and executed checks
 

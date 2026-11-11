@@ -20,6 +20,13 @@ complexity-10, four-parameter and depth-four checks. Comments and blank lines ar
 this does not assert that all runtime owners meet those limits. MOD-14 remains unaccepted
 pending its complete behavior/rendering criterion and GPU dependency.
 
+The 2026-11-11 Hug follow-up groups Note leaf/body layout and its height contribution
+under `layout/notes/`. Browser test-driver factories separate setup, selection,
+components, paints and read probes while preserving their 11 methods. All seven
+TypeScript runtime/test modules touched by this follow-up meet the same size and
+complexity limits. The [Note evidence](NOTE-FILL.md) keeps the behavioral and rendering
+qualification boundaries explicit; this remains a bounded ownership change.
+
 Scope: authored `.ts`, `.vue`, `.rs` and `.css` under `src`, `packages/core/src`,
 `packages/vue/src`, `packages/scene-graph/src` and `desktop/src`. Counts are physical lines.
 `.d.ts` declarations, tests and `.stories.ts` examples are excluded; authored catalogs are included.

@@ -1,0 +1,11 @@
+{
+  "version": "2.22",
+  "children": [{
+    "id": "hug", "type": "frame", "name": "Hug Note overflow", "layout": "vertical",
+    "width": 600, "height": "fit_content(500)", "padding": 20, "fill": "#FFFFFF",
+    "children": [
+      { "id": "gold", "type": "note", "content": "One\nTwo\nThree\nFour\nFive\nSix\nSeven\nEight\nNine\nTen\nEleven\nTwelve\nThirteen\nFourteen", "width": "fill_container", "height": "fill_container" },
+      { "id": "purple", "type": "note", "content": "Vertical sibling", "width": "fill_container", "height": "fill_container", "color": "#DCC5F9" }
+    ]
+  }]
+}

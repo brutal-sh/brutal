@@ -9,6 +9,7 @@ import { applyEffectiveGeneratedTextLayout } from './layout/effective-generated-
 import { buildYogaTree } from './layout/flex'
 import { buildGridTree } from './layout/grid'
 import { layoutNote } from './layout/notes'
+import { resolveNoteHugLayout } from './layout/notes/hug'
 import { fitShapeWithTextFrame } from './layout/shape-with-text'
 import { sizeAutoResizingText } from './layout/text-auto-resize'
 import { freeYogaTree } from './layout/yoga-helpers'
@@ -38,6 +39,9 @@ function computeLayoutInternal(graph: SceneGraph, frameId: string): void {
       ? buildGridTree(graph, frame, rootDirection)
       : buildYogaTree(graph, frame, rootDirection)
   yogaRoot.calculateLayout(undefined, undefined, yogaDirection)
+  resolveNoteHugLayout(graph, frame, yogaRoot, () =>
+    yogaRoot.calculateLayout(undefined, undefined, yogaDirection)
+  )
   applyYogaLayout(graph, frame, yogaRoot, computeLayoutInternal)
   freeYogaTree(yogaRoot)
 }

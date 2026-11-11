@@ -4,8 +4,7 @@ import { parseColor } from '@open-pencil/scene-graph/color'
 
 import { openAppMenu } from '#tests/helpers/menu'
 
-/** Setup and probes for imported Pen Notes; edits and saves use the app's controls. */
-export function noteDriver(page: Page) {
+function noteSetupDriver(page: Page) {
   return {
     origin() {
       return page.evaluate(() => {
@@ -21,6 +20,23 @@ export function noteDriver(page: Page) {
         store.requestRender()
       })
     },
+    async open(path: string) {
+      const choosing = page.waitForEvent('filechooser')
+      await (await openAppMenu(page, 'File')).getByRole('menuitem', { name: /^Open…/ }).click()
+      await (await choosing).setFiles(path)
+    },
+    readOnly(value: boolean) {
+      return page.evaluate((readOnly) => {
+        const store = window.openPencil?.getStore?.()
+        if (!store) throw new Error('Editor unavailable')
+        store.setReadOnly(readOnly)
+      }, value)
+    }
+  }
+}
+
+function noteSelectionDriver(page: Page) {
+  return {
     selected() {
       return page.evaluate(() => {
         const store = window.openPencil?.getStore?.()
@@ -47,11 +63,22 @@ export function noteDriver(page: Page) {
         }
       })
     },
-    async open(path: string) {
-      const choosing = page.waitForEvent('filechooser')
-      await (await openAppMenu(page, 'File')).getByRole('menuitem', { name: /^Open…/ }).click()
-      await (await choosing).setFiles(path)
-    },
+    select(ids: string | readonly string[]) {
+      return page.evaluate(
+        (targets) => {
+          const store = window.openPencil?.getStore?.()
+          if (!store) throw new Error('Editor unavailable')
+          store.select(targets)
+          store.requestRender()
+        },
+        typeof ids === 'string' ? [ids] : [...ids]
+      )
+    }
+  }
+}
+
+function noteComponentDriver(page: Page) {
+  return {
     createInstance(masterId: string) {
       return page.evaluate((id) => {
         const store = window.openPencil?.getStore?.()
@@ -77,18 +104,12 @@ export function noteDriver(page: Page) {
         store.select([copy.id])
         return { prototype, copy: copy.id }
       }, masterId)
-    },
-    select(ids: string | readonly string[]) {
-      return page.evaluate(
-        (targets) => {
-          const store = window.openPencil?.getStore?.()
-          if (!store) throw new Error('Editor unavailable')
-          store.select(targets)
-          store.requestRender()
-        },
-        typeof ids === 'string' ? [ids] : [...ids]
-      )
-    },
+    }
+  }
+}
+
+function notePaintDriver(page: Page) {
+  return {
     paints(ids: readonly string[] = ['gold', 'purple', 'long']) {
       return page.evaluate(
         (targets) => {
@@ -117,13 +138,24 @@ export function noteDriver(page: Page) {
         store.requestRender()
         return variable.id
       }, parseColor('#FEE484'))
-    },
-    readOnly(value: boolean) {
-      return page.evaluate((readOnly) => {
-        const store = window.openPencil?.getStore?.()
-        if (!store) throw new Error('Editor unavailable')
-        store.setReadOnly(readOnly)
-      }, value)
+    }
+  }
+}
+
+function noteReadDriver(page: Page) {
+  return {
+    geometry(ids: readonly string[]) {
+      return page.evaluate(
+        (targets) => {
+          const store = window.openPencil?.getStore?.()
+          if (!store) throw new Error('Editor unavailable')
+          return targets.map((id) => {
+            const node = store.graph.getNode(id)
+            return { id, x: node?.x, y: node?.y, width: node?.width, height: node?.height }
+          })
+        },
+        [...ids]
+      )
     },
     read() {
       return page.evaluate(() => {
@@ -136,5 +168,16 @@ export function noteDriver(page: Page) {
         })
       })
     }
+  }
+}
+
+/** Setup and probes for imported Pen Notes; edits and saves use the app's controls. */
+export function noteDriver(page: Page) {
+  return {
+    ...noteSetupDriver(page),
+    ...noteSelectionDriver(page),
+    ...noteComponentDriver(page),
+    ...notePaintDriver(page),
+    ...noteReadDriver(page)
   }
 }
