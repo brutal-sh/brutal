@@ -618,3 +618,13 @@ are linked from the task index and branding record. The fresh complete board rea
 457 open cards: 440 execution tasks and 17 milestones; 368 Backlog, one Building, 18 Verify
 and 53 Executed. The current browser stability owner remains the sole Building task.
 The old installed app is not accepted by newer source or native-test results.
+
+The remaining-wording source candidate is committed at `ae4461af18dbd42a1709c8023e86cf93a68388fb`
+in the isolated checkout, based on preserved Hug commit `3036f503`. The normal optimized
+macOS build is installed after backing up the old app and three profile paths. Both recovery
+blobs remain byte-identical; native workspace/app/About and Cloud/model Settings surfaces
+show the intended identity. Fullcheck,342 Cloud cases,155 focused cases,35 browser cases
+and eight cases across four native specs pass. The excluded overlapping-build browser run
+and two stripped-dylib build failures remain recorded. This supersedes the earlier local
+no-install testing hold under the user’s explicit visible-app wording request; no public
+release or merge occurs. Full parity and the remaining acceptance gates remain open.

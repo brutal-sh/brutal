@@ -1,6 +1,6 @@
 # Open Pen identity acceptance
 
-Updated: 2026-11-09. Own-brand assets have executed output and browser checks.
+Updated: 2026-11-11. Own-brand assets have executed output and browser checks.
 Owned diagnostics/log names also have bounded executed checks below. Product copy, native
 identity, links and full cross-platform branding remain separate open tasks.
 The [desktop-link record](DESKTOP-LINKS.md) tracks the own setup destination,
@@ -79,8 +79,10 @@ reproduces Rust's documented macOS 27 stripped-dylib loader failure
 rebuild succeeds for one macro but the full retry exposes the same alignment error in other
 compiler plugins. The Cargo release build override keeps only build-time dependencies
 unstripped, as supported by [Cargo profiles](https://doc.rust-lang.org/cargo/reference/profiles.html#build-dependencies).
-App optimization and permissions are unchanged. The actual optimized bundle retry and installed
-verification remain pending. The old app and three profile paths (45 files) are backed up
+App optimization and permissions are unchanged. The actual optimized bundle then builds successfully and is installed over the backed-up local
+copy. The installed binary SHA-256 is `9db3949e3634b7bcf9e857d40c46c48b74b607ef406b6f773a7ace5c0428d38a`;
+all four installed bundle files match the generated package and its ad-hoc signature verifies.
+Only the empty default Cargo feature is enabled; the native test driver is excluded. The old app and three profile paths (45 files) are backed up
 locally before update; both original recovery offers remain intact and Keychain is untouched.
 
 ## Owned diagnostics and log names
@@ -471,3 +473,25 @@ The real device controller handles test-owned rejection/retry/approval, denial a
 expiry feedback, retaining email/code values. Real OpenPencil Cloud service names and hosts
 remain; direct navigation and local responses do not accept real sign-in, verification,
 backend/native/CLI/provider delivery or full branding/Pen parity. Portal production source is unchanged.
+
+## Installed macOS wording — 2026-11-11
+
+The installed optimized app actually launches with “Open Pen found documents from a previous
+session.” Both original Untitled recoveries retain their Oct 30 timestamps and 29 KB labels;
+the two stored blob files (29,428 and 29,435 bytes) remain byte-identical after launch and Close.
+No Restore or Discard is invoked. All 45 backed-up profile files still exist; 31 retain their
+hashes and 14 database/cache files change during normal startup. Keychain is not exported or
+modified by this update. The old app and three profile paths remain in private local backups.
+
+The workspace popup actually offers Open Pen GitHub/documentation/CLI links and no upstream
+website item. The macOS menu actually shows About/Hide/Quit Open Pen, and About displays
+Open Pen 0.16.0 with the app icon. Settings actually shows the neutral Cloud heading and
+self-hosted-server option, retaining the truthful upstream website address. The existing Codex
+profile reports Connected/Tools; a new-model draft is cancelled without saving, and the app is
+left on Home with the original Settings section restored. These are CUA accessibility and
+screenshot observations in the session, not exported native image files.
+
+This accepts the observed English macOS wording surfaces only. It does not qualify every
+screen, menu, locale, a newly invoked microphone permission prompt, actual external-link
+activation, real AI prompts, Windows/Linux delivery, notarization, full branding or full Pen
+parity. The two follow-up cards remain Verify for their remaining criteria.
