@@ -41,10 +41,10 @@ and [branding milestone](https://trello.com/c/2cCz31Kz).
 
 Tracked by [Cloud copy](https://trello.com/c/mrP2See8) and [macOS menu delivery](https://trello.com/c/Auz9pX4e); both remain Verify.
 
-The installed `/Applications/Open Pen.app` predates the current source. Its macOS application
-menu already says Open Pen, but its workspace menu still offers “OpenPencil website” and its
-recovery dialog still identifies OpenPencil. The two existing recovery records are preserved;
-this observation does not qualify an updated installation.
+Before this follow-up, the installed `/Applications/Open Pen.app` predates the current source.
+Its macOS application menu already says Open Pen, but its workspace menu still offers
+“OpenPencil website” and its recovery dialog still identifies OpenPencil. These are observations
+of the replaced build. The two existing recovery records are preserved.
 
 The source candidate removes that upstream marketing item, names Open Pen in the assistant
 and microphone permission text, and uses neutral Cloud labels for optional service controls,
@@ -84,6 +84,18 @@ copy. The installed binary SHA-256 is `9db3949e3634b7bcf9e857d40c46c48b74b607ef4
 all four installed bundle files match the generated package and its ad-hoc signature verifies.
 Only the empty default Cargo feature is enabled; the native test driver is excluded. The old app and three profile paths (45 files) are backed up
 locally before update; both original recovery offers remain intact and Keychain is untouched.
+
+A fresh installed-app check observes Open Pen in the macOS application menu and its About,
+Hide and Quit commands, plus the own GitHub, support, documentation and CLI entries in the
+workspace menu. The upstream website entry is absent. This check uses the ordinary installed
+app, not the native test build; a screenshot is unavailable for this particular observation.
+
+The Cloud account recovery-code download also uses `open-pen-recovery-codes.txt`. A local
+synthetic account journey executes the actual download in Chromium and WebKit, verifies its
+bytes and filename, and confirms Done remains disabled until the codes are saved. Both
+captures are inspected and no remote request is observed. Independent review finds no caller
+depending on the old filename. This qualifies the client download; no real account's recovery
+codes are created, read or changed, and a deployed Cloud portal is not qualified by this check.
 
 ## Owned diagnostics and log names
 

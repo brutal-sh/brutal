@@ -30,7 +30,7 @@ async function copyCodes() {
 function downloadCodes() {
   downloadBlob(
     new TextEncoder().encode(`${codes.join('\n')}\n`),
-    'openpencil-recovery-codes.txt',
+    'open-pen-recovery-codes.txt',
     'text/plain'
   )
   saved.value = true
