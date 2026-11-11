@@ -78,3 +78,14 @@ installation, native approval, OS restart, physical input or exact Pen geometry 
 The empty feed and user files, profiles, credentials and recovery remain untouched.
 
 See the [PRD](PRD.md), [identity record](BRANDING.md) and [task index](TASKS.md).
+
+## Manual no-endpoint controller follow-up
+
+The original component-copy acceptance excludes real updater checks. A later installed macOS menu reproduction shows that the intentionally empty endpoint configuration still reaches the plugin and displays its raw EmptyEndpoints error. [BRAND-UPDATER-EMPTY](https://trello.com/c/3zbtcs6K) now owns the focused controller/native path; its candidate guard reuses the existing unavailable message, preserves silent/enabled behavior and passes the updater owner tests. A unique, ad-hoc-signed native-test candidate builds successfully with the canonical isolated identifier, incognito WebView, memory credentials and fresh test-owned routing. Computer Use reports the Mac locked before any candidate menu action; the owned process is terminated and native delivery remains Verify. The earlier ambiguous-bundle/WDIO handoff failure is retained. Endpoint, signing, download/install and updater-window policies are unchanged.
+
+
+### Controller qualification and open native gate
+
+The owner suite passes 25 cases and 52 assertions. Its original false and absent-flag controls fail on unwanted plugin calls before the guard; enabled-update cleanup, failure and window controls remain passing. Focused format/lint/size checks and the complete `bun run check` pass, including literal zero duplicate-code clones. Independent source review finds no actionable defect. The unique signed native-test bundle has binary SHA-256 `38d9b24e96c9956aced91896432670463faf903e83cd18c1e3b9de332e68ba82`; it is a test artifact, not an installed or public release.
+
+The actual installed menu establishes the original defect only. The candidate's actual Check for Updates menu command has not executed: the earlier handoff cannot bind ambiguous old test bundles, and the subsequent exact-path bundle binding reports the Mac locked. Both failures remain retained. The owned candidate process exits after termination, while the normal installed binary remains `79dd048532dbe97ae74c904b226a840371827cd3e2f393b7fa872c53e9287aa0`. No candidate menu, native unavailable toast, real updater delivery, download/install, restart or full-brand acceptance is inferred from owner tests or the successful build.

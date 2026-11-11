@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, test } from 'bun:test'
+import { afterEach, beforeEach, describe, expect, test } from 'bun:test'
 
 import { useI18n } from '@open-pencil/vue/i18n'
 
@@ -9,6 +9,18 @@ import { UPDATER_WINDOW_LABEL, UPDATER_WINDOW_URL } from '@/app/shell/updater/wi
 import { clearTauriMocks, mockTauriIPC } from '#tests/helpers/tauri/mocks'
 
 const { updates: messages } = useI18n()
+const originalUpdatesFlag = Object.getOwnPropertyDescriptor(
+  globalThis,
+  '__OPENPENCIL_UPDATES_ENABLED__'
+)
+
+beforeEach(() => {
+  Object.defineProperty(globalThis, '__OPENPENCIL_UPDATES_ENABLED__', {
+    configurable: true,
+    writable: true,
+    value: true
+  })
+})
 
 const AVAILABLE_UPDATE = {
   rid: 9,
@@ -22,10 +34,14 @@ const AVAILABLE_UPDATE = {
 afterEach(async () => {
   await clearTauriMocks()
   for (const entry of toast.toasts.value) toast.remove(entry.id)
+  if (originalUpdatesFlag)
+    Object.defineProperty(globalThis, '__OPENPENCIL_UPDATES_ENABLED__', originalUpdatesFlag)
+  else Reflect.deleteProperty(globalThis, '__OPENPENCIL_UPDATES_ENABLED__')
 })
 
 describe('checkForAppUpdate', () => {
   test('does not schedule an update request in a build without update endpoints', async () => {
+    Object.assign(globalThis, { __OPENPENCIL_UPDATES_ENABLED__: false })
     const calls: string[] = []
     const previousToasts = toast.toasts.value.map((entry) => ({ ...entry }))
     await mockTauriIPC((cmd) => {
@@ -41,6 +57,24 @@ describe('checkForAppUpdate', () => {
     expect(calls).toEqual([])
     expect(toast.toasts.value).toEqual(previousToasts)
   })
+
+  for (const enabled of [false, undefined]) {
+    test(`manual ${enabled === false ? 'disabled' : 'unconfigured'} updates use unavailable guidance without contacting the plugin`, async () => {
+      Object.assign(globalThis, { __OPENPENCIL_UPDATES_ENABLED__: enabled })
+      const calls: string[] = []
+      await mockTauriIPC((cmd) => {
+        calls.push(cmd)
+        return null
+      })
+      await checkForAppUpdate({ messages })
+      expect(calls).toEqual([])
+      expect(toast.toasts.value.map((entry) => entry.message)).toEqual([messages.value.unavailable])
+      for (const entry of toast.toasts.value) toast.remove(entry.id)
+      await checkForAppUpdate({ silent: true, messages })
+      expect(calls).toEqual([])
+      expect(toast.toasts.value).toEqual([])
+    })
+  }
 
   test('returns quietly when no update is available', async () => {
     const calls: string[] = []

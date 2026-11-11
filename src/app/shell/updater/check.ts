@@ -19,9 +19,13 @@ let updateCheckInFlight: Promise<void> | null = null
 
 export async function checkForAppUpdate(options: UpdateCheckOptions) {
   if (!isTauri()) return
+  const { silent = false, messages } = options
+  if (typeof __OPENPENCIL_UPDATES_ENABLED__ === 'undefined' || !__OPENPENCIL_UPDATES_ENABLED__) {
+    if (!silent) toast.info(messages.value.unavailable)
+    return
+  }
   if (updateCheckInFlight) return updateCheckInFlight
 
-  const { silent = false, messages } = options
   updateCheckInFlight = runUpdateCheck(silent, messages).finally(() => {
     updateCheckInFlight = null
   })

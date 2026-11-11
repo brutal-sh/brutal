@@ -130,7 +130,7 @@ The [complete audit](BOARD-AUDIT-2026-11-11.md) reconciles 461 execution tasks a
 
 | Horizon | Outcome | Evidence checkpoint |
 | --- | --- | --- |
-| Now | Repair measured browser height/import behavior | Qualified AssetsPanel source c37b11ba2 is published and its bounded cards accepted. Reproduce and repair actual Pen minimum-height, fixed-device import and double-click differences, retaining all failed controls. |
+| Now | Execute the isolated draft/save/reopen journey while native checks wait | AssetsPanel source c37b11ba2 is accepted under its bounded cards. Browser source 543ca9bd8 is privately published with retained controls and broader actual-reference matrices still open. The bounded updater guard passes source/owner checks but remains Verify for its actual candidate menu command. FIRST-03 is the sole Building task; preserve original failures and user state. |
 | Next | Close inspector/draft/save/recovery gates | Finish the private core-journey prerequisite graph with actual reference/native evidence; preserve full-parity obligations. |
 | Later | Complete every remaining domain and parity gate | Follow the [milestones](MILESTONES.md) and task dependencies, including FMT-09-DRIFT before IO-13-EXPORT; keep all applicable feature/platform obligations. |
 | Public readiness | Prepare an exact candidate for an explicit owner decision | BETA-01 stays private-core qualification. Public readiness separately requires PARITY-ALL and REL trust/package/support artifacts. No public publication is authorized. |

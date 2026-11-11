@@ -6,13 +6,15 @@ Repository: [private Open Pen repository](https://github.com/jpoindexter/open-pe
 Board: [Open Pen — independent design editor](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor), private.
 
 The [PRD](PRD.md) owns the outcome, constraints and release criteria.
-The [task index](TASKS.md) links all 461 execution cards; the [modularity audit](MODULARITY.md)
+The [task index](TASKS.md) links all 462 execution cards; the [modularity audit](MODULARITY.md)
 records the measured review queue. Requirements come from the [feature catalog](pen-feature-reference/README.md)
 and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), preserving historical Pen 1.2.21 evidence and the current [1.2.22 update inventory](pen-feature-reference/update-1.2.22-2026-11-09.md).
 
 The complete 2026-11-11 readback contains 479 cards: 461 execution tasks and 18 milestones. Lists are 380 Backlog, 3 Ready, 0 Building, 24 Verify and 54 Executed. [The audit](BOARD-AUDIT-2026-11-11.md) and [milestone exit gates](MILESTONES.md) own the current reconciliation; earlier snapshots below remain historical.
 
-After the audit, source c37b11ba2 publishes the qualified AssetsPanel refactor and fixtures privately; MOD-09 and TEST-ASSETS-WORKSPACE meet their bounded criteria and move Executed. Current lists are 380 Backlog, 2 Ready, 1 Building (BROWSER-CLIP), 22 Verify and 56 Executed. The preceding 479-card audit snapshot stays dated. Browser behavior has actual-reference repair work queued; inspector and draft/save/recovery criteria remain explicit. Installed command-card readback is observed on the original saved transcript. Full Agent, native, brand, beta and design/functionality parity remain unaccepted.
+After the audit, source c37b11ba2 publishes the qualified AssetsPanel refactor and fixtures; its two bounded cards are Executed. Source 543ca9bd8 publishes the browser-height reference repair with 34 serial browser cases, four isolated native candidate cases and a discriminating fresh-process reset control; BROWSER-CLIP remains Verify for its wider actual-reference matrices. Claude's read-only review identifies a manual empty-endpoint updater defect, reproduced through the installed macOS menu and allocated to BRAND-UPDATER-EMPTY under BRAND-MAC-MENU. The narrow guard and 25 owner controls pass; its signed isolated candidate is built, but actual menu delivery stays Verify because Computer Use reports the Mac locked. FIRST-03 is the next isolated draft/save/reopen journey; physical native/reference checks remain open.
+
+The current all-state readback contains 480 cards: 462 execution tasks and 18 milestones. Lists are 380 Backlog, 1 Ready, 1 Building (FIRST-03), 24 Verify and 56 Executed. This is a task-state snapshot, not product-parity progress. The preceding 479-card audit stays dated. Existing saved-chat readback, normal installation/profile/recovery and protected icon work remain preserved; all broader acceptance remains open.
 
 ## Board organization
 

@@ -507,3 +507,11 @@ This accepts the observed English macOS wording surfaces only. It does not quali
 screen, menu, locale, a newly invoked microphone permission prompt, actual external-link
 activation, real AI prompts, Windows/Linux delivery, notarization, full branding or full Pen
 parity. The two follow-up cards remain Verify for their remaining criteria.
+
+## Parallel Claude source follow-up — 2026-11-11
+
+An isolated, read-only Claude Sonnet5 review uses only Read/Grep/Glob and leaves its checkout unchanged. It identifies a manual updater-controller gap despite the already accepted update-copy component fixtures. The parent confirms the route and activates Open Pen > Check for Updates in normal installed binary79dd: the native warning reads “Could not check for updates: Updater does not have any endpoints set.” The warning auto-dismisses; the saved workspace and transcript remain intact, with no updater window or install.
+
+[BRAND-UPDATER-EMPTY](https://trello.com/c/3zbtcs6K) owns this bounded controller/native correction and is a prerequisite of BRAND-MAC-MENU. Two false/unconfigured-flag controls fail before the guard; the candidate updater owner suite passes 25 tests/52 assertions with existing enabled behavior preserved. The unique signed native-test candidate builds successfully, but Computer Use reports the Mac locked before its menu can be invoked. The owned test process is terminated; the exact candidate menu criterion remains Verify until its actual command is observed. No existing component-only receipt is promoted to cover this path.
+
+The review also identifies documentation-only scheme/owner references for BRAND-NATIVE and MOD-13. Those do not authorize blanket renaming: required attribution, provider names and valid compatibility identifiers remain intact. The private review, tool inventory, clean-checkout receipt and installed reproduction are under `local-evidence/claude-brand-review-2026-11-11/`. Full branding, native delivery and parity remain open.
