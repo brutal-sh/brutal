@@ -1,92 +1,98 @@
+import { BUILTIN_IO_FORMATS, IORegistry } from '@open-pencil/core/io'
+
 import { expect, test, useEditorSetup } from '#tests/e2e/fixtures'
 import { CanvasHelper } from '#tests/helpers/canvas'
+import { recoveryBytes } from '#tests/helpers/document/recovery'
+import { openAppMenu } from '#tests/helpers/menu'
 
 const editor = useEditorSetup()
 
-test('autosave triggers after scene changes with a file handle', async () => {
-  const writeCount = await editor.page.evaluate(() => {
-    let writes = 0
-    const mockWritable: Pick<FileSystemWritableFileStream, 'write' | 'close'> = {
-      write: async () => {
-        writes++
-      },
-      close: async () => undefined
+test('autosave writes actual edited pen bytes through its established file handle', async () => {
+  const file = await editor.page.evaluateHandle(async () => {
+    const directory = await navigator.storage.getDirectory()
+    const handle = await directory.getFileHandle('autosave.pen', { create: true })
+    const original = window.showSaveFilePicker
+    window.showSaveFilePicker = async () => handle
+    return {
+      read: async () => Array.from(new Uint8Array(await (await handle.getFile()).arrayBuffer())),
+      restore: () => {
+        window.showSaveFilePicker = original
+      }
     }
-    const mockHandle = {
-      createWritable: async () => mockWritable
-    } as FileSystemFileHandle
-
-    window.openPencil ??= {}
-    window.openPencil.test = { writeCount: () => writes, mockHandle }
-
-    return writes
   })
-
-  expect(writeCount).toBe(0)
-
-  // Inject the file handle into the store's internal state
-  // We do this by calling a save first to establish the handle
-  await editor.page.evaluate(() => {
-    // Directly set the fileHandle via a test hook
-    // Since fileHandle is a closure variable, we need to trigger the save path
-    // The cleanest way: mock showSaveFilePicker to return our handle
-    const mockWritable: Pick<FileSystemWritableFileStream, 'write' | 'close'> = {
-      write: async () => undefined,
-      close: async () => undefined
-    }
-    const mockHandle = {
-      createWritable: async () => mockWritable
-    }
-    window.showSaveFilePicker = async () => mockHandle as FileSystemFileHandle
-  })
-
-  // Trigger Save As to establish the file handle
-  await editor.page.keyboard.press('Meta+Shift+s')
-  await editor.page.waitForTimeout(500)
-
-  // Now draw a shape — this should trigger autosave after 3s
-  await editor.canvas.drawRect(400, 400, 60, 60)
-
-  // Check that the scene version changed
-  const versionAfterDraw = await editor.page.evaluate(() => {
-    const store = window.openPencil?.getStore?.()
-    if (!store) throw new Error('OpenPencil store not initialized')
-    return store.state.sceneVersion
-  })
-  expect(versionAfterDraw).toBeGreaterThan(0)
-
-  // Wait for autosave debounce (3s) + buffer
-  await editor.page.waitForTimeout(4000)
-
-  // Verify a write happened by checking the mock was called
-  const writeHappened = await editor.page.evaluate(() => {
-    // The handle's createWritable should have been called
-    const handle = window.showSaveFilePicker
-    return handle !== undefined
-  })
-  expect(writeHappened).toBe(true)
+  try {
+    await (
+      await openAppMenu(editor.page, 'File')
+    )
+      .getByRole('menuitem', { name: /^Save as…/ })
+      .click()
+    await expect
+      .poll(() => file.evaluate(async (state) => (await state.read()).length))
+      .toBeGreaterThan(0)
+    const autosave = (await openAppMenu(editor.page, 'File')).getByRole('menuitemcheckbox', {
+      name: 'Auto-save to local file',
+      exact: true
+    })
+    await expect(autosave).not.toBeChecked()
+    await autosave.click()
+    await editor.canvas.drawRect(400, 400, 60, 60)
+    await expect
+      .poll(async () => {
+        const bytes = new Uint8Array(await file.evaluate((state) => state.read()))
+        const document = await new IORegistry(BUILTIN_IO_FORMATS).readDocument({
+          name: 'autosave.pen',
+          data: bytes
+        })
+        return [...document.graph.nodes.values()]
+          .filter((node) => node.type === 'RECTANGLE')
+          .map((node) => ({ width: node.width, height: node.height }))
+      })
+      .toEqual([{ width: 60, height: 60 }])
+    await expect(editor.page.getByRole('img', { name: 'Unsaved changes' })).not.toBeVisible()
+    editor.canvas.assertNoErrors()
+  } finally {
+    await file.evaluate((state) => state.restore())
+    await file.dispose()
+  }
 })
 
-test('no autosave without file handle', async ({ browser, baseURL }) => {
+test('an unsaved design keeps a recovery draft without opening a file picker', async ({
+  browser,
+  baseURL
+}) => {
   const context = await browser.newContext({
     baseURL,
     viewport: { width: 1280, height: 800 },
     deviceScaleFactor: 2
   })
-  const freshPage = await context.newPage()
-  await freshPage.goto('/')
-  const freshCanvas = new CanvasHelper(freshPage)
-  await freshCanvas.waitForInit()
-
-  await freshPage.evaluate(() => {
-    Reflect.deleteProperty(window, 'showSaveFilePicker')
-  })
-
-  await freshCanvas.drawRect(100, 100, 50, 50)
-  await freshPage.waitForTimeout(4000)
-
-  freshCanvas.assertNoErrors()
-
-  await freshPage.close()
-  await context.close()
+  try {
+    const page = await context.newPage()
+    await page.goto('/')
+    const canvas = new CanvasHelper(page)
+    await canvas.waitForInit()
+    const picker = await page.evaluateHandle(() => {
+      const state = { calls: 0 }
+      window.showSaveFilePicker = async () => {
+        state.calls++
+        throw new Error('An unwritable draft must not open a file picker')
+      }
+      return state
+    })
+    try {
+      await canvas.drawRect(100, 100, 50, 50)
+      const menu = await openAppMenu(page, 'File')
+      await expect(
+        menu.getByRole('menuitemcheckbox', { name: 'Auto-save to local file', exact: true })
+      ).toHaveCount(0)
+      await page.keyboard.press('Escape')
+      await expect.poll(async () => (await recoveryBytes(page)).length).toBe(1)
+      expect(await picker.evaluate((state) => state.calls)).toBe(0)
+      await expect(page.getByRole('img', { name: 'Unsaved changes' })).toBeVisible()
+      canvas.assertNoErrors()
+    } finally {
+      await picker.dispose()
+    }
+  } finally {
+    await context.close()
+  }
 })

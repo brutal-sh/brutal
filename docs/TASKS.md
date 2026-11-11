@@ -4,7 +4,7 @@ Updated: 2026-11-11 after the complete live-board audit. Full design and functio
 
 The board contains **463 execution tasks** and **18 outcome milestones**, covering all **164 documented requirements** and **22 native screen/menu rows** plus explicit operational, branding and modularity work. Four compound parents now retain acceptance gates over 14 bounded children. Three separate public-readiness artifacts and the accepted macOS driver leaf have explicit owners.
 
-Current lists: 381 Backlog, 1 Ready, 1 Building, 24 Verify, 56 Executed, plus 18 milestones. These are recorded task states, not a product-parity percentage or a count of unbuilt features.
+Current lists: 380 Backlog, 1 Ready, 1 Building, 24 Verify, 57 Executed, plus 18 milestones. These are recorded task states, not a product-parity percentage or a count of unbuilt features.
 
 [Audit](BOARD-AUDIT-2026-11-11.md) · [Milestones](MILESTONES.md) · [PRD](PRD.md) · [Tracking](TRACKING.md) · [Board](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor)
 
@@ -63,7 +63,7 @@ Current lists: 381 Backlog, 1 Ready, 1 Building, 24 Verify, 56 Executed, plus 18
 | MCP-05 | Document targeting | MCP-05 | None identified | Backlog | [Card](https://trello.com/c/Emr6EgtS/64-mcp-05-document-targeting) |
 | FIRST-01 | First AI workflow | FIRST-01 | None identified | Backlog | [Card](https://trello.com/c/cYFWqKMs/65-first-01-first-ai-workflow) |
 | FIRST-02 | Focus-aware history | FIRST-02 | None identified | Backlog | [Card](https://trello.com/c/EwVLcrmq/66-first-02-focus-aware-history) |
-| FIRST-03 | Draft to project file | FIRST-03 | FIRST-DRAFT-REFRESH | Backlog | [Card](https://trello.com/c/apRnHd1j/67-first-03-draft-to-project-file) |
+| FIRST-03 | Draft to project file | FIRST-03 | FIRST-DRAFT-REFRESH | Building | [Card](https://trello.com/c/apRnHd1j/67-first-03-draft-to-project-file) |
 | FILE-01 | Portable document | FILE-01 | None identified | Backlog | [Card](https://trello.com/c/JsFIbu7p/68-file-01-portable-document) |
 | FILE-02 | Dashboard categories | FILE-02 | None identified | Backlog | [Card](https://trello.com/c/J8UZort9/69-file-02-dashboard-categories) |
 | FILE-03 | Gate: Grid and list views | FILE-03 | FILE-03-SELECT, FILE-03-SORT, FILE-03-VIEWS | Backlog | [Card](https://trello.com/c/Rzw53I8c/70-file-03-gate-grid-and-list-views) |
@@ -474,7 +474,7 @@ Current lists: 381 Backlog, 1 Ready, 1 Building, 24 Verify, 56 Executed, plus 18
 | REL-BETA-SUPPORT | Prepare beta limits and support routing | PRD-02, PRD-06, PRD-09 | BRAND-LINKS, ERR-07 | Backlog | [Card](https://trello.com/c/kEhaUu5g/477-rel-beta-support-prepare-beta-limits-and-support-routing) |
 | STAB-NATIVE-DRIVER-MAC | Qualify macOS multiwebview driver context ownership | PRD-07, PRD-09 | None identified | Executed | [Card](https://trello.com/c/gZDp0wet/478-stab-native-driver-mac-qualify-macos-multiwebview-driver-context-ownership) |
 | BRAND-UPDATER-EMPTY | Handle manual update checks without endpoints | PRD-02, PRD-09 | BRAND-COPY-SOURCE | Verify | [Card](https://trello.com/c/3zbtcs6K/480-brand-updater-empty-handle-manual-update-checks-without-endpoints) |
-| FIRST-DRAFT-REFRESH | Refresh Home Drafts after recovery writes | FIRST-03, PRD-09 | None identified | Building | [Card](https://trello.com/c/F5Uw69NM/481-first-draft-refresh-refresh-home-drafts-after-recovery-writes) |
+| FIRST-DRAFT-REFRESH | Refresh Home Drafts after recovery writes | FIRST-03, PRD-09 | None identified | Executed | [Card](https://trello.com/c/F5Uw69NM/481-first-draft-refresh-refresh-home-drafts-after-recovery-writes) |
 
 ## Native surface coverage
 
