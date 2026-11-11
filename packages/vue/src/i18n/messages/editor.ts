@@ -3,6 +3,8 @@ import { params } from '@nanostores/i18n'
 import { i18n } from '#vue/i18n/create'
 
 export const editorMessageDefaults = {
+  browserImportHeight: 'Browser import height',
+  browserImportHeightHint: 'Drag to clip import height, double-click to import the full page',
   toolOptions: params('{tool} options'),
   removeGradientStop: 'Remove gradient stop',
   /** The word before a corner's radius in the label beside a dragged radius handle. */

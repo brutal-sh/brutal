@@ -12,9 +12,9 @@ against the candidate. Width and height comparisons remain exact; x/y keep the
 original 0.05 CSS-pixel bound.
 
 | Preset and dimension | Original native value | Rendered CSS value | Candidate native value |
-| --- | --- | --- | --- |
-| Phone width | 334.0876777251185 | 334.078125 | 334.078125 |
-| Tablet height | 267.54237288135596 | 267.53125 | 267.53125 |
+| -------------------- | --------------------- | ------------------ | ---------------------- |
+| Phone width          | 334.0876777251185     | 334.078125         | 334.078125             |
+| Tablet height        | 267.54237288135596    | 267.53125          | 267.53125              |
 
 Native WebKit probes show that raw truncation is insufficient near a layout-unit
 boundary: `389.99999999999994` renders at 390 CSS pixels. A separate containing
@@ -111,3 +111,46 @@ payload or proprietary implementation is added to the repository.
 [STAB-BROWSER-BACKDROP-FIXED](https://trello.com/c/j6yjFgIw) remains open for the
 remaining source/reference checks. [SURF-BROWSER](https://trello.com/c/8J2BOlBG)
 retains the full surface comparison; the native-sequence parent remains Verify.
+
+## Height control candidate — 2026-11-11
+
+The unpublished BROWSER-CLIP candidate adds the observed 16 CSS-pixel footer, a fixed-device
+rim and a hatched clipped region. A prepared page image keeps its captured scale while the
+surface clips it; the native child resumes before that image is released. Capture failures
+cancel the gesture, and an older result cannot own a newer gesture. Pointer cancellation and
+Escape restore the prior height. Arrow keys, Shift, Home and End adjust the focused control;
+Enter or double-click requests a full-page import.
+
+Whole-page imports can clip the editable root while retaining descendants outside it; selected
+element imports retain their original dimensions. Existing destination, read-only, font/image,
+late-result and document Undo protections remain. Clip height stays in workspace memory.
+No provider, credential, browsing-history or global preference policy changes.
+
+Thirty Chromium/WebKit checks execute the real surface and height composables, with dark
+and light render/axe states, cancellation, late rejection, failed capture, stable image scale
+and hide/resume transitions at the bridge boundary for Desktop, Phone and Tablet. Deliberately removing each of the three
+surface repairs makes its exact assertion fail; the candidate bytes are restored afterward.
+The browser owner suite executes 86 cases and 343 assertions after the final dock signature
+refactor. Strict 300-code/50-function-line, complexity-10, four-parameter/depth-four checks pass
+all 23 browser source modules. These bounded results do not establish actual native pointer
+behavior or full Pen parity.
+
+The isolated native driver emits MouseEvent rather than PointerEvent for its pointer action.
+A retained diagnostic sees no pointerdown at the grip, no error/overlay and no drag. The two
+failed drag cases and narrowed diagnostic are not evidence of a product failure or pass;
+no driver patch, fake pointer or app event fallback is added to make this gate green.
+A readiness-corrected isolated WebView probe executes two cases: keyboard clipping with a
+smaller editable root, two retained fixture panels including the off-edge panel at y1500,
+full-page import at height1800, and one Undo per import. The initial fixture sends ArrowUp
+while aria-disabled=true during loading; that ignored key is not a product failure. A separate
+initial assertion wrongly counts immediate children rather than the two nested fixture panels;
+its corrected assertion checks both200×120panels and the off-edge y1500 position. Both failure receipts
+remain. Driver-delivered KeyboardEvent and programmatic focus do not establish trusted OS
+keyboard or pointer behavior. The canonical native height spec then executes both cases successfully (1.9s).
+
+Actual Pen's minimum height, fixed-device import clipping policy and double-click result are
+still unexecuted. Compact/wide/tall, matched light/dark and native pointer comparisons remain
+open. The Mac is locked during re-entry; no security or permission setting is changed.
+Private receipts: `local-evidence/browser-clip-2026-11-11/`, including three failing controls,
+four browser captures, source review and native diagnostics. BROWSER-CLIP stays Building;
+SURF-BROWSER and full beta remain open. This candidate is not installed over the normal app.

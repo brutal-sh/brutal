@@ -2,9 +2,13 @@ import { describe, expect, test } from 'bun:test'
 
 import type { BrowserCapture } from '@/app/browser-preview/capture'
 import { createBrowserPreviewController } from '@/app/browser-preview/controller'
+import type { BrowserImportTarget } from '@/app/browser-preview/dom/placement'
+import type { ExtractedPage } from '@/app/browser-preview/dom/schema'
 import type { BrowserPreviewNative } from '@/app/browser-preview/native'
 import { captureBytes, previewAddressLabel, previewURL } from '@/app/browser-preview/schema'
 import { createDeferred } from '@/app/runtime/deferred'
+
+import { extractedFixture } from '#tests/helpers/browser-preview/extracted-page'
 
 const png = new Uint8Array([137, 80, 78, 71, 13, 10, 26, 10])
 const capture: BrowserCapture = {
@@ -12,9 +16,47 @@ const capture: BrowserCapture = {
   title: 'Fixture',
   slices: [{ png, width: 1280, height: 800 }]
 }
+
+test('clips whole-page imports while retaining selected and full-page extractions', async () => {
+  const page = extractedFixture()
+  const placed: ExtractedPage[] = []
+  const selections: boolean[] = []
+  const { preview } = fixture(
+    {
+      extract: async (url, selected = false) => {
+        expect(url).toBe(page.url)
+        selections.push(selected)
+        return page
+      }
+    },
+    undefined,
+    () => ({
+      isCurrent: () => true,
+      place: async (result, isLive) => {
+        expect(isLive()).toBe(true)
+        placed.push(result)
+      }
+    })
+  )
+  await preview.importPage(false, 120)
+  expect(placed[0]).toMatchObject({ height: 120, width: 800 })
+  expect(placed[0]?.nodes).toBe(page.nodes)
+  expect(page.height).toBe(600)
+  await preview.importPage(true, 120)
+  expect(placed[1]).toBe(page)
+  await preview.importPage()
+  expect(placed[2]).toBe(page)
+  expect(selections).toEqual([false, true, false])
+  await preview.importPage(false, 0)
+  expect(placed).toHaveLength(3)
+  expect(preview.error.value).toContain('positive, finite')
+  expect(preview.notice.value).toBe('')
+})
+
 function fixture(
   overrides: Partial<BrowserPreviewNative> = {},
-  exportURL?: () => string | undefined
+  exportURL?: () => string | undefined,
+  importTarget?: () => BrowserImportTarget
 ) {
   const calls: unknown[] = []
   const status = {
@@ -55,7 +97,7 @@ function fixture(
         placed.push(image)
       }
     }),
-    undefined,
+    importTarget,
     exportURL
   )
   return {
@@ -262,59 +304,62 @@ describe('browser preview', () => {
   })
 })
 
-test('editable import waits for extraction and suppresses a disposed or switched destination', async () => {
-  const { extractedFixture } = await import('#tests/helpers/browser-preview/extracted-page')
-  const page = extractedFixture()
-  const pending = createDeferred<typeof page>()
-  let current = true
-  let inserted = 0
-  let extractionCalls = 0
-  const native: BrowserPreviewNative = {
-    open: async () => {
-      throw new Error('unused')
-    },
-    status: async () => ({
-      url: page.url,
-      title: page.title,
-      width: 800,
-      height: 600,
-      captureAvailable: true,
-      loading: false
-    }),
-    action: async () => undefined,
-    resize: async () => undefined,
-    capture: async () => capture,
-    backdrop: async () => png,
-    clearSiteData: async () => undefined,
-    extract: async () => {
-      extractionCalls++
-      return pending.promise
-    }
-  }
-  const preview = createBrowserPreviewController(
-    native,
-    () => ({ isCurrent: () => current, place: async () => undefined }),
-    () => ({
-      isCurrent: () => current,
-      place: async (_page, isLive) => {
-        if (isLive()) inserted++
+test.each([undefined, 120])(
+  'editable import waits for extraction and suppresses a disposed or switched destination (%s)',
+  async (height) => {
+    const { extractedFixture } = await import('#tests/helpers/browser-preview/extracted-page')
+    const page = extractedFixture()
+    const pending = createDeferred<typeof page>()
+    let current = true
+    let inserted = 0
+    let extractionCalls = 0
+    const native: BrowserPreviewNative = {
+      open: async () => {
+        throw new Error('unused')
+      },
+      status: async () => ({
+        url: page.url,
+        title: page.title,
+        width: 800,
+        height: 600,
+        captureAvailable: true,
+        loading: false
+      }),
+      action: async () => undefined,
+      resize: async () => undefined,
+      capture: async () => capture,
+      backdrop: async () => png,
+      clearSiteData: async () => undefined,
+      extract: async () => {
+        extractionCalls++
+        return pending.promise
       }
-    })
-  )
-  const work = preview.importPage()
-  await preview.importPage()
-  current = false
-  pending.resolve(page)
-  await work
-  expect(extractionCalls).toBe(1)
-  expect(inserted).toBe(0)
-  expect(preview.notice.value).toBe('')
-  expect(preview.error.value).not.toBe('')
-  current = true
-  await preview.importPage()
-  expect(inserted).toBe(1)
-  expect(preview.notice.value).not.toBe('')
-})
+    }
+    const preview = createBrowserPreviewController(
+      native,
+      () => ({ isCurrent: () => current, place: async () => undefined }),
+      () => ({
+        isCurrent: () => current,
+        place: async (_page, isLive) => {
+          if (isLive()) inserted++
+        }
+      })
+    )
+    const work = preview.importPage(false, height)
+    await preview.importPage(false, height)
+    current = false
+    pending.resolve(page)
+    await work
+    expect(extractionCalls).toBe(1)
+    expect(inserted).toBe(0)
+    expect(preview.notice.value).toBe('')
+    expect(preview.error.value).not.toBe('')
+    current = true
+    await preview.importPage(false, height)
+    expect(inserted).toBe(1)
+    expect(preview.notice.value).not.toBe('')
+  }
+)
 
 test('closing the controller during asynchronous import preparation cancels its commit', async () => {
   const { extractedFixture } = await import('#tests/helpers/browser-preview/extracted-page')

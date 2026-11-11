@@ -24,6 +24,12 @@ export default {
       'cursor-default rounded-sm font-medium leading-4 text-browser-menu-foreground data-[highlighted]:bg-browser-menu-highlight data-[disabled]:text-browser-menu-foreground data-[disabled]:opacity-50',
     popupSeparator: '-mx-1 my-1 h-px bg-browser-menu-separator',
     surface: 'relative min-h-0 flex-1 overflow-hidden bg-panel',
+    clipRegion: 'flex min-h-0 flex-1 flex-col overflow-hidden',
+    deviceRim: 'pointer-events-none absolute ring-1 ring-island-border',
+    heightHandle:
+      'flex h-4 shrink-0 touch-none cursor-ns-resize items-center justify-center border-t border-menu-border text-muted outline-none hover:bg-panel-foreground/4 focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-accent',
+    clippedSpace:
+      'min-h-0 flex-1 bg-canvas bg-[repeating-linear-gradient(-45deg,color-mix(in_srgb,var(--color-panel-foreground)_12%,transparent)_0_1px,transparent_1px_4px)]',
     backdrop: 'pointer-events-none absolute max-w-none select-none',
     landing: 'absolute inset-0 overflow-auto border-x border-island-border bg-panel',
     content: 'mx-auto flex min-h-full w-full max-w-[720px] flex-col px-5 py-14',

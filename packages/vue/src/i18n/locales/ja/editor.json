@@ -13,5 +13,7 @@
   "previewing": "プレビュー中",
   "resetPreview": "リセット",
   "leavePreview": "プレビューを終了 ({shortcut})",
-  "startPreview": "プレビュー ({shortcut})"
+  "startPreview": "プレビュー ({shortcut})",
+  "browserImportHeight": "ブラウザーのインポートの高さ",
+  "browserImportHeightHint": "ドラッグしてインポートの高さを切り取り、ダブルクリックしてページ全体をインポートします。"
 }

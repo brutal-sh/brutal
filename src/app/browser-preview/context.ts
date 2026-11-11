@@ -8,6 +8,8 @@ export interface BrowserPreviewSession {
   url: string
   preset: string
   zoom: number
+  /** This workspace's clip height in editor CSS pixels; never a browsing preference. */
+  clipHeight?: number | null
   closing: Promise<void>
   exportURLs: Set<string>
 }

@@ -61,6 +61,16 @@ const appDefaults = {
   }
 } satisfies Pick<PlaywrightTestConfig, 'expect' | 'use'>
 
+const storybookDefaults = {
+  testDir: './tests/e2e/storybook',
+  timeout: 30_000,
+  use: {
+    baseURL: `http://localhost:${storybookPort}`,
+    viewport: { width: 800, height: 600 },
+    contextOptions: { reducedMotion: 'reduce' }
+  }
+} satisfies Pick<PlaywrightTestConfig, 'testDir' | 'timeout' | 'use'>
+
 export default defineConfig({
   testDir: './tests',
   timeout: 15_000,
@@ -100,15 +110,14 @@ export default defineConfig({
       testDir: './tests/figma'
     },
     {
-      name: 'storybook-chromium',
-      testDir: './tests/e2e/storybook',
-      timeout: 30_000,
-      use: {
-        baseURL: `http://localhost:${storybookPort}`,
-        viewport: { width: 800, height: 600 },
-        deviceScaleFactor: 1,
-        contextOptions: { reducedMotion: 'reduce' }
-      }
+      ...storybookDefaults,
+      name: 'storybook-chromium'
+    },
+    {
+      ...storybookDefaults,
+      name: 'storybook-webkit',
+      testMatch: '**/browser-height.spec.ts',
+      use: { ...storybookDefaults.use, browserName: 'webkit' }
     }
   ],
   webServer: [

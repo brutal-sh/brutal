@@ -13,5 +13,7 @@
   "previewing": "Anteprima",
   "resetPreview": "Ripristina",
   "leavePreview": "Esci dall’anteprima ({shortcut})",
-  "startPreview": "Anteprima ({shortcut})"
+  "startPreview": "Anteprima ({shortcut})",
+  "browserImportHeight": "Altezza di importazione del browser",
+  "browserImportHeightHint": "Trascina per ritagliare l’altezza di importazione; fai doppio clic per importare tutta la pagina."
 }

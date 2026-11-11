@@ -2,6 +2,8 @@ import type { Rect, Vector } from '@open-pencil/scene-graph/primitives'
 
 import { PREVIEW_PRESETS, type PreviewPreset } from './schema'
 
+export const MIN_FIXED_PREVIEW_ZOOM = 0.1
+
 export interface PreviewViewport {
   bounds: Rect
   layoutOrigin?: Vector
@@ -10,13 +12,19 @@ export interface PreviewViewport {
 }
 
 /** CSS pixels and Tauri logical pixels share the main webview's unzoomed coordinate space. */
-export function previewDockViewport(
-  rect: Rect,
-  preset: PreviewPreset['value'],
-  windowWidth: number,
-  windowHeight: number,
+export function previewDockViewport({
+  rect,
+  preset,
+  windowWidth,
+  windowHeight,
+  zoom
+}: {
+  rect: Rect
+  preset: PreviewPreset['value']
+  windowWidth: number
+  windowHeight: number
   zoom: number
-): PreviewViewport | null {
+}): PreviewViewport | null {
   if (
     ![rect.x, rect.y, rect.width, rect.height, windowWidth, windowHeight, zoom].every(
       Number.isFinite
@@ -35,10 +43,19 @@ export function previewDockViewport(
         height: Math.floor(height / Math.min(1.5, Math.max(0.25, zoom)))
       }
     }
+  return fixedViewport(rect, preset, availableWidth, height)
+}
+
+function fixedViewport(
+  rect: Rect,
+  preset: PreviewPreset['value'],
+  availableWidth: number,
+  height: number
+): PreviewViewport | null {
   const device = PREVIEW_PRESETS.find((item) => item.value === preset)
   if (!device || availableWidth <= 16 || height <= 16) return null
   const fit = Math.min((availableWidth - 16) / device.width, (height - 16) / device.height)
-  if (fit < 0.1) return null
+  if (fit < MIN_FIXED_PREVIEW_ZOOM) return null
   const width = device.width * fit
   const fittedHeight = device.height * fit
   return {

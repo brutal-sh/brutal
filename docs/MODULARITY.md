@@ -273,3 +273,15 @@ The actual full-root command rejects the controlled original one-clone/zero-perc
 corpus and accepts the restored zero-clone candidate. Its complete clean combined check at that commit exits zero and reports literal zero
 clones; historical false-green and five-group failures stay retained. Full-unit fixture
 materialization and native/reference acceptance remain separate controls.
+
+## Browser control candidate — 2026-11-11
+
+BROWSER-CLIP splits the 658-line BrowserPreviewControl into toolbar, landing, surface,
+height, viewport, history and feedback owners while preserving the existing native bridge,
+cleanup order and page/workspace ownership. The parent is 300 nonblank code lines; all 23
+browser source modules meet 300-code/50-function-line, complexity-10, four-parameter and
+depth-four gates. `previewDockViewport` now takes named options and isolates fixed-device
+fitting without changing the projection math. Root controller state remains per instance.
+
+This is a measured candidate disposition, not closure of every app module or native gesture.
+See [browser evidence and remaining acceptance](BROWSER-FIXED-BACKDROP.md#height-control-candidate--2026-11-11).

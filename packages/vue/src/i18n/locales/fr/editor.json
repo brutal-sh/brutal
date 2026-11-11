@@ -13,5 +13,7 @@
   "previewing": "Aperçu",
   "resetPreview": "Réinitialiser",
   "leavePreview": "Quitter l’aperçu ({shortcut})",
-  "startPreview": "Aperçu ({shortcut})"
+  "startPreview": "Aperçu ({shortcut})",
+  "browserImportHeight": "Hauteur d’importation du navigateur",
+  "browserImportHeightHint": "Faites glisser pour limiter la hauteur d’importation, double-cliquez pour importer toute la page."
 }
