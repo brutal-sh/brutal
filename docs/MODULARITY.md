@@ -36,6 +36,21 @@ method bodies and original request options. Its focused 155 tests, complete Clou
 TypeScript source modules meet the strict size/complexity limits; the optimized macOS package is installed and its bounded English identity surfaces are observed. These bounded changes do not establish whole-app
 compliance with the size limits.
 
+The AssetsPanel extraction on 2026-11-11 reduces its original 669 physical lines to
+308 (below 300 code lines), with catalog projection, preview request/URL lifecycle,
+insertion/materialization and details-dialog markup in four focused owners. Existing
+thumbnail and page lookup modules remain unchanged. All nine asset source/example
+modules meet the strict 300/50/10/4/4 checks. Current Components-workspace tests retain
+insertion, details, search, main-component navigation, real canvas drag, entered-container
+coordinates and FIG/library lifecycle contracts; legacy grid/list metadata stays in an
+isolated real-component story. The unchanged original component passes the repaired
+frozen baseline before extraction. Candidate Chromium/WebKit runs pass 12 app and four
+story cases; all 12 captured images exactly match the original pixels. Focused library
+and Core component owners pass 113 tests/454 assertions. Independent source review
+finds no concrete regression. These are behavior-preservation and ownership receipts,
+not actual Pen surface, trusted OS input or full-product acceptance. Private receipts:
+`local-evidence/assets-modularization-2026-11-11/`.
+
 Scope: authored `.ts`, `.vue`, `.rs` and `.css` under `src`, `packages/core/src`,
 `packages/vue/src`, `packages/scene-graph/src` and `desktop/src`. Counts are physical lines.
 `.d.ts` declarations, tests and `.stories.ts` examples are excluded; authored catalogs are included.

@@ -163,3 +163,28 @@ also occur when the pre-refactor `e3c70fbc6` is rebuilt and runs the same three 
 specs and routing guards. That baseline additionally fails two preview setup cases. This
 comparison does not establish their cause or native reliability; no timeout or assertion is
 waived. The [native sequence record](NATIVE-RETAINED-SEQUENCE.md) retains both results.
+
+## Docked import-height reference follow-up
+
+Actual Pen 1.2.22 on the same 1,800px synthetic page supplies a further bounded
+reference observation. Two coordinate drags in expanded Coding Mode leave the
+layout unchanged. In the docked browser, dragging the grip upward reveals hatching;
+a further drag reaches a stable minimum, and repeating the upward drag retains it.
+The displayed capture suggests a 240 CSS-pixel surface at device-pixel ratio two;
+this is image-read geometry, not an exported DOM measurement.
+
+With Tablet selected, the full-height Import action creates a body frame whose
+inspector reads 200×1,800. Import at the minimum height creates a second frame with
+the same dimensions. The fixture has two 200×120 absolute sections at y32 and y1500;
+its observed root width does not establish general body-width projection. On this
+fixture, reduced fixed-device preview height does not truncate the editable import.
+Double-clicking the grip restores the full browser height and removes hatching;
+the layer tree retains two roots, with no additional import observed. This exposes
+remaining minimum, fixed-device import and double-click differences in the current
+Open Pen candidate; those behavior gates stay open.
+
+Only the newly created reference document is closed. Pen returns to its original
+Home view with Tablet preference retained; the owned local server is stopped.
+No design-MCP call, direct reference-file edit, permission change or user-document
+edit is used. Desktop/Phone semantics and exact lossless cross-app pixels remain
+unverified. Private observations: `local-evidence/browser-clip-2026-11-11/actual-pen-height-followup.json`.

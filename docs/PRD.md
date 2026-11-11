@@ -1,7 +1,7 @@
 # Open Pen product requirements
 
 Decision owner: Jason Poindexter. Implementation and evidence owner: Codex.
-Updated: 2026-11-10. Status: active; full design and functionality parity is not achieved.
+Updated: 2026-11-11. Status: active; full design and functionality parity is not achieved.
 
 ## Product outcome
 
@@ -11,7 +11,7 @@ interaction and visual behavior, without editor subscriptions or license activat
 Open Pen uses its own name and visual identity. Required engine and third-party attribution
 remain accessible. This identity difference is intentional; it does not waive layout or behavior parity.
 
-The active parity goal remains intact. This PRD adds explicit requirements for maintainable
+The full parity target remains intact. This PRD adds explicit requirements for maintainable
 modules, complete Open Pen branding and an executable Trello backlog.
 
 ## Problem and evidence
@@ -106,7 +106,7 @@ vendor account. Hosted inference and other external services retain their own co
 
 Retain all original 152 documented requirements and the native screen/menu ledger. The
 2026-11-06 refresh adds 12 documentary deltas, for 164 allocated requirements. Qualify each
-delta against installed Pen 1.2.21 or record specific newer-only evidence before changing
+delta against installed Pen 1.2.22, preserving historical 1.2.21 receipts, or record specific newer-only evidence before changing
 implementation scope; do not silently upgrade schema or discard older node data. Split requirements
 that cover separate providers, platforms, tools or inspector domains into smaller tasks. Add
 newly observed states to the same traceability map before implementing them. Existing evidence
@@ -126,19 +126,16 @@ types/catalogs into arbitrary microfiles or weaken validation to reduce line cou
 
 ## Delivery sequence
 
-The fresh board contains 414 bounded execution tasks and 17 milestones. Every one of the
-164 catalog requirements and 22 native ledger rows is allocated; allocation is not acceptance.
-[Task index](TASKS.md) records the live-board states and dependencies.
+The [complete audit](BOARD-AUDIT-2026-11-11.md) reconciles 461 execution tasks and 18 real milestone gates. The installed reference is rechecked as Pen 1.2.22 with unchanged archive/all 432 outer-file hashes; old 1.2.21 receipts remain historical. All 164 catalog requirements and 22 native rows have allocated acceptance work. That coverage is not full acceptance.
 
-| Horizon               | Outcome                                                                                                      | Evidence checkpoint                                                                                                                                                                 |
-| --------------------- | ------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Now                   | Qualify the 2.22 reader prerequisite (FMT-09-DRIFT)                                                          | The actual Pen-saved SVG fixture fails at `/version`; admit unchanged supported shapes with explicit unsupported-data and future-version guards, then execute the real import path. |
-| Next                  | Continue SVG export parity (IO-13-EXPORT, Verify)                                                            | Actual reference exports text paths and a ZIP for multiple selections; current app exports live text and a combined SVG. Retain these concrete gaps and the format dependency.      |
-| Then                  | Stabilize document switching and finish unaccepted icon, module and feature/screen tasks in dependency order | Each card has relevant owner tests, visual/native checks and a commit/evidence link before Executed; dependent renderer/input work waits for STAB-GPU.                              |
-| Release qualification | Deliver private beta, then complete the full parity gate                                                     | Clean normal build, install/restart/recovery and core journey; declared beta limitations. Later, no required parity state remains unaccepted.                                       |
+| Horizon | Outcome | Evidence checkpoint |
+| --- | --- | --- |
+| Now | Reconcile the qualified unpublished AssetsPanel candidate | Preserve 16 browser cases, 12 exact pixel comparisons, 113 owner tests, full static check and isolated native insert/Undo proof; publish only the selected source to the existing private draft, preserving icon WIP and normal installation. |
+| Next | Repair measured browser behavior and close inspector/draft/save/recovery gates | Reproduce actual Pen minimum/fixed-import/double-click differences and retain failures; finish the private core-journey prerequisite graph with actual reference/native evidence. |
+| Later | Complete every remaining domain and parity gate | Follow the [milestones](MILESTONES.md) and task dependencies, including FMT-09-DRIFT before IO-13-EXPORT; keep all applicable feature/platform obligations. |
+| Public readiness | Prepare an exact candidate for an explicit owner decision | BETA-01 stays private-core qualification. Public readiness separately requires PARITY-ALL and REL trust/package/support artifacts. No public publication is authorized. |
 
-No fixed completion date is claimed. Re-estimate after the stability and branding tasks using
-observed task throughput and the remaining acceptance work, including native/platform checks.
+Keep one Building card and at most three Ready cards. Reuse implemented code and qualified receipts before adding code or duplicating tests. Dates remain uncommitted; review the forecast after the next three accepted cards using observed elapsed work and remaining gates, not task counts.
 
 ## Four risks
 
@@ -175,8 +172,8 @@ percentage is reported until its denominator and acceptance evidence are complet
 - 2026-11-06 — Jason requests explicit modularization goals, a PRD and smaller complete Trello tasks.
 - 2026-11-06 — Keep the full parity objective active; preserve broad cards as milestones and
   add traceable execution tasks rather than dropping unfinished work.
-- Next review: after the portal client-label journeys and menu-schema modularization.
-  Codex will update counts, evidence and dependencies from fresh results.
+- Next review: after the next three accepted cards, a new independent failure or an installed-reference change.
+  Codex refreshes counts, evidence, dependencies and forecast confidence from observed results.
 - Open: remaining lifecycle/reliability states beyond the bounded canvas criterion, zero-to-positive icon redraw, exact glyph pixels,
   runtime resize and bindings, remaining native screens/menus and non-macOS qualification.
 - Open: mixed-script export bounds, local-font picker acceptance and delayed CJK repaint
@@ -186,7 +183,7 @@ percentage is reported until its denominator and acceptance evidence are complet
   those choices when a concrete release candidate is ready; implementation continues meanwhile.
 
 The [tracking index](TRACKING.md), [feature catalog](FEATURES.md), [screen/menu ledger](PARITY-STATE-MATRIX.md)
-and [task index](TASKS.md) are the reviewable sources of scope. The active goal is not complete.
+and [task index](TASKS.md) are the reviewable sources of scope. Full parity is not accepted.
 
 [REF-03](https://trello.com/c/l9y1fz5C/413-ref-03-catalog-installed-pen-1222-update) has bounded Executed inventory evidence at
 `cc33e07c9`: exact extracted/outer bytes, versioned findings, independent review and live-board

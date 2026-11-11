@@ -1,28 +1,24 @@
 # Tracking
 
-Updated: 2026-11-11. The full independent design and functionality parity goal remains active.
+Updated: 2026-11-11. The full independent design and functionality parity target remains required. The old controller goal is cleared; its replacement follows final audit reconciliation.
 
 Repository: [private Open Pen repository](https://github.com/jpoindexter/open-pen), branch `feat/open-pen`.
 Board: [Open Pen — independent design editor](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor), private.
 
 The [PRD](PRD.md) owns the outcome, constraints and release criteria.
-The [task index](TASKS.md) links all 442 execution cards; the [modularity audit](MODULARITY.md)
+The [task index](TASKS.md) links all 461 execution cards; the [modularity audit](MODULARITY.md)
 records the measured review queue. Requirements come from the [feature catalog](pen-feature-reference/README.md)
 and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), preserving historical Pen 1.2.21 evidence and the current [1.2.22 update inventory](pen-feature-reference/update-1.2.22-2026-11-09.md).
 
-The latest board readback retains 459 open cards: 442 execution tasks and 17
-milestones, with 366 Backlog, one Building, 22 Verify and 53 Executed. Two narrow
-Agent-chat follow-ups cover tool-title containment and app-scoped Codex skill context;
-installed delivery remains a separate gate. BROWSER-CLIP is the sole Building task. The numerical backdrop repair is in Verify
-with its broader matched-reference criterion still open. MOD-10 is also in Verify: the
-browser control extraction and bounded tests are qualified, while its native/dependency
-gates remain open. Earlier snapshots below retain their historical scope.
+The complete 2026-11-11 readback contains 479 cards: 461 execution tasks and 18 milestones. Lists are 380 Backlog, 3 Ready, 0 Building, 24 Verify and 54 Executed. [The audit](BOARD-AUDIT-2026-11-11.md) and [milestone exit gates](MILESTONES.md) own the current reconciliation; earlier snapshots below remain historical.
+
+Qualified AssetsPanel and fixture work remain Verify until publication/acceptance reconciliation. Browser behavior has actual-reference repair work queued; inspector and draft/save/recovery criteria remain explicit. Installed command-card readback is observed on the original saved transcript. Full Agent, native, brand, beta and design/functionality parity remain unaccepted.
 
 ## Board organization
 
 | List       | Purpose                                                                                                                                                                        |
 | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Milestones | The 15 original cards retain their history; two new milestones track own branding and modularization. These broad cards are not executable units or current acceptance claims. |
+| Milestones | The 15 original groups plus branding, modularity and public readiness now have explicit outcomes, linked children and exit gates. They are not implementation cards or current acceptance claims. |
 | Backlog    | Bounded tasks with source, scope, owner, dependencies and observable Done criteria.                                                                                            |
 | Ready      | At most three next tasks whose dependencies are accepted or absent.                                                                                                            |
 | Building   | One current task; record its last result and exact re-entry action before switching.                                                                                           |
@@ -355,7 +351,7 @@ No native runtime or full product acceptance follows from these engineering gate
 Fresh complete readback: 446 open cards = 429 execution tasks plus 17 milestones;
 370 Backlog, 0 Ready, 1 Building, 12 Verify and 46 Executed. All 429 task IDs,
 list states and links reconcile with the task table. The 428 terminal dependencies
-remain required; PARITY-ALL stays Backlog and the active full goal remains open.
+remain required; PARITY-ALL stays Backlog and the full parity target remains open.
 
 The materialized canonical full-unit rerun exits one in CLI/Core/render: one inherited
 Storybook prose assertion, three incomplete renderer Surface doubles and the known

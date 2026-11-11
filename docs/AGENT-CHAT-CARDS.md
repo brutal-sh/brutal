@@ -53,11 +53,16 @@ a visible chevron and the original 13px font.
 
 The normal optimized app is installed and its signature verified. Its binary SHA-256 is
 `79dd048532dbe97ae74c904b226a840371827cd3e2f393b7fa872c53e9287aa0`.
-The actual app launches, retains the saved workspace in Recents, and offers the two historical
-recoveries. Close leaves those records intact. Reopening the saved workspace is currently
-blocked while macOS's protected permission-prompt process is open; Computer Use refuses
-access to that app. Exact installed-card readback is not accepted while this is unresolved. A later CUA attempt
-reports the Mac locked and automatic unlock failed; neither gate is bypassed.
+The actual app launches and retains the saved workspace in Recents. Earlier attempts meet a
+protected prompt-app restriction and a locked Mac; neither gate is bypassed. After the user
+reports the Mac open, CUA reopens the dated saved workspace and selects the original “draw a
+square” transcript from conversation history. Its Rg and Cat titles end with an ellipsis inside
+their bordered cards; status circles and disclosure chevrons remain visible. Expanding Rg
+shows the complete original command in Input; collapsing restores containment. The original
+charcoal square and historical warning remain. No permission or recovery prompt is visible
+in this readback, and no permission setting changes. The saved archived session explicitly
+cannot resume here; new chat remains available. This does not accept every long-title status
+combination or the complete Agent surface.
 Historical warning messages remain in chat history; the scoped catalog applies to new sessions.
 
 Full repository `bun run check` passes, including literal zero duplicate clones. The bounded
