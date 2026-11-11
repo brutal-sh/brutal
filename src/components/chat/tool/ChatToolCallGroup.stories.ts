@@ -81,3 +81,18 @@ export const Failed: Story = { args: { parts: [failed] } }
 export const LongRun: Story = {
   args: { parts: [described, rendered, failed, exported, { ...streaming, toolCallId: 'last' }] }
 }
+
+const command = 'rg --files /Users/designer/.agents/skills/design-system-extraction/references'
+const shell = part({
+  type: 'dynamic-tool',
+  toolName: command,
+  toolCallId: 'shell',
+  state: 'output-available',
+  input: { command },
+  output: 'SKILL.md\nreferences/tokens.md'
+})
+
+export const LongCommand: Story = { args: { parts: [shell] } }
+export const LongCommandsGrouped: Story = {
+  args: { parts: [shell, described, rendered, exported, { ...shell, toolCallId: 'last' }] }
+}

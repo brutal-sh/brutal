@@ -1,20 +1,20 @@
 # Tracking
 
-Updated: 2026-11-10. The full independent design and functionality parity goal remains active.
+Updated: 2026-11-11. The full independent design and functionality parity goal remains active.
 
 Repository: [private Open Pen repository](https://github.com/jpoindexter/open-pen), branch `feat/open-pen`.
 Board: [Open Pen — independent design editor](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor), private.
 
 The [PRD](PRD.md) owns the outcome, constraints and release criteria.
-The [task index](TASKS.md) links all 440 execution cards; the [modularity audit](MODULARITY.md)
+The [task index](TASKS.md) links all 442 execution cards; the [modularity audit](MODULARITY.md)
 records the measured review queue. Requirements come from the [feature catalog](pen-feature-reference/README.md)
 and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), preserving historical Pen 1.2.21 evidence and the current [1.2.22 update inventory](pen-feature-reference/update-1.2.22-2026-11-09.md).
 
-The latest board readback retains 457 open cards: 440 execution tasks and 17
-milestones. The Note Fill and MOD-14 implementation artifacts move to Verify,
-leaving 368 Backlog, one Building, 16 Verify and 53 Executed. The backdrop task
-remains Building for its matched-reference criterion. Earlier snapshots below
-retain their historical counts and scope.
+The latest board readback retains 459 open cards: 442 execution tasks and 17
+milestones, with 368 Backlog, one Building, 20 Verify and 53 Executed. Two narrow
+Agent-chat follow-ups cover tool-title containment and app-scoped Codex skill context;
+installed delivery remains a separate gate. The browser backdrop task remains Building
+for its matched-reference criterion. Earlier snapshots below retain their historical scope.
 
 ## Board organization
 

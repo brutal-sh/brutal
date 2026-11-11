@@ -85,6 +85,7 @@ pub fn run() {
                 #[cfg(feature = "native-test")]
                 agents::native_test::native_test_mcp_configuration,
                 agents::lookup::agent_lookup,
+                agents::codex::codex_acp_config,
                 agents::lookup::agent_workspace,
                 files::fig::build_fig_file,
                 network::oauth::chatgpt_oauth_listen,

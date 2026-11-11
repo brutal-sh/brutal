@@ -22,6 +22,7 @@ import { toolCallState } from '@/components/chat/tool/state'
 import { loadCodeViewer } from '@/components/code-editor/lazy'
 import CodeViewer from '@/components/code-editor/LazyCodeViewer.vue'
 import AppAlert from '@/components/ui/feedback/AppAlert.vue'
+import Tip from '@/components/ui/overlay/Tip.vue'
 import SegmentedControl from '@/components/ui/select/SegmentedControl.vue'
 import { collapsibleContentMotion } from '@/theme/collapsible/collapsible'
 
@@ -102,7 +103,9 @@ function json(value: unknown): string {
         <icon-lucide-check v-else-if="state === 'done'" :class="ui.statusIcon()" />
         <icon-lucide-triangle-alert v-else :class="ui.statusIcon()" />
       </span>
-      <span :class="ui.name()">{{ name }}</span>
+      <Tip :label="name" truncated as-child>
+        <span :class="ui.name()">{{ name }}</span>
+      </Tip>
       <span :class="ui.summary()">{{ summary }}</span>
       <span v-if="undone" :class="ui.undone()" data-slot="chat-tool-undone">
         <icon-lucide-undo-2 :class="ui.undoneIcon()" aria-hidden="true" />

@@ -38,3 +38,4 @@
 - Keep sign-in Cancel and Change actions readable on their status background in both themes.
 - Use Open Pen names in the workspace menu, assistant, microphone permission prompt and recovery-code download, and neutral Cloud labels in service controls.
 - Keep the browser panel background around fixed-device previews consistent with its toolbar.
+- Long agent command titles truncate inside tool cards while retaining the full tooltip and inspectable command details.

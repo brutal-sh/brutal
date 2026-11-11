@@ -1,5 +1,9 @@
+import { invoke } from '@tauri-apps/api/core'
+
 import { decodeTauriStderr } from '@/app/shell/ui'
 import { resolvePlatformCommand } from '@/app/tauri/command'
+
+import { acpOutput } from './output'
 
 export type TauriChild = {
   write(data: number[]): Promise<void>
@@ -25,67 +29,15 @@ export async function spawnACPProcess({
   const resolved = resolvePlatformCommand(commandName, args)
   const command = Command.create(resolved.command, resolved.args, {
     encoding: 'raw',
-    env: {}
+    env:
+      commandName === 'codex-acp' ? { CODEX_CONFIG: await invoke<string>('codex_acp_config') } : {}
   })
 
-  const stdoutChunks: Uint8Array[] = []
-  let stdoutResolver: ((chunk: Uint8Array | null) => void) | null = null
-  let stdoutClosed = false
-  let stdoutClosedError: Error | null = null
-
-  command.stdout.on('data', (raw: Uint8Array | number[]) => {
-    const chunk = raw instanceof Uint8Array ? raw : new Uint8Array(raw)
-    if (stdoutResolver) {
-      const resolve = stdoutResolver
-      stdoutResolver = null
-      resolve(chunk)
-    } else {
-      stdoutChunks.push(chunk)
-    }
-  })
-
+  const output = acpOutput(command, { destroying, onUnexpectedClose })
   command.stderr.on('data', (raw: Uint8Array | number[] | string) => {
     console.error(`[ACP ${logId}]`, decodeTauriStderr(raw))
   })
-
-  command.on('close', () => {
-    stdoutClosed = true
-    stdoutClosedError = destroying() ? null : new Error('Agent process exited unexpectedly.')
-    if (stdoutResolver) {
-      const resolve = stdoutResolver
-      stdoutResolver = null
-      resolve(null)
-    }
-    if (!destroying()) {
-      onUnexpectedClose()
-    }
-  })
-
   const child = await command.spawn()
-
-  const output = new ReadableStream<Uint8Array>({
-    async pull(controller) {
-      const buffered = stdoutChunks.shift()
-      if (buffered) {
-        controller.enqueue(buffered)
-        return
-      }
-      if (stdoutClosed) {
-        if (stdoutClosedError) controller.error(stdoutClosedError)
-        else controller.close()
-        return
-      }
-      const chunk = await new Promise<Uint8Array | null>((resolve) => {
-        stdoutResolver = resolve
-      })
-      if (chunk) {
-        controller.enqueue(chunk)
-        return
-      }
-      if (stdoutClosedError) controller.error(stdoutClosedError)
-      else controller.close()
-    }
-  })
 
   const input = new WritableStream<Uint8Array>({
     async write(chunk) {
