@@ -285,3 +285,8 @@ fitting without changing the projection math. Root controller state remains per 
 
 This is a measured candidate disposition, not closure of every app module or native gesture.
 See [browser evidence and remaining acceptance](BROWSER-FIXED-BACKDROP.md#height-control-candidate--2026-11-11).
+
+The candidate is published privately as `bb399a9b4`. MOD-10 moves to Verify, retaining its
+STAB-GPU dependency and native/reference limits. The original-flow follow-up passes 29 cases
+and fails three; all three also occur on the rebuilt pre-refactor source. This does not
+close native lifecycle reliability or accept a normal-app installation.

@@ -11,10 +11,12 @@ records the measured review queue. Requirements come from the [feature catalog](
 and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), preserving historical Pen 1.2.21 evidence and the current [1.2.22 update inventory](pen-feature-reference/update-1.2.22-2026-11-09.md).
 
 The latest board readback retains 459 open cards: 442 execution tasks and 17
-milestones, with 367 Backlog, one Building, 21 Verify and 53 Executed. Two narrow
+milestones, with 366 Backlog, one Building, 22 Verify and 53 Executed. Two narrow
 Agent-chat follow-ups cover tool-title containment and app-scoped Codex skill context;
 installed delivery remains a separate gate. BROWSER-CLIP is the sole Building task. The numerical backdrop repair is in Verify
-with its broader matched-reference criterion still open. Earlier snapshots below retain their historical scope.
+with its broader matched-reference criterion still open. MOD-10 is also in Verify: the
+browser control extraction and bounded tests are qualified, while its native/dependency
+gates remain open. Earlier snapshots below retain their historical scope.
 
 ## Board organization
 

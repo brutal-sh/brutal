@@ -114,7 +114,7 @@ retains the full surface comparison; the native-sequence parent remains Verify.
 
 ## Height control candidate — 2026-11-11
 
-The unpublished BROWSER-CLIP candidate adds the observed 16 CSS-pixel footer, a fixed-device
+The BROWSER-CLIP candidate adds the observed 16 CSS-pixel footer, a fixed-device
 rim and a hatched clipped region. A prepared page image keeps its captured scale while the
 surface clips it; the native child resumes before that image is released. Capture failures
 cancel the gesture, and an older result cannot own a newer gesture. Pointer cancellation and
@@ -140,11 +140,11 @@ A retained diagnostic sees no pointerdown at the grip, no error/overlay and no d
 failed drag cases and narrowed diagnostic are not evidence of a product failure or pass;
 no driver patch, fake pointer or app event fallback is added to make this gate green.
 A readiness-corrected isolated WebView probe executes two cases: keyboard clipping with a
-smaller editable root, two retained fixture panels including the off-edge panel at y1500,
-full-page import at height1800, and one Undo per import. The initial fixture sends ArrowUp
+smaller editable root, two retained fixture panels including the off-edge panel at y=1500,
+full-page import at height 1800, and one Undo per import. The initial fixture sends ArrowUp
 while aria-disabled=true during loading; that ignored key is not a product failure. A separate
 initial assertion wrongly counts immediate children rather than the two nested fixture panels;
-its corrected assertion checks both200×120panels and the off-edge y1500 position. Both failure receipts
+its corrected assertion checks both 200 × 120 panels and the off-edge y=1500 position. Both failure receipts
 remain. Driver-delivered KeyboardEvent and programmatic focus do not establish trusted OS
 keyboard or pointer behavior. The canonical native height spec then executes both cases successfully (1.9s).
 
@@ -154,3 +154,12 @@ open. The Mac is locked during re-entry; no security or permission setting is ch
 Private receipts: `local-evidence/browser-clip-2026-11-11/`, including three failing controls,
 four browser captures, source review and native diagnostics. BROWSER-CLIP stays Building;
 SURF-BROWSER and full beta remain open. This candidate is not installed over the normal app.
+
+The source candidate is published privately as `bb399a9b4`; its normal-app installation
+remains withheld. The broader original 16-spec sequence plus the height spec executes
+29 passing and three failing cases across 17 specs (14 pass, three fail). The failures are
+menu focus, editor focus after browser hiding, and reload address availability. All three
+also occur when the pre-refactor `e3c70fbc6` is rebuilt and runs the same three byte-identical
+specs and routing guards. That baseline additionally fails two preview setup cases. This
+comparison does not establish their cause or native reliability; no timeout or assertion is
+waived. The [native sequence record](NATIVE-RETAINED-SEQUENCE.md) retains both results.

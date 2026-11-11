@@ -58,7 +58,6 @@ still fails canvas readiness in both, so neither a full-sequence pass nor a
 packaging-only fix is accepted. Their original outputs and differing browser
 failures remain under `host-activation/`; no tolerance or assertion changes.
 
-
 Earlier host qualification, 2026-11-10: runner source `a4f9462b4` executes the
 standard retained 15-spec/28-case sequence in 58 seconds (60.52 wall seconds),
 without manual Raise, changed assertions, retries or deadlines. The rebuilt raw
@@ -91,7 +90,6 @@ fixed-device backdrop equality failure remains separately OPEN on SURF-BROWSER;
 Desktop capture success does not accept it, strict Note pixels or full Pen parity.
 Private controls and failed attempts remain in
 `local-evidence/native-retained-focus-2026-11-10/bundled-host/`.
-
 
 [STAB-NATIVE-SEQUENCE](https://trello.com/c/bQp0Q9x6) remains open. The 13-file native
 candidate is saved at `c791e333a` and remains under qualification. This record
@@ -187,16 +185,13 @@ retained toast state and measured-text publication discovery. With those repairs
 the complete app shard passes 1,964 cases. Native menu-focus/window loss and
 strict Note pixels remain open; these app controls do not qualify either.
 
-
 The subsequent complete clean check passes at `18a464656` with literal zero
 clones after the app residual repairs. This broader engineering result does not
 change the native runtime criterion or classify the first window-loss cause.
 
-
 The full unit rerun at `18a464656` finishes with exit one and the sole distinct
 strict Note raster failure (12,792 changed channels); the three app failures
 are absent. Retained native focus/window-loss remains a separate runtime gap.
-
 
 The subsequent [multiwebview driver control](NATIVE-DRIVER-MULTIWEBVIEW.md)
 confirms a distinct cause of the reproduced WebDriver NoWindow response: Tauri's
@@ -206,25 +201,21 @@ classification. This does not classify every historical failure or the separate
 intermittent DOM menu-focus criterion. STAB-NATIVE-DRIVER-CHILD is the narrow
 Building repair; this parent remains Verify pending its own runtime criterion.
 
-
 The paired native-test driver/companion candidate builds and executes two durable
 macOS child/discovery/true-close controls. The broader retained run still fails
 seven of 14 specs (18 passing cases, nine failures), starting with editor readiness
 after reload. No NoWindow response appears. WebDriver Enter and trusted OS input
 remain separate open gates. See NATIVE-DRIVER-MULTIWEBVIEW.md for exact evidence.
 
-
 After `954f68b8a` passes the complete tracked-clean quality gate, the driver card
 moves Verify with its remaining platform/input limits. This parent resumes
 Building at the earliest history reload readiness failure; a failure-only observer
 retains canonical assertions and timeouts. No later cascade is waived.
 
-
 The unchanged three-case history run with a failure-only observer passes in
 12 seconds on the same candidate image. The observer does not fire. This cold
 pass does not explain or clear the earlier retained-run readiness failure;
 that intermittent gate remains Building with the failed receipt preserved.
-
 
 The follow-up observer still reproduces history reload after exact orphan
 termination. A proposed offer-autofocus readiness change builds and passes the
@@ -234,7 +225,6 @@ an additional conditional-event deadlock risk in that candidate. All three
 candidate files are reverted; its patch, binary and failed control are retained.
 Only the separately verified runner fixes are committed.
 
-
 The committed runner tree `a4f9462b4` is identical to isolated `bd2e92311`;
 the complete tracked-and-untracked-clean `bun run check` exits zero with literal
 zero clones. The subsequent focused history observer passes all three cases
@@ -243,7 +233,6 @@ failure callback does not execute. This narrower pass does not classify the
 previous failures or accept the canonical sequence. No runtime fix follows from
 an intermittent pass.
 
-
 Final canonical and process-bound input receipts are in
 `local-evidence/native-retained-focus-2026-11-10/host-activation/` under
 `baseline-final-15.log`, `baseline-final-15-result.json` and `baseline-bundle/`.
@@ -251,7 +240,6 @@ The latter records all 36 named file-backed sections identical, test-only
 identifier, no document associations, per-run route equality, exact native URL
 with loading false, and observed native Zoom In feedback. Linux/Windows runtime,
 trusted clipboard/IME and full native-suite acceptance remain separate.
-
 
 ## Fixed-device follow-up — 2026-11-10
 
@@ -269,3 +257,29 @@ The geometry source is now `d5b8cc1b1`, tree-identical to isolated `e552c2622`,
 and its complete tracked-and-untracked-clean quality gate exits zero with literal
 zero clones. This source acceptance does not waive the four failed mixed specs
 or the unmatched Pen reference viewport.
+
+## Browser height refactor control — 2026-11-11
+
+Private candidate `bb399a9b4` executes the original 16 native specs plus its new height spec.
+The full result is 29 passing and three failing cases across 17 specs: 14 specs pass and
+three fail. The failure diagnostics are `editor menu owns focus` in overlays,
+`editor focus after browser hides` in preview, and `Missing address` in reload. The new
+height spec passes both clipped/full editable imports and Undo; driver-delivered keys and
+programmatic focus remain distinct from trusted OS input.
+
+The pre-refactor `e3c70fbc6` is rebuilt in its clean isolated checkout with the same native-test
+profile/route protections. The three failing specs and shared routing/fixture/config files
+are byte-identical. This baseline reproduces all three candidate diagnostics, plus two
+preview setup failures (`Unavailable Enter a URL` and `expanded browser`). It is not a
+clean baseline or evidence that the candidate fixes the native lifecycle. The latest CUA
+attempt reports the Mac locked and automatic unlock failed; the precise cause of these
+native failures is still unaccepted.
+
+The candidate executable is backed up before the paired build, then its test build is
+restored through the canonical build command. Neither build replaces the installed normal
+app or uses its profile, credentials, recoveries or documents. Target symlinks are removed
+after each terminal run. No timeout, retry, assertion, pixel baseline or permission is
+changed. Private receipts: `local-evidence/browser-clip-2026-11-11/`, particularly
+`native-retained-17.{log,json}`, `baseline-plan.json`, `native-baseline-three.log` and
+`restored-build.json`. STAB-NATIVE-SEQUENCE and MOD-10 stay in Verify; BROWSER-CLIP owns
+the remaining actual Pen/native gesture comparisons. Full native, beta and parity remain open.

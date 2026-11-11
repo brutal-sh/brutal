@@ -56,7 +56,8 @@ The normal optimized app is installed and its signature verified. Its binary SHA
 The actual app launches, retains the saved workspace in Recents, and offers the two historical
 recoveries. Close leaves those records intact. Reopening the saved workspace is currently
 blocked while macOS's protected permission-prompt process is open; Computer Use refuses
-access to that app. Exact installed-card readback is not accepted while this is unresolved.
+access to that app. Exact installed-card readback is not accepted while this is unresolved. A later CUA attempt
+reports the Mac locked and automatic unlock failed; neither gate is bypassed.
 Historical warning messages remain in chat history; the scoped catalog applies to new sessions.
 
 Full repository `bun run check` passes, including literal zero duplicate clones. The bounded
