@@ -18,7 +18,7 @@ Renderer, layout, editor, Figma API, tools, clipboard, vector conversion, and do
 
 ## Layout
 
-- `src/layout.ts` owns orchestration; `src/layout/flex/`, `leaf.ts` and `apply/geometry.ts` own Yoga tree construction, child sizing and geometry writes. Generated Note measurement remains in `notes.ts` and runs again after parent allocation (`packages/core/tests/io/formats/pen/note-sizing.test.ts`).
+- `src/layout.ts` owns orchestration; `src/layout/flex/`, `leaf.ts` and `apply/geometry.ts` own Yoga tree construction, child sizing and geometry writes. Generated Note measurement remains in `src/layout/notes/` and runs again after parent allocation (`packages/core/tests/io/formats/pen/note-sizing.test.ts`).
 
 - `@open-pencil/yoga-layout` supplies both flexbox and CSS Grid.
 - Recompute layout after demo creation and for each materialized or imported page; scope computation to the affected page or subtree where possible.

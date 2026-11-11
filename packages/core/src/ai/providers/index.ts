@@ -1,124 +1,5 @@
-/** ACP agents, direct AI providers, and the models each provider recommends. */
-
-export type ACPAgentID = 'claude-code' | 'codex' | 'gemini-cli'
-
-export interface ACPAgentDef {
-  id: ACPAgentID
-  name: string
-  command: string
-  args: string[]
-  /** The agent's own CLI, when the ACP program is a separate adapter for it. */
-  cliCommand?: string
-  /** npm package that provides `command` when it is an adapter. */
-  adapterPackage?: string
-  /** The vendor's installation guide for the agent itself. */
-  setupURL?: string
-  installCommand?: string
-  /**
-   * The ACP auth method setup signs in with, once the agent offers it. `acp` methods run inside
-   * the agent through `authenticate`; `terminal` methods run the agent's command with `args`,
-   * which the desktop shell scope pins under `<command>-sign-in`.
-   */
-  signIn?: { via: 'acp'; method: string } | { via: 'terminal'; method: string; args: string[] }
-}
-
-export const ACP_AGENTS: ACPAgentDef[] = [
-  {
-    id: 'claude-code',
-    name: 'Claude Code',
-    command: 'claude-agent-acp',
-    args: [],
-    cliCommand: 'claude',
-    adapterPackage: '@agentclientprotocol/claude-agent-acp',
-    setupURL: 'https://code.claude.com/docs/en/setup',
-    installCommand: 'npm i -g @agentclientprotocol/claude-agent-acp',
-    signIn: {
-      via: 'terminal',
-      method: 'claude-ai-login',
-      args: ['--cli', 'auth', 'login', '--claudeai']
-    }
-  },
-  {
-    id: 'codex',
-    name: 'Codex',
-    command: 'codex-acp',
-    args: [],
-    cliCommand: 'codex',
-    adapterPackage: '@agentclientprotocol/codex-acp',
-    setupURL: 'https://developers.openai.com/codex/cli',
-    installCommand: 'npm i -g @agentclientprotocol/codex-acp',
-    signIn: { via: 'acp', method: 'chat-gpt' }
-  },
-  {
-    id: 'gemini-cli',
-    name: 'Gemini CLI',
-    command: 'gemini',
-    args: ['--acp'],
-    setupURL: 'https://geminicli.com/docs/get-started/installation/',
-    installCommand: 'npm i -g @google/gemini-cli'
-  }
-]
-
-export type AIProviderID =
-  | 'openrouter'
-  | 'anthropic'
-  | 'openai'
-  | 'chatgpt'
-  | 'google'
-  | 'deepseek'
-  | 'openai-compatible'
-  | 'zai'
-  | 'minimax'
-  | 'anthropic-compatible'
-  | 'openpencil'
-  | 'harness:pi'
-  | `acp:${ACPAgentID}`
-
-export const REASONING_EFFORTS = ['minimal', 'low', 'medium', 'high', 'xhigh'] as const
-export type ReasoningEffort = (typeof REASONING_EFFORTS)[number]
-
-export interface ModelOption {
-  id: string
-  name: string
-  tag?: string
-  capabilities?: readonly ('tools' | 'vision')[]
-  recommendedMaxOutputTokens?: number
-  releaseDate?: string
-  status?: 'active' | 'beta' | 'deprecated'
-  /** Lowest reasoning effort the model accepts; lower thinking levels, Off included, use it. */
-  minReasoningEffort?: ReasoningEffort
-}
-
-export interface AIProviderDef {
-  id: AIProviderID
-  name: string
-  keyPlaceholder: string
-  keyURL: string
-  models: ModelOption[]
-  defaultModel: string
-  supportsCustomBaseURL?: boolean
-  supportsCustomModel?: boolean
-  /** The credential comes from signing in to an account; there is no key to paste. */
-  signInOnly?: boolean
-}
-
-const OPENAI_MODELS: ModelOption[] = [
-  {
-    id: 'gpt-6.1-sol',
-    name: 'GPT-6.1 Sol',
-    tag: 'Best',
-    capabilities: ['tools', 'vision'],
-    minReasoningEffort: 'low'
-  },
-  {
-    id: 'gpt-6-astra',
-    name: 'GPT-6 Astra',
-    tag: 'Smartest',
-    capabilities: ['tools', 'vision'],
-    minReasoningEffort: 'low'
-  },
-  { id: 'gpt-6-luna', name: 'GPT-6 Luna', tag: 'Fast', capabilities: ['tools', 'vision'] }
-]
+import { OPENAI_MODELS } from './openai'
+import type { AIProviderDef, AIProviderID } from './types'
 
 export const HARNESS_PROVIDER_ID = 'harness:pi' as const
 
@@ -369,7 +250,7 @@ export const AI_PROVIDERS: AIProviderDef[] = [
   },
   {
     id: 'openpencil',
-    name: 'OpenPencil Cloud',
+    name: 'Cloud',
     keyPlaceholder: '',
     keyURL: '',
     defaultModel: '',
@@ -378,5 +259,6 @@ export const AI_PROVIDERS: AIProviderDef[] = [
 ]
 
 export const DEFAULT_AI_PROVIDER: AIProviderID = 'openai-compatible'
+
 export const DEFAULT_AI_MODEL =
   AI_PROVIDERS.find((provider) => provider.id === DEFAULT_AI_PROVIDER)?.defaultModel ?? ''

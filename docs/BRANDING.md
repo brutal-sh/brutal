@@ -37,6 +37,52 @@ their own task cards. None is accepted by the artwork checks.
 See the [PRD](PRD.md), [task index](TASKS.md), [source/generator guide](../assets/brand/README.md)
 and [branding milestone](https://trello.com/c/2cCz31Kz).
 
+## Remaining menu and service wording follow-up — 2026-11-11
+
+Tracked by [Cloud copy](https://trello.com/c/mrP2See8) and [macOS menu delivery](https://trello.com/c/Auz9pX4e); both remain Verify.
+
+The installed `/Applications/Open Pen.app` predates the current source. Its macOS application
+menu already says Open Pen, but its workspace menu still offers “OpenPencil website” and its
+recovery dialog still identifies OpenPencil. The two existing recovery records are preserved;
+this observation does not qualify an updated installation.
+
+The source candidate removes that upstream marketing item, names Open Pen in the assistant
+and microphone permission text, and uses neutral Cloud labels for optional service controls,
+providers and client errors. It preserves actual server addresses, auth/provider IDs, saved
+preferences, wire formats and required attribution. Privacy text continues to identify the
+actual upstream recipient. No endpoint, reporting policy, consent, credential or login changes.
+This follow-up supersedes the older presentation exceptions for Cloud display names and
+clipboard warning prose below; those historical receipts remain scoped to their original runs.
+
+Canonical catalogs retain all 32 namespaces and key order, formatter shapes and interpolation
+parameters, with 23 intended English copy changes. Eight translated locales retain keys,
+value types and interpolation tokens across 184 changed values in 32 files. These are structural
+checks, not native-speaker translation approval. The provider registry preserves its exports,
+ACP definitions, IDs, model data and defaults except for the Cloud display name.
+
+The touched AI/Cloud catalogs and provider data are divided into their existing domains.
+The Cloud client composes request owners for sessions, users, documents, shares, grants,
+invitations, collaboration, uploads and version history. All 37 moved request method bodies
+retain their token sequences and original options reference. Request validation, error handling,
+headers, paths and response schemas remain. The 155 focused client/integration/AI tests and the complete Cloud suite (187 unit and 155
+integration cases) pass. The full repository check passes with zero clones. Six workspace-menu/
+Cloud-AI browser cases and a fresh 29-case locale/setup/diagnostics/Settings run pass. All 54
+captures are inspected: Open Pen labels and controls fit, while the actual upstream recipient
+remains explicit. This is visual identity/fit evidence, not native-speaker approval. Four rebuilt
+native specs pass eight cases, including preserving recovery bytes through Close and Settings
+behavior. These native-test receipts do not establish installed delivery.
+
+One locale run is excluded after an overlapping package rebuild caused reload failures; its
+log is retained and the same checks pass after the build ends. The normal optimized package
+reproduces Rust's documented macOS 27 stripped-dylib loader failure
+([rust-lang/rust#157750](https://github.com/rust-lang/rust/issues/157750)). A narrow cache
+rebuild succeeds for one macro but the full retry exposes the same alignment error in other
+compiler plugins. The Cargo release build override keeps only build-time dependencies
+unstripped, as supported by [Cargo profiles](https://doc.rust-lang.org/cargo/reference/profiles.html#build-dependencies).
+App optimization and permissions are unchanged. The actual optimized bundle retry and installed
+verification remain pending. The old app and three profile paths (45 files) are backed up
+locally before update; both original recovery offers remain intact and Keychain is untouched.
+
 ## Owned diagnostics and log names
 
 App-owned error prefixes, MCP startup/connection/unavailable messages, JSX diagnostics,

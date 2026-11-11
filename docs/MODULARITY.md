@@ -27,6 +27,16 @@ TypeScript runtime/test modules touched by this follow-up meet the same size and
 complexity limits. The [Note evidence](NOTE-FILL.md) keeps the behavioral and rendering
 qualification boundaries explicit; this remains a bounded ownership change.
 
+The 2026-11-11 remaining-branding candidate groups AI defaults into chat, models, failures
+and setup; Cloud defaults into editor connection/documents/workspace/history and portal
+access/account/admin; and provider tables into agents, provider types, OpenAI models and
+registry. Public catalog and provider contracts remain unchanged apart from intended copy.
+The same candidate moves 37 Cloud request methods into their owning domains, preserving
+method bodies and original request options. Its focused 155 tests, complete Cloud suite and combined repository check pass. All 36 touched
+TypeScript source modules meet the strict size/complexity limits; installed delivery remains
+pending. These bounded changes do not establish whole-app
+compliance with the size limits.
+
 Scope: authored `.ts`, `.vue`, `.rs` and `.css` under `src`, `packages/core/src`,
 `packages/vue/src`, `packages/scene-graph/src` and `desktop/src`. Counts are physical lines.
 `.d.ts` declarations, tests and `.stories.ts` examples are excluded; authored catalogs are included.

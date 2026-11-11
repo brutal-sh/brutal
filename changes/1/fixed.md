@@ -36,3 +36,4 @@
 - Saved .pen text retains its font weight when opened in Pen.
 - Export multiple selected objects as separate SVG files in one ZIP, and offer SVG in the desktop File export menu.
 - Keep sign-in Cancel and Change actions readable on their status background in both themes.
+- Use Open Pen names in the workspace menu, assistant and microphone permission prompt, and neutral Cloud labels in service controls.

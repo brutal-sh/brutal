@@ -6,11 +6,11 @@ Repository: [private Open Pen repository](https://github.com/jpoindexter/open-pe
 Board: [Open Pen — independent design editor](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor), private.
 
 The [PRD](PRD.md) owns the outcome, constraints and release criteria.
-The [task index](TASKS.md) links all 438 execution cards; the [modularity audit](MODULARITY.md)
+The [task index](TASKS.md) links all 440 execution cards; the [modularity audit](MODULARITY.md)
 records the measured review queue. Requirements come from the [feature catalog](pen-feature-reference/README.md)
 and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), preserving historical Pen 1.2.21 evidence and the current [1.2.22 update inventory](pen-feature-reference/update-1.2.22-2026-11-09.md).
 
-The latest board readback retains 455 open cards: 438 execution tasks and 17
+The latest board readback retains 457 open cards: 440 execution tasks and 17
 milestones. The Note Fill and MOD-14 implementation artifacts move to Verify,
 leaving 368 Backlog, one Building, 16 Verify and 53 Executed. The backdrop task
 remains Building for its matched-reference criterion. Earlier snapshots below
@@ -609,3 +609,12 @@ Windows-only skip and the unchanged 12,792-channel Note raster failure. No
 threshold is waived. FMT-08-NOTE-FILL and MOD-14 are Verify; their complete
 reference, dependency and rendering criteria remain open. Final source
 publication and the clean combined gate are recorded with the implementation.
+
+## Remaining identity follow-ups — 2026-11-11
+
+Two bounded Verify cards distinguish optional Cloud labels/client errors from actual macOS
+menu and package delivery. Their scope, preservation constraints and executed Done checks
+are linked from the task index and branding record. The fresh complete board readback has
+457 open cards: 440 execution tasks and 17 milestones; 368 Backlog, one Building, 18 Verify
+and 53 Executed. The current browser stability owner remains the sole Building task.
+The old installed app is not accepted by newer source or native-test results.

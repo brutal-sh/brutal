@@ -122,7 +122,7 @@ export function parseOpenPencilClipboard(html: string): OpenPencilClipboardData 
     }
     const decoded = v.safeParse(openPencilClipboardSchema, new TextDecoder().decode(bytes))
     if (!decoded.success) {
-      console.warn('Ignoring malformed OpenPencil clipboard data:', v.summarize(decoded.issues))
+      console.warn('Ignoring malformed clipboard design data:', v.summarize(decoded.issues))
       return null
     }
     const nodes = restoreNodeData(decoded.output.nodes)
@@ -132,7 +132,7 @@ export function parseOpenPencilClipboard(html: string): OpenPencilClipboardData 
     }
     return { nodes, images }
   } catch (e) {
-    console.warn('Failed to parse OpenPencil clipboard data:', e)
+    console.warn('Failed to parse clipboard design data:', e)
   }
   return null
 }

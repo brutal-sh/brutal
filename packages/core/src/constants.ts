@@ -4,7 +4,9 @@ import type { Color } from '@open-pencil/scene-graph/primitives'
 
 import type { SelectionTheme } from '#core/canvas/renderer/types'
 
+export * from './ai/agents'
 export * from './ai/providers'
+export * from './ai/providers/types'
 
 export const IS_BROWSER = typeof window !== 'undefined'
 export const IS_TAURI = IS_BROWSER && '__TAURI_INTERNALS__' in window

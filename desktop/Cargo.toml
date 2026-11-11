@@ -68,3 +68,6 @@ objc2-core-text = { version = "0.3.2", default-features = false, features = ["st
 [target.'cfg(any(target_os = "macos", windows, target_os = "linux"))'.dependencies]
 tauri-plugin-single-instance = { version = "2", features = ["deep-link"] }
 
+# Keep proc-macro dylibs loadable on macOS 27: rust-lang/rust#157750.
+[profile.release.build-override]
+strip = "none"

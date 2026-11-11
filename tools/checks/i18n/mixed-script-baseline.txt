@@ -503,7 +503,6 @@ zh-cn:cloudPortal.deviceExpiredDescription
 zh-cn:cloudPortal.authenticatorOff
 ja:cloud.connectHeading
 ja:cloud.connectServerDescription
-ja:cloud.officialDescription
 ja:cloud.selfHostedDescription
 ja:cloud.errorInvalidAddressDescription
 ja:cloud.errorNotCloudHeading
@@ -513,7 +512,6 @@ ja:cloud.continueWithGoogle
 ja:cloud.continueWithApple
 ja:cloud.shareDescriptionInWorkspace
 ja:cloud.shareDescription
-ja:cloud.settingsOfficialDescription
 ja:cloud.settingsSelfHostedDescription
 ja:cloudPortal.errorEmailInvalid
 ja:cloudPortal.verifiedDescription
@@ -524,7 +522,6 @@ ja:cloudPortal.methodDesktop
 ja:cloudPortal.pictureUnreadable
 zh-cn:cloud.connectHeading
 zh-cn:cloud.connectServerDescription
-zh-cn:cloud.officialDescription
 zh-cn:cloud.selfHostedDescription
 zh-cn:cloud.errorInvalidAddressDescription
 zh-cn:cloud.errorNotCloudHeading
@@ -534,7 +531,6 @@ zh-cn:cloud.continueWithGoogle
 zh-cn:cloud.continueWithApple
 zh-cn:cloud.shareDescriptionInWorkspace
 zh-cn:cloud.shareDescription
-zh-cn:cloud.settingsOfficialDescription
 zh-cn:cloud.settingsSelfHostedDescription
 zh-cn:cloudPortal.errorEmailInvalid
 zh-cn:cloudPortal.verifiedDescription

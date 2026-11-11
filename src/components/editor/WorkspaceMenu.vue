@@ -10,7 +10,6 @@ import {
 import { computed, ref } from 'vue'
 import IconBookOpen from '~icons/lucide/book-open'
 import IconGithub from '~icons/lucide/github'
-import IconGlobe from '~icons/lucide/globe'
 import IconLifeBuoy from '~icons/lucide/life-buoy'
 
 import { useEditorStore } from '@/app/editor/active-store'
@@ -46,8 +45,7 @@ const links = [
     label: 'Open Pen documentation',
     href: `${repository}/blob/HEAD/README.md`,
     icon: IconBookOpen
-  },
-  { label: 'OpenPencil website', href: 'https://openpencil.dev', icon: IconGlobe }
+  }
 ]
 const styles = useMenuUI({
   content: 'w-[216px] rounded-md border border-menu-border bg-panel p-1 shadow-lg',
