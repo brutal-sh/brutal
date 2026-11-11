@@ -10,14 +10,14 @@ The original `assets/brand/open-pen-app.png` is the source for shipped artwork.
 Historical teal SVG masters retain provenance but are no longer generator inputs.
 Native generation retains its existing source and Tauri path; app geometry is unchanged.
 
-| Surface | Executed evidence | Limit |
+| Surface                                  | Executed evidence                                                                                    | Limit                                                                    |
 | ---------------------------------------- | ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| Main/micro marks and light/dark variants | Generator source-fidelity checks; inspected browser captures at 16/24/32px and larger sizes. | Chromium browser evidence; WebKit and full product branding remain open. |
-| Monochrome | Neutral-channel and retained light/dark feature checks; rendered output inspected. | Browser filter rendering is not separately qualified. |
-| Favicon and declarations | Real browser loads, both themes, 1x/2x captures; ICO sizes and no duplicate manifest checked. | No installed PWA acceptance is inferred. |
-| Profile and any-purpose PWA | Output pixels match canonical Open Pen PNG; generated images inspected. | Platform installation and cache migration remain open. |
-| Apple Touch / maskable | Opaque output, expected dimensions and safe-circle validation; output inspected. | Actual mobile OS launcher delivery remains open. |
-| Native PNG/ICO/ICNS | Fresh generation, dimensions/RGBA/container and reproducibility checks; 32px/128px images inspected. | This does not qualify a newly packaged or installed native build. |
+| Main/micro marks and light/dark variants | Generator source-fidelity checks; inspected browser captures at 16/24/32px and larger sizes.         | Chromium browser evidence; WebKit and full product branding remain open. |
+| Monochrome                               | Neutral-channel and retained light/dark feature checks; rendered output inspected.                   | Browser filter rendering is not separately qualified.                    |
+| Favicon and declarations                 | Real browser loads, both themes, 1x/2x captures; ICO sizes and no duplicate manifest checked.        | No installed PWA acceptance is inferred.                                 |
+| Profile and any-purpose PWA              | Output pixels match canonical Open Pen PNG; generated images inspected.                              | Platform installation and cache migration remain open.                   |
+| Apple Touch / maskable                   | Opaque output, expected dimensions and safe-circle validation; output inspected.                     | Actual mobile OS launcher delivery remains open.                         |
+| Native PNG/ICO/ICNS                      | Fresh generation, dimensions/RGBA/container and reproducibility checks; 32px/128px images inspected. | This does not qualify a newly packaged or installed native build.        |
 
 All 16 generator/cache tests pass. Eight browser workflows pass without snapshot update
 after inspecting the eight intentionally changed artwork captures. Existing Open Pen header
@@ -316,14 +316,14 @@ beta and terminal gates retain this dependency. Native queued-file delivery also
 The following browser branches have bounded passing receipts. The counts identify those
 branches; they do not turn the mixed run into an accepted suite.
 
-| Branch | Observed path and preservation | Limit |
-| --- | --- | --- |
-| Command search, nine languages and two engines | Actual description, search focus and Escape dismissal. | The own-brand description is accessibility text; this does not qualify all menu commands or Pen geometry. |
-| Unsupported font, nine languages and two engines | Real font-status branch from a synthetic host-loader failure; original family and text remain. | No native font-parser or all-format claim; the English mixed-run timeout remains open. |
-| Unsupported variable, nine languages and two engines | Actual inspector tooltip; full expression and cached width remain. | This branch checks in-memory preservation. |
-| Microphone denial, nine languages in Chromium | Browser permission refusal displays guidance and keeps the fixture out of a call. | Fake device; no real audio, OS permission panel or native delivery. |
-| Unreachable room, nine languages and two engines | A real local WebSocket closes normally; the actual 21-second status deadline is advanced, then Leave executes without browser errors. | Simulated elapsed time; reconnection is unaccepted. |
-| FIG import/save/reopen, nine languages, both themes and engines | File chooser triggers the real import warning; Close executes, height/background edits save through a real download, parsed bytes retain the expression and geometry, and the selected reopened tab retains the values. | Browser download fallback; no native file panel or associated-file delivery. |
+| Branch                                                          | Observed path and preservation                                                                                                                                                                                          | Limit                                                                                                     |
+| --------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| Command search, nine languages and two engines                  | Actual description, search focus and Escape dismissal.                                                                                                                                                                  | The own-brand description is accessibility text; this does not qualify all menu commands or Pen geometry. |
+| Unsupported font, nine languages and two engines                | Real font-status branch from a synthetic host-loader failure; original family and text remain.                                                                                                                          | No native font-parser or all-format claim; the English mixed-run timeout remains open.                    |
+| Unsupported variable, nine languages and two engines            | Actual inspector tooltip; full expression and cached width remain.                                                                                                                                                      | This branch checks in-memory preservation.                                                                |
+| Microphone denial, nine languages in Chromium                   | Browser permission refusal displays guidance and keeps the fixture out of a call.                                                                                                                                       | Fake device; no real audio, OS permission panel or native delivery.                                       |
+| Unreachable room, nine languages and two engines                | A real local WebSocket closes normally; the actual 21-second status deadline is advanced, then Leave executes without browser errors.                                                                                   | Simulated elapsed time; reconnection is unaccepted.                                                       |
+| FIG import/save/reopen, nine languages, both themes and engines | File chooser triggers the real import warning; Close executes, height/background edits save through a real download, parsed bytes retain the expression and geometry, and the selected reopened tab retains the values. | Browser download fallback; no native file panel or associated-file delivery.                              |
 
 Fixtures use the browser-language setting while preserving the canonical first-run storage
 state. The app's existing plain theme setter selects the actual theme, which the test checks
@@ -359,7 +359,6 @@ is simulated. Action activation and clipboard contents remain outside this check
 [UI-TOAST-SURFACE](https://trello.com/c/FzA3qbsT) has executed this bounded surface criterion. Its bounded acceptance cannot close editor copy, native/Pen matching,
 mixed stability, the branding milestone or beta.
 
-
 ## Recovery identity and failure feedback
 
 The [recovery record](RECOVERY-COPY.md) qualifies actual dialog outcomes in all nine locales
@@ -376,7 +375,6 @@ This receipt does not qualify native recovery, multiple-snapshot preservation, e
 geometry, every recovery workflow or full product identity. The failed-restore test proves
 retention through Close, not rediscovery after another launch.
 
-
 ## Update prompt identity and guidance
 
 The [update prompt record](UPDATER-COPY.md) qualifies thirteen actual component states in
@@ -392,7 +390,6 @@ The source and record are published at
 [`9d399a4ab`](https://github.com/jpoindexter/open-pen/commit/9d399a4abaa9ba1c465b38fdaf00965535b82ed1). Typed mock emits and explicitly fictitious release data do not
 qualify controller transitions, a real release/feed/download/install, native restart,
 physical input, exact Pen geometry, human translation sign-off or full branding.
-
 
 ## Restart feedback and support decomposition
 
@@ -416,7 +413,6 @@ support-copy acceptance gate has bounded Executed reconciliation at `d30381b16`.
 bounded Executed evidence at `5e68a7668`; editor/native identity, remaining links and broader
 branding acceptance stay open. The editor-copy gate retains its mixed WebKit dependency.
 
-
 The [browser support record](BROWSER-SUPPORT-COPY.md) publishes the own requirements/report
 routing, matching issue-form platform option and preserved diagnostic details at
 [`59e02516b`](https://github.com/jpoindexter/open-pen/commit/59e02516b70bd22032906a1e8f5683c8512197ce).
@@ -424,7 +420,6 @@ All 35 browser cases pass with inspected captures and matching frozen sources; f
 authenticated remote contents match the new README and template exactly. Both requested
 color schemes retain existing dark pre-boot styling. The support parent and full links
 gate remain open for their other owners and uninspected destinations.
-
 
 ## CLI help and format presentation
 
@@ -437,7 +432,6 @@ executable/package IDs and format contracts remain unchanged. The CLI owner suit
 [`f5eef8e84`](https://github.com/jpoindexter/open-pen/commit/f5eef8e84a2e438d53a112e199240f895f92f303).
 The separate [Storybook manifest error-label record](STORYBOOK-ERROR-COPY.md) now has
 bounded Executed evidence at `881d0b7e5`; compatibility filenames and namespaces are preserved. No full CLI, native or whole-brand acceptance is inferred.
-
 
 ## WebMCP metadata
 
@@ -515,3 +509,5 @@ An isolated, read-only Claude Sonnet5 review uses only Read/Grep/Glob and leaves
 [BRAND-UPDATER-EMPTY](https://trello.com/c/3zbtcs6K) owns this bounded controller/native correction and is a prerequisite of BRAND-MAC-MENU. Two false/unconfigured-flag controls fail before the guard; the candidate updater owner suite passes 25 tests/52 assertions with existing enabled behavior preserved. The unique signed native-test candidate builds successfully, but Computer Use reports the Mac locked before its menu can be invoked. The owned test process is terminated; the exact candidate menu criterion remains Verify until its actual command is observed. No existing component-only receipt is promoted to cover this path.
 
 The review also identifies documentation-only scheme/owner references for BRAND-NATIVE and MOD-13. Those do not authorize blanket renaming: required attribution, provider names and valid compatibility identifiers remain intact. The private review, tool inventory, clean-checkout receipt and installed reproduction are under `local-evidence/claude-brand-review-2026-11-11/`. Full branding, native delivery and parity remain open.
+
+The later isolated native empty-endpoint updater check executes the actual macOS menu command and observes the translated unavailable guidance. BRAND-UPDATER-EMPTY is accepted on its bounded published-controller/native-delivery criterion; normal installation, configured update delivery and the wider BRAND-MAC-MENU gate stay open. See [the exact native evidence and limits](UPDATER-COPY.md#manual-empty-endpoint-native-acceptance--2026-11-11).
