@@ -2,11 +2,12 @@ import { expect, test, type Page } from '@playwright/test'
 
 import { expectDefined } from '#tests/helpers/assert'
 import { CanvasHelper } from '#tests/helpers/canvas'
+import { waitForDemo } from '#tests/helpers/demo'
 
 async function selectedNodeSnapshot(page: Page) {
   return page.evaluate(() => {
     const store = window.openPencil?.getStore?.()
-    if (!store) throw new Error('OpenPencil store not initialized')
+    if (!store) throw new Error('Open Pen store not initialized')
     const selectedId = [...store.state.selectedIds][0]
     const selected = selectedId ? store.graph.getNode(selectedId) : null
     return selected
@@ -26,14 +27,28 @@ async function selectedNodeSnapshot(page: Page) {
   })
 }
 
-test('assets panel groups component sets and inserts the default variant', async ({ page }) => {
+async function openAssets(page: Page) {
+  await page.getByRole('tab', { name: 'Components', exact: true }).click()
+}
+
+async function insertFromDetails(page: Page, id: string) {
+  await page.locator(`[data-asset-id="${id}"]`).click()
+  const details = page.getByTestId('asset-details-dialog')
+  await expect(details).toBeVisible()
+  await details.getByTestId('asset-details-insert').click()
+  await expect(details).toBeHidden()
+}
+
+test('components workspace shows set details and inserts the default variant', async ({
+  page
+}, testInfo) => {
   const canvas = new CanvasHelper(page)
   await page.goto('/?test')
   await canvas.waitForInit()
 
   const ids = await page.evaluate(() => {
     const store = window.openPencil?.getStore?.()
-    if (!store) throw new Error('OpenPencil store not initialized')
+    if (!store) throw new Error('Open Pen store not initialized')
 
     const pageNode = store.graph.getNode(store.state.currentPageId)
     if (!pageNode) throw new Error('Current page not found')
@@ -111,8 +126,7 @@ test('assets panel groups component sets and inserts the default variant', async
   })
   await canvas.waitForRender()
 
-  await page.getByTestId('left-panel-assets-tab').click()
-  await page.getByRole('button', { name: 'List view' }).click()
+  await openAssets(page)
 
   const assetsPanel = page.getByTestId('assets-panel')
   const assetItems = page.getByTestId('asset-item')
@@ -122,15 +136,16 @@ test('assets panel groups component sets and inserts the default variant', async
   await expect(assetsPanel).not.toContainText('Type=Primary')
   await expect(assetsPanel).not.toContainText('Type=Secondary')
   const buttonAsset = page.locator(`[data-asset-id="${ids.setId}"]`)
-  await expect(buttonAsset.getByTestId('asset-variant-summary')).toContainText('Type')
+  // Grid/list-only summaries retain their isolated legacy-component coverage.
   await expect(buttonAsset.getByTestId('asset-library-badge')).toContainText('Library')
-  await expect(buttonAsset.getByTestId('asset-description')).toContainText(
-    'Reusable button component'
-  )
-  await expect(buttonAsset.getByTestId('asset-docs')).toBeVisible()
-  await expect(buttonAsset.getByTestId('asset-variant-conflict')).toContainText(
-    'Duplicate variant values'
-  )
+  await expect(buttonAsset.locator('[data-slot="asset-thumbnail"] img')).toBeVisible()
+  await expect(
+    page.locator(`[data-asset-id="${ids.cardId}"] [data-slot="asset-thumbnail"] img`)
+  ).toBeVisible()
+  await assetsPanel.screenshot({
+    path: testInfo.outputPath('components-grid.png'),
+    animations: 'disabled'
+  })
 
   await buttonAsset.click()
   const details = page.getByTestId('asset-details-dialog')
@@ -144,13 +159,17 @@ test('assets panel groups component sets and inserts the default variant', async
   await expect(details.getByTestId('asset-details-library')).toContainText('lk-test-library')
   await expect(details.getByTestId('asset-details-docs')).toBeVisible()
   await expect(details.getByTestId('asset-details-property')).toContainText('Type')
+  await details.screenshot({
+    path: testInfo.outputPath('components-details.png'),
+    animations: 'disabled'
+  })
   await page.getByTestId('asset-details-close').click()
   await expect(details).toBeHidden()
 
   await page.getByTestId('assets-search').fill('card')
   await expect(assetItems).toHaveCount(1)
   await expect(assetsPanel).toContainText('Card')
-  await page.locator(`[data-asset-id="${ids.cardId}"]`).getByTestId('asset-insert').click()
+  await insertFromDetails(page, ids.cardId)
   await canvas.waitForRender()
 
   const cardInstance = await selectedNodeSnapshot(page)
@@ -163,7 +182,7 @@ test('assets panel groups component sets and inserts the default variant', async
 
   await page.getByTestId('assets-search').fill('button')
   await expect(assetItems).toHaveCount(1)
-  await page.locator(`[data-asset-id="${ids.setId}"]`).getByTestId('asset-insert').click()
+  await insertFromDetails(page, ids.setId)
   await canvas.waitForRender()
 
   const inserted = await selectedNodeSnapshot(page)
@@ -190,7 +209,7 @@ test('assets panel groups component sets and inserts the default variant', async
   canvas.assertNoErrors()
 })
 
-test('assets panel supports Figma-style views, component actions, and canvas drag', async ({
+test('components workspace supports main-component navigation and canvas drag', async ({
   page
 }) => {
   const canvas = new CanvasHelper(page)
@@ -199,7 +218,7 @@ test('assets panel supports Figma-style views, component actions, and canvas dra
 
   const setup = await page.evaluate(() => {
     const store = window.openPencil?.getStore?.()
-    if (!store) throw new Error('OpenPencil store not initialized')
+    if (!store) throw new Error('Open Pen store not initialized')
     store.state.panX = 0
     store.state.panY = 0
     store.state.zoom = 1
@@ -218,13 +237,10 @@ test('assets panel supports Figma-style views, component actions, and canvas dra
   })
   await canvas.waitForRender()
 
-  await page.getByTestId('left-panel-assets-tab').click()
+  await openAssets(page)
   const asset = page.locator(`[data-asset-id="${setup.componentId}"]`)
-  await expect(page.getByRole('heading', { name: 'Components' })).toBeVisible()
-  await expect(asset.locator('[data-slot="asset-thumbnail"]')).toHaveClass(/size-24/)
-
-  await page.getByRole('button', { name: 'List view' }).click()
-  await expect(asset.locator('[data-slot="asset-thumbnail"]')).toHaveClass(/size-10/)
+  await expect(asset).toBeVisible()
+  await expect(asset.locator('[data-slot="asset-thumbnail"]')).toHaveClass(/w-full/)
 
   await asset.click({ button: 'right' })
   await page.getByTestId('asset-context-go-to-main').click()
@@ -232,7 +248,7 @@ test('assets panel supports Figma-style views, component actions, and canvas dra
     .poll(() =>
       page.evaluate(() => {
         const store = window.openPencil?.getStore?.()
-        if (!store) throw new Error('OpenPencil store not initialized')
+        if (!store) throw new Error('Open Pen store not initialized')
         return {
           pageId: store.state.currentPageId,
           selectedId: [...store.state.selectedIds][0]
@@ -241,7 +257,7 @@ test('assets panel supports Figma-style views, component actions, and canvas dra
     )
     .toEqual({ pageId: setup.secondPageId, selectedId: setup.componentId })
 
-  await page.getByTestId('left-panel-assets-tab').click()
+  await openAssets(page)
   const canvasBox = expectDefined(await canvas.canvas.boundingBox(), 'canvas bounds')
   await page
     .locator(`[data-asset-id="${setup.componentId}"]`)
@@ -261,7 +277,7 @@ test('assets insertion accounts for entered container coordinates', async ({ pag
 
   const setup = await page.evaluate(() => {
     const store = window.openPencil?.getStore?.()
-    if (!store) throw new Error('OpenPencil store not initialized')
+    if (!store) throw new Error('Open Pen store not initialized')
     store.state.panX = 0
     store.state.panY = 0
     store.state.zoom = 1
@@ -287,14 +303,13 @@ test('assets insertion accounts for entered container coordinates', async ({ pag
   })
   await canvas.waitForRender()
 
-  await page.getByTestId('left-panel-assets-tab').click()
-  await page.getByRole('button', { name: 'List view' }).click()
-  await page.locator(`[data-asset-id="${setup.componentId}"]`).getByTestId('asset-insert').click()
+  await openAssets(page)
+  await insertFromDetails(page, setup.componentId)
   await canvas.waitForRender()
 
   const inserted = await page.evaluate(() => {
     const store = window.openPencil?.getStore?.()
-    if (!store) throw new Error('OpenPencil store not initialized')
+    if (!store) throw new Error('Open Pen store not initialized')
     const selectedId = [...store.state.selectedIds][0]
     const selected = selectedId ? store.graph.getNode(selectedId) : null
     if (!selected) return null
@@ -317,19 +332,17 @@ test('assets insertion accounts for entered container coordinates', async ({ pag
   canvas.assertNoErrors()
 })
 
-test('demo exposes component set assets', async ({ page }) => {
+test('demo exposes its shipped reusable components', async ({ page }) => {
   const canvas = new CanvasHelper(page)
   await page.goto('/demo')
   await canvas.waitForInit()
-
-  await page.getByTestId('left-panel-assets-tab').click()
-  await page.getByRole('button', { name: 'List view' }).click()
+  await waitForDemo(page)
+  await openAssets(page)
   const assetsPanel = page.getByTestId('assets-panel')
-
-  await expect(assetsPanel).toContainText('Button')
-  await expect(assetsPanel).toContainText('2 variants · Variant')
-  await expect(assetsPanel).toContainText('Avatar')
-  await expect(assetsPanel).not.toContainText('Button/Primary')
-
+  await expect(assetsPanel.getByTestId('asset-item')).toHaveCount(6)
+  for (const name of ['Option', 'Play', 'Player', 'Progress', 'Skip', 'Tip'])
+    await expect(
+      assetsPanel.getByTestId('asset-name').filter({ hasText: new RegExp(`^${name}$`) })
+    ).toBeVisible()
   canvas.assertNoErrors()
 })

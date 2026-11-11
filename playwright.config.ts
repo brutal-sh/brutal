@@ -92,6 +92,7 @@ export default defineConfig({
         '**/*.webkit.spec.ts',
         '**/canvas/split-views.spec.ts',
         '**/components/library-lifecycle.spec.ts',
+        '**/components/assets-panel.spec.ts',
         '**/design/panel.spec.ts',
         '**/design/retained-panel.spec.ts',
         '**/export/basic.spec.ts',
@@ -116,7 +117,7 @@ export default defineConfig({
     {
       ...storybookDefaults,
       name: 'storybook-webkit',
-      testMatch: '**/browser-height.spec.ts',
+      testMatch: ['**/browser-height.spec.ts', '**/assets-panel.spec.ts'],
       use: { ...storybookDefaults.use, browserName: 'webkit' }
     }
   ],
