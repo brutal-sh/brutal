@@ -2,6 +2,7 @@ export { createDocumentRecovery } from '@/app/document/recovery/controller'
 export type { DocumentRecoveryController } from '@/app/document/recovery/controller'
 export {
   getRecoveryStore,
+  recoveryRevision,
   isRecoveryStoreMemoryFallback,
   resetRecoveryStoreForTests
 } from '@/app/document/recovery/store'

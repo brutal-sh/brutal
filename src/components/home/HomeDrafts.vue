@@ -2,7 +2,7 @@
 import { tv } from 'tailwind-variants'
 import { ref, watch } from 'vue'
 
-import type { RecoverySnapshotMeta } from '@/app/document/recovery'
+import { recoveryRevision, type RecoverySnapshotMeta } from '@/app/document/recovery'
 import { useDateFormat } from '@/app/i18n/date'
 import { activeTab, listRecoverySnapshots, restoreRecoverySnapshot } from '@/app/tabs'
 import DocumentEntry from '@/components/home/document/DocumentEntry.vue'
@@ -17,8 +17,8 @@ const error = ref('')
 const styles = tv(workspaceTheme)()
 const dates = useDateFormat()
 watch(
-  () => activeTab.value?.kind === 'home',
-  async (active, _previous, onCleanup) => {
+  [() => activeTab.value?.kind === 'home', recoveryRevision],
+  async ([active], _previous, onCleanup) => {
     if (!active) return
     let current = true
     onCleanup(() => {

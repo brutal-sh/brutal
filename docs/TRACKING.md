@@ -1,20 +1,20 @@
 # Tracking
 
-Updated: 2026-11-11. The full independent design and functionality parity target remains required. The old controller goal is cleared; its replacement follows final audit reconciliation.
+Updated: 2026-11-11. The full independent design and functionality parity target remains required. The replacement controller goal is Active and follows the audited plan.
 
 Repository: [private Open Pen repository](https://github.com/jpoindexter/open-pen), branch `feat/open-pen`.
 Board: [Open Pen — independent design editor](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor), private.
 
 The [PRD](PRD.md) owns the outcome, constraints and release criteria.
-The [task index](TASKS.md) links all 462 execution cards; the [modularity audit](MODULARITY.md)
+The [task index](TASKS.md) links all 463 execution cards; the [modularity audit](MODULARITY.md)
 records the measured review queue. Requirements come from the [feature catalog](pen-feature-reference/README.md)
 and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), preserving historical Pen 1.2.21 evidence and the current [1.2.22 update inventory](pen-feature-reference/update-1.2.22-2026-11-09.md).
 
-The complete 2026-11-11 readback contains 479 cards: 461 execution tasks and 18 milestones. Lists are 380 Backlog, 3 Ready, 0 Building, 24 Verify and 54 Executed. [The audit](BOARD-AUDIT-2026-11-11.md) and [milestone exit gates](MILESTONES.md) own the current reconciliation; earlier snapshots below remain historical.
+The original 2026-11-11 audit readback contains 479 cards: 461 execution tasks and 18 milestones. Lists are 380 Backlog, 3 Ready, 0 Building, 24 Verify and 54 Executed. [The audit](BOARD-AUDIT-2026-11-11.md) and [milestone exit gates](MILESTONES.md) own the current reconciliation; earlier snapshots below remain historical.
 
-After the audit, source c37b11ba2 publishes the qualified AssetsPanel refactor and fixtures; its two bounded cards are Executed. Source 543ca9bd8 publishes the browser-height reference repair with 34 serial browser cases, four isolated native candidate cases and a discriminating fresh-process reset control; BROWSER-CLIP remains Verify for its wider actual-reference matrices. Claude's read-only review identifies a manual empty-endpoint updater defect, reproduced through the installed macOS menu and allocated to BRAND-UPDATER-EMPTY under BRAND-MAC-MENU. The narrow guard and 25 owner controls pass; its signed isolated candidate is built, but actual menu delivery stays Verify because Computer Use reports the Mac locked. FIRST-03 is the next isolated draft/save/reopen journey; physical native/reference checks remain open.
+After the audit, source c37b11ba2 publishes the qualified AssetsPanel refactor and fixtures; its two bounded cards are Executed. Source 543ca9bd8 publishes the browser-height reference repair with 34 serial browser cases, four isolated native candidate cases and a discriminating fresh-process reset control; BROWSER-CLIP remains Verify for its wider actual-reference matrices. Claude's read-only review identifies a manual empty-endpoint updater defect, reproduced through the installed macOS menu and allocated to BRAND-UPDATER-EMPTY under BRAND-MAC-MENU. Its guard is privately published at f606d6de9 with 25 owner cases/52 assertions and a complete static check; candidate native menu delivery stays Verify because Computer Use reports a locked Mac.
 
-The current all-state readback contains 480 cards: 462 execution tasks and 18 milestones. Lists are 380 Backlog, 1 Ready, 1 Building (FIRST-03), 24 Verify and 56 Executed. This is a task-state snapshot, not product-parity progress. The preceding 479-card audit stays dated. Existing saved-chat readback, normal installation/profile/recovery and protected icon work remain preserved; all broader acceptance remains open.
+The current all-state readback contains 481 cards: 463 execution tasks and 18 milestones. Lists are 381 Backlog, 1 Ready, 1 Building (FIRST-DRAFT-REFRESH), 24 Verify and 56 Executed. The narrow recovery-list child is a required prerequisite of FIRST-03 under M07; original browser failures and the aggregate native/reference criteria remain binding. This is a task-state snapshot, not product-parity progress. The preceding 479-card audit stays dated. Existing saved-chat readback, normal installation/profile/recovery and protected icon work remain preserved; all broader acceptance remains open.
 
 ## Board organization
 

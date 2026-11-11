@@ -1,3 +1,5 @@
+import { readonly, shallowRef } from 'vue'
+
 import { createIdbRecoveryStore } from '@/app/document/recovery/idb'
 import { createMemoryRecoveryStore } from '@/app/document/recovery/memory'
 import type {
@@ -9,11 +11,46 @@ import type {
 
 let singleton: RecoveryStore | null = null
 let memoryFallback = false
+const revision = shallowRef(0)
+export const recoveryRevision = readonly(revision)
+
+function observeRecoveryChanges(store: RecoveryStore): RecoveryStore {
+  async function changed<T>(operation: () => Promise<T>): Promise<T> {
+    const result = await operation()
+    revision.value++
+    return result
+  }
+  return {
+    list: () => store.list(),
+    read: (id) => store.read(id),
+    write: (input) => changed(() => store.write(input)),
+    remove: (id) => changed(() => store.remove(id)),
+    clear: () => changed(() => store.clear())
+  }
+}
 
 function warnMemoryFallback(error?: unknown): void {
   if (memoryFallback) return
   console.warn('[Recovery] IndexedDB unavailable; crash recovery is limited to this session', error)
   memoryFallback = true
+}
+
+async function migrateRecoveryToMemory(
+  primary: RecoveryStore,
+  error: unknown
+): Promise<RecoveryStore> {
+  warnMemoryFallback(error)
+  const memory = createMemoryRecoveryStore()
+  try {
+    const snapshots = await primary.list()
+    for (const metadata of snapshots) {
+      const snapshot = await primary.read(metadata.id)
+      if (snapshot) await memory.write(snapshot)
+    }
+  } catch (migrationError) {
+    console.warn('[Recovery] Failed to migrate IndexedDB snapshots to memory:', migrationError)
+  }
+  return memory
 }
 
 function createResilientRecoveryStore(primary: RecoveryStore): RecoveryStore {
@@ -31,19 +68,8 @@ function createResilientRecoveryStore(primary: RecoveryStore): RecoveryStore {
 
   async function switchToMemory(error: unknown): Promise<RecoveryStore> {
     if (current !== primary) return current
-    warnMemoryFallback(error)
-    const memory = createMemoryRecoveryStore()
-    try {
-      const snapshots = await primary.list()
-      for (const metadata of snapshots) {
-        const snapshot = await primary.read(metadata.id)
-        if (snapshot) await memory.write(snapshot)
-      }
-    } catch (migrationError) {
-      console.warn('[Recovery] Failed to migrate IndexedDB snapshots to memory:', migrationError)
-    }
-    current = memory
-    return memory
+    current = await migrateRecoveryToMemory(primary, error)
+    return current
   }
 
   function run<T>(operation: (store: RecoveryStore) => Promise<T>): Promise<T> {
@@ -85,11 +111,11 @@ export function getRecoveryStore(): RecoveryStore {
   if (singleton) return singleton
   if (typeof indexedDB === 'undefined') {
     warnMemoryFallback()
-    singleton = createMemoryRecoveryStore()
+    singleton = observeRecoveryChanges(createMemoryRecoveryStore())
     return singleton
   }
   memoryFallback = false
-  singleton = createResilientRecoveryStore(createIdbRecoveryStore())
+  singleton = observeRecoveryChanges(createResilientRecoveryStore(createIdbRecoveryStore()))
   return singleton
 }
 
@@ -98,6 +124,6 @@ export function isRecoveryStoreMemoryFallback(): boolean {
 }
 
 export function resetRecoveryStoreForTests(store?: RecoveryStore): void {
-  singleton = store ?? null
+  singleton = store ? observeRecoveryChanges(store) : null
   memoryFallback = false
 }
