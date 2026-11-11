@@ -305,3 +305,9 @@ The candidate is published privately as `bb399a9b4`. MOD-10 moves to Verify, ret
 STAB-GPU dependency and native/reference limits. The original-flow follow-up passes 29 cases
 and fails three; all three also occur on the rebuilt pre-refactor source. This does not
 close native lifecycle reliability or accept a normal-app installation.
+
+## AssetsPanel publication — 2026-11-11
+
+Private source `c37b11ba2603f77a6358d96da8bad9c2c162ff4b` publishes the qualified extraction and fixture repair. All 12 frozen source/fixture hashes match the committed tree; all 12 original/candidate image pairs are re-read and pixel-exact. The existing serial browser, owner-unit, strict-size, full static and isolated native receipts remain bound to those unchanged bytes. Runtime suites are not repeated during this source-only publication.
+
+MOD-09 and TEST-ASSETS-WORKSPACE meet their bounded refactor/fixture criteria and move Executed. Actual Pen Components, trusted OS input and broader native/unit/parity gates remain separate. All 17 protected file hashes/modes remain intact; the repository stays private, PR draft and Actions disabled. The normal installation is unchanged. Private receipt: `local-evidence/assets-modularization-2026-11-11/publication.json`.

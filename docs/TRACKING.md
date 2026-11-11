@@ -12,7 +12,7 @@ and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), preserving historic
 
 The complete 2026-11-11 readback contains 479 cards: 461 execution tasks and 18 milestones. Lists are 380 Backlog, 3 Ready, 0 Building, 24 Verify and 54 Executed. [The audit](BOARD-AUDIT-2026-11-11.md) and [milestone exit gates](MILESTONES.md) own the current reconciliation; earlier snapshots below remain historical.
 
-Qualified AssetsPanel and fixture work remain Verify until publication/acceptance reconciliation. Browser behavior has actual-reference repair work queued; inspector and draft/save/recovery criteria remain explicit. Installed command-card readback is observed on the original saved transcript. Full Agent, native, brand, beta and design/functionality parity remain unaccepted.
+After the audit, source c37b11ba2 publishes the qualified AssetsPanel refactor and fixtures privately; MOD-09 and TEST-ASSETS-WORKSPACE meet their bounded criteria and move Executed. Current lists are 380 Backlog, 2 Ready, 1 Building (BROWSER-CLIP), 22 Verify and 56 Executed. The preceding 479-card audit snapshot stays dated. Browser behavior has actual-reference repair work queued; inspector and draft/save/recovery criteria remain explicit. Installed command-card readback is observed on the original saved transcript. Full Agent, native, brand, beta and design/functionality parity remain unaccepted.
 
 ## Board organization
 

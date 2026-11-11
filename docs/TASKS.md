@@ -4,7 +4,7 @@ Updated: 2026-11-11 after the complete live-board audit. Full design and functio
 
 The board contains **461 execution tasks** and **18 outcome milestones**, covering all **164 documented requirements** and **22 native screen/menu rows** plus explicit operational, branding and modularity work. Four compound parents now retain acceptance gates over 14 bounded children. Three separate public-readiness artifacts and the accepted macOS driver leaf have explicit owners.
 
-Current lists: 380 Backlog, 3 Ready, 0 Building, 24 Verify, 54 Executed, plus 18 milestones. These are recorded task states, not a product-parity percentage or a count of unbuilt features.
+Current lists: 380 Backlog, 2 Ready, 1 Building, 22 Verify, 56 Executed, plus 18 milestones. These are recorded task states, not a product-parity percentage or a count of unbuilt features.
 
 [Audit](BOARD-AUDIT-2026-11-11.md) · [Milestones](MILESTONES.md) · [PRD](PRD.md) · [Tracking](TRACKING.md) · [Board](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor)
 
@@ -301,7 +301,7 @@ Current lists: 380 Backlog, 3 Ready, 0 Building, 24 Verify, 54 Executed, plus 18
 | MOD-06 | Split cohesive responsibilities: index.ts | PRD operational requirement | STAB-GPU | Verify | [Card](https://trello.com/c/4BpMrJ8z/92-mod-06-split-cohesive-responsibilities-indexts) |
 | MOD-07 | Split cohesive responsibilities: spawn.ts | PRD operational requirement | None identified | Executed | [Card](https://trello.com/c/Z8yoNzfz/93-mod-07-split-cohesive-responsibilities-spawnts) |
 | MOD-08 | Review declaration/catalog ownership: panels.ts | PRD operational requirement | VERIFY-INSPECTOR-CONTROLS | Verify | [Card](https://trello.com/c/Sm6cJwgy/94-mod-08-review-declaration-catalog-ownership-panelsts) |
-| MOD-09 | Split cohesive responsibilities: AssetsPanel.vue | PRD operational requirement | TEST-ASSETS-WORKSPACE | Verify | [Card](https://trello.com/c/QNEY9RTi/95-mod-09-split-cohesive-responsibilities-assetspanelvue) |
+| MOD-09 | Split cohesive responsibilities: AssetsPanel.vue | PRD operational requirement | TEST-ASSETS-WORKSPACE | Executed | [Card](https://trello.com/c/QNEY9RTi/95-mod-09-split-cohesive-responsibilities-assetspanelvue) |
 | MOD-10 | Split cohesive responsibilities: BrowserPreviewControl.vue | PRD operational requirement | STAB-GPU | Verify | [Card](https://trello.com/c/8Juf837A/96-mod-10-split-cohesive-responsibilities-browserpreviewcontrolvue) |
 | MOD-11 | Split cohesive responsibilities: formats.ts | PRD operational requirement | None identified | Executed | [Card](https://trello.com/c/yoCuhcXD/97-mod-11-split-cohesive-responsibilities-formatsts) |
 | MOD-12 | Split cohesive responsibilities: useCanvasInput.ts | PRD operational requirement | STAB-GPU | Backlog | [Card](https://trello.com/c/g8YerYWL/98-mod-12-split-cohesive-responsibilities-usecanvasinputts) |
@@ -351,7 +351,7 @@ Current lists: 380 Backlog, 3 Ready, 0 Building, 24 Verify, 54 Executed, plus 18
 | NATIVE-SAMPLER | System eyedropper trigger, trusted pick/cancel and history | DRAW-08 | None identified | Backlog | [Card](https://trello.com/c/DO5688Uu/144-native-sampler-system-eyedropper-trigger-trusted-pick-cancel-and-history) |
 | LAYOUT-WRAP | Preserve world geometry when wrapping rotated selections | UI-04 | None identified | Backlog | [Card](https://trello.com/c/ohHzRvfj/145-layout-wrap-preserve-world-geometry-when-wrapping-rotated-selections) |
 | BROWSER-RESTART | Retain browser state after a normal packaged-app restart | IO-04 | None identified | Backlog | [Card](https://trello.com/c/g34FW0yb/146-browser-restart-retain-browser-state-after-a-normal-packaged-app-restart) |
-| BROWSER-CLIP | Match fixed-device rim and browser clip-height resizing | IO-04 | None identified | Ready | [Card](https://trello.com/c/Ou2ZtFCB/147-browser-clip-match-fixed-device-rim-and-browser-clip-height-resizing) |
+| BROWSER-CLIP | Match fixed-device rim and browser clip-height resizing | IO-04 | None identified | Building | [Card](https://trello.com/c/Ou2ZtFCB/147-browser-clip-match-fixed-device-rim-and-browser-clip-height-resizing) |
 | BROWSER-FRAMES | Import iframe/shadow content or report precise unsupported scope | IO-04 | None identified | Backlog | [Card](https://trello.com/c/o8bvGU8E/148-browser-frames-import-iframe-shadow-content-or-report-precise-unsupported-scope) |
 | CONTEXT-DRAG | Native Context resize-handle delivery and exact geometry | UI-08 | None identified | Backlog | [Card](https://trello.com/c/dRLZalKf/149-context-drag-native-context-resize-handle-delivery-and-exact-geometry) |
 | BETA-01 | Qualify the private macOS core design journey | ENV-01, FIRST-01, FIRST-02, FIRST-03, FILE-07, FILE-08 | BRAND-VERIFY, FILE-07, FILE-08, FIRST-03, STAB-GPU, STAB-UNIT-BLOB-FETCH, STAB-WEBKIT-MIXED, VERIFY-FIG-WRAP-VISUAL, VERIFY-INSPECTOR-CONTROLS, VERIFY-TAURI-IO-CONTRACTS | Backlog | [Card](https://trello.com/c/sYpWJdvu/150-beta-01-qualify-the-private-macos-core-design-journey) |
@@ -454,7 +454,7 @@ Current lists: 380 Backlog, 3 Ready, 0 Building, 24 Verify, 54 Executed, plus 18
 | STAB-BROWSER-BACKDROP-FIXED | Match fractional fixed-device backdrop geometry | IO-04, IO-05, PRD-07, PRD-09 | STAB-NATIVE-HOST | Verify | [Card](https://trello.com/c/j6yjFgIw/455-stab-browser-backdrop-fixed-match-fractional-fixed-device-backdrop-geometry) |
 | UI-CHAT-TOOL-TITLES | Keep long agent command titles inside tool cards | PRD-02, PRD-07, PRD-09 | None identified | Verify | [Card](https://trello.com/c/oF2pQf45/458-ui-chat-tool-titles-keep-long-agent-command-titles-inside-tool-cards) |
 | AI-SKILLS-CONTEXT | Scope Codex skill catalog without changing user settings | PRD-02, PRD-07, PRD-09 | None identified | Verify | [Card](https://trello.com/c/l0cEsoYm/459-ai-skills-context-scope-codex-skill-catalog-without-changing-user-settings) |
-| TEST-ASSETS-WORKSPACE | Align asset acceptance with current workspace entry points | PRD verification; COMP-01, COMP-02, COMP-04 | None identified | Verify | [Card](https://trello.com/c/MLb58LNR/460-test-assets-workspace-align-asset-acceptance-with-current-workspace-entry-points) |
+| TEST-ASSETS-WORKSPACE | Align asset acceptance with current workspace entry points | PRD verification; COMP-01, COMP-02, COMP-04 | None identified | Executed | [Card](https://trello.com/c/MLb58LNR/460-test-assets-workspace-align-asset-acceptance-with-current-workspace-entry-points) |
 | AUTH-01-LOCAL | Verify local editing without an account | AUTH-01 | None identified | Backlog | [Card](https://trello.com/c/OCOHzwYd/461-auth-01-local-verify-local-editing-without-an-account) |
 | AUTH-01-ACCOUNT | Qualify applicable independent account states | AUTH-01 | None identified | Backlog | [Card](https://trello.com/c/QoCbOFwX/462-auth-01-account-qualify-applicable-independent-account-states) |
 | AUTH-01-WORKSPACE | Qualify workspace identity and switching | AUTH-01 | None identified | Backlog | [Card](https://trello.com/c/9znN6ygK/463-auth-01-workspace-qualify-workspace-identity-and-switching) |
