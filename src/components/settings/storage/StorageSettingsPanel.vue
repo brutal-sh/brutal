@@ -9,12 +9,12 @@ import {
   useStorageMessages
 } from '@open-pencil/vue/i18n'
 
-import { homeLocation } from '@/app/home/location'
 import { useNotificationMessages } from '@/app/i18n/notifications'
 import { useStorageSettingsFeedback } from '@/app/integrations/storage/settings/feedback'
 import { useStorageSettings } from '@/app/integrations/storage/settings/use'
 import { settingsDialogOpen } from '@/app/settings/dialog'
 import { useSettingsFormGuard } from '@/app/settings/navigation/use'
+import { openHomeLocation } from '@/app/shell/menu/navigation'
 import { focusInvalidField } from '@/components/settings/layout/focus'
 import SettingsPage from '@/components/settings/layout/SettingsPage.vue'
 import SettingsSaveFeedback from '@/components/settings/layout/SettingsSaveFeedback.vue'
@@ -96,10 +96,9 @@ async function save() {
   }
   if ((await connection.save()) === 'saved') editing.value = false
 }
-async function openWorkspace() {
+function openWorkspace() {
   settingsDialogOpen.value = false
-  homeLocation.value = { kind: 'storage' }
-  await router.push('/storage')
+  openHomeLocation(router, { kind: 'storage' })
 }
 async function testConnection() {
   if (busy.value) return

@@ -25,6 +25,7 @@ import { openPendingFiles } from '@/app/document/io/pending-open'
 import { openWebLinkFromLocation, withoutWebLinkParams } from '@/app/document/io/web-link'
 import { setActiveEditorStore } from '@/app/editor/active-store'
 import { focusNodesByName } from '@/app/editor/selection/focus'
+import { homeLocation } from '@/app/home/location'
 import { notificationMessages } from '@/app/i18n/notifications'
 import { recentFilesAvailable } from '@/app/recent-files/preferences'
 import { appRuntimeConfig } from '@/app/runtime/config'
@@ -97,7 +98,9 @@ const createdInitialTab = tabCount() === 0
 // Home is pinned first everywhere but tests and the demo, and opens in front where it lists
 // something: recent files, or the workspaces of the Cloud server that serves the editor.
 const pinHome = !appRuntimeConfig.test && !route.meta.demo
-const showHomeFirst = route.path === '/' && pinHome && (recentFilesAvailable() || IS_CLOUD_SITE)
+const showHomeFirst =
+  route.path === '/' &&
+  (homeLocation.value.kind === 'storage' || (pinHome && (recentFilesAvailable() || IS_CLOUD_SITE)))
 // The view stays mounted from /demo to /, so Home is pinned once a route that has it is reached.
 watch(
   () => !appRuntimeConfig.test && !route.meta.demo,
