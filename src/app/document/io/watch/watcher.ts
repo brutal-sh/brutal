@@ -15,8 +15,10 @@ export function createFileWatcher({
   reloadFromDisk
 }: FileWatchOptions) {
   let unwatchFile: (() => void) | null = null
+  let generation = 0
 
   function stopWatchingFile() {
+    generation++
     if (unwatchFile) {
       unwatchFile()
       unwatchFile = null
@@ -25,20 +27,24 @@ export function createFileWatcher({
 
   async function startWatchingFile() {
     stopWatchingFile()
+    const request = generation
+    const reload = () => {
+      if (request === generation) reloadFromDisk()
+    }
+    const stop = () => {
+      if (request === generation) stopWatchingFile()
+    }
     const filePath = getFilePath()
     const fileHandle = getFileHandle()
 
+    let release: (() => void) | null = null
     if (filePath && IS_TAURI) {
-      unwatchFile = await watchTauriFile(filePath, getLastWriteTime, reloadFromDisk)
+      release = await watchTauriFile(filePath, getLastWriteTime, reload)
     } else if (fileHandle) {
-      unwatchFile = await watchBrowserFile(
-        fileHandle,
-        getFileHandle,
-        getLastWriteTime,
-        reloadFromDisk,
-        stopWatchingFile
-      )
+      release = await watchBrowserFile(fileHandle, getFileHandle, getLastWriteTime, reload, stop)
     }
+    if (request !== generation) release?.()
+    else unwatchFile = release
   }
 
   return { startWatchingFile, stopWatchingFile }

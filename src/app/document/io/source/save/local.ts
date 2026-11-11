@@ -11,7 +11,7 @@ export function createSourceFileSaves(context: SourceContext) {
     buildFigFile: context.builders.buildFigFile,
     buildPenFile: context.builders.buildPenFile,
     startWatchingFile: () => {
-      void context.options.startWatchingFile()
+      void context.fileWatch.start()
     },
     onWriteSuccess: async (version) => {
       await context.recovery.markProtectedVersion(version)

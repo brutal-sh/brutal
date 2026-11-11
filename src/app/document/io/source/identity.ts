@@ -3,6 +3,7 @@ import {
   downloadNameFromPath,
   documentDownloadName
 } from '@/app/document/io/names'
+import { validateRecoveryFileSource } from '@/app/document/io/source/recovery'
 import type { SourceContext } from '@/app/document/io/source/types'
 import type { StorageDocumentBinding } from '@/app/integrations/storage/types'
 import { trackDocumentFormat } from '@/app/telemetry'
@@ -42,9 +43,9 @@ function setDocumentSource(
     setFileHandle,
     setFilePath,
     setDownloadName,
-    setSourceIdentity,
-    startWatchingFile
+    setSourceIdentity
   } = context.options
+  context.fileWatch.reset()
   stopWatchingFile()
   setStorageBinding(null)
   const writable = isWritableFormat(sourceFormat)
@@ -55,7 +56,7 @@ function setDocumentSource(
   markDocumentSaved(context)
   void context.recovery.markProtectedVersion(context.changes.capture())
   trackDocumentFormat('document_opened', sourceFormat)
-  if (writable && (handle || path)) void startWatchingFile()
+  if (writable && (handle || path)) void context.fileWatch.start()
 }
 
 function setStorageDocumentSource(
@@ -72,6 +73,7 @@ function setStorageDocumentSource(
     setStorageBinding,
     state
   } = context.options
+  context.fileWatch.reset()
   stopWatchingFile()
   setFileHandle(null)
   setFilePath(null)
@@ -102,6 +104,19 @@ export function setPlannedFilePath(context: SourceContext, path: string) {
   state.documentName = documentNameFromFigPath(downloadName)
 }
 
+export function restoreRecoverySource(context: SourceContext, input: unknown) {
+  const source = validateRecoveryFileSource(input)
+  const options = context.options
+  context.fileWatch.defer()
+  options.setStorageBinding(null)
+  options.setFileHandle(source.identity.handle)
+  options.setFilePath(source.identity.path)
+  options.setDownloadName(source.fileName)
+  options.setSourceIdentity(source.identity)
+  // Restoring unsaved edits must not write them back before an explicit save.
+  options.state.autosaveEnabled = false
+}
+
 export function createSourceIdentityActions(context: SourceContext) {
   return {
     renameDocument: (name: string) => renameDocument(context, name),
@@ -116,7 +131,7 @@ export function createSourceIdentityActions(context: SourceContext) {
     setPlannedFilePath: (path: string) => setPlannedFilePath(context, path),
     markDocumentSaved: () => markDocumentSaved(context),
     startWatchingCurrentFile: () => {
-      void context.options.startWatchingFile()
+      void context.fileWatch.start()
     }
   }
 }

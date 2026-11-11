@@ -28,7 +28,7 @@ watch(
     error.value = ''
     try {
       const snapshots = await listRecoverySnapshots()
-      if (current) drafts.value = snapshots
+      if (current) drafts.value = snapshots.filter((snapshot) => snapshot.source === undefined)
     } catch (reason) {
       if (current) error.value = String(reason)
     } finally {

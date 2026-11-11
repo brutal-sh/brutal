@@ -5,7 +5,8 @@ import type { createDocumentChanges } from '@/app/document/io/changes'
 import type { createSaveActions } from '@/app/document/io/save/actions'
 import type { createSourceBuilders } from '@/app/document/io/source/builders'
 import type { createSourceSaveQueue } from '@/app/document/io/source/save/queue'
-import type { DocumentSourceAccess } from '@/app/document/io/types'
+import type { createSourceFileWatch } from '@/app/document/io/source/watch'
+import type { DocumentSourceAccess, DocumentSourceIdentity } from '@/app/document/io/types'
 import type { DocumentRecoveryController } from '@/app/document/recovery'
 
 export type DocumentSourceState = EditorState & {
@@ -15,6 +16,7 @@ export type DocumentSourceState = EditorState & {
 
 export type DocumentSourceOptions = DocumentSourceAccess & {
   io: IORegistry
+  getSourceIdentity: () => DocumentSourceIdentity
   editor: Editor
   state: DocumentSourceState
   stopWatchingFile: () => void
@@ -28,6 +30,7 @@ export interface SourceContext {
   builders: ReturnType<typeof createSourceBuilders>
   queue: ReturnType<typeof createSourceSaveQueue>
   recovery: DocumentRecoveryController
+  fileWatch: ReturnType<typeof createSourceFileWatch>
 }
 
 export type SourceSaveContext = SourceContext & {

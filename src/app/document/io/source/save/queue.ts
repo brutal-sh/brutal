@@ -2,7 +2,10 @@ import type { createDocumentChanges } from '@/app/document/io/changes'
 import { notificationMessages } from '@/app/i18n/notifications'
 import { toast } from '@/app/shell/ui'
 
-export function createSourceSaveQueue(changes: ReturnType<typeof createDocumentChanges>) {
+export function createSourceSaveQueue(
+  changes: ReturnType<typeof createDocumentChanges>,
+  afterSave: () => Promise<void>
+) {
   let pendingSave: Promise<boolean> | null = null
   let disposed = false
 
@@ -21,7 +24,10 @@ export function createSourceSaveQueue(changes: ReturnType<typeof createDocumentC
   async function track(save: () => Promise<boolean>) {
     const revision = changes.capture()
     const saved = await save()
-    if (saved) changes.markSaved(revision)
+    if (saved) {
+      changes.markSaved(revision)
+      await afterSave()
+    }
     return saved
   }
 

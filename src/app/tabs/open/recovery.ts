@@ -1,3 +1,4 @@
+import { validateRecoveryFileSource } from '@/app/document/io/source/recovery'
 import { getRecoveryStore, type RecoverySnapshotMeta } from '@/app/document/recovery'
 import { readFigForTab, showImportedGraph } from '@/app/tabs/open/imported'
 import { failPreparation, reusableTabStore, releaseOpeningTab } from '@/app/tabs/open/session'
@@ -13,6 +14,7 @@ export async function discardRecoverySnapshot(id: string): Promise<void> {
 export async function restoreRecoverySnapshot(id: string): Promise<void> {
   const snapshot = await getRecoveryStore().read(id)
   if (!snapshot) throw new Error('Recovery snapshot is no longer available')
+  const source = snapshot.source === undefined ? null : validateRecoveryFileSource(snapshot.source)
 
   const opening = reusableTabStore()
   const { store } = opening
@@ -35,7 +37,7 @@ export async function restoreRecoverySnapshot(id: string): Promise<void> {
       imported,
       async () => {
         store.state.documentName = snapshot.documentName
-        await store.adoptRecoverySnapshot(id)
+        await store.adoptRecoverySnapshot(id, source ?? undefined)
       },
       load
     )

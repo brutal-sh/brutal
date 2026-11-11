@@ -31,3 +31,4 @@
 - Choose icon families separately from glyphs, keep swapped or reset glyphs proportional and centered in rectangular boxes, and edit Material Symbols weights with cancellable, single-step history.
 - Create and edit Pen 2.22 Notes with their palette and text, preserve supported direct and nested component references through save and reopen, and detach Note components with reversible history. Retain Fill dimensions and authored fallback values while text determines the visible height. Keep intrinsic Note bodies separate from a Hug parent's height.
 - Adjust browser preview height with its footer control, restore full height without importing, and keep Phone and Tablet page imports at their full editable height.
+- Keep unsaved edits to existing local files in a separate recovery backup, restore their original save target without overwriting it, and retain the backup when saving fails or is cancelled.

@@ -23,6 +23,7 @@ export function createRecoveryRuntime(options: DocumentRecoveryOptions): Recover
     version: options.version,
     buildFigFile: options.buildFigFile,
     hasWritableSource: options.hasWritableSource,
+    getSource: options.getSource ?? (() => null),
     hasUnsavedChanges: options.hasUnsavedChanges ?? (() => true),
     isEnabled: options.isEnabled ?? (() => true),
     store,
@@ -35,4 +36,8 @@ export function createRecoveryRuntime(options: DocumentRecoveryOptions): Recover
     cleanup: Promise.resolve(),
     disposed: false
   }
+}
+
+export function hasManagedRecoverySource(runtime: RecoveryRuntime): boolean {
+  return runtime.hasWritableSource() && runtime.getSource() === null
 }

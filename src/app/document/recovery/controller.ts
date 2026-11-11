@@ -7,7 +7,7 @@ import {
   discardRecovery,
   markRecoveryProtected
 } from '@/app/document/recovery/lifecycle'
-import { createRecoveryRuntime } from '@/app/document/recovery/runtime'
+import { createRecoveryRuntime, hasManagedRecoverySource } from '@/app/document/recovery/runtime'
 import { persistRecovery } from '@/app/document/recovery/snapshot'
 import type {
   DocumentRecoveryController,
@@ -21,7 +21,7 @@ export function createDocumentRecovery(
 ): DocumentRecoveryController {
   const runtime = createRecoveryRuntime(options)
   const stopVersionWatch = watchDebounced(
-    runtime.version,
+    [runtime.version, () => hasManagedRecoverySource(runtime)],
     () => {
       void persistRecovery(runtime).catch((error) =>
         console.warn('[Recovery] Snapshot failed:', error)

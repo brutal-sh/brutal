@@ -1,5 +1,6 @@
 import type { DBSchema } from 'idb'
 
+import { createRecoveryMetadata } from '@/app/document/recovery/metadata'
 import type {
   RecoverySnapshot,
   RecoverySnapshotInput,
@@ -12,7 +13,8 @@ import {
   defineAppDatabase,
   connectAppDatabase,
   readStoredBinary,
-  type StoredBinary
+  type StoredBinary,
+  type AppDatabase
 } from '@/app/storage/idb'
 
 const recoveryDatabase = defineAppDatabase<RecoveryDatabase>({
@@ -59,24 +61,7 @@ export function createIdbRecoveryStore(): RecoveryStore {
       return metadata && figBytes ? ({ ...metadata, figBytes } satisfies RecoverySnapshot) : null
     },
 
-    async write(input: RecoverySnapshotInput) {
-      const db = await database.open()
-      const storeBinary = await binaryStorage()
-      const transaction = db.transaction(['meta', 'fig'], 'readwrite')
-      const metadata: RecoverySnapshotMeta = {
-        id: input.id,
-        documentName: input.documentName || 'Untitled',
-        updatedAt: new Date().toISOString(),
-        byteLength: input.figBytes.byteLength,
-        formatVersion: 1
-      }
-      await Promise.all([
-        transaction.objectStore('meta').put(metadata),
-        transaction.objectStore('fig').put(storeBinary(input.figBytes), input.id),
-        transaction.done
-      ])
-      return metadata
-    },
+    write: (input) => writeSnapshot(database, input),
 
     async remove(id: string) {
       const db = await database.open()
@@ -98,4 +83,20 @@ export function createIdbRecoveryStore(): RecoveryStore {
       ])
     }
   }
+}
+
+async function writeSnapshot(
+  database: AppDatabase<RecoveryDatabase>,
+  input: RecoverySnapshotInput
+) {
+  const metadata = createRecoveryMetadata(input)
+  const db = await database.open()
+  const storeBinary = await binaryStorage()
+  const transaction = db.transaction(['meta', 'fig'], 'readwrite')
+  await Promise.all([
+    transaction.objectStore('meta').put(metadata),
+    transaction.objectStore('fig').put(storeBinary(input.figBytes), input.id),
+    transaction.done
+  ])
+  return metadata
 }

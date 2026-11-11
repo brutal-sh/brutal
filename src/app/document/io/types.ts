@@ -1,9 +1,9 @@
+import type * as v from 'valibot'
+
+import type { documentSourceIdentitySchema } from '@/app/document/io/schema'
 import type { StorageDocumentBinding } from '@/app/integrations/storage/types'
 
-export type DocumentSourceIdentity = Readonly<{
-  handle: FileSystemFileHandle | null
-  path: string | null
-}>
+export type DocumentSourceIdentity = Readonly<v.InferOutput<typeof documentSourceIdentitySchema>>
 
 export type DocumentSourceAccess = {
   getFileHandle: () => FileSystemFileHandle | null

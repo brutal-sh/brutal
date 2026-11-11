@@ -18,7 +18,7 @@
     "@open-pencil/design-jsx": "workspace:*",
     "@open-pencil/package-artifacts-tools": "workspace:*",
     "@open-pencil/scene-graph": "workspace:*",
-    "@playwright/test": "^1.63.0",
+    "@playwright/test": "^1.65.0",
     "js-base64": "^3.9.3",
     "proper-lockfile": "4.1.2",
     "shaders": "4.0.4"

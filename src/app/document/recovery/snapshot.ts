@@ -1,5 +1,5 @@
 import { markRecoveryProtected } from '@/app/document/recovery/lifecycle'
-import type { RecoveryRuntime } from '@/app/document/recovery/runtime'
+import { hasManagedRecoverySource, type RecoveryRuntime } from '@/app/document/recovery/runtime'
 
 function isActiveGeneration(runtime: RecoveryRuntime, generation: number): boolean {
   return !runtime.disposed && generation === runtime.lifecycleGeneration
@@ -7,19 +7,17 @@ function isActiveGeneration(runtime: RecoveryRuntime, generation: number): boole
 
 async function runWrites(runtime: RecoveryRuntime, generation: number): Promise<void> {
   if (!isActiveGeneration(runtime, generation) || !runtime.isEnabled()) return
-  if (runtime.hasWritableSource() || runtime.requestedVersion === runtime.protectedVersion) return
-  const version = runtime.requestedVersion
-  const bytes = await runtime.buildFigFile()
-  if (
-    generation !== runtime.lifecycleGeneration ||
-    runtime.hasWritableSource() ||
-    !runtime.isEnabled()
-  )
+  if (hasManagedRecoverySource(runtime) || runtime.requestedVersion === runtime.protectedVersion)
     return
+  const version = runtime.requestedVersion
+  const source = runtime.getSource()
+  const bytes = await runtime.buildFigFile()
+  if (!canStoreSnapshot(runtime, generation)) return
   await runtime.store.write({
     id: runtime.id,
     documentName: runtime.state.documentName,
-    figBytes: bytes
+    figBytes: bytes,
+    ...(source === null ? {} : { source })
   })
   runtime.persistedVersion = version
   if (generation !== runtime.lifecycleGeneration) return
@@ -29,7 +27,7 @@ async function runWrites(runtime: RecoveryRuntime, generation: number): Promise<
 
 export async function persistRecovery(runtime: RecoveryRuntime): Promise<void> {
   await runtime.cleanup
-  if (runtime.disposed || runtime.hasWritableSource() || !runtime.isEnabled()) return
+  if (runtime.disposed || hasManagedRecoverySource(runtime) || !runtime.isEnabled()) return
   runtime.requestedVersion = runtime.version()
   if (!runtime.hasUnsavedChanges()) {
     await markRecoveryProtected(runtime, runtime.requestedVersion)
@@ -45,4 +43,12 @@ export async function persistRecovery(runtime: RecoveryRuntime): Promise<void> {
     })
   }
   await runtime.writing
+}
+
+function canStoreSnapshot(runtime: RecoveryRuntime, generation: number): boolean {
+  return (
+    generation === runtime.lifecycleGeneration &&
+    !hasManagedRecoverySource(runtime) &&
+    runtime.isEnabled()
+  )
 }

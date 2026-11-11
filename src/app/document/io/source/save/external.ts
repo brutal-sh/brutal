@@ -19,8 +19,7 @@ async function saveToNewTarget(
     setStorageBinding,
     setFileHandle,
     setFilePath,
-    setDownloadName,
-    startWatchingFile
+    setDownloadName
   } = context.options
   const previous = {
     filePath: getFilePath(),
@@ -35,7 +34,7 @@ async function saveToNewTarget(
     setFilePath(previous.filePath)
     setDownloadName(previous.downloadName)
     state.documentName = previous.documentName
-    if (previous.filePath || previous.fileHandle) void startWatchingFile()
+    if (previous.filePath || previous.fileHandle) void context.fileWatch.start()
   }
   planTarget()
   try {
@@ -51,7 +50,7 @@ async function saveToNewTarget(
 async function saveFigFileToPath(context: SourceSaveContext, path: string): Promise<boolean> {
   if (!isTauri()) return false
   const saved = await saveToNewTarget(context, () => setPlannedFilePath(context, path))
-  if (saved) void context.options.startWatchingFile()
+  if (saved) void context.fileWatch.start()
   return saved
 }
 

@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@open-pencil/package-artifacts-tools": "workspace:*",
-    "@playwright/test": "^1.63.0",
+    "@playwright/test": "^1.65.0",
     "sharp": "0.34.5"
   },
   "devDependencies": {

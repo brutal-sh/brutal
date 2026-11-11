@@ -1,9 +1,16 @@
+import type * as v from 'valibot'
+
+import type { recoveryFileSourceSchema } from '@/app/document/recovery/schema'
+
+export type RecoveryFileSource = v.InferOutput<typeof recoveryFileSourceSchema>
+
 export interface RecoverySnapshotMeta {
   id: string
   documentName: string
   updatedAt: string
   byteLength: number
   formatVersion: 1
+  source?: RecoveryFileSource
 }
 
 export interface RecoverySnapshot extends RecoverySnapshotMeta {
@@ -11,6 +18,7 @@ export interface RecoverySnapshot extends RecoverySnapshotMeta {
 }
 
 export interface RecoverySnapshotInput {
+  source?: RecoveryFileSource
   id: string
   documentName: string
   figBytes: Uint8Array
@@ -30,6 +38,8 @@ export interface DocumentRecoveryOptions {
   version: () => number
   buildFigFile: () => Promise<Uint8Array> | Uint8Array
   hasWritableSource: () => boolean
+  /** Confirmed local-file identity; absent for drafts and managed/provisional targets. */
+  getSource?: () => RecoveryFileSource | null
   hasUnsavedChanges?: () => boolean
   isEnabled?: () => boolean
   store?: RecoveryStore

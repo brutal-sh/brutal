@@ -2,6 +2,7 @@ import { readonly, shallowRef } from 'vue'
 
 import { createIdbRecoveryStore } from '@/app/document/recovery/idb'
 import { createMemoryRecoveryStore } from '@/app/document/recovery/memory'
+import { RecoverySourceValidationError } from '@/app/document/recovery/metadata'
 import type {
   RecoverySnapshot,
   RecoverySnapshotInput,
@@ -77,7 +78,7 @@ function createResilientRecoveryStore(primary: RecoveryStore): RecoveryStore {
       try {
         return await operation(current)
       } catch (error) {
-        if (current !== primary) throw error
+        if (current !== primary || error instanceof RecoverySourceValidationError) throw error
         return operation(await switchToMemory(error))
       }
     })
