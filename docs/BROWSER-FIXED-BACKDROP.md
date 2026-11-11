@@ -57,6 +57,49 @@ no exact Pen pixel or geometry comparison is claimed.
 The subsequent reference attempt can read menus but CUA reports its screenshot
 unavailable. Home remains unchanged; that attempt supplies no new visual evidence.
 
+## Same-window reference follow-up — 2026-11-11
+
+CUA Raise restores actual Pen 1.2.22 screenshot delivery. Its captured window is
+2992×1866 pixels. The isolated current native build runs at that physical size,
+with a measured 1496×933 CSS viewport and device-pixel ratio 2. The canonical
+driver uses physical outer-window pixels; an initial logical-size assumption
+fails before comparison. A second setup attempt misses a selected-layer-only
+entry; the working fixture uses the always-available browser header button.
+Neither setup failure is attributed to application behavior.
+
+Desktop, Phone and Tablet open the More menu on the same synthetic tall-page
+content. The four zoom controls are enabled on Desktop at 50% and disabled on
+Phone/Tablet in both apps. Native and DOM backdrop widths/heights remain exactly
+equal; the existing 0.05 CSS-pixel position bound is retained. The isolated native
+journey passes, restores its original window size and closes its owned server.
+Stable menu captures wait for the actual opening animation to finish; captures
+made during that animation are not accepted as final visual states.
+
+This comparison identifies remaining differences rather than accepting visual
+parity. Fixed-device surroundings use the editor canvas color in Open Pen while
+Pen uses its panel background. The source switches that one theme slot to the
+existing panel token. Pen also has a 16 CSS-pixel footer with an import-height
+handle: an actual drag reduces the visible region and reveals hatching below;
+dragging down restores the full region. Open Pen lacks that control. This is the
+existing [BROWSER-CLIP](https://trello.com/c/Ou2ZtFCB) gap. Double-click full-page
+import is a static tooltip contract and is not executed in the reference.
+
+Matching window dimensions does not match stored sidebar widths: the candidate
+surface starts at x401.796875/y102 CSS pixels, while the reference's sidebar and
+footer yield different content bounds. A lossless reference export and exact
+cross-app pixel comparison remain unavailable. Native screenshots and numerical
+records stay private under `local-evidence/browser-reference-2026-11-11/`.
+No proprietary implementation is copied into the source. Pen's owned comparison
+tabs are closed, and its original Home, Tablet and full-height state are restored.
+
+The rebuilt background candidate executes the same three-preset native journey
+successfully (2.2 reported seconds). Both final fixed-device captures are inspected:
+sampled surrounding pixels change from RGB 24/24/27 to 39/39/42, matching the existing
+dark panel token. Full lint, formatting, documentation and changelog checks pass;
+independent source/evidence review finds no confirmed defect. This is dark-theme
+background evidence in an isolated native build, not installed delivery, full
+light-theme acceptance, footer completion or an exact Pen pixel comparison.
+
 REA additionally parses the selected packaged `out/app-window.js`: one source,
 33 findings, no parse failure. Its semantic analysis remains partial, with
 19,158 unselected inventoried files and an explicit unknown-retention ceiling.
