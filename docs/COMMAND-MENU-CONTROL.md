@@ -1,7 +1,7 @@
 # Commands menu investigation
 
-Updated: 2026-11-09. [STAB-COMMAND-MENU](https://trello.com/c/6WTOPIdh) remains
-unaccepted in Verify. [MOD-13](https://trello.com/c/dqmI6X9G) also remains Verify.
+Updated: 2026-11-12. [STAB-COMMAND-MENU](https://trello.com/c/6WTOPIdh) is the sole
+Building task; it remains unaccepted. [MOD-13](https://trello.com/c/dqmI6X9G) also remains Verify.
 No production fix is made by this investigation.
 
 The retained post-extraction failure resolves the Commands trigger, waits for element
@@ -44,3 +44,11 @@ Re-entry: retain this probe for the first reproducing pointer sequence and ident
 actual close event/call stack before changing an owner. In the meantime SVG output is
 an independently actionable current-reference unit; the unresolved menu gate continues
 to block MOD-13 and terminal parity acceptance.
+
+## Reproducing WebKit recovery controls — 2026-11-12
+
+The storage Home candidate's seventeen-case cohort records sixteen passes and one failure: the recovered-draft WebKit journey stalls while pointer-opening the unstable Commands submenu trigger. All three storage cases pass. Restoring the exact original `0faffb642` WorkspaceView and StorageSettingsPanel source, keeping helpers/configuration/assertions/timeouts unchanged and starting fresh canonical servers, makes both WebKit draft journeys fail: the first in Commands pointer stability and the second in the File submenu. They are related failure observations at different steps, not proof of a common cause.
+
+Both candidate runtime files are restored byte-exactly, and all thirteen frozen source/control hashes match. Independent read-only review verifies baseline identity, restoration and the reported failures. This is not a demonstrated storage-runtime regression, a repair, a stable/full-cohort result or full recovery/native acceptance. The bounded storage child is accepted separately; this required menu failure remains open.
+
+Private receipts: `local-evidence/claude-brand-review-2026-11-11/storage-home-{browser-cohort.json,webkit-baseline.json,webkit-baseline-context.json,frozen-final.json,baseline-review.txt}` and corresponding logs/error contexts. Re-entry uses the retained `local-evidence/commands-detachment-2026-11-09/current-prefix/instrumented-menu.ts` probe; add bounded frame/geometry/animation observations to distinguish a moving target from absent frame progress before changing a menu owner.
