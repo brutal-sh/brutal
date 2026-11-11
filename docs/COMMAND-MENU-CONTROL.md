@@ -1,7 +1,7 @@
 # Commands menu investigation
 
-Updated: 2026-11-12. [STAB-COMMAND-MENU](https://trello.com/c/6WTOPIdh) is the sole
-Building task; it remains unaccepted. [MOD-13](https://trello.com/c/dqmI6X9G) also remains Verify.
+Updated: 2026-11-12. [STAB-COMMAND-MENU](https://trello.com/c/6WTOPIdh) remains
+Verify and unaccepted. [MOD-13](https://trello.com/c/dqmI6X9G) also remains Verify.
 No production fix is made by this investigation.
 
 The retained post-extraction failure resolves the Commands trigger, waits for element
@@ -52,3 +52,9 @@ The storage Home candidate's seventeen-case cohort records sixteen passes and on
 Both candidate runtime files are restored byte-exactly, and all thirteen frozen source/control hashes match. Independent read-only review verifies baseline identity, restoration and the reported failures. This is not a demonstrated storage-runtime regression, a repair, a stable/full-cohort result or full recovery/native acceptance. The bounded storage child is accepted separately; this required menu failure remains open.
 
 Private receipts: `local-evidence/claude-brand-review-2026-11-11/storage-home-{browser-cohort.json,webkit-baseline.json,webkit-baseline-context.json,frozen-final.json,baseline-review.txt}` and corresponding logs/error contexts. Re-entry uses the retained `local-evidence/commands-detachment-2026-11-09/current-prefix/instrumented-menu.ts` probe; add bounded frame/geometry/animation observations to distinguish a moving target from absent frame progress before changing a menu owner.
+
+## Bounded probe follow-up — 2026-11-12
+
+The instrumented two-case recovery run fails before the probe is installed: one case has no automatic backup and the other has no recovery dialog. It captures no menu cause. A separate minimal cold pointer sequence opens Commands and File successfully in 7.79 seconds, retaining 79 events and 26 frame samples. This is one passing cold control, not recovery/menu stability acceptance. Both temporary test versions are removed and the original spec is restored byte-exactly to HEAD. No production menu change is made.
+
+Private receipts: `local-evidence/claude-brand-review-2026-11-11/menu-{recovery,minimal}-*`. The next reproducing recovery probe must install before the failing setup/reload phase; a passing cold menu trace does not waive the failing recovered sequence.

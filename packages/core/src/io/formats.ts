@@ -1,5 +1,3 @@
-import { filename } from 'pathe/utils'
-
 import { sceneNodeToJSX, selectionToJSX } from '@open-pencil/design-jsx'
 import { isDrawIOExportFileName } from '@open-pencil/drawio'
 import type { SceneGraph } from '@open-pencil/scene-graph'
@@ -7,203 +5,23 @@ import type { SceneGraph } from '@open-pencil/scene-graph'
 import { layoutAuthoredNodes } from '#core/layout'
 
 import type { DrawIOExportTarget } from './formats/drawio/export'
-import { exportFigFile, parseFigFile } from './formats/fig'
+import { figFormat } from './formats/fig/adapter'
+import { mermaidFormat } from './formats/mermaid/adapter'
 import { penFormat } from './formats/pen/adapter'
 import type { PPTXExportOptions } from './formats/pptx'
-import { headlessRenderNodes, renderNodesToImage, type RasterExportFormat } from './formats/raster'
+import { jpgFormat, pngFormat, webpFormat } from './formats/raster/adapter'
 import { EXPORT_EVERY_TARGET, FIXED_SIZE_EXPORT, lowerExt } from './formats/shared'
-import { extractExportGraph, findPageId } from './subgraph'
+import { ensureSingleNode, resolveExportNodes } from './formats/targets'
 import type {
   ExportRequest,
   ExportResult,
-  FigWriteOptions,
   HTMLExportOptions,
   IOContext,
   IOFormatAdapter,
-  RasterExportOptions,
   SVGExportOptions
 } from './types'
 
-export { penFormat }
-
-function ensureSingleNode(target: ExportRequest['target']): string | null {
-  if (target.scope === 'node') return target.nodeId
-  if (target.scope === 'selection' && target.nodeIds.length === 1) return target.nodeIds[0]
-  return null
-}
-
-function resolveExportNodes(request: ExportRequest): { pageId: string; nodeIds: string[] } | null {
-  switch (request.target.scope) {
-    case 'document': {
-      const page = request.graph.getPages()[0]
-      return { pageId: page.id, nodeIds: page.childIds }
-    }
-    case 'page': {
-      const page = request.graph.getNode(request.target.pageId)
-      if (!page) return null
-      return { pageId: page.id, nodeIds: page.childIds }
-    }
-    case 'selection': {
-      const first = request.target.nodeIds[0]
-      if (!first) return null
-      const pageId = findPageId(request.graph, first)
-      if (!pageId) return null
-      if (!request.target.nodeIds.every((nodeId) => findPageId(request.graph, nodeId) === pageId)) {
-        throw new Error('Export selection must stay on a single page')
-      }
-      return { pageId, nodeIds: request.target.nodeIds }
-    }
-    case 'node':
-      return resolveExportNodes({
-        ...request,
-        target: { scope: 'selection', nodeIds: [request.target.nodeId] }
-      })
-    default:
-      return null
-  }
-}
-
-async function renderRaster(
-  request: ExportRequest,
-  options: RasterExportOptions,
-  context?: IOContext
-): Promise<Uint8Array | null> {
-  const target = resolveExportNodes(request)
-  if (!target) return null
-  const scale = options.scale ?? 1
-
-  if (context?.canvasKit && context.renderer) {
-    return renderNodesToImage(
-      context.canvasKit,
-      context.renderer,
-      request.graph,
-      target.pageId,
-      target.nodeIds,
-      {
-        scale,
-        format: options.format,
-        quality: options.quality,
-        trimTransparent: request.target.scope === 'page' || request.target.scope === 'document'
-      }
-    )
-  }
-
-  return headlessRenderNodes(request.graph, target.pageId, target.nodeIds, {
-    scale,
-    format: options.format,
-    quality: options.quality,
-    trimTransparent: request.target.scope === 'page' || request.target.scope === 'document'
-  })
-}
-
-function rasterFormat<F extends RasterExportFormat>(format: F): IOFormatAdapter<Lowercase<F>> {
-  const extension = format.toLowerCase() as Lowercase<F>
-  let mimeType = 'image/png'
-  if (format === 'JPG') mimeType = 'image/jpeg'
-  else if (format === 'WEBP') mimeType = 'image/webp'
-
-  return {
-    id: extension,
-    label: format,
-    role: 'derived-export',
-    category: 'raster',
-    extensions: [extension],
-    mimeTypes: [mimeType],
-    support: {
-      exportDocument: true,
-      exportPage: true,
-      exportSelection: true,
-      exportNode: true
-    },
-    exportOptions: {
-      scale: true,
-      quality: format !== 'PNG',
-      colorSpace: false
-    },
-    async exportContent(request, options?: RasterExportOptions, context?: IOContext) {
-      let data = await renderRaster(
-        request,
-        {
-          format,
-          scale: options?.scale,
-          quality: options?.quality
-        },
-        context
-      )
-      if (!data && format === 'WEBP' && context?.encodeWebP) {
-        const png = await renderRaster(request, { format: 'PNG', scale: options?.scale }, context)
-        if (png) data = new Uint8Array(await context.encodeWebP(png))
-      }
-      if (!data) throw new Error('Nothing to export')
-      return {
-        format: extension,
-        mimeType,
-        extension,
-        data
-      }
-    }
-  }
-}
-
-export const figFormat: IOFormatAdapter<'fig'> = {
-  id: 'fig',
-  label: 'Open Pen Document',
-  role: 'native-document',
-  category: 'document',
-  extensions: ['fig'],
-  mimeTypes: ['application/octet-stream'],
-  support: {
-    readDocument: true,
-    writeDocument: true,
-    exportDocument: true,
-    exportPage: true,
-    exportSelection: true,
-    exportNode: true
-  },
-  exportOptions: FIXED_SIZE_EXPORT,
-  matchesFile(fileName) {
-    return lowerExt(fileName) === 'fig'
-  },
-  async readDocument(input) {
-    const data = input.data.slice().buffer
-    const graph = await parseFigFile(data, { populate: 'first-page' })
-    return { graph, sourceFormat: 'fig' }
-  },
-  async writeDocument(graph, options?: FigWriteOptions, context?: IOContext) {
-    return writeFig(graph, options, context, options?.thumbnailPageId)
-  },
-  async exportContent(request, options?: FigWriteOptions, context?: IOContext) {
-    // A whole document is written as it is, so one opened from an archive keeps that archive.
-    if (request.target.scope === 'document')
-      return writeFig(request.graph, options, context, options?.thumbnailPageId, request.fileName)
-    const extracted = extractExportGraph(request.graph, request.target)
-    return writeFig(
-      extracted.graph,
-      options,
-      context,
-      options?.thumbnailPageId ?? extracted.pageId ?? undefined,
-      request.fileName
-    )
-  }
-}
-
-/** A `.fig` named as asked, or else after the file it is written to, or else Untitled. */
-async function writeFig(
-  graph: SceneGraph,
-  options: FigWriteOptions | undefined,
-  context: IOContext | undefined,
-  pageId: string | undefined,
-  fileName?: string
-): Promise<ExportResult> {
-  const data = await exportFigFile(graph, {
-    ck: context?.canvasKit,
-    renderer: context?.renderer,
-    pageId,
-    renderHeadlessThumbnail: options?.renderThumbnail ?? false,
-    documentName: options?.documentName ?? (fileName && filename(fileName))
-  })
-  return { format: 'fig', mimeType: 'application/octet-stream', extension: 'fig', data }
-}
+export { figFormat, jpgFormat, mermaidFormat, penFormat, pngFormat, webpFormat }
 
 export const drawioFormat: IOFormatAdapter<'drawio'> = {
   id: 'drawio',
@@ -264,31 +82,6 @@ export const drawioFormat: IOFormatAdapter<'drawio'> = {
   }
 }
 
-export const mermaidFormat: IOFormatAdapter<'mermaid'> = {
-  id: 'mermaid',
-  label: 'Mermaid Diagram',
-  role: 'interchange-document',
-  category: 'document',
-  extensions: ['mmd', 'mermaid'],
-  mimeTypes: ['text/vnd.mermaid'],
-  support: {
-    readDocument: true
-  },
-  laysOutOnRead: true,
-  matchesFile(fileName, mimeType) {
-    const ext = lowerExt(fileName)
-    return ext === 'mmd' || ext === 'mermaid' || mimeType === 'text/vnd.mermaid'
-  },
-  async readDocument(input) {
-    const { detectMermaidDiagram } = await import('@open-pencil/mermaid')
-    const text = new TextDecoder().decode(input.data)
-    if (!detectMermaidDiagram(text)) throw new Error('This file holds no Mermaid flowchart')
-    // Mermaid stores a diagram's structure, which reading lays out with its text measured.
-    const { mermaidToSceneGraph } = await import('./formats/mermaid')
-    return { graph: await mermaidToSceneGraph(text), sourceFormat: 'mermaid' }
-  }
-}
-
 /** Pages or layers as a draw.io file, loading the writer only when one is saved. */
 async function writeDrawIO(graph: SceneGraph, target: DrawIOExportTarget): Promise<ExportResult> {
   const { writeDrawIOFile } = await import('@open-pencil/drawio')
@@ -301,10 +94,6 @@ async function writeDrawIO(graph: SceneGraph, target: DrawIOExportTarget): Promi
     encoding: 'utf8'
   }
 }
-
-export const pngFormat = rasterFormat('PNG')
-export const jpgFormat = rasterFormat('JPG')
-export const webpFormat = rasterFormat('WEBP')
 
 export const svgFormat: IOFormatAdapter<'svg'> = {
   id: 'svg',
