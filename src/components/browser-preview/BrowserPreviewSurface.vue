@@ -18,13 +18,12 @@ const { status, preset, backdropSource, backdropStyle, disabled, prepare } = def
 }>()
 const clipHeight = defineModel<number | null>('clipHeight', { required: true })
 const error = defineModel<string>('error', { required: true })
-const emit = defineEmits<{ full: [] }>()
+const emit = defineEmits<{ reset: [] }>()
 const region = ref<HTMLElement | null>(null)
 const surface = ref<HTMLElement | null>(null)
 const height = useBrowserHeight({
   region,
   model: clipHeight,
-  preset: () => preset,
   error,
   prepare,
   disabled: () => disabled || !status || status.loading
@@ -77,7 +76,7 @@ defineExpose({
       @end="height.end"
       @cancel="height.cancel"
       @key="height.key"
-      @full="emit('full')"
+      @reset="emit('reset')"
     />
     <div
       v-if="status && height.clipped.value"

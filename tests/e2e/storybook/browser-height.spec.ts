@@ -81,9 +81,9 @@ for (const preset of ['desktop', 'phone', 'tablet']) {
     )
     await grip.press('End')
     await grip.dblclick()
-    await expect(page.getByLabel('Full imports', { exact: true })).toHaveText('1')
+    await expect(page.getByLabel('Height resets', { exact: true })).toHaveText('1')
     await grip.press('Enter')
-    await expect(page.getByLabel('Full imports', { exact: true })).toHaveText('2')
+    await expect(page.getByLabel('Height resets', { exact: true })).toHaveText('2')
   })
 }
 
@@ -147,4 +147,32 @@ test('Escape restores a committed clip after movement in an active drag', async 
   await expect(page.locator('[data-slot="browser-backdrop"]')).toHaveCount(0)
   await page.mouse.up()
   await expect(page.getByLabel('Import height', { exact: true })).toHaveText(String(maximum - 10))
+})
+
+test('Tablet height reaches the actual Pen minimum', async ({ page }, info) => {
+  const grip = await openHeight(page, 'tablet')
+  const { point } = await beginDrag(page)
+  await expect(grip).toHaveAttribute('data-dragging', 'true')
+  await page.mouse.move(point.x, point.y - 400)
+  await page.mouse.up()
+  await expect(grip).toHaveAttribute('aria-valuenow', '240')
+  await page.screenshot({ path: info.outputPath('tablet-minimum.png') })
+})
+
+test('ending a pending pointer gesture releases capture ownership before reset', async ({
+  page
+}) => {
+  const grip = await openHeight(page, 'pending-backdrop')
+  await grip.press('ArrowUp')
+  await beginDrag(page)
+  await expect(page.getByRole('button', { name: 'Ready 1', exact: true })).toBeVisible()
+  await expect(page.getByLabel('Backdrop capture', { exact: true })).toHaveText('pending')
+  await page.mouse.up()
+  await expect(page.getByLabel('Backdrop capture', { exact: true })).toHaveText('idle')
+  await grip.dblclick()
+  await expect(page.getByLabel('Import height', { exact: true })).toHaveText('Full page')
+  await expect(page.getByLabel('Height resets', { exact: true })).toHaveText('1')
+  await page.getByRole('button', { name: 'Fail 1', exact: true }).click()
+  await expect(page.getByRole('alert')).toHaveCount(0)
+  await expect(page.getByLabel('Import height', { exact: true })).toHaveText('Full page')
 })

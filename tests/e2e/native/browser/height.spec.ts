@@ -138,13 +138,68 @@ it('clips the real browser through the focused height control and imports editab
   await undoImport(root.id)
 })
 
-it('imports the full page through the focused grip and restores the design with one Undo', async () => {
+it('restores full preview height through the focused grip and imports the full page with one Undo', async () => {
   await focusGrip()
   await browser.keys('Enter')
+  await $('[data-slot="browser-height-clipped"]').waitForExist({ reverse: true })
+  const button = $('button[aria-label="Import editable page"]')
+  await button.waitForEnabled()
+  await button.click()
   await browser.waitUntil(async () => (await importedRoot())?.height === 1800)
   const root = await importedRoot()
   assert.ok(root)
   assert.equal(root.panels.length, 2)
   await undoImport(root.id)
   await $('[data-slot="browser-height-clipped"]').waitForExist({ reverse: true })
+})
+
+it('double-click restores the browser height without adding a design root', async () => {
+  await focusGrip()
+  await browser.keys('ArrowUp')
+  await $('[data-slot="browser-height-clipped"]').waitForDisplayed()
+  const roots = () =>
+    browser.execute(() => {
+      const store = window.openPencil?.getStore?.()
+      if (!store) throw new Error('Missing editor')
+      return store.graph.getChildren(store.state.currentPageId).map((node) => node.id)
+    })
+  const before = await roots()
+  const importButton = $('button[aria-label="Import editable page"]')
+  await importButton.waitForEnabled()
+  await browser.executeAsync((selector, done) => {
+    const grip = document.querySelector(selector)
+    if (!grip) throw new Error('Missing height control')
+    grip.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }))
+    // Flush queued reset/import work without animation frames paused by native child focus.
+    setTimeout(done, 0)
+  }, gripSelector)
+  await $('[data-slot="browser-height-clipped"]').waitForExist({ reverse: true })
+  await $('button[aria-label="Import editable page"]').waitForEnabled()
+  assert.deepEqual(await roots(), before)
+})
+
+it('Tablet imports the complete editable page at the reduced preview height', async () => {
+  for (const label of ['Viewport: Desktop. Switch to Phone', 'Viewport: Phone. Switch to Tablet']) {
+    const choice = $(`button[aria-label="${label}"]`)
+    await choice.waitForEnabled()
+    await choice.click()
+  }
+  await $('button[aria-label="Viewport: Tablet. Switch to Desktop"]').waitForDisplayed()
+  await focusGrip()
+  await browser.keys('ArrowUp')
+  await $('[data-slot="browser-height-clipped"]').waitForDisplayed()
+  const button = $('button[aria-label="Import editable page"]')
+  await button.waitForEnabled()
+  const previousId = (await importedRoot())?.id
+  await button.click()
+  await browser.waitUntil(async () => {
+    const root = await importedRoot()
+    return !!root && root.id !== previousId
+  })
+  const root = await importedRoot()
+  assert.ok(root)
+  assert.equal(root.height, 1800)
+  assert.equal(root.panels.length, 2)
+  assert.ok(root.panels.some((panel) => panel.y === 1500))
+  await undoImport(root.id)
 })

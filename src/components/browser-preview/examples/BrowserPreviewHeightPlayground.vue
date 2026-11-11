@@ -11,7 +11,7 @@ const { preset = 'desktop', manual = false } = defineProps<{ preset?: string; ma
 const snapshotCanvas = useTemplateRef<HTMLCanvasElement>('snapshotCanvas')
 const height = ref<number | null>(null)
 const error = ref('')
-const fullImports = ref(0)
+const heightResets = ref(0)
 let nextRequest = 0
 interface Request {
   id: number
@@ -86,9 +86,9 @@ function settle(request: Request, action: 'ready' | 'refuse' | 'fail') {
   if (action === 'fail') request.reject(new Error('Fixture backdrop failed.'))
   else request.resolve(action === 'ready')
 }
-function importFullPage() {
+function resetHeight() {
   height.value = null
-  fullImports.value++
+  heightResets.value++
 }
 onScopeDispose(() => {
   frame.disposeSurface()
@@ -110,7 +110,7 @@ onScopeDispose(() => {
         :backdrop-style="frame.backdropStyle.value"
         :disabled="false"
         :prepare="frame.prepareDragBackdrop"
-        @full="importFullPage"
+        @reset="resetHeight"
       >
         <div class="flex h-full flex-col justify-between p-4 text-sm">
           <p>Browser page fixture</p>
@@ -122,7 +122,10 @@ onScopeDispose(() => {
     <output aria-label="Native surface" class="block text-sm">{{
       nativeVisible ? 'visible' : 'hidden'
     }}</output>
-    <output aria-label="Full imports" class="block text-sm">{{ fullImports }}</output>
+    <output aria-label="Height resets" class="block text-sm">{{ heightResets }}</output>
+    <output aria-label="Backdrop capture" class="block text-sm">{{
+      frame.backdrop.pending.value ? 'pending' : 'idle'
+    }}</output>
     <p v-if="error" role="alert" class="text-sm text-error">{{ error }}</p>
     <div v-for="request in requests" :key="request.id" class="flex gap-2">
       <AppButton size="sm" variant="outline" @click="settle(request, 'ready')"

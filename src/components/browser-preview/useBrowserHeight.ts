@@ -1,14 +1,14 @@
 import { useEventListener, useResizeObserver } from '@vueuse/core'
 import { computed, onScopeDispose, ref, type Ref } from 'vue'
 
-import { BROWSER_HEIGHT_HANDLE_HEIGHT } from '@/app/browser-preview/clip'
-import { MIN_FIXED_PREVIEW_ZOOM } from '@/app/browser-preview/dock'
-import { PREVIEW_PRESETS } from '@/app/browser-preview/schema'
+import {
+  BROWSER_HEIGHT_HANDLE_HEIGHT,
+  BROWSER_MIN_SURFACE_HEIGHT
+} from '@/app/browser-preview/clip'
 
 interface HeightOptions {
   region: Ref<HTMLElement | null>
   model: Ref<number | null>
-  preset: () => string
   error: Ref<string>
   disabled: () => boolean
   prepare: () => Promise<boolean>
@@ -40,7 +40,7 @@ export function useBrowserHeight(options: HeightOptions) {
     disposed: false
   }
   const maximum = computed(() => Math.max(0, state.available.value - BROWSER_HEIGHT_HANDLE_HEIGHT))
-  const minimum = computed(() => Math.min(maximum.value, minimumHeight(state)))
+  const minimum = computed(() => Math.min(maximum.value, BROWSER_MIN_SURFACE_HEIGHT))
   const height = computed(() =>
     Math.min(maximum.value, Math.max(minimum.value, options.model.value ?? maximum.value))
   )
@@ -71,18 +71,11 @@ export function useBrowserHeight(options: HeightOptions) {
   }
 }
 
-function minimumHeight({ options }: HeightState) {
-  const device = PREVIEW_PRESETS.find((preset) => preset.value === options.preset())
-  return !device || device.value === 'desktop'
-    ? 1
-    : Math.ceil(device.height * MIN_FIXED_PREVIEW_ZOOM + 16)
-}
-
 function setHeight(state: HeightState, value: number) {
   if (!Number.isFinite(value)) return
   const maximum = Math.max(0, state.available.value - BROWSER_HEIGHT_HANDLE_HEIGHT)
   const height = Math.round(
-    Math.max(Math.min(maximum, minimumHeight(state)), Math.min(maximum, value))
+    Math.max(Math.min(maximum, BROWSER_MIN_SURFACE_HEIGHT), Math.min(maximum, value))
   )
   state.options.model.value = height >= Math.floor(maximum) ? null : height
 }
@@ -171,7 +164,7 @@ function adjustHeight(state: HeightState, event: KeyboardEvent) {
   const step = event.shiftKey ? 50 : 10
   if (event.key === 'ArrowUp') setHeight(state, current - step)
   else if (event.key === 'ArrowDown') setHeight(state, current + step)
-  else if (event.key === 'Home') setHeight(state, minimumHeight(state))
+  else if (event.key === 'Home') setHeight(state, BROWSER_MIN_SURFACE_HEIGHT)
   else if (event.key === 'End') state.options.model.value = null
   else return false
   return true

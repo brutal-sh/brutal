@@ -131,17 +131,18 @@ useBrowserFeedback({
 })
 async function importPage() {
   if (busy.value) return
-  const limit = clipHeight.value === null ? undefined : viewport.surfaceViewport()?.viewport.height
+  const limit =
+    clipHeight.value !== null && preset.value === 'desktop'
+      ? viewport.surfaceViewport()?.viewport.height
+      : undefined
   await preview.importPage(!!picker.state.value?.pick, limit)
   if (notice.value && picker.state.value?.pick) await picker.stop()
 }
-async function importFullPage() {
-  if (busy.value || store.state.readOnly) return
+async function resetHeight() {
+  if (busy.value) return
   clipHeight.value = null
   await nextTick()
   syncSurface()
-  await preview.importPage(false)
-  if (notice.value && picker.state.value?.pick) await picker.stop()
 }
 async function capture(scope?: BrowserCaptureScope) {
   if (busy.value) return
@@ -288,7 +289,7 @@ onScopeDispose(() => {
       :backdrop-style="backdropStyle"
       :disabled="actionBusy || openingHistory || !open"
       :prepare="prepareDragBackdrop"
-      @full="importFullPage"
+      @reset="resetHeight"
     >
       <BrowserPreviewLanding
         v-if="!status"

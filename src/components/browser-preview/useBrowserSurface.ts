@@ -57,6 +57,13 @@ export function useBrowserSurface(options: SurfaceOptions) {
   const syncSurface = () => sync(state)
   useResizeObserver(options.surface, syncSurface)
   watch(options.dragging, syncSurface, { flush: 'post' })
+  watch(
+    options.preparingDrag,
+    (preparing) => {
+      if (!preparing && !options.dragging.value) releaseFrame(state, state.preparation)
+    },
+    { flush: 'sync' }
+  )
   useEventListener(window, 'resize', syncSurface)
   useMutationObserver(document.body, syncSurface, {
     subtree: true,

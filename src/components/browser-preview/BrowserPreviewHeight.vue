@@ -19,7 +19,7 @@ const emit = defineEmits<{
   end: [event: PointerEvent]
   cancel: []
   key: [event: KeyboardEvent]
-  full: []
+  reset: []
 }>()
 const ui = tv(theme)()
 const messages = useEditorMessages()
@@ -44,8 +44,8 @@ const messages = useEditorMessages()
       @pointercancel="emit('cancel')"
       @lostpointercapture="emit('cancel')"
       @keydown="emit('key', $event)"
-      @keydown.enter.prevent="!disabled && emit('full')"
-      @dblclick="!disabled && emit('full')"
+      @keydown.enter.prevent="!disabled && emit('reset')"
+      @dblclick="!disabled && emit('reset')"
     >
       <icon-lucide-grip-horizontal aria-hidden="true" class="size-3.5" />
     </div>
