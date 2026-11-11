@@ -1,162 +1,55 @@
 import { watchDebounced } from '@vueuse/core'
-import { watch, type WatchHandle } from 'vue'
+import { watch } from 'vue'
 
-import { getRecoveryStore } from '@/app/document/recovery/store'
-import type { RecoveryStore } from '@/app/document/recovery/types'
-import { createCanvasId } from '@/app/storage/id'
+import {
+  adoptRecovery,
+  disableRecovery,
+  discardRecovery,
+  markRecoveryProtected
+} from '@/app/document/recovery/lifecycle'
+import { createRecoveryRuntime } from '@/app/document/recovery/runtime'
+import { persistRecovery } from '@/app/document/recovery/snapshot'
+import type {
+  DocumentRecoveryController,
+  DocumentRecoveryOptions
+} from '@/app/document/recovery/types'
 
-interface DocumentRecoveryOptions {
-  state: { documentName: string }
-  /** The document's content revision; rendering and layout do not advance it. */
-  version: () => number
-  buildFigFile: () => Promise<Uint8Array> | Uint8Array
-  hasWritableSource: () => boolean
-  hasUnsavedChanges?: () => boolean
-  isEnabled?: () => boolean
-  store?: RecoveryStore
-  recoveryId?: string
-}
+export type { DocumentRecoveryController } from '@/app/document/recovery/types'
 
-export interface DocumentRecoveryController {
-  getRecoveryId(): string
-  adoptRecoverySnapshot(id: string): Promise<void>
-  persistNow(): Promise<void>
-  markProtectedVersion(version: number): Promise<void>
-  discardRecovery(): Promise<void>
-  disposeRecovery(): void
-}
-
-export function createDocumentRecovery({
-  state,
-  version: currentVersion,
-  buildFigFile,
-  hasWritableSource,
-  hasUnsavedChanges = () => true,
-  isEnabled = () => true,
-  store = getRecoveryStore(),
-  recoveryId = createCanvasId()
-}: DocumentRecoveryOptions): DocumentRecoveryController {
-  let id = recoveryId
-  let protectedVersion = currentVersion()
-  let persistedVersion: number | null = null
-  let requestedVersion = protectedVersion
-  let lifecycleGeneration = 0
-  let writing: Promise<void> | null = null
-  let cleanup: Promise<void> = Promise.resolve()
-  let disposed = false
-
-  async function runWrites(generation: number): Promise<void> {
-    if (disposed || generation !== lifecycleGeneration || !isEnabled()) return
-    if (hasWritableSource() || requestedVersion === protectedVersion) return
-    const version = requestedVersion
-    const bytes = await buildFigFile()
-    if (generation !== lifecycleGeneration || hasWritableSource() || !isEnabled()) return
-    await store.write({
-      id,
-      documentName: state.documentName,
-      figBytes: bytes
-    })
-    persistedVersion = version
-    if (generation !== lifecycleGeneration) return
-    protectedVersion = version
-    if (requestedVersion !== version) await runWrites(generation)
-  }
-
-  async function persistNow(): Promise<void> {
-    await cleanup
-    if (disposed || hasWritableSource() || !isEnabled()) return
-    requestedVersion = currentVersion()
-    if (!hasUnsavedChanges()) {
-      await markProtectedVersion(requestedVersion)
-      // A new edit may arrive while the old snapshot is being removed.
-      if (hasUnsavedChanges()) await persistNow()
-      return
-    }
-    if (requestedVersion === protectedVersion) return
-    if (!writing) {
-      const generation = lifecycleGeneration
-      writing = runWrites(generation).finally(() => {
-        writing = null
-      })
-    }
-    await writing
-  }
-
-  const stopVersionWatch: WatchHandle = watchDebounced(
-    currentVersion,
+export function createDocumentRecovery(
+  options: DocumentRecoveryOptions
+): DocumentRecoveryController {
+  const runtime = createRecoveryRuntime(options)
+  const stopVersionWatch = watchDebounced(
+    runtime.version,
     () => {
-      void persistNow().catch((error) => console.warn('[Recovery] Snapshot failed:', error))
+      void persistRecovery(runtime).catch((error) =>
+        console.warn('[Recovery] Snapshot failed:', error)
+      )
     },
     { debounce: 3000, maxWait: 10000 }
   )
-
-  const stopEnabledWatch: WatchHandle = watch(
-    isEnabled,
+  const stopEnabledWatch = watch(
+    runtime.isEnabled,
     (enabled) => {
       if (enabled) {
-        protectedVersion = currentVersion()
-        requestedVersion = currentVersion()
+        runtime.protectedVersion = runtime.version()
+        runtime.requestedVersion = runtime.version()
         return
       }
-      lifecycleGeneration++
-      const cleanupGeneration = lifecycleGeneration
-      const snapshotId = id
-      requestedVersion = currentVersion()
-      protectedVersion = currentVersion()
-      const activeWrite = writing
-      cleanup = cleanup
-        .then(async () => {
-          await activeWrite
-          await store.remove(snapshotId)
-          if (cleanupGeneration === lifecycleGeneration) persistedVersion = null
-          return undefined
-        })
-        .catch((error) => console.warn('[Recovery] Failed to disable recovery:', error))
+      disableRecovery(runtime)
     },
     { flush: 'sync' }
   )
-
-  async function invalidateActiveWrite(): Promise<void> {
-    lifecycleGeneration++
-    await Promise.all([writing, cleanup])
-  }
-
-  async function markProtectedVersion(version: number): Promise<void> {
-    await invalidateActiveWrite()
-    protectedVersion = version
-    requestedVersion = currentVersion()
-    if (persistedVersion == null || persistedVersion <= version) {
-      await store.remove(id)
-      persistedVersion = null
-    }
-  }
-
   return {
-    getRecoveryId: () => id,
-    async adoptRecoverySnapshot(nextId) {
-      const previousId = id
-      await invalidateActiveWrite()
-      id = nextId
-      // The adopted snapshot holds the document as it is now.
-      const version = currentVersion()
-      protectedVersion = version
-      persistedVersion = version
-      requestedVersion = version
-      disposed = false
-      if (previousId !== nextId) await store.remove(previousId)
-    },
-    persistNow,
-    markProtectedVersion,
-    async discardRecovery() {
-      await invalidateActiveWrite()
-      protectedVersion = currentVersion()
-      persistedVersion = null
-      requestedVersion = currentVersion()
-      await store.remove(id)
-    },
+    getRecoveryId: () => runtime.id,
+    adoptRecoverySnapshot: (id) => adoptRecovery(runtime, id),
+    persistNow: () => persistRecovery(runtime),
+    markProtectedVersion: (version) => markRecoveryProtected(runtime, version),
+    discardRecovery: () => discardRecovery(runtime),
     disposeRecovery() {
-      disposed = true
-      lifecycleGeneration++
+      runtime.disposed = true
+      runtime.lifecycleGeneration++
       stopVersionWatch()
       stopEnabledWatch()
     }

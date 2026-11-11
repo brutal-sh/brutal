@@ -51,6 +51,8 @@ finds no concrete regression. These are behavior-preservation and ownership rece
 not actual Pen surface, trusted OS input or full-product acceptance. Private receipts:
 `local-evidence/assets-modularization-2026-11-11/`.
 
+The recovery-owner follow-up is tracked in [RECOVERY-OWNERS.md](RECOVERY-OWNERS.md). The original recovery/source/tab factories exceed the requested function or module gates. Five recovery runtime modules now pass strict 300/50/10/4/4 checks with owner and browser preservation controls; the complete static check passes with zero clones and private publication remains pending. The separate local-file backup defect remains red and is not accepted by modularization.
+
 Scope: authored `.ts`, `.vue`, `.rs` and `.css` under `src`, `packages/core/src`,
 `packages/vue/src`, `packages/scene-graph/src` and `desktop/src`. Counts are physical lines.
 `.d.ts` declarations, tests and `.stories.ts` examples are excluded; authored catalogs are included.

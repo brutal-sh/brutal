@@ -6,7 +6,7 @@ Repository: [private Open Pen repository](https://github.com/jpoindexter/open-pe
 Board: [Open Pen — independent design editor](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor), private.
 
 The [PRD](PRD.md) owns the outcome, constraints and release criteria.
-The [task index](TASKS.md) links all 463 execution cards; the [modularity audit](MODULARITY.md)
+The [task index](TASKS.md) links all 467 execution cards; the [modularity audit](MODULARITY.md)
 records the measured review queue. Requirements come from the [feature catalog](pen-feature-reference/README.md)
 and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), preserving historical Pen 1.2.21 evidence and the current [1.2.22 update inventory](pen-feature-reference/update-1.2.22-2026-11-09.md).
 
@@ -14,7 +14,7 @@ The original 2026-11-11 audit readback contains 479 cards: 461 execution tasks a
 
 After the audit, source c37b11ba2 publishes the qualified AssetsPanel refactor and fixtures; its two bounded cards are Executed. Source 543ca9bd8 publishes the browser-height reference repair with 34 serial browser cases, four isolated native candidate cases and a discriminating fresh-process reset control; BROWSER-CLIP remains Verify for its wider actual-reference matrices. Claude's read-only review identifies a manual empty-endpoint updater defect, reproduced through the installed macOS menu and allocated to BRAND-UPDATER-EMPTY under BRAND-MAC-MENU. Its guard is privately published at f606d6de9 with 25 owner cases/52 assertions and a complete static check; candidate native menu delivery stays Verify because Computer Use reports a locked Mac.
 
-The current all-state readback contains 481 cards: 463 execution tasks and 18 milestones. Lists are 380 Backlog, 1 Ready, 1 Building (FIRST-03), 24 Verify and 57 Executed. FIRST-DRAFT-REFRESH is accepted under its bounded criterion and privately published at 719438873; FIRST-03 resumes its aggregate journey. Original browser failures and the aggregate native/reference criteria remain binding. This is a task-state snapshot, not product-parity progress. The preceding 479-card audit stays dated. Existing saved-chat readback, normal installation/profile/recovery and protected icon work remain preserved; all broader acceptance remains open.
+The current all-state readback contains 485 cards: 467 execution tasks and 18 milestones. Lists are 383 Backlog, 1 Ready, 1 Building (MOD-RECOVERY-LIFECYCLE), 25 Verify and 57 Executed. FIRST-DRAFT-REFRESH is accepted under its bounded criterion and privately published at719438873; FIRST-03 stays Verify for native/reference gates. FILE-RECOVERY-LOCAL owns a confirmed existing-file backup gap and depends on three bounded module-owner extractions; FILE-07 retains its aggregate acceptance. Original browser failures and the aggregate native/reference criteria remain binding. This is a task-state snapshot, not product-parity progress. The preceding 479-card audit stays dated. Existing saved-chat readback, normal installation/profile/recovery and protected icon work remain preserved; all broader acceptance remains open.
 
 ## Board organization
 
