@@ -138,7 +138,6 @@ Private receipts are under `local-evidence/library-hash-order-2026-11-10/`,
 These bounded results do not establish exact Pen visual design, native delivery,
 the strict Note raster criterion, the whole unit suite or full product parity.
 
-
 The complete clean `bun run check` at `18a464656` subsequently passes every
 configured gate through literal zero detected clones. Its tracked checkout is
 clean and excludes unrelated icon work. The complete canonical unit rerun then
@@ -147,3 +146,11 @@ raster comparison, expecting zero and observing 12,792 changed channels. The
 runner repeats failed-group output; these repeated log lines are not separate
 root causes. The three app failures are absent from this complete rerun. Full
 unit success remains unaccepted.
+
+## Current mixed workflow controls — 2026-11-12
+
+At published `5e1beb9ee`, the unchanged export cohort passes all 32 cases in 46.677 seconds across Chromium/WebKit. The complete 117-case editor/branding matrix then passes in 500.989 seconds. Both use canonical configuration, one worker, the original 15-second case limit, zero retries/skips/unexpected/flaky results and no overlapping package/native/static/site builds. Every one of the 149 cases has a retained trace; named owners/configuration match the published head. Only internal plan Markdown changes during the larger run.
+
+The original English WebKit font case and FIG save/reopen paths execute in the larger cohort. Its utility-scoped `caffeinate -is` process exits after the command; no persistent or display power setting changes. These are current passing controls, not a demonstrated cause or repair for the original untraced failure. STAB-WEBKIT-MIXED remains Verify; do not repeat passing cohorts without a new hypothesis or actual failing transition. Native delivery, matched actual Pen visuals and normal-installed recovery remain separate.
+
+Private evidence: `local-evidence/mixed-webkit-2026-11-12/`, including complete results/commands/logs, per-case outcomes, owner/configuration hashes, 149 traces and a manifest of 319 files totalling 999,286,390 bytes. Older failed and successful controls remain untouched.
