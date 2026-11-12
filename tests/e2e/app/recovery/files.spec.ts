@@ -15,16 +15,17 @@ import {
   decideFile,
   finishUnrelatedFile,
   holdUnrelatedRestore,
+  prepareFileDecisions,
   refuseTargetWrite,
   TARGET_FILE,
   TARGET_NAME,
-  UNRELATED_FILE,
-  useFileDecisionSetup
+  UNRELATED_FILE
 } from '#tests/helpers/document/recovery/files'
+import { useRecoverySetup } from '#tests/helpers/document/recovery/setup'
 import { openAppMenu } from '#tests/helpers/menu'
 
 test.describe('pending existing-file restoration', () => {
-  const ctx = useFileDecisionSetup()
+  const ctx = useRecoverySetup(prepareFileDecisions)
   test('closing the recovery offer during an existing-file read retains the pending restoration', async () => {
     const { page, state } = ctx
     await decideFile(page, 'Cancel')
@@ -59,7 +60,7 @@ test.describe('pending existing-file restoration', () => {
 
 for (const decision of ['Save', 'Save As', 'Cancel', 'Close', 'Discard'] as const) {
   test.describe(`${decision} existing-file decision`, () => {
-    const ctx = useFileDecisionSetup()
+    const ctx = useRecoverySetup(prepareFileDecisions)
     test(`${decision} on a recovered file preserves unrelated file bytes and editable recovery`, async () => {
       const { page, state } = ctx
       await decideFile(page, decision)
@@ -84,7 +85,7 @@ for (const decision of ['Save', 'Save As', 'Cancel', 'Close', 'Discard'] as cons
 
 for (const refusal of ['cancel Save As', 'refuse Save'] as const) {
   test.describe(`${refusal} existing-file decision`, () => {
-    const ctx = useFileDecisionSetup()
+    const ctx = useRecoverySetup(prepareFileDecisions)
     test(`${refusal} preserves both existing files and exact recovery backups`, async () => {
       const { page, state } = ctx
       await restoreDraft(page, TARGET_NAME)

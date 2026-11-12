@@ -27,7 +27,7 @@ Public release is a separate owner decision. The current full-parity target is n
 
 ## Execution order and review
 
-1. Qualify TEST-RECOVERY-JOURNEY-LIFETIME after two traced total-deadline failures reproduce on published original input. Preserve all existing assertions and the separate existing setup/journey phase budgets. MOD-12 remains Verify after bounded API/unit/browser preservation, with no full native acceptance. The original Cancel/Home transition and native read-only refusal/retry/source-path readback remain open. Preserve unrelated icon work and installed user state.
+1. Finish TEST-RECOVERY-NATIVE-PANELS on a freshly rebuilt isolated host: read-only Save/refusal/retry and exact source-path readback after Cancel remain open. The fixture-lifetime candidate passes five focused and all24 traced recovery/history cases with unchanged application/configuration/assertions; it stays Verify for independent review. MOD-12 also retains native acceptance. The original untraced Cancel/Home transition remains unresolved. Preserve unrelated icon work and installed user state.
 2. Close the queued inspector and remaining draft/save/recovery gates. The saved-text authored-frame disposition is bounded Executed; UI-02 retains camera/fit and SURF-FRAME-TITLE owns actual Pen frame-title appearance/behavior. MOD-16/17 retain their live Figma criteria. Use existing source/evidence and actual Pen as the reference.
 3. Continue the remaining domain milestones in task-dependency order. Keep one Building card, at most three Ready cards, and distinguish a private core-beta pass from public readiness and full parity.
 

@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test'
+import { expect, type Page } from '@playwright/test'
 
 import { BUILTIN_IO_FORMATS, IORegistry } from '@open-pencil/core/io'
 
@@ -76,27 +76,6 @@ export async function prepareFileDecisions(page: Page) {
   await reloadRecovery(page)
   expect(await recoveryBytes(page)).toEqual(both)
   return { canvas, both, unrelated, targetOriginal, unrelatedOriginal }
-}
-
-/** Own the fixture's cold startup separately from the decision journey, as canvas specs do. */
-export function useFileDecisionSetup() {
-  let page: Page
-  let state: Awaited<ReturnType<typeof prepareFileDecisions>>
-  test.beforeAll(async ({ browser }) => {
-    page = await browser.newPage()
-    state = await prepareFileDecisions(page)
-  })
-  test.afterAll(async () => {
-    if (page) await page.close()
-  })
-  return {
-    get page() {
-      return page
-    },
-    get state() {
-      return state
-    }
-  }
 }
 
 export async function saveFileDecision(page: Page, saveAs = false) {
@@ -194,7 +173,10 @@ async function saveRecoveredTarget(page: Page, saveAs: boolean) {
 export async function refuseTargetWrite(page: Page) {
   return page.evaluateHandle(() => {
     const prototype = FileSystemFileHandle.prototype
-    const original = prototype.createWritable
+    const descriptor: TypedPropertyDescriptor<FileSystemFileHandle['createWritable']> | undefined =
+      Object.getOwnPropertyDescriptor(prototype, 'createWritable')
+    const original = descriptor?.value
+    if (!original) throw new Error('Missing file write method')
     prototype.createWritable = async function (this: FileSystemFileHandle, options) {
       if (this.name === 'target-file.pen')
         throw new DOMException('Fixture target write refused', 'NotAllowedError')
@@ -209,7 +191,10 @@ export async function refuseTargetWrite(page: Page) {
 export async function holdUnrelatedRestore(page: Page) {
   return page.evaluateHandle(() => {
     const prototype = Blob.prototype
-    const original = prototype.arrayBuffer
+    const descriptor: TypedPropertyDescriptor<Blob['arrayBuffer']> | undefined =
+      Object.getOwnPropertyDescriptor(prototype, 'arrayBuffer')
+    const original = descriptor?.value
+    if (!original) throw new Error('Missing file byte reader')
     let started = false
     let release: (() => void) | undefined
     const reading = new Promise<void>((resolve) => {
