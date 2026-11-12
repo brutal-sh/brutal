@@ -1,0 +1,25 @@
+# Native persistent-store isolation
+
+TEST-NATIVE-STORE-ISOLATION is Building. Native profile recovery and panels remain Verify until their fresh execution. This concerns the test host; no normal installed profile, credentials, documents or recovery store is inspected or changed.
+
+The b7212d76 test host (`5e09f74df7df1626bdd40e2c571b4c0d0eb82c3d40b05d987ddeb5ac932ff5e0`) opens a fresh owned profile `PbqhQ7` and reads both its own backup and an older owned synthetic `MjGR1S` backup. The marker UUIDs differ. The permanent sentinel control independently fails at “B starts empty”: B reads A's `profile-A` value. A same-profile restart succeeds first. All owned sessions close in `finally`; no shared recovery database is deleted or count assertion relaxed.
+
+Pinned installed primary source explains the failure: `tauri-runtime` 2.12.1 `WebviewAttributes::from(&WindowConfig)` omits `data_store_identifier`. Tauri's `WebviewWindowBuilder::from_config` uses that conversion; its explicit setter reaches Wry 0.57.0 and WebKit. Configuration readback alone therefore cannot establish the selected store.
+
+The candidate delays automatic creation only for explicitly persistent native-test windows and uses the public builder setter. Its identity command also reads the actual `WKWebView.configuration.websiteDataStore.identifier` on the main thread and rejects default, ephemeral or mismatched stores. The ordinary ephemeral test host and normal builds keep their existing construction. No global dependency cache, security permission, profile marker or backup is rewritten.
+
+The permanent `bun run test:native:recovery-isolation` control uses a unique owned sentinel database and five sequential processes: A write, A restart, fresh B empty/write, B restart, A unchanged. A and B use the same sentinel database name to expose accidental namespace sharing. This is a storage isolation criterion, separate from recovery behavior and physical native panel delivery.
+
+The candidate passes 31 Rust profile tests, including refusal of altered startup/window configurations. The rebuilt host (`dfc976f47650800f6dc8a1649823aa66c42843a6e9767c61086ca6e21d0c8f84`) passes the unchanged A/B control: six assertions across five processes, with actual WebKit identity verified at each launch. The fresh three-process existing-file journey also passes: exact backup, guarded interruption, Restore/Save and editable third-process reopen without another offer. These outcomes reestablish bounded storage/recovery behavior; real native refusal/retry, normal installed delivery and matched Pen recovery remain open. The ordinary ephemeral startup-recovery check passes, while its separate hide/show case fails the existing visibility guard. Historical same-profile recovery outcomes remain preserved with their isolation claim withdrawn.
+
+Private raw logs, identities, board readback and dependency reconciliation live in `local-evidence/native-store-isolation-2026-11-12/`. The original backup counterexample and both parsed owned FIGs remain under `local-evidence/recovery-journey-lifetime-2026-11-12/native-current/`.
+
+## Fresh panel qualification limits
+
+A separate owned bundle contains the identical candidate executable. Launch Services provides the launch timestamp required by REA, whereas direct driver spawning does not. Fresh Restore reaches two 64×64 rectangles; when the test WebView is hidden, canvas preparation stalls until the existing show/focus path runs. This is retained as a visibility limitation, not a recovery repair. REA executes native Save As Cancel, followed by exact original-file, backup-digest and original-source-path readback. Save As also creates a two-node copy, but entering a full pathname into its filename field produces a colon-named file in an older owned test directory. That attempt does not accept the intended destination or the dependent panel card. The file and all previous profiles/backups remain retained. Native intended-destination, read-only/refusal/retry, physical menu and normal-installed recovery criteria remain open.
+
+An auxiliary System Events attempt resolves the shared executable process name to the normal installed app despite a PID-based lookup. Its Save As sheet opens; no Save is issued there. REA binds the normal executable/PID and executes Cancel, confirming that its sheet closes. System Events mutations are abandoned; they are not accepted native-test actions. Raw incident/correction receipts stay private. No normal-installation replacement or user-profile cleanup occurs.
+
+## Static qualification
+
+The final complete `bun run check` passes with literal zero clones after relocating the standalone A/B runner to the established native restart-helper domain. Its original architecture-placement failure remains in the raw log; no rule is waived. Native-test compilation, strict 300/50/10/4/4 runner checks, 31 native profile Rust cases, the normal-build flag unit case and five process-ownership tests pass. Whole-product unit/visual and native acceptance are not inferred from these checks. The separate native hide/show failure and dependent panel/reference gates remain open.

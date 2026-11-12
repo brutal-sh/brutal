@@ -35,6 +35,7 @@ fn supported_test_configuration_selects_only_the_owned_store_and_app_paths() {
         Some(profile.store_id)
     );
     assert!(!config.app.windows[0].incognito);
+    assert!(!config.app.windows[0].create);
     assert_eq!(
         config.app.app_directories_override,
         Some(AppDirectoriesOverride::Root(profile.data_root))
@@ -42,6 +43,7 @@ fn supported_test_configuration_selects_only_the_owned_store_and_app_paths() {
     let mut expected = original;
     expected.app.windows[0].data_store_identifier = config.app.windows[0].data_store_identifier;
     expected.app.windows[0].incognito = false;
+    expected.app.windows[0].create = false;
     expected.app.app_directories_override = config.app.app_directories_override.clone();
     assert_eq!(
         serde_json::to_value(config).unwrap(),
@@ -73,6 +75,7 @@ fn an_unexpected_or_already_persistent_window_is_refused() {
         "extra",
         "other-label",
         "not-incognito",
+        "not-created",
         "existing-store",
         "existing-data-directory",
         "existing-paths",
@@ -83,6 +86,7 @@ fn an_unexpected_or_already_persistent_window_is_refused() {
             "extra" => config.app.windows.push(WindowConfig::default()),
             "other-label" => config.app.windows[0].label = "other".into(),
             "not-incognito" => config.app.windows[0].incognito = false,
+            "not-created" => config.app.windows[0].create = false,
             "existing-store" => config.app.windows[0].data_store_identifier = Some([2; 16]),
             "existing-data-directory" => {
                 config.app.windows[0].data_directory = Some(PathBuf::from("/other"))

@@ -4,6 +4,7 @@ use super::profile_context::{apply_profile, validate_context, validate_test_host
 use std::ffi::OsString;
 use std::path::{Path, PathBuf};
 use tauri::utils::config::Config;
+use tauri::Manager;
 
 pub(crate) fn activate_profile(
     config: &mut Config,
@@ -48,6 +49,26 @@ pub(crate) fn configure_context<R: tauri::Runtime>(
         supports_persistence(),
     )?;
     Ok(context)
+}
+
+pub(crate) fn build_profile_window(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
+    let window = app
+        .config()
+        .app
+        .windows
+        .first()
+        .ok_or("Missing test window.")?;
+    let Some(store_id) = window.data_store_identifier else {
+        return Ok(());
+    };
+    if window.create || window.label != "main" || app.get_webview_window("main").is_some() {
+        return Err("Persistent test window must be constructed exactly once.".into());
+    }
+    // Tauri 2.12.1 drops the store ID in from_config; keep the setter until the A/B control passes without it.
+    tauri::WebviewWindowBuilder::from_config(app, window)?
+        .data_store_identifier(store_id)
+        .build()?;
+    Ok(())
 }
 
 #[cfg(test)]

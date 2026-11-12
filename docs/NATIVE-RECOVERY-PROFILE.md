@@ -1,5 +1,11 @@
 # Isolated native recovery acceptance
 
+Current qualification: **Verify**. The 2026-11-12 A/B control disproves cross-profile storage separation in the earlier host. Retain historical same-profile observations below; fresh acceptance requires [TEST-NATIVE-STORE-ISOLATION](NATIVE-STORE-ISOLATION.md) and rerun recovery/panel outcomes. No normal user profile is read or altered.
+
+The corrected candidate passes the actual A/B namespace control and fresh three-process existing-file journey; [current evidence and native limitations](NATIVE-STORE-ISOLATION.md) remain separate from the historical receipt below. Full native/profile acceptance remains Verify.
+
+## Historical same-profile receipt
+
 FILE-07 remains Verify. On 2026-11-12, the rebuilt isolated host executes the complete three-process existing-file recovery journey below. This accepts the bounded test-profile persistence criterion; OS picker delivery, external-file permissions, read-only behavior, automatic backup debounce, normal installed-app delivery and matched Pen recovery states remain open.
 
 The implementation is test-only and lives in the owned qualification checkout. Run these commands only against a freshly rebuilt isolated host and after Computer Use observes the visible desktop; the helper also checks document visibility. The normal installed app is separate.

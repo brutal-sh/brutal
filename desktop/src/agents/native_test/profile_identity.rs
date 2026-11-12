@@ -15,6 +15,7 @@ pub(super) fn validate_active_profile(
     }
     let window = &config.app.windows[0];
     if window.label != "main"
+        || window.create
         || window.incognito
         || window.data_directory.is_some()
         || window.data_store_identifier != Some(profile.store_id)
@@ -39,7 +40,7 @@ pub struct NativeRecoveryIdentity {
 }
 
 #[tauri::command]
-pub fn native_test_recovery_identity(
+pub async fn native_test_recovery_identity(
     webview: tauri::Webview,
 ) -> Result<NativeRecoveryIdentity, String> {
     if webview.label() != "main" {
@@ -57,6 +58,7 @@ pub fn native_test_recovery_identity(
         .app_data_dir()
         .map_err(|error| error.to_string())?;
     validate_active_profile(app.config(), &profile, &app_data)?;
+    super::profile_store::verify(&webview, profile.store_id).await?;
     Ok(NativeRecoveryIdentity {
         pid: std::process::id(),
         executable: std::env::current_exe().map_err(|error| error.to_string())?,

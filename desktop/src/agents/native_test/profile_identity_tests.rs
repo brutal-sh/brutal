@@ -30,6 +30,9 @@ fn readback_refuses_ephemeral_production_or_reconfigured_hosts() {
     config.app.windows[0].incognito = true;
     assert!(validate_active_profile(&config, &profile, &profile.data_root).is_err());
     config = active.clone();
+    config.app.windows[0].create = true;
+    assert!(validate_active_profile(&config, &profile, &profile.data_root).is_err());
+    config = active.clone();
     config.app.windows.push(config.app.windows[0].clone());
     assert!(validate_active_profile(&config, &profile, &profile.data_root).is_err());
     config = active;

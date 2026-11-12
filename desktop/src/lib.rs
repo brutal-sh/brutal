@@ -53,7 +53,11 @@ pub fn run() {
         .on_menu_event(|app, event| {
             handle_menu_event(app, event.id().0.as_str());
         })
-        .setup(runtime::setup_app);
+        .setup(|app| {
+            #[cfg(feature = "native-test")]
+            agents::native_test::profile_startup::build_profile_window(app)?;
+            runtime::setup_app(app)
+        });
     let context = app_context();
     #[cfg(feature = "native-test")]
     let context = agents::native_test::profile_startup::configure_context(context)

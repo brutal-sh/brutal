@@ -8,6 +8,7 @@ pub(crate) mod profile_context;
 pub(crate) mod profile_fixtures;
 pub(crate) mod profile_identity;
 pub(crate) mod profile_startup;
+mod profile_store;
 
 #[derive(serde::Serialize)]
 #[serde(rename_all = "camelCase")]

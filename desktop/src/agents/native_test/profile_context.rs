@@ -19,6 +19,7 @@ pub(super) fn validate_test_host(config: &Config) -> Result<(), String> {
     }
     let window = &config.app.windows[0];
     if window.label != "main"
+        || !window.create
         || !window.incognito
         || window.data_store_identifier.is_some()
         || window.data_directory.is_some()
@@ -39,6 +40,7 @@ pub(crate) fn apply_profile(
     let window = &mut config.app.windows[0];
     window.data_store_identifier = Some(profile.store_id);
     window.incognito = false;
+    window.create = false;
     config.app.app_directories_override =
         Some(AppDirectoriesOverride::Root(profile.data_root.clone()));
     Ok(())

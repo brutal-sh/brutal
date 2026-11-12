@@ -1,5 +1,7 @@
 # Native recovery panels
 
+Current qualification: **Verify**. The 2026-11-12 A/B control disproves cross-profile storage separation in the earlier host. Retain historical same-profile observations below; fresh acceptance requires [TEST-NATIVE-STORE-ISOLATION](NATIVE-STORE-ISOLATION.md) and rerun recovery/panel outcomes. No normal user profile is read or altered.
+
 TEST-RECOVERY-NATIVE-PANELS remains Verify. Native Restore and Save As cancellation/success execute; visible read-only Save refusal and retry remain unexecuted because macOS locks before the Save action. The normal installed app remains unchanged.
 
 ## Exact isolated hosts
@@ -19,3 +21,7 @@ Tauri bundles that executable into a separate **Open Pen Native Test.app**, iden
 The initial recovery seed explicitly persists its backup; the later Cmd+D backup is automatic. These observations do not establish normal-installed recovery, a visible filesystem error/retry, complete native debounce reliability, matched reference pixels or full FILE-07/08 acceptance. Actual Pen's earlier separate-copy measurements remain versioned; they are not a comparison of its crash-recovery offer.
 
 Private receipts: `local-evidence/claude-brand-review-2026-11-11/file09-native-{candidate-identity,replay-qualified,bundle-identity,panels-partial}.json`, `file09-bundle-native-panels-control-ready.json` and probes `00`–`04`. Original, saved and dirty versions remain retained under the owned profile. Re-entry requires a fresh profile, current exact host/source identity, source-path probes and an unlocked desktop; never reopen an older registered test app or target a user process/profile.
+
+## Corrected-store candidate — 2026-11-12
+
+The identical candidate binary in a separate test bundle passes fresh Restore and native Save As cancellation with exact backup/original-file/source-path readback. A successful copy attempt uses the wrong native filename-field path semantics and does not accept the intended destination. Native refusal/retry, physical menu delivery and full acceptance remain open. Visibility and automation targeting failures are preserved in [the isolation report](NATIVE-STORE-ISOLATION.md); no successful rerun is presented as their causal repair.
