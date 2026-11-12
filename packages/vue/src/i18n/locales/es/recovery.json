@@ -7,5 +7,6 @@
   "settingsTitle": "Recuperación",
   "settingsDescription": "Controla las copias locales de recuperación de documentos no guardados.",
   "restore": "Restaurar",
-  "discard": "Descartar"
+  "discard": "Descartar",
+  "discardFailed": "No se pudo descartar esta copia de recuperación. Vuelve a intentarlo."
 }

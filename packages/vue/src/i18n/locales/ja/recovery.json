@@ -7,5 +7,6 @@
   "settingsTitle": "復元",
   "settingsDescription": "未保存ドキュメントのローカル復元コピーを管理します。",
   "restore": "復元",
-  "discard": "破棄"
+  "discard": "破棄",
+  "discardFailed": "この復元コピーを破棄できませんでした。もう一度お試しください。"
 }

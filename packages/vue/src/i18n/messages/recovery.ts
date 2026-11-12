@@ -4,6 +4,7 @@ export const recoveryMessageDefaults = {
   dialogTitle: 'Recover unsaved work',
   dialogDescription: 'Open Pen found documents from a previous session.',
   restoreFailed: 'Could not restore this document.',
+  discardFailed: 'Could not discard this recovery copy. Try again.',
   settingsTitle: 'Recovery',
   settingsDescription: 'Control local crash-recovery copies for unsaved documents.',
   preserveUnsavedWork: 'Automatically preserve unsaved work',

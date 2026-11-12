@@ -7,5 +7,6 @@
   "settingsTitle": "Odzyskiwanie",
   "settingsDescription": "Zarządzaj lokalnymi kopiami odzyskiwania niezapisanych dokumentów.",
   "restore": "Przywróć",
-  "discard": "Odrzuć"
+  "discard": "Odrzuć",
+  "discardFailed": "Nie udało się odrzucić tej kopii odzyskiwania. Spróbuj ponownie."
 }

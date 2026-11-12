@@ -19,6 +19,7 @@ const { recovery, common } = useI18n()
 const route = useRoute()
 const snapshots = ref<RecoverySnapshotMeta[]>([])
 const busyId = ref<string | null>(null)
+const discardError = ref(false)
 const open = ref(false)
 const startup = createDeferred<undefined>()
 exposeRecoveryReadiness(startup.promise)
@@ -49,9 +50,13 @@ async function restore(snapshot: RecoverySnapshotMeta): Promise<void> {
 
 async function discard(snapshot: RecoverySnapshotMeta): Promise<void> {
   busyId.value = snapshot.id
+  discardError.value = false
   try {
     await discardRecoverySnapshot(snapshot.id)
     settle(snapshot)
+  } catch (error) {
+    console.warn('[Recovery] Failed to discard snapshot:', error)
+    discardError.value = true
   } finally {
     busyId.value = null
   }
@@ -82,6 +87,7 @@ onMounted(async () => {
       <AlertDialogDescription class="text-xs text-muted">
         {{ recovery.dialogDescription }}
       </AlertDialogDescription>
+      <AppAlert v-if="discardError" tone="error" :heading="recovery.discardFailed" />
       <div class="max-h-72 space-y-2 overflow-y-auto">
         <div
           v-for="snapshot in snapshots"
