@@ -32,7 +32,7 @@ The first thirteen-case browser cohort has six passes, three failures and four c
 
 Both repeated-document snapshots fail because the current fixture draws on light background while the saved resource snapshot has a dark background. Running the untouched HEAD renderer reproduces both failures with byte-identical received PNGs. Resource assertions after that screenshot were not reached in that original cohort. The later [explicit resource fixture qualification](GPU-DARK-FIXTURE.md) selects the intended dark page and executes those assertions in both engines against byte-identical original snapshots. It changes test setup only; the original failures remain recorded.
 
-The original strict WebKit P3 snapshot also fails by one matcher pixel. Its candidate PNG is byte-identical to the pre-refactor failure. Chromium executes the initial/resized strict P3 images successfully; WebKit does not reach its resized assertion. Existing Note raster discrepancies remain separate.
+The original strict WebKit P3 snapshot also fails by one matcher pixel; the candidate PNG is byte-identical to the pre-refactor failure, and that original run does not reach resizing. The subsequent [browser-version control](P3-BROWSER-BASELINES.md) reproduces both original PNGs byte-for-byte with the historical bundled browser and records five/six text-channel differences with the updated browser. It documents a separate versioned-baseline decision; no renderer correction or relaxed threshold is claimed. Existing Note raster discrepancies remain separate.
 
 These controls execute the rebuilt isolated native host as well as supported source/browser behavior. Normal installed-app acceptance and complete matched live Pen design/functionality parity remain open.
 

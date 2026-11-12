@@ -13,7 +13,12 @@ import {
 
 test.use({ viewport: { width: 1200, height: 900 } })
 
-test('P3 paint blends and masks survive pan, zoom, and surface resize', async ({ page }) => {
+test('P3 paint blends and masks survive pan, zoom, and surface resize', async ({
+  page,
+  browser,
+  browserName
+}) => {
+  const engine = browserName === 'webkit' ? `-webkit-${browser.version()}` : ''
   await emulateWideGamutDisplay(page)
   await page.goto('/?test&no-chrome&no-rulers')
   const canvas = new CanvasHelper(page)
@@ -30,7 +35,7 @@ test('P3 paint blends and masks survive pan, zoom, and surface resize', async ({
   async function expectEffects(phase: 'initial' | 'resized') {
     const buffer = await sceneBufferState(page)
     expect(buffer).toEqual({ colorSpace: 'srgb', documentColorSpace: 'display-p3', error: 0 })
-    expect(await canvas.screenshotCanvas()).toMatchSnapshot(`paint-fixture-${phase}.png`, {
+    expect(await canvas.screenshotCanvas()).toMatchSnapshot(`paint-fixture-${phase}${engine}.png`, {
       threshold: 0,
       maxDiffPixels: 0
     })
