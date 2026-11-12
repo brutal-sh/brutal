@@ -25,3 +25,9 @@ The seven-case control then passes in 65.562 seconds. After strengthening the fi
 The complete static gate exits zero with zero duplicate-code clones; both new TypeScript owners pass strict 300/50/10/4/4 and test types. Actual `/Applications/Pen.app` is refreshed through REA as version 1.2.22 and its archive hash remains unchanged. Native UI access still reports locked. FILE-07/08, parity and public beta remain open.
 
 Private receipts: `local-evidence/claude-brand-review-2026-11-11/recovery-file-decisions-{first,owned-port,server-diagnostic,qualified-runtime,save,all,seven,final,cancel-trace,qualified}.*`, strict/type/static logs and matching artifact directories. Source owners: `tests/helpers/document/recovery/files.ts` and `tests/e2e/app/recovery/files.spec.ts`.
+
+## Held-read dismissal control
+
+A subsequent bounded case tests the asynchronous Close hypothesis directly. It holds only the unrelated recovery file's actual `.fig` array-buffer read behind a scoped promise, waits until that read has started, clicks the public recovery Close button, then releases the read. It requires the correct two unrelated layers, exact backup digests and both original files unchanged. The override is released/restored in `finally` and never touches a normal profile.
+
+The first traced held-read case passes. The complete eight-case cohort then passes in 97.033 seconds with zero skips/retries/flaky cases. Closing the offer during that held read does not reproduce the earlier lost-canvas outcome; this control narrows the hypothesis and makes no production repair. The earlier timeout remains unresolved. The override is subsequently moved to the owning Blob prototype so restoration leaves File's inherited method ownership intact; the final targeted case passes with that restoration boundary. Both touched owners pass strict limits and test types.

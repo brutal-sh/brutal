@@ -184,3 +184,30 @@ export async function refuseTargetWrite(page: Page) {
     }
   })
 }
+
+export async function holdUnrelatedRestore(page: Page) {
+  return page.evaluateHandle(() => {
+    const prototype = Blob.prototype
+    const original = prototype.arrayBuffer
+    let started = false
+    let release: (() => void) | undefined
+    const reading = new Promise<void>((resolve) => {
+      release = resolve
+    })
+    prototype.arrayBuffer = async function (this: Blob) {
+      if (this instanceof File && this.name === 'unrelated-file.fig') {
+        started = true
+        await reading
+      }
+      return original.call(this)
+    }
+    return {
+      started: () => started,
+      release: () => release?.(),
+      restore: () => {
+        release?.()
+        prototype.arrayBuffer = original
+      }
+    }
+  })
+}

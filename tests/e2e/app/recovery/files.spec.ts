@@ -1,6 +1,10 @@
 import { expect, test } from '@playwright/test'
 
-import { readOwnedFile, savePicker } from '#tests/helpers/document/existing-file-recovery'
+import {
+  readOwnedFile,
+  savePicker,
+  showLayers
+} from '#tests/helpers/document/existing-file-recovery'
 import { recoveryBytes } from '#tests/helpers/document/recovery'
 import {
   recoveryRow,
@@ -10,6 +14,7 @@ import {
 import {
   decideFile,
   finishUnrelatedFile,
+  holdUnrelatedRestore,
   prepareFileDecisions,
   refuseTargetWrite,
   TARGET_FILE,
@@ -17,6 +22,34 @@ import {
   UNRELATED_FILE
 } from '#tests/helpers/document/recovery/files'
 import { openAppMenu } from '#tests/helpers/menu'
+
+test('closing the recovery offer during an existing-file read retains the pending restoration', async ({
+  page
+}) => {
+  const state = await prepareFileDecisions(page)
+  await decideFile(page, 'Cancel')
+  await reloadRecovery(page)
+  const held = await holdUnrelatedRestore(page)
+  try {
+    await recoveryRow(page, 'unrelated-file')
+      .getByRole('button', { name: 'Restore', exact: true })
+      .click()
+    await expect.poll(() => held.evaluate((gate) => gate.started())).toBe(true)
+    expect(await recoveryBytes(page)).toEqual(state.both)
+    await page.getByRole('alertdialog').getByRole('button', { name: 'Close', exact: true }).click()
+    await held.evaluate((gate) => gate.release())
+    await state.canvas.waitForInit()
+    await showLayers(page)
+    await expect(page.getByTestId('layers-item').filter({ hasText: UNRELATED_FILE })).toHaveCount(2)
+    expect(await recoveryBytes(page)).toEqual(state.both)
+    expect(await readOwnedFile(page, TARGET_FILE)).toEqual(state.targetOriginal)
+    expect(await readOwnedFile(page, UNRELATED_FILE)).toEqual(state.unrelatedOriginal)
+    state.canvas.assertNoErrors()
+  } finally {
+    await held.evaluate((gate) => gate.restore())
+    await held.dispose()
+  }
+})
 
 for (const decision of ['Save', 'Save As', 'Cancel', 'Close', 'Discard'] as const) {
   test(`${decision} on a recovered file preserves unrelated file bytes and editable recovery`, async ({
