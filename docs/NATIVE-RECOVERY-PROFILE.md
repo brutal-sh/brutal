@@ -1,6 +1,6 @@
 # Isolated native recovery acceptance
 
-Current qualification: **Verify**. The 2026-11-12 A/B control disproves cross-profile storage separation in the earlier host. Retain historical same-profile observations below; fresh acceptance requires [TEST-NATIVE-STORE-ISOLATION](NATIVE-STORE-ISOLATION.md) and rerun recovery/panel outcomes. No normal user profile is read or altered.
+Current qualification: **Verify**. The 2026-11-12 A/B control disproves cross-profile storage separation in the earlier host. Retain historical same-profile observations below; the corrected [namespace prerequisite](NATIVE-STORE-ISOLATION.md) is now qualified, while this card retains its own recovery/panel outcomes. The test-host correction does not migrate or clear normal document/recovery stores or credentials; the normal-app UI incident and preference-preservation limit are recorded in the linked isolation report.
 
 The corrected candidate passes the actual A/B namespace control and fresh three-process existing-file journey; [current evidence and native limitations](NATIVE-STORE-ISOLATION.md) remain separate from the historical receipt below. Full native/profile acceptance remains Verify.
 

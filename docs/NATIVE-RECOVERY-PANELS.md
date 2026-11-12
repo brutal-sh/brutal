@@ -1,6 +1,6 @@
 # Native recovery panels
 
-Current qualification: **Verify**. The 2026-11-12 A/B control disproves cross-profile storage separation in the earlier host. Retain historical same-profile observations below; fresh acceptance requires [TEST-NATIVE-STORE-ISOLATION](NATIVE-STORE-ISOLATION.md) and rerun recovery/panel outcomes. No normal user profile is read or altered.
+Current qualification: **Verify**. The 2026-11-12 A/B control disproves cross-profile storage separation in the earlier host. Retain historical same-profile observations below; the corrected [namespace prerequisite](NATIVE-STORE-ISOLATION.md) is now qualified, while this card retains its own recovery/panel outcomes. The test-host correction does not migrate or clear normal document/recovery stores or credentials; the normal-app UI incident and preference-preservation limit are recorded in the linked isolation report.
 
 TEST-RECOVERY-NATIVE-PANELS remains Verify. Native Restore and Save As cancellation/success execute; visible read-only Save refusal and retry remain unexecuted because macOS locks before the Save action. The normal installed app remains unchanged.
 
