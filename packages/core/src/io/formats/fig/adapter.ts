@@ -28,7 +28,7 @@ export const figFormat: IOFormatAdapter<'fig'> = {
     return lowerExt(fileName) === 'fig'
   },
   async readDocument(input) {
-    const data = input.data.slice().buffer
+    const data = new Uint8Array(input.data).buffer
     const graph = await parseFigFile(data, { populate: 'first-page' })
     return { graph, sourceFormat: 'fig' }
   },
