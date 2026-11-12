@@ -1,9 +1,11 @@
 import { afterAll, describe, expect, test } from 'bun:test'
-import { mkdtemp, mkdir, rm, symlink, writeFile } from 'node:fs/promises'
+import { mkdtemp, mkdir, rename, rm, symlink, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
 import { toUint8Array } from 'js-base64'
+
+import { IORegistry, penFormat } from '@open-pencil/core/io'
 
 import { documentAssetReader, loadDocument } from '#cli/headless'
 
@@ -61,5 +63,53 @@ describe('loadDocument — .pen images', () => {
     expect(graph.getNode('inside')?.fills[0]?.type).toBe('IMAGE')
     expect(graph.getNode('parent')?.fills).toEqual([])
     expect(graph.getNode('linked')?.fills).toEqual([])
+  })
+})
+
+describe('loadDocument — relocated images', () => {
+  test('reopens relative images after relocating the whole folder and exports without source paths', async () => {
+    const original = join(root, 'relocate-original')
+    const moved = join(root, 'relocate-moved')
+    await mkdir(join(original, 'images'), { recursive: true })
+    await writeFile(join(original, 'images', 'inside.png'), PNG)
+    await writeFile(
+      join(original, 'document.pen'),
+      JSON.stringify({
+        version: '2.22',
+        children: [
+          {
+            id: 'portable-image',
+            type: 'rectangle',
+            width: 20,
+            height: 10,
+            fill: { type: 'image', url: './images/inside.png' }
+          }
+        ]
+      })
+    )
+    const before = await loadDocument(join(original, 'document.pen'))
+    const fill = before.getNode('portable-image')?.fills[0]
+    if (fill?.type !== 'IMAGE' || !fill.imageHash) throw new Error('Missing loaded image paint')
+    expect(before.images.get(fill.imageHash)).toEqual(PNG)
+    await rename(original, moved)
+    const after = await loadDocument(join(moved, 'document.pen'))
+    expect(after.getNode('portable-image')?.fills).toEqual([fill])
+    expect(after.images.get(fill.imageHash)).toEqual(PNG)
+    const exported = await new IORegistry([penFormat]).writeDocument('pen', after)
+    if (typeof exported.data !== 'string') throw new Error('Expected portable JSON document')
+    expect(exported.data).not.toContain(original)
+    expect(exported.data).not.toContain(moved)
+    expect(exported.data).not.toContain(root)
+    await writeFile(join(moved, 'saved.pen'), exported.data)
+    const reopened = await loadDocument(join(moved, 'saved.pen'))
+    // Saved data URLs keep image content; their transient source-file provenance is absent.
+    expect(reopened.getNode('portable-image')?.fills[0]).toMatchObject({
+      type: 'IMAGE',
+      imageHash: fill.imageHash,
+      imageScaleMode: 'FILL',
+      opacity: 1,
+      visible: true
+    })
+    expect(reopened.images.get(fill.imageHash)).toEqual(PNG)
   })
 })
