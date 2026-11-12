@@ -85,3 +85,7 @@ power-loss durability, a native Tauri restart, WebKit process-loss behavior or m
 actual Pen recovery states. Those FILE-07 gates stay open while native access is
 blocked. Receipts stay private under
 `local-evidence/claude-brand-review-2026-11-11/recovery-process-loss-*`.
+
+## Native persistent-profile candidate
+
+The isolated physical-process recovery runner and its refusal boundaries are documented in [NATIVE-RECOVERY-PROFILE.md](NATIVE-RECOVERY-PROFILE.md). Pure Rust and owned-process controls have executed; native WebView persistence and the three-process journey remain unexecuted while the desktop is locked. FILE-07 remains Verify. Use the standalone helper only after building the separate native-test host; preserve its retained test-owned marker/store and all normal profiles.
