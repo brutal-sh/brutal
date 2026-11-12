@@ -9,7 +9,11 @@ const splitTree = computed(() => store.splitTree.value)
 </script>
 
 <template>
-  <div data-slot="canvas-split-root" class="relative flex min-h-0 min-w-0 flex-1 overflow-hidden">
+  <div
+    data-slot="canvas-split-root"
+    :data-split="store.visiblePaneCount.value > 1"
+    class="relative flex min-h-0 min-w-0 flex-1 overflow-hidden data-[split=true]:mt-[50px] data-[split=true]:mr-[229px] data-[split=true]:ml-[52px]"
+  >
     <CanvasSplitNode :node="splitTree" />
   </div>
 </template>
