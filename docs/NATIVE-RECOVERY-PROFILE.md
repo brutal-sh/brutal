@@ -1,8 +1,8 @@
 # Isolated native recovery acceptance
 
-Current qualification: **Verify**. The 2026-11-12 A/B control disproves cross-profile storage separation in the earlier host. Retain historical same-profile observations below; the corrected [namespace prerequisite](NATIVE-STORE-ISOLATION.md) is now qualified, while this card retains its own recovery/panel outcomes. The test-host correction does not migrate or clear normal document/recovery stores or credentials; the normal-app UI incident and preference-preservation limit are recorded in the linked isolation report.
+Current qualification: **bounded Executed** for TEST-RECOVERY-NATIVE-PROFILE after the fresh corrected-store three-process journey and independent review below. The earlier A/B failure and historical same-profile observations remain versioned; the [namespace prerequisite](NATIVE-STORE-ISOLATION.md) is separately qualified. The test-host correction does not migrate or clear normal document/recovery stores or credentials.
 
-The corrected candidate passes the actual A/B namespace control and fresh three-process existing-file journey; [current evidence and native limitations](NATIVE-STORE-ISOLATION.md) remain separate from the historical receipt below. Full native/profile acceptance remains Verify.
+The original four profile criteria are satisfied within their isolated native-test scope. Actual OS panel/refusal/retry results are separately recorded in [native recovery panels](NATIVE-RECOVERY-PANELS.md); corresponding current Pen states, normal-installed delivery and full FILE-07/08 acceptance remain open. The normal-app UI incident and preference-preservation boundary remain in the isolation report.
 
 ## Historical same-profile receipt
 
@@ -55,3 +55,11 @@ The runner creates a fresh private profile and synthetic external `.pen` file. F
 This is a native file association, recovery, Save and process-persistence control. Shape creation and snapshot timing use existing editor methods; the Save/Duplicate/Undo keys use WebDriver. It does not establish physical pointer/keyboard acceptance, automatic backup debounce, OS chooser interactions, normal-installed-app behavior, power-loss durability or actual Pen visual/functionality parity. Those FILE-07 criteria remain open after this bounded runner passes.
 
 Owned Rust formatting passes. The whole-repository `cargo fmt --check` retains a separate pre-existing assertion-wrap difference in `desktop/src/agents/lookup.rs`; that unrelated source is unchanged. The original failed format receipt is retained.
+
+## Fresh corrected-store journey — 2026-11-12
+
+Current source `6bb36166a` plus the compact pane-header candidate builds the separate native-test host. Its raw executable hashes `5add27fc65cb3cb8e5be7d1805afd02b80f7a4b3200c559620cc697765e9b915`. The canonical three-process runner exits zero with PIDs95877/95896/95913 on one fresh, actual persistent WebKit store. Original bytes remain unchanged until explicit Save; independent public decoding verifies two64×64rectangles at0,0/120,120. Third reopening has no recovery offer or backup and executes Duplicate/Undo. The receipt follows guarded teardown.
+
+Independent review maps the original four Done criteria to this execution and retained checks for unchanged owners: all69native/config source hashes and the six restart helpers match current HEAD. The corrected namespace prerequisite is bounded Executed. This restores TEST-RECOVERY-NATIVE-PROFILE to bounded Executed; prior same-profile results do not regain the disproved cross-profile claim. Private evidence: `local-evidence/native-recovery-reentry-2026-11-12/{formal-profile-receipt.json,formal-profile.log,native-source-freeze.json,independent-formal-review.json}`.
+
+Real native OS picker/refusal/retry outcomes now have separate [panel evidence](NATIVE-RECOVERY-PANELS.md). Neither result accepts normal-installed recovery, physical input, power-loss durability or matched current Pen recovery states.

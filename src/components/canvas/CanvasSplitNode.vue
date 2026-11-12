@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import { useElementSize } from '@vueuse/core'
+import { sum } from 'es-toolkit'
 import { SplitterGroup, SplitterPanel, SplitterResizeHandle } from 'reka-ui'
 import { tv } from 'tailwind-variants'
-import { computed } from 'vue'
+import { computed, useTemplateRef } from 'vue'
 
 import { useEditorStore } from '@/app/editor/active-store'
 import type { CanvasSplitNode } from '@/app/editor/panes/split-tree'
@@ -16,6 +18,25 @@ const { node } = defineProps<{
 const store = useEditorStore()
 const direction = computed(() => (node.type === 'split' ? node.direction : 'horizontal'))
 const splitterStyles = tv(splitterTheme)
+const group = useTemplateRef<InstanceType<typeof SplitterGroup>>('group')
+const { width, height } = useElementSize(() => {
+  const element: unknown = group.value?.$el
+  return element instanceof HTMLElement ? element : null
+})
+// Keep room for the 24px actions, padding and the compact two-row header.
+const MIN_PANE_WIDTH = 40
+const MIN_PANE_HEIGHT = 56
+
+function minimumExtent(child: CanvasSplitNode, axis: 'horizontal' | 'vertical'): number {
+  if (child.type === 'pane') return axis === 'horizontal' ? MIN_PANE_WIDTH : MIN_PANE_HEIGHT
+  const extents = child.children.map((item) => minimumExtent(item, axis))
+  return child.direction === axis ? sum(extents) : Math.max(...extents)
+}
+
+function minimumSize(child: CanvasSplitNode) {
+  const extent = direction.value === 'horizontal' ? width.value : height.value
+  return extent > 0 ? Math.max(12, (minimumExtent(child, direction.value) / extent) * 100) : 12
+}
 
 function setLayout(sizes: number[]) {
   if (node.type === 'split') store.setSplitSizes(node.id, sizes)
@@ -34,6 +55,7 @@ function setLayout(sizes: number[]) {
 
   <SplitterGroup
     v-else
+    ref="group"
     :id="node.id"
     :direction="direction"
     class="flex min-h-0 min-w-0 flex-1 overflow-hidden"
@@ -46,7 +68,7 @@ function setLayout(sizes: number[]) {
       <SplitterPanel
         :id="`${node.id}-panel-${index}`"
         :default-size="node.sizes[index]"
-        :min-size="12"
+        :min-size="minimumSize(child)"
         class="flex min-h-0 min-w-0 overflow-hidden"
       >
         <CanvasSplitNode :node="child" />

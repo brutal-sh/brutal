@@ -5,38 +5,23 @@
   "method": "Computer Use native accessibility and screenshot; existing installed app. No user draft changed.",
   "observed": {
     "route": "pencil://editor/#/home",
-    "homeTabs": [
-      "Recents",
-      "Drafts",
-      "Design Systems"
-    ],
-    "draftContextMenu": [
-      "Open",
-      "Reveal in Finder",
-      "Rename",
-      "Delete Draft"
-    ],
+    "homeTabs": ["Recents", "Drafts", "Design Systems"],
+    "draftContextMenu": ["Open", "Reveal in Finder", "Rename", "Delete Draft"],
     "fileMenu": [
       "New File",
-      "Open\u2026",
+      "Open…",
       "Open Recent",
       "Home",
-      "Import Image/SVG/Figma\u2026",
-      "Export Selection to\u2026",
-      "Export Snapshot\u2026",
-      "Guide: How to Import from Figma\u2026",
-      "Install pen CLI\u2026",
+      "Import Image/SVG/Figma…",
+      "Export Selection to…",
+      "Export Snapshot…",
+      "Guide: How to Import from Figma…",
+      "Install pen CLI…",
       "Save",
-      "Save As\u2026",
+      "Save As…",
       "Close Tab"
     ],
-    "exportSubmenu": [
-      "PDF",
-      "SVG",
-      "PNG",
-      "JPEG",
-      "WebP"
-    ]
+    "exportSubmenu": ["PDF", "SVG", "PNG", "JPEG", "WebP"]
   },
   "notExecuted": [
     "Draft deletion/rename",
@@ -65,5 +50,30 @@
   "privateReceipts": [
     "local-evidence/claude-brand-review-2026-11-11/pen-draft-menu-native-2026-11-12.json",
     "local-evidence/claude-brand-review-2026-11-11/pen-native-reference-rea-refresh.json"
-  ]
+  ],
+  "freshNativePanels": {
+    "version": "1.2.22",
+    "evidence": "local-evidence/native-recovery-reentry-2026-11-12/current/",
+    "saveAsTitle": "Save .pen file as…",
+    "executed": [
+      "Settled owned-copy Layers shows three rectangles",
+      "Actual Save As Cancel preserves both source hashes",
+      "Separate-copy native Save As",
+      "Owned read-only edit and permission-denied Save",
+      "Restored permissions and explicit Save retry writes four rectangles",
+      "Close only clean owned-copy tab"
+    ],
+    "permissionFeedback": "Native critical alert names the file, explains permission refusal, and suggests File > Save As.",
+    "allocatedGaps": {
+      "task": "FILE-NATIVE-SAVE-UI",
+      "url": "https://trello.com/c/ysa9PnRd",
+      "states": ["Format-specific Save As title", "Native actionable permission-error feedback"]
+    },
+    "limitations": [
+      "Initial old inactive WebView upgrade notice does not establish a current editor block.",
+      "Blank alert screenshot is not matched-pixel evidence; native accessibility labels/state are retained.",
+      "No Pen crash-recovery, normal-installed Open Pen, hardware input or full parity acceptance.",
+      "Raw paint NORMAL versus omitted declaration differs; equivalent unchanged default is explicit, not byte/raster identity."
+    ]
+  }
 }
