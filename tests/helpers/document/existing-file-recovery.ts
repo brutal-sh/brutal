@@ -82,6 +82,10 @@ async function reloadAndRestore(page: Page) {
   } finally {
     page.off('dialog', acceptUnload)
   }
+  await restoreExistingFileRecovery(page)
+}
+
+export async function restoreExistingFileRecovery(page: Page) {
   const recovery = page.getByRole('alertdialog', { name: 'Recover unsaved work' })
   await expect(recovery).toBeVisible()
   await recovery.getByRole('button', { name: 'Restore', exact: true }).click()
@@ -89,7 +93,7 @@ async function reloadAndRestore(page: Page) {
   await showLayers(page)
 }
 
-export async function recoverExistingFile(page: Page) {
+export async function prepareExistingFileRecovery(page: Page) {
   const canvas = await openOwnedFile(page)
   const original = await readOwnedFile(page)
   const autosave = (await openAppMenu(page, 'File')).getByRole('menuitemcheckbox', {
@@ -108,6 +112,11 @@ export async function recoverExistingFile(page: Page) {
   const home = page.getByTestId('recent-files-home')
   await home.getByRole('tab', { name: 'Drafts', exact: true }).click()
   await expect(home.getByText('No drafts yet', { exact: true })).toBeVisible()
+  return { canvas, original }
+}
+
+export async function recoverExistingFile(page: Page) {
+  const { canvas, original } = await prepareExistingFileRecovery(page)
   await reloadAndRestore(page)
   await expect(page.getByTestId('layers-item')).toHaveCount(2)
   expect(await readOwnedFile(page)).toEqual(original)

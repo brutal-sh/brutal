@@ -43,3 +43,45 @@ The expanded owner run passes 177 cases and 470 assertions across 27 files. All 
 Restored files defer disk watching until a clean successful Save; cancelled/refused writes retain that protection. An executed control first exposes the missing restart and then passes after repair. Three original watcher-lifetime controls fail before generation guards and pass afterward: stopped pending setup is cleaned up, late setup cannot replace the active watcher, and retired callbacks cannot reload or stop a replacement. All twenty-four changed runtime modules satisfy the strict size/complexity gate. Independent current source review finds no additional actionable regression.
 
 Computer Use is checked again after this validation and reports the Mac locked; native comparison cannot continue in this state. The complete new `bun run check` exits zero, including zero duplicate-code clones. The final owner run passes 177 cases and 470 assertions; four real-file browser controls pass again after the canonical helper move and test type correction; the earlier fourteen-case cohort retains legacy Chromium/WebKit coverage. Frozen executed, working and staged source/control hashes match. Private branch and draft PR independently read back b519e79f6286f051b447213729872f7f23c250a3. Actions are disabled; the normal app and all 17 protected file hashes/modes remain unchanged. This accepts only the bounded child; full native/reference acceptance remains open. No full feature, FILE-07, parity or beta acceptance follows from these interim controls.
+
+## Browser process-loss control — 2026-11-12
+
+The new control executes a real SIGKILL of a runner-owned Chromium process after
+an existing-file edit has persisted its separate recovery copy. Its fresh persistent
+profile lives inside test output; no normal browser or application profile is used.
+The PID is reacquired through that context's browser CDP session and checked against
+the unique profile path in the OS command line before interruption. Launch/context
+settings come from the canonical runner. The initial synthetic onboarding state is
+installed only in the first process. Later launches retain actual profile storage,
+using [Playwright's persistent context](https://playwright.dev/docs/api/class-browsertype#browser-type-launch-persistent-context).
+
+The first executed macOS control passes with Chromium 158.0.8127.18: three distinct
+browser PIDs use the same owned profile, and the killed PID matches the first.
+The second process sees the same 29,507-byte backup digest and unchanged original
+before Restore. Public Restore retains two shapes; explicit Save writes two decoded
+64 × 64 rectangles to the original OPFS file. A third process has no recovery prompt
+or backup, reopens that saved file and executes Duplicate to three shapes and Undo
+to two. The existing reload helper keeps its prior behavior by sharing preparation
+and Restore phases. No production recovery code changes for this test.
+
+Two initial fixture failures remain retained and stop before interruption: persistent
+Chromium cannot supply its command line through the selected CDP method, and an
+incorrect Browser event-wait method is then replaced with the actual `once` event.
+The OS identity check adds no launch flag; the three-launch case starts with its own
+45-second budget and changes no existing case timeout or assertion. The successful
+run has no skip, retry or flaky case. The POSIX identity guard is not Windows coverage.
+Independent review finds no actionable source/control defect. Test types and all
+three touched TypeScript modules pass strict 300/50/10/4/4 checks. The final combined
+cohort passes all 19 cases (17 Chromium and two named WebKit), including the new
+process-loss path, existing reload/cancellation/refusal/history cases and storage
+Save To. It has no retry, skip or flaky case; earlier unrelated mixed-menu failures
+remain unclassified. Frozen candidate hashes match after the run. The complete static gate subsequently
+exits zero with zero duplicate-code clones; no full-unit or strict Note success is
+claimed by this test-only change.
+
+The chooser returns a real runner-owned OPFS handle; it does not execute an OS file
+panel or external-file permission prompt. Browser process loss does not establish
+power-loss durability, a native Tauri restart, WebKit process-loss behavior or matched
+actual Pen recovery states. Those FILE-07 gates stay open while native access is
+blocked. Receipts stay private under
+`local-evidence/claude-brand-review-2026-11-11/recovery-process-loss-*`.
