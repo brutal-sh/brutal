@@ -1,6 +1,8 @@
 import { writeFile } from 'node:fs/promises'
 
-import type { JSHandle } from '@playwright/test'
+import type { JSHandle, Page } from '@playwright/test'
+
+import { PAGE_DEFAULT_BACKGROUNDS } from '@open-pencil/core/constants'
 
 import { expect, test, useEditorSetupWithClear } from '#tests/e2e/fixtures'
 import { CanvasHelper } from '#tests/helpers/canvas'
@@ -8,6 +10,41 @@ import { createCanvasResourceProbe } from '#tests/helpers/canvas/resources'
 import { openAppMenu } from '#tests/helpers/menu'
 
 const ctx = useEditorSetupWithClear()
+
+async function expectDarkResourceDrawing(page: Page, canvas: CanvasHelper) {
+  await page.evaluate((color) => {
+    const store = window.openPencil?.getStore?.()
+    if (!store) throw new Error('Active resource fixture missing')
+    store.setPageColor(color)
+  }, PAGE_DEFAULT_BACKGROUNDS.dark)
+  await canvas.drawRect(120, 100, 100, 80)
+  await canvas.waitForRender()
+  const bounds = await page.getByTestId('canvas-area').boundingBox()
+  if (!bounds) throw new Error('Active canvas bounds missing')
+  expect(
+    await page.screenshot({
+      clip: { x: bounds.x + 110, y: bounds.y + 90, width: 120, height: 125 }
+    })
+  ).toMatchSnapshot('reused-canvas-drawing.png')
+}
+
+async function holdCanvasKitLoad(page: Page) {
+  let release: () => void = () => undefined
+  const loading = new Promise<void>((resolve) => {
+    release = resolve
+  })
+  let intercepted = 0
+  await page.route('**/*canvaskit*.wasm*', async (route) => {
+    if (route.request().resourceType() === 'script') {
+      await route.continue()
+      return
+    }
+    intercepted++
+    await loading
+    await route.continue()
+  })
+  return { release, intercepted: () => intercepted }
+}
 
 test('switching documents reuses the canvas context after releasing the retired renderer', async () => {
   const { page, canvas } = ctx
@@ -66,15 +103,7 @@ test('repeated document changes keep the active canvas drawing without exhaustin
       canvas.assertNoErrors()
       expect(await contexts.evaluate((probe) => probe.read().length)).toBeLessThanOrEqual(3)
     }
-    await canvas.drawRect(120, 100, 100, 80)
-    await canvas.waitForRender()
-    const bounds = await page.getByTestId('canvas-area').boundingBox()
-    if (!bounds) throw new Error('Active canvas bounds missing')
-    expect(
-      await page.screenshot({
-        clip: { x: bounds.x + 110, y: bounds.y + 90, width: 120, height: 125 }
-      })
-    ).toMatchSnapshot('reused-canvas-drawing.png')
+    await expectDarkResourceDrawing(page, canvas)
     await page.locator(`[id="${originalTab}"]`).click()
     await canvas.waitForInit()
     expect(
@@ -101,32 +130,19 @@ test('repeated document changes keep the active canvas drawing without exhaustin
 test('switching documents while CanvasKit loads does not initialize retired canvases', async ({
   page
 }) => {
-  let release: () => void = () => undefined
-  const loading = new Promise<void>((resolve) => {
-    release = resolve
-  })
-  let intercepted = 0
-  await page.route('**/*canvaskit*.wasm*', async (route) => {
-    if (route.request().resourceType() === 'script') {
-      await route.continue()
-      return
-    }
-    intercepted++
-    await loading
-    await route.continue()
-  })
+  const loading = await holdCanvasKitLoad(page)
   const canvas = new CanvasHelper(page)
   let contexts: JSHandle<ReturnType<typeof createCanvasResourceProbe>> | undefined
   try {
     await page.goto('/?test', { waitUntil: 'domcontentloaded' })
-    await expect.poll(() => intercepted).toBeGreaterThan(0)
+    await expect.poll(() => loading.intercepted()).toBeGreaterThan(0)
     contexts = await page.evaluateHandle(createCanvasResourceProbe)
     expect(await contexts.evaluate((probe) => probe.read().length)).toBe(0)
     await test.step('create three documents before WASM resumes', async () => {
       for (let index = 0; index < 3; index++)
         await page.getByTestId('tabbar-new').click({ timeout: 3000 })
     })
-    release()
+    loading.release()
     await expect(page.locator('canvas[data-ready="1"]')).toHaveCount(2, { timeout: 5000 })
     await canvas.waitForInit()
     await expect(page.locator('canvas[data-ready="1"]')).toHaveCount(2)
@@ -151,7 +167,7 @@ test('switching documents while CanvasKit loads does not initialize retired canv
       })
     throw error
   } finally {
-    release()
+    loading.release()
     if (contexts && !page.isClosed()) {
       await contexts.evaluate((probe) => {
         probe.restore()
