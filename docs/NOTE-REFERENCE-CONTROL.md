@@ -193,3 +193,61 @@ Commit `5ca1e4344` is checked in a separate checkout without the unrelated icon 
 The strict Core comparison is rerun unchanged and still reports 12,792 differing channels. At that candidate publication, full `bun run check` stops at the native type gate: 67 errors in eight other native test files; the new Note test/declarations report none. These failures remain unaccepted. VERIFY-NATIVE-TYPES becomes the one Building card; the Note/format acceptance work returns to Backlog with its observations and remaining gates preserved. No production installation, merge or release occurs.
 
 The later [native type control](NATIVE-TEST-TYPE-CONTROL.md) clears those 67 errors without changing app behavior or assertions. Its fresh-process run repeats the Note component/history workflow successfully, alongside 21 other native cases. The initial retained-app batch remains a separate open reliability gate. Strict Note raster and the other Note acceptance limits above remain unchanged.
+
+## Core coverage investigation, 2026-11-12
+
+The unchanged canonical Core control still requires zero differing channels for both
+imported and saved/reopened Notes. At source `f6edb506f`, its software export differs
+from the retained native reference by 12,792 channels. The full unit run records
+10,155 passes, one platform skip and this one failure. A paired original/current
+Figma API control produces identical serialization, PNG and decoded RGBA hashes;
+that refactor neither causes nor repairs the Note mismatch.
+
+The first gold text region has five reference colors: background plus four ink
+coverage levels. The software output has 210 colors there; purple text has five
+versus 207. The reference rounded corner has 14 colors versus 40 in software, so
+uniformly quantizing every edge is not supported by these observations.
+
+A separate probe samples the unchanged merged glyph paths with `Path.contains`.
+After subtracting the reference frame origin `(0, 260)`, all measured points remain
+inside their owned Note palette. None of the three four-point patterns reproduces
+the reference: the fewest differing pixels are 166 for gold, 78 for purple and 437
+for the long Note, with different best patterns. The earlier page-coordinate probe
+is invalid and retained separately; its out-of-frame values are not evidence.
+This does not prove GPU tessellation, sample positions or font geometry as the cause.
+
+Hashed static anchors in the actual Pen 1.2.22 renderer show an offscreen target
+branch requesting up to four samples and an onscreen WebGL context configured
+without browser antialiasing. These declarations do not establish which target
+produced the reference PNG. Our headless owner uses a CPU surface and software
+supersampling; the app uses a GPU surface. A fresh unchanged Chromium/WebKit pair also fails at 1,083 and 21 differing
+channels (361 and seven pixels), reproducing the retained results. Both cases
+reach their post-reopen data checks before the strict PNG assertion. No production
+correction, tolerance or oracle change follows from this investigation. Earlier rejected scale-one and
+per-glyph trials remain rejected. Backend/coordinate discrimination and exact Core,
+browser and native acceptance stay open. Private receipts are
+`local-evidence/claude-brand-review-2026-11-11/note-core-*` and
+`note-reference-export-backend-anchors.json`.
+
+The next diagnostic records one scene picture per browser instance and replays that
+same object without resampling onto GPU and software surfaces at one-to-one scale.
+Both browsers have identical Note path-command/font-byte hashes, transforms and
+colors, and produce identical software output. Their GPU outputs exactly reproduce
+the canonical PNGs above. This demonstrates a backend-dependent contribution in our
+output with the recorded scene held fixed. Actual replay targets report GPU/one
+sample versus software/zero; that does not identify internal coverage policy or the
+reference-producing backend. Software two-times replay with linear downsampling
+still differs by 12,790 channels, two fewer than the headless owner; that remaining
+configuration difference stays open. Receipts: `note-backend-replay-*` in the same
+private evidence folder. Temporary diagnostic specs are removed after byte-identity
+checks; the installed app, tracked runtime and strict tests remain unchanged.
+
+A three-arm replay then holds glyph x, paint, rounded baselines and line membership
+fixed: the original merged path, separate line paths with baselines baked into their
+commands, and those same separate lines at local y-zero with translated baselines.
+The merged controls reproduce the canonical PNG hashes. The two separate-line arms
+produce identical PNGs within each browser and worsen the mismatch to 3,048 channels
+in Chromium and 2,286 in WebKit. This rejects baseline coordinate representation as
+a correction for that decomposition; it does not isolate Skia's internal algorithm.
+Neither variant enters production. `note-line-three-replay-summary.json` retains
+those results, with the earlier two-arm trial kept separately.
