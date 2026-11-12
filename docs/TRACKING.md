@@ -6,7 +6,7 @@ Repository: [private Open Pen repository](https://github.com/jpoindexter/open-pe
 Board: [Open Pen — independent design editor](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor), private.
 
 The [PRD](PRD.md) owns the outcome, constraints and release criteria.
-The [task index](TASKS.md) links all 473 execution cards; the [modularity audit](MODULARITY.md)
+The [task index](TASKS.md) links all 474 execution cards; the [modularity audit](MODULARITY.md)
 records the measured review queue. Requirements come from the [feature catalog](pen-feature-reference/README.md)
 and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), preserving historical Pen 1.2.21 evidence and the current [1.2.22 update inventory](pen-feature-reference/update-1.2.22-2026-11-09.md).
 
@@ -14,7 +14,7 @@ The original 2026-11-11 audit readback contains 479 cards: 461 execution tasks a
 
 After the audit, private source c37b11ba2 publishes the qualified AssetsPanel extraction and fixtures. Source 543ca9bd8 publishes the bounded browser-height repair; f606d6de9 repairs the empty-endpoint updater action. Their wider reference/native gates remain separate. The normal installation is unchanged.
 
-The current readback contains 491 cards: 473 execution tasks and 18 milestones. Lists are 379 Backlog, 0 Ready, 1 Building (MOD-01), 25 Verify and 68 Executed. VERIFY-INSPECTOR-CONTROLS is Backlog while its required actual Pen measurement is inaccessible. Ready is scheduling, not acceptance.
+The current readback contains 492 cards: 474 execution tasks and 18 milestones. Lists are 379 Backlog, 0 Ready, 1 Building (TEST-CANVAS-LIGHT-PAGE), 26 Verify and 68 Executed. VERIFY-INSPECTOR-CONTROLS is Backlog while its required actual Pen measurement is inaccessible. Ready is scheduling, not acceptance.
 
 The bounded recovery/source/tab extractions publish at b0ad9f66a, f0f5411f6 and 5886a5766. FIRST-DRAFT-REFRESH and TEST-RECOVERY-CHROMIUM are accepted at 719438873 and b4e0aaf52. FILE-RECOVERY-LOCAL is accepted at b519e79f6: 177 owner cases/470 assertions, strict checks on 24 runtime modules, controlled real OPFS/IndexedDB recovery and explicit original-file write-back, cancellation/refusal/discard, history and editable reopening. [Recovery ownership and retained failures](RECOVERY-OWNERS.md) preserve the original zero-backup control and earlier engine crashes.
 
@@ -22,11 +22,11 @@ Private source adcff38a1 adds the guarded browser-process-loss control without c
 
 Storage Home routing publishes at 0cd791ab0; remaining I/O extraction at 80c7d7336; the shared FIG byte-view correction at 2193a3068; and the strengthened Save To control at e936ede11. [Storage evidence](STORAGE-HOME.md) and [I/O ownership](IO-FORMATS.md) retain the actual PUT-body decode, selected-layer editable reopening and controlled-provider/cache limits. Earlier Commands/File pointer failures remain unclassified. Passing recovery cohorts do not establish a menu cause, repair or long-run stability; [the menu control](COMMAND-MENU-CONTROL.md) stays binding.
 
-MOD-15 is bounded Executed at f6edb506f: five runtime owners retain public descriptors/exports, 980 owner cases/3,770 assertions, actual browser/CLI history/save/reopen controls and identical paired browser PNGs. [Modularity evidence](MODULARITY.md) records its strict/static qualification. MOD-01 now owns the next scene-dispatch extraction, with before/after rendering and public-method baselines required before edits.
+MOD-15 is bounded Executed at f6edb506f: five runtime owners retain public descriptors/exports, 980 owner cases/3,770 assertions, actual browser/CLI history/save/reopen controls and identical paired browser PNGs. [Modularity evidence](MODULARITY.md) records its strict/static qualification. MOD-01 publishes at c28fb679e and stays Verify for native/reference output. Twelve runtime modules pass strict 300/50/10/4/4; public renderer files/descriptors are unchanged, 334 owner cases pass, and 20 recorded-reference plus 12 browser outputs match exactly before/after. All original reference/snapshot failures remain recorded. The complete static gate passes with zero clones, and the final 19-case recovery cohort passes again in 139.518 seconds. [Scene ownership](SCENE-OWNERSHIP.md) retains the source/control identity and limits. TEST-CANVAS-LIGHT-PAGE is the sole Building card for the measured test-helper default mismatch; it does not change production dark defaults or accept Pen pixels.
 
-The latest complete unit receipt remains 10,155 passes, one platform skip and one strict Note failure (12,792 differing channels). Original/candidate Figma API controls have identical Note serialization/PNG/RGBA hashes. Current browser Note controls still fail at 1,083 Chromium/21 WebKit channels. [Same-picture backend and three-arm line controls](NOTE-REFERENCE-CONTROL.md) establish no qualified correction; DRAW-16-NOTE-RASTER-CORE is unresolved in Backlog. Full unit, rendering, native and Pen parity success remain unaccepted.
+The latest complete unit receipt at c28fb679e retains 10,155 passes, one platform skip and one strict Note failure (12,792 differing channels). Original/candidate Figma API controls have identical Note serialization/PNG/RGBA hashes. Current browser Note controls still fail at 1,083 Chromium/21 WebKit channels. [Same-picture backend and three-arm line controls](NOTE-REFERENCE-CONTROL.md) establish no qualified correction; DRAW-16-NOTE-RASTER-CORE is unresolved in Backlog. Full unit, rendering, native and Pen parity success remain unaccepted.
 
-All 473 primary milestone owners and 472 terminal dependencies are reconciled without cycles or Executed tasks with open prerequisites. All 164 catalog requirements remain allocated. Counts are not parity percentages. The original 479-card audit stays dated; current reference is actual Pen 1.2.22. Latest Computer Use again reports the Mac locked. Normal app, saved workspace/transcript, credentials/recovery and protected icon work are preserved. Full parity and public beta remain open.
+All 474 primary milestone owners and 473 terminal dependencies are reconciled without cycles or Executed tasks with open prerequisites. All 164 catalog requirements remain allocated. Counts are not parity percentages. The original 479-card audit stays dated; current reference is actual Pen 1.2.22. Latest Computer Use again reports the Mac locked. Normal app, saved workspace/transcript, credentials/recovery and protected icon work are preserved. Full parity and public beta remain open.
 
 ## Board organization
 
