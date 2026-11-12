@@ -1,4 +1,4 @@
-import { expect, type Page } from '@playwright/test'
+import { expect, test, type Page } from '@playwright/test'
 
 import { BUILTIN_IO_FORMATS, IORegistry } from '@open-pencil/core/io'
 
@@ -76,6 +76,27 @@ export async function prepareFileDecisions(page: Page) {
   await reloadRecovery(page)
   expect(await recoveryBytes(page)).toEqual(both)
   return { canvas, both, unrelated, targetOriginal, unrelatedOriginal }
+}
+
+/** Own the fixture's cold startup separately from the decision journey, as canvas specs do. */
+export function useFileDecisionSetup() {
+  let page: Page
+  let state: Awaited<ReturnType<typeof prepareFileDecisions>>
+  test.beforeAll(async ({ browser }) => {
+    page = await browser.newPage()
+    state = await prepareFileDecisions(page)
+  })
+  test.afterAll(async () => {
+    if (page) await page.close()
+  })
+  return {
+    get page() {
+      return page
+    },
+    get state() {
+      return state
+    }
+  }
 }
 
 export async function saveFileDecision(page: Page, saveAs = false) {
