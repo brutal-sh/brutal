@@ -117,7 +117,11 @@ export default defineConfig({
     {
       ...storybookDefaults,
       name: 'storybook-webkit',
-      testMatch: ['**/browser-height.spec.ts', '**/assets-panel.spec.ts'],
+      testMatch: [
+        '**/browser-height.spec.ts',
+        '**/assets-panel.spec.ts',
+        '**/chat-tool-titles.spec.ts'
+      ],
       use: { ...storybookDefaults.use, browserName: 'webkit' }
     }
   ],

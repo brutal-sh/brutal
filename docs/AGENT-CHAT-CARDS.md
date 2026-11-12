@@ -78,6 +78,34 @@ not test fixtures. Private receipts live in `local-evidence/skills-budget-2026-1
 Tracking: [tool titles](https://trello.com/c/oF2pQf45),
 [Codex context](https://trello.com/c/l0cEsoYm). The parent Skills and Agent-surface tasks remain open.
 
+## Remaining-state qualification — 2026-11-12
+
+The current Chromium/WebKit display matrix passes 76 cases without retries or skips: six
+long-title states at 240/480px in dark/light themes, plus all seven preexisting stories in
+both themes and engines. Pending, streaming source, error, individual Undone and grouped
+Undone states retain contained header children, semantic status and the applicable disclosure
+control. Clipped names retain the original 13px font, full hover title and keyboard-accessible
+input. Pending calls without source intentionally remain disabled; this policy is unchanged.
+The nine runtime component, theme, token and display-helper files remain byte-identical to
+the original published containment fix. No new production styling or behavior is introduced.
+
+Two further actual-app journeys execute production Core render through the real chat
+transport with a controlled model response. A test-only stream alias supplies the long visible
+name, retaining the call ID and all input/output/metadata; it runs no shell command and never
+injects an Undone marker. Canvas keyboard Undo removes the real edit and the individual card
+then shows Undone; Redo restores the edit and clears that marker. Both engines retain header
+containment and inspectable input. This closes the earlier review gap between a supplied story
+marker and whole-reply reversion. Separate review checks raw results, embedded trace source,
+both Undo images and the fixture boundary, finding no actionable defect. A formatter-only
+line wrap is recorded separately from the executed helper hash.
+
+These controls supplement the dated native and normal-installed readbacks above; they do not
+represent fresh native status-matrix or live-provider execution. The bounded tool-title task
+can close on that combined evidence. The parent Agent surface and full parity stay open.
+Current private receipts: `local-evidence/chat-title-states-2026-11-12/` and
+`local-evidence/chat-title-history-2026-11-12/`. Initial ambiguous-locator failures and the empty
+focused selection remain retained as test-probe failures, not hidden passing runs.
+
 The pre-update unsaved workspace is saved as a dated local `.fig` copy (31,645 bytes; ZIP
 integrity checked). Chat storage is backed up separately with all 45 files across three app-profile locations
 have private backups; none change during bundle replacement. Both historical recovery blobs

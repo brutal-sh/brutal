@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
+import { computed } from 'vue'
 
 import type { ToolCallPart } from '@/app/ai/chat/tool-calls/display'
 
@@ -59,16 +60,19 @@ const described = part({
 
 interface Args {
   parts: ToolCallPart[]
+  width: number
+  undone: string[]
 }
 
 const meta = {
   title: 'App/Chat/Tool Calls',
   component: ChatToolCallGroup,
-  args: { parts: [rendered] },
+  args: { parts: [rendered], width: 320, undone: [] },
   render: (args) => ({
     components: { ChatToolCallGroup },
-    setup: () => ({ args }),
-    template: '<div class="w-80"><ChatToolCallGroup v-bind="args" /></div>'
+    setup: () => ({ args, undone: computed(() => new Set(args.undone)) }),
+    template:
+      '<div :style="{ width: args.width + \'px\' }"><ChatToolCallGroup :parts="args.parts" :undone="undone" /></div>'
   })
 } satisfies Meta<Args>
 export default meta
@@ -95,4 +99,36 @@ const shell = part({
 export const LongCommand: Story = { args: { parts: [shell] } }
 export const LongCommandsGrouped: Story = {
   args: { parts: [shell, described, rendered, exported, { ...shell, toolCallId: 'last' }] }
+}
+
+export const LongPending: Story = {
+  args: {
+    parts: [part({ ...shell, state: 'input-available', output: undefined })]
+  }
+}
+export const LongStreamingSource: Story = {
+  args: {
+    parts: [
+      part({
+        ...shell,
+        state: 'input-streaming',
+        input: { code: `const command = ${JSON.stringify(command)}` },
+        output: undefined
+      })
+    ]
+  }
+}
+export const LongCommandError: Story = {
+  args: {
+    parts: [
+      part({ ...shell, state: 'output-error', errorText: 'Command failed', output: undefined })
+    ]
+  }
+}
+export const LongCommandUndone: Story = { args: { parts: [shell], undone: ['shell'] } }
+export const LongCommandsGroupedUndone: Story = {
+  args: {
+    parts: [shell, failed, described, rendered, { ...shell, toolCallId: 'last' }],
+    undone: ['shell', 'last']
+  }
 }
