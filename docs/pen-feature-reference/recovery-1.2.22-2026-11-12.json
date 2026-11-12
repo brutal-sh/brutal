@@ -1,0 +1,69 @@
+{
+  "reference": "/Applications/Pen.app",
+  "knownVersion": "1.2.22",
+  "date": "2026-11-12",
+  "method": "Computer Use native accessibility and screenshot; existing installed app. No user draft changed.",
+  "observed": {
+    "route": "pencil://editor/#/home",
+    "homeTabs": [
+      "Recents",
+      "Drafts",
+      "Design Systems"
+    ],
+    "draftContextMenu": [
+      "Open",
+      "Reveal in Finder",
+      "Rename",
+      "Delete Draft"
+    ],
+    "fileMenu": [
+      "New File",
+      "Open\u2026",
+      "Open Recent",
+      "Home",
+      "Import Image/SVG/Figma\u2026",
+      "Export Selection to\u2026",
+      "Export Snapshot\u2026",
+      "Guide: How to Import from Figma\u2026",
+      "Install pen CLI\u2026",
+      "Save",
+      "Save As\u2026",
+      "Close Tab"
+    ],
+    "exportSubmenu": [
+      "PDF",
+      "SVG",
+      "PNG",
+      "JPEG",
+      "WebP"
+    ]
+  },
+  "notExecuted": [
+    "Draft deletion/rename",
+    "Recovery process loss",
+    "Pixel measurement against current Open Pen candidate",
+    "Actual Pen crash recovery",
+    "Normal installed Open Pen flow",
+    "Matched recovery-dialog visuals",
+    "Pen native Save command and Save As cancellation"
+  ],
+  "verifiedVersion": "1.2.22",
+  "verifiedAsarSha256": "1c6d0129dc9dda08f2f0da5dde23aa8cc52df11858fec1e35cd3bd2647bcf407",
+  "reaRefresh": "pen-native-reference-rea-refresh.json",
+  "roundtrip": {
+    "executed": true,
+    "nativePen": [
+      "Open panel",
+      "Both recovered layers measured64x64 in inspector",
+      "Save As separate owned file"
+    ],
+    "publicOpenPenReader": "Both names/types/x/y/width/height/solid fill color/opacity/visibility equal recovered source",
+    "sourcePreserved": true,
+    "receipt": "local-evidence/claude-brand-review-2026-11-11/pen-recovery-roundtrip-2026-11-12/roundtrip.json"
+  },
+  "acceptance": "Bounded native menu observation and recovered-file interchange only; FILE07/08 remain Verify",
+  "privateReceipts": [
+    "local-evidence/claude-brand-review-2026-11-11/pen-draft-menu-native-2026-11-12.json",
+    "local-evidence/claude-brand-review-2026-11-11/pen-native-reference-rea-refresh.json"
+  ]
+}

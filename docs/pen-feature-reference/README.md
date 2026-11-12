@@ -4,6 +4,8 @@ Reference: original documentation retrieved 2026-10-30, fully rechecked 2026-11-
 
 The original 23-chapter catalog is retained below, with the current 22-chapter mapping and additions in the refresh supplement. Requirements are paraphrased; acceptance checks are our own executable criteria. A documented claim is not an observed result. **No row is fully accepted.** `Open` means acceptance is missing, not necessarily implementation. `Partial` means linked evidence covers only part of the row. The installed app can differ from the live documentation; record both rather than silently choosing one.
 
+The [2026-11-12 native recovery-file reference](recovery-1.2.22-2026-11-12.md) records current Drafts/File menus and an actual recovered-file Open/inspector/Save As round trip, with explicit unexecuted recovery states.
+
 The native [Goodies inventory](../GOODIES-PARITY.md) records its five sections, style preview/composer behavior, document cards and shader actions in addition to the documentation chapters below.
 
 Subscriptions, vendor activation and vendor account gates are excluded. Independent equivalents must still protect documents, credentials and published data. External AI/service costs and provider authentication remain separate. Vendor source/assets stay in ignored private evidence.

@@ -1,8 +1,8 @@
 # Isolated native recovery acceptance
 
-FILE-07 remains Verify. This candidate prepares its native process-loss gate; **no native recovery journey has run on this candidate** because Computer Use reports the Mac locked. The browser recovery receipt does not establish native persistence, OS picker delivery, external-file permissions, read-only behavior or matched Pen states.
+FILE-07 remains Verify. On 2026-11-12, the rebuilt isolated host executes the complete three-process existing-file recovery journey below. This accepts the bounded test-profile persistence criterion; OS picker delivery, external-file permissions, read-only behavior, automatic backup debounce, normal installed-app delivery and matched Pen recovery states remain open.
 
-The implementation described below is a **local, uncommitted candidate** in the owned qualification checkout. Published planning documentation does not publish that host/helper source. Run the commands only where that candidate is present and after the visibility guard succeeds.
+The implementation is test-only and lives in the owned qualification checkout. Run these commands only against a freshly rebuilt isolated host and after Computer Use observes the visible desktop; the helper also checks document visibility. The normal installed app is separate.
 
 ## Profile boundary
 
@@ -24,9 +24,13 @@ The readback command exists only in native-test builds and only answers the main
 
 Private evidence lives under `local-evidence/claude-brand-review-2026-11-11/native-{profile-qualified-rust,production-qualified-rust,process-ownership-qualified,restart-native-types-qualified,restart-strict-qualified}.*`. Earlier red controls and rejected intermediate type checks are retained separately.
 
-The recorded isolated host build predates the latest custom-font guard and discard-alert changes. Rebuild the current candidate before running the native journey; the older compiled artifact does not qualify these later sources.
+The current host includes the custom-font guard, discard alert and renderer ownership extraction. Its SHA-256 is `7dca50c64622079d01099aa620beb496de4ffb55d2432e489e36a61048385739`; the exact 50-file native/renderer source freeze is retained in `native-recovery-final-source.json`. The earlier compiled-host receipt remains historical. The only delta from the earlier native runtime/helper qualification is rustfmt module ordering; fresh native-test/normal Rust runs again pass120/88 cases, and the rebuilt final host repeats the complete three-process journey.
 
-## Native journey to execute
+The current native journey passes with three distinct verified PIDs, one persistent test-owned store and unchanged original source until explicit Save. Native Restore and WebDriver Save succeed; independent decoding finds both 64 × 64 rectangles. The third launch has no recovery offer or stale backup and executes Duplicate/Undo. Guarded teardown returns before the success receipt is written. Private receipts: `native-recovery-final-{build.log,journey.log,journey.json,source.json}`.
+
+The same host also passes twelve native document changes, original-layer preservation, P3/sRGB changes and resizing with at most three no-error contexts. Saved native screenshots independently contain exact red/gray center pixels; see `renderer-native-resources/verification.json`. These are synthetic native controls, not full matched Pen visuals.
+
+## Executed native journey
 
 After Computer Use observes an unlocked desktop, build only the isolated host:
 
@@ -42,4 +46,6 @@ bun tests/helpers/tauri/restart/run.ts
 
 The runner creates a fresh private profile and synthetic external `.pen` file. First launch opens that source through native startup arguments, confirms local-file autosave is off, creates an editable second rectangle and explicitly persists recovery. It hashes the backup and checks unchanged original bytes, interrupts only the verified owned PID, and starts a second process on the same profile. Restore uses the public dialog; the source must remain unchanged until explicit Save. The written source is independently parsed and both 64 by 64 rectangles checked. A clean close and third distinct PID must reopen that source, show no recovery offer, retain no stale backup, and support Duplicate/Undo. A successful receipt is written only after the whole journey and teardown return.
 
-This is a native file association, recovery, Save and process-persistence control. Shape creation and snapshot timing use existing editor methods; the Save/Duplicate/Undo keys use WebDriver. It does not establish physical pointer/keyboard acceptance, automatic backup debounce, OS chooser interactions, normal-installed-app behavior, power-loss durability or actual Pen visual/functionality parity. Those FILE-07 criteria remain open even after this runner eventually passes.
+This is a native file association, recovery, Save and process-persistence control. Shape creation and snapshot timing use existing editor methods; the Save/Duplicate/Undo keys use WebDriver. It does not establish physical pointer/keyboard acceptance, automatic backup debounce, OS chooser interactions, normal-installed-app behavior, power-loss durability or actual Pen visual/functionality parity. Those FILE-07 criteria remain open after this bounded runner passes.
+
+Owned Rust formatting passes. The whole-repository `cargo fmt --check` retains a separate pre-existing assertion-wrap difference in `desktop/src/agents/lookup.rs`; that unrelated source is unchanged. The original failed format receipt is retained.

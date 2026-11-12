@@ -6,7 +6,6 @@
   },
   "include": [
     "./**/*.ts",
-    "../../helpers/tauri/native-global.d.ts",
     "../../helpers/tauri/editor-snapshot.ts",
     "../../helpers/tauri/event-recorder.ts",
     "../../../src/global.d.ts",
@@ -16,5 +15,6 @@
     "../../../packages/dom-css/src/cssom.d.ts",
     "../../../packages/dom-css/src/postcss-value-parser.d.ts",
     "../../../packages/design-jsx/src/global.d.ts"
-  ]
+  ],
+  "files": ["../../helpers/tauri/native-global.d.ts"]
 }

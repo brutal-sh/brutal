@@ -1,6 +1,6 @@
 # Recovery ownership and existing-file gap
 
-Updated: 2026-11-11. [MOD-RECOVERY-LIFECYCLE](https://trello.com/c/cGCjHTm2) owns the bounded recovery extraction. [MOD-DOCUMENT-SOURCE](https://trello.com/c/SZ4ZF919) and [MOD-TAB-OPEN-RECOVERY](https://trello.com/c/cVK1VfgL) own the two remaining source/save and tab-opening factories. [FILE-RECOVERY-LOCAL](https://trello.com/c/7JAWHZSv) depends on them and owns the behavioral correction; FILE-07 retains full acceptance.
+Updated: 2026-11-12. [MOD-RECOVERY-LIFECYCLE](https://trello.com/c/cGCjHTm2) owns the bounded recovery extraction. [MOD-DOCUMENT-SOURCE](https://trello.com/c/SZ4ZF919) and [MOD-TAB-OPEN-RECOVERY](https://trello.com/c/cVK1VfgL) own the two remaining source/save and tab-opening factories. [FILE-RECOVERY-LOCAL](https://trello.com/c/7JAWHZSv) depends on them and owns the behavioral correction; FILE-07 retains full acceptance.
 
 ## Confirmed behavior gap
 
@@ -18,7 +18,7 @@ The complete bun run check passes, including literal zero duplicate-code clones.
 
 ## Reference and preservation
 
-Fresh REA directory inspection examines 818 entries and 60 file headers; it reads 5,040 header bytes and does not follow 14 symlinks. That metadata/read-range evidence is not a full-content hash or a runtime test. A separate full ASAR hash matches 1c6d0129dc9dda08f2f0da5dde23aa8cc52df11858fec1e35cd3bd2647bcf407 and the installed plist reports Pen 1.2.22, preserving the current reference identity. Computer Use still reports the Mac locked. No reference asset/implementation is published, and no normal app/profile/recovery/credential or protected icon change is made.
+Fresh REA directory inspection examines 818 entries and 60 file headers; it reads 5,040 header bytes and does not follow 14 symlinks. That metadata/read-range evidence is not a full-content hash or a runtime test. A separate full ASAR hash matches 1c6d0129dc9dda08f2f0da5dde23aa8cc52df11858fec1e35cd3bd2647bcf407 and the installed plist reports Pen 1.2.22, preserving the current reference identity. Computer Use reports the Mac locked at that original inspection; the current native execution below supersedes that access limitation. No reference asset/implementation is published, and no normal app/profile/recovery/credential or protected icon change is made.
 
 ## Source and save extraction
 
@@ -89,3 +89,11 @@ blocked. Receipts stay private under
 ## Native persistent-profile candidate
 
 The isolated physical-process recovery runner and its refusal boundaries are documented in [NATIVE-RECOVERY-PROFILE.md](NATIVE-RECOVERY-PROFILE.md). Pure Rust and owned-process controls have executed; native WebView persistence and the three-process journey remain unexecuted while the desktop is locked. FILE-07 remains Verify. Use the standalone helper only after building the separate native-test host; preserve its retained test-owned marker/store and all normal profiles.
+
+## Executed native profile and reference round trip — 2026-11-12
+
+The rebuilt isolated host now executes the existing-file recovery journey across three distinct verified processes. Its fresh private test-owned WebKit store retains the backup after interruption; Restore preserves the external source until explicit Save, and the saved file independently decodes to two 64 × 64 rectangles. Third-process reopening has no stale backup/offer and supports Duplicate/Undo. The success receipt follows teardown. Normal installed-app, physical input, automatic backup debounce, OS picker/permission/read-only cases and actual Pen recovery states remain open under FILE-07/08. The prior intermittent Cancel timeout remains unclassified; this successful journey does not repair it.
+
+Actual Pen 1.2.22 opens that recovered output. Its Layers/inspector show both 64 × 64 rectangles, with original position0,0 and restored position120,120. Native Save As writes a separate owned file. The built public Open Pen reader preserves both names, types, positions, dimensions and solid fills exactly; the original source hash remains unchanged. This is a small executed interchange round trip, not Pen crash recovery or full recovery-dialog visual acceptance. See [the reference record](pen-feature-reference/recovery-1.2.22-2026-11-12.md).
+
+Private evidence: `native-recovery-final-{source,journey}.json`, `renderer-native-resources/verification.json` and `pen-recovery-roundtrip-2026-11-12/roundtrip.json`. Full unit execution records 10,172 passes, one Windows-only skip and the unchanged strict Note failure at 12,792 channels. No strict threshold, reference image or user file is changed.

@@ -1,5 +1,4 @@
 import { mkdtemp } from 'node:fs/promises'
-import { createServer } from 'node:net'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -7,6 +6,7 @@ import { fileURLToPath } from 'node:url'
 import type { TauriCapabilities } from '@wdio/tauri-service'
 
 import { installCompanionVersionFixture } from './tests/helpers/tauri/companion-versions'
+import { allocateNativePort } from './tests/helpers/tauri/ports'
 
 const root = dirname(fileURLToPath(import.meta.url))
 const binaryName = process.platform === 'win32' ? 'OpenPencil.exe' : 'OpenPencil'
@@ -22,23 +22,10 @@ if (!process.env.OPENPENCIL_NATIVE_TEST_DIRECTORY) {
   process.env.OPENPENCIL_NATIVE_TEST_DIRECTORY = await mkdtemp(
     join(tmpdir(), 'openpen-native-test-')
   )
-  process.env.OPENPENCIL_NATIVE_TEST_MCP_PORT = String(await allocatePort())
+  process.env.OPENPENCIL_NATIVE_TEST_MCP_PORT = String(await allocateNativePort())
 }
 if (!process.env.OPENPENCIL_NATIVE_TEST_DRIVER_PORT) {
-  process.env.OPENPENCIL_NATIVE_TEST_DRIVER_PORT = String(await allocatePort())
-}
-
-async function allocatePort(): Promise<number> {
-  const server = createServer()
-  await new Promise<void>((resolve) => {
-    server.listen(0, '127.0.0.1', resolve)
-  })
-  const address = server.address()
-  if (!address || typeof address === 'string') throw new Error('No native test port allocated')
-  await new Promise<void>((resolve, reject) => {
-    server.close((error) => (error ? reject(error) : resolve()))
-  })
-  return address.port
+  process.env.OPENPENCIL_NATIVE_TEST_DRIVER_PORT = String(await allocateNativePort())
 }
 
 if (process.env.OPENPENCIL_NATIVE_COMPANION_VERSIONS === '1' && process.platform !== 'win32') {

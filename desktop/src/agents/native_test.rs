@@ -1,6 +1,14 @@
 //! Only compiled into the test executable. Routing must be explicitly test-owned, never default.
 use std::path::PathBuf;
 
+pub(crate) mod profile;
+pub(crate) mod profile_args;
+pub(crate) mod profile_context;
+#[cfg(test)]
+pub(crate) mod profile_fixtures;
+pub(crate) mod profile_identity;
+pub(crate) mod profile_startup;
+
 #[derive(serde::Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct NativeTestMCPConfiguration {

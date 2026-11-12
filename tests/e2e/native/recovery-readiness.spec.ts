@@ -3,44 +3,7 @@ import { strict as assert } from 'node:assert'
 import { createNativeLayerFixture } from '#tests/helpers/tauri/editor-snapshot'
 import { reloadNativeEditor } from '#tests/helpers/tauri/navigation'
 import { settleNativeRecovery } from '#tests/helpers/tauri/recovery'
-
-async function snapshotDigests() {
-  return browser.executeAsync<{ failure?: string; digests?: string[] }, []>(async (done) => {
-    try {
-      const opening = indexedDB.open('open-pencil-recovery')
-      const database = await new Promise<IDBDatabase>((resolve, reject) => {
-        opening.onsuccess = () => resolve(opening.result)
-        opening.onerror = () => reject(opening.error)
-      })
-      try {
-        const transaction = database.transaction('fig', 'readonly')
-        const request = transaction.objectStore('fig').getAll()
-        await new Promise<void>((resolve, reject) => {
-          transaction.oncomplete = () => resolve()
-          transaction.onerror = () => reject(transaction.error)
-          transaction.onabort = () => reject(transaction.error)
-        })
-        const values: unknown[] = request.result
-        const digests = await Promise.all(
-          values.map(async (value) => {
-            const bytes = value instanceof Blob ? await value.arrayBuffer() : value
-            if (!(bytes instanceof ArrayBuffer) && !(bytes instanceof Uint8Array))
-              throw new Error('Unexpected recovery bytes')
-            const digest = await crypto.subtle.digest('SHA-256', new Uint8Array(bytes))
-            return Array.from(new Uint8Array(digest), (byte) =>
-              byte.toString(16).padStart(2, '0')
-            ).join('')
-          })
-        )
-        done({ digests: digests.toSorted() })
-      } finally {
-        database.close()
-      }
-    } catch (reason) {
-      done({ failure: String(reason) })
-    }
-  })
-}
+import { readNativeRecoveryDigests } from '#tests/helpers/tauri/restart/digests'
 
 it('settles startup recovery before fixture input and closes its offer without changing snapshot bytes', async () => {
   await createNativeLayerFixture()
@@ -65,12 +28,12 @@ it('settles startup recovery before fixture input and closes its offer without c
   })
   const offer = $('[data-test-id="recovery-dialog"][data-state="open"]')
   await offer.waitForDisplayed()
-  const before = await snapshotDigests()
+  const before = await readNativeRecoveryDigests()
   assert.equal(before.failure, undefined)
   assert.ok(before.digests && before.digests.length > 0)
   await settleNativeRecovery()
   await offer.waitForExist({ reverse: true })
-  const after = await snapshotDigests()
+  const after = await readNativeRecoveryDigests()
   assert.equal(after.failure, undefined)
   assert.deepEqual(after.digests, before.digests)
 })

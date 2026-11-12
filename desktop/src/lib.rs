@@ -1,4 +1,5 @@
 mod agents;
+mod commands;
 mod credentials;
 mod files;
 mod fonts;
@@ -6,137 +7,41 @@ mod icons;
 mod launch;
 mod menu;
 mod network;
+mod runtime;
 mod system;
 
-use credentials::{
-    credential_access_paused, credential_read, credential_remove, credential_retry_access,
-    credential_status, credential_store_availability, credential_write,
-};
-use fonts::{list_system_fonts, load_system_font};
-use launch::args;
 use menu::events::handle_menu_event;
-use menu::{
-    install_app_menu, native_menu_checked, set_native_menu_checked, set_native_menu_features,
-    NativeMenuInputs, NativeMenuState,
-};
-use network::http::{cancel_http_request, proxy_http_request, ProxyHttpRequests};
+use menu::{NativeMenuInputs, NativeMenuState};
+use network::http::ProxyHttpRequests;
 use std::sync::Mutex;
-#[cfg(target_os = "macos")]
-use system::window::show_main_window;
-use tauri::{Emitter, Manager};
+
+pub(crate) fn app_context() -> tauri::Context<tauri::Wry> {
+    tauri::generate_context!()
+}
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    if !launch::args::accepts_profile_arguments(
+        cfg!(feature = "native-test"),
+        std::env::args_os().skip(1),
+    ) {
+        eprintln!("Recovery profile arguments require an isolated Open Pen native-test build.");
+        return;
+    }
     // Native acceptance launches pin their own executable search order.
     #[cfg(not(feature = "native-test"))]
     let _ = fix_path_env::fix();
     agents::path::augment_process_path();
 
-    let mut builder = tauri::Builder::default();
-
-    #[cfg(feature = "native-test")]
-    {
-        builder = builder
-            .manage(system::opener::OpenedExternalUrls::default())
-            .plugin(tauri_plugin_wdio::init())
-            .plugin(tauri_plugin_wdio_webdriver::init());
-    }
-
-    #[cfg(all(
-        any(target_os = "macos", windows, target_os = "linux"),
-        not(feature = "native-test")
-    ))]
-    {
-        builder = builder.plugin(tauri_plugin_single_instance::init(|app, args, cwd| {
-            launch::queue_deep_links(app, args::deep_links_from_args(&args));
-            launch::queue_open_paths(
-                app,
-                args::open_paths_from_args(args, std::path::Path::new(&cwd)),
-            );
-        }));
-    }
-
-    builder = builder.plugin(tauri_plugin_deep_link::init());
-
-    builder
+    let builder = runtime::builder();
+    let builder = builder
         .manage(launch::PendingOpen::default())
         .manage(ProxyHttpRequests::default())
         .manage(network::oauth::ChatGPTOAuthLoopback::default())
         .manage(launch::PendingRooms::default())
         .manage(NativeMenuState(Mutex::new(NativeMenuInputs::default())))
         .manage(launch::PendingCloudLinks::default())
-        .invoke_handler({
-            let handler: fn(tauri::ipc::Invoke) -> bool = tauri::generate_handler![
-                network::browser::browser_preview_open,
-                network::browser::exports::authorize_browser_export,
-                network::browser::exports::browser_preview_open_export,
-                network::browser::browser_preview_status,
-                network::browser::browser_preview_picker,
-                network::browser::history::take_browser_preview_visits,
-                network::browser::history::clear_browser_preview_visits,
-                network::browser::browser_preview_action,
-                network::browser::browser_preview_resize,
-                network::browser::browser_preview_layout,
-                network::browser::browser_preview_capture,
-                network::browser::browser_preview_screenshot,
-                network::browser::browser_preview_backdrop,
-                network::browser::browser_preview_clear_site_data,
-                network::browser::browser_preview_extract,
-                #[cfg(feature = "native-test")]
-                agents::native_test::native_test_mcp_configuration,
-                agents::lookup::agent_lookup,
-                agents::codex::codex_acp_config,
-                agents::lookup::agent_workspace,
-                files::fig::build_fig_file,
-                network::oauth::chatgpt_oauth_listen,
-                network::oauth::chatgpt_oauth_wait,
-                network::oauth::chatgpt_oauth_cancel,
-                credential_read,
-                credential_access_paused,
-                credential_retry_access,
-                credential_remove,
-                credential_status,
-                credential_store_availability,
-                credential_write,
-                agents::mcp::mcp_lookup,
-                agents::skills::skill_folders,
-                agents::skills::project_skill_folders,
-                agents::skills::skill_folder_file,
-                #[cfg(feature = "native-test")]
-                launch::native_test_open_deep_link,
-                system::opener::open_external_url,
-                #[cfg(feature = "native-test")]
-                system::opener::take_native_test_opened_urls,
-                launch::paths::path_matches_suffix,
-                list_system_fonts,
-                load_system_font,
-                icons::sf_symbols_catalogue,
-                icons::sf_symbols_render,
-                proxy_http_request,
-                cancel_http_request,
-                files::recent::set_recent_files,
-                set_native_menu_features,
-                native_menu_checked,
-                set_native_menu_checked,
-                launch::take_pending_open,
-                launch::take_pending_rooms,
-                system::env::sharing_disabled_by_env,
-                launch::take_pending_cloud_links,
-                system::env::webview_version,
-                system::color::sample_screen_color,
-                system::raster::encode_webp
-            ];
-            move |invoke: tauri::ipc::Invoke| {
-                if !network::browser::policy::permits_app_command(invoke.message.webview().label())
-                {
-                    invoke
-                        .resolver
-                        .reject("Browser preview content cannot access application commands.");
-                    return true;
-                }
-                handler(invoke)
-            }
-        })
+        .invoke_handler(commands::handler())
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_clipboard_manager::init())
@@ -148,72 +53,13 @@ pub fn run() {
         .on_menu_event(|app, event| {
             handle_menu_event(app, event.id().0.as_str());
         })
-        .setup(|app| {
-            launch::queue_open_paths(app.handle(), args::startup_open_paths());
-
-            use tauri_plugin_deep_link::DeepLinkExt;
-            // On macOS the plugin turns `RunEvent::Opened` into this callback, so every
-            // link that arrives while the app runs is handled here; the cold-start link
-            // arrives before this closure and is drained from `current` below. The
-            // `Opened` arm further down keeps handling file URLs.
-            let handle = app.handle().clone();
-            app.deep_link().on_open_url(move |event| {
-                launch::queue_deep_links(&handle, event.urls());
-            });
-            #[cfg(any(windows, target_os = "linux"))]
-            {
-                if let Err(error) = app.deep_link().register_all() {
-                    eprintln!("[deep-link] register_all failed: {error}");
-                }
-            }
-            // Every desktop platform can deliver the launch link before this closure
-            // runs, which means before the listener above exists, and the plugin's
-            // `deep-link://new-url` emit then reaches nobody:
-            //
-            // - Windows / Linux: the link is argv, and the plugin parses it in its own
-            //   setup (`handle_cli_arguments`).
-            // - macOS: AppKit delivers the GetURL event *before* the app's setup. Traced
-            //   on a cold `open openpen://…`: `RunEvent::Opened` at T+0.085 s, this
-            //   closure at T+0.342 s, and `on_open_url` never fired.
-            //
-            // In all three cases the URL survives only in the plugin's `current`, so it
-            // is read here. No link can be queued twice: `RunEvent::Opened` is dispatched
-            // on the main thread, the same thread this closure runs on, so a link cannot
-            // arrive between the registration above and this read — anything later goes
-            // to `on_open_url` and is no longer in `current` by the time it is read.
-            if let Ok(Some(urls)) = app.deep_link().get_current() {
-                launch::queue_deep_links(app.handle(), urls);
-            }
-
-            Ok(install_app_menu(
-                app.handle(),
-                &NativeMenuInputs::default(),
-            )?)
-        })
-        .build(tauri::generate_context!())
+        .setup(runtime::setup_app);
+    let context = app_context();
+    #[cfg(feature = "native-test")]
+    let context = agents::native_test::profile_startup::configure_context(context)
+        .expect("error while configuring isolated Open Pen native tests");
+    builder
+        .build(context)
         .expect("error while building tauri application")
-        .run(|_app, event| match event {
-            tauri::RunEvent::ExitRequested {
-                api, code: None, ..
-            } if !_app.windows().is_empty() => {
-                api.prevent_exit();
-                // The frontend asks about unsaved documents and exits when they agree.
-                let _ = _app.emit("menu-event", "quit");
-            }
-            #[cfg(target_os = "macos")]
-            tauri::RunEvent::Opened { urls } => {
-                let paths = urls
-                    .into_iter()
-                    .filter_map(|url| url.to_file_path().ok())
-                    .filter_map(args::file_association_path)
-                    .collect();
-                launch::queue_open_paths(_app, paths);
-            }
-            #[cfg(target_os = "macos")]
-            tauri::RunEvent::Reopen {
-                has_visible_windows: false,
-                ..
-            } => show_main_window(_app),
-            _ => {}
-        });
+        .run(runtime::on_event);
 }
