@@ -76,6 +76,8 @@ Renderer, layout, editor, Figma API, tools, clipboard, vector conversion, and do
 
 Canvas is CanvasKit (Skia WASM) on a WebGL surface, not DOM.
 
+- Renderer fields, construction and guarded browser capabilities stay in `canvas/renderer.ts`; chrome, geometry, resources, labels, drawing and images own their concrete operations under `canvas/renderer/`. Preserve instance lifetime, borrowed font ownership, positional APIs and class method descriptors when moving operations (`packages/core/tests/canvas/renderer/`, `tests/engine/render/canvas/surface-replacement.test.ts`).
+
 ### Invalidation
 
 - `renderVersion` is a canvas repaint (pan, zoom, hover); `sceneVersion` is a scene-graph mutation. `requestRender()` bumps both; `requestRepaint()` bumps only `renderVersion`. UI that only cares about graph data must not watch repaint-only state.

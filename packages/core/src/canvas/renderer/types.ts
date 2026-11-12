@@ -1,4 +1,6 @@
-import type { VectorRegion, VectorVertex } from '@open-pencil/scene-graph'
+import type { SkPicture } from 'canvaskit-wasm'
+
+import type { SceneNode, VectorRegion, VectorVertex } from '@open-pencil/scene-graph'
 import type { Color, Rect, Vector } from '@open-pencil/scene-graph/primitives'
 import type { SnapGuide } from '@open-pencil/scene-graph/snap'
 
@@ -8,6 +10,7 @@ import type { ConnectorTarget } from '#core/editor/connectors/attach'
 import type { ShapeHandleHover, GradientEdit, PencilState } from '#core/editor/types'
 import type { RotationPreview } from '#core/geometry'
 import type { TextEditor } from '#core/text/editor'
+import type { FontResolutionSnapshot } from '#core/text/resolver'
 
 /** Selection chrome on the canvas and the text drawn on it, such as size pills and ruler badges. */
 export interface SelectionTheme {
@@ -114,3 +117,21 @@ export interface RenderOverlays {
   designIssues?: DesignIssueOverlay | null
   codeFocusNodeId?: string | null
 }
+
+export interface SubtreePictureCacheEntry {
+  picture: SkPicture
+  pageId: string | null
+  sceneVersion: number
+  positionPreviewVersion: number
+  fontGeneration: number
+}
+
+export interface PendingFontNode {
+  node: SceneNode
+  keys: Set<string>
+}
+
+export type FontResolutionListener = (
+  snapshot: FontResolutionSnapshot,
+  nodeIds: readonly string[]
+) => void
