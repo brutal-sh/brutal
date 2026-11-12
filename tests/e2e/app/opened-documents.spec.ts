@@ -45,6 +45,10 @@ test('an opened .fig file stays saved until it is edited', async ({ page }) => {
 // A page's layers load from the opened file the first time it is shown.
 test('showing another page of an opened .fig file keeps it saved', async ({ page }) => {
   const tab = await openFixture(page, 'slots.fig')
+  await page
+    .getByRole('tablist', { name: 'Workspace panels' })
+    .getByRole('tab', { name: 'Layers', exact: true })
+    .click()
   await page.getByTestId('pages-item').filter({ hasText: 'Slots fixture' }).click()
   await waitForPreparation(page)
   await expect
