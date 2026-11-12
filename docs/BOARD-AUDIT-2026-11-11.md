@@ -2,6 +2,16 @@
 
 2026-11-11. Decision owner: Jason Poindexter. Audit and execution owner: Codex.
 
+## Current execution refresh — 2026-11-12
+
+The complete current readback contains 505 cards: 487 execution tasks and 18 milestones. Lists reconcile to 374 Backlog / 0 Ready / 1 Building (TEST-RECOVERY-JOURNEY-LIFETIME) / 32 Verify / 80 Executed. Every task has one primary milestone owner; all 164 catalog requirements remain allocated. The terminal gate expands all 486 other required tasks with no dependency cycle or Executed task with an open prerequisite. These counts record acceptance state, not product parity.
+
+MOD-12 returns Verify after exact API metadata, 133 owner cases, full static qualification with zero clones and matched pre/post interaction results. Its traced recovery replay has 22 passes and two total-deadline failures; published original input independently reproduces both. The new M01 fixture-lifetime leaf is also required by FILE-07/08; it preserves separate existing phase limits and all assertions. This allocation does not diagnose the older untraced Home-state transition or accept native/full parity.
+
+The bounded saved-text reference disposition publishes at `fbdbad5ab`: original PNGs remain unchanged, all authored-frame channels match the current captures, and whole-image title/camera differences remain unaccepted. The new M02 child SURF-FRAME-TITLE is separate from UI-02 camera/fit; MOD-16/17 keep their live Figma criteria. FILE-RECOVERY-CANCEL remains Verify after twenty successful unchanged traces provide negative evidence without identifying the original Home-state transition. Native Restore and real Save As cancellation/success execute on the isolated test bundle; refusal/retry and internal source-path readback after Cancel remain open. The existing data-loss safeguard and native profile proof retain their bounded scopes.
+
+REA refreshes the installed reference inventory; plist and full ASAR hash still identify Pen 1.2.22. This refresh does not rerun every screen or menu. Normal Open Pen binary `79dd0485…`, all 17 protected work files and the protected graph directory remain preserved. Current raw readback, primary owners and dependency reconciliation are retained privately in `local-evidence/current-plan-recovery-lifetime-2026-11-12/`. The original audit and dated observations below remain historical evidence.
+
 ## Scope and verified inventory
 
 The complete all-state Trello response has 479 cards: 461 unique execution tasks and 18 milestones, with no additional pagination or archived cards returned. Every task has a canonical ID, owner, source requirements, outcome and Done criteria. All 164 catalog requirements and 22 native surface/menu rows are allocated. Allocation and recorded acceptance do not establish complete product behavior.

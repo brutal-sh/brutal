@@ -28,6 +28,7 @@ async function historyState() {
 }
 
 test('undo after option-drag duplicate removes the copy', async () => {
+  await editor.page.getByRole('tab', { name: 'Layers', exact: true }).click()
   await editor.canvas.drawRect(120, 120, 120, 90)
   await expect.poll(rectangleCount).toBe(1)
 
