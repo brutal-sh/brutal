@@ -1,5 +1,8 @@
 import type { Page, Locator } from '@playwright/test'
 
+import { PAGE_DEFAULT_BACKGROUNDS } from '@open-pencil/core/constants'
+import type { Vector } from '@open-pencil/scene-graph/primitives'
+
 import { OFFICIAL_CLOUD_URL } from '@/constants'
 
 /**
@@ -54,21 +57,19 @@ export class CanvasHelper {
    * `tests/e2e/pages/theme-background.spec.ts` covers the theme.
    */
   async useLightPage() {
-    await this.page.evaluate(() => {
+    await this.page.evaluate(({ dark, light }) => {
       const store = window.openPencil?.getStore?.()
-      if (!store) return
+      if (!store || store.hasUnsavedChanges() || store.undo.canUndo || store.undo.canRedo) return
       const pages = store.graph.getPages()
       const [first] = pages
-      const darkDefault = 0x1e / 255
-      const { r, g, b } = store.state.pageColor
-      const fresh =
-        pages.length === 1 &&
-        first.childIds.length === 0 &&
-        [r, g, b].every((c) => c === darkDefault)
+      const sameBackground = (['r', 'g', 'b', 'a'] as const).every(
+        (channel) => store.state.pageColor[channel] === dark[channel]
+      )
+      const fresh = pages.length === 1 && first.childIds.length === 0 && sameBackground
       if (!fresh) return
-      store.setPageColor({ r: 0.96, g: 0.96, b: 0.96, a: 1 })
+      store.setPageColor(light)
       store.markDocumentSaved()
-    })
+    }, PAGE_DEFAULT_BACKGROUNDS)
   }
 
   async clearCanvas() {
@@ -123,11 +124,15 @@ export class CanvasHelper {
     await this.page.mouse.click(box.x + canvasX, box.y + canvasY)
   }
 
-  async drag(fromX: number, fromY: number, toX: number, toY: number, steps = 10) {
+  async drag(fromX: number, fromY: number, toX: number, toY: number) {
+    await this.dragBetween({ x: fromX, y: fromY }, { x: toX, y: toY })
+  }
+
+  async dragBetween(from: Vector, to: Vector, steps = 10) {
     const box = await this.canvasBounds()
-    await this.page.mouse.move(box.x + fromX, box.y + fromY)
+    await this.page.mouse.move(box.x + from.x, box.y + from.y)
     await this.page.mouse.down()
-    await this.page.mouse.move(box.x + toX, box.y + toY, { steps })
+    await this.page.mouse.move(box.x + to.x, box.y + to.y, { steps })
     await this.page.mouse.up()
   }
 
@@ -193,12 +198,8 @@ export class CanvasHelper {
     await this.waitForRender()
   }
 
-  async marquee(x1: number, y1: number, x2: number, y2: number, steps = 10) {
-    const box = await this.canvasBounds()
-    await this.page.mouse.move(box.x + x1, box.y + y1)
-    await this.page.mouse.down()
-    await this.page.mouse.move(box.x + x2, box.y + y2, { steps })
-    await this.page.mouse.up()
+  async marquee(x1: number, y1: number, x2: number, y2: number) {
+    await this.drag(x1, y1, x2, y2)
     await this.waitForRender()
   }
 

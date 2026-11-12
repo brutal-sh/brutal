@@ -19,7 +19,7 @@ test.beforeEach(async () => {
 async function drag(from: [number, number], to: [number, number]) {
   const start = connectors.point(...from)
   const end = connectors.point(...to)
-  await editor.canvas.drag(start.x, start.y, end.x, end.y, 12)
+  await editor.canvas.dragBetween(start, end, 12)
   await editor.canvas.waitForRender()
 }
 

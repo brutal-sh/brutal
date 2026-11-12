@@ -47,7 +47,9 @@ test('dragging a nested card uses repaint-only position previews', async ({ page
   })
   await canvas.waitForRender()
 
-  const counters = await measureInteraction(page, () => canvas.drag(110, 110, 210, 150, 20))
+  const counters = await measureInteraction(page, () =>
+    canvas.dragBetween({ x: 110, y: 110 }, { x: 210, y: 150 }, 20)
+  )
 
   expect(counters?.storeUpdateCount).toBeLessThanOrEqual(1)
   expect(counters?.graphUpdateCount).toBeLessThanOrEqual(25)

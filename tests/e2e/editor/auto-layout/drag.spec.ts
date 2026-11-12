@@ -12,72 +12,13 @@ test('dragging selected nested instance content reorders its auto-layout item', 
   canvas.errors.length = 0
   await canvas.clearCanvas()
 
-  const ids = await page.evaluate(() => {
-    const store = window.openPencil?.getStore?.()
-    if (!store) throw new Error('OpenPencil store not initialized')
-
-    store.state.panX = 0
-    store.state.panY = 0
-    store.state.zoom = 1
-
-    const pageId = store.state.currentPageId
-    const frame = store.graph.createNode('FRAME', pageId, {
-      name: 'Auto Row',
-      x: 100,
-      y: 100,
-      width: 360,
-      height: 80,
-      layoutMode: 'HORIZONTAL',
-      itemSpacing: 20,
-      paddingTop: 10,
-      paddingRight: 10,
-      paddingBottom: 10,
-      paddingLeft: 10
-    })
-
-    const first = store.graph.createNode('INSTANCE', frame.id, {
-      name: 'First item',
-      x: 110,
-      y: 110,
-      width: 120,
-      height: 60
-    })
-    store.graph.createNode('TEXT', first.id, {
-      name: 'First label',
-      text: 'First',
-      x: 8,
-      y: 8,
-      width: 80,
-      height: 24
-    })
-
-    const second = store.graph.createNode('INSTANCE', frame.id, {
-      name: 'Second item',
-      x: 250,
-      y: 110,
-      width: 120,
-      height: 60
-    })
-    const secondText = store.graph.createNode('TEXT', second.id, {
-      name: 'Second label',
-      text: 'Second',
-      x: 8,
-      y: 8,
-      width: 80,
-      height: 24
-    })
-
-    store.runLayoutForNode(frame.id)
-    store.select([secondText.id])
-    store.requestRender()
-    return { frame: frame.id, first: first.id, second: second.id, secondText: secondText.id }
-  })
+  const ids = await clickDepthDriver(() => page).dragRow(true)
   await canvas.waitForRender()
 
   const driver = clickDepthDriver(() => page)
   const from = await driver.at(ids.secondText, 40, 12)
   const to = await driver.at(ids.first, 20, 20)
-  await canvas.drag(from.x, from.y, to.x, to.y, 12)
+  await canvas.dragBetween(from, to, 12)
   await canvas.waitForRender()
 
   const childIds = await page.evaluate((frameId) => {
@@ -99,52 +40,7 @@ test('auto-layout drag does not show an insert indicator before order changes', 
   canvas.errors.length = 0
   await canvas.clearCanvas()
 
-  const ids = await page.evaluate(() => {
-    const store = window.openPencil?.getStore?.()
-    if (!store) throw new Error('OpenPencil store not initialized')
-
-    const pageId = store.state.currentPageId
-    const frame = store.graph.createNode('FRAME', pageId, {
-      name: 'Auto Row',
-      x: 100,
-      y: 100,
-      width: 360,
-      height: 80,
-      layoutMode: 'HORIZONTAL',
-      itemSpacing: 20,
-      paddingTop: 10,
-      paddingRight: 10,
-      paddingBottom: 10,
-      paddingLeft: 10
-    })
-    const first = store.graph.createNode('INSTANCE', frame.id, {
-      name: 'First item',
-      x: 110,
-      y: 110,
-      width: 120,
-      height: 60
-    })
-    const second = store.graph.createNode('INSTANCE', frame.id, {
-      name: 'Second item',
-      x: 250,
-      y: 110,
-      width: 120,
-      height: 60
-    })
-    const secondText = store.graph.createNode('TEXT', second.id, {
-      name: 'Second label',
-      text: 'Second',
-      x: 8,
-      y: 8,
-      width: 80,
-      height: 24
-    })
-
-    store.runLayoutForNode(frame.id)
-    store.select([secondText.id])
-    store.requestRender()
-    return { frame: frame.id, first: first.id, second: second.id, secondText: secondText.id }
-  })
+  const ids = await clickDepthDriver(() => page).dragRow(false)
   await canvas.waitForRender()
 
   const box = await canvas.canvas.boundingBox()

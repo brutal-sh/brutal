@@ -1,16 +1,10 @@
-import { expect, test } from '@playwright/test'
+import { expect, test, type Page } from '@playwright/test'
 
 import { CanvasHelper } from '#tests/helpers/canvas'
 import { measureInteraction } from '#tests/helpers/performance/interaction'
 
-test('resizing uses repaint-only previews until mouseup', async ({ page }) => {
-  await page.goto('/')
-  const canvas = new CanvasHelper(page)
-  await canvas.waitForInit()
-  canvas.errors.length = 0
-  await canvas.clearCanvas()
-
-  const id = await page.evaluate(() => {
+function prepareResizableCard(page: Page) {
+  return page.evaluate(() => {
     const store = window.openPencil?.getStore?.()
     if (!store) throw new Error('OpenPencil store not initialized')
     store.state.zoom = 1
@@ -38,9 +32,23 @@ test('resizing uses repaint-only previews until mouseup', async ({ page }) => {
     store.requestRender()
     return node.id
   })
+}
+
+test('resizing uses repaint-only previews until mouseup', async ({ page }) => {
+  await page.goto('/')
+  const canvas = new CanvasHelper(page)
+  await canvas.waitForInit()
+  canvas.errors.length = 0
+  await canvas.clearCanvas()
+
+  const id = await prepareResizableCard(page)
   await canvas.waitForRender()
 
-  const counters = await measureInteraction(page, () => canvas.drag(340, 240, 420, 290, 12), id)
+  const counters = await measureInteraction(
+    page,
+    () => canvas.dragBetween({ x: 340, y: 240 }, { x: 420, y: 290 }, 12),
+    id
+  )
   const node = await page.evaluate((nodeId) => {
     const store = window.openPencil?.getStore?.()
     if (!store) throw new Error('OpenPencil store not initialized')

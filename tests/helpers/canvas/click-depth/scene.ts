@@ -2,6 +2,48 @@ import type { Fill, SceneGraph } from '@open-pencil/scene-graph'
 
 /** Scenes for click-depth specs, built in the browser on the editor's graph. */
 
+function dragRowItem(graph: SceneGraph, parent: string, name: string, x: number) {
+  return graph.createNode('INSTANCE', parent, {
+    name: `${name} item`,
+    x,
+    y: 110,
+    width: 120,
+    height: 60
+  })
+}
+
+function dragRowLabel(graph: SceneGraph, parent: string, name: string) {
+  return graph.createNode('TEXT', parent, {
+    name: `${name} label`,
+    text: name,
+    x: 8,
+    y: 8,
+    width: 80,
+    height: 24
+  })
+}
+
+export function createAutoLayoutDragRow(graph: SceneGraph, pageId: string, firstLabel: boolean) {
+  const frame = graph.createNode('FRAME', pageId, {
+    name: 'Auto Row',
+    x: 100,
+    y: 100,
+    width: 360,
+    height: 80,
+    layoutMode: 'HORIZONTAL',
+    itemSpacing: 20,
+    paddingTop: 10,
+    paddingRight: 10,
+    paddingBottom: 10,
+    paddingLeft: 10
+  })
+  const first = dragRowItem(graph, frame.id, 'First', 110)
+  if (firstLabel) dragRowLabel(graph, first.id, 'First')
+  const second = dragRowItem(graph, frame.id, 'Second', 250)
+  const secondText = dragRowLabel(graph, second.id, 'Second')
+  return { frame: frame.id, first: first.id, second: second.id, secondText: secondText.id }
+}
+
 function fill(r: number, g: number, b: number): Fill[] {
   return [{ type: 'SOLID', color: { r, g, b, a: 1 }, opacity: 1, visible: true }]
 }

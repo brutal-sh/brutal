@@ -78,3 +78,12 @@ recovery remain outside this extraction. No native, full reference, parity or be
 acceptance follows from preserved output.
 
 Private receipts: `local-evidence/claude-brand-review-2026-11-11/scene-*`.
+
+## Subsequent fixture qualification — 2026-11-12
+
+[The canvas fixture correction](CANVAS-FIXTURE-CONTROL.md) subsequently executes
+all ten original canvas snapshots successfully without image or threshold updates.
+Its corrected final run passes 50 browser cases plus all 19 recovery cases; full
+static checks pass with zero clones. Renderer production hashes remain unchanged.
+The original failing preservation receipts above stay retained. Strict Note and
+native/Pen reference acceptance remain separate open requirements.

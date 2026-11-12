@@ -4,6 +4,25 @@ import type * as ClickDepthScenes from '#tests/helpers/canvas/click-depth/scene'
 
 type SceneName = 'createClickDepthCards' | 'createNestedBoard'
 
+function prepareDragRow(page: Page, firstLabel: boolean) {
+  return page.evaluate(async (firstLabel) => {
+    const store = window.openPencil?.getStore?.()
+    if (!store) throw new Error('OpenPencil store not initialized')
+    const fixtureURL = '/tests/helpers/canvas/click-depth/scene.ts'
+    const scenes: typeof ClickDepthScenes = await import(fixtureURL)
+    if (firstLabel) {
+      store.state.panX = 0
+      store.state.panY = 0
+      store.state.zoom = 1
+    }
+    const ids = scenes.createAutoLayoutDragRow(store.graph, store.state.currentPageId, firstLabel)
+    store.runLayoutForNode(ids.frame)
+    store.select([ids.secondText])
+    store.requestRender()
+    return ids
+  }, firstLabel)
+}
+
 /** Builds click-depth scenes and reads back what pointer input selected, hovered, or moved. */
 /** `page` is read on each call, so a spec can create the driver before its page exists. */
 export function clickDepthDriver(page: () => Page) {
@@ -23,6 +42,8 @@ export function clickDepthDriver(page: () => Page) {
   return {
     cards: () => build('createClickDepthCards'),
     nestedBoard: () => build('createNestedBoard'),
+
+    dragRow: (firstLabel: boolean) => prepareDragRow(page(), firstLabel),
 
     /** Canvas coordinates of a point given relative to a node's top-left corner. */
     at(id: string, dx: number, dy: number) {
