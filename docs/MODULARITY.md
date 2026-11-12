@@ -329,3 +329,15 @@ All five runtime owners and two acceptance files pass strict300/50/10/4/4; publi
 The new real browser automation-handler control passes in both Chromium and named WebKit before and after: create/group rectangles, Undo/Redo, Save As, close the saved tab, reopen downloaded bytes under their original name, then Duplicate/Undo. Both requested640×400CSS-region captures produce1280×800PNG files and compare with zero differing channels against their same-project originals. The first fixture passed an extensionless temporary UUID filename and correctly triggered refusal; its second revision omitted selecting the new tab's Layers panel. Both failed receipts remain retained; the final fixture uses actual public file/sidebar actions and preserves error checking.
 
 Source/test types, architecture and independent source review pass. The complete static gate exits0with zero clones; rebuilt CLI create/save/reopen results match their baseline. The full canonical unit run exits1:10,155passes,one skip and one strict Note raster failure. A paired original API source control also fails at12,792channels; imported/reopened PEN serialization,920×500PNG and decoded RGBA hashes match the candidate exactly. All seven candidate hashes are restored after the control. This accepts no Note raster or whole-suite success. Selected9-file working/index/Git hashes match private branch/draft PRf6edb506f; Actions remain disabled and normal/protected work unchanged. The browser control uses the live app command handler/host factory through the existing test hook, so it does not establish MCP wire/auth, native trusted input, live Figma or Pen parity. Private receipts: `local-evidence/claude-brand-review-2026-11-11/figma-api-*`.
+
+## Scene renderer ownership candidate — 2026-11-12
+
+MOD-01 separates traversal, culling/transforms, masks/children, paint lifetimes,
+containers, shape/effect caches, stroke geometry/painting and text dispatch into
+existing canvas domains. Twelve runtime modules meet strict 300/50/10/4/4 limits;
+the public renderer entry and method adapters remain byte-identical. All 334 focused
+owner cases pass, and 20 recorded-reference renders plus 12 browser outputs match
+before/after exactly. Original canvas snapshot and strict Note failures remain red;
+preservation does not accept reference pixels. [Scope and controls](SCENE-OWNERSHIP.md)
+retain the complete unit result (10,155 passes, one skip, the existing Note failure),
+the passing 19-case recovery cohort and native acceptance blocked by the locked Mac. No normal installation or unrelated icon work changes.
