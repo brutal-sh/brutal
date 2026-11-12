@@ -1,4 +1,4 @@
-- Opening `.pen` files reports known unsupported content with node paths before replacing a document, rather than silently dropping it.
+- Opening `.pen` files reports known unsupported content, including custom font file declarations, with field and node paths before replacing a document.
 - Browser builds avoid probing an unavailable local MCP server during startup.
 - macOS builds find the SF Symbols library when Command Line Tools uses the Swift Build output layout.
 - Dispose canvas resources in their owning graphics context when replacing a surface or closing a document.

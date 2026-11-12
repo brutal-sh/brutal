@@ -1,0 +1,64 @@
+{
+  "referenceVersion": "1.2.22",
+  "rendererPath": "out/editor/assets/index.js",
+  "rendererSha256": "9287a8a40617929bc99c059e7a408e0ffa905e9531f320ee6e99943379fc031a",
+  "archiveSha256": "1c6d0129dc9dda08f2f0da5dde23aa8cc52df11858fec1e35cd3bd2647bcf407",
+  "manifestFileHashMatched": true,
+  "authority": "shipped-artifact",
+  "confidence": "derived from static codec source; native behavior unexecuted",
+  "fontDecodeOffset": 4576937,
+  "fontEncodeOffset": 4578625,
+  "documentLoadOffset": 4582418,
+  "namespaceOffset": 2866768,
+  "facts": {
+    "fontEntryFields": [
+      "name",
+      "url",
+      "weight",
+      "style",
+      "axes"
+    ],
+    "weight": "number or two-number range; default400",
+    "axisFields": [
+      "tag",
+      "start",
+      "end"
+    ],
+    "axisTagLength": 4,
+    "relativeFontURLBase": "document URI",
+    "namespace": "documentAlias:nodeId; each ref/descendant path segment namespaced",
+    "publicSchemaOmitsFonts": true
+  },
+  "unknowns": [
+    "Actual font loading/rendering/isolation in Pen and Open Pen",
+    "Read/write empty/malformed field UI states",
+    "Custom font relocation and OS delivery"
+  ],
+  "locations": {
+    "fontDecoder": {
+      "utf8ByteOffset": 4706553,
+      "unicodeCodePointOffset": 4576937,
+      "line": 964,
+      "columnUtf16": 19165
+    },
+    "fontEncoder": {
+      "utf8ByteOffset": 4708241,
+      "unicodeCodePointOffset": 4578625,
+      "line": 965,
+      "columnUtf16": 28
+    },
+    "namespace": {
+      "utf8ByteOffset": 2996285,
+      "unicodeCodePointOffset": 2866768,
+      "line": 367,
+      "columnUtf16": 195892
+    },
+    "fontAssignment": {
+      "utf8ByteOffset": 4711900,
+      "unicodeCodePointOffset": 4582284,
+      "line": 967,
+      "columnUtf16": 695
+    }
+  },
+  "offsetClarification": "Earlier Offset fields were Unicode-code-point indices; use explicit UTF-8 byte offsets for artifact seeking."
+}

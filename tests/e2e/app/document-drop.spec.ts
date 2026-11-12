@@ -118,6 +118,10 @@ test('unsupported .pen content reports its loss and preserves the current unsave
   ).toBeVisible()
   await expect(tabs).toHaveCount(1)
   await expect(tabs.first()).toHaveText(current ?? '')
+  await page
+    .getByRole('tablist', { name: 'Workspace panels' })
+    .getByRole('tab', { name: 'Layers', exact: true })
+    .click()
   await expect(page.getByTestId('layers-item').filter({ hasText: 'Rectangle 1' })).toHaveCount(1)
   await expect(tabs.first().getByRole('img', { name: 'Unsaved changes' })).toHaveCount(1)
 })

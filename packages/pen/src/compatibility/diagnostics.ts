@@ -6,6 +6,7 @@ export interface PenImportDiagnostic {
     | 'unsupported-effect'
     | 'unsupported-blend'
     | 'unsupported-import'
+    | 'unsupported-font'
     | 'unsupported-slot'
     | 'unsupported-component'
   /** JSON Pointer into the source document. */

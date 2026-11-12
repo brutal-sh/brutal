@@ -25,4 +25,7 @@ export function inspectDocument(doc: PenDocument, add: DiagnosticReporter): void
       'Imported .pen libraries are not resolved.'
     )
   }
+  if (doc.fonts !== undefined && (!Array.isArray(doc.fonts) || doc.fonts.length > 0)) {
+    add('unsupported-font', '/fonts', 'Custom font file declarations cannot be preserved yet.')
+  }
 }
