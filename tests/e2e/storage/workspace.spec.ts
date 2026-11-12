@@ -5,8 +5,10 @@ import { openAppMenu } from '#tests/helpers/menu'
 import {
   configureTestStorage,
   exerciseStorageEdit,
+  expectStoredRectangle,
   mockStorageUploads,
-  mockStorageWorkspace
+  mockStorageWorkspace,
+  reopenUploadedStorageDesign
 } from '#tests/helpers/storage/workspace'
 
 test('configured storage lists previews through ranges before opening the document', async ({
@@ -82,25 +84,25 @@ test('storage workspace opens a remote design for canvas edits and Undo', async 
   canvas.assertNoErrors()
 })
 
-test('Save to storage uploads the open document and lists it in the workspace', async ({
-  page
-}) => {
+test('Save To uploads edited content and reopens it from storage', async ({ page }) => {
   const objects = await mockStorageUploads(page)
 
   await page.goto('/?test')
   const canvas = new CanvasHelper(page)
   await canvas.waitForInit()
+  await canvas.drawRect(100, 120, 120, 90)
 
-  // Before storage is configured, the command opens storage settings.
+  // With no destination, Save To opens setup; choose Storage.
   let file = await openAppMenu(page, 'File')
-  await file.getByRole('menuitem', { name: 'Save to storage…' }).click()
+  await file.getByRole('menuitem', { name: /^Save to…$/i }).click()
+  await page.getByTestId('settings-section-storage').click()
   const panel = page.getByTestId('settings-storage-panel')
   await expect(panel).toBeVisible()
   await configureTestStorage(page)
   await page.getByTestId('app-settings-done').click()
 
   file = await openAppMenu(page, 'File')
-  await file.getByRole('menuitem', { name: 'Save to storage…' }).click()
+  await file.getByRole('menuitem', { name: /^Save to…$/i }).click()
   await expect
     .poll(() => [...objects.keys()].filter((key) => key.includes('/canvases/')).sort())
     .toEqual([
@@ -111,8 +113,7 @@ test('Save to storage uploads the open document and lists it in the workspace', 
   // An exported .fig is a zip archive holding the document and its thumbnail.
   expect(uploaded?.subarray(0, 4)).toEqual(Buffer.from([0x50, 0x4b, 0x03, 0x04]))
 
-  file = await openAppMenu(page, 'File')
-  await file.getByRole('menuitem', { name: 'Open storage workspace…' }).click()
-  await expect(page.getByTestId('recent-files-home')).toBeVisible()
-  await expect(page.getByRole('button', { name: /^Untitled/ }).first()).toBeVisible()
+  await expectStoredRectangle(uploaded)
+  await reopenUploadedStorageDesign(canvas)
+  canvas.assertNoErrors()
 })

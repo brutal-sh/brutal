@@ -2,7 +2,10 @@ import { readFileSync } from 'node:fs'
 
 import { expect, type Page, type Route } from '@playwright/test'
 
+import { BUILTIN_IO_FORMATS, IORegistry } from '@open-pencil/core/io'
+
 import type { CanvasHelper } from '#tests/helpers/canvas'
+import { openAppMenu } from '#tests/helpers/menu'
 import { testPath } from '#tests/helpers/paths'
 
 interface WorkspaceRequests {
@@ -150,4 +153,46 @@ export async function exerciseStorageEdit(canvas: CanvasHelper) {
       canvas.page.evaluate((id) => window.openPencil?.getStore?.()?.graph.getNode(id) ?? null, id)
     )
     .toBeNull()
+}
+
+export async function expectStoredRectangle(bytes: Uint8Array | undefined) {
+  if (!bytes) throw new Error('Uploaded FIG bytes missing')
+  const document = await new IORegistry(BUILTIN_IO_FORMATS).readDocument({
+    name: 'uploaded.fig',
+    data: bytes
+  })
+  expect(document.sourceFormat).toBe('fig')
+  const rectangles = [...document.graph.nodes.values()].filter((node) => node.type === 'RECTANGLE')
+  expect(rectangles).toHaveLength(1)
+  expect(rectangles[0]).toMatchObject({ width: 120, height: 90 })
+}
+
+export async function reopenUploadedStorageDesign(canvas: CanvasHelper) {
+  const page = canvas.page
+  await expect(page.getByRole('img', { name: 'Unsaved changes' })).not.toBeVisible()
+  await page.getByTestId('tabbar-close').click()
+  await expect(page.getByRole('tab', { name: /^Untitled/ })).toHaveCount(0)
+  await (
+    await openAppMenu(page, 'File')
+  )
+    .getByRole('menuitem', { name: /^Browse files…$/i })
+    .click()
+  const home = page.getByTestId('recent-files-home')
+  await expect(home).toBeVisible()
+  await home.getByRole('button', { name: /^Document locations:/ }).click()
+  await page.getByRole('menuitem', { name: /^designs/ }).click()
+  const entry = home.getByRole('button', { name: /^Untitled/ }).first()
+  await expect(entry).toBeVisible()
+  await entry.click()
+  await canvas.waitForInit()
+  await page
+    .getByRole('tablist', { name: 'Workspace panels' })
+    .getByRole('tab', { name: 'Layers', exact: true })
+    .click()
+  await expect(page.getByTestId('layers-item')).toHaveCount(1)
+  await page.getByTestId('layers-item').first().click()
+  await canvas.duplicate()
+  await expect(page.getByTestId('layers-item')).toHaveCount(2)
+  await canvas.undo()
+  await expect(page.getByTestId('layers-item')).toHaveCount(1)
 }
