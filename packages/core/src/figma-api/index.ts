@@ -1,28 +1,18 @@
 import { fromUint8Array, isValid, toUint8Array } from 'js-base64'
 
-import type { SceneGraph, SceneNode as CoreSceneNode, NodeType } from '@open-pencil/scene-graph'
-import { createConnector, freeEndpoint } from '@open-pencil/scene-graph/connectors'
-import { computeBounds } from '@open-pencil/scene-graph/geometry'
+import type { SceneGraph } from '@open-pencil/scene-graph'
 import type { GroupFitOptions } from '@open-pencil/scene-graph/group-bounds'
 import type { Rect, Vector } from '@open-pencil/scene-graph/primitives'
 
 import type { SkiaRenderer } from '#core/canvas'
 import { groupFitOptions } from '#core/canvas/boolean'
 import { IS_BROWSER, type InterfaceTheme } from '#core/constants'
-import { newLayerDefaults } from '#core/editor/shapes/defaults'
-import { booleanOperationPaints, createBooleanOperation } from '#core/editor/structure/boolean'
-import { wrapNodes } from '#core/editor/structure/container-wrap'
-import { ungroupNode } from '#core/editor/structure/group/ungroup'
-import { setDefaultPageBackground } from '#core/figma-api/page-backgrounds'
 import { defaultIcons, type IconProvider } from '#core/icons'
 import type { RasterCodec } from '#core/io/formats/raster'
-import { createSVGNodes } from '#core/io/formats/svg'
-import { textAutoResizeChanges } from '#core/layout/text-auto-resize'
-import { fontManager } from '#core/text/fonts'
 
-import { componentFromNode } from './components'
-import { flattenSceneNodes } from './flatten'
-import { loadFigmaFont, variationAxisTags, type FigmaFontNameInput } from './fonts'
+import * as Creation from './creation'
+import { FigmaDocumentState } from './document-state'
+import { loadFigmaFont, fontFamilyVariationAxes, type FigmaFontNameInput } from './fonts'
 import * as images from './images'
 import type {
   FigmaBooleanOperationNode,
@@ -42,12 +32,18 @@ import type {
   FigmaVectorNode
 } from './node-types'
 import { startPendingLayout } from './pending-layout'
-import { FigmaNodeProxy, INTERNAL_ID, MIXED, type FigmaFont, type NodeProxyHost } from './proxy'
+import { MIXED, type FigmaNodeProxy, type FigmaFont, type NodeProxyHost } from './proxy'
 import { newShapeWithText } from './shape-with-text'
+import * as Structure from './structure'
 import type { ExportImageOptions } from './types'
 import { figmaUtil } from './util'
 import { FigmaVariablesAPI } from './variables'
-import { combineComponentsAsVariants } from './variants'
+
+type ProxyNodes = ReadonlyArray<FigmaNodeProxy>
+type OfficialNodes = ReadonlyArray<BaseNode>
+type OfficialParent = BaseNode & ChildrenMixin
+type InputNodes = Structure.NodeInputs
+type InputParent = Structure.NodeParent
 
 const noop = () => undefined
 
@@ -102,10 +98,7 @@ export type { FigmaFontNameInput, FigmaVariationSettings } from './fonts'
 // layer covers all required node-specific return types and unsupported APIs are modeled explicitly.
 export class FigmaAPI implements NodeProxyHost {
   readonly graph: SceneGraph
-  private _currentPageId: string
-  private _selection: FigmaNodeProxy[] = []
-  private _nodeCache = new Map<string, FigmaNodeProxy>()
-  private _pageProxies = new WeakSet<FigmaNodeProxy>()
+  readonly #document: FigmaDocumentState
   private _renderer: SkiaRenderer | null = null
   /** The interface theme new sections take their fill from, as in Figma. */
   theme: InterfaceTheme = 'light'
@@ -124,8 +117,10 @@ export class FigmaAPI implements NodeProxyHost {
     this.#fetch = options.fetch ?? ((input, init) => fetch(input, init))
     this.variables = new FigmaVariablesAPI(graph)
     startPendingLayout(graph)
-    const pages = graph.getPages()
-    this._currentPageId = pages[0]?.id ?? graph.rootId
+    this.#document = new FigmaDocumentState(graph, this, () => ({
+      width: IS_BROWSER ? window.innerWidth : 1280,
+      height: IS_BROWSER ? window.innerHeight : 720
+    }))
   }
 
   setRenderer(renderer: SkiaRenderer | null): void {
@@ -137,33 +132,11 @@ export class FigmaAPI implements NodeProxyHost {
   }
 
   get currentPageId(): string {
-    return this._currentPageId
+    return this.#document.currentPageId
   }
 
   wrapNode(id: string): FigmaNodeProxy {
-    let proxy = this._nodeCache.get(id)
-    if (!proxy) {
-      proxy = new FigmaNodeProxy(id, this.graph, this)
-      this._nodeCache.set(id, proxy)
-    }
-    return proxy
-  }
-
-  private _ensurePageProxy(
-    proxy: FigmaNodeProxy
-  ): FigmaNodeProxy & { selection: FigmaNodeProxy[] } {
-    if (!this._pageProxies.has(proxy)) {
-      Object.defineProperty(proxy, 'selection', {
-        get: () => this._selection,
-        set: (nodes: FigmaNodeProxy[]) => {
-          this._selection = nodes
-        },
-        enumerable: true,
-        configurable: true
-      })
-      this._pageProxies.add(proxy)
-    }
-    return proxy as FigmaNodeProxy & { selection: FigmaNodeProxy[] }
+    return this.#document.wrapNode(id)
   }
 
   get root(): FigmaNodeProxy {
@@ -171,11 +144,11 @@ export class FigmaAPI implements NodeProxyHost {
   }
 
   get currentPage(): FigmaNodeProxy & { selection: FigmaNodeProxy[] } {
-    return this._ensurePageProxy(this.wrapNode(this._currentPageId))
+    return this.#document.currentPage
   }
 
   set currentPage(page: FigmaNodeProxy) {
-    this._currentPageId = page[INTERNAL_ID]
+    this.#document.currentPage = page
   }
 
   getNodeById(id: string): FigmaNodeProxy | null {
@@ -197,58 +170,42 @@ export class FigmaAPI implements NodeProxyHost {
   // Scripts are not type-checked, so the call checks for a missing node as Figma does.
   setCurrentPageAsync(page: PageNode | FigmaNodeProxy | null | undefined): Promise<void> {
     if (page == null) throw new Error(`in setCurrentPageAsync: Expected node, got ${String(page)}`)
-    if (this._rawNode(page).type !== 'CANVAS') {
+    if (Structure.rawNode(this, page).type !== 'CANVAS') {
       return Promise.reject(new Error('figma.setCurrentPageAsync expects a PageNode'))
     }
-    this._currentPageId = this._nodeId(page)
+    this.#document.currentPageId = Structure.nodeId(page)
     return Promise.resolve()
   }
 
   // --- Node Creation ---
 
   /** New layers start as the editor's tools make them, which is how Figma's plugin API makes them. */
-  private _createNode(type: NodeType): FigmaNodeProxy {
-    const defaults = newLayerDefaults(type, this.theme)
-    // Figma's plugin API makes a line with no height, a 496 px section, and a hugging frame.
-    if (type === 'LINE') defaults.height = 0
-    if (type === 'SECTION') Object.assign(defaults, { width: 496, height: 496 })
-    if (type === 'FRAME' || type === 'COMPONENT') defaults.primaryAxisSizing = 'HUG'
-    const node = this.graph.createNode(type, this._currentPageId, defaults)
-    return this.wrapNode(node.id)
-  }
-
   createFrame(): FigmaFrameNode {
-    return this._createNode('FRAME') as FigmaFrameNode
+    return Creation.createNode(this, 'FRAME') as FigmaFrameNode
   }
 
   createRectangle(): FigmaRectangleNode {
-    return this._createNode('RECTANGLE') as FigmaRectangleNode
+    return Creation.createNode(this, 'RECTANGLE') as FigmaRectangleNode
   }
 
   createEllipse(): FigmaEllipseNode {
-    return this._createNode('ELLIPSE') as FigmaEllipseNode
+    return Creation.createNode(this, 'ELLIPSE') as FigmaEllipseNode
   }
 
   createText(): FigmaTextNode {
-    const text = this._createNode('TEXT') as FigmaTextNode
-    // Figma's plugin text starts empty at 12px and sizes itself to its content: no width, one
-    // line tall.
-    const node = this.graph.getNode(text.id)
-    const defaults = { fontSize: 12, textAutoResize: 'WIDTH_AND_HEIGHT' as const, width: 0 }
-    this.graph.updateNode(text.id, { ...defaults, ...textAutoResizeChanges(node, defaults) })
-    return text
+    return Creation.createText(this)
   }
 
   createLine(): FigmaLineNode {
-    return this._createNode('LINE') as FigmaLineNode
+    return Creation.createNode(this, 'LINE') as FigmaLineNode
   }
 
   createPolygon(): FigmaPolygonNode {
-    return this._createNode('POLYGON') as FigmaPolygonNode
+    return Creation.createNode(this, 'POLYGON') as FigmaPolygonNode
   }
 
   createStar(): FigmaStarNode {
-    return this._createNode('STAR') as FigmaStarNode
+    return Creation.createNode(this, 'STAR') as FigmaStarNode
   }
 
   createShapeWithText(): FigmaShapeWithTextNode {
@@ -256,15 +213,13 @@ export class FigmaAPI implements NodeProxyHost {
   }
 
   createVector(): FigmaVectorNode {
-    return this._createNode('VECTOR') as FigmaVectorNode
+    return Creation.createNode(this, 'VECTOR') as FigmaVectorNode
   }
 
   /** The layers Figma makes from SVG markup, on the current page at its origin. */
   // eslint-disable-next-line open-pencil/no-mixed-case-acronym-identifiers -- Figma Plugin API name.
   createNodeFromSvg(svg: string): FigmaFrameNode {
-    const node = createSVGNodes(this.graph, this._currentPageId, svg, { keepEmpty: true })
-    if (!node) throw new Error('in createNodeFromSvg: Failed to convert SVG file')
-    return this.wrapNode(node.id) as FigmaFrameNode
+    return Creation.createSVGFrame(this, svg)
   }
 
   /**
@@ -272,70 +227,37 @@ export class FigmaAPI implements NodeProxyHost {
    * 200 px right of it, with no start cap and an arrow at the end.
    */
   createConnector(): FigmaConnectorNode {
-    const node = createConnector(this.graph, this._currentPageId, {
-      start: freeEndpoint(0, 0),
-      end: freeEndpoint(200, 0),
-      startCap: 'NONE',
-      endCap: 'ARROW_LINES'
-    })
-    return this.wrapNode(node.id) as FigmaConnectorNode
+    return Creation.createConnectorNode(this)
   }
 
   createComponent(): FigmaComponentNode {
-    return this._createNode('COMPONENT') as FigmaComponentNode
+    return Creation.createNode(this, 'COMPONENT') as FigmaComponentNode
   }
 
   createSection(): FigmaSectionNode {
-    return this._createNode('SECTION') as FigmaSectionNode
+    return Creation.createNode(this, 'SECTION') as FigmaSectionNode
   }
 
   createPage(): FigmaNodeProxy {
-    const page = this.graph.addPage('Page')
-    setDefaultPageBackground(this.graph, page, this.theme)
-    return this.wrapNode(page.id)
+    return Creation.createPage(this)
   }
 
   // --- Grouping ---
 
-  private _nodeId(node: BaseNode | FigmaNodeProxy): string {
-    return (node as BaseNode & { [INTERNAL_ID]: string })[INTERNAL_ID]
-  }
-
-  private _rawNode(node: BaseNode | FigmaNodeProxy): CoreSceneNode {
-    const id = this._nodeId(node)
-    const raw = this.graph.getNode(id)
-    if (!raw) throw new Error(`Node ${id} not found`)
-    return raw
-  }
-
-  group(
-    nodes: ReadonlyArray<FigmaNodeProxy>,
-    parent: FigmaNodeProxy,
-    index?: number
-  ): FigmaGroupNode
-  group(nodes: ReadonlyArray<BaseNode>, parent: BaseNode & ChildrenMixin, index?: number): GroupNode
-  group(
-    nodes: ReadonlyArray<BaseNode | FigmaNodeProxy>,
-    parent: (BaseNode & ChildrenMixin) | FigmaNodeProxy,
-    index?: number
-  ): FigmaGroupNode {
-    const parentId = this._nodeId(parent)
-    const members = nodes.map((node) => this._rawNode(node))
-    const groupNode = wrapNodes(this.graph, 'GROUP', members, parentId, index)
-    return this.wrapNode(groupNode.id) as FigmaGroupNode
+  group(nodes: ProxyNodes, parent: FigmaNodeProxy, index?: number): FigmaGroupNode
+  group(nodes: OfficialNodes, parent: OfficialParent, index?: number): GroupNode
+  group(nodes: InputNodes, parent: InputParent, index?: number): FigmaGroupNode {
+    return Structure.groupNodes(this, nodes, parent, index)
   }
 
   ungroup(node: FigmaNodeProxy): FigmaNodeProxy[]
   ungroup(node: SceneNode & ChildrenMixin): Array<SceneNode>
   ungroup(node: (SceneNode & ChildrenMixin) | FigmaNodeProxy): Array<SceneNode> | FigmaNodeProxy[] {
-    const children = ungroupNode(this.graph, this._nodeId(node)) ?? []
-    return children.map((id) => this.wrapNode(id))
+    return Structure.ungroup(this, node)
   }
 
   createComponentFromNode(node: FigmaNodeProxy): FigmaNodeProxy {
-    const raw = this.graph.getNode(node[INTERNAL_ID])
-    if (!raw) throw new Error('Node not found')
-    return this.wrapNode(componentFromNode(this.graph, raw, raw.parentId ?? this._currentPageId).id)
+    return Structure.createComponent(this, node)
   }
 
   combineAsVariants(
@@ -345,180 +267,63 @@ export class FigmaAPI implements NodeProxyHost {
   ): FigmaComponentSetNode
   combineAsVariants(
     nodes: ReadonlyArray<ComponentNode>,
-    parent: BaseNode & ChildrenMixin,
+    parent: OfficialParent,
     index?: number
   ): ComponentSetNode
   combineAsVariants(
     nodes: ReadonlyArray<ComponentNode | FigmaComponentNode>,
-    parent: (BaseNode & ChildrenMixin) | FigmaNodeProxy,
+    parent: InputParent,
     index?: number
   ): FigmaComponentSetNode {
-    const componentSet = combineComponentsAsVariants(
-      this.graph,
-      nodes.map((node) => this._nodeId(node)),
-      this._nodeId(parent),
-      index
-    )
-    return this.wrapNode(componentSet.id) as FigmaComponentSetNode
+    return Structure.combineVariants(this, nodes, parent, index)
   }
 
   // --- Boolean Operations ---
 
-  private _booleanOperation(
-    operation: 'UNION' | 'SUBTRACT' | 'INTERSECT' | 'EXCLUDE',
-    nodes: ReadonlyArray<BaseNode | FigmaNodeProxy>,
-    parent: (BaseNode & ChildrenMixin) | FigmaNodeProxy,
-    index?: number
-  ): FigmaBooleanOperationNode {
-    if (nodes.length < 2) throw new Error('Need at least 2 nodes for boolean operation')
-    const parentId = this._nodeId(parent)
-    const members = nodes.map((node) => this._rawNode(node))
-    const { node: group } = createBooleanOperation(
-      this.graph,
-      members,
-      parentId,
-      operation,
-      index,
-      booleanOperationPaints(operation, members, 'script'),
-      this.groupFitOptions
-    )
-    return this.wrapNode(group.id) as FigmaBooleanOperationNode
+  union(nodes: ProxyNodes, parent: FigmaNodeProxy, index?: number): FigmaBooleanOperationNode
+  union(nodes: OfficialNodes, parent: OfficialParent, index?: number): BooleanOperationNode
+  union(nodes: InputNodes, parent: InputParent, index?: number): FigmaBooleanOperationNode {
+    return Structure.booleanOperation(this, 'UNION', nodes, { parent, index })
   }
 
-  union(
-    nodes: ReadonlyArray<FigmaNodeProxy>,
-    parent: FigmaNodeProxy,
-    index?: number
-  ): FigmaBooleanOperationNode
-  union(
-    nodes: ReadonlyArray<BaseNode>,
-    parent: BaseNode & ChildrenMixin,
-    index?: number
-  ): BooleanOperationNode
-  union(
-    nodes: ReadonlyArray<BaseNode | FigmaNodeProxy>,
-    parent: (BaseNode & ChildrenMixin) | FigmaNodeProxy,
-    index?: number
-  ): FigmaBooleanOperationNode {
-    return this._booleanOperation('UNION', nodes, parent, index)
+  subtract(nodes: ProxyNodes, parent: FigmaNodeProxy, index?: number): FigmaBooleanOperationNode
+  subtract(nodes: OfficialNodes, parent: OfficialParent, index?: number): BooleanOperationNode
+  subtract(nodes: InputNodes, parent: InputParent, index?: number): FigmaBooleanOperationNode {
+    return Structure.booleanOperation(this, 'SUBTRACT', nodes, { parent, index })
   }
 
-  subtract(
-    nodes: ReadonlyArray<FigmaNodeProxy>,
-    parent: FigmaNodeProxy,
-    index?: number
-  ): FigmaBooleanOperationNode
-  subtract(
-    nodes: ReadonlyArray<BaseNode>,
-    parent: BaseNode & ChildrenMixin,
-    index?: number
-  ): BooleanOperationNode
-  subtract(
-    nodes: ReadonlyArray<BaseNode | FigmaNodeProxy>,
-    parent: (BaseNode & ChildrenMixin) | FigmaNodeProxy,
-    index?: number
-  ): FigmaBooleanOperationNode {
-    return this._booleanOperation('SUBTRACT', nodes, parent, index)
+  intersect(nodes: ProxyNodes, parent: FigmaNodeProxy, index?: number): FigmaBooleanOperationNode
+  intersect(nodes: OfficialNodes, parent: OfficialParent, index?: number): BooleanOperationNode
+  intersect(nodes: InputNodes, parent: InputParent, index?: number): FigmaBooleanOperationNode {
+    return Structure.booleanOperation(this, 'INTERSECT', nodes, { parent, index })
   }
 
-  intersect(
-    nodes: ReadonlyArray<FigmaNodeProxy>,
-    parent: FigmaNodeProxy,
-    index?: number
-  ): FigmaBooleanOperationNode
-  intersect(
-    nodes: ReadonlyArray<BaseNode>,
-    parent: BaseNode & ChildrenMixin,
-    index?: number
-  ): BooleanOperationNode
-  intersect(
-    nodes: ReadonlyArray<BaseNode | FigmaNodeProxy>,
-    parent: (BaseNode & ChildrenMixin) | FigmaNodeProxy,
-    index?: number
-  ): FigmaBooleanOperationNode {
-    return this._booleanOperation('INTERSECT', nodes, parent, index)
-  }
-
-  exclude(
-    nodes: ReadonlyArray<FigmaNodeProxy>,
-    parent: FigmaNodeProxy,
-    index?: number
-  ): FigmaBooleanOperationNode
-  exclude(
-    nodes: ReadonlyArray<BaseNode>,
-    parent: BaseNode & ChildrenMixin,
-    index?: number
-  ): BooleanOperationNode
-  exclude(
-    nodes: ReadonlyArray<BaseNode | FigmaNodeProxy>,
-    parent: (BaseNode & ChildrenMixin) | FigmaNodeProxy,
-    index?: number
-  ): FigmaBooleanOperationNode {
-    return this._booleanOperation('EXCLUDE', nodes, parent, index)
+  exclude(nodes: ProxyNodes, parent: FigmaNodeProxy, index?: number): FigmaBooleanOperationNode
+  exclude(nodes: OfficialNodes, parent: OfficialParent, index?: number): BooleanOperationNode
+  exclude(nodes: InputNodes, parent: InputParent, index?: number): FigmaBooleanOperationNode {
+    return Structure.booleanOperation(this, 'EXCLUDE', nodes, { parent, index })
   }
 
   // --- Flatten ---
 
-  flatten(
-    nodes: ReadonlyArray<FigmaNodeProxy>,
-    parent?: FigmaNodeProxy,
-    index?: number
-  ): FigmaVectorNode
-  flatten(
-    nodes: ReadonlyArray<BaseNode>,
-    parent?: BaseNode & ChildrenMixin,
-    index?: number
-  ): VectorNode
-  flatten(
-    nodes: ReadonlyArray<BaseNode | FigmaNodeProxy>,
-    parent?: (BaseNode & ChildrenMixin) | FigmaNodeProxy,
-    index?: number
-  ): FigmaVectorNode {
-    if (nodes.length === 0) throw new Error('Need at least 1 node to flatten')
-    const parentId = this._nodeId(parent ?? this.currentPage)
-    const sourceNodes: CoreSceneNode[] = []
-    for (const node of nodes) {
-      const raw = this.graph.getNode(this._nodeId(node))
-      if (!raw) throw new Error('Node not found')
-      sourceNodes.push(raw)
-    }
-    const vector = flattenSceneNodes(this.graph, this._renderer, sourceNodes, parentId)
-    if (index != null) this.graph.insertChildAt(vector.id, parentId, index)
-    for (const node of nodes) {
-      this.graph.deleteNode(this._nodeId(node))
-    }
-    return this.wrapNode(vector.id) as FigmaVectorNode
+  flatten(nodes: ProxyNodes, parent?: FigmaNodeProxy, index?: number): FigmaVectorNode
+  flatten(nodes: OfficialNodes, parent?: OfficialParent, index?: number): VectorNode
+  flatten(nodes: InputNodes, parent?: InputParent, index?: number): FigmaVectorNode {
+    return Structure.flatten(this, this._renderer, nodes, { parent, index })
   }
 
   // --- Viewport ---
-
-  private _viewport = { x: 0, y: 0, zoom: 1 }
 
   get viewport(): {
     center: Vector
     zoom: number
     scrollAndZoomIntoView: (nodes: readonly { absoluteBoundingBox: Rect }[]) => void
   } {
-    return {
-      center: { x: this._viewport.x, y: this._viewport.y },
-      zoom: this._viewport.zoom,
-      scrollAndZoomIntoView: (nodes) => {
-        const b = computeBounds(nodes.map((n) => n.absoluteBoundingBox))
-        if (b.width === 0 && b.height === 0 && nodes.length === 0) return
-
-        const padding = 80
-        const contentW = b.width + padding * 2
-        const contentH = b.height + padding * 2
-        const viewW = IS_BROWSER ? window.innerWidth : 1280
-        const viewH = IS_BROWSER ? window.innerHeight : 720
-        const zoom = Math.min(viewW / contentW, viewH / contentH, 1)
-        this._viewport = { x: b.x + b.width / 2, y: b.y + b.height / 2, zoom }
-      }
-    }
+    return this.#document.viewport
   }
 
   set viewport(v: { center: Vector; zoom: number }) {
-    this._viewport = { x: v.center.x, y: v.center.y, zoom: v.zoom }
+    this.#document.viewport = v
   }
 
   createImage(data: Uint8Array): Image {
@@ -547,13 +352,7 @@ export class FigmaAPI implements NodeProxyHost {
    * loaded, so a family has to be loaded first.
    */
   getFontFamilyVariationAxes(family: string): string[] | null {
-    const variation = fontManager.familyVariation(family)
-    if (variation === undefined) {
-      throw new Error(
-        `in getFontFamilyVariationAxes: Font family "${family}" is not available. Load it with figma.loadFontAsync({ family: "${family}" }) first.`
-      )
-    }
-    return variation ? variationAxisTags(variation.axes) : null
+    return fontFamilyVariationAxes(family)
   }
 
   async listAvailableFontsAsync(): Promise<FigmaFont[]> {

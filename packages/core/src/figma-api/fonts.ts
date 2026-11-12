@@ -183,16 +183,17 @@ export interface CurrentFont {
   variationSettings?: FigmaVariationSettings
 }
 
-export function fontNameInputStyle(
-  method: string,
+function resolvedFontStyle(
   input: FigmaFontNameInput,
-  current?: CurrentFont
-): { fontFamily: string; fontWeight: number; italic: boolean; fontVariations: FontVariation[] } {
-  const settings = input.variationSettings ?? {}
-  const tags = Object.keys(settings)
-  const slanted = parseFontStyle(input.style ?? current?.style ?? 'Regular').italic
-  const variation = checkedVariation(method, input.family, slanted, tags)
-  const style =
+  current: CurrentFont | undefined,
+  source: {
+    tags: string[]
+    settings: FigmaVariationSettings
+    variation: ReturnType<typeof fontManager.familyVariation>
+  }
+): string {
+  const { tags, settings, variation } = source
+  return (
     input.style ??
     (tags.length > 0 && variation
       ? nearestInstance(variation.axes, variation.instances, {
@@ -202,6 +203,19 @@ export function fontNameInputStyle(
       : undefined) ??
     current?.style ??
     'Regular'
+  )
+}
+
+export function fontNameInputStyle(
+  method: string,
+  input: FigmaFontNameInput,
+  current?: CurrentFont
+): { fontFamily: string; fontWeight: number; italic: boolean; fontVariations: FontVariation[] } {
+  const settings = input.variationSettings ?? {}
+  const tags = Object.keys(settings)
+  const slanted = parseFontStyle(input.style ?? current?.style ?? 'Regular').italic
+  const variation = checkedVariation(method, input.family, slanted, tags)
+  const style = resolvedFontStyle(input, current, { tags, settings, variation })
   const { weight, italic } = parseFontStyle(style)
   return {
     fontFamily: input.family,
@@ -216,4 +230,15 @@ export function fontNameInputStyle(
       ...tags.map((axis) => ({ axis, value: settings[axis] ?? 0 }))
     ]
   }
+}
+
+/** The axes exposed by the API for a loaded variable font family. */
+export function fontFamilyVariationAxes(family: string): string[] | null {
+  const variation = fontManager.familyVariation(family)
+  if (variation === undefined) {
+    throw new Error(
+      `in getFontFamilyVariationAxes: Font family "${family}" is not available. Load it with figma.loadFontAsync({ family: "${family}" }) first.`
+    )
+  }
+  return variation ? variationAxisTags(variation.axes) : null
 }

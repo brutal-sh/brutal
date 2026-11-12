@@ -59,6 +59,10 @@ Renderer, layout, editor, Figma API, tools, clipboard, vector conversion, and do
 - Renderer interaction policy uses explicit `beginInteractiveEdit()` leases and `isInteractiveEditing()`, not undo batching. Release leases on every terminal path. Keep live queries callable across app facades that spread editor actions.
 - `packages/core/src/editor/history/atomic-tool.ts` owns synchronous property/variable transactions for AI, MCP, and WebMCP tools; see Tools above.
 
+## Figma scripting API
+
+- `packages/core/src/figma-api/index.ts` retains public methods, overloads and host callbacks; `packages/core/src/figma-api/creation.ts`, `packages/core/src/figma-api/structure.ts` and `packages/core/src/figma-api/document-state.ts` own creation, structural operations and per-instance page/proxy/view state. Proxies keep the original API as their host, and page selection remains one shared slot exposed lazily; viewport dimensions stay at the guarded entry boundary (`packages/core/tests/figma-api/`, `tests/e2e/app/automation/figma.webkit.spec.ts`).
+
 ## OpenPencil API
 
 `OpenPencilAPI` (`packages/core/src/openpencil-api/`) is what OpenPencil adds to the Plugin API, exposed to scripts as the `openpencil` global next to `figma`.
