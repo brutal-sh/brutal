@@ -43,6 +43,16 @@ export const filesMessageDefaults = {
   home: 'Home',
   closeTab: params('Close {name}'),
   unsavedChanges: 'Unsaved changes',
+  fileChanged: 'File changed',
+  externalCopyFailed: 'Could not save a copy.',
+  externalReloadFailed: 'Could not reload the file.',
+  externalCopyFailedDescription:
+    'Your unsaved changes are still open. Try again or choose Ignore to keep editing.',
+  fileChangedDescription: params(
+    '“{name}” changed outside Open Pen. Reload discards your unsaved changes. Ignore to keep editing, or save a separate copy.'
+  ),
+  ignoreExternalChange: 'Ignore',
+  reloadExternalChange: 'Reload',
   saveBeforeClosing: params('Save changes to “{name}”?'),
   saveBeforeClosingDescription: 'Your changes will be discarded if you close without saving.',
   discard: 'Don’t Save',

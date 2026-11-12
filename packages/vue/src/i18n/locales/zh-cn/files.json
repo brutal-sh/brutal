@@ -57,5 +57,12 @@
   "figmaGuideLimits": "导入后请检查高级图形。「打开」会保留多个页面；「导入到画布」接受单页文件。",
   "snapshotScripts": {
     "many": "{count} 个脚本"
-  }
+  },
+  "fileChanged": "文件已更改",
+  "fileChangedDescription": "“{name}”已被其他程序更改。重新加载将丢弃未保存的更改。请选择忽略以继续编辑，或另存一份副本。",
+  "ignoreExternalChange": "忽略",
+  "reloadExternalChange": "重新加载",
+  "externalCopyFailed": "无法保存副本。",
+  "externalCopyFailedDescription": "未保存的更改仍处于打开状态。请重试，或选择“忽略”以继续编辑。",
+  "externalReloadFailed": "无法重新加载文件。"
 }

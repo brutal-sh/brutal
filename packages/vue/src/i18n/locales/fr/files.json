@@ -60,5 +60,12 @@
   "snapshotScripts": {
     "one": "{count} script JavaScript",
     "many": "{count} scripts JavaScript"
-  }
+  },
+  "fileChanged": "Fichier modifié",
+  "fileChangedDescription": "« {name} » a été modifié en dehors d’Open Pen. Le rechargement supprime vos modifications non enregistrées. Ignorez ce changement pour continuer ou enregistrez une copie séparée.",
+  "ignoreExternalChange": "Ignorer",
+  "reloadExternalChange": "Recharger",
+  "externalCopyFailed": "Impossible d’enregistrer une copie.",
+  "externalCopyFailedDescription": "Vos modifications non enregistrées sont toujours ouvertes. Réessayez ou choisissez Ignorer pour continuer.",
+  "externalReloadFailed": "Impossible de recharger le fichier."
 }

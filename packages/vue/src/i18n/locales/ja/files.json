@@ -57,5 +57,12 @@
   "figmaGuideLimits": "インポート後に高度なグラフィックを確認してください。「開く」は複数ページを保持します。「キャンバスにインポート」は単一ページのファイルに対応します。",
   "snapshotScripts": {
     "many": "スクリプト {count} 個"
-  }
+  },
+  "fileChanged": "ファイルが変更されました",
+  "fileChangedDescription": "「{name}」が別のアプリで変更されました。再読み込みすると未保存の変更は失われます。編集を続けるには無視するか、別のコピーを保存してください。",
+  "ignoreExternalChange": "無視",
+  "reloadExternalChange": "再読み込み",
+  "externalCopyFailed": "コピーを保存できませんでした。",
+  "externalCopyFailedDescription": "未保存の変更は引き続き開いています。もう一度試すか、「無視」を選んで編集を続けてください。",
+  "externalReloadFailed": "ファイルを再読み込みできませんでした。"
 }

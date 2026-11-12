@@ -5,14 +5,19 @@ import type { SceneGraph, SceneNode } from '@open-pencil/scene-graph'
 import { loadFont } from '@/app/editor/fonts'
 import type { EditorPreparationHandle as DocumentLoadSession } from '@/app/editor/preparation/types'
 
-export async function applyImportedDocument(
-  editor: Editor,
-  imported: SceneGraph,
-  load?: DocumentLoadSession
-) {
+function initializePageBackgrounds(editor: Editor, imported: SceneGraph) {
   for (const page of imported.getPages()) {
     if (!hasStoredBackground(page)) setDefaultPageBackground(imported, page, editor.state.theme)
   }
+}
+
+export async function applyImportedDocument(
+  editor: Editor,
+  imported: SceneGraph,
+  load?: DocumentLoadSession,
+  beforeCommit?: () => void
+) {
+  initializePageBackgrounds(editor, imported)
   const firstPage = imported.getPages()[0] as SceneNode | undefined
   const pageId = firstPage?.id ?? imported.rootId
   const stagingEditor = createEditor({
@@ -29,6 +34,7 @@ export async function applyImportedDocument(
     load?.signal.throwIfAborted()
     if (!prepared) throw new Error('Imported page preparation was superseded')
 
+    beforeCommit?.()
     editor.replaceGraph(imported)
     editor.undo.clear()
     editor.clearSelection()

@@ -1,106 +1,62 @@
-import type { Editor, EditorState } from '@open-pencil/core'
+import type { Editor } from '@open-pencil/core'
 import { prefetchFigmaSchema } from '@open-pencil/core/clipboard'
 import type { IORegistry } from '@open-pencil/core/io'
 
 import { createDocumentViewportActions, downloadBlob } from '@/app/document/io/browser'
 import { createDOMOpenActions } from '@/app/document/io/dom'
-import { createOpenActions, createReloadActions } from '@/app/document/io/read'
-import {
-  createDocumentSourceActions,
-  createDocumentSourceState
-} from '@/app/document/io/source/actions'
+import { createOpenActions } from '@/app/document/io/read'
+import { createDocumentSourceConnection } from '@/app/document/io/source/connection'
+import type { DocumentSourceState } from '@/app/document/io/source/types'
 import type { ViewportSize } from '@/app/document/io/types'
-import { createFileWatcher } from '@/app/document/io/watch/watcher'
 import type { EditorPreparationController } from '@/app/editor/preparation/controller'
 
-type DocumentIOState = EditorState & {
-  documentName: string
-  autosaveEnabled: boolean
-}
-
-export function createDocumentIOActions(
+type DocumentIOArguments = [
   editor: Editor,
-  state: DocumentIOState,
+  state: DocumentSourceState,
   viewportSize: ViewportSize,
   preparationController: EditorPreparationController,
   io: IORegistry
+]
+
+export function createDocumentIOActions(
+  ...[editor, state, viewportSize, preparationController, io]: DocumentIOArguments
 ) {
-  const sourceState = createDocumentSourceState()
-
   void prefetchFigmaSchema()
-
-  const { reloadFromDisk } = createReloadActions({
+  const { sourceState, sourceActions, reload } = createDocumentSourceConnection({
     editor,
     state,
-    getFilePath: sourceState.getFilePath,
-    getFileHandle: sourceState.getFileHandle,
-    markDocumentSaved: () => sourceActions.markDocumentSaved(),
-    preparationController
+    preparationController,
+    io
   })
-  const { startWatchingFile, stopWatchingFile } = createFileWatcher({
-    getFilePath: sourceState.getFilePath,
-    getFileHandle: sourceState.getFileHandle,
-    getLastWriteTime: sourceState.getLastWriteTime,
-    reloadFromDisk: () => {
-      void reloadFromDisk()
-    }
-  })
-  const { setViewportSize, getViewportSize, fitCurrentPageToViewport } =
-    createDocumentViewportActions(editor, viewportSize)
-  const sourceActions = createDocumentSourceActions({
-    io,
-    editor,
-    state,
-    stopWatchingFile,
-    startWatchingFile,
-    getRenderer: () => editor.renderer,
-    ...sourceState
-  })
-  const { openFigFile } = createOpenActions({
-    editor,
-    state,
-    setDocumentSource: sourceActions.setDocumentSource,
-    fitCurrentPageToViewport,
-    preparationController
-  })
-  const { openDOMFile, importDOMText } = createDOMOpenActions({
-    editor,
-    state,
-    setDocumentSource: sourceActions.setDocumentSource,
-    fitCurrentPageToViewport,
-    preparationController
-  })
-
+  const viewport = createDocumentViewportActions(editor, viewportSize)
   return {
-    renameDocument: sourceActions.renameDocument,
+    ...sourceActions,
+    ...viewport,
+    ...createOpenActions({
+      editor,
+      state,
+      setDocumentSource: sourceActions.setDocumentSource,
+      fitCurrentPageToViewport: viewport.fitCurrentPageToViewport,
+      preparationController
+    }),
+    ...createDOMOpenActions({
+      editor,
+      state,
+      setDocumentSource: sourceActions.setDocumentSource,
+      fitCurrentPageToViewport: viewport.fitCurrentPageToViewport,
+      preparationController
+    }),
     downloadBlob,
-    setViewportSize,
-    getViewportSize,
-    fitCurrentPageToViewport,
     getDocumentFilePath: sourceState.getFilePath,
     getSourceIdentity: sourceState.getSourceIdentity,
-    getStorageBinding: sourceState.getStorageBinding,
     hasWritableSource: sourceState.hasWritableSource,
-    getRecoveryId: sourceActions.getRecoveryId,
-    adoptRecoverySnapshot: sourceActions.adoptRecoverySnapshot,
-    persistRecoveryNow: sourceActions.persistRecoveryNow,
-    discardRecovery: sourceActions.discardRecovery,
-    setDocumentSource: sourceActions.setDocumentSource,
-    setStorageDocumentSource: sourceActions.setStorageDocumentSource,
-    setPlannedFilePath: sourceActions.setPlannedFilePath,
-    saveFigFileToPath: sourceActions.saveFigFileToPath,
-    saveFigFileCopy: sourceActions.saveFigFileCopy,
-    saveFigFileToStorage: sourceActions.saveFigFileToStorage,
-    startWatchingCurrentFile: sourceActions.startWatchingCurrentFile,
-    disposeDocumentIO: sourceActions.disposeDocumentIO,
-    openFigFile,
-    openDOMFile,
-    importDOMText,
-    hasUnsavedChanges: sourceActions.hasUnsavedChanges,
-    markDocumentSaved: () => sourceActions.markDocumentSaved(),
-    markDocumentChanged: sourceActions.markDocumentChanged,
-    adoptChanges: sourceActions.adoptChanges,
-    saveFigFile: sourceActions.saveFigFile,
-    saveFigFileAs: sourceActions.saveFigFileAs
+    externalFileChange: reload.externalFileChange,
+    lastReloadFailed: reload.lastReloadFailed,
+    ignoreExternalFileChange: reload.ignoreExternalFileChange,
+    reloadExternalFileChange: reload.reloadExternalFileChange,
+    disposeDocumentIO: () => {
+      reload.dispose()
+      sourceActions.disposeDocumentIO()
+    }
   }
 }

@@ -41,3 +41,4 @@
 - Keep the browser panel background around fixed-device previews consistent with its toolbar.
 - Long agent command titles truncate inside tool cards while retaining the full tooltip and inspectable command details.
 - Open FIG documents from byte views without reading padding outside the supplied file data.
+- Preserve unsaved browser-file edits and recovery backups when another writer changes the source, with explicit reload and save-copy decisions.

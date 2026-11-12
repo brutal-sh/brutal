@@ -7,7 +7,7 @@ import { createDefaultEditorState } from '@open-pencil/core'
 import { BUILTIN_IO_FORMATS, IORegistry } from '@open-pencil/core/io'
 import { SceneGraph } from '@open-pencil/scene-graph'
 
-import { readReloadSource } from '@/app/document/io/reload-source'
+import { readReloadSource } from '@/app/document/io/reload/source'
 import { createSaveActions } from '@/app/document/io/save/actions'
 import { documentSaveFormat } from '@/app/document/io/save/format'
 import * as targets from '@/app/document/io/save/targets'
@@ -41,7 +41,10 @@ function fileHandle(name: string, written: Uint8Array[], file?: File) {
 
 function harness() {
   const source = createDocumentSourceState()
-  const state = { ...createDefaultEditorState('page'), documentName: 'Existing' }
+  const state = {
+    ...createDefaultEditorState('page'),
+    documentName: 'Existing'
+  }
   const written: Uint8Array[] = []
   const original = fileHandle('existing.fig', written)
   source.setFileHandle(original)
@@ -65,7 +68,10 @@ test('Save writes an imported .pen in place with the real Core writer and readab
     expect(store.hasUnsavedChanges()).toBe(true)
     expect(await store.saveFigFile()).toBe(true)
     expect(written).toHaveLength(1)
-    const imported = await io.readDocument({ name: 'design.pen', data: written[0] })
+    const imported = await io.readDocument({
+      name: 'design.pen',
+      data: written[0]
+    })
     expect(imported.sourceFormat).toBe('pen')
     expect(imported.graph.getChildren(imported.graph.getPages()[0].id)[0].name).toBe('Saved slide')
     expect(store.hasUnsavedChanges()).toBe(false)
@@ -90,7 +96,10 @@ test('a new document defaults to .pen and writes editable geometry on its first 
     expect(await store.saveFigFile()).toBe(true)
     expect(picker).toHaveBeenCalledWith('Untitled.pen')
     expect(written).toHaveLength(1)
-    const reopened = await io.readDocument({ name: handle.name, data: written[0] })
+    const reopened = await io.readDocument({
+      name: handle.name,
+      data: written[0]
+    })
     expect(reopened.sourceFormat).toBe('pen')
     expect(reopened.graph.getChildren(reopened.graph.getPages()[0].id)[0]).toMatchObject({
       type: 'RECTANGLE',
@@ -175,7 +184,10 @@ test('the final writer rejects FIG bytes directed at a .pen destination', async 
   const source = createDocumentSourceState()
   const written: Uint8Array[] = []
   source.setFileHandle(fileHandle('design.pen', written))
-  const writer = createDocumentWriter({ ...source, state: { documentName: 'Design' } })
+  const writer = createDocumentWriter({
+    ...source,
+    state: { documentName: 'Design' }
+  })
   await expect(writer(new Uint8Array([1]), 2, 'fig')).rejects.toThrow('changed format')
   expect(written).toEqual([])
   expect(source.getSavedVersion()).toBe(0)
@@ -234,7 +246,10 @@ test('autosave writes .pen bytes after a real document edit', async () => {
       height: 30
     })
     const bytes = await write
-    const reopened = await io.readDocument({ name: 'autosave.pen', data: bytes })
+    const reopened = await io.readDocument({
+      name: 'autosave.pen',
+      data: bytes
+    })
     expect(reopened.sourceFormat).toBe('pen')
     expect(reopened.graph.getChildren(reopened.graph.getPages()[0].id)[0].name).toBe('Automatic')
   } finally {
@@ -245,8 +260,14 @@ test('autosave writes .pen bytes after a real document edit', async () => {
 
 test('storage refuses .pen encoding before persistence or a saved-version update', async () => {
   const source = createDocumentSourceState()
-  source.setStorageBinding({ providerId: 's3-compatible', documentId: 'stored' })
-  const writer = createDocumentWriter({ ...source, state: { documentName: 'Stored' } })
+  source.setStorageBinding({
+    providerId: 's3-compatible',
+    documentId: 'stored'
+  })
+  const writer = createDocumentWriter({
+    ...source,
+    state: { documentName: 'Stored' }
+  })
   await expect(writer(new Uint8Array([1]), 4, 'pen')).rejects.toThrow(
     'Storage documents must use FIG encoding'
   )
@@ -263,7 +284,10 @@ test('a successful native Save immediately remembers its local path', async () =
     store.createShape('RECTANGLE', 0, 0, 100, 50)
     expect(await store.saveFigFile()).toBe(true)
     expect(write).toHaveBeenCalledTimes(1)
-    expect(recentDocuments.value[0]).toMatchObject({ kind: 'local', path: '/native/history.pen' })
+    expect(recentDocuments.value[0]).toMatchObject({
+      kind: 'local',
+      path: '/native/history.pen'
+    })
   } finally {
     store.dispose()
     native.mockRestore()

@@ -20,6 +20,7 @@ import { scheduleStartupUpdateCheck } from '@/app/shell/updater/check'
 import { kickSyncEngine } from '@/app/storage/sync'
 import { prepareForReload } from '@/app/tabs'
 import { CloudHosts } from '@/components/cloud/integration'
+import ExternalFileChangeDialog from '@/components/document/ExternalFileChangeDialog.vue'
 import UnsavedChangesDialog from '@/components/document/UnsavedChangesDialog.vue'
 import DesignCodeGuide from '@/components/guides/DesignCodeGuide.vue'
 import FigmaImportGuide from '@/components/guides/FigmaImportGuide.vue'
@@ -58,7 +59,9 @@ onMounted(() => {
   scheduleStartupUpdateCheck(updates)
   void kickSyncEngine()
   onUnmounted(
-    startCloud({ leaveLinkAddress: () => router.isReady().then(() => router.replace('/')) })
+    startCloud({
+      leaveLinkAddress: () => router.isReady().then(() => router.replace('/'))
+    })
   )
 })
 </script>
@@ -77,6 +80,7 @@ onMounted(() => {
       <CloudHosts />
       <RecoveryDialog />
       <UnsavedChangesDialog />
+      <ExternalFileChangeDialog />
       <PublishLibraryDialog />
       <LibraryUpdateReviewDialog />
       <UsageStatsPrompt />

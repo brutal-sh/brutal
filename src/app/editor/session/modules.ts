@@ -1,3 +1,4 @@
+import { omit } from 'es-toolkit'
 import { computed } from 'vue'
 
 import type { Editor } from '@open-pencil/core'
@@ -56,16 +57,43 @@ export function createEditorComputedRefs(editor: Editor, state: AppEditorState) 
   return { selectedNodes, selectedNode, layerTree, disposeSelection }
 }
 
-export function createEditorStoreModules(
+function createEditingModules(editor: Editor, state: AppEditorState) {
+  const flash = createFlashActions(editor, state)
+  const pen = createPenActions(editor, state)
+  const vectorEdit = createVectorEditActions(editor, state)
+  return {
+    ...flash,
+    ...pen,
+    ...vectorEdit,
+    wrapInAutoLayout: () => editor.wrapInAutoLayout(true),
+    async insertIcon(...args: Parameters<Editor['insertIcon']>) {
+      try {
+        return await editor.insertIcon(...args)
+      } catch {
+        toast.error(panelMessages.get().insertIconFailed)
+        return null
+      }
+    },
+    /** Going read-only keeps a vector edit in progress, as the editor keeps edited text. */
+    setReadOnly(readOnly: boolean) {
+      if (readOnly) vectorEdit.exitNodeEditMode(true)
+      editor.setReadOnly(readOnly)
+    }
+  }
+}
+
+type EditorModuleArguments = [
   editor: Editor,
   state: AppEditorState,
   io: IORegistry,
   viewportSize: ViewportSize,
   preparationController: EditorPreparationController
+]
+
+export function createEditorStoreModules(
+  ...[editor, state, io, viewportSize, preparationController]: EditorModuleArguments
 ) {
-  const flash = createFlashActions(editor, state)
-  const pen = createPenActions(editor, state)
-  const vectorEdit = createVectorEditActions(editor, state)
+  const editing = createEditingModules(editor, state)
   const documentIO = createDocumentIOActions(editor, state, viewportSize, preparationController, io)
   const shaderSources = createShaderSourceWatcher(editor, {
     getDocumentPath: documentIO.getDocumentFilePath,
@@ -81,18 +109,7 @@ export function createEditorStoreModules(
   const designCheck = createDesignCheck(editor, state)
 
   return {
-    ...flash,
-    ...pen,
-    ...vectorEdit,
-    wrapInAutoLayout: () => editor.wrapInAutoLayout(true),
-    async insertIcon(...args: Parameters<Editor['insertIcon']>) {
-      try {
-        return await editor.insertIcon(...args)
-      } catch {
-        toast.error(panelMessages.get().insertIconFailed)
-        return null
-      }
-    },
+    ...editing,
     attachScriptSource: scriptRuntime.attachScriptSource,
     reloadScript: scriptRuntime.reloadScript,
     scriptRuntimeStates: scriptRuntime.scriptRuntimeStates,
@@ -100,42 +117,7 @@ export function createEditorStoreModules(
     watchShaderSource: shaderSources.watchShaderSource,
     shaderSourceErrors: shaderSources.shaderSourceErrors,
     shaderSourceOrder: shaderSources.shaderSourceOrder,
-    /** Going read-only keeps a vector edit in progress, as the editor keeps edited text. */
-    setReadOnly(readOnly: boolean) {
-      if (readOnly) vectorEdit.exitNodeEditMode(true)
-      editor.setReadOnly(readOnly)
-    },
-    openFigFile: documentIO.openFigFile,
-    openDOMFile: documentIO.openDOMFile,
-    importDOMText: documentIO.importDOMText,
-    setViewportSize: documentIO.setViewportSize,
-    getViewportSize: documentIO.getViewportSize,
-    fitCurrentPageToViewport: documentIO.fitCurrentPageToViewport,
-    hasUnsavedChanges: documentIO.hasUnsavedChanges,
-    renameDocument: documentIO.renameDocument,
-    /** Takes the document as it is now as its saved state, so closing it asks nothing. */
-    markDocumentSaved: documentIO.markDocumentSaved,
-    /** Counts the document changed by something outside its history, so it gets saved. */
-    markDocumentChanged: documentIO.markDocumentChanged,
-    /** Applies changes the document already has elsewhere, such as its room's, as no edit. */
-    adoptChanges: documentIO.adoptChanges,
-    saveFigFile: documentIO.saveFigFile,
-    saveFigFileAs: documentIO.saveFigFileAs,
-    getDocumentFilePath: documentIO.getDocumentFilePath,
-    hasWritableSource: documentIO.hasWritableSource,
-    getSourceIdentity: documentIO.getSourceIdentity,
-    getStorageBinding: documentIO.getStorageBinding,
-    getRecoveryId: documentIO.getRecoveryId,
-    adoptRecoverySnapshot: documentIO.adoptRecoverySnapshot,
-    persistRecoveryNow: documentIO.persistRecoveryNow,
-    discardRecovery: documentIO.discardRecovery,
-    setDocumentSource: documentIO.setDocumentSource,
-    setStorageDocumentSource: documentIO.setStorageDocumentSource,
-    setPlannedFilePath: documentIO.setPlannedFilePath,
-    saveFigFileToPath: documentIO.saveFigFileToPath,
-    saveFigFileCopy: documentIO.saveFigFileCopy,
-    saveFigFileToStorage: documentIO.saveFigFileToStorage,
-    startWatchingCurrentFile: documentIO.startWatchingCurrentFile,
+    ...omit(documentIO, ['downloadBlob', 'disposeDocumentIO']),
     designCheck,
     dispose: () => {
       scriptRuntime.dispose()

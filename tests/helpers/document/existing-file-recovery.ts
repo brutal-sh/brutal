@@ -59,12 +59,14 @@ export async function readOwnedFile(page: Page, name = 'existing.pen') {
   )
 }
 
-async function openOwnedFile(page: Page) {
+export async function openOwnedFile(page: Page) {
   await page.goto('/')
   await new CanvasHelper(page).waitForInit()
   await page.evaluate(async (content) => {
     const directory = await navigator.storage.getDirectory()
-    const handle = await directory.getFileHandle('existing.pen', { create: true })
+    const handle = await directory.getFileHandle('existing.pen', {
+      create: true
+    })
     const writable = await handle.createWritable()
     await writable.write(content)
     await writable.close()
@@ -86,7 +88,9 @@ async function reloadAndRestore(page: Page) {
 }
 
 export async function restoreExistingFileRecovery(page: Page) {
-  const recovery = page.getByRole('alertdialog', { name: 'Recover unsaved work' })
+  const recovery = page.getByRole('alertdialog', {
+    name: 'Recover unsaved work'
+  })
   await expect(recovery).toBeVisible()
   await recovery.getByRole('button', { name: 'Restore', exact: true }).click()
   await new CanvasHelper(page).waitForInit()

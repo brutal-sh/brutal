@@ -63,5 +63,12 @@
     "one": "{count} skrypt",
     "many": "{count} skryptów",
     "few": "{count} skrypty"
-  }
+  },
+  "fileChanged": "Plik został zmieniony",
+  "fileChangedDescription": "Plik „{name}” został zmieniony poza Open Pen. Ponowne wczytanie odrzuci niezapisane zmiany. Zignoruj zmianę, aby kontynuować edycję, lub zapisz osobną kopię.",
+  "ignoreExternalChange": "Ignoruj",
+  "reloadExternalChange": "Wczytaj ponownie",
+  "externalCopyFailed": "Nie udało się zapisać kopii.",
+  "externalCopyFailedDescription": "Niezapisane zmiany są nadal otwarte. Spróbuj ponownie lub wybierz Ignoruj, aby kontynuować edycję.",
+  "externalReloadFailed": "Nie udało się ponownie wczytać pliku."
 }

@@ -60,5 +60,12 @@
   "snapshotScripts": {
     "one": "{count} script de JavaScript",
     "many": "{count} scripts de JavaScript"
-  }
+  },
+  "fileChanged": "Archivo modificado",
+  "fileChangedDescription": "«{name}» se ha modificado fuera de Open Pen. Recargar descarta los cambios sin guardar. Ignora el cambio para seguir editando o guarda una copia aparte.",
+  "ignoreExternalChange": "Ignorar",
+  "reloadExternalChange": "Recargar",
+  "externalCopyFailed": "No se ha podido guardar una copia.",
+  "externalCopyFailedDescription": "Los cambios sin guardar siguen abiertos. Inténtalo de nuevo o elige Ignorar para seguir editando.",
+  "externalReloadFailed": "No se ha podido recargar el archivo."
 }

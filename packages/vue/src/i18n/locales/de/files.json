@@ -60,5 +60,12 @@
   "snapshotScripts": {
     "one": "{count} Skript",
     "many": "{count} Skripte"
-  }
+  },
+  "fileChanged": "Datei geändert",
+  "fileChangedDescription": "„{name}“ wurde außerhalb von Open Pen geändert. Beim Neuladen gehen Ihre ungespeicherten Änderungen verloren. Ignorieren Sie die Änderung, um weiterzuarbeiten, oder speichern Sie eine separate Kopie.",
+  "ignoreExternalChange": "Ignorieren",
+  "reloadExternalChange": "Neu laden",
+  "externalCopyFailed": "Kopie konnte nicht gespeichert werden.",
+  "externalCopyFailedDescription": "Ihre ungespeicherten Änderungen sind noch geöffnet. Versuchen Sie es erneut oder wählen Sie Ignorieren, um weiterzuarbeiten.",
+  "externalReloadFailed": "Datei konnte nicht neu geladen werden."
 }
