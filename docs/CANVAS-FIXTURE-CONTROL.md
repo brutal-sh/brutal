@@ -68,3 +68,38 @@ are not qualified by these fixture controls. Native access remains blocked by th
 locked Mac.
 
 Private receipts: `local-evidence/claude-brand-review-2026-11-11/canvas-fixture-*`.
+
+## Saved-text reference disposition — 2026-11-12
+
+VERIFY-FIG-WRAP-VISUAL separately checks the retained pre-FIG-extraction failure.
+The unchanged current save/reopen test passes its two-line assertion and original
+whole-image matcher. That matcher permits a 1% perceptual pixel difference, so its
+green result alone does not establish exact output.
+
+Three controlled captures are byte-identical to each other. Replaying only the
+pre-`f286dba18` `useLightPage()` method against the same current runtime reproduces
+the original November 7 failed PNG byte-for-byte: the stale `#1E1E1E` comparison
+does not recognize the actual `#18181B` canvas. Both temporary source files and
+their modes are restored exactly. No application, configuration, deadline,
+assertion, retry or baseline changes.
+
+The existing fixture repair supplies the intended light page. Whole-image output
+still differs from the original reference in 31,026 raw pixels: a visible Card
+title and a 20-device-pixel vertical translation. The authored 520 × 104 frame
+regions match every one of their 216,320 RGBA channels after aligning their
+positions, in all three captures. This is direct rendered-content evidence, not
+an assumption that every difference is theme-only.
+
+The original whole-view reference is retained, SHA-256
+`ee7ccfd8d16dd013fb47d9dcac7bf3d22969d75dfb8ce2cf16aab566c63f7513`.
+No newly received image becomes a replacement reference. Fit-controls task UI-02
+retains camera-placement acceptance, and SURF-FRAME-TITLE owns the missing matched
+actual-Pen frame-title comparison. The rendered-content/reference disposition
+does not accept those full-scene states, live Figma, native interoperability,
+complete FIG reader/writer fidelity or full product parity.
+
+Current test-type and owning lint checks pass. Private receipts:
+`fig-wrap-current-before.*`, `fig-wrap-{capture-current,old-helper}.*`,
+`fig-wrap-helper-control.json`, `fig-wrap-raw-comparison.json` and
+`fig-wrap-authored-frame-comparison.json` under the same evidence root. The
+original November 7 PNGs and manifests remain untouched.
