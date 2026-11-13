@@ -127,6 +127,10 @@ openpencil convert design.fig -o design.pen
 openpencil formats
 ```
 
+Conversion requires an output folder that permits temporary-file creation. It replaces
+a destination symlink without overwriting the linked file. Check both the exit status
+and resulting document; resolve a reported write failure before retrying.
+
 ### Analyze and lint
 
 ```bash

@@ -1,20 +1,15 @@
-import { writeFile } from 'node:fs/promises'
 import { basename, extname, resolve } from 'node:path'
 
 import { defineCommand } from 'citty'
 
 import { BUILTIN_IO_FORMATS, IORegistry } from '@open-pencil/core/io'
 import { layoutAuthoredNodes } from '@open-pencil/core/layout'
+import { writeFileAtomic } from '@open-pencil/core/node/fs'
 
 import { requireFile } from '#cli/app/client'
 import { FONT_POLICIES, reportFontStatus } from '#cli/commands/export/font-policy'
 import { ok, printError } from '#cli/format'
-import {
-  loadDocument,
-  measureDocumentText,
-  populateWholeDocument,
-  writeFigDocument
-} from '#cli/headless'
+import { loadDocument, measureDocumentText, populateWholeDocument } from '#cli/headless'
 
 const io = new IORegistry(BUILTIN_IO_FORMATS)
 
@@ -81,8 +76,12 @@ export default defineCommand({
       )
     }
     const output = args.output ? resolve(args.output) : defaultOutput(file, format)
-    if (format === 'fig') await writeFigDocument(graph, output)
-    else await writeFile(output, (await io.writeDocument(format, graph)).data as Uint8Array)
+    const result = await io.writeDocument(
+      format,
+      graph,
+      format === 'fig' ? { renderThumbnail: true } : undefined
+    )
+    await writeFileAtomic(output, result.data, { fallback: 'refuse' })
     console.log(ok(`Converted ${file} → ${output}`))
   }
 })

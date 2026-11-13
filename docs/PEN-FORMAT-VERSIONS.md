@@ -63,8 +63,9 @@ An earlier local binding rejected by Core's global-name rule was renamed before
 the final check and browser cohort. Original failures and producing identities
 remain retained; no guard or acceptance threshold was relaxed.
 
-Now: ERR-06 continues owned CLI output/failure/safe-retry qualification. This bounded
-format slice remains Verify for actual native/reference and line conversion acceptance.
+Now: ERR-06 is Verify after bounded converter output/failure/safe-retry qualification;
+CLI-04-PNG continues actual export acceptance. This format slice remains Verify for
+actual native/reference and line conversion acceptance.
 Retain strict checks, raw controls, exact source and saved-output identities.
 Normal installed `db4e528c`, user workspace, profiles, credentials, older recovery
 and protected icon work remain untouched. Do not infer actual native-menu pixels,

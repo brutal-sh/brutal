@@ -49,3 +49,4 @@
 - Diagnostics redact supported credential formats in new and retained error details while preserving technical identifiers, and advise reviewing reports before sharing.
 
 - Save compatible `.pen` designs with the current 2.22 schema header while retaining existing legacy-line interchange output.
+- Failed CLI conversion writes preserve existing output and allow retry after resolving the write failure.

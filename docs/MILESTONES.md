@@ -2,7 +2,7 @@
 
 Updated: 2026-11-13. These are outcome and evidence gates, not calendar promises. All remain open until their required exit evidence is accepted. Every execution task has one primary milestone owner; supporting dependencies can cross owners without creating a whole-milestone ordering rule.
 
-Current reference is Pen 1.2.23; REF-04 has executed its bounded catalog criterion. Normal Save delivery is bounded Executed on installed `db4e528c`; [ERR-07](SUPPORT-DIAGNOSTICS.md) and FMT-01 are Verify; ERR-06 is the sole Building task; LAYOUT-WRAP is Verify and remains unaccepted. UI-MAC-WINDOW-CONTROLS remains Verify for pointer dragging, and FILE-NATIVE-SAVE-UI remains Verify for matched critical-alert pixels. The complete index has 525 cards: 507 execution tasks and 18 milestones, with 506 other terminal prerequisites. See [normal delivery](NATIVE-SAVE-DELIVERY.md) for executed scope and remaining limits.
+Current reference is Pen 1.2.23; REF-04 has executed its bounded catalog criterion. Normal Save delivery is bounded Executed on installed `db4e528c`; [ERR-07](SUPPORT-DIAGNOSTICS.md) and FMT-01 are Verify; [ERR-06](CLI-CONVERSION-OUTPUT.md) is Verify and CLI-04-PNG is the sole Building task; LAYOUT-WRAP is Verify and remains unaccepted. UI-MAC-WINDOW-CONTROLS remains Verify for pointer dragging, and FILE-NATIVE-SAVE-UI remains Verify for matched critical-alert pixels. The complete index has 525 cards: 507 execution tasks and 18 milestones, with 506 other terminal prerequisites. See [normal delivery](NATIVE-SAVE-DELIVERY.md) for executed scope and remaining limits.
 
 Public release is a separate owner decision. The current full-parity target is not reduced to reach a beta date.
 

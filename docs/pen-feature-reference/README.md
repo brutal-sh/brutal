@@ -331,7 +331,7 @@ Source: [Troubleshooting](https://docs.pen.dev/troubleshooting).
 | ERR-03 MCP diagnostics | Missing tools, connection errors and client config enable/disable. | Inspect live tool list, minimal failing call and restored independent configuration. | Open |
 | ERR-04 Save/recovery diagnostics | Unsaved original versus backup; recovered-change review. | Compare disk bytes before/after Save and recovery; preserve unrelated recovery snapshots. | Open |
 | ERR-05 Import/font diagnostics | Figma image clipboard limit and missing resources/fonts. | Provide accurate recovery route while keeping existing design intact. | Open |
-| ERR-06 CLI output diagnostics | Export may report failure despite successful exit in reference. | Verify expected file content, errors and safe retry; independent CLI should fail clearly. | Open |
+| ERR-06 CLI output diagnostics | Check command exit status and the produced file; retain existing output on failure and permit a safe retry. | Verify expected file content, errors and safe retry; independent CLI should fail clearly. | Open |
 | ERR-07 Support evidence | Exact version, repro, sanitized logs and minimal fixtures. | Produce a redacted diagnostic report without private designs or credentials. | Open |
 
 ## Documentation refresh, 2026-11-06

@@ -1,0 +1,1 @@
+- CLI conversion requires an output folder that permits temporary-file creation and replaces destination symlinks without overwriting their linked files.

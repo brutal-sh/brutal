@@ -12,10 +12,22 @@ export interface AtomicWriteOptions {
    * link. `follow` writes the file the link points at, as a document saved in place should.
    */
   symlink?: 'follow' | 'replace'
+  /** Refuse when no temporary sibling can be created; defaults to the legacy in-place retry. */
+  fallback?: 'in-place' | 'refuse'
 }
 
 function hasCode(error: unknown, ...codes: string[]): boolean {
   return error instanceof Error && 'code' in error && codes.includes(String(error.code))
+}
+
+function canWriteInPlace(
+  error: unknown,
+  existing: number | undefined,
+  options: AtomicWriteOptions
+) {
+  return (
+    options.fallback !== 'refuse' && existing !== undefined && hasCode(error, 'EACCES', 'EPERM')
+  )
 }
 
 async function resolveTarget(path: string): Promise<string> {
@@ -41,7 +53,7 @@ async function fileMode(path: string): Promise<number | undefined> {
 /**
  * Writes `data` to `path` all at once: into a new file beside it, which then replaces it, so a
  * reader never sees half a file and a failed write leaves the old one. An existing file in a
- * directory that takes no new files is written in place, as it could be before.
+ * directory that takes no new files is written in place unless `fallback` is `refuse`.
  */
 export async function writeFileAtomic(
   path: string,
@@ -56,7 +68,7 @@ export async function writeFileAtomic(
   try {
     handle = await open(temporary, 'wx', mode ?? 0o666)
   } catch (error) {
-    if (existing === undefined || !hasCode(error, 'EACCES', 'EPERM')) throw error
+    if (!canWriteInPlace(error, existing, options)) throw error
     await writeFile(target, data)
     return
   }

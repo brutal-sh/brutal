@@ -1475,10 +1475,10 @@
         {
           "id": "ERR-06",
           "feature": "CLI output diagnostics",
-          "behavior": "Export may report failure despite successful exit in reference.",
+          "behavior": "Check command exit status and the produced file; retain existing output on failure and permit a safe retry.",
           "acceptance": "Verify expected file content, errors and safe retry; independent CLI should fail clearly.",
           "status": "open",
-          "evidence": []
+          "evidence": ["docs/CLI-CONVERSION-OUTPUT.md"]
         },
         {
           "id": "ERR-07",
