@@ -1267,10 +1267,10 @@
         {
           "id": "FMT-01",
           "feature": "Version and parsing",
-          "behavior": "Published schema says 2.21; JSON comments and supported-version conversion.",
+          "behavior": "Current published schema is 2.22; JSON comments and supported-version conversion.",
           "acceptance": "Open versioned/commented fixtures; reject unsupported content before destructive save.",
           "status": "open",
-          "evidence": []
+          "evidence": ["docs/PEN-FORMAT-VERSIONS.md"]
         },
         {
           "id": "FMT-02",

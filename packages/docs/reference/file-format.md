@@ -71,7 +71,7 @@ Export writes the message chunk with Zstd at a level set per document, stored as
 | Format | Open / Read | Save / Write | Export |
 |--------|-------------|--------------|--------|
 | `.fig` (Figma) | ✅ | ✅ | ✅ |
-| `.pen` (Pencil) | ✅ | — | — |
+| `.pen`         | ✅          | ✅           | ✅     |
 | `.png` | — | — | ✅ |
 | `.jpg` | — | — | ✅ |
 | `.webp` | — | — | ✅ |
@@ -86,3 +86,7 @@ Copy/paste uses the same Kiwi binary encoding:
 2. **Paste** — read clipboard, decompress, decode Kiwi binary, create nodes in scene graph
 
 Encoding happens synchronously in the copy event handler (not async Clipboard API) for browser compatibility. This enables bidirectional clipboard between OpenPencil and Figma.
+
+### Pen schema versions
+
+Core document/scoped `.pen` output uses the current 2.22 header for compatible content. Legacy `line` records retain their prior header while their current-schema representation is qualified. The bounded format package retains its existing interchange defaults and explicit unsupported-content refusals. Preserve originals and inspect geometry, fonts and resources when exchanging files; the header alone does not establish complete format or reference-rendering fidelity.

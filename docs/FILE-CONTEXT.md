@@ -1,6 +1,6 @@
 # Agent file context
 
-Updated 2026-11-13. AI-04-FILE is Building. Actual installed reference is Pen
+Updated 2026-11-13. AI-04-FILE is Verify; ERR-06 is Building. Actual installed reference is Pen
 1.2.23; full design/functionality parity and all milestone exits remain open.
 
 ## Outcome and scope
@@ -68,9 +68,9 @@ answered locally; it proves serialized wire content, not a live provider, MCP or
 Codex/Claude CLI receipt. Real inference/native/reference visual acceptance remains
 separate and unexecuted while desktop access is unavailable.
 
-Next: publish the qualified selected candidate with exact source/request/preview
-artifacts to the private draft, then finish the remaining applicable native/CLI
-and reference gates. Do not install over
+Published `17b2a03ed` retains exact source/request/preview artifacts on the private
+draft. Next: finish the remaining applicable native/CLI and reference gates;
+ERR-06 proceeds independently while those gates are unavailable. Do not install over
 the normal app while its unsaved state cannot be inspected. The prepared production
 bundle `410f5f62` belongs to earlier diagnostics source `da2bd5984`, not this file
 candidate. Normal installed `db4e528c` remains unchanged.

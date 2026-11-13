@@ -4,7 +4,8 @@ import {
   isDataURL,
   parsePenDocument,
   penAssets,
-  writePenFile
+  writePenDocument,
+  type PenOverride
 } from '@open-pencil/pen'
 import type { SceneGraph } from '@open-pencil/scene-graph'
 import { MAX_FRAGMENT_SOURCE_LENGTH } from '@open-pencil/scene-graph/shaders'
@@ -131,12 +132,23 @@ export const penFormat: IOFormatAdapter<'pen'> = {
   }
 }
 
+function hasLegacyLine(node: PenOverride): boolean {
+  return (
+    node.type === 'line' ||
+    (node.children?.some(hasLegacyLine) ?? false) ||
+    Object.values(node.descendants ?? {}).some(hasLegacyLine)
+  )
+}
+
 function penExportResult(graph: SceneGraph): ExportResult {
+  const doc = writePenDocument(graph)
+  // shortcut: retain legacy line headers until current-schema line export is qualified.
+  if (!doc.children.some(hasLegacyLine)) doc.version = '2.22'
   return {
     format: 'pen',
     mimeType: 'application/json',
     extension: 'pen',
-    data: writePenFile(graph),
+    data: `${JSON.stringify(doc, null, 2)}\n`,
     encoding: 'utf8'
   }
 }

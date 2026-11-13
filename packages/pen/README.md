@@ -19,3 +19,5 @@ Unsupported content throws `PenExportError` with node IDs and property paths bef
 The reader accepts supported node shapes from schema 2.22 as well as older versions. Notes,
 prompts, contexts, browser nodes and unknown node types still produce explicit compatibility
 errors before import, preserving the source. The writer continues to emit schema 2.21.
+
+Core application I/O applies its current-save header policy after this bounded writer. Compatible document and scoped exports use schema 2.22; records containing legacy `line` nodes retain their prior header until current-schema line conversion is qualified. This package’s interchange defaults and structured refusals remain unchanged.

@@ -295,7 +295,7 @@ Source: [The .pen Format](https://docs.pen.dev/for-developers/the-pen-format).
 
 | ID / feature | Required behavior | Observable acceptance | State |
 | --- | --- | --- | --- |
-| FMT-01 Version and parsing | Published schema says 2.21; JSON comments and supported-version conversion. | Open versioned/commented fixtures; reject unsupported content before destructive save. | Open |
+| FMT-01 Version and parsing       | Current published schema is 2.22; JSON comments and supported-version conversion.                    | Open versioned/commented fixtures; reject unsupported content before destructive save.     | Open                                                                                                                          |
 | FMT-02 Entity tree | Unique IDs without slash; nested coordinates, transforms and enabled/context metadata. | Round-trip every entity kind and common property; compare data and rendered placement. | Open |
 | FMT-03 Layout serialization | Flex, padding forms, distributed alignment, dynamic sizes/fallbacks and absolute position. | Round-trip variable-bound layout; compare resolved geometry and authored sizing. | Partial — [evidence](../ACCEPTANCE.md); Earlier executed paths are narrower than this entire requirement; see acceptance log. |
 | FMT-04 Graphics serialization | Ordered paints/effects, gradients/mesh/images/shaders and stroke geometry. | Round-trip every paint/effect variant; compare values, order and rendered output. | Open |
