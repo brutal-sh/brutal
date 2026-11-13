@@ -1,12 +1,14 @@
 # Open Pen product requirements
 
 Decision owner: Jason Poindexter. Implementation and evidence owner: Codex.
-Updated: 2026-11-12. Status: active; full design and functionality parity is not achieved.
+Updated: 2026-11-13. Status: active; full design and functionality parity is not achieved.
+
+Current reference refresh: REA retains the installed1.2.23 archive/outer-file inventory and delta under `local-evidence/pen-reference-1.2.23/`. REF-04 owns changed-surface catalog and new acceptance allocation. Prior1.2.22 receipts remain versioned; neither extracted files nor the native window correction establishes full feature parity.
 
 ## Product outcome
 
 Open Pen is an independent local design app built on the MIT OpenPencil foundation.
-Jason should be able to use the workflows available in installed Pen 1.2.22 with the same
+Jason should be able to use the workflows available in installed Pen 1.2.23 with the same
 interaction and visual behavior, without editor subscriptions or license activation.
 Open Pen uses its own name and visual identity. Required engine and third-party attribution
 remain accessible. This identity difference is intentional; it does not waive layout or behavior parity.
