@@ -55,3 +55,4 @@
 - Refuse invalid CLI export quality values before replacing an output, and preserve minimum JPEG quality in shared file and document IO exports.
 
 - Export WebP in browsers without a built-in encoder using an on-demand codec, retaining explicit quality and the default native lossless fallback.
+- Export PDF files from the Node CLI with embedded local images instead of failing or silently omitting them.

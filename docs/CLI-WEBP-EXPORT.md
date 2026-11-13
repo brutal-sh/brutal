@@ -98,4 +98,4 @@ App-connected CLI quality and direct-bridge WebP delivery remain unqualified;
 that route uses the direct image API, so the new document-IO host fallback does
 not itself prove connected CLI behavior. Actual Pen output and native/platform/
 standalone trust gates above remain open. No milestone or full-parity acceptance.
-CLI-04-PDF is the next sole Building card for actual outside-checkout qualification.
+The following [PDF slice](CLI-PDF-EXPORT.md) qualifies actual outside-checkout output. Current scheduling is in [Tracking](TRACKING.md).

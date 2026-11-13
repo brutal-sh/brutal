@@ -1378,7 +1378,8 @@
           "evidence": [
             "docs/CLI-PNG-EXPORT.md",
             "docs/CLI-JPEG-EXPORT.md",
-            "docs/CLI-WEBP-EXPORT.md"
+            "docs/CLI-WEBP-EXPORT.md",
+            "docs/CLI-PDF-EXPORT.md"
           ]
         },
         {

@@ -1,3 +1,6 @@
+import type { jsPDF as PDFDocument } from 'jspdf'
+import type { svg2pdf as convertSVG } from 'svg2pdf.js'
+
 import type { SceneGraph } from '@open-pencil/scene-graph'
 import { shaderOfPaint } from '@open-pencil/scene-graph/shaders'
 
@@ -61,13 +64,34 @@ function hasRasterPaint(graph: SceneGraph, id: string): boolean {
   )
 }
 
+async function renderPaintPage(
+  graph: SceneGraph,
+  spec: PDFPageSpec,
+  context?: IOContext
+): Promise<Uint8Array> {
+  const options = { scale: 2, format: 'PNG' } as const
+  const raster =
+    context?.canvasKit && context.renderer
+      ? renderNodesToImage(
+          context.canvasKit,
+          context.renderer,
+          graph,
+          spec.pageId,
+          spec.nodeIds,
+          options
+        )
+      : await headlessRenderNodes(graph, spec.pageId, spec.nodeIds, options)
+  if (!raster) throw new Error('Could not render paint pixels for PDF export')
+  return raster
+}
+
 async function preparePage(
   graph: SceneGraph,
   spec: PDFPageSpec,
-  svgOptions: PageSVGOptions,
-  parse: SVGPageParser,
-  context?: IOContext
+  options: { svgOptions: PageSVGOptions; context?: IOContext },
+  parse: SVGPageParser
 ): Promise<PreparedPage | null> {
+  const { svgOptions, context } = options
   const bounds = computeContentBounds(graph, spec.nodeIds)
   if (!bounds) return null
 
@@ -77,19 +101,7 @@ async function preparePage(
 
   // Mesh and shader pages use 2× pixels; svg2pdf drops image-pattern strokes.
   if (spec.nodeIds.some((id) => hasRasterPaint(graph, id))) {
-    const options = { scale: 2, format: 'PNG' } as const
-    const raster =
-      context?.canvasKit && context.renderer
-        ? renderNodesToImage(
-            context.canvasKit,
-            context.renderer,
-            graph,
-            spec.pageId,
-            spec.nodeIds,
-            options
-          )
-        : await headlessRenderNodes(graph, spec.pageId, spec.nodeIds, options)
-    if (!raster) throw new Error('Could not render paint pixels for PDF export')
+    const raster = await renderPaintPage(graph, spec, context)
     return { spec, raster, width, height }
   }
   const svg = renderNodesToSVG(graph, spec.pageId, spec.nodeIds, {
@@ -114,6 +126,19 @@ export function renderPagesToPDFDetailed(
   return withPDFDOM((parse) => renderPages(graph, specs, options, parse))
 }
 
+async function drawPDFPages(
+  doc: PDFDocument,
+  prepared: PreparedPage[],
+  svg2pdf: typeof convertSVG
+): Promise<void> {
+  for (const [index, page] of prepared.entries()) {
+    if (index > 0) doc.addPage([page.width, page.height], orientationOf(page))
+    if (page.raster) doc.addImage(page.raster, 'PNG', 0, 0, page.width, page.height)
+    else if (page.svgElement)
+      await svg2pdf(page.svgElement, doc, { x: 0, y: 0, width: page.width, height: page.height })
+  }
+}
+
 async function renderPages(
   graph: SceneGraph,
   specs: readonly PDFPageSpec[],
@@ -128,14 +153,17 @@ async function renderPages(
   const preparePages = async () => {
     const pages = []
     for (const spec of specs)
-      pages.push(await preparePage(graph, spec, svgOptions, parse, options.context))
+      pages.push(await preparePage(graph, spec, { svgOptions, context: options.context }, parse))
     return pages.filter((page): page is PreparedPage => page !== null)
   }
   let prepared = await preparePages()
   if (prepared.length === 0) return null
   const first = prepared[0]
 
-  const [{ jsPDF }, { svg2pdf }] = await Promise.all([import('jspdf'), import('svg2pdf.js')])
+  const [{ jsPDF }, { svg2pdf }] = await Promise.all([
+    import('jspdf'),
+    import('svg2pdf.js/dist/svg2pdf.es.min.js')
+  ])
 
   const doc = new jsPDF({
     orientation: orientationOf(first),
@@ -156,12 +184,7 @@ async function renderPages(
     if (!registerEmbeddedFonts(doc, embedding) || !cut) prepared = await preparePages()
   }
 
-  for (const [index, page] of prepared.entries()) {
-    if (index > 0) doc.addPage([page.width, page.height], orientationOf(page))
-    if (page.raster) doc.addImage(page.raster, 'PNG', 0, 0, page.width, page.height)
-    else if (page.svgElement)
-      await svg2pdf(page.svgElement, doc, { x: 0, y: 0, width: page.width, height: page.height })
-  }
+  await drawPDFPages(doc, prepared, svg2pdf)
 
   return {
     data: new Uint8Array(doc.output('arraybuffer')),

@@ -137,6 +137,10 @@ App-connected export currently uses the app's default quality and ignores `-q`.
 WebP retains alpha. Maximum-quality lossless WebP can be smaller than a lossy export;
 compare decoded pixels as well as file signatures and dimensions.
 
+PDF file exports can retain selectable text and embed local image resources. Use
+`--font-policy strict` to refuse unresolved fonts, and inspect the rendered pages
+as well as the exit status.
+
 ### Analyze and lint
 
 ```bash

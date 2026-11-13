@@ -1,12 +1,19 @@
-import { CLI_ENTRY } from './paths'
+import { BUILT_CLI_ENTRY, CLI_ENTRY } from './paths'
 
 interface CLIRunOptions {
   cwd?: string
   limited?: boolean
 }
 
-export async function runCLI(args: string[], options: CLIRunOptions = {}) {
-  const command = [process.execPath, CLI_ENTRY, ...args]
+export function runCLI(args: string[], options: CLIRunOptions = {}) {
+  return runProcess([process.execPath, CLI_ENTRY, ...args], options)
+}
+
+export function runNodeCLI(args: string[], options: CLIRunOptions = {}) {
+  return runProcess(['node', BUILT_CLI_ENTRY, ...args], options)
+}
+
+async function runProcess(command: string[], options: CLIRunOptions) {
   const invocation = options.limited
     ? [
         '/bin/sh',

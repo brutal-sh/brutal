@@ -15,3 +15,6 @@ export function workspaceRoot(from = dirname(fileURLToPath(import.meta.url))): s
 
 /** Fixtures shared across the repository; a module import would escape the package root. */
 export const FIXTURES = join(workspaceRoot(), 'tests/fixtures')
+
+/** The built workspace entry that runs under Node. */
+export const BUILT_CLI_ENTRY = join(workspaceRoot(), 'packages/cli/bin/openpencil.js')

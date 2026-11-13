@@ -40,6 +40,10 @@ File-backed WebP exports preserve transparency. WebP is lossy at ordinary qualit
 settings; maximum quality can choose a lossless encoding and produce a smaller file.
 Compare decoded image fidelity rather than assuming file size increases with quality.
 
+PDF file exports can contain selectable text and embedded local image resources.
+Use the font policy below when a missing face should stop the export. Inspect the
+rendered pages as well as the exit status before using the PDF.
+
 ## Font Substitution Policy
 
 For file-backed PNG, JPG, WEBP, and PDF exports, and for `openpencil convert`, choose how missing or substituted fonts are handled:

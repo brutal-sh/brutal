@@ -23,16 +23,18 @@ interface SVG2PDFGlobals {
   document?: unknown
   CSSStyleSheet?: unknown
   CSSStyleRule?: unknown
+  Image?: unknown
 }
 
-const SVG2PDF_GLOBALS = ['document', 'CSSStyleSheet', 'CSSStyleRule'] as const
+const SVG2PDF_GLOBALS = ['document', 'CSSStyleSheet', 'CSSStyleRule', 'Image'] as const
 
 type SVG2PDFGlobal = (typeof SVG2PDF_GLOBALS)[number]
 
 function removeGlobal(scope: SVG2PDFGlobals, name: SVG2PDFGlobal): void {
   if (name === 'document') delete scope.document
   else if (name === 'CSSStyleSheet') delete scope.CSSStyleSheet
-  else delete scope.CSSStyleRule
+  else if (name === 'CSSStyleRule') delete scope.CSSStyleRule
+  else delete scope.Image
 }
 
 /**
@@ -74,7 +76,8 @@ async function withHappyDOM<T>(draw: (parse: SVGPageParser) => Promise<T>): Prom
   const values: Required<SVG2PDFGlobals> = {
     document: dom.document,
     CSSStyleSheet: dom.CSSStyleSheet,
-    CSSStyleRule: dom.CSSStyleRule
+    CSSStyleRule: dom.CSSStyleRule,
+    Image: dom.Image
   }
   // Each global replaced, with its descriptor before, so an accessor a host defines comes back as
   // one and a global that could not be replaced is left as it was.
