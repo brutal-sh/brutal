@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head><meta charset="utf-8" /><title>Native appearance boundary fixture</title></head>
+  <body>
+    <nav style="position:fixed;top:0;left:0;z-index:2147483647">
+      <button id="light" disabled>Use Light</button>
+      <button id="auto" disabled>Use Auto</button>
+    </nav>
+    <div id="app"></div>
+    <script type="module">
+      import { mockIPC, mockWindows } from '@tauri-apps/api/mocks'
+      const role = new URL(location.href).searchParams.get('window')
+      if (role !== 'main' && role !== 'updater') throw new Error('Unknown fixture window')
+      mockWindows(role)
+      mockIPC((command, args) => {
+        if (command === 'plugin:app|set_app_theme') {
+          console.info('owned-native-theme', String(args.theme))
+        }
+        return command === 'plugin:event|listen' ? 1 : null
+      })
+      // Mount the actual updater entry; SDK mocks stop native/network effects.
+      await import('/src/updater.ts')
+      const { setAppTheme } = await import('/src/app/shell/theme.ts')
+      for (const setting of ['light', 'auto']) {
+        const button = document.getElementById(setting)
+        button.onclick = () => setAppTheme(setting)
+        button.disabled = false
+      }
+    </script>
+  </body>
+</html>

@@ -32,5 +32,8 @@
   "tokensLeftOut": "Pominięte w arkuszu stylów: {names}.",
   "designTokensLeftOut": "Pominięte w tokenach projektowych: {names}.",
   "designTokensImported": "Zaimportowano tokeny projektowe: {count}.",
-  "unsupportedVariableExpressions": "Open Pen nie potrafi jeszcze obliczyć tych zmiennych, więc warstwy zachowują wartości zapisane w pliku: {names}."
+  "unsupportedVariableExpressions": "Open Pen nie potrafi jeszcze obliczyć tych zmiennych, więc warstwy zachowują wartości zapisane w pliku: {names}.",
+  "nativeSaveTitle": "Zapisz plik {extension} jako…",
+  "nativeSaveFailed": "Nie udało się zapisać „{name}”",
+  "nativeSavePermissionDenied": "Open Pen nie może zapisać tego pliku, ponieważ nie masz uprawnień. Użyj Plik → Zapisz jako, aby zapisać kopię w folderze, w którym możesz zapisywać pliki."
 }

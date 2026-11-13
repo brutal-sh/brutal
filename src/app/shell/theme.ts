@@ -1,8 +1,10 @@
+import { setTheme as setNativeTheme } from '@tauri-apps/api/app'
+import { getCurrentWindow } from '@tauri-apps/api/window'
 import { useLocalStorage, usePreferredDark } from '@vueuse/core'
 import { computed, watch } from 'vue'
 
 import type { RulerTheme } from '@open-pencil/core/canvas'
-import { IS_BROWSER } from '@open-pencil/core/constants'
+import { IS_BROWSER, IS_TAURI } from '@open-pencil/core/constants'
 import { parseColor } from '@open-pencil/scene-graph/color'
 
 import { getActiveEditorStoreOrNull, useActiveEditorStoreRef } from '@/app/editor/active-store'
@@ -59,6 +61,11 @@ function applyTheme(value: 'dark' | 'light', setting: AppTheme): void {
   document.documentElement.dataset.theme = value
   document.documentElement.dataset.themeSetting = setting
   document.documentElement.style.colorScheme = value
+  if (IS_TAURI && getCurrentWindow().label === 'main') {
+    void setNativeTheme(setting === 'auto' ? null : value).catch((error: unknown) => {
+      console.error('[Open Pen] Could not synchronize native appearance:', error)
+    })
+  }
   applyAccent(accentPalette.value)
   updateCanvasTheme()
 }

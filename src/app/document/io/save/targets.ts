@@ -1,4 +1,5 @@
 import { pickBrowserSaveFile } from '@/app/document/io/capability'
+import { notificationMessages } from '@/app/i18n/notifications'
 
 export async function chooseTauriDocumentSavePath(suggestedName = 'Untitled.pen') {
   const { save } = await import('@tauri-apps/plugin-dialog')
@@ -6,8 +7,10 @@ export async function chooseTauriDocumentSavePath(suggestedName = 'Untitled.pen'
     { name: 'Pen file', extensions: ['pen'] },
     { name: 'Figma file', extensions: ['fig'] }
   ]
-  if (suggestedName.toLowerCase().endsWith('.fig')) filters.reverse()
+  const isFig = suggestedName.toLowerCase().endsWith('.fig')
+  if (isFig) filters.reverse()
   return save({
+    title: notificationMessages.get().nativeSaveTitle({ extension: isFig ? '.fig' : '.pen' }),
     defaultPath: suggestedName,
     filters
   })

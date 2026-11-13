@@ -32,5 +32,8 @@
   "tokensLeftOut": "Non inclus dans la feuille de style : {names}.",
   "designTokensLeftOut": "Exclus des design tokens : {names}.",
   "designTokensImported": "{count} design tokens importés.",
-  "unsupportedVariableExpressions": "Open Pen ne sait pas encore évaluer ces variables ; les calques gardent les valeurs enregistrées dans le fichier : {names}."
+  "unsupportedVariableExpressions": "Open Pen ne sait pas encore évaluer ces variables ; les calques gardent les valeurs enregistrées dans le fichier : {names}.",
+  "nativeSaveTitle": "Enregistrer le fichier {extension} sous…",
+  "nativeSaveFailed": "Impossible d’enregistrer « {name} »",
+  "nativeSavePermissionDenied": "Open Pen ne peut pas enregistrer ce fichier, car vous n’avez pas l’autorisation. Utilisez Fichier → Enregistrer sous pour enregistrer une copie dans un dossier accessible en écriture."
 }

@@ -43,3 +43,5 @@
 - Open FIG documents from byte views without reading padding outside the supplied file data.
 - Preserve unsaved browser-file edits and recovery backups when another writer changes the source, with explicit reload and save-copy decisions.
 - Center the native macOS window controls within the document header.
+
+- macOS Save As panels use format-specific titles and follow the editor appearance; permission-denied saves show file-specific guidance while preserving edits and recovery copies.

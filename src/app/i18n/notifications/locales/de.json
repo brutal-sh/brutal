@@ -32,5 +32,8 @@
   "tokensLeftOut": "Nicht im Stylesheet enthalten: {names}.",
   "designTokensLeftOut": "Nicht in den Design-Tokens enthalten: {names}.",
   "designTokensImported": "{count} Design-Tokens importiert.",
-  "unsupportedVariableExpressions": "Open Pen kann diese Variablen noch nicht auswerten, daher behalten Ebenen die in der Datei gespeicherten Werte: {names}."
+  "unsupportedVariableExpressions": "Open Pen kann diese Variablen noch nicht auswerten, daher behalten Ebenen die in der Datei gespeicherten Werte: {names}.",
+  "nativeSaveTitle": "{extension}-Datei speichern unter…",
+  "nativeSaveFailed": "„{name}“ konnte nicht gespeichert werden",
+  "nativeSavePermissionDenied": "Open Pen kann diese Datei nicht speichern, da dir die Berechtigung fehlt. Speichere über Datei → Speichern unter eine Kopie in einem Ordner, in den du schreiben kannst."
 }

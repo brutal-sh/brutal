@@ -1,9 +1,9 @@
 import { describeDiagnosticError, recordDocumentFailure } from '@/app/diagnostics'
-import { documentSaveFormat, type DocumentSaveFormat } from '@/app/document/io/save/format'
+import type { DocumentSaveFormat } from '@/app/document/io/save/format'
+import { NativeSavePermissionError, writeLocalDocument } from '@/app/document/io/save/local'
 import { storageLocationOf } from '@/app/integrations/storage/location'
 import type { StorageDocumentBinding } from '@/app/integrations/storage/types'
 import { persistStorageCanvasLocally } from '@/app/storage/sync/persist'
-import { isTauri } from '@/app/tauri/env'
 
 type WriteDocumentState = { documentName: string }
 
@@ -55,32 +55,14 @@ export function createDocumentWriter({
         return await finishWrite(version)
       }
 
-      const filePath = getFilePath()
-      const fileHandle = getFileHandle()
-      const destinationName = fileHandle?.name ?? filePath
-      if (destinationName && documentSaveFormat(destinationName) !== format) {
-        throw new Error(
-          'The save destination changed format. Save again to use the new destination.'
-        )
-      }
-      if (filePath && isTauri()) {
-        const { writeFile: tauriWrite } = await import('@tauri-apps/plugin-fs')
-        await tauriWrite(filePath, data)
-        return await finishWrite(version)
-      }
-      if (fileHandle) {
-        const writable = await fileHandle.createWritable()
-        await writable.write(new Uint8Array(data))
-        await writable.close()
-        return await finishWrite(version)
-      }
-      return false
+      const wrote = await writeLocalDocument(getFilePath(), getFileHandle(), data, format)
+      return wrote ? await finishWrite(version) : false
     } catch (error) {
+      const failure = error instanceof NativeSavePermissionError ? error.cause : error
       recordDocumentFailure({
         operation: 'save',
         format,
-        ...describeDiagnosticError(error),
-        retryable: describeDiagnosticError(error).retryable
+        ...describeDiagnosticError(failure)
       })
       throw error
     }

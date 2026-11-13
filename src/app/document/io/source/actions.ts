@@ -22,6 +22,8 @@ export function createDocumentSourceActions(options: DocumentSourceOptions) {
     saveFigFileAs: () =>
       context.queue.serialize(() => context.queue.userSave(fileSaves.saveFigFileAs)),
     lastSaveFailed: context.queue.lastFailure,
+    savePermissionFailure: context.queue.permissionFailure,
+    dismissSavePermissionFailure: context.queue.dismissPermissionFailure,
     hasUnsavedChanges: context.changes.hasUnsavedChanges,
     captureVersion: context.changes.capture,
     markDocumentChanged: context.changes.markChanged,

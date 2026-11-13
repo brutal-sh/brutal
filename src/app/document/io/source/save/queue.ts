@@ -1,14 +1,15 @@
 import { shallowRef } from 'vue'
 
 import type { createDocumentChanges } from '@/app/document/io/changes'
-import { notificationMessages } from '@/app/i18n/notifications'
-import { toast } from '@/app/shell/ui'
+
+import { createSourceSaveFeedback } from './feedback'
 
 export function createSourceSaveQueue(
   changes: ReturnType<typeof createDocumentChanges>,
   afterSave: () => Promise<void>
 ) {
   const lastFailure = shallowRef(false)
+  const feedback = createSourceSaveFeedback()
   let pendingSave: Promise<boolean> | null = null
   let disposed = false
 
@@ -36,15 +37,12 @@ export function createSourceSaveQueue(
 
   async function userSave(save: () => Promise<boolean>) {
     lastFailure.value = false
+    feedback.clear()
     try {
       return await track(save)
     } catch (error) {
       lastFailure.value = true
-      toast.error(
-        notificationMessages.get().operationFailed({
-          error: error instanceof Error ? error.message : String(error)
-        })
-      )
+      await feedback.show(error)
       return false
     }
   }
@@ -54,6 +52,8 @@ export function createSourceSaveQueue(
     track,
     userSave,
     lastFailure,
+    permissionFailure: feedback.permissionFailure,
+    dismissPermissionFailure: feedback.clear,
     dispose: () => {
       disposed = true
     }

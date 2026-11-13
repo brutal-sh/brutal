@@ -32,5 +32,8 @@
   "tokensLeftOut": "Не вошли в таблицу стилей: {names}.",
   "designTokensLeftOut": "Не вошли в дизайн-токены: {names}.",
   "designTokensImported": "Импортировано дизайн-токенов: {count}.",
-  "unsupportedVariableExpressions": "Open Pen пока не умеет вычислять эти переменные, поэтому слои сохраняют значения из файла: {names}."
+  "unsupportedVariableExpressions": "Open Pen пока не умеет вычислять эти переменные, поэтому слои сохраняют значения из файла: {names}.",
+  "nativeSaveTitle": "Сохранить файл {extension} как…",
+  "nativeSaveFailed": "Не удалось сохранить «{name}»",
+  "nativeSavePermissionDenied": "Open Pen не может сохранить этот файл: у вас нет разрешения. Выберите Файл → Сохранить как, чтобы сохранить копию в папке, доступной для записи."
 }

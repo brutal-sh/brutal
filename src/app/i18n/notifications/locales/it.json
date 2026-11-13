@@ -32,5 +32,8 @@
   "tokensLeftOut": "Esclusi dal foglio di stile: {names}.",
   "designTokensLeftOut": "Esclusi dai design token: {names}.",
   "designTokensImported": "Importati {count} design token.",
-  "unsupportedVariableExpressions": "Open Pen non sa ancora valutare queste variabili, quindi i livelli mantengono i valori salvati nel file: {names}."
+  "unsupportedVariableExpressions": "Open Pen non sa ancora valutare queste variabili, quindi i livelli mantengono i valori salvati nel file: {names}.",
+  "nativeSaveTitle": "Salva file {extension} con nome…",
+  "nativeSaveFailed": "Impossibile salvare «{name}»",
+  "nativeSavePermissionDenied": "Open Pen non può salvare questo file perché non hai il permesso. Usa File → Salva con nome per salvare una copia in una cartella in cui puoi scrivere."
 }

@@ -94,6 +94,7 @@ test.each([
     expect(cmd).toBe('plugin:dialog|save')
     expect(args).toEqual({
       options: {
+        title: `Save ${fixture.defaultPath.endsWith('.fig') ? '.fig' : '.pen'} file as…`,
         defaultPath: fixture.defaultPath,
         filters: fixture.filters
       }
