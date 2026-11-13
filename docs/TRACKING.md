@@ -1,18 +1,24 @@
 # Tracking
 
-Updated: 2026-11-12. The full independent design and functionality parity target remains required. The replacement controller goal is Active and follows the audited plan.
+Updated: 2026-11-13. The full independent design and functionality parity target remains required. The replacement controller goal is Active and follows the audited plan.
 
 Repository: [private Open Pen repository](https://github.com/jpoindexter/open-pen), branch `feat/open-pen`.
 Board: [Open Pen — independent design editor](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor), private.
 
 The [PRD](PRD.md) owns the outcome, constraints and release criteria.
-The [task index](TASKS.md) links all 485 execution cards; the [modularity audit](MODULARITY.md)
+The [task index](TASKS.md) links all 505 execution cards; the [modularity audit](MODULARITY.md)
 records the measured review queue. Requirements come from the [feature catalog](pen-feature-reference/README.md)
-and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), preserving historical Pen 1.2.21 evidence and the current [1.2.22 update inventory](pen-feature-reference/update-1.2.22-2026-11-09.md).
+and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), preserving historical Pen 1.2.21 evidence and the [1.2.22 historical inventory](pen-feature-reference/update-1.2.22-2026-11-09.md) plus [current 1.2.23 catalog](pen-feature-reference/update-1.2.23-2026-11-13.md).
+
+Current execution readback — 2026-11-13
+
+The board has 523 cards: 505 execution tasks and 18 milestones, with 383 Backlog / 0 Ready / 1 Building (REF-04) / 36 Verify / 85 Executed. All 505 single primary owners and 504 other terminal prerequisites reconcile without unknown declared dependencies, cycles or Executed/open-prerequisite contradictions. The 13 current-reference followups stay Backlog. The [current audit](BOARD-AUDIT-2026-11-13.md) separates current state from the historical snapshots below.
+
+Now: publish and qualify REF-04's bounded catalog. Next: continue installed save/recovery delivery and the remaining cards. FILE-NATIVE-SAVE-UI remains Verify for matched critical-alert pixels; normal installed `9ec149` contains the traffic correction but not the new Save UI. The controller goal stays Active; full parity and public-beta readiness remain unaccepted.
 
 The original 2026-11-11 audit readback contains 479 cards: 461 execution tasks and 18 milestones. Lists are 380 Backlog, 3 Ready, 0 Building, 24 Verify and 54 Executed. [The audit](BOARD-AUDIT-2026-11-11.md) and [milestone exit gates](MILESTONES.md) own the current reconciliation; earlier snapshots below remain historical.
 
-Current execution readback — 2026-11-12
+Historical execution readback — 2026-11-12
 
 The board contains 503 cards: 485 execution tasks and 18 milestone gates. Lists are 375 Backlog, 0 Ready, 1 Building (FILE-RECOVERY-CANCEL), 30 Verify and 79 Executed. All 485 primary owners, 484 other-terminal dependencies and 164 documented requirements are reconciled without cycles or Executed/open-prerequisite contradictions. Counts are not parity percentages. The original 479-card audit stays historical.
 

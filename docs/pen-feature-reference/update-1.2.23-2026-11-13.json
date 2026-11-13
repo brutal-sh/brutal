@@ -1,0 +1,1750 @@
+{
+  "date": "2026-11-13",
+  "referenceApp": "/Applications/Pen.app",
+  "baselineVersion": "1.2.22",
+  "installedVersion": "1.2.23",
+  "archiveSHA256": "d0c5c23a3a86ec1802c8754b59e82600d815f0e2b6a383f655319535e6e07925",
+  "launcherSHA256": "2ef89fde4c00cd22fe9c78742f7cce686be28001c0421b53f42c4a94e4d177c8",
+  "coverage": {
+    "extractedRegularFiles": 21007,
+    "extractedBytes": 950857937,
+    "rawAddedPaths": 243,
+    "rawRemovedPaths": 92,
+    "rawChangedPaths": 544,
+    "rawUnchangedPaths": 20220,
+    "sourceMapOnlyOwnerChanges": 32,
+    "ownerDispositions": 65,
+    "outerRegularFiles": 434,
+    "symlinksRecordedNotFollowed": 14,
+    "looseVisualAssets": 477,
+    "looseVisualAssetsChanged": 0,
+    "cssFilesInventoried": 99,
+    "cssFilesASTMeasured": 1,
+    "nativeCatalogRecords": 23,
+    "integrityContradictions": 38,
+    "nativeTraces": 31,
+    "fullRuntimeOrSemanticCoverage": false
+  },
+  "addedMessageDispositions": [
+    {
+      "id": "deferredGeneration.generateButton.generate",
+      "category": "pending-generation-controls",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 471,
+        "column": 24639
+      },
+      "owners": [
+        "UPD23-GEN-PENDING"
+      ],
+      "observed": "Source-declared operation/queue controls; vendor generation not executed. The shipped guide associates deferred URLs with vendor quota waiting; that licensing trigger is excluded. Independent pending/retry/imported-state applicability must be qualified without artificial limits.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "actions.unavailable.selectText",
+      "category": "text-command-surfaces",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 471,
+        "column": 78237
+      },
+      "owners": [
+        "UI-13-PALETTE",
+        "DRAW-05-ALIGN"
+      ],
+      "observed": "Native palette24shows four alignment commands and text-selection hint; no command execution.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "actions.category.text",
+      "category": "text-command-surfaces",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 471,
+        "column": 79285
+      },
+      "owners": [
+        "UI-13-PALETTE",
+        "DRAW-05-ALIGN"
+      ],
+      "observed": "Native palette24shows four alignment commands and text-selection hint; no command execution.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "actions.textAlignLeft",
+      "category": "text-command-surfaces",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 471,
+        "column": 88671
+      },
+      "owners": [
+        "UI-13-PALETTE",
+        "DRAW-05-ALIGN"
+      ],
+      "observed": "Native palette24shows four alignment commands and text-selection hint; no command execution.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "actions.textAlignCenter",
+      "category": "text-command-surfaces",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 471,
+        "column": 89009
+      },
+      "owners": [
+        "UI-13-PALETTE",
+        "DRAW-05-ALIGN"
+      ],
+      "observed": "Native palette24shows four alignment commands and text-selection hint; no command execution.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "actions.textAlignRight",
+      "category": "text-command-surfaces",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 471,
+        "column": 89363
+      },
+      "owners": [
+        "UI-13-PALETTE",
+        "DRAW-05-ALIGN"
+      ],
+      "observed": "Native palette24shows four alignment commands and text-selection hint; no command execution.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "actions.textAlignJustify",
+      "category": "text-command-surfaces",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 471,
+        "column": 89706
+      },
+      "owners": [
+        "UI-13-PALETTE",
+        "DRAW-05-ALIGN"
+      ],
+      "observed": "Native palette24shows four alignment commands and text-selection hint; no command execution.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "actions.showInterface",
+      "category": "interface-command-surface",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 471,
+        "column": 113331
+      },
+      "owners": [
+        "UI-13-PALETTE"
+      ],
+      "observed": "Native palette27shows HideUI; hidden-state ShowUI and execution remain unaccepted.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "actions.reloadBrowser",
+      "category": "browser-command-surfaces",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 471,
+        "column": 118319
+      },
+      "owners": [
+        "UI-13-PALETTE",
+        "SURF-BROWSER"
+      ],
+      "observed": "Native palette25shows browser commands; navigation/URL execution not performed.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "actions.browserBack",
+      "category": "browser-command-surfaces",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 471,
+        "column": 119004
+      },
+      "owners": [
+        "UI-13-PALETTE",
+        "SURF-BROWSER"
+      ],
+      "observed": "Native palette25shows browser commands; navigation/URL execution not performed.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "actions.browserForward",
+      "category": "browser-command-surfaces",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 471,
+        "column": 119337
+      },
+      "owners": [
+        "UI-13-PALETTE",
+        "SURF-BROWSER"
+      ],
+      "observed": "Native palette25shows browser commands; navigation/URL execution not performed.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "actions.editBrowserUrl",
+      "category": "browser-command-surfaces",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 471,
+        "column": 119681
+      },
+      "owners": [
+        "UI-13-PALETTE",
+        "SURF-BROWSER"
+      ],
+      "observed": "Native palette25shows browser commands; navigation/URL execution not performed.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "actions.stopPresentation",
+      "category": "presentation-command-surfaces",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 471,
+        "column": 120235
+      },
+      "owners": [
+        "UI-13-PALETTE",
+        "SLIDE-02"
+      ],
+      "observed": "Native palette26shows presentation entry; stop/next/previous applicability requires an active presentation.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "actions.nextSlide",
+      "category": "presentation-command-surfaces",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 471,
+        "column": 120564
+      },
+      "owners": [
+        "UI-13-PALETTE",
+        "SLIDE-02"
+      ],
+      "observed": "Native palette26shows presentation entry; stop/next/previous applicability requires an active presentation.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "actions.previousSlide",
+      "category": "presentation-command-surfaces",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 471,
+        "column": 120821
+      },
+      "owners": [
+        "UI-13-PALETTE",
+        "SLIDE-02"
+      ],
+      "observed": "Native palette26shows presentation entry; stop/next/previous applicability requires an active presentation.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "actions.toggleChatFullscreen",
+      "category": "chat-workspace-and-history",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 471,
+        "column": 133282
+      },
+      "owners": [
+        "SURF-CHAT-FULLSCREEN",
+        "AI-01"
+      ],
+      "observed": "Native06–10executes full-screen/history show/hide/back round trip without opening/deleting user history.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "actions.toggleChatFullscreenActive",
+      "category": "chat-workspace-and-history",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 471,
+        "column": 133383
+      },
+      "owners": [
+        "SURF-CHAT-FULLSCREEN",
+        "AI-01"
+      ],
+      "observed": "Native06–10executes full-screen/history show/hide/back round trip without opening/deleting user history.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "properties.deferredGeneration.operationGenerateImage",
+      "category": "pending-generation-controls",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 6861,
+        "column": 19786
+      },
+      "owners": [
+        "UPD23-GEN-PENDING",
+        "UPD23-GEN-IMAGE"
+      ],
+      "observed": "Source-declared operation/queue controls; vendor generation not executed. The shipped guide associates deferred URLs with vendor quota waiting; that licensing trigger is excluded. Independent pending/retry/imported-state applicability must be qualified without artificial limits.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "properties.deferredGeneration.operationGenerateSvg",
+      "category": "pending-generation-controls",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 6861,
+        "column": 19890
+      },
+      "owners": [
+        "UPD23-GEN-PENDING",
+        "UPD23-GEN-SVG"
+      ],
+      "observed": "Source-declared operation/queue controls; vendor generation not executed. The shipped guide associates deferred URLs with vendor quota waiting; that licensing trigger is excluded. Independent pending/retry/imported-state applicability must be qualified without artificial limits.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "properties.deferredGeneration.operationRemoveBackground",
+      "category": "pending-generation-controls",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 6861,
+        "column": 19995
+      },
+      "owners": [
+        "UPD23-GEN-PENDING",
+        "DRAW-14"
+      ],
+      "observed": "Source-declared operation/queue controls; vendor generation not executed. The shipped guide associates deferred URLs with vendor quota waiting; that licensing trigger is excluded. Independent pending/retry/imported-state applicability must be qualified without artificial limits.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "properties.deferredGeneration.operationReplaceBackground",
+      "category": "pending-generation-controls",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 6861,
+        "column": 20111
+      },
+      "owners": [
+        "UPD23-GEN-PENDING",
+        "UPD23-GEN-REPLACE"
+      ],
+      "observed": "Source-declared operation/queue controls; vendor generation not executed. The shipped guide associates deferred URLs with vendor quota waiting; that licensing trigger is excluded. Independent pending/retry/imported-state applicability must be qualified without artificial limits.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "properties.deferredGeneration.operationVectorizeImage",
+      "category": "pending-generation-controls",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 6861,
+        "column": 20226
+      },
+      "owners": [
+        "UPD23-GEN-PENDING",
+        "DRAW-15"
+      ],
+      "observed": "Source-declared operation/queue controls; vendor generation not executed. The shipped guide associates deferred URLs with vendor quota waiting; that licensing trigger is excluded. Independent pending/retry/imported-state applicability must be qualified without artificial limits.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "properties.deferredGeneration.waiting",
+      "category": "pending-generation-controls",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 6861,
+        "column": 20922
+      },
+      "owners": [
+        "UPD23-GEN-PENDING"
+      ],
+      "observed": "Source-declared operation/queue controls; vendor generation not executed. The shipped guide associates deferred URLs with vendor quota waiting; that licensing trigger is excluded. Independent pending/retry/imported-state applicability must be qualified without artificial limits.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "properties.deferredGeneration.prompt",
+      "category": "pending-generation-controls",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 6861,
+        "column": 21664
+      },
+      "owners": [
+        "UPD23-GEN-PENDING"
+      ],
+      "observed": "Source-declared operation/queue controls; vendor generation not executed. The shipped guide associates deferred URLs with vendor quota waiting; that licensing trigger is excluded. Independent pending/retry/imported-state applicability must be qualified without artificial limits.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "properties.deferredGeneration.discard",
+      "category": "pending-generation-controls",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 6861,
+        "column": 22294
+      },
+      "owners": [
+        "UPD23-GEN-PENDING"
+      ],
+      "observed": "Source-declared operation/queue controls; vendor generation not executed. The shipped guide associates deferred URLs with vendor quota waiting; that licensing trigger is excluded. Independent pending/retry/imported-state applicability must be qualified without artificial limits.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "properties.deferredGeneration.listTitle",
+      "category": "pending-generation-controls",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 6861,
+        "column": 23602
+      },
+      "owners": [
+        "UPD23-GEN-PENDING"
+      ],
+      "observed": "Source-declared operation/queue controls; vendor generation not executed. The shipped guide associates deferred URLs with vendor quota waiting; that licensing trigger is excluded. Independent pending/retry/imported-state applicability must be qualified without artificial limits.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "properties.fill.waiting",
+      "category": "pending-generation-controls",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 6862,
+        "column": 59269
+      },
+      "owners": [
+        "UPD23-GEN-PENDING"
+      ],
+      "observed": "Source-declared operation/queue controls; vendor generation not executed. The shipped guide associates deferred URLs with vendor quota waiting; that licensing trigger is excluded. Independent pending/retry/imported-state applicability must be qualified without artificial limits.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "agent.examplePrompts.prompt.roboticsFactory",
+      "category": "example-prompt-surfaces",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 7006,
+        "column": 12203
+      },
+      "owners": [
+        "SURF-AGENT"
+      ],
+      "observed": "Sixteen new message IDs describe suggestions/clear-canvas copy, not sixteen independently executed features.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "agent.examplePrompts.prompt.bugTriage",
+      "category": "example-prompt-surfaces",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 7006,
+        "column": 12342
+      },
+      "owners": [
+        "SURF-AGENT"
+      ],
+      "observed": "Sixteen new message IDs describe suggestions/clear-canvas copy, not sixteen independently executed features.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "agent.examplePrompts.prompt.coworkingBooking",
+      "category": "example-prompt-surfaces",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 7006,
+        "column": 12495
+      },
+      "owners": [
+        "SURF-AGENT"
+      ],
+      "observed": "Sixteen new message IDs describe suggestions/clear-canvas copy, not sixteen independently executed features.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "agent.examplePrompts.prompt.kyotoWeekend",
+      "category": "example-prompt-surfaces",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 7006,
+        "column": 12642
+      },
+      "owners": [
+        "SURF-AGENT"
+      ],
+      "observed": "Sixteen new message IDs describe suggestions/clear-canvas copy, not sixteen independently executed features.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "agent.examplePrompts.prompt.matchaOrdering",
+      "category": "example-prompt-surfaces",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 7006,
+        "column": 12788
+      },
+      "owners": [
+        "SURF-AGENT"
+      ],
+      "observed": "Sixteen new message IDs describe suggestions/clear-canvas copy, not sixteen independently executed features.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "agent.examplePrompts.prompt.penSitemap",
+      "category": "example-prompt-surfaces",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 7006,
+        "column": 12913
+      },
+      "owners": [
+        "SURF-AGENT"
+      ],
+      "observed": "Sixteen new message IDs describe suggestions/clear-canvas copy, not sixteen independently executed features.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "agent.examplePrompts.prompt.spaceTourism",
+      "category": "example-prompt-surfaces",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 7006,
+        "column": 13064
+      },
+      "owners": [
+        "SURF-AGENT"
+      ],
+      "observed": "Sixteen new message IDs describe suggestions/clear-canvas copy, not sixteen independently executed features.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "agent.examplePrompts.prompt.pacificCoastTrip",
+      "category": "example-prompt-surfaces",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 7006,
+        "column": 13221
+      },
+      "owners": [
+        "SURF-AGENT"
+      ],
+      "observed": "Sixteen new message IDs describe suggestions/clear-canvas copy, not sixteen independently executed features.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "agent.examplePrompts.prompt.fashionPortfolio",
+      "category": "example-prompt-surfaces",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 7006,
+        "column": 13367
+      },
+      "owners": [
+        "SURF-AGENT"
+      ],
+      "observed": "Sixteen new message IDs describe suggestions/clear-canvas copy, not sixteen independently executed features.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "agent.examplePrompts.prompt.houseplants",
+      "category": "example-prompt-surfaces",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 7006,
+        "column": 13518
+      },
+      "owners": [
+        "SURF-AGENT"
+      ],
+      "observed": "Sixteen new message IDs describe suggestions/clear-canvas copy, not sixteen independently executed features.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "agent.examplePrompts.prompt.tradingTerminal",
+      "category": "example-prompt-surfaces",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 7006,
+        "column": 13671
+      },
+      "owners": [
+        "SURF-AGENT"
+      ],
+      "observed": "Sixteen new message IDs describe suggestions/clear-canvas copy, not sixteen independently executed features.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "agent.examplePrompts.prompt.meditation",
+      "category": "example-prompt-surfaces",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 7006,
+        "column": 13799
+      },
+      "owners": [
+        "SURF-AGENT"
+      ],
+      "observed": "Sixteen new message IDs describe suggestions/clear-canvas copy, not sixteen independently executed features.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "agent.examplePrompts.prompt.cinemaTicketing",
+      "category": "example-prompt-surfaces",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 7006,
+        "column": 13945
+      },
+      "owners": [
+        "SURF-AGENT"
+      ],
+      "observed": "Sixteen new message IDs describe suggestions/clear-canvas copy, not sixteen independently executed features.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "agent.examplePrompts.prompt.solarDashboard",
+      "category": "example-prompt-surfaces",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 7006,
+        "column": 14095
+      },
+      "owners": [
+        "SURF-AGENT"
+      ],
+      "observed": "Sixteen new message IDs describe suggestions/clear-canvas copy, not sixteen independently executed features.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "agent.examplePrompts.prompt.sushiReservations",
+      "category": "example-prompt-surfaces",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 7006,
+        "column": 14248
+      },
+      "owners": [
+        "SURF-AGENT"
+      ],
+      "observed": "Sixteen new message IDs describe suggestions/clear-canvas copy, not sixteen independently executed features.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "agent.modelSelector.svgGenerationTitle",
+      "category": "svg-provider-and-model-selection",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 7115,
+        "column": 20535
+      },
+      "owners": [
+        "UPD23-SVG-SELECT",
+        "UPD23-GEN-SVG"
+      ],
+      "observed": "Native13/17/19/20corroborate pen.dev selected/default and QuiverAI/Recraft Upgrade offers; no service execution.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "agent.modelSelector.svgModel",
+      "category": "svg-provider-and-model-selection",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 7115,
+        "column": 31977
+      },
+      "owners": [
+        "UPD23-SVG-SELECT",
+        "UPD23-GEN-SVG"
+      ],
+      "observed": "Native13/17/19/20corroborate pen.dev selected/default and QuiverAI/Recraft Upgrade offers; no service execution.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "agent.input.iterate.creative",
+      "category": "run-settings-and-iteration",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 7115,
+        "column": 55986
+      },
+      "owners": [
+        "AI-09",
+        "AI-09-CREATIVE"
+      ],
+      "observed": "Native02/03/11observes the shared Runsettings popup and Layout/Style/Creative choices with Off/1–5count menu. Iteration execution and additional-versus-total count semantics remain unaccepted; parallel execution is a separate existing owner.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "agent.input.iterate.creativeDescription",
+      "category": "run-settings-and-iteration",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 7115,
+        "column": 56068
+      },
+      "owners": [
+        "AI-09",
+        "AI-09-CREATIVE"
+      ],
+      "observed": "Native02/03/11observes the shared Runsettings popup and Layout/Style/Creative choices with Off/1–5count menu. Iteration execution and additional-versus-total count semantics remain unaccepted; parallel execution is a separate existing owner.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "agent.input.iterate.off",
+      "category": "run-settings-and-iteration",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 7116,
+        "column": 1157
+      },
+      "owners": [
+        "AI-09",
+        "AI-09-CREATIVE"
+      ],
+      "observed": "Native02/03/11observes the shared Runsettings popup and Layout/Style/Creative choices with Off/1–5count menu. Iteration execution and additional-versus-total count semantics remain unaccepted; parallel execution is a separate existing owner.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "agent.input.iterate.exploreVariations",
+      "category": "run-settings-and-iteration",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 7116,
+        "column": 1481
+      },
+      "owners": [
+        "AI-09",
+        "AI-09-CREATIVE"
+      ],
+      "observed": "Native02/03/11observes the shared Runsettings popup and Layout/Style/Creative choices with Off/1–5count menu. Iteration execution and additional-versus-total count semantics remain unaccepted; parallel execution is a separate existing owner.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "agent.input.runSettings",
+      "category": "run-settings-and-iteration",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 7116,
+        "column": 5090
+      },
+      "owners": [
+        "AI-08-MODES",
+        "AI-09"
+      ],
+      "observed": "Native02/03/11observes the shared Runsettings popup and Layout/Style/Creative choices with Off/1–5count menu. Iteration execution and additional-versus-total count semantics remain unaccepted; parallel execution is a separate existing owner.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "agent.tool.startTask",
+      "category": "agent-activity-and-context-loading",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 7116,
+        "column": 39367
+      },
+      "owners": [
+        "AI-CONTEXT-START",
+        "SURF-AGENT",
+        "AI-01"
+      ],
+      "observed": "Source-declared context/todo/activity states; new schema and provider changes observed statically, no vendor task executed.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "agent.tool.startTaskStreaming",
+      "category": "agent-activity-and-context-loading",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 7116,
+        "column": 39443
+      },
+      "owners": [
+        "AI-CONTEXT-START",
+        "SURF-AGENT",
+        "AI-01"
+      ],
+      "observed": "Source-declared context/todo/activity states; new schema and provider changes observed statically, no vendor task executed.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "agent.tool.updateTodosStreaming",
+      "category": "agent-activity-and-context-loading",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 7116,
+        "column": 40339
+      },
+      "owners": [
+        "AI-CONTEXT-START",
+        "SURF-AGENT",
+        "AI-01"
+      ],
+      "observed": "Source-declared context/todo/activity states; new schema and provider changes observed statically, no vendor task executed.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "agent.activity.waitingForPermission",
+      "category": "agent-activity-and-context-loading",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 7117,
+        "column": 1667
+      },
+      "owners": [
+        "AI-CONTEXT-START",
+        "SURF-AGENT",
+        "AI-01"
+      ],
+      "observed": "Source-declared context/todo/activity states; new schema and provider changes observed statically, no vendor task executed.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "agent.activity.waitingForAnswer",
+      "category": "agent-activity-and-context-loading",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 7117,
+        "column": 1832
+      },
+      "owners": [
+        "AI-CONTEXT-START",
+        "SURF-AGENT",
+        "AI-01"
+      ],
+      "observed": "Source-declared context/todo/activity states; new schema and provider changes observed statically, no vendor task executed.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "agent.activity.writing",
+      "category": "agent-activity-and-context-loading",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 7117,
+        "column": 2209
+      },
+      "owners": [
+        "AI-CONTEXT-START",
+        "SURF-AGENT",
+        "AI-01"
+      ],
+      "observed": "Source-declared context/todo/activity states; new schema and provider changes observed statically, no vendor task executed.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "agent.historyIsland.showChats",
+      "category": "chat-workspace-and-history",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 7117,
+        "column": 3381
+      },
+      "owners": [
+        "SURF-CHAT-FULLSCREEN",
+        "AI-01"
+      ],
+      "observed": "Native06–10executes full-screen/history show/hide/back round trip without opening/deleting user history.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "agent.historyIsland.hide",
+      "category": "chat-workspace-and-history",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 7117,
+        "column": 3535
+      },
+      "owners": [
+        "SURF-CHAT-FULLSCREEN",
+        "AI-01"
+      ],
+      "observed": "Native06–10executes full-screen/history show/hide/back round trip without opening/deleting user history.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "agent.tool.startTask.skillsAndStyles",
+      "category": "agent-activity-and-context-loading",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 7117,
+        "column": 11669
+      },
+      "owners": [
+        "AI-CONTEXT-START",
+        "SURF-AGENT",
+        "AI-01"
+      ],
+      "observed": "Source-declared context/todo/activity states; new schema and provider changes observed statically, no vendor task executed.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "agent.tool.startTask.skills",
+      "category": "agent-activity-and-context-loading",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 7117,
+        "column": 11825
+      },
+      "owners": [
+        "AI-CONTEXT-START",
+        "SURF-AGENT",
+        "AI-01"
+      ],
+      "observed": "Source-declared context/todo/activity states; new schema and provider changes observed statically, no vendor task executed.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "agent.tool.startTask.styles",
+      "category": "agent-activity-and-context-loading",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 7117,
+        "column": 11942
+      },
+      "owners": [
+        "AI-CONTEXT-START",
+        "SURF-AGENT",
+        "AI-01"
+      ],
+      "observed": "Source-declared context/todo/activity states; new schema and provider changes observed statically, no vendor task executed.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "agent.activity.toolCalls",
+      "category": "agent-activity-and-context-loading",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 7118,
+        "column": 442
+      },
+      "owners": [
+        "AI-CONTEXT-START",
+        "SURF-AGENT",
+        "AI-01"
+      ],
+      "observed": "Source-declared context/todo/activity states; new schema and provider changes observed statically, no vendor task executed.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "agent.activity.steps",
+      "category": "agent-activity-and-context-loading",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 7118,
+        "column": 720
+      },
+      "owners": [
+        "AI-CONTEXT-START",
+        "SURF-AGENT",
+        "AI-01"
+      ],
+      "observed": "Source-declared context/todo/activity states; new schema and provider changes observed statically, no vendor task executed.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "agent.panel.newChatTitle",
+      "category": "chat-workspace-and-history",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 7119,
+        "column": 24688
+      },
+      "owners": [
+        "SURF-CHAT-FULLSCREEN",
+        "AI-01"
+      ],
+      "observed": "Native06–10executes full-screen/history show/hide/back round trip without opening/deleting user history.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "sidebar.chatFullscreen.backToCanvas",
+      "category": "chat-workspace-and-history",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 7119,
+        "column": 57176
+      },
+      "owners": [
+        "SURF-CHAT-FULLSCREEN",
+        "AI-01"
+      ],
+      "observed": "Native06–10executes full-screen/history show/hide/back round trip without opening/deleting user history.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "agent.activity.openChat",
+      "category": "agent-activity-and-context-loading",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 7181,
+        "column": 50463
+      },
+      "owners": [
+        "AI-CONTEXT-START",
+        "SURF-AGENT",
+        "AI-01"
+      ],
+      "observed": "Source-declared context/todo/activity states; new schema and provider changes observed statically, no vendor task executed.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "agent.examplePrompts.cleanCanvasFirst",
+      "category": "example-prompt-surfaces",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 7183,
+        "column": 181
+      },
+      "owners": [
+        "SURF-AGENT"
+      ],
+      "observed": "Sixteen new message IDs describe suggestions/clear-canvas copy, not sixteen independently executed features.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "shortcuts.textAlignLeft",
+      "category": "text-command-surfaces",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 8101,
+        "column": 6206
+      },
+      "owners": [
+        "UI-13-PALETTE",
+        "DRAW-05-ALIGN"
+      ],
+      "observed": "Native palette24shows four alignment commands and text-selection hint; no command execution.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "shortcuts.textAlignCenter",
+      "category": "text-command-surfaces",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 8101,
+        "column": 6286
+      },
+      "owners": [
+        "UI-13-PALETTE",
+        "DRAW-05-ALIGN"
+      ],
+      "observed": "Native palette24shows four alignment commands and text-selection hint; no command execution.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "shortcuts.textAlignRight",
+      "category": "text-command-surfaces",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 8101,
+        "column": 6369
+      },
+      "owners": [
+        "UI-13-PALETTE",
+        "DRAW-05-ALIGN"
+      ],
+      "observed": "Native palette24shows four alignment commands and text-selection hint; no command execution.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "shortcuts.textAlignJustify",
+      "category": "text-command-surfaces",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 8101,
+        "column": 6452
+      },
+      "owners": [
+        "UI-13-PALETTE",
+        "DRAW-05-ALIGN"
+      ],
+      "observed": "Native palette24shows four alignment commands and text-selection hint; no command execution.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "shortcuts.category.textAlign",
+      "category": "text-command-surfaces",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 8101,
+        "column": 12497
+      },
+      "owners": [
+        "UI-13-PALETTE",
+        "DRAW-05-ALIGN"
+      ],
+      "observed": "Native palette24shows four alignment commands and text-selection hint; no command execution.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "settings.general.alwaysSteerMessages",
+      "category": "message-steering-preference",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 8153,
+        "column": 54363
+      },
+      "owners": [
+        "AI-03-STEER-PREF",
+        "AI-03"
+      ],
+      "observed": "Native13shows AlwayssteermessagesOff; toggling/provider behavior not executed.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "settings.general.alwaysSteerMessagesDescription",
+      "category": "message-steering-preference",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 8153,
+        "column": 54477
+      },
+      "owners": [
+        "AI-03-STEER-PREF",
+        "AI-03"
+      ],
+      "observed": "Native13shows AlwayssteermessagesOff; toggling/provider behavior not executed.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "settings.general.svgGeneratorProvider",
+      "category": "svg-provider-and-model-selection",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 8153,
+        "column": 56648
+      },
+      "owners": [
+        "UPD23-SVG-SELECT",
+        "UPD23-GEN-SVG"
+      ],
+      "observed": "Native13/17/19/20corroborate pen.dev selected/default and QuiverAI/Recraft Upgrade offers; no service execution.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    },
+    {
+      "id": "upgrade.limit.premiumImageFeatures",
+      "category": "excluded-editor-licensing",
+      "source": {
+        "path": "out/editor/assets/index.js",
+        "sha256": "bb96ad9857691262cbbe6fc05a2b1b71dc9c6541aa5c111dace669b5cfa3bed5",
+        "line": 8156,
+        "column": 8071
+      },
+      "owners": [],
+      "observed": "Vendor editor subscription/upgrade enforcement excluded from independent editor; external provider capability/auth/cost remain real constraints.",
+      "acceptance": "Unaccepted; catalog evidence is narrower than the owning implementation criterion."
+    }
+  ],
+  "removedMessageDispositions": [
+    {
+      "id": "agent.input.parallel.tooltip",
+      "sourceVersion": "1.2.22",
+      "line": 7120,
+      "column": 5851,
+      "owners": [
+        "AI-08-MODES"
+      ],
+      "disposition": "Removed message identifier only; this does not prove removed capability. Reconcile current surface or explicit licensing exclusion."
+    },
+    {
+      "id": "agent.input.iterate.letItCook",
+      "sourceVersion": "1.2.22",
+      "line": 7120,
+      "column": 12060,
+      "owners": [
+        "AI-09",
+        "AI-09-CREATIVE"
+      ],
+      "disposition": "Removed message identifier only; this does not prove removed capability. Reconcile current surface or explicit licensing exclusion."
+    },
+    {
+      "id": "agent.input.iterate.automaticallyTooltip",
+      "sourceVersion": "1.2.22",
+      "line": 7120,
+      "column": 12404,
+      "owners": [
+        "AI-09",
+        "AI-09-CREATIVE"
+      ],
+      "disposition": "Removed message identifier only; this does not prove removed capability. Reconcile current surface or explicit licensing exclusion."
+    },
+    {
+      "id": "agent.input.iterate.styleTitle",
+      "sourceVersion": "1.2.22",
+      "line": 7120,
+      "column": 13104,
+      "owners": [
+        "AI-09",
+        "AI-09-CREATIVE"
+      ],
+      "disposition": "Removed message identifier only; this does not prove removed capability. Reconcile current surface or explicit licensing exclusion."
+    },
+    {
+      "id": "agent.input.iterate.layoutTitle",
+      "sourceVersion": "1.2.22",
+      "line": 7120,
+      "column": 13193,
+      "owners": [
+        "AI-09",
+        "AI-09-CREATIVE"
+      ],
+      "disposition": "Removed message identifier only; this does not prove removed capability. Reconcile current surface or explicit licensing exclusion."
+    },
+    {
+      "id": "agent.input.iterate.variants",
+      "sourceVersion": "1.2.22",
+      "line": 7120,
+      "column": 14916,
+      "owners": [
+        "AI-09",
+        "AI-09-CREATIVE"
+      ],
+      "disposition": "Removed message identifier only; this does not prove removed capability. Reconcile current surface or explicit licensing exclusion."
+    },
+    {
+      "id": "agent.input.iterate.dontIterate",
+      "sourceVersion": "1.2.22",
+      "line": 7120,
+      "column": 15432,
+      "owners": [
+        "AI-09",
+        "AI-09-CREATIVE"
+      ],
+      "disposition": "Removed message identifier only; this does not prove removed capability. Reconcile current surface or explicit licensing exclusion."
+    },
+    {
+      "id": "agent.todos.title",
+      "sourceVersion": "1.2.22",
+      "line": 7120,
+      "column": 52632,
+      "owners": [
+        "AI-01",
+        "SURF-AGENT"
+      ],
+      "disposition": "Removed message identifier only; this does not prove removed capability. Reconcile current surface or explicit licensing exclusion."
+    },
+    {
+      "id": "agent.todos.merge",
+      "sourceVersion": "1.2.22",
+      "line": 7120,
+      "column": 52899,
+      "owners": [
+        "AI-01",
+        "SURF-AGENT"
+      ],
+      "disposition": "Removed message identifier only; this does not prove removed capability. Reconcile current surface or explicit licensing exclusion."
+    },
+    {
+      "id": "agent.chat.workingFor",
+      "sourceVersion": "1.2.22",
+      "line": 7120,
+      "column": 75711,
+      "owners": [
+        "AI-01",
+        "SURF-AGENT"
+      ],
+      "disposition": "Removed message identifier only; this does not prove removed capability. Reconcile current surface or explicit licensing exclusion."
+    },
+    {
+      "id": "agent.todos.panelTitle",
+      "sourceVersion": "1.2.22",
+      "line": 7120,
+      "column": 111077,
+      "owners": [
+        "AI-01",
+        "SURF-AGENT"
+      ],
+      "disposition": "Removed message identifier only; this does not prove removed capability. Reconcile current surface or explicit licensing exclusion."
+    },
+    {
+      "id": "agent.todos.collapse",
+      "sourceVersion": "1.2.22",
+      "line": 7120,
+      "column": 111614,
+      "owners": [
+        "AI-01",
+        "SURF-AGENT"
+      ],
+      "disposition": "Removed message identifier only; this does not prove removed capability. Reconcile current surface or explicit licensing exclusion."
+    },
+    {
+      "id": "agent.todos.expand",
+      "sourceVersion": "1.2.22",
+      "line": 7120,
+      "column": 111691,
+      "owners": [
+        "AI-01",
+        "SURF-AGENT"
+      ],
+      "disposition": "Removed message identifier only; this does not prove removed capability. Reconcile current surface or explicit licensing exclusion."
+    },
+    {
+      "id": "upgrade.limit.premiumImageModel",
+      "sourceVersion": "1.2.22",
+      "line": 8155,
+      "column": 8123,
+      "owners": [],
+      "disposition": "Removed message identifier only; this does not prove removed capability. Reconcile current surface or explicit licensing exclusion."
+    }
+  ],
+  "changedEnglishMessageDispositions": [
+    {
+      "id": "agent.input.parallel.splitWork",
+      "before": {
+        "id": "agent.input.parallel.splitWork",
+        "line": 7119,
+        "column": 54490
+      },
+      "after": {
+        "id": "agent.input.parallel.splitWork",
+        "line": 7115,
+        "column": 55131
+      },
+      "owners": [
+        "AI-08-MODES"
+      ],
+      "disposition": "English copy change; Runsettings labels and historyisland native observations are narrower than execution acceptance."
+    },
+    {
+      "id": "agent.input.parallel.splitWorkDescription",
+      "before": {
+        "id": "agent.input.parallel.splitWorkDescription",
+        "line": 7119,
+        "column": 54577
+      },
+      "after": {
+        "id": "agent.input.parallel.splitWorkDescription",
+        "line": 7115,
+        "column": 55226
+      },
+      "owners": [
+        "AI-08-MODES"
+      ],
+      "disposition": "English copy change; Runsettings labels and historyisland native observations are narrower than execution acceptance."
+    },
+    {
+      "id": "agent.input.parallel.sideBySide",
+      "before": {
+        "id": "agent.input.parallel.sideBySide",
+        "line": 7119,
+        "column": 54694
+      },
+      "after": {
+        "id": "agent.input.parallel.sideBySide",
+        "line": 7115,
+        "column": 55325
+      },
+      "owners": [
+        "AI-08-MODES"
+      ],
+      "disposition": "English copy change; Runsettings labels and historyisland native observations are narrower than execution acceptance."
+    },
+    {
+      "id": "agent.input.parallel.sideBySideDescription",
+      "before": {
+        "id": "agent.input.parallel.sideBySideDescription",
+        "line": 7119,
+        "column": 54785
+      },
+      "after": {
+        "id": "agent.input.parallel.sideBySideDescription",
+        "line": 7115,
+        "column": 55427
+      },
+      "owners": [
+        "AI-08-MODES"
+      ],
+      "disposition": "English copy change; Runsettings labels and historyisland native observations are narrower than execution acceptance."
+    },
+    {
+      "id": "agent.input.iterate.description",
+      "before": {
+        "id": "agent.input.iterate.description",
+        "line": 7120,
+        "column": 12220
+      },
+      "after": {
+        "id": "agent.input.iterate.description",
+        "line": 7116,
+        "column": 1664
+      },
+      "owners": [
+        "AI-09",
+        "AI-09-CREATIVE"
+      ],
+      "disposition": "English copy change; Runsettings labels and historyisland native observations are narrower than execution acceptance."
+    },
+    {
+      "id": "agent.history.clear",
+      "before": {
+        "id": "agent.history.clear",
+        "line": 7120,
+        "column": 96035
+      },
+      "after": {
+        "id": "agent.history.clear",
+        "line": 7119,
+        "column": 12581
+      },
+      "owners": [
+        "AI-01"
+      ],
+      "disposition": "English copy change; Runsettings labels and historyisland native observations are narrower than execution acceptance."
+    }
+  ],
+  "existingTaskLinks": {
+    "AI-01": "https://trello.com/c/kOn4FF7H/216-ai-01-conversation-history",
+    "AI-02": "https://trello.com/c/yRoYQ3Cm/217-ai-02-model-and-effort",
+    "AI-03": "https://trello.com/c/YKXG94JQ/218-ai-03-interruptions",
+    "AI-07": "https://trello.com/c/drOvPVmM/222-ai-07-gate-skills",
+    "AI-08-MODES": "https://trello.com/c/HwwyVVZs/223-ai-08-modes-parallel-agent-layout-and-count-controls",
+    "AI-09": "https://trello.com/c/MgeIJzwH/225-ai-09-iterations",
+    "AI-SKILLS-CONTEXT": "https://trello.com/c/l0cEsoYm/459-ai-skills-context-scope-codex-skill-catalog-without-changing-user-settings",
+    "DRAW-05-ALIGN": "https://trello.com/c/NxL8oDTr/189-draw-05-align-text-alignment-controls",
+    "DRAW-14": "https://trello.com/c/3loUoOCX/214-draw-14-background-removal",
+    "DRAW-15": "https://trello.com/c/OUvNHCaw/215-draw-15-vectorization",
+    "MCP-03-EXECUTE": "https://trello.com/c/hN4jl4nX/61-mcp-03-execute-execute-public-tool-contract",
+    "MCP-03-READSKILL": "https://trello.com/c/py0nmCOL/59-mcp-03-readskill-readskill-public-tool-contract",
+    "REF-04": "https://trello.com/c/UGGvvG7q/510-ref-04-catalog-pen-1223-artifact-delta-and-changed-native-surfaces",
+    "SLIDE-02": "https://trello.com/c/e7Je5biT/293-slide-02-presenter",
+    "SURF-AGENT": "https://trello.com/c/odtTtoGR/103-surf-agent-agent-composer-layout-and-focus-states",
+    "SURF-BROWSER": "https://trello.com/c/8J2BOlBG/116-surf-browser-browser-more-zoom-device-history-capture-surfaces",
+    "UI-10-LANGUAGE": "https://trello.com/c/2nCgZnj8/369-ui-10-language-match-language-selection-and-system-fallback",
+    "UI-13-PALETTE": "https://trello.com/c/81hEAPER/368-ui-13-palette-match-command-search-states-and-execution",
+    "UPD22-GUIDE-COMPETE": "https://trello.com/c/f3xegAZL/414-upd22-guide-compete-competitive-research-guide",
+    "UPD22-GUIDE-RECRUIT": "https://trello.com/c/wHIF8NR6/415-upd22-guide-recruit-recruiting-profile-comparison-guide",
+    "UPD22-GUIDE-SITEMAP": "https://trello.com/c/tHaexdJ1/416-upd22-guide-sitemap-website-sitemap-guide",
+    "UPD22-GUIDE-TRAVEL": "https://trello.com/c/gIR9UQcj/417-upd22-guide-travel-travel-planning-guide"
+  },
+  "privateEvidenceRoot": "local-evidence/pen-reference-1.2.23/",
+  "limitations": [
+    "Whole Pen/Open Pen design and functionality parity remains unaccepted.",
+    "Current native editor menus are observations on one owned copy/theme/window, not every screen or state.",
+    "Generation/provider execution, live inference and authenticated nativeMCPbehavior remain unexecuted. No access-limit workaround.",
+    "Minified headlesspreview and changed nativeMCP semantics remain unresolved; Hopper decompiles one recorded entry, not all5900procedures.",
+    "The bounded REA graph is partial and truncates semantic unknown retention; static source declarations never prove runtime.",
+    "Private native account/history captures and proprietary source/assets are excluded from Git and distribution.",
+    "Critical savealert pixels, pointer dragging and normal-installed SaveUI delivery remain separate open gates."
+  ],
+  "guideDispositions": [
+    {
+      "path": "out/skills/pen-dev/competitive-research.md",
+      "sha256": "0bb5642e154d3e55270f8ae1cef610ee272e959dfd7a17e3a1dc151650cc78d9",
+      "owners": [
+        "UPD22-GUIDE-COMPETE"
+      ],
+      "disposition": "Product comparison guide shifts toward a central conclusion, differentiated product areas, parallel task lanes and source-linked screens. Source prose, not an executed new capability.",
+      "evidenceTier": "source-declared; no workflow execution"
+    },
+    {
+      "path": "out/skills/pen-dev/recruiting-profiles.md",
+      "sha256": "03443ef7a1c5052a6e1609fe3016dcb3e92fb588c09cabb79123fd6a35c5640f",
+      "owners": [
+        "UPD22-GUIDE-RECRUIT"
+      ],
+      "disposition": "Role-centered equal candidate areas, timelines and evidence states replace a generic comparison layout; professional-evidence and privacy boundaries remain in the source.",
+      "evidenceTier": "source-declared; no workflow execution"
+    },
+    {
+      "path": "out/skills/pen-dev/sitemap.md",
+      "sha256": "81ac15642954bbc1ee190e5cb48b0c4df50a0057c2a651887827dce88aeb9bcc",
+      "owners": [
+        "UPD22-GUIDE-SITEMAP"
+      ],
+      "disposition": "Sitemap tree/layout incorporates site styling, page evidence and a verified route; source guide revision only.",
+      "evidenceTier": "source-declared; no workflow execution"
+    },
+    {
+      "path": "out/skills/pen-dev/travel-plan.md",
+      "sha256": "69f907c988941996e67b83c70164e14d4a90daf0993fd82729526e44f53f1bab",
+      "owners": [
+        "UPD22-GUIDE-TRAVEL"
+      ],
+      "disposition": "Travel board revisions emphasize checked itinerary data and destination-specific visual grouping; no real travel research or reservations performed in this audit.",
+      "evidenceTier": "source-declared; no workflow execution"
+    },
+    {
+      "path": "out/skills/pen-dev/whiteboard.md",
+      "sha256": "3a9c049262aaa054313c04af0fb69b6417e25df21506e4e24b038fbb9e3d6a92",
+      "owners": [
+        "AI-07",
+        "MCP-03-READSKILL"
+      ],
+      "disposition": "Whiteboard guidance changes the answer/evidence composition, scale and layout instructions; no vendor prompt adopted.",
+      "evidenceTier": "source-declared; no workflow execution"
+    },
+    {
+      "path": "out/skills/pen-dev/guide/whiteboard-example.md",
+      "sha256": "931d5cb301db498eabbbae0983f91e9ff0070d9eb87259b48e61729b1f96117f",
+      "owners": [
+        "AI-07",
+        "MCP-03-READSKILL"
+      ],
+      "disposition": "Worked example changes layout, hierarchy and visual direction; example code is retained inertly and not executed or copied.",
+      "evidenceTier": "source-declared; no workflow execution"
+    },
+    {
+      "path": "out/skills/pen-dev/execute.md",
+      "sha256": "6b19219a361be96113c2dbee8f1329ff3d6e997cfa4219ba91978c26b5203727",
+      "owners": [
+        "MCP-03-EXECUTE",
+        "DRAW-14",
+        "DRAW-15",
+        "UPD23-GEN-REPLACE"
+      ],
+      "disposition": "Generation fallback guidance expands to image transformations via separately saved files; auth boundary stays source data, not an instruction to call vendor tools.",
+      "evidenceTier": "source-declared; no workflow execution"
+    },
+    {
+      "path": "out/skills/pen-dev/generate.md",
+      "sha256": "d5767a3df5e2bc42c3d02faf9b15b1a70b77325d9fee4553aad2269f9837b7ea",
+      "owners": [
+        "UPD23-GEN-PENDING"
+      ],
+      "disposition": "Source distinguishes pending image completion from quota-deferred waiting and documents explicit user resumption; recreating the vendor quota trigger is excluded.",
+      "evidenceTier": "source-declared; no workflow execution"
+    }
+  ],
+  "allocatedBoundedTasks": [
+    {
+      "id": "UPD23-GEN-PENDING",
+      "title": "[UPD23-GEN-PENDING] Match pending generation state and Generate/Discard controls",
+      "primaryMilestone": "M02",
+      "dependencies": [
+        "REF-04"
+      ],
+      "state": "Backlog",
+      "url": "https://trello.com/c/XTrLx7Xo/511-upd23-gen-pending-match-pending-generation-state-and-generate-discard-controls"
+    },
+    {
+      "id": "UPD23-GEN-IMAGE",
+      "title": "[UPD23-GEN-IMAGE] Generate a raster fill from its pending operation",
+      "primaryMilestone": "M02",
+      "dependencies": [
+        "UPD23-GEN-PENDING",
+        "AI-02"
+      ],
+      "state": "Backlog",
+      "url": "https://trello.com/c/5WiqhSl1/512-upd23-gen-image-generate-a-raster-fill-from-its-pending-operation"
+    },
+    {
+      "id": "UPD23-GEN-SVG",
+      "title": "[UPD23-GEN-SVG] Generate editable SVG from its pending operation",
+      "primaryMilestone": "M02",
+      "dependencies": [
+        "UPD23-GEN-PENDING",
+        "UPD23-SVG-SELECT"
+      ],
+      "state": "Backlog",
+      "url": "https://trello.com/c/BvV0tswJ/513-upd23-gen-svg-generate-editable-svg-from-its-pending-operation"
+    },
+    {
+      "id": "UPD23-GEN-REPLACE",
+      "title": "[UPD23-GEN-REPLACE] Replace an image background through its pending operation",
+      "primaryMilestone": "M02",
+      "dependencies": [
+        "UPD23-GEN-PENDING",
+        "AI-02"
+      ],
+      "state": "Backlog",
+      "url": "https://trello.com/c/a5Lt3v1v/514-upd23-gen-replace-replace-an-image-background-through-its-pending-operation"
+    },
+    {
+      "id": "UPD23-SVG-SELECT",
+      "title": "[UPD23-SVG-SELECT] Match SVG provider and model selection",
+      "primaryMilestone": "M05",
+      "dependencies": [
+        "REF-04",
+        "AI-02"
+      ],
+      "state": "Backlog",
+      "url": "https://trello.com/c/5Of2UB2h/515-upd23-svg-select-match-svg-provider-and-model-selection"
+    },
+    {
+      "id": "UPD23-IMAGE-MODELS",
+      "title": "[UPD23-IMAGE-MODELS] Reconcile image model choices and legacy selections",
+      "primaryMilestone": "M05",
+      "dependencies": [
+        "REF-04",
+        "AI-02"
+      ],
+      "state": "Backlog",
+      "url": "https://trello.com/c/HKWyHR64/516-upd23-image-models-reconcile-image-model-choices-and-legacy-selections"
+    },
+    {
+      "id": "AI-09-CREATIVE",
+      "title": "[AI-09-CREATIVE] Add and qualify Creative iteration mode",
+      "primaryMilestone": "M05",
+      "dependencies": [
+        "REF-04",
+        "AI-09"
+      ],
+      "state": "Backlog",
+      "url": "https://trello.com/c/PV3BZ4pr/517-ai-09-creative-add-and-qualify-creative-iteration-mode"
+    },
+    {
+      "id": "SURF-CHAT-FULLSCREEN",
+      "title": "[SURF-CHAT-FULLSCREEN] Match full-screen chat and history-island round trip",
+      "primaryMilestone": "M05",
+      "dependencies": [
+        "REF-04",
+        "AI-01"
+      ],
+      "state": "Backlog",
+      "url": "https://trello.com/c/gd5T43yy/518-surf-chat-fullscreen-match-full-screen-chat-and-history-island-round-trip"
+    },
+    {
+      "id": "AI-03-STEER-PREF",
+      "title": "[AI-03-STEER-PREF] Match Always steer messages preference and queue behavior",
+      "primaryMilestone": "M05",
+      "dependencies": [
+        "REF-04",
+        "AI-03"
+      ],
+      "state": "Backlog",
+      "url": "https://trello.com/c/6Jc0ORzA/519-ai-03-steer-pref-match-always-steer-messages-preference-and-queue-behavior"
+    },
+    {
+      "id": "AI-CONTEXT-START",
+      "title": "[AI-CONTEXT-START] Qualify lazy task-context loading and resumed sessions",
+      "primaryMilestone": "M05",
+      "dependencies": [
+        "REF-04",
+        "AI-SKILLS-CONTEXT"
+      ],
+      "state": "Backlog",
+      "url": "https://trello.com/c/p56nlmao/520-ai-context-start-qualify-lazy-task-context-loading-and-resumed-sessions",
+      "relatedOwners": [
+        "MCP-03-READSKILL"
+      ]
+    },
+    {
+      "id": "UI-10-LANGUAGE-CS",
+      "title": "[UI-10-LANGUAGE-CS] Qualify Czech interface coverage",
+      "primaryMilestone": "M02",
+      "dependencies": [
+        "REF-04",
+        "UI-10-LANGUAGE"
+      ],
+      "state": "Backlog",
+      "url": "https://trello.com/c/5Pzv6Bo9/521-ui-10-language-cs-qualify-czech-interface-coverage"
+    },
+    {
+      "id": "UI-10-LANGUAGE-PTBR",
+      "title": "[UI-10-LANGUAGE-PTBR] Qualify Brazilian Portuguese interface coverage",
+      "primaryMilestone": "M02",
+      "dependencies": [
+        "REF-04",
+        "UI-10-LANGUAGE"
+      ],
+      "state": "Backlog",
+      "url": "https://trello.com/c/zzxjVEtR/522-ui-10-language-ptbr-qualify-brazilian-portuguese-interface-coverage"
+    },
+    {
+      "id": "UI-10-LANGUAGE-ID",
+      "title": "[UI-10-LANGUAGE-ID] Qualify Indonesian interface coverage",
+      "primaryMilestone": "M02",
+      "dependencies": [
+        "REF-04",
+        "UI-10-LANGUAGE"
+      ],
+      "state": "Backlog",
+      "url": "https://trello.com/c/h3nf3GpQ/523-ui-10-language-id-qualify-indonesian-interface-coverage"
+    }
+  ],
+  "boardAudit": {
+    "cards": 523,
+    "executionTasks": 505,
+    "milestones": 18,
+    "counts": {
+      "Milestones": 18,
+      "Backlog": 383,
+      "Building": 1,
+      "Verify": 36,
+      "Executed": 85
+    },
+    "primaryOwners": 505,
+    "terminalDependencies": 504,
+    "unknownDependencies": [],
+    "cycles": 0,
+    "executedWithOpenDependency": []
+  }
+}

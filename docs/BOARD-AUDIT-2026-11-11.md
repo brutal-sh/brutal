@@ -1,5 +1,8 @@
 # Complete board and installed-reference audit
 
+Current scheduling is reconciled in the [2026-11-13board readback](BOARD-AUDIT-2026-11-13.md); the original audit and its dated snapshots below remain historical.
+
+
 2026-11-11. Decision owner: Jason Poindexter. Audit and execution owner: Codex.
 
 ## Current execution refresh — 2026-11-12

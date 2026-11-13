@@ -1,10 +1,12 @@
 # Parity reference and implementation base
 
-The product reference is the installed `/Applications/Pen.app` **1.2.21**, bundle identifier `dev.pencil.desktop`. Its internal Pencil naming is unrelated to the MIT OpenPencil codebase used as Open Pen's implementation base.
+The product reference is the installed `/Applications/Pen.app` **1.2.23**, bundle identifier `dev.pencil.desktop`. Its internal Pencil naming is unrelated to the MIT OpenPencil codebase used as Open Pen's implementation base.
 
 The independent build is `/Applications/Open Pen.app`, bundle identifier `dev.jpoindexter.openpen`. Existing `open-pencil` package names and the `openpencil` Playwright project name refer to implementation/test infrastructure; they do not make OpenPencil the parity target.
 
 Pen's UI and observed behavior govern acceptance. Inherited implementation tests are regression checks. A passing Figma/OpenPencil contract or a successful build does not establish a Pen screen/menu match. Defaults or inherited controls that differ from observed Pen remain gaps in `PARITY-STATE-MATRIX.md`.
+
+Current versioned update: [Pen1.2.23 catalog](pen-feature-reference/update-1.2.23-2026-11-13.md). The private1.2.23folder contains the current REA extraction, dimensions, CSS/native measurements and Hopper MCP entry analysis, with explicit coverage limits. The1.2.21archive below remains historical evidence.
 
 ## Private shipped-reference archive
 
