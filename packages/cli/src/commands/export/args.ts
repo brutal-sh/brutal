@@ -155,8 +155,23 @@ function validateFormatOptions(format: string, args: ExportArgs): void {
   }
 }
 
+function validateQuality(value: string | undefined): void {
+  if (value === undefined) return
+  const quality = Number(value)
+  if (
+    typeof value === 'string' &&
+    value.trim() &&
+    Number.isFinite(quality) &&
+    quality >= 0 &&
+    quality <= 100
+  )
+    return
+  printError(`Invalid quality "${value}". Use a number from 0 to 100.`)
+  process.exit(1)
+}
+
 export function validateExportArgs(args: ExportArgs): string {
-  const format = args.format.toUpperCase()
+  const format = typeof args.format === 'string' ? args.format.toUpperCase() : ''
   if (!ALL_FORMATS.has(format)) {
     printError(`Invalid format "${args.format}". Use ${FORMAT_LIST}.`)
     process.exit(1)
@@ -171,5 +186,6 @@ export function validateExportArgs(args: ExportArgs): string {
     printError(`Invalid font policy "${args['font-policy']}". Use warn, strict, or allow.`)
     process.exit(1)
   }
+  validateQuality(args.quality)
   return format
 }

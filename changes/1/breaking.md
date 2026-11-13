@@ -1,1 +1,2 @@
 - CLI conversion and primary export files require an output folder that permits temporary-file creation and replace destination symlinks without overwriting their linked files.
+- CLI export rejects explicitly supplied blank, nonnumeric, nonfinite and out-of-range quality values.

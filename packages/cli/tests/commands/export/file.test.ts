@@ -4,12 +4,12 @@ import { join } from 'node:path'
 
 import { runCLI } from '#cli-tests/helpers/process'
 
-import { pngFixture, pngPixels } from './fixture'
+import { rasterFixture, rasterPixels } from './fixture'
 
 setDefaultTimeout(60_000)
 
 test('PNG export outside the checkout preserves solid colors at both scales', async () => {
-  const fixture = await pngFixture()
+  const fixture = await rasterFixture()
   try {
     for (const scale of [1, 2]) {
       const result = await runCLI(
@@ -17,7 +17,7 @@ test('PNG export outside the checkout preserves solid colors at both scales', as
         { cwd: fixture.dir }
       )
       expect(result.exitCode).toBe(0)
-      const image = await pngPixels(fixture.output)
+      const image = await rasterPixels(fixture.output)
       expect([image.width, image.height]).toEqual([128 * scale, 96 * scale])
       const offset = (48 * scale * image.width + 64 * scale) * 4
       expect(Array.from(image.data.subarray(offset, offset + 4))).toEqual([51, 102, 153, 255])
@@ -29,14 +29,14 @@ test('PNG export outside the checkout preserves solid colors at both scales', as
 })
 
 test('relative images retain the current renderer sample and source bytes outside the checkout', async () => {
-  const fixture = await pngFixture('image')
+  const fixture = await rasterFixture('image')
   try {
     if (!fixture.asset) throw new Error('Expected an owned image fixture')
     const result = await runCLI(['export', fixture.source, '-o', fixture.output], {
       cwd: fixture.dir
     })
     expect(result.exitCode).toBe(0)
-    const image = await pngPixels(fixture.output)
+    const image = await rasterPixels(fixture.output)
     expect([image.width, image.height]).toEqual([128, 96])
     const offset = (48 * image.width + 64) * 4
     expect(Array.from(image.data.subarray(offset, offset + 4))).toEqual([64, 48, 204, 255])
@@ -48,7 +48,7 @@ test('relative images retain the current renderer sample and source bytes outsid
 })
 
 test('PNG node export selects the intended layer without changing the design', async () => {
-  const fixture = await pngFixture('selection')
+  const fixture = await rasterFixture('selection')
   try {
     const result = await runCLI(
       ['export', fixture.source, '--node', 'owned', '-o', fixture.output],
@@ -57,7 +57,7 @@ test('PNG node export selects the intended layer without changing the design', a
       }
     )
     expect(result.exitCode).toBe(0)
-    const image = await pngPixels(fixture.output)
+    const image = await rasterPixels(fixture.output)
     expect([image.width, image.height]).toEqual([128, 96])
     expect(Array.from(image.data.subarray(0, 4))).toEqual([51, 102, 153, 255])
     expect(await readFile(fixture.source)).toEqual(fixture.input)
@@ -67,7 +67,7 @@ test('PNG node export selects the intended layer without changing the design', a
 })
 
 test('an unknown PNG node refuses before replacing an existing output', async () => {
-  const fixture = await pngFixture()
+  const fixture = await rasterFixture()
   try {
     await writeFile(fixture.output, 'owned previous output')
     const result = await runCLI(
@@ -88,7 +88,7 @@ test('an unknown PNG node refuses before replacing an existing output', async ()
 test.skipIf(process.platform === 'win32')(
   'a failed PNG write preserves output and permits retry',
   async () => {
-    const fixture = await pngFixture('image')
+    const fixture = await rasterFixture('image')
     const args = ['export', fixture.source, '-o', fixture.output]
     try {
       if (!fixture.asset) throw new Error('Expected an owned image fixture')
@@ -119,7 +119,7 @@ test.skipIf(process.platform === 'win32')(
 test.skipIf(process.platform === 'win32')(
   'a restricted PNG output folder refuses before an in-place write',
   async () => {
-    const fixture = await pngFixture()
+    const fixture = await rasterFixture()
     const args = ['export', fixture.source, '-o', fixture.output]
     try {
       expect((await runCLI(args, { cwd: fixture.dir })).exitCode).toBe(0)
@@ -140,7 +140,7 @@ test.skipIf(process.platform === 'win32')(
 )
 
 test('PNG output replaces a symlink while preserving its linked file', async () => {
-  const fixture = await pngFixture()
+  const fixture = await rasterFixture()
   const target = join(fixture.dir, 'linked-data')
   try {
     await writeFile(target, 'owned linked content')
@@ -151,7 +151,9 @@ test('PNG output replaces a symlink while preserving its linked file', async () 
     expect(result.exitCode).toBe(0)
     expect((await lstat(fixture.output)).isSymbolicLink()).toBe(false)
     expect(await readFile(target, 'utf8')).toBe('owned linked content')
-    expect([...(await pngPixels(fixture.output)).data.subarray(0, 4)]).toEqual([51, 102, 153, 255])
+    expect([...(await rasterPixels(fixture.output)).data.subarray(0, 4)]).toEqual([
+      51, 102, 153, 255
+    ])
     expect(await readFile(fixture.source)).toEqual(fixture.input)
   } finally {
     await rm(fixture.dir, { recursive: true, force: true })

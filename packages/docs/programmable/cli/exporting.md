@@ -25,10 +25,16 @@ Options:
 
 - `-f` — format: `png`, `jpg`, `webp`, `svg`, `pdf`, `pptx`, `jsx`, `html`, `fig`, `storybook`
 - `-s` — export scale (default: `1`)
-- `-q` — quality: `0`–`100` (JPG/WEBP only)
+- `-q` — file-export quality: `0`–`100` (JPG/WEBP only; default `90`)
 - `-o` — output path
 - `--page` — page name
 - `--node` — specific node ID
+
+File export accepts a finite numeric quality from `0` to `100`. Blank, nonnumeric and
+out-of-range quality values fail before reading or writing a design or output file.
+Use `--quality=0` for minimum JPEG quality. JPEG is lossy, so decoded colors can differ
+from PNG. App-connected export currently uses the app's default quality; `-q` does
+not change it.
 
 ## Font Substitution Policy
 

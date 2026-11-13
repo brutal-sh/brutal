@@ -2,7 +2,7 @@
 
 This readback covers all 525 open cards after the Pen 1.2.23 update catalog allocation and normal Save delivery. It updates current scheduling; the [2026-11-11 audit](BOARD-AUDIT-2026-11-11.md) and intervening execution receipts remain historical. Actual Pen is the reference; OpenPencil is the implementation foundation.
 
-There are 507 execution tasks and 18 milestone gates: 378 Backlog, 0 Ready, 1 Building (CLI-04-JPEG), 41 Verify and 87 Executed. These are workflow states, not a product-parity percentage, an estimate of unbuilt features or a beta date. Full parity and all milestone exits remain unaccepted.
+There are 507 execution tasks and 18 milestone gates: 377 Backlog, 0 Ready, 1 Building (CLI-04-WEBP), 42 Verify and 87 Executed. These are workflow states, not a product-parity percentage, an estimate of unbuilt features or a beta date. Full parity and all milestone exits remain unaccepted.
 
 ## Checks actually executed
 
@@ -13,21 +13,21 @@ There are 507 execution tasks and 18 milestone gates: 378 Backlog, 0 Ready, 1 Bu
 
 ## New bounded followups
 
-| Task | Primary milestone | Declared prerequisites | State |
-| --- | --- | --- | --- |
-| [UPD23-GEN-PENDING](https://trello.com/c/XTrLx7Xo/511-upd23-gen-pending-match-pending-generation-state-and-generate-discard-controls) | M02 | REF-04 | Backlog |
-| [UPD23-GEN-IMAGE](https://trello.com/c/5WiqhSl1/512-upd23-gen-image-generate-a-raster-fill-from-its-pending-operation) | M02 | UPD23-GEN-PENDING, AI-02 | Backlog |
-| [UPD23-GEN-SVG](https://trello.com/c/BvV0tswJ/513-upd23-gen-svg-generate-editable-svg-from-its-pending-operation) | M02 | UPD23-GEN-PENDING, UPD23-SVG-SELECT | Backlog |
-| [UPD23-GEN-REPLACE](https://trello.com/c/a5Lt3v1v/514-upd23-gen-replace-replace-an-image-background-through-its-pending-operation) | M02 | UPD23-GEN-PENDING, AI-02 | Backlog |
-| [UPD23-SVG-SELECT](https://trello.com/c/5Of2UB2h/515-upd23-svg-select-match-svg-provider-and-model-selection) | M05 | REF-04, AI-02 | Backlog |
-| [UPD23-IMAGE-MODELS](https://trello.com/c/HKWyHR64/516-upd23-image-models-reconcile-image-model-choices-and-legacy-selections) | M05 | REF-04, AI-02 | Backlog |
-| [AI-09-CREATIVE](https://trello.com/c/PV3BZ4pr/517-ai-09-creative-add-and-qualify-creative-iteration-mode) | M05 | REF-04, AI-09 | Backlog |
-| [SURF-CHAT-FULLSCREEN](https://trello.com/c/gd5T43yy/518-surf-chat-fullscreen-match-full-screen-chat-and-history-island-round-trip) | M05 | REF-04, AI-01 | Backlog |
-| [AI-03-STEER-PREF](https://trello.com/c/6Jc0ORzA/519-ai-03-steer-pref-match-always-steer-messages-preference-and-queue-behavior) | M05 | REF-04, AI-03 | Backlog |
-| [AI-CONTEXT-START](https://trello.com/c/p56nlmao/520-ai-context-start-qualify-lazy-task-context-loading-and-resumed-sessions) | M05 | REF-04, AI-SKILLS-CONTEXT | Backlog |
-| [UI-10-LANGUAGE-CS](https://trello.com/c/5Pzv6Bo9/521-ui-10-language-cs-qualify-czech-interface-coverage) | M02 | REF-04, UI-10-LANGUAGE | Backlog |
-| [UI-10-LANGUAGE-PTBR](https://trello.com/c/zzxjVEtR/522-ui-10-language-ptbr-qualify-brazilian-portuguese-interface-coverage) | M02 | REF-04, UI-10-LANGUAGE | Backlog |
-| [UI-10-LANGUAGE-ID](https://trello.com/c/h3nf3GpQ/523-ui-10-language-id-qualify-indonesian-interface-coverage) | M02 | REF-04, UI-10-LANGUAGE | Backlog |
+| Task                                                                                                                                  | Primary milestone | Declared prerequisites              | State   |
+| ------------------------------------------------------------------------------------------------------------------------------------- | ----------------- | ----------------------------------- | ------- |
+| [UPD23-GEN-PENDING](https://trello.com/c/XTrLx7Xo/511-upd23-gen-pending-match-pending-generation-state-and-generate-discard-controls) | M02               | REF-04                              | Backlog |
+| [UPD23-GEN-IMAGE](https://trello.com/c/5WiqhSl1/512-upd23-gen-image-generate-a-raster-fill-from-its-pending-operation)                | M02               | UPD23-GEN-PENDING, AI-02            | Backlog |
+| [UPD23-GEN-SVG](https://trello.com/c/BvV0tswJ/513-upd23-gen-svg-generate-editable-svg-from-its-pending-operation)                     | M02               | UPD23-GEN-PENDING, UPD23-SVG-SELECT | Backlog |
+| [UPD23-GEN-REPLACE](https://trello.com/c/a5Lt3v1v/514-upd23-gen-replace-replace-an-image-background-through-its-pending-operation)    | M02               | UPD23-GEN-PENDING, AI-02            | Backlog |
+| [UPD23-SVG-SELECT](https://trello.com/c/5Of2UB2h/515-upd23-svg-select-match-svg-provider-and-model-selection)                         | M05               | REF-04, AI-02                       | Backlog |
+| [UPD23-IMAGE-MODELS](https://trello.com/c/HKWyHR64/516-upd23-image-models-reconcile-image-model-choices-and-legacy-selections)        | M05               | REF-04, AI-02                       | Backlog |
+| [AI-09-CREATIVE](https://trello.com/c/PV3BZ4pr/517-ai-09-creative-add-and-qualify-creative-iteration-mode)                            | M05               | REF-04, AI-09                       | Backlog |
+| [SURF-CHAT-FULLSCREEN](https://trello.com/c/gd5T43yy/518-surf-chat-fullscreen-match-full-screen-chat-and-history-island-round-trip)   | M05               | REF-04, AI-01                       | Backlog |
+| [AI-03-STEER-PREF](https://trello.com/c/6Jc0ORzA/519-ai-03-steer-pref-match-always-steer-messages-preference-and-queue-behavior)      | M05               | REF-04, AI-03                       | Backlog |
+| [AI-CONTEXT-START](https://trello.com/c/p56nlmao/520-ai-context-start-qualify-lazy-task-context-loading-and-resumed-sessions)         | M05               | REF-04, AI-SKILLS-CONTEXT           | Backlog |
+| [UI-10-LANGUAGE-CS](https://trello.com/c/5Pzv6Bo9/521-ui-10-language-cs-qualify-czech-interface-coverage)                             | M02               | REF-04, UI-10-LANGUAGE              | Backlog |
+| [UI-10-LANGUAGE-PTBR](https://trello.com/c/zzxjVEtR/522-ui-10-language-ptbr-qualify-brazilian-portuguese-interface-coverage)          | M02               | REF-04, UI-10-LANGUAGE              | Backlog |
+| [UI-10-LANGUAGE-ID](https://trello.com/c/h3nf3GpQ/523-ui-10-language-id-qualify-indonesian-interface-coverage)                        | M02               | REF-04, UI-10-LANGUAGE              | Backlog |
 
 The generation-state leaves explicitly exclude recreating the vendor image quota or subscription trigger. They qualify applicable independent pending/retry/imported-operation behavior and real generated output without artificial free-editor limits. Existing DRAW-14/DRAW-15 retain background removal/vectorization; AI-09 retains its Layout/Style base; MCP-03-READSKILL retains the guide-read contract. Native/provider applicability and output acceptance remain separate.
 
@@ -46,3 +46,14 @@ FILE-NATIVE-SAVE-UI remains Verify for matched critical-alert pixels. UI-MAC-WIN
 The controller goal stays Active. Product Done still requires every applicable task and matched reference state, PARITY-ALL's own combined acceptance, the normal-installed core journey, and the separate public-beta trust/package/support gates. No catalog publication alone meets that terminal criterion.
 
 New bounded technical prerequisite: [FMT-LINE-2-22](https://trello.com/c/N4z4LJt8/525-fmt-line-2-22-qualify-current-schema-line-serialization), primary M04 and dependent only on REF-04, is Backlog. FMT-01 and FMT-05-PATH consume it. Terminal closure includes it; the temporary legacy-line header exception is not current-schema line acceptance.
+
+## JPEG handoff — 2026-11-13
+
+CLI-04-JPEG moves to Verify with [bounded executed evidence](CLI-JPEG-EXPORT.md),
+including the zero-quality correction, strict raster ownership split, complete
+static gate, 107 caller cases, four separately enabled heavy cases, 38 browser
+cases and 17 actual workspace Node controls. Its actual Pen/native/app-connected
+quality/standalone gates remain open. CLI-04-WEBP is the sole Building card. The
+complete readback retains 507 single primary owners, 506 terminal prerequisites
+and 18 open milestones, with no unknown dependencies, cycles or terminal
+contradictions. No new execution card is created or marked Executed in this handoff.

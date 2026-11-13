@@ -51,3 +51,5 @@
 - Save compatible `.pen` designs with the current 2.22 schema header while retaining existing legacy-line interchange output.
 - Failed CLI conversion and primary export writes preserve existing output and allow retry after resolving the write failure.
 - Empty or malformed encoded app-export responses are refused before replacing existing output.
+
+- Refuse invalid CLI export quality values before replacing an output, and preserve minimum JPEG quality in shared file and document IO exports.

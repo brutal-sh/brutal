@@ -5,8 +5,8 @@ import { fileURLToPath } from 'node:url'
 
 import { createCanvasKitRasterCodec, initCanvasKit } from '@open-pencil/core/io/formats/raster'
 
-export async function pngFixture(kind: 'solid' | 'image' | 'selection' = 'solid') {
-  const dir = await mkdtemp(join(tmpdir(), 'open-pen-png-'))
+export async function rasterFixture(kind: 'solid' | 'image' | 'selection' = 'solid') {
+  const dir = await mkdtemp(join(tmpdir(), 'open-pen-raster-'))
   const source = join(dir, 'source.pen')
   const output = join(dir, 'output.png')
   const assetPath = join(dir, 'pattern.png')
@@ -31,9 +31,9 @@ export async function pngFixture(kind: 'solid' | 'image' | 'selection' = 'solid'
   return { dir, source, output, input, assetPath, asset }
 }
 
-export async function pngPixels(path: string) {
+export async function rasterPixels(path: string) {
   const codec = createCanvasKitRasterCodec(await initCanvasKit())
   const image = codec.decode(await readFile(path))
-  if (!image) throw new Error('Expected a decodable PNG')
+  if (!image) throw new Error('Expected a decodable raster image')
   return image
 }

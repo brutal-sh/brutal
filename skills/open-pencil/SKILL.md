@@ -131,6 +131,9 @@ Conversion and primary file exports require an output folder that permits tempor
 creation. They replace a destination symlink without overwriting the linked file.
 Check both the exit status and resulting document; resolve a reported write failure
 before retrying. Multi-file exports write primary files and external assets separately.
+File-backed JPEG/WEBP quality must be a finite number from 0 to 100; invalid values
+fail before reading or writing files. Use `--quality=0` for minimum JPEG quality.
+App-connected export currently uses the app's default quality and ignores `-q`.
 
 ### Analyze and lint
 

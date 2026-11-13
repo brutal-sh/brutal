@@ -1,4 +1,4 @@
-import type { CanvasKit, Canvas, Surface, Image, MallocObj } from 'canvaskit-wasm'
+import type { CanvasKit } from 'canvaskit-wasm'
 
 import type { SceneGraph, SceneNode } from '@open-pencil/scene-graph'
 import type { RenderColorSpace } from '@open-pencil/scene-graph/color'
@@ -11,6 +11,10 @@ import { assertFragmentFrames } from '@open-pencil/scene-graph/shaders'
 import type { SkiaRenderer } from '#core/canvas'
 import { getPageColor } from '#core/figma-api/page-backgrounds'
 import { extractExportGraph, findPageId } from '#core/io/subgraph'
+
+import { renderToSurface } from './surface'
+
+type RenderContextArgs = [ck: CanvasKit, renderer: SkiaRenderer, graph: SceneGraph, pageId: string]
 
 export type RasterExportFormat = 'PNG' | 'JPG' | 'WEBP'
 export type ExportFormat = RasterExportFormat | 'SVG'
@@ -43,213 +47,6 @@ export function computeContentBounds(graph: SceneGraph, nodeIds: string[]) {
     (id) => graph.getNode(id),
     (id) => graph.getAbsolutePosition(id)
   )
-}
-
-function ckImageFormat(ck: CanvasKit, format: ExportFormat) {
-  switch (format) {
-    case 'JPG':
-      return ck.ImageFormat.JPEG
-    case 'WEBP':
-      return ck.ImageFormat.WEBP
-    default:
-      return ck.ImageFormat.PNG
-  }
-}
-
-function findAlphaBounds(ck: CanvasKit, canvas: Canvas, width: number, height: number) {
-  const pixels = canvas.readPixels(0, 0, {
-    alphaType: ck.AlphaType.Unpremul,
-    colorType: ck.ColorType.RGBA_8888,
-    colorSpace: ck.ColorSpace.SRGB,
-    width,
-    height
-  })
-  if (!pixels) return null
-
-  let minX = width
-  let minY = height
-  let maxX = -1
-  let maxY = -1
-
-  for (let y = 0; y < height; y++) {
-    const row = y * width * 4
-    for (let x = 0; x < width; x++) {
-      if (pixels[row + x * 4 + 3] === 0) continue
-      minX = Math.min(minX, x)
-      minY = Math.min(minY, y)
-      maxX = Math.max(maxX, x + 1)
-      maxY = Math.max(maxY, y + 1)
-    }
-  }
-
-  if (maxX < minX || maxY < minY) return null
-  return { minX, minY, maxX, maxY }
-}
-
-const MIN_TRANSPARENT_TRIM_INSET = 2
-
-function shouldTrimAlphaBounds(
-  alphaBounds: ReturnType<typeof findAlphaBounds>,
-  width: number,
-  height: number
-): boolean {
-  return (
-    alphaBounds !== null &&
-    Math.max(
-      alphaBounds.minX,
-      alphaBounds.minY,
-      width - alphaBounds.maxX,
-      height - alphaBounds.maxY
-    ) >= MIN_TRANSPARENT_TRIM_INSET
-  )
-}
-
-function createExportSurface(ck: CanvasKit, renderer: SkiaRenderer, width: number, height: number) {
-  // Preserve GPU edge coverage; software rendering retains its existing supersampling.
-  let renderScale = renderer.surface.reportBackendTypeIsGPU() ? 1 : 2
-  const info = {
-    alphaType: ck.AlphaType.Premul,
-    colorType: ck.ColorType.RGBA_8888,
-    colorSpace: ck.ColorSpace.SRGB,
-    width: width * renderScale,
-    height: height * renderScale
-  }
-  let surface: Surface | null = null
-  try {
-    surface = renderer.surface.makeSurface(info)
-  } catch (error) {
-    console.warn('GPU export target unavailable; using software rasterization.', error)
-  }
-  let rasterPixels: MallocObj | null = null
-  if (!surface) {
-    renderScale = 2
-    info.width = width * renderScale
-    info.height = height * renderScale
-    rasterPixels = ck.Malloc(Uint8Array, info.width * info.height * 4)
-    surface = ck.MakeRasterDirectSurface(info, rasterPixels, info.width * 4)
-  }
-  if (!surface) {
-    if (rasterPixels) ck.Free(rasterPixels)
-    return null
-  }
-  const allocatedSurface = surface
-  return {
-    surface,
-    renderScale,
-    renderWidth: info.width,
-    renderHeight: info.height,
-    dispose() {
-      allocatedSurface.delete()
-      if (rasterPixels) ck.Free(rasterPixels)
-    }
-  }
-}
-
-function renderToSurface(
-  ck: CanvasKit,
-  renderer: SkiaRenderer,
-  renderGraph: SceneGraph,
-  pageId: string,
-  width: number,
-  height: number,
-  format: ExportFormat,
-  quality: number,
-  setup: (canvas: Canvas) => void,
-  trimTransparent = false
-): Uint8Array<ArrayBuffer> | null {
-  const allocation = createExportSurface(ck, renderer, width, height)
-  if (!allocation) return null
-  const { surface, renderScale, renderWidth, renderHeight } = allocation
-
-  let highResImage: Image | null = null
-  let downsampleSurface: Surface | null = null
-  let image: Image | null = null
-  try {
-    const canvas = surface.getCanvas()
-    canvas.scale(renderScale, renderScale)
-    setup(canvas)
-    renderer.renderSceneToCanvas(canvas, renderGraph, pageId)
-    surface.flush()
-
-    highResImage = surface.makeImageSnapshot()
-    downsampleSurface = surface.makeSurface({
-      alphaType: ck.AlphaType.Premul,
-      colorType: ck.ColorType.RGBA_8888,
-      colorSpace: ck.ColorSpace.SRGB,
-      width,
-      height
-    })
-    const downsampleCanvas = downsampleSurface.getCanvas()
-    downsampleCanvas.clear(ck.TRANSPARENT)
-    downsampleCanvas.drawImageRectOptions(
-      highResImage,
-      ck.LTRBRect(0, 0, renderWidth, renderHeight),
-      ck.LTRBRect(0, 0, width, height),
-      ck.FilterMode.Linear,
-      ck.MipmapMode.None,
-      null
-    )
-    downsampleSurface.flush()
-
-    const foundAlphaBounds = trimTransparent
-      ? findAlphaBounds(ck, downsampleCanvas, width, height)
-      : null
-    const alphaBounds = shouldTrimAlphaBounds(foundAlphaBounds, width, height)
-      ? foundAlphaBounds
-      : null
-    if (format === 'JPG') {
-      const matte = new ck.Paint()
-      matte.setColor(ck.WHITE)
-      matte.setBlendMode(ck.BlendMode.DstOver)
-      downsampleCanvas.drawPaint(matte)
-      downsampleSurface.flush()
-      matte.delete()
-    }
-    image = alphaBounds
-      ? downsampleSurface.makeImageSnapshot([
-          alphaBounds.minX,
-          alphaBounds.minY,
-          alphaBounds.maxX,
-          alphaBounds.maxY
-        ])
-      : downsampleSurface.makeImageSnapshot()
-    const encoded = image.encodeToBytes(ckImageFormat(ck, format), quality)
-    let resultBytes: Uint8Array<ArrayBuffer> | null = encoded ? new Uint8Array(encoded) : null
-
-    // CanvasKit's `encodeToBytes` returns null for JPEG/WEBP in this build, so
-    // fall back to encoding the raw pixels through the browser canvas.
-    if (!resultBytes && (format === 'JPG' || format === 'WEBP')) {
-      const exportWidth = alphaBounds ? alphaBounds.maxX - alphaBounds.minX : width
-      const exportHeight = alphaBounds ? alphaBounds.maxY - alphaBounds.minY : height
-      const exportMinX = alphaBounds ? alphaBounds.minX : 0
-      const exportMinY = alphaBounds ? alphaBounds.minY : 0
-
-      const rawPixels = downsampleCanvas.readPixels(exportMinX, exportMinY, {
-        alphaType: ck.AlphaType.Unpremul,
-        colorType: ck.ColorType.RGBA_8888,
-        colorSpace: ck.ColorSpace.SRGB,
-        width: exportWidth,
-        height: exportHeight
-      })
-
-      if (rawPixels instanceof Uint8Array) {
-        resultBytes = renderer.encodeRasterFallback(
-          rawPixels,
-          exportWidth,
-          exportHeight,
-          format,
-          quality
-        )
-      }
-    }
-
-    return resultBytes
-  } finally {
-    image?.delete()
-    downsampleSurface?.delete()
-    highResImage?.delete()
-    allocation.dispose()
-  }
 }
 
 export function prepareSelectionRenderGraph(
@@ -294,13 +91,27 @@ function applyWorldTransform(node: SceneNode, matrix: Mat3): void {
   node.flipY = false
 }
 
+function renderSelection(graph: SceneGraph, pageId: string, nodeIds: string[]) {
+  const extracted = extractExportGraph(graph, { scope: 'selection', nodeIds })
+  if (!extracted.pageId) return null
+
+  const renderGraph = nodeIds.some((nodeId) => nodeNeedsSceneBackdrop(graph, nodeId))
+    ? graph
+    : extracted.graph
+  const renderPageId = renderGraph === graph ? pageId : extracted.pageId
+  if (renderGraph !== graph) {
+    prepareSelectionRenderGraph(graph, renderGraph, renderPageId, nodeIds)
+  }
+
+  return { graph: renderGraph, pageId: renderPageId }
+}
+
 export function renderNodesToImage(
-  ck: CanvasKit,
-  renderer: SkiaRenderer,
-  graph: SceneGraph,
-  pageId: string,
-  nodeIds: string[],
-  options: RenderOptions
+  ...[ck, renderer, graph, pageId, nodeIds, options]: [
+    ...RenderContextArgs,
+    nodeIds: string[],
+    options: RenderOptions
+  ]
 ): Uint8Array<ArrayBuffer> | null {
   if (!ensureSinglePageSelection(graph, pageId, nodeIds)) {
     throw new Error('Raster export selection must stay on a single page')
@@ -319,34 +130,24 @@ export function renderNodesToImage(
   const pixelH = Math.ceil(contentH * options.scale)
   if (pixelW <= 0 || pixelH <= 0) return null
 
-  const extracted = extractExportGraph(graph, { scope: 'selection', nodeIds })
-  if (!extracted.pageId) return null
-
-  const renderGraph = nodeIds.some((nodeId) => nodeNeedsSceneBackdrop(graph, nodeId))
-    ? graph
-    : extracted.graph
-  const renderPageId = renderGraph === graph ? pageId : extracted.pageId
-  if (renderGraph !== graph) {
-    prepareSelectionRenderGraph(graph, renderGraph, renderPageId, nodeIds)
-  }
+  const target = renderSelection(graph, pageId, nodeIds)
+  if (!target) return null
 
   const quality = options.quality ?? (options.format === 'PNG' ? 100 : 90)
-  return renderToSurface(
-    ck,
-    renderer,
-    renderGraph,
-    renderPageId,
-    pixelW,
-    pixelH,
-    options.format,
+  return renderToSurface(ck, renderer, {
+    graph: target.graph,
+    pageId: target.pageId,
+    width: pixelW,
+    height: pixelH,
+    format: options.format,
     quality,
-    (canvas) => {
+    setup(canvas) {
       canvas.clear(ck.TRANSPARENT)
       canvas.scale(options.scale, options.scale)
       canvas.translate(-bounds.minX, -bounds.minY)
     },
-    options.trimTransparent
-  )
+    trimTransparent: options.trimTransparent
+  })
 }
 
 export interface ThumbnailFrame {
@@ -385,12 +186,11 @@ export function thumbnailFrame(
 }
 
 export function renderThumbnail(
-  ck: CanvasKit,
-  renderer: SkiaRenderer,
-  graph: SceneGraph,
-  pageId: string,
-  width: number,
-  height: number
+  ...[ck, renderer, graph, pageId, width, height]: [
+    ...RenderContextArgs,
+    width: number,
+    height: number
+  ]
 ): Uint8Array<ArrayBuffer> | null {
   const frame = thumbnailFrame(graph, pageId, width, height)
   if (!frame) return null
@@ -398,28 +198,48 @@ export function renderThumbnail(
   // The page's own background, which the editor's page colour matches only while it is open.
   const background = getPageColor(graph.getNode(pageId))
 
-  return renderToSurface(ck, renderer, graph, pageId, pixelW, pixelH, 'PNG', 100, (canvas) => {
-    canvas.clear(ck.Color4f(background.r, background.g, background.b, 1))
-    canvas.translate(-bounds.minX * scale, -bounds.minY * scale)
-    canvas.scale(scale, scale)
+  return renderToSurface(ck, renderer, {
+    graph,
+    pageId,
+    width: pixelW,
+    height: pixelH,
+    format: 'PNG',
+    quality: 100,
+    setup(canvas) {
+      canvas.clear(ck.Color4f(background.r, background.g, background.b, 1))
+      canvas.translate(-bounds.minX * scale, -bounds.minY * scale)
+      canvas.scale(scale, scale)
+    }
   })
 }
 
 /** Draws a page region with `renderer`; `region.ts` gives it a renderer of its own. */
 export function drawRegionToImage(
-  ck: CanvasKit,
-  renderer: SkiaRenderer,
-  graph: SceneGraph,
-  pageId: string,
-  bounds: VisualBounds,
-  scale: number
+  ...[ck, renderer, graph, pageId, bounds, scale]: [
+    ...RenderContextArgs,
+    bounds: VisualBounds,
+    scale: number
+  ]
 ): Uint8Array<ArrayBuffer> | null {
   const pixelW = Math.max(1, Math.round((bounds.maxX - bounds.minX) * scale))
   const pixelH = Math.max(1, Math.round((bounds.maxY - bounds.minY) * scale))
   if (!graph.getNode(pageId) || !Number.isFinite(pixelW * pixelH)) return null
-  return renderToSurface(ck, renderer, graph, pageId, pixelW, pixelH, 'PNG', 100, (canvas) => {
-    canvas.clear(ck.Color4f(renderer.pageColor.r, renderer.pageColor.g, renderer.pageColor.b, 1))
-    canvas.scale(scale, scale)
-    canvas.translate(-bounds.minX, -bounds.minY)
+  return renderToSurface(ck, renderer, {
+    graph,
+    pageId,
+    width: pixelW,
+    height: pixelH,
+    format: 'PNG',
+    quality: 100,
+    setup(canvas) {
+      canvas.clear(ck.Color4f(renderer.pageColor.r, renderer.pageColor.g, renderer.pageColor.b, 1))
+      canvas.scale(scale, scale)
+      canvas.translate(-bounds.minX, -bounds.minY)
+    }
   })
+}
+
+// Preserve callable metadata for the existing positional APIs.
+for (const render of [renderNodesToImage, renderThumbnail, drawRegionToImage]) {
+  Object.defineProperty(render, 'length', { value: 6 })
 }

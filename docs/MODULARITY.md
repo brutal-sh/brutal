@@ -353,3 +353,13 @@ explicit behavior changes. [CLI export qualification](CLI-PNG-EXPORT.md) retains
 original failures, independent review and built-entry qualification; standalone
 installation, actual reference and pixel gates remain open.
 This is a bounded CLI slice; it accepts no whole-package or whole-app modularity.
+
+## Raster export ownership — 2026-11-13
+
+The JPEG candidate separates `packages/core/src/io/formats/raster/render.ts`
+selection/bounds/transforms from `surface.ts` GPU/software allocation and
+supersampling, and `encode.ts` alpha trimming/matte/encoding/fallback. Existing public
+positional APIs and callable metadata remain compatible. The shared encoding
+boundary owns the CanvasKit zero-quality workaround for both IO and direct callers.
+Strict 300/50/10/4/4 checks pass for all changed code; this bounded disposition does
+not establish whole-application modularity or Pen visual parity.
