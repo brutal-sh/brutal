@@ -1,4 +1,7 @@
+import { mapValues } from 'es-toolkit'
+
 import { createIDBDiagnosticsStore, type DiagnosticsStore } from './idb'
+import { scrubDiagnosticText } from './scrub'
 import {
   getDiagnosticsRetention,
   isDiagnosticsEnabled,
@@ -41,8 +44,24 @@ function notify(): void {
   for (const subscriber of subscribers) subscriber()
 }
 
+const ERROR_DETAIL_FIELDS = new Set(['errorName', 'errorCode', 'message', 'stack', 'info'])
+
+// Free-text errors need scrubbing; model identifiers and correlation metadata stay exact.
+function scrubEventErrorDetails(event: DiagnosticEvent): DiagnosticEvent {
+  return {
+    ...event,
+    attributes: mapValues(event.attributes, (value, key) =>
+      ERROR_DETAIL_FIELDS.has(key) && typeof value === 'string' ? scrubDiagnosticText(value) : value
+    )
+  }
+}
+
 function makeEvent(input: DiagnosticEventInput): DiagnosticEvent {
-  return { ...input, id: crypto.randomUUID(), timestamp: input.timestamp ?? Date.now() }
+  return scrubEventErrorDetails({
+    ...input,
+    id: crypto.randomUUID(),
+    timestamp: input.timestamp ?? Date.now()
+  })
 }
 
 function enqueue(operation: () => Promise<void>): void {
@@ -76,7 +95,11 @@ export const diagnostics = {
   },
   /** The stored events, after `environment`, the context a report needs to reproduce them. */
   async export(environment: Record<string, unknown> = {}): Promise<string> {
-    return JSON.stringify({ environment, events: await this.list() }, null, 2)
+    return JSON.stringify(
+      { environment, events: (await this.list()).map(scrubEventErrorDetails) },
+      null,
+      2
+    )
   },
   async prune(retention: DiagnosticsRetention): Promise<void> {
     memoryEvents = memoryEvents.slice(-retention)

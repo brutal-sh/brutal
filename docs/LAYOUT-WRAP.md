@@ -1,6 +1,6 @@
 # Rotated layout wrapping
 
-Updated 2026-11-13. LAYOUT-WRAP remains Building. Actual Pen 1.2.23 is the reference;
+Updated 2026-11-13. LAYOUT-WRAP is Verify and remains unaccepted. Actual Pen 1.2.23 is the reference;
 OpenPencil is the implementation foundation. This is bounded command evidence, not
 full layout, menu or native acceptance.
 

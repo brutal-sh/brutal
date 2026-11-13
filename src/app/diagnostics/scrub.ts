@@ -34,6 +34,11 @@ function redactLongRun(run: string): string {
  * AWS access key IDs are too short for the long-run rule, and a JWT's dots split it into runs
  * while its payload can name the user.
  */
+const CREDENTIAL_FIELD_NAME =
+  /api[_-]?key|(?:access|refresh|session)[_-]?token|(?:client[_-]?)?secret|passw(?:or)?d/.source
+const QUOTED_CREDENTIAL_VALUE = /"(?:\\[\s\S]|[^"\\])*(?:"|\\?$)|'(?:\\[\s\S]|[^'\\])*(?:'|\\?$)/
+  .source
+
 const CREDENTIAL_RULES: ScrubRule[] = [
   [
     /-----BEGIN[ A-Z0-9_-]{0,100}PRIVATE KEY(?: BLOCK)?-----[\s\S]*?-----END[ A-Z0-9_-]{0,100}PRIVATE KEY(?: BLOCK)?-----/g,
@@ -44,13 +49,26 @@ const CREDENTIAL_RULES: ScrubRule[] = [
   // An `Authorization` header value in any scheme; a bearer token anywhere.
   [/(\bAuthorization["']?\s*[:=]\s*["']?(?:Basic|Bearer|Token)?\s*)[^\s"',]+/gi, `$1${REDACTED}`],
   [/\bBearer\s+(?!\[redacted\])\S+/gi, `Bearer ${REDACTED}`],
-  // Assignments such as `api_key=…` or `password: …`. A bare `key` or `token` counts only
-  // with `=`, since messages such as `Missing key: fills` name code, not secrets.
+  // Structured keys need their closing quote; quoted values may contain spaces and escapes.
   [
-    /\b((?:api[_-]?key|(?:access|refresh)[_-]?token|(?:client[_-]?)?secret|passw(?:or)?d)\s*[=:]\s*)["']?[^\s&,"']+["']?/gi,
+    new RegExp(
+      String.raw`(["'](?:${CREDENTIAL_FIELD_NAME}|key|token)["']\s*:\s*)(?:${QUOTED_CREDENTIAL_VALUE}|[^\s,}\]]+)`,
+      'gi'
+    ),
+    `$1"${REDACTED}"`
+  ],
+  // Bare key/token labels count only with '=', so "Missing key: fills" remains useful.
+  [
+    new RegExp(
+      String.raw`\b((?:${CREDENTIAL_FIELD_NAME})\s*[=:]\s*)(?:${QUOTED_CREDENTIAL_VALUE}|[^\s&,"']+)`,
+      'gi'
+    ),
     `$1${REDACTED}`
   ],
-  [/\b((?:key|token)\s*=\s*)["']?[^\s&,"']+["']?/gi, `$1${REDACTED}`],
+  [
+    new RegExp(String.raw`\b((?:key|token)\s*=\s*)(?:${QUOTED_CREDENTIAL_VALUE}|[^\s&,"']+)`, 'gi'),
+    `$1${REDACTED}`
+  ],
   // Prefixed keys such as `sk-ant-…`, `sk-proj-…`, `sk_live_…`, and `rk_live_…`.
   [/\b(?:sk|pk|rk|key|token|secret)[-_][\w-]{8,}/gi, REDACTED],
   [/[A-Za-z0-9+/_-]{40,}={0,2}/g, redactLongRun]

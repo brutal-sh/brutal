@@ -24,7 +24,7 @@
   "mcpFailed": "MCP接続失敗",
   "retention": "診断データの保持数",
   "retentionDescription": "この数までの最新イベントを端末に保存します。",
-  "description": "Open Penのトラブルシューティングに役立つ技術イベントを端末に保存します。プロンプト、デザイン内容、認証情報、APIキーは除外されます。",
+  "description": "Open Penの問題を調査するため、技術イベントを端末に保存します。レポートを共有する前に、エラーの詳細を確認してください。",
   "eventCount": "{count} 件 · {size} KB",
   "copy": "診断データをコピー",
   "save": "診断データを保存…",

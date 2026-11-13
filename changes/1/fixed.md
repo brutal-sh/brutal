@@ -46,3 +46,4 @@
 
 - macOS Save As panels use format-specific titles and follow the editor appearance; permission-denied saves show file-specific guidance while preserving edits and recovery copies.
 - Adding flex layout to rotated layers retains the initial measured extent, and wrapping or undoing a wrap leaves unrelated page layouts untouched.
+- Diagnostics redact supported credential formats in new and retained error details while preserving technical identifiers, and advise reviewing reports before sharing.

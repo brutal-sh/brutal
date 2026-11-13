@@ -25,6 +25,83 @@ function pemMarker(edge: 'BEGIN' | 'END'): string {
   return ['-----', edge, ' RSA PRIVATE', ' KEY-----'].join('')
 }
 
+const scrubCases = [
+  [
+    'a URL query and fragment',
+    'fetch https://api.example.com/v1/chat?key=abc123&doc=Secret%20Plan#part failed',
+    'fetch https://api.example.com/v1/chat failed'
+  ],
+  [
+    'a query on a bare path, keeping ordinary question marks',
+    'Failed to load /Designs/app.fig?token=abc123. Retry? Maybe',
+    'Failed to load /Designs/app.fig Retry? Maybe'
+  ],
+  [
+    'credentials in a URL',
+    'GET https://admin:hunter2@example.com/x',
+    'GET https://[redacted]@example.com/x'
+  ],
+  ['a bearer token', 'Authorization: Bearer abc.def', 'Authorization: Bearer [redacted]'],
+  [
+    'a Basic authorization value',
+    'Authorization: Basic dXNlcjpwYXNz rejected',
+    'Authorization: Basic [redacted] rejected'
+  ],
+  [
+    'credential assignments',
+    'api_key=short password: hunter2 key=abc client_secret="xyz"',
+    'api_key=[redacted] password: [redacted] key=[redacted] client_secret=[redacted]'
+  ],
+  [
+    'quoted JSON credentials without losing other fields',
+    '{"api_key":"plum42","password":"orchid glade","session_token":"cedar17","status":401}',
+    '{"api_key":"[redacted]","password":"[redacted]","session_token":"[redacted]","status":401}'
+  ],
+  [
+    'whole quoted values containing spaces',
+    `password="violet meadow" token='spruce branch'`,
+    'password=[redacted] token=[redacted]'
+  ],
+  [
+    'escaped quotes inside a credential value',
+    JSON.stringify({ password: 'pine "grove" fern' }),
+    JSON.stringify({ password: '[redacted]' })
+  ],
+  [
+    'quoted generic JSON tokens',
+    '{"token":"cedar17","key":"plum42"}',
+    '{"token":"[redacted]","key":"[redacted]"}'
+  ],
+  ['an assigned session token', 'session_token=cedar17', 'session_token=[redacted]'],
+  ['an unterminated quoted assignment', 'password="orchid glade', 'password=[redacted]'],
+  [
+    'a quoted assignment ending in an escape',
+    'password="pine' + String.fromCharCode(92),
+    'password=[redacted]'
+  ],
+  [
+    'an unterminated structured credential',
+    '{"password":"orchid glade',
+    '{"password":"[redacted]"'
+  ],
+  [
+    'a key that contains slashes',
+    ['Upload ', 'Zx9Yw8Vu7Ts6Rq5Po4Nm3', '/', 'Lk2Ji1HgFeDcBa0aB3cD4eF5', ' rejected'].join(''),
+    'Upload [redacted]/[redacted] rejected'
+  ],
+  [
+    'a home folder name with a space',
+    'at /Users/Jane Doe/app/x.ts:1:1 and C:\\Users\\Jane Doe\\app\\y.ts:2:2',
+    'at /Users/~/app/x.ts:1:1 and C:\\Users\\~\\app\\y.ts:2:2'
+  ],
+  ['an email address', 'No account for jane.doe@example.com.', 'No account for [redacted].'],
+  [
+    'the user name in home folders',
+    'at file:///Users/jane/app/x.ts:1:1 and C:\\Users\\jane\\app\\y.ts:2:2 and /home/jane/z.ts',
+    'at file:///Users/~/app/x.ts:1:1 and C:\\Users\\~\\app\\y.ts:2:2 and /home/~/z.ts'
+  ]
+] as const
+
 describe('scrubDiagnosticText', () => {
   test.each(Object.entries(fake))('redacts a %s credential', (_kind, secret) => {
     const scrubbed = scrubDiagnosticText(`Request failed with ${secret} attached`)
@@ -33,51 +110,9 @@ describe('scrubDiagnosticText', () => {
     expect(scrubbed).toEndWith(' attached')
   })
 
-  test.each([
-    [
-      'a URL query and fragment',
-      'fetch https://api.example.com/v1/chat?key=abc123&doc=Secret%20Plan#part failed',
-      'fetch https://api.example.com/v1/chat failed'
-    ],
-    [
-      'a query on a bare path, keeping ordinary question marks',
-      'Failed to load /Designs/app.fig?token=abc123. Retry? Maybe',
-      'Failed to load /Designs/app.fig Retry? Maybe'
-    ],
-    [
-      'credentials in a URL',
-      'GET https://admin:hunter2@example.com/x',
-      'GET https://[redacted]@example.com/x'
-    ],
-    ['a bearer token', 'Authorization: Bearer abc.def', 'Authorization: Bearer [redacted]'],
-    [
-      'a Basic authorization value',
-      'Authorization: Basic dXNlcjpwYXNz rejected',
-      'Authorization: Basic [redacted] rejected'
-    ],
-    [
-      'credential assignments',
-      'api_key=short password: hunter2 key=abc client_secret="xyz"',
-      'api_key=[redacted] password: [redacted] key=[redacted] client_secret=[redacted]'
-    ],
-    [
-      'a key that contains slashes',
-      ['Upload ', 'Zx9Yw8Vu7Ts6Rq5Po4Nm3', '/', 'Lk2Ji1HgFeDcBa0aB3cD4eF5', ' rejected'].join(''),
-      'Upload [redacted]/[redacted] rejected'
-    ],
-    [
-      'a home folder name with a space',
-      'at /Users/Jane Doe/app/x.ts:1:1 and C:\\Users\\Jane Doe\\app\\y.ts:2:2',
-      'at /Users/~/app/x.ts:1:1 and C:\\Users\\~\\app\\y.ts:2:2'
-    ],
-    ['an email address', 'No account for jane.doe@example.com.', 'No account for [redacted].'],
-    [
-      'the user name in home folders',
-      'at file:///Users/jane/app/x.ts:1:1 and C:\\Users\\jane\\app\\y.ts:2:2 and /home/jane/z.ts',
-      'at file:///Users/~/app/x.ts:1:1 and C:\\Users\\~\\app\\y.ts:2:2 and /home/~/z.ts'
-    ]
-  ])('removes %s', (_case, text, scrubbed) => {
+  test.each(scrubCases)('removes %s', (_case, text, scrubbed) => {
     expect(scrubDiagnosticText(text)).toBe(scrubbed)
+    expect(scrubDiagnosticText(scrubbed)).toBe(scrubbed)
   })
 
   test.each([
