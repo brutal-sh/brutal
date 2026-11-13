@@ -10,8 +10,11 @@ import { AppDialogBody, AppDialogHeader, AppDialogRoot } from '@/components/ui/d
 const { attachment } = defineProps<{ attachment: AttachmentPresentation }>()
 const { ai } = useI18n()
 const viewerOpen = ref(false)
-const previewURL = useObjectUrl(toRef(() => attachment.preview))
+const previewURL = useObjectUrl(
+  toRef(() => (attachment.kind === 'file' ? undefined : attachment.preview))
+)
 const typeLabel = computed(() => {
+  if (attachment.kind === 'file') return attachment.mediaType
   if (attachment.kind === 'image')
     return attachment.mediaType.split('/')[1]?.toUpperCase() ?? 'Image'
   return attachment.nodeType
@@ -19,8 +22,10 @@ const typeLabel = computed(() => {
     .replaceAll('_', ' ')
     .replace(/^./, (character) => character.toUpperCase())
 })
-const dimensions = computed(
-  () => `${Math.round(attachment.originalSize.x)} × ${Math.round(attachment.originalSize.y)}`
+const dimensions = computed(() =>
+  attachment.kind === 'file'
+    ? ''
+    : `${Math.round(attachment.originalSize.x)} × ${Math.round(attachment.originalSize.y)}`
 )
 </script>
 
@@ -41,6 +46,12 @@ const dimensions = computed(
     <span class="block max-w-28 truncate px-1.5 py-1 text-3xs leading-tight text-surface">
       {{ attachment.name }}
     </span>
+    <span
+      v-if="attachment.kind === 'file'"
+      class="block max-w-28 truncate px-1.5 pb-1 text-3xs text-muted"
+    >
+      {{ typeLabel }}
+    </span>
   </button>
 
   <AppDialogRoot v-model:open="viewerOpen" size="xl">
@@ -50,15 +61,19 @@ const dimensions = computed(
       :close-label="ai.closeAttachmentPreview"
     />
     <AppDialogBody class="flex min-h-0 items-center justify-center bg-canvas p-4">
+      <pre
+        v-if="attachment.kind === 'file'"
+        class="max-h-[75vh] min-w-0 w-full overflow-auto text-xs text-surface"
+        >{{ attachment.text }}</pre>
       <img
-        v-if="previewURL"
+        v-else-if="previewURL"
         :src="previewURL"
         :alt="attachment.name"
         class="max-h-[75vh] max-w-full object-contain"
       />
     </AppDialogBody>
     <div class="border-t border-border px-4 py-2 text-xs text-muted">
-      {{ typeLabel }} · {{ dimensions }}
+      {{ typeLabel }}<template v-if="dimensions"> · {{ dimensions }}</template>
     </div>
   </AppDialogRoot>
 </template>

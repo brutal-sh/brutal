@@ -33,3 +33,5 @@
 - Adjust browser preview height with its footer control, restore full height without importing, and keep Phone and Tablet page imports at their full editable height.
 - Keep unsaved edits to existing local files in a separate recovery backup, restore their original save target without overwriting it, and retain the backup when saving fails or is cancelled.
 - Open storage workspaces on Home from Settings and direct links, while preserving the current design and its history.
+
+- Attach UTF-8 text and source files to agent requests and inspect their escaped content in conversation history.

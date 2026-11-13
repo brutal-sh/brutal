@@ -52,6 +52,9 @@ const attachments = useAttachmentDrafts({
 })
 const {
   images,
+  textFiles,
+  preparing,
+  removeTextFile,
   canMentionSelection,
   selectionMentions,
   openImageDialog,
@@ -137,7 +140,7 @@ const selectedProfileName = computed(
   <ChatComposer
     ref="composer"
     :status="status"
-    :disabled="disabled"
+    :disabled="disabled || preparing"
     :completions="completions"
     :take-back="takeBack"
     @submit="(text, afterWork) => emit('submit', takeSubmission(text), afterWork)"
@@ -146,7 +149,7 @@ const selectedProfileName = computed(
     @paste="handlePaste"
     @settings="openSettingsDialog('ai')"
   >
-    <template v-if="images.length" #attachment>
+    <template v-if="images.length || textFiles.length" #attachment>
       <div class="flex flex-wrap gap-1.5">
         <div
           v-for="(image, index) in images"
@@ -167,6 +170,21 @@ const selectedProfileName = computed(
             :label="ai.removeImageAttachment({ name: image.file.name })"
             size="xs"
             @click="removeImage(index)"
+          >
+            <icon-lucide-x class="size-3" />
+          </IconButton>
+        </div>
+        <div
+          v-for="(attachment, index) in textFiles"
+          :key="index"
+          class="flex min-w-0 max-w-full items-center gap-2 rounded-lg border border-border bg-canvas p-1.5"
+        >
+          <icon-lucide-file-text class="size-4 shrink-0" />
+          <span class="min-w-0 truncate text-2xs text-surface">{{ attachment.file.name }}</span>
+          <IconButton
+            :label="ai.removeImageAttachment({ name: attachment.file.name })"
+            size="xs"
+            @click="removeTextFile(index)"
           >
             <icon-lucide-x class="size-3" />
           </IconButton>
@@ -194,7 +212,7 @@ const selectedProfileName = computed(
       <IconButton
         :label="ai.attachImages"
         size="sm"
-        :disabled="disabled || images.length >= MAX_IMAGE_ATTACHMENTS"
+        :disabled="disabled || preparing"
         @click="openImageDialog()"
       >
         <icon-lucide-image-plus class="size-4" />

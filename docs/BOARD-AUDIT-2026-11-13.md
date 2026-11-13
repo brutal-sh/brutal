@@ -2,7 +2,7 @@
 
 This readback covers all 524 open cards after the Pen 1.2.23 update catalog allocation and normal Save delivery. It updates current scheduling; the [2026-11-11 audit](BOARD-AUDIT-2026-11-11.md) and intervening execution receipts remain historical. Actual Pen is the reference; OpenPencil is the implementation foundation.
 
-There are 506 execution tasks and 18 milestone gates: 382 Backlog, 0 Ready, 1 Building (ERR-07), 36 Verify and 87 Executed. These are workflow states, not a product-parity percentage, an estimate of unbuilt features or a beta date. Full parity and all milestone exits remain unaccepted.
+There are 506 execution tasks and 18 milestone gates: 381 Backlog, 0 Ready, 1 Building (AI-04-FILE), 37 Verify and 87 Executed. These are workflow states, not a product-parity percentage, an estimate of unbuilt features or a beta date. Full parity and all milestone exits remain unaccepted.
 
 ## Checks actually executed
 
@@ -39,7 +39,7 @@ Private receipts are retained under `local-evidence/pen-reference-1.2.23/`: `cre
 
 REF-04 is bounded Executed at private catalog publication `64f61e4cd`. [Normal Save delivery](NATIVE-SAVE-DELIVERY.md) records the subsequently installed `db4e528c`, actual owned Cancel/copy/edit/refusal/OK/retry/reopen, exact original workspace/older recovery preservation and independent review. Its new leaf belongs to M07, which now records 14/36 primary cards Executed. M00 records 4/5; both milestones remain open.
 
-Now: [ERR-07](SUPPORT-DIAGNOSTICS.md) is the sole Building card for an executable diagnostics-report privacy control. [LAYOUT-WRAP](LAYOUT-WRAP.md) returns Verify after the bounded command candidate publishes; native/exact-file readiness, normal delivery and saved-reference import remain unaccepted. The Mac is locked, with the clean owned Pen Gap tab still open. FILE-RECOVERY-CANCEL stays Verify with its historical Home-state cause unresolved. All13 new reference followups remain Backlog; full parity and beta remain unaccepted.
+Now: [AI-04-FILE](FILE-CONTEXT.md) is the sole Building card: 23 affected browser cases, 2,038 app units and complete static pass. Intercepted production HTTP serialization and saved-conversation reload/reopen execute; native/CLI/reference/limit gates stay open. [ERR-07](SUPPORT-DIAGNOSTICS.md) is Verify at `da2bd5984` with scoped runtime/report controls executed and an uninstalled local default-feature candidate prepared. [LAYOUT-WRAP](LAYOUT-WRAP.md) remains Verify for native/exact-file readiness, normal delivery and saved-reference import. Native checks stop at the unchanged locked-host guard; the clean owned Pen Gap tab remains open. FILE-RECOVERY-CANCEL retains its unresolved historical Home-state cause. All13 current-reference followups remain Backlog; full parity/beta remain unaccepted.
 
 FILE-NATIVE-SAVE-UI remains Verify for matched critical-alert pixels. UI-MAC-WINDOW-CONTROLS remains Verify for pointer dragging. The normal installed app now contains the Save correction; broader normal-profile process-loss, native updater, TCC and beta acceptance remain separate. Existing recovery content/profiles, protected icon work, private GitHub/draft PR and disabled Actions remain constraints.
 

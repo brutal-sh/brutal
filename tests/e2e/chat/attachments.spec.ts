@@ -35,20 +35,20 @@ test('the selection button mentions the selected layers, which history shows', a
 
 test('image drafts can be attached and removed', async ({ configuredChat: chat }) => {
   const chooser = chat.page.waitForEvent('filechooser')
-  await chat.page.getByRole('button', { name: 'Attach images' }).click()
+  await chat.page.getByRole('button', { name: 'Add image or file' }).click()
   await (await chooser).setFiles([PILOT, PYTHON])
 
   await expect(chat.page.getByText('pilot_avatar.png', { exact: true })).toBeVisible()
   await expect(chat.page.getByText('python_logo.png', { exact: true })).toBeVisible()
-  await chat.page.getByRole('button', { name: 'Remove image pilot_avatar.png' }).click()
+  await chat.page.getByRole('button', { name: 'Remove attachment pilot_avatar.png' }).click()
   await expect(chat.page.getByText('pilot_avatar.png', { exact: true })).toBeHidden()
-  await chat.page.getByRole('button', { name: 'Remove image python_logo.png' }).click()
+  await chat.page.getByRole('button', { name: 'Remove attachment python_logo.png' }).click()
 })
 
 test('sent images and text appear immediately in history', async ({ configuredChat: chat }) => {
   await chat.input.fill('Use these images for the new layout')
   const chooser = chat.page.waitForEvent('filechooser')
-  await chat.page.getByRole('button', { name: 'Attach images' }).click()
+  await chat.page.getByRole('button', { name: 'Add image or file' }).click()
   await (await chooser).setFiles([PILOT, PYTHON])
   await chat.sendButton.click()
 
@@ -71,7 +71,7 @@ test('a mentioned layer sends with an image', async ({ configuredChat: chat }) =
   await chat.input.fill('Use this reference ')
   await chat.page.getByRole('button', { name: 'Mention the selected layers' }).click()
   const chooser = chat.page.waitForEvent('filechooser')
-  await chat.page.getByRole('button', { name: 'Attach images' }).click()
+  await chat.page.getByRole('button', { name: 'Add image or file' }).click()
   await (await chooser).setFiles(PILOT)
   await chat.sendButton.click()
 
@@ -79,7 +79,11 @@ test('a mentioned layer sends with an image', async ({ configuredChat: chat }) =
   await expect(chat.userMessage()).not.toContainText('[Referenced nodes')
 })
 
-type DroppedFile = { name: string; type: string; content: 'svg' | 'png' | 'text' }
+type DroppedFile = {
+  name: string
+  type: string
+  content: 'svg' | 'png' | 'text'
+}
 
 /**
  * Drags files onto the chat transcript; `drop: false` stops at the drag, so what it shows over
@@ -160,7 +164,10 @@ test('the drop overlay leaves with the drag even when the leave no longer lists 
 
   await chat.page.getByTestId('chat-panel').evaluate((panel) => {
     panel.dispatchEvent(
-      new DragEvent('dragleave', { bubbles: true, dataTransfer: new DataTransfer() })
+      new DragEvent('dragleave', {
+        bubbles: true,
+        dataTransfer: new DataTransfer()
+      })
     )
   })
   await expect(overlay).toBeHidden()
@@ -180,9 +187,9 @@ test('a drag that ends without leaving the chat hides the overlay at the next po
 
 test('a full message shows why more images cannot be dropped', async ({ configuredChat: chat }) => {
   const chooser = chat.page.waitForEvent('filechooser')
-  await chat.page.getByRole('button', { name: 'Attach images' }).click()
+  await chat.page.getByRole('button', { name: 'Add image or file' }).click()
   await (await chooser).setFiles([PILOT, PYTHON, PILOT, PYTHON])
-  await expect(chat.page.getByRole('button', { name: /Remove image/ })).toHaveCount(4)
+  await expect(chat.page.getByRole('button', { name: /Remove attachment/ })).toHaveCount(4)
 
   const photo: DroppedFile[] = [{ name: 'photo.png', type: 'image/png', content: 'png' }]
   await dragOntoChat(chat.page, photo, { drop: false })
@@ -191,6 +198,6 @@ test('a full message shows why more images cannot be dropped', async ({ configur
   )
   await dragOntoChat(chat.page, photo)
   await expect(chat.page.locator('[data-slot="drop-overlay"]')).toBeHidden()
-  await expect(chat.page.getByRole('button', { name: /Remove image/ })).toHaveCount(4)
+  await expect(chat.page.getByRole('button', { name: /Remove attachment/ })).toHaveCount(4)
   await expect(chat.page.getByText('Up to 4 images per message', { exact: true })).toBeVisible()
 })

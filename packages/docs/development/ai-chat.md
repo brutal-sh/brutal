@@ -2,6 +2,15 @@
 
 How the built-in AI chat turns a message into edits, how a reply ends, and how what happens to its edits afterwards reaches the transcript and the model. ACP and Pi chats share the transcript, the saved conversation, and the marks on a reply, but run their own tool loop and agent presence.
 
+Text/source-file drafts share the composer's attachment lifecycle with images.
+`attachment/text/prepare.ts` validates bounded UTF-8 input; `attachment/text/context.ts`
+adds JSON reference data to the model request. History retains the separate visible
+request and file presentation, and previews render escaped text. The draft owner
+in `src/components/chat/input/attachment-drafts.ts` invalidates late reads on clear/send.
+`chat/submission/use.ts` composes the submission lifecycle (`submit.ts`), attachment
+delivery (`attachments.ts`) and history actions (`history-actions.ts`); they retain
+unsent drafts, operation-version guards and reply Undo/Redo ownership.
+
 ## A message goes out
 
 `src/app/ai/chat/submission/use.ts` sends a message through the AI SDK's `Chat`. Before sending, it appends notes for the model to the text: the layers you referenced, and the edits you undid or redid since the model last heard (`context.ts`). The transcript shows only what you wrote; `stripModelNotes` removes the notes. Notes go on the newest message only. Earlier messages never change, so the provider can keep caching the conversation up to the new message.

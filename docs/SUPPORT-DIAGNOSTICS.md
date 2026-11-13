@@ -1,6 +1,6 @@
 # Support diagnostics
 
-Updated 2026-11-13. ERR-07 is the sole Building card. The full parity goal remains
+Updated 2026-11-13. ERR-07 is Verify; AI-04-FILE is the sole Building card. The full parity goal remains
 Active; LAYOUT-WRAP is Verify with its native/import gates retained.
 
 ## Outcome and authority
@@ -34,16 +34,25 @@ The English description and eight existing translations replace a blanket privac
 promise with guidance to review error details before sharing. No reporting service,
 transmission, new dialog or production-profile change is added.
 
-Now: prepare selected private publication of the qualified browser correction. The four new browser cases
+Published: `da2bd5984` on the private draft PR. The four new browser cases
 execute actual downloads in Chromium/WebKit, exclude the synthetic open design,
 retain metadata, and protect real legacy IDB records across reload without changing
-their stored evidence. The affected app unit group records 2,032 passes; all 19 report/Settings/branding
-browser cases pass with zero skips/retries/flaky. The complete repository check
-also exits 0 with zero reported clones. These do not accept native delivery.
-Next: independently review the selected publication and retain exact source,
-outputs and limits. Native/reference GUI acceptance remains unexecuted.
-Later: complete applicable reference/native states and the dependent beta support
-packet. Native work waits on the unchanged hidden-window readiness guard.
+their stored evidence. The affected app unit group records 2,032 passes; all 19
+report/Settings/branding browser cases pass with zero skips/retries/flaky. The
+complete repository check exits 0 with zero reported clones. These do not accept
+native delivery.
+
+A default-feature local production candidate at the same source builds with
+signing disabled, then receives a local ad-hoc signature that verifies. Binary
+`410f5f628b812095c4435d5259a05e68bda3561a2329f9f03e7865ca4a1788db`
+refuses reserved native-test arguments before startup without creating their profile.
+It is not installed, normally launched or notarized. Normal installed `db4e528c`
+and isolated native-test `5b19ef31` remain byte-identical. Build, source, signature,
+archive and guard receipts stay private with the downloaded report evidence.
+
+Next: complete applicable reference/native states, native-speaker review and the
+dependent beta support packet when available. Native work waits on the unchanged
+hidden-window readiness guard. Continue independent AI-04-FILE work meanwhile.
 
 ## Done evidence and re-entry
 
