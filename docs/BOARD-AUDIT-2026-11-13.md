@@ -2,7 +2,7 @@
 
 This readback covers all 525 open cards after the Pen 1.2.23 update catalog allocation and normal Save delivery. It updates current scheduling; the [2026-11-11 audit](BOARD-AUDIT-2026-11-11.md) and intervening execution receipts remain historical. Actual Pen is the reference; OpenPencil is the implementation foundation.
 
-There are 507 execution tasks and 18 milestone gates: 377 Backlog, 0 Ready, 1 Building (CLI-04-WEBP), 42 Verify and 87 Executed. These are workflow states, not a product-parity percentage, an estimate of unbuilt features or a beta date. Full parity and all milestone exits remain unaccepted.
+There are 507 execution tasks and 18 milestone gates: 376 Backlog, 0 Ready, 1 Building (CLI-04-PDF), 43 Verify and 87 Executed. These are workflow states, not a product-parity percentage, an estimate of unbuilt features or a beta date. Full parity and all milestone exits remain unaccepted.
 
 ## Checks actually executed
 
@@ -57,3 +57,14 @@ quality/standalone gates remain open. CLI-04-WEBP is the sole Building card. The
 complete readback retains 507 single primary owners, 506 terminal prerequisites
 and 18 open milestones, with no unknown dependencies, cycles or terminal
 contradictions. No new execution card is created or marked Executed in this handoff.
+
+## WebP handoff — 2026-11-13
+
+CLI-04-WEBP moves to Verify with [bounded executed evidence](CLI-WEBP-EXPORT.md):
+18 actual workspace Node controls, 75 owner cases and 42 browser cases, including
+the actual inspector selector/button/download in both engines. The measured
+WebKit browser fallback gap has a qualified source correction; the original two
+failures remain retained. Static and production build gates pass. Its current Pen,
+native, connected-bridge and standalone-package gates remain open. CLI-04-PDF is
+the sole Building card. The index remains 507 single-owner tasks and 18 open
+milestones with 506 terminal prerequisites. No task is newly marked Executed.

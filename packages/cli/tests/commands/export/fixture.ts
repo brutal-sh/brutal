@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url'
 
 import { createCanvasKitRasterCodec, initCanvasKit } from '@open-pencil/core/io/formats/raster'
 
-export async function rasterFixture(kind: 'solid' | 'image' | 'selection' = 'solid') {
+export async function rasterFixture(kind: 'solid' | 'image' | 'selection' | 'alpha' = 'solid') {
   const dir = await mkdtemp(join(tmpdir(), 'open-pen-raster-'))
   const source = join(dir, 'source.pen')
   const output = join(dir, 'output.png')
@@ -15,13 +15,14 @@ export async function rasterFixture(kind: 'solid' | 'image' | 'selection' = 'sol
       ? await readFile(fileURLToPath(new URL('./fixtures/pattern.png', import.meta.url)))
       : undefined
   if (asset) await writeFile(assetPath, asset)
+  const solidFill = kind === 'alpha' ? '#9933CC80' : '#336699'
   const children = [
     {
       id: 'owned',
       type: 'rectangle',
       width: 128,
       height: 96,
-      fill: asset ? { type: 'image', url: './pattern.png' } : '#336699'
+      fill: asset ? { type: 'image', url: './pattern.png' } : solidFill
     }
   ]
   if (kind === 'selection')

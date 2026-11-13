@@ -53,3 +53,5 @@
 - Empty or malformed encoded app-export responses are refused before replacing existing output.
 
 - Refuse invalid CLI export quality values before replacing an output, and preserve minimum JPEG quality in shared file and document IO exports.
+
+- Export WebP in browsers without a built-in encoder using an on-demand codec, retaining explicit quality and the default native lossless fallback.

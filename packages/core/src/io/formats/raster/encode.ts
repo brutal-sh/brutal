@@ -1,4 +1,4 @@
-import type { CanvasKit, Canvas, Surface } from 'canvaskit-wasm'
+import type { CanvasKit, Canvas, Surface, Image, EncodedImageFormat } from 'canvaskit-wasm'
 
 import type { SkiaRenderer } from '#core/canvas'
 
@@ -141,14 +141,21 @@ export function encodeExportSurface(
       ])
     : surface.makeImageSnapshot()
   try {
-    // shortcut: CanvasKit 0.41 defaults zero to 100; remove this integer-zero sentinel when upstream fixes it.
-    const encoded = image.encodeToBytes(
-      ckImageFormat(ck, format),
-      quality === 0 ? Number.MIN_VALUE : quality
-    )
-    if (encoded) return new Uint8Array(encoded)
+    const encoded = encodeRasterImage(image, ckImageFormat(ck, format), quality)
+    if (encoded) return encoded
     return fallbackRaster(ck, renderer, canvas, rasterRegion(options, alphaBounds))
   } finally {
     image.delete()
   }
+}
+
+/** Encodes through CanvasKit while preserving its documented minimum quality. */
+export function encodeRasterImage(
+  image: Image,
+  format: EncodedImageFormat,
+  quality: number
+): Uint8Array<ArrayBuffer> | null {
+  // shortcut: CanvasKit 0.41 defaults zero to 100; remove this integer-zero sentinel when upstream fixes it.
+  const encoded = image.encodeToBytes(format, quality === 0 ? Number.MIN_VALUE : quality)
+  return encoded ? new Uint8Array(encoded) : null
 }

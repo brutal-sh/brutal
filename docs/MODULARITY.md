@@ -363,3 +363,14 @@ positional APIs and callable metadata remain compatible. The shared encoding
 boundary owns the CanvasKit zero-quality workaround for both IO and direct callers.
 Strict 300/50/10/4/4 checks pass for all changed code; this bounded disposition does
 not establish whole-application modularity or Pen visual parity.
+
+## Document export ownership — 2026-11-13
+
+The WebP candidate separates the 171-line document export factory into bindings
+and context, format rendering, file delivery, and batch-request owners. The bounded
+`webp/` domain keeps codec loading and binary validation apart, so a Vite asset URL
+does not enter Bun's unit-test boundary. The shared Core encoding helper avoids a
+second CanvasKit quality workaround. New owners satisfy 300/50/10/4/4; old direct
+API, cancellation, selection, ZIP-order and delivery-gated telemetry contracts are
+retained under owner/browser execution and independent review. This is a bounded
+modularity disposition, not an application-wide acceptance claim.

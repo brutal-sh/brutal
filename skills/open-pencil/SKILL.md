@@ -134,6 +134,8 @@ before retrying. Multi-file exports write primary files and external assets sepa
 File-backed JPEG/WEBP quality must be a finite number from 0 to 100; invalid values
 fail before reading or writing files. Use `--quality=0` for minimum JPEG quality.
 App-connected export currently uses the app's default quality and ignores `-q`.
+WebP retains alpha. Maximum-quality lossless WebP can be smaller than a lossy export;
+compare decoded pixels as well as file signatures and dimensions.
 
 ### Analyze and lint
 

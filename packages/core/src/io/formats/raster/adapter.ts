@@ -61,18 +61,19 @@ function rasterFormat<F extends RasterExportFormat>(format: F): IOFormatAdapter<
       colorSpace: false
     },
     async exportContent(request, options?: RasterExportOptions, context?: IOContext) {
+      const { scale, quality } = options ?? {}
       let data = await renderRaster(
         request,
         {
           format,
-          scale: options?.scale,
-          quality: options?.quality
+          scale,
+          quality
         },
         context
       )
       if (!data && format === 'WEBP' && context?.encodeWebP) {
-        const png = await renderRaster(request, { format: 'PNG', scale: options?.scale }, context)
-        if (png) data = new Uint8Array(await context.encodeWebP(png))
+        const png = await renderRaster(request, { format: 'PNG', scale }, context)
+        if (png) data = new Uint8Array(await context.encodeWebP(png, quality))
       }
       if (!data) throw new Error('Nothing to export')
       return {

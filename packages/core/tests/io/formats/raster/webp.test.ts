@@ -17,34 +17,40 @@ beforeEach(() => {
 })
 afterEach(() => renderer.destroy())
 
-test('an unavailable WebP encoder hands the host a PNG at the requested export scale', async () => {
-  const graph = new SceneGraph()
-  const pageId = graph.getPages()[0].id
-  const node = graph.createNode('RECTANGLE', pageId, {
-    width: 20,
-    height: 10,
-    fills: [colorToFill('#33669980')]
-  })
-  const codec = createCanvasKitRasterCodec(ck)
-  let dimensions: number[] | undefined
-  const encoded = new Uint8Array([1, 2, 3])
-  const result = await webpFormat.exportContent?.(
-    { graph, target: { scope: 'node', nodeId: node.id } },
-    { scale: 3 },
-    {
-      canvasKit: ck,
-      renderer,
-      encodeWebP: async (png) => {
-        const image = codec.decode(png)
-        dimensions = image ? [image.width, image.height, image.data[3]] : undefined
-        return encoded
+test.each([undefined, 37])(
+  'an unavailable WebP encoder hands the host a scaled PNG and quality %p',
+  async (requestedQuality) => {
+    const graph = new SceneGraph()
+    const pageId = graph.getPages()[0].id
+    const node = graph.createNode('RECTANGLE', pageId, {
+      width: 20,
+      height: 10,
+      fills: [colorToFill('#33669980')]
+    })
+    const codec = createCanvasKitRasterCodec(ck)
+    let dimensions: number[] | undefined
+    let receivedQuality: number | undefined
+    const encoded = new Uint8Array([1, 2, 3])
+    const result = await webpFormat.exportContent?.(
+      { graph, target: { scope: 'node', nodeId: node.id } },
+      { scale: 3, quality: requestedQuality },
+      {
+        canvasKit: ck,
+        renderer,
+        encodeWebP: async (png, quality) => {
+          receivedQuality = quality
+          const image = codec.decode(png)
+          dimensions = image ? [image.width, image.height, image.data[3]] : undefined
+          return encoded
+        }
       }
-    }
-  )
-  expect(dimensions).toEqual([60, 30, 128])
-  expect(result?.data).toEqual(encoded)
-  expect(result?.mimeType).toBe('image/webp')
-})
+    )
+    expect(dimensions).toEqual([60, 30, 128])
+    expect(receivedQuality).toBe(requestedQuality)
+    expect(result?.data).toEqual(encoded)
+    expect(result?.mimeType).toBe('image/webp')
+  }
+)
 
 test('a failed host WebP conversion rejects rather than claiming a successful export', async () => {
   const graph = new SceneGraph()

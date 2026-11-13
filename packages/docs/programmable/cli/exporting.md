@@ -36,6 +36,10 @@ Use `--quality=0` for minimum JPEG quality. JPEG is lossy, so decoded colors can
 from PNG. App-connected export currently uses the app's default quality; `-q` does
 not change it.
 
+File-backed WebP exports preserve transparency. WebP is lossy at ordinary quality
+settings; maximum quality can choose a lossless encoding and produce a smaller file.
+Compare decoded image fidelity rather than assuming file size increases with quality.
+
 ## Font Substitution Policy
 
 For file-backed PNG, JPG, WEBP, and PDF exports, and for `openpencil convert`, choose how missing or substituted fonts are handled:

@@ -67,7 +67,7 @@ export interface ExportRequest {
 
 export interface IOContext {
   /** Host encoder used when CanvasKit and the browser cannot encode WebP. */
-  encodeWebP?(png: Uint8Array): Promise<Uint8Array>
+  encodeWebP?(png: Uint8Array, quality?: number): Promise<Uint8Array>
   canvasKit?: CanvasKit
   renderer?: SkiaRenderer
   /** Where documents' icons come from; Iconify unless a host passes its own. */

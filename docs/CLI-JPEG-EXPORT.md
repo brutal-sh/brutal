@@ -85,6 +85,6 @@ strict fractional-reference pixel comparisons pass without baseline changes. Thi
 establishes browser download/API behavior, not a UI quality control or native GPU
 acceptance. Independent read-only review finds no actionable source regression.
 
-Now: CLI-04-WEBP is the sole Building card. JPEG remains Verify for the explicitly
+Now: CLI-04-PDF is the sole Building card; [WebP](CLI-WEBP-EXPORT.md) is Verify. JPEG remains Verify for the explicitly
 open actual reference/native/app-connected/standalone gates above. No release,
 milestone or full product acceptance follows from these bounded receipts.

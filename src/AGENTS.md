@@ -6,6 +6,7 @@ Root Tauri/Vite app. Services and state live under `src/app/**`, views under `sr
 
 - `src/app/editor/session/create.ts` wraps Core: it creates reactive state, calls `createEditor()`, and assembles document I/O, autosave, export, vector edit, pen resume, flashes, profiler, and mobile clipboard. Tabs live in `src/app/tabs/`; active editor access in `src/app/editor/active-store/`.
 - Use editor actions (`clearSelection()`, `select()`, `setTool()`), never direct state assignments (`packages/core/AGENTS.md`, Editor).
+- Document export bindings live in `src/app/document/export/create.ts`; `render.ts` owns format preparation, `delivery.ts` native picker/save delivery, and `requests.ts` batches and delivery-gated telemetry. `webp/` owns the bounded lazy full-codec fallback; the default native WebP path remains lossless (`tests/app/document/export/`, `tests/e2e/export/raster-quality.webkit.spec.ts`).
 - File System Access APIs are browser APIs, not Tauri-only. Keep the Safari download fallback and defer `revokeObjectURL`.
 - File watcher reloads use `src/app/document/io/reload/index.ts`, which keeps per-document conflicts and rechecks source, revision and disposal at staged import commit. An explicit decision never authorizes replacing a different source; retain dirty recovery until the choice (`tests/app/document/io/reload.test.ts`).
 - Vectorize provider clients, preferences, and lazy credential resolution live under `src/app/editor/vectorize/`; conversion itself is in Core.

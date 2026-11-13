@@ -67,7 +67,7 @@ Pen baseline or a relaxed reference threshold. Actual Pen comparison must resolv
 this image sampling state before resource-pixel parity is accepted. No renderer
 correction or complete image fidelity is inferred from the successful export.
 
-Now: CLI-04-WEBP continues actual export acceptance; the [JPEG candidate](CLI-JPEG-EXPORT.md) is Verify. The qualified primary-output
+Now: CLI-04-PDF continues actual export acceptance; [WebP](CLI-WEBP-EXPORT.md) is Verify and the [JPEG candidate](CLI-JPEG-EXPORT.md) is Verify. The qualified primary-output
 slice remains Verify for actual reference/native/platform/image acceptance.
 CLI-04-PNG stays unaccepted while those gates are open. No all-OS,
 power-loss, beta or full design/functionality parity follows from these controls.
