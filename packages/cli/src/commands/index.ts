@@ -10,6 +10,7 @@ import formats from './formats'
 import { redo, undo } from './history'
 import importCmd from './import'
 import info from './info'
+import interactive from './interactive'
 import libraries from './libraries'
 import lint from './lint'
 import node from './node'
@@ -34,6 +35,7 @@ export const COMMANDS = {
   eval: evalCmd,
   export: exportCmd,
   import: importCmd,
+  interactive,
   find,
   formats,
   fonts,

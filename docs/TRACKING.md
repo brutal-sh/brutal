@@ -1,6 +1,6 @@
 # Tracking
 
-Updated: 2026-11-13. The full independent design and functionality parity target remains required. The replacement controller goal is Active and follows the audited plan.
+Updated: 2026-11-14. The full independent design and functionality parity target remains required. The replacement controller goal is Active and follows the audited plan.
 
 Repository: [private Open Pen repository](https://github.com/jpoindexter/open-pen), branch `feat/open-pen`.
 Board: [Open Pen — independent design editor](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor), private.
@@ -10,13 +10,13 @@ The [task index](TASKS.md) links all 507 execution cards; the [modularity audit]
 records the measured review queue. Requirements come from the [feature catalog](pen-feature-reference/README.md)
 and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), preserving historical Pen 1.2.21 evidence and the [1.2.22 historical inventory](pen-feature-reference/update-1.2.22-2026-11-09.md) plus [current 1.2.23 catalog](pen-feature-reference/update-1.2.23-2026-11-13.md).
 
-Current execution readback — 2026-11-13
+Current execution readback — 2026-11-14
 
-The complete board readback has 525 cards: 507 execution tasks and 18 milestones, with 375 Backlog / 0 Ready / 1 Building (CLI-05) / 44 Verify / 87 Executed. All 507 single primary owners and 506 other terminal prerequisites reconcile without unknown declared dependencies, cycles or Executed/open-prerequisite contradictions. The 13 current-reference followups stay Backlog. The [current audit](BOARD-AUDIT-2026-11-13.md) separates current state from historical snapshots below.
+The complete board readback has 525 cards: 507 execution tasks and 18 milestones, with 374 Backlog / 0 Ready / 1 Building (CLI-06) / 45 Verify / 87 Executed. All 507 single primary owners and 506 other terminal prerequisites reconcile without unknown declared dependencies, cycles or Executed/open-prerequisite contradictions. The 13 current-reference followups stay Backlog. The [current audit](BOARD-AUDIT-2026-11-13.md) separates current state from historical snapshots below.
 
 [REF-04](pen-feature-reference/update-1.2.23-2026-11-13.md) is bounded Executed for its independently reviewed catalog. [Normal Save delivery](NATIVE-SAVE-DELIVERY.md) is bounded Executed on installed `db4e528c`: actual Cancel, explicit copy, edit, announced read-only refusal, OK, restored permissions, successful Save and clean reopen preserve the original workspace and older recovery data. FILE-NATIVE-SAVE-UI remains Verify for matched critical-alert pixels.
 
-Now: [CLI-05](https://trello.com/c/JVxgYe9t/334-cli-05-interactive-headless) is the sole Building card for an owned interactive headless session and explicit save/reopen. [CLI-04-PDF](CLI-PDF-EXPORT.md) is Verify: actual Node module/resource failures are corrected, 148 affected caller cases and 44 browser cases pass, six outside-checkout exports and seven failure/refusal controls execute with independent PDF readers, and full repository/production build checks pass. High-frequency sampling, actual Pen/native/app-connected/standalone gates remain open. Normal installed db4e528c and all protected work remain unchanged. Full goal stays Active; no milestone/parity/beta acceptance.
+Now: [CLI-06](https://trello.com/c/rz1JCTOt/335-cli-06-interactive-app-connection) is the sole Building card for live, isolated app-connected targeting across two owned documents. [CLI-05](CLI-INTERACTIVE.md) is Verify after actual Node/PTY save, exit, interruption, failed-call/Save retry, image retention and rollback controls, 1,655 affected cases, 62 browser cases, strict limits, full repository/production build and independent review. Actual Pen tool-name/execute, connected route, native reopen, standalone/release trust and earlier Note/wrap/resource-pixel failures remain open. Normal installed db4e528c and protected work are unchanged; no milestone/full-parity/beta acceptance.
 
 The current Actions-policy audit reads all 199 authenticated owned repositories; all report disabled, with no setting changes or unverified repositories. This is a current configuration receipt, not billing or future-repository acceptance. Private inventory: `local-evidence/actions-policy-2026-11-13/`.
 
@@ -26,7 +26,7 @@ The original 2026-11-11 audit readback contains 479 cards: 461 execution tasks a
 
 Historical execution readback — 2026-11-12
 
-The board contains 503 cards: 485 execution tasks and 18 milestone gates. Lists are 375 Backlog, 0 Ready, 1 Building (FILE-RECOVERY-CANCEL), 30 Verify and 79 Executed. All 485 primary owners, 484 other-terminal dependencies and 164 documented requirements are reconciled without cycles or Executed/open-prerequisite contradictions. Counts are not parity percentages. The original 479-card audit stays historical.
+The board contains 503 cards: 485 execution tasks and 18 milestone gates. Lists are 374 Backlog, 0 Ready, 1 Building (FILE-RECOVERY-CANCEL), 30 Verify and 79 Executed. All 485 primary owners, 484 other-terminal dependencies and 164 documented requirements are reconciled without cycles or Executed/open-prerequisite contradictions. Counts are not parity percentages. The original 479-card audit stays historical.
 
 Now: investigate the retained intermittent recovery Cancel/Home-state timeout without treating successful repeats as repair. The original failure remains unclassified. Native panel work returns Verify after macOS locks before read-only Save; no repeated unlock request while Jason is away.
 
@@ -333,7 +333,7 @@ The complete 439-card readback has 422 execution tasks and 17 milestones: 371 Ba
 
 Candidate `1306f6cf2` completes the full clean combined check with a red result at its final unchanged duplication gate: five groups, 39 lines. All preceding gates pass, including native/source/general typing, secrets, type shapes, architecture and tool suites. MOD-RECT is Executed for its bounded criterion with the independent later failures recorded. The next repairs separate OAuth outcome validation, an agent-connection story fixture, Script render-target capture, PEN mesh-point projection and visible generated-output traversal; each has its own owner, preserved semantics and unchanged-checker acceptance.
 
-The fresh complete board readback returns 444 open cards: 427 execution tasks and 17 milestones, with 375 Backlog, 0 Ready, 1 Building, 12 Verify and 39 Executed. MOD-DUPES-AUTH is the only Building task. All five new duplication tasks and MOD-RECT are terminal dependencies of PARITY-ALL. The native retained-session failure remains separate and unclassified; none of these dispositions accepts full native, Note raster, beta or full Pen parity.
+The fresh complete board readback returns 444 open cards: 427 execution tasks and 17 milestones, with 374 Backlog, 0 Ready, 1 Building, 12 Verify and 39 Executed. MOD-DUPES-AUTH is the only Building task. All five new duplication tasks and MOD-RECT are terminal dependencies of PARITY-ALL. The native retained-session failure remains separate and unclassified; none of these dispositions accepts full native, Note raster, beta or full Pen parity.
 
 ## Shared native OAuth outcome
 

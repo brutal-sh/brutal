@@ -35,3 +35,4 @@
 - Open storage workspaces on Home from Settings and direct links, while preserving the current design and its history.
 
 - Attach UTF-8 text and source files to agent requests and inspect their escaped content in conversation history.
+- Keep a headless document open in an interactive tool session, save explicitly, and retry refused saves without losing live edits.

@@ -167,6 +167,16 @@ openpencil variables design.fig             # Variables and collections
 openpencil eval design.fig -c "figma.currentPage.selection.forEach(n => n.opacity = 0.5)" -w
 ```
 
+### Keep a headless document open
+
+```sh
+bun open-pencil interactive -i existing.pen -o edited.pen
+```
+
+Call tools from `tool list` one line at a time; `save()` writes the output and
+`exit()` closes without another save. The [interactive guide](packages/docs/programmable/cli/app-control.md#headless-interactive-sessions)
+describes arguments, retry and current tool-name/connection limits.
+
 ### Control the running app
 
 Omit the file argument and the CLI works on the document open in the editor:
@@ -179,7 +189,7 @@ openpencil undo                                 # Undo the newest automation cha
 openpencil settings set appearance.theme light  # Change editor settings
 ```
 
-Every command supports `--json`. See the [CLI reference](https://openpencil.dev/reference/cli) for all commands and options.
+Run `<command> --help` for output options, including `--json` where available. See the [CLI reference](https://openpencil.dev/reference/cli) for all commands and options.
 
 ## AI & MCP
 

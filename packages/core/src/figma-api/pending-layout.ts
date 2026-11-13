@@ -38,6 +38,18 @@ export function startPendingLayout(graph: SceneGraph): void {
   recordSceneMutations(graph, pending.impact, () => !pending.flushing && !graph.isApplyingLayout)
 }
 
+/** Restore outstanding edits after graph rollback has emitted its recovery notifications. */
+export function capturePendingLayout(graph: SceneGraph): () => void {
+  const pending = pendingByGraph.get(graph)
+  const saved = pending ? structuredClone(pending.impact) : undefined
+  return () => {
+    const current = pendingByGraph.get(graph)
+    if (!current) return
+    clearImpact(current.impact)
+    if (saved) mergeImpact(current.impact, saved)
+  }
+}
+
 /** Lays out the edits recorded since the last geometry read. */
 export function flushPendingLayout(graph: SceneGraph): void {
   const pending = pendingByGraph.get(graph)

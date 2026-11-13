@@ -2,7 +2,7 @@
 
 This readback covers all 525 open cards after the Pen 1.2.23 update catalog allocation and normal Save delivery. It updates current scheduling; the [2026-11-11 audit](BOARD-AUDIT-2026-11-11.md) and intervening execution receipts remain historical. Actual Pen is the reference; OpenPencil is the implementation foundation.
 
-There are 507 execution tasks and 18 milestone gates: 375 Backlog, 0 Ready, 1 Building (CLI-05), 44 Verify and 87 Executed. These are workflow states, not a product-parity percentage, an estimate of unbuilt features or a beta date. Full parity and all milestone exits remain unaccepted.
+There are 507 execution tasks and 18 milestone gates: 374 Backlog, 0 Ready, 1 Building (CLI-06), 45 Verify and 87 Executed. These are workflow states, not a product-parity percentage, an estimate of unbuilt features or a beta date. Full parity and all milestone exits remain unaccepted.
 
 ## Checks actually executed
 
@@ -80,3 +80,16 @@ resource sampling and actual Pen/native/connected/standalone acceptance stay ope
 CLI-05 is the sole Building card. All 507 source states and unique primary owners,
 506 terminal prerequisites and 18 allocations reconcile with the full live board.
 No new card, Executed promotion, milestone or full-parity acceptance occurs.
+
+## Interactive headless handoff — 2026-11-14
+
+CLI-05 moves to Verify with [bounded executed evidence](CLI-INTERACTIVE.md).
+The initial missing command and both review-discovered rollback faults reproduce
+before correction. Strict changed-code limits,1,655affected caller cases,39final
+parser/caller cases,16actual outside-checkout Node controls, actual terminal
+Save/Ctrl-C,62browser cases, full repository/production build and final read-only
+review qualify the candidate. Original failed controls remain retained. Pen
+API/connected/native/standalone and earlier strict pixel gates remain open.
+CLI-06 is the sole Building card. All507source states/owners,18allocations and506
+terminal prerequisites reconcile. No new execution card or Executed promotion;
+allmilestone exits and the full parity goal stay open.

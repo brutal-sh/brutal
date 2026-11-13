@@ -1388,7 +1388,9 @@
           "behavior": "Tool calls on a local editor; explicit save before exit.",
           "acceptance": "Create/modify/export/save, exit and reopen output through desktop.",
           "status": "open",
-          "evidence": []
+          "evidence": [
+            "docs/CLI-INTERACTIVE.md"
+          ]
         },
         {
           "id": "CLI-06",

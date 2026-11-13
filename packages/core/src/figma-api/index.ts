@@ -60,7 +60,7 @@ export {
   hasStoredBackground,
   setDefaultPageBackground
 } from './page-backgrounds'
-export { flushPendingLayout } from './pending-layout'
+export { capturePendingLayout, flushPendingLayout } from './pending-layout'
 export type { FigmaEffect } from './effects'
 export type { ExportImageOptions } from './types'
 export { MAX_IMAGE_FETCH_BYTES, type ImageFetch } from './images'

@@ -25,6 +25,18 @@ export async function createHeadlessFigma(graph: SceneGraph): Promise<FigmaAPI> 
   return figma
 }
 
+/** Run a tool on the session's existing document and API, preserving page and selection. */
+export async function runHeadlessTool(
+  figma: FigmaAPI,
+  name: string,
+  args: Record<string, unknown>
+): Promise<unknown> {
+  const tool = ALL_TOOLS.find((candidate) => candidate.name === name)
+  if (!tool) throw new Error(`Unknown tool: ${name}`)
+  await tool.loadFonts(figma, args)
+  return editDocument(figma.graph, () => tool.execute(figma, args))
+}
+
 /**
  * Run a Core tool against the running app, or headlessly against a document file.
  * Headless runs return the loaded graph so mutating commands can write it back.
@@ -39,12 +51,11 @@ export async function runToolData(
     const target = targetArgs ? appTargetRPCArgs(targetArgs) : {}
     return { result: await rpc('tool', { ...target, name, args }), graph: null }
   }
-  const tool = ALL_TOOLS.find((candidate) => candidate.name === name)
-  if (!tool) throw new Error(`Unknown tool: ${name}`)
+  if (!ALL_TOOLS.some((candidate) => candidate.name === name))
+    throw new Error(`Unknown tool: ${name}`)
   const graph = await loadDocument(requireFile(file))
   populateWholeDocument(graph)
   await measureDocumentText(graph)
   const figma = await createHeadlessFigma(graph)
-  await tool.loadFonts(figma, args)
-  return { result: await editDocument(graph, () => tool.execute(figma, args)), graph }
+  return { result: await runHeadlessTool(figma, name, args), graph }
 }

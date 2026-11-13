@@ -68,6 +68,7 @@ Common commands:
 - `formats` — supported document/export formats
 - `eval` — execute JavaScript with the Figma Plugin API
 - `tool` — list, describe, and call any MCP tool from the shell, in app or headless mode
+- `interactive` — keep a headless document open, call editor tools, and save explicitly with `save()`
 - `documents` — list, open, create, save, close, and activate documents in the running app
 - `undo` / `redo` — step back through your own (automation) changes in the running app
 - `settings` — read and change editor settings in the running app
@@ -140,6 +141,21 @@ compare decoded pixels as well as file signatures and dimensions.
 PDF file exports can retain selectable text and embed local image resources. Use
 `--font-policy strict` to refuse unresolved fonts, and inspect the rendered pages
 as well as the exit status.
+
+### Headless interactive session
+
+```sh
+openpencil interactive -i existing.pen -o edited.pen
+```
+
+Enter one existing tool call per line, for example
+`create_shape({type:'RECTANGLE',x:0,y:0,width:64,height:64})`, then `save()` and
+`exit()`. Discover schemas with `tool list`/`tool describe`; arguments are data
+literals, and `eval` runs its code string only when explicitly called. Only
+`save()` writes; exit/EOF does not autosave. A refused save retains live changes
+for retry. Failed calls leave the overall session status nonzero. Output supports
+`.pen` and `.fig`; this headless command does not provide Pen tool-name parity or
+the app-connected interactive route.
 
 ### Analyze and lint
 

@@ -3,6 +3,7 @@ import { BUILT_CLI_ENTRY, CLI_ENTRY } from './paths'
 interface CLIRunOptions {
   cwd?: string
   limited?: boolean
+  stdin?: string
 }
 
 export function runCLI(args: string[], options: CLIRunOptions = {}) {
@@ -23,7 +24,12 @@ async function runProcess(command: string[], options: CLIRunOptions) {
         ...command
       ]
     : command
-  const proc = Bun.spawn(invocation, { cwd: options.cwd, stdout: 'pipe', stderr: 'pipe' })
+  const proc = Bun.spawn(invocation, {
+    cwd: options.cwd,
+    stdout: 'pipe',
+    stderr: 'pipe',
+    stdin: options.stdin === undefined ? undefined : Buffer.from(options.stdin)
+  })
   const [stdout, stderr] = await Promise.all([
     new Response(proc.stdout).text(),
     new Response(proc.stderr).text()

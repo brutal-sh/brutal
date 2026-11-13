@@ -5,7 +5,43 @@ description: Open, save, switch, and close documents, undo and redo, change sett
 
 # Controlling the App
 
-While the desktop app is running, the CLI drives it over the same automation bridge as the [MCP server](/programmable/mcp-server). Every command on this page except headless `tool call` needs the running app.
+While the desktop app is running, the CLI drives it over the same automation bridge as the [MCP server](/programmable/mcp-server). Headless `interactive` sessions and file-backed `tool call` run locally; the other commands on this page need the running app.
+
+## Headless interactive sessions
+
+Keep a local document open while calling editor tools:
+
+```sh
+openpencil interactive -o design.pen
+openpencil interactive -i existing.pen -o edited.fig
+```
+
+The output path is required and must end in `.pen` or `.fig`. Enter one call per line:
+
+```js
+create_shape({ type: 'RECTANGLE', name: 'Square', x: 12, y: 34, width: 64, height: 64 })
+get_page_tree()
+export_image({ format: 'PNG' })
+save()
+exit()
+```
+
+Run `openpencil tool list` and `openpencil tool describe <name>` to discover the
+available tools and argument schemas. Tool results are JSON; image exports return
+encoded image data. Arguments can contain data literals, including unquoted keys,
+strings, arrays and nested objects. Command syntax does not evaluate expressions.
+The existing `eval` tool executes its code string when explicitly invoked.
+
+Only `save()` writes the document. Exit, end-of-input and interruption leave the
+last saved output unchanged. A refused write retains live edits for retry. Failed
+tool calls restore their document state and report an error; the shell can accept
+another command, and a session containing errors exits with a nonzero status.
+Input files and their local resources remain unchanged when saving a copy; `.pen`
+output embeds supported images so the saved copy can move to another folder.
+
+This command uses the existing editor tool names. Pen's `execute`, `read_skill`
+and `get_style` contracts and connected interactive mode have separate acceptance
+work; use the app-control commands below for the current connected interface.
 
 ## Documents
 
