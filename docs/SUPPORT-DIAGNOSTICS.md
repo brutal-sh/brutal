@@ -1,6 +1,6 @@
 # Support diagnostics
 
-Updated 2026-11-13. ERR-07 is Verify; CLI-04-PNG is the sole Building card. The full parity goal remains
+Updated 2026-11-13. ERR-07 is Verify; CLI-04-JPEG is the sole Building card. The full parity goal remains
 Active; LAYOUT-WRAP is Verify with its native/import gates retained.
 
 ## Outcome and authority
@@ -52,7 +52,7 @@ archive and guard receipts stay private with the downloaded report evidence.
 
 Next: complete applicable reference/native states, native-speaker review and the
 dependent beta support packet when available. Native work waits on the unchanged
-hidden-window readiness guard. Continue independent CLI-04-PNG work meanwhile.
+hidden-window readiness guard. Continue independent CLI-04-JPEG work meanwhile.
 
 ## Done evidence and re-entry
 

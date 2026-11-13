@@ -1375,7 +1375,7 @@
           "behavior": "PNG/JPEG/WEBP/PDF with explicit type and scale.",
           "acceptance": "Check exit status plus actual file signature/dimensions/pages; never trust status alone.",
           "status": "open",
-          "evidence": []
+          "evidence": ["docs/CLI-PNG-EXPORT.md"]
         },
         {
           "id": "CLI-05",

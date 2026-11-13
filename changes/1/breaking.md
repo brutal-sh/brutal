@@ -1,1 +1,1 @@
-- CLI conversion requires an output folder that permits temporary-file creation and replaces destination symlinks without overwriting their linked files.
+- CLI conversion and primary export files require an output folder that permits temporary-file creation and replace destination symlinks without overwriting their linked files.

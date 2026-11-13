@@ -341,3 +341,15 @@ before/after exactly. Original canvas snapshot and strict Note failures remain r
 preservation does not accept reference pixels. [Scope and controls](SCENE-OWNERSHIP.md)
 retain the complete unit result (10,155 passes, one skip, the existing Note failure),
 the passing 19-case recovery cohort and native acceptance blocked by the locked Mac. No normal installation or unrelated icon work changes.
+
+## CLI export ownership — 2026-11-13
+
+CLI-04-PNG separates the existing 411-line command into 230 physical lines of
+orchestration, 175 lines of argument metadata/ordered validation and a 10-line
+format-registry owner. All touched runtime/test files pass strict300/50/10/4/4.
+The extraction preserves argument metadata, validation ordering, file/document/page/
+node targets and output names; primary-write and malformed-response repairs remain
+explicit behavior changes. [CLI export qualification](CLI-PNG-EXPORT.md) retains
+original failures, independent review and built-entry qualification; standalone
+installation, actual reference and pixel gates remain open.
+This is a bounded CLI slice; it accepts no whole-package or whole-app modularity.

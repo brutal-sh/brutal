@@ -1,6 +1,6 @@
 # Agent file context
 
-Updated 2026-11-13. AI-04-FILE is Verify; CLI-04-PNG is Building. Actual installed reference is Pen
+Updated 2026-11-13. AI-04-FILE is Verify; CLI-04-JPEG is Building. Actual installed reference is Pen
 1.2.23; full design/functionality parity and all milestone exits remain open.
 
 ## Outcome and scope
@@ -70,7 +70,7 @@ separate and unexecuted while desktop access is unavailable.
 
 Published `17b2a03ed` retains exact source/request/preview artifacts on the private
 draft. Next: finish the remaining applicable native/CLI and reference gates;
-CLI-04-PNG proceeds independently while those gates are unavailable. Do not install over
+CLI-04-JPEG proceeds independently while those gates are unavailable. Do not install over
 the normal app while its unsaved state cannot be inspected. The prepared production
 bundle `410f5f62` belongs to earlier diagnostics source `da2bd5984`, not this file
 candidate. Normal installed `db4e528c` remains unchanged.

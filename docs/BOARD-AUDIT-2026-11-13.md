@@ -2,7 +2,7 @@
 
 This readback covers all 525 open cards after the Pen 1.2.23 update catalog allocation and normal Save delivery. It updates current scheduling; the [2026-11-11 audit](BOARD-AUDIT-2026-11-11.md) and intervening execution receipts remain historical. Actual Pen is the reference; OpenPencil is the implementation foundation.
 
-There are 507 execution tasks and 18 milestone gates: 379 Backlog, 0 Ready, 1 Building (CLI-04-PNG), 40 Verify and 87 Executed. These are workflow states, not a product-parity percentage, an estimate of unbuilt features or a beta date. Full parity and all milestone exits remain unaccepted.
+There are 507 execution tasks and 18 milestone gates: 378 Backlog, 0 Ready, 1 Building (CLI-04-JPEG), 41 Verify and 87 Executed. These are workflow states, not a product-parity percentage, an estimate of unbuilt features or a beta date. Full parity and all milestone exits remain unaccepted.
 
 ## Checks actually executed
 
@@ -39,7 +39,7 @@ Private receipts are retained under `local-evidence/pen-reference-1.2.23/`: `cre
 
 REF-04 is bounded Executed at private catalog publication `64f61e4cd`. [Normal Save delivery](NATIVE-SAVE-DELIVERY.md) records the subsequently installed `db4e528c`, actual owned Cancel/copy/edit/refusal/OK/retry/reopen, exact original workspace/older recovery preservation and independent review. Its new leaf belongs to M07, which now records 14/36 primary cards Executed. M00 records 4/5; both milestones remain open.
 
-Now: [CLI-04-PNG](https://trello.com/c/kwFT1VFM) is the sole Building card for actual CLI PNG export, resource fidelity, output failures and safe retry. [ERR-06](CLI-CONVERSION-OUTPUT.md) is Verify: both converter formats preserve owned output through limited writes and restricted-folder refusal, then retry successfully; all 32 affected caller cases and the complete static gate pass. The shared headless save helper remains unchanged. [FMT-01](PEN-FORMAT-VERSIONS.md), [AI-04-FILE](FILE-CONTEXT.md), ERR-07 and LAYOUT-WRAP remain Verify with their recorded native/reference/compatibility limits. Normal installed `db4e528c` remains unchanged, and the current desktop lock leaves native checks open. Full goal remains Active; no milestone/parity/beta acceptance.
+Now: [CLI-04-JPEG](https://trello.com/c/1n1QYeLj/331-cli-04-jpeg-jpeg-cli-export) is the sole Building card for actual built workspace Node CLI JPEG output, options, diagnostics and safe retry. [CLI-04-PNG](CLI-PNG-EXPORT.md) is Verify: all 66 affected caller cases and the complete static gate pass; the built workspace Node entry on24.18 exports outside the checkout preserve prior PNG bytes, help and five invalid-option diagnostics, and execute failure/refusal/retry/mode/symlink/source controls. Its raw resource-pixel discrepancy remains unaccepted pending actual Pen comparison. [ERR-06](CLI-CONVERSION-OUTPUT.md), [FMT-01](PEN-FORMAT-VERSIONS.md), [AI-04-FILE](FILE-CONTEXT.md), ERR-07 and LAYOUT-WRAP retain their recorded native/reference/compatibility limits. Normal installed `db4e528c` remains unchanged. Full goal remains Active; no milestone/parity/beta acceptance.
 
 FILE-NATIVE-SAVE-UI remains Verify for matched critical-alert pixels. UI-MAC-WINDOW-CONTROLS remains Verify for pointer dragging. The normal installed app now contains the Save correction; broader normal-profile process-loss, native updater, TCC and beta acceptance remain separate. Existing recovery content/profiles, protected icon work, private GitHub/draft PR and disabled Actions remain constraints.
 

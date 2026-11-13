@@ -44,10 +44,10 @@ final eight-file caller cohort passes all 32 cases with 140 assertions, includin
 existing import/eval/lint/diff/tool/library writes. The complete repository check
 passes in 182.24 seconds with zero clones; strict 300/50/10/4/4 checks pass.
 
-Now: publish the qualified converter slice privately, preserving exact source/output
-identities, failure controls and independent review. ERR-06 retains applicable actual
-reference/platform/CLI-output states outside this bounded converter slice. Next:
-CLI-04-PNG qualifies actual export/output/failure/resource paths on owned designs.
+The converter slice is privately published at `727f5408e`; exact source/output
+identities, failure controls and independent review remain retained. ERR-06 retains
+applicable actual reference/platform/CLI-output states outside this bounded slice.
+Now: CLI-04-JPEG continues actual export acceptance; CLI-04-PNG is Verify.
 No all-OS, power-loss, other export-command, native, beta or full-parity acceptance
 follows from these controls. Windows does not execute the POSIX-only resource and
 directory-mode cases; existing tests and thresholds are not weakened.

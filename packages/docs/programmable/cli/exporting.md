@@ -51,11 +51,11 @@ Run [`openpencil fonts`](./inspecting#font-diagnostics) first to inspect affecte
 
 This policy does not apply to exports from the running app, or to SVG, PowerPoint, JSX, HTML, and `.fig` exports. It checks font resolution, not complete visual equivalence with Figma.
 
-## Conversion Output
+## Conversion and Export Output
 
-Document conversion writes a temporary file in the output folder before replacing the destination. The folder must permit new files; otherwise, conversion fails without changing an existing output. An existing regular file keeps its permissions. A destination symlink is replaced by the converted file, leaving the linked file unchanged.
+Document conversion and primary export files use a temporary file in the output folder before replacing the destination. The folder must permit new files; otherwise, the primary write fails without changing an existing output. An existing regular file keeps its permissions. A destination symlink is replaced by the produced file, leaving the linked file unchanged. Multi-file exports write the primary file and external assets separately.
 
-Check the exit status and open the resulting file before using it. Resolve a reported write failure before retrying the conversion.
+Check the exit status and open the resulting file before using it. Resolve a reported write failure before retrying. Empty or malformed encoded app-export responses are refused before writing the destination.
 
 ## JSX Export
 

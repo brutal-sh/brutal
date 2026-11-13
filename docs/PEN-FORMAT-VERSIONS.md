@@ -64,7 +64,7 @@ the final check and browser cohort. Original failures and producing identities
 remain retained; no guard or acceptance threshold was relaxed.
 
 Now: ERR-06 is Verify after bounded converter output/failure/safe-retry qualification;
-CLI-04-PNG continues actual export acceptance. This format slice remains Verify for
+CLI-04-JPEG continues actual export acceptance; CLI-04-PNG is Verify. This format slice remains Verify for
 actual native/reference and line conversion acceptance.
 Retain strict checks, raw controls, exact source and saved-output identities.
 Normal installed `db4e528c`, user workspace, profiles, credentials, older recovery

@@ -14,7 +14,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
 import { figThumbnailSize } from '#cli-tests/helpers/fig'
-import { CLI_ENTRY } from '#cli-tests/helpers/paths'
+import { runCLI } from '#cli-tests/helpers/process'
 
 import { getTextMeasurer } from '@open-pencil/core/layout'
 import { parsePenDocument } from '@open-pencil/pen'
@@ -22,25 +22,6 @@ import { parsePenDocument } from '@open-pencil/pen'
 import { loadDocument, measureDocumentText } from '#cli/headless'
 
 setDefaultTimeout(60_000)
-
-async function cli(args: string[], limited = false) {
-  const command = [process.execPath, CLI_ENTRY, ...args]
-  const invocation = limited
-    ? [
-        '/bin/sh',
-        '-c',
-        'ulimit -c 0; trap "" XFSZ; ulimit -f 2; exec "$@"',
-        'open-pen-write-limit',
-        ...command
-      ]
-    : command
-  const proc = Bun.spawn(invocation, { stdout: 'pipe', stderr: 'pipe' })
-  const [stdout, stderr] = await Promise.all([
-    new Response(proc.stdout).text(),
-    new Response(proc.stderr).text()
-  ])
-  return { stdout: stdout.trim(), stderr: stderr.trim(), exitCode: await proc.exited }
-}
 
 async function outputFixture(version = '2.22', format = 'pen') {
   const dir = await mkdtemp(join(tmpdir(), 'open-pen-convert-output-'))
@@ -100,7 +81,7 @@ test('saves a .pen document with its text measured in its own fonts', async () =
       ]
     })
   )
-  expect((await cli(['convert', source, '-o', output])).exitCode).toBe(0)
+  expect((await runCLI(['convert', source, '-o', output])).exitCode).toBe(0)
 
   const graph = await loadDocument(output)
   const label = [...graph.getAllNodes()].find((node) => node.type === 'TEXT')
@@ -124,12 +105,12 @@ test('reports a font it cannot load, and with --font-policy strict writes nothin
       ]
     })
   )
-  const warned = await cli(['convert', source, '-o', join(dir, 'warned.fig')])
+  const warned = await runCLI(['convert', source, '-o', join(dir, 'warned.fig')])
   expect(warned.exitCode).toBe(0)
   expect(warned.stderr).toContain('Definitely Missing Font')
   expect(await Bun.file(join(dir, 'warned.fig')).exists()).toBe(true)
 
-  const strict = await cli([
+  const strict = await runCLI([
     'convert',
     source,
     '-o',
@@ -152,7 +133,7 @@ test('saves a .fig with a thumbnail of its layers', async () => {
       children: [{ id: 'card', type: 'rectangle', width: 300, height: 200, fill: '#111111' }]
     })
   )
-  expect((await cli(['convert', source, '-o', output])).exitCode).toBe(0)
+  expect((await runCLI(['convert', source, '-o', output])).exitCode).toBe(0)
 
   const { width, height } = figThumbnailSize(await readFile(output))
   expect(width / height).toBeCloseTo(300 / 200, 2)
@@ -161,7 +142,7 @@ test('saves a .fig with a thumbnail of its layers', async () => {
 test('a future schema leaves a pre-existing converter output untouched', async () => {
   const fixture = await outputFixture('2.23')
   try {
-    const result = await cli(['convert', fixture.source, '-f', 'pen', '-o', fixture.output])
+    const result = await runCLI(['convert', fixture.source, '-f', 'pen', '-o', fixture.output])
     expect(result.exitCode).not.toBe(0)
     expect(result.stderr.length).toBeGreaterThan(0)
     expect(await readFile(fixture.source)).toEqual(fixture.input)
@@ -178,13 +159,13 @@ for (const format of ['pen', 'fig']) {
       const fixture = await outputFixture('2.22', format)
       const args = ['convert', fixture.source, '-f', format, '-o', fixture.output]
       try {
-        const failed = await cli(args, true)
+        const failed = await runCLI(args, { limited: true })
         expect(failed.exitCode).not.toBe(0)
         expect(failed.stderr.length).toBeGreaterThan(0)
         expect((await readFile(fixture.output)).equals(fixture.original)).toBe(true)
         expect(await readFile(fixture.source)).toEqual(fixture.input)
         expect((await readdir(fixture.dir)).sort()).toEqual([`existing.${format}`, 'input.pen'])
-        expect((await cli(args)).exitCode).toBe(0)
+        expect((await runCLI(args)).exitCode).toBe(0)
         await expectConverted(fixture.output)
         expect((await stat(fixture.output)).mode & 0o777).toBe(0o640)
         expect(await readFile(fixture.source)).toEqual(fixture.input)
@@ -201,14 +182,14 @@ for (const format of ['pen', 'fig']) {
       const args = ['convert', fixture.source, '-f', format, '-o', fixture.output]
       try {
         await chmod(fixture.dir, 0o500)
-        const failed = await cli(args)
+        const failed = await runCLI(args)
         expect(failed.exitCode).not.toBe(0)
         expect(failed.stderr.length).toBeGreaterThan(0)
         expect(await readFile(fixture.output)).toEqual(fixture.original)
         expect(await readFile(fixture.source)).toEqual(fixture.input)
         expect((await readdir(fixture.dir)).sort()).toEqual([`existing.${format}`, 'input.pen'])
         await chmod(fixture.dir, 0o700)
-        expect((await cli(args)).exitCode).toBe(0)
+        expect((await runCLI(args)).exitCode).toBe(0)
         await expectConverted(fixture.output)
         expect((await stat(fixture.output)).mode & 0o777).toBe(0o640)
       } finally {
@@ -223,7 +204,7 @@ for (const format of ['pen', 'fig']) {
     const link = join(fixture.dir, `converted.${format}`)
     try {
       await symlink(fixture.output, link)
-      expect((await cli(['convert', fixture.source, '-f', format, '-o', link])).exitCode).toBe(0)
+      expect((await runCLI(['convert', fixture.source, '-f', format, '-o', link])).exitCode).toBe(0)
       expect((await lstat(link)).isSymbolicLink()).toBe(false)
       await expectConverted(link)
       expect(await readFile(fixture.output)).toEqual(fixture.original)
