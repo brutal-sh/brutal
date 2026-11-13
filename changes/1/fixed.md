@@ -45,3 +45,4 @@
 - Center the native macOS window controls within the document header.
 
 - macOS Save As panels use format-specific titles and follow the editor appearance; permission-denied saves show file-specific guidance while preserving edits and recovery copies.
+- Adding flex layout to rotated layers retains the initial measured extent, and wrapping or undoing a wrap leaves unrelated page layouts untouched.

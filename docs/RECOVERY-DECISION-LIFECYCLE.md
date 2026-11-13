@@ -24,3 +24,13 @@ The original eight scenarios and loop values remain. An AST/token control compar
 The last full unit run records 10,172 passes, one Windows-only skip and the existing strict Note failure; that run precedes this test-only lifecycle change. Native application source remains identical to the separately executed profile/resource host, so these fixture results add no new native acceptance.
 
 Private evidence: `local-evidence/claude-brand-review-2026-11-11/recovery-cancel-{repeat-original,lifecycle-*}.*`, original source copies under `recovery-cancel-before/`, and the original Home-state error snapshot. No original failure is removed or reclassified as successful runtime behavior.
+
+## Phase and historical-fixture comparison — 2026-11-13
+
+Source `1da674371` adds no runtime change. A scoped mutation/preparation/console probe runs ten current cases: eight decision journeys pass, while two setup hooks reach their existing 15-second limit before any decision. Five retained historical combined-deadline cases with the observer reach the total deadline. The observer and extra reads can perturb timing; these are diagnostic receipts, not a production regression or repair.
+
+A separate comparison removes the observer entirely. The retained historical fixture fails five cases: two while initially waiting for Home, and three at the total deadline. The unchanged current fixture then passes all five decision/data/history journeys, with zero skips, retries or flaky cases. Configuration and all temporary source/helper/spec changes return byte-exactly to HEAD; the qualified checkout is clean.
+
+Independent trace review corrects the initial interpretation of the legacy errors: one first deadline occurs while waiting for the recovery dialog, before unrelated Restore is clicked during teardown. Two others expire during Commands-menu navigation; later Save/Open/canvas stacks occur during teardown. A reported final stack or screenshot cannot locate the first expiry. The pre-review interpretation is retained beside its explicit correction.
+
+This does not connect the original untraced Home-state event to a demonstrated cause. FILE-RECOVERY-CANCEL remains Verify, with its original criteria and failed receipts preserved. More passing repeats will not close it. Re-entry requires capturing the actual original-path transition before the first expiry. Private receipts: `local-evidence/recovery-cancel-phase-2026-11-13/`, including corrected `reentry-disposition.json`, independent trace anchors, both comparisons and exact restoration hashes.

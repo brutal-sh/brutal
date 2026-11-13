@@ -1,0 +1,27 @@
+{
+  "version": "2.21",
+  "children": [
+    {
+      "id": "wrap-a",
+      "type": "rectangle",
+      "name": "TEST OWNED wrap A",
+      "x": 0,
+      "y": 0,
+      "width": 80,
+      "height": 60,
+      "rotation": 90,
+      "fill": "#2563EB"
+    },
+    {
+      "id": "wrap-b",
+      "type": "rectangle",
+      "name": "TEST OWNED wrap B",
+      "x": 120,
+      "y": 0,
+      "width": 80,
+      "height": 60,
+      "rotation": 90,
+      "fill": "#22C55E"
+    }
+  ]
+}
