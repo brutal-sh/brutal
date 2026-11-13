@@ -3,7 +3,7 @@
 Decision owner: Jason Poindexter. Implementation and evidence owner: Codex.
 Updated: 2026-11-13. Status: active; full design and functionality parity is not achieved.
 
-Current reference refresh: REA retains the installed 1.2.23 archive/outer-file inventory and delta under `local-evidence/pen-reference-1.2.23/`. REF-04 owns the [independently reviewed changed-surface catalog](pen-feature-reference/update-1.2.23-2026-11-13.md) and 13 bounded Backlog followups, with current 505-task/504-other-terminal dependency closure. No added message identifier or static declaration accepts a feature. Prior 1.2.22 receipts remain versioned; neither extracted files nor the native window correction establishes full feature parity.
+Current reference refresh: REA retains the installed 1.2.23 archive/outer-file inventory and delta under `local-evidence/pen-reference-1.2.23/`. REF-04 owns the [independently reviewed changed-surface catalog](pen-feature-reference/update-1.2.23-2026-11-13.md) and 13 bounded Backlog followups, with current 506-task/505-other-terminal dependency closure. No added message identifier or static declaration accepts a feature. Prior 1.2.22 receipts remain versioned; neither extracted files nor the native window correction establishes full feature parity.
 
 ## Product outcome
 
@@ -291,3 +291,7 @@ The historical 2026-11-12 503-card index comprises 485 execution tasks and 18 mi
 ## Native Save UI update — 2026-11-13
 
 The native Save UI correction is recorded in [NATIVE-SAVE-UI.md](NATIVE-SAVE-UI.md): current Pen 1.2.23 reference, correctly titled/theme-aligned native picker, actionable permission feedback, persistent fallback and exact recovery/cancel/copy/refusal/retry preservation. Current owner/browser/strict/full-check gates pass. FILE-NATIVE-SAVE-UI remains Verify for matched critical-alert pixels; normal installed and full beta acceptance remain separate. REF-04 continues the current reference delta catalog.
+
+## Normal installed Save delivery — 2026-11-13
+
+[Normal Save delivery](NATIVE-SAVE-DELIVERY.md) records installed production `db4e528c` and the executed Cancel/copy/edit/refusal/OK/retry/clean-reopen slice, preserving the original workspace and two older recovery records. This separate leaf is bounded Executed; native critical-alert pixels, broader recovery/process-loss, the combined core journey and public readiness remain open. REF-04 is bounded Executed for its versioned catalog; FILE-RECOVERY-CANCEL resumes the original unclassified Home-state failure.

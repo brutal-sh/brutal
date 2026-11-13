@@ -1,15 +1,15 @@
 # Open Pen current board reconciliation — 2026-11-13
 
-This readback covers all 523 open cards after the Pen 1.2.23 update catalog allocation. It updates current scheduling; the [2026-11-11 audit](BOARD-AUDIT-2026-11-11.md) and intervening execution receipts remain historical. Actual Pen is the reference; OpenPencil is the implementation foundation.
+This readback covers all 524 open cards after the Pen 1.2.23 update catalog allocation and normal Save delivery. It updates current scheduling; the [2026-11-11 audit](BOARD-AUDIT-2026-11-11.md) and intervening execution receipts remain historical. Actual Pen is the reference; OpenPencil is the implementation foundation.
 
-There are 505 execution tasks and 18 milestone gates:383 Backlog,0 Ready, 1 Building (REF-04), 36 Verify and 85 Executed. These are workflow states, not a product-parity percentage, an estimate of unbuilt features or a beta date. Full parity and all milestone exits remain unaccepted.
+There are 506 execution tasks and 18 milestone gates: 383 Backlog, 0 Ready, 1 Building (FILE-RECOVERY-CANCEL), 35 Verify and 87 Executed. These are workflow states, not a product-parity percentage, an estimate of unbuilt features or a beta date. Full parity and all milestone exits remain unaccepted.
 
 ## Checks actually executed
 
-- Re-read the complete 523-card live board after 13 creates and 19 tracking-description updates; every new description/state and every updated description matches the intended bytes.
-- Reconcile 505 unique execution IDs to exactly 505 single primary milestone owners. M02 now owns 114 tasks; M05 owns 81. Other ownership remains unchanged. An existing Note-raster child link was moved from M02's historical tail into its current primary block; its rendering acceptance stays open.
-- Expand PARITY-ALL to all 504 other execution IDs before validating the explicit dependency graph. There are no unknown named prerequisites, reachable cycles or Executed/open-prerequisite contradictions. This checks declared edges, not undiscovered real prerequisites or runtime behavior.
-- Preserve 18 open milestones, one Building card and no Ready cards. No feature card or release gate is promoted by adding/cataloging work.
+- Re-read the complete 524-card live board after the 13 update followups, separate normal-delivery leaf and current status/parent-description updates; current states and complete dependency allocation reconcile, and the delivery/handoff descriptions match their intended bytes. Earlier catalog-description readback remains separately retained.
+- Reconcile 506 unique execution IDs to exactly 506 single primary milestone owners. M02 owns 114 tasks, M05 owns 81 and M07 owns 36. Remaining ownership is unchanged. An existing Note-raster child link was moved from M02's historical tail into its current primary block; its rendering acceptance stays open.
+- Expand PARITY-ALL to all 505 other execution IDs before validating the explicit dependency graph. There are no unknown named prerequisites, reachable cycles or Executed/open-prerequisite contradictions. This checks declared edges, not undiscovered real prerequisites or runtime behavior.
+- Preserve 18 open milestones, one Building card and no Ready cards. Catalog allocation alone promotes no feature or release gate. REF-04 has separately executed its bounded catalog criterion; FILE-NATIVE-SAVE-DELIVERY has executed its actual installed save slice.
 
 ## New bounded followups
 
@@ -37,8 +37,10 @@ The [versioned current reference supplement](pen-feature-reference/update-1.2.23
 
 Private receipts are retained under `local-evidence/pen-reference-1.2.23/`: `created-cards-verified.json`, compact `board-audit-current.json`, independent review, full native traces/teardown, source dispositions and REA/Hopper exports. Proprietary bytes, user-account/history captures and private evidence are excluded from publication. REA's post-close response reports no open target or pending cleanup.
 
-Now: qualify/publish REF-04's bounded catalog criterion. Next: continue normal-installed save/refusal/recovery delivery and unresolved native chrome/critical-alert visual criteria using owned fixtures. Later: execute remaining domain tasks in prerequisite order, including new reference followups. Re-evaluate after each accepted card or newly observed reference change.
+REF-04 is bounded Executed at private catalog publication `64f61e4cd`. [Normal Save delivery](NATIVE-SAVE-DELIVERY.md) records the subsequently installed `db4e528c`, actual owned Cancel/copy/edit/refusal/OK/retry/reopen, exact original workspace/older recovery preservation and independent review. Its new leaf belongs to M07, which now records 14/36 primary cards Executed. M00 records 4/5; both milestones remain open.
 
-FILE-NATIVE-SAVE-UI stays Verify despite its passing source/native/browser slice; matched critical-alert pixels and normal-installed Save UI delivery remain open. UI-MAC-WINDOW-CONTROLS stays Verify for pointer dragging. Normal installed `9ec149` contains the measured traffic-light correction; it has not been replaced with the new Save UI build. Existing recovery content/profiles, protected icon work, private GitHub/draftPR and disabled Actions remain constraints.
+Now: classify the retained FILE-RECOVERY-CANCEL Home-state transition with phase-specific evidence before changing an owner. Next: remaining recovery/native/reference acceptance and other dependency-ready tasks. Later: the remaining domain tasks, including all 13 new reference followups. Successful repeats alone do not close the unresolved reliability card.
+
+FILE-NATIVE-SAVE-UI remains Verify for matched critical-alert pixels. UI-MAC-WINDOW-CONTROLS remains Verify for pointer dragging. The normal installed app now contains the Save correction; broader normal-profile process-loss, native updater, TCC and beta acceptance remain separate. Existing recovery content/profiles, protected icon work, private GitHub/draft PR and disabled Actions remain constraints.
 
 The controller goal stays Active. Product Done still requires every applicable task and matched reference state, PARITY-ALL's own combined acceptance, the normal-installed core journey, and the separate public-beta trust/package/support gates. No catalog publication alone meets that terminal criterion.
