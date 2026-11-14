@@ -1,11 +1,16 @@
 import { request as httpRequest } from 'node:http'
 import type { IncomingMessage } from 'node:http'
 
+import { isEqual } from 'es-toolkit'
+import * as v from 'valibot'
+
 import { readDiscoveryFile } from '@open-pencil/mcp/discovery'
 import type { DiscoveryInfo } from '@open-pencil/mcp/discovery'
 import { platformHasUnixSockets } from '@open-pencil/mcp/transport'
 
 import type { AppTarget } from '#cli/app/target'
+
+import { appErrorSchema, appResponseSchema } from './schema'
 
 /** Maximum time to wait for a single RPC request before giving up. */
 const RPC_TIMEOUT_MS = 30_000
@@ -15,6 +20,11 @@ let cachedInfo: DiscoveryInfo | null = null
 async function resolveDiscovery(): Promise<DiscoveryInfo> {
   if (cachedInfo) return cachedInfo
 
+  cachedInfo = await currentDiscovery()
+  return cachedInfo
+}
+
+async function currentDiscovery(): Promise<DiscoveryInfo> {
   const info = await readDiscoveryFile()
   if (!info) {
     throw new Error(
@@ -23,19 +33,16 @@ async function resolveDiscovery(): Promise<DiscoveryInfo> {
     )
   }
 
-  cachedInfo = info
-  return cachedInfo
+  return info
 }
 
 function doRequest(
   info: DiscoveryInfo,
-  path: string,
-  method: string,
-  body?: Record<string, unknown>,
+  body: Record<string, unknown>,
   forceTcp = false
 ): Promise<{ status: number; data: unknown }> {
   return new Promise((resolve, reject) => {
-    const bodyJSON = body ? JSON.stringify(body) : undefined
+    const bodyJSON = JSON.stringify(body)
     const headers: Record<string, string> = {}
     if (bodyJSON) headers['Content-Type'] = 'application/json'
     if (info.authToken) headers.Authorization = `Bearer ${info.authToken}`
@@ -43,6 +50,8 @@ function doRequest(
     // Use the narrowed `useSocket` variable (string | false) to construct
     // request options so TypeScript knows socketPath is a string when truthy.
     const useSocket = !forceTcp && platformHasUnixSockets() && info.socketPath
+    const path = '/rpc'
+    const method = 'POST'
     const reqOpts = useSocket
       ? { socketPath: useSocket, path, method, headers }
       : { hostname: '127.0.0.1', port: info.httpPort, path, method, headers }
@@ -55,7 +64,7 @@ function doRequest(
         const raw = Buffer.concat(chunks).toString('utf-8')
         let data: unknown
         try {
-          data = JSON.parse(raw)
+          data = v.parse(v.pipe(v.string(), v.parseJson(), v.unknown()), raw)
         } catch {
           data = raw
         }
@@ -92,7 +101,7 @@ async function doRPC<T>(
   args: unknown,
   forceTcp = false
 ): Promise<RPCResponse<T>> {
-  const { status, data } = await doRequest(info, '/rpc', 'POST', { command, args }, forceTcp)
+  const { status, data } = await doRequest(info, { command, args }, forceTcp)
 
   if (status === 401) {
     throw new UnauthorizedError(
@@ -100,12 +109,17 @@ async function doRPC<T>(
     )
   }
   if (status >= 400) {
-    const errData = data as { error?: string }
-    throw new Error(errData.error ?? `RPC failed: HTTP ${status}`)
+    const parsed = v.safeParse(appErrorSchema, data)
+    throw new AppCommandError(
+      (parsed.success ? parsed.output.error : undefined) ?? `RPC failed: HTTP ${status}`
+    )
   }
 
-  const body = data as { ok?: boolean; result?: T; target?: AppTarget; error?: string }
-  if (body.ok === false) throw new Error(body.error ?? 'RPC failed')
+  const parsed = v.safeParse(appResponseSchema, data)
+  if (!parsed.success)
+    throw new AppCommandError('Invalid app response. Check command state before retrying.')
+  const body = parsed.output
+  if (!body.ok) throw new AppCommandError(body.error ?? 'RPC failed')
   return { result: body.result as T, ...(body.target ? { target: body.target } : {}) }
 }
 
@@ -117,8 +131,16 @@ class UnauthorizedError extends Error {
   }
 }
 
+/** The app received the request; repeating it could repeat an edit. */
+class AppCommandError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'AppCommandError'
+  }
+}
+
 function isSocketConnectionError(error: unknown): boolean {
-  if (!(error instanceof Error)) return false
+  if (!(error instanceof Error) || error instanceof AppCommandError) return false
   const code = 'code' in error ? String(error.code) : ''
   return (
     code === 'ECONNREFUSED' ||
@@ -164,6 +186,16 @@ export async function rpcResponse<T = unknown>(
     if (!(error instanceof UnauthorizedError) && !isSocketConnectionError(error)) throw error
     cachedInfo = null
     return rpcWithFallback<T>(await resolveDiscovery(), command, args)
+  }
+}
+
+/** A session never follows a replacement app or retries a received command. */
+export async function createAppConnection() {
+  const info = await currentDiscovery()
+  return async (command: string, args: unknown = {}): Promise<RPCResponse<unknown>> => {
+    if (!isEqual(info, await currentDiscovery()))
+      throw new Error('The app connection changed. Start a new interactive session.')
+    return rpcWithFallback(info, command, args)
   }
 }
 

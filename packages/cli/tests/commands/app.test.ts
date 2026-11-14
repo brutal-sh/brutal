@@ -1,13 +1,20 @@
-import { afterAll, beforeAll, beforeEach, describe, expect, setDefaultTimeout, test } from 'bun:test'
+import {
+  afterAll,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  setDefaultTimeout,
+  test
+} from 'bun:test'
 import { mkdtemp, writeFile } from 'node:fs/promises'
 import { createServer, type Server } from 'node:http'
 import type { AddressInfo } from 'node:net'
 import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'
 
-import * as v from 'valibot'
-
 import { CLI_ENTRY } from '#cli-tests/helpers/paths'
+import * as v from 'valibot'
 
 setDefaultTimeout(60_000)
 
@@ -29,6 +36,7 @@ type Request = v.InferOutput<typeof requestSchema>
 
 const requests: Request[] = []
 const responses = new Map<string, unknown>()
+const failures = new Map<string, { status: number; error: string }>()
 let server: Server
 let discoveryPath: string
 
@@ -41,6 +49,12 @@ beforeAll(async () => {
     request.on('end', () => {
       const parsed = v.parse(requestSchema, body)
       requests.push(parsed)
+      const failure = failures.get(parsed.command)
+      if (failure) {
+        response.writeHead(failure.status, { 'Content-Type': 'application/json' })
+        response.end(JSON.stringify({ ok: false, error: failure.error }))
+        return
+      }
       response.writeHead(200, { 'Content-Type': 'application/json' })
       response.end(
         JSON.stringify({ ok: true, result: responses.get(parsed.command) ?? {}, target: TARGET })
@@ -73,6 +87,7 @@ afterAll(() => {
 beforeEach(() => {
   requests.length = 0
   responses.clear()
+  failures.clear()
 })
 
 async function cli(args: string[]) {
@@ -87,6 +102,19 @@ async function cli(args: string[]) {
   ])
   return { stdout: stdout.trim(), stderr: stderr.trim(), exitCode: await proc.exited }
 }
+
+test.each([200, 500])('an application failure at HTTP %i is delivered once', async (status) => {
+  failures.set('eval', { status, error: 'ENOENT: owned application failure' })
+  const result = await cli(['eval', '--document-id', 'doc-2', '--code', 'figma.createRectangle()'])
+  expect(result.exitCode).not.toBe(0)
+  expect(result.stderr).toContain('ENOENT: owned application failure')
+  expect(requests).toEqual([
+    {
+      command: 'eval',
+      args: { document_id: 'doc-2', code: 'figma.createRectangle()' }
+    }
+  ])
+})
 
 describe('documents CLI', () => {
   test('opens files by absolute path and reports the target document', async () => {

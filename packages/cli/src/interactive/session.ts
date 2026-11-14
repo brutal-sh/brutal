@@ -8,12 +8,7 @@ import { createHeadlessFigma, runHeadlessTool } from '#cli/tool-data'
 
 import { interactiveOutput, saveInteractiveDocument } from './files'
 import type { InteractiveCall } from './parse'
-
-function toolError(value: unknown): string | undefined {
-  if (value && typeof value === 'object' && 'error' in value && typeof value.error === 'string')
-    return value.error
-  return undefined
-}
+import { assertInteractiveResult } from './result'
 
 export async function createInteractiveSession(options: { input?: string; output: string }) {
   const output = interactiveOutput(options.output)
@@ -33,8 +28,7 @@ export async function createInteractiveSession(options: { input?: string; output
     const selection = [...page.selection]
     try {
       const result = await runHeadlessTool(figma, call.name, call.args)
-      const error = toolError(result)
-      if (error !== undefined) throw new Error(error)
+      assertInteractiveResult(result)
       return result
     } catch (error) {
       try {

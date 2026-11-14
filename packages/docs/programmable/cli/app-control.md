@@ -40,8 +40,38 @@ Input files and their local resources remain unchanged when saving a copy; `.pen
 output embeds supported images so the saved copy can move to another folder.
 
 This command uses the existing editor tool names. Pen's `execute`, `read_skill`
-and `get_style` contracts and connected interactive mode have separate acceptance
-work; use the app-control commands below for the current connected interface.
+and `get_style` contracts have separate acceptance work.
+
+## Connected interactive sessions
+
+Read the open documents, then connect to a specific tab:
+
+```sh
+openpencil documents list --json
+openpencil interactive --app desktop --document-id tab-123 --page-id 0:1
+openpencil interactive -a desktop -i designs/landing.pen -o designs/copy.pen
+```
+
+Without an input path or document ID, the session selects the one active document.
+Use a matching updated Open Pen app: a bridge that does not advertise unique
+document identities is refused before opening a file or applying an edit.
+An input path opens that file; it cannot be combined with a document ID. The first
+JSON response identifies the connected document and page. Later tab or page
+switches do not change that target. A closed target or changed app connection
+requires a new session; commands never fall back to the newly active document.
+
+Use the same tool calls, plus `undo()`, `redo()`, `save()` and `exit()`. The output
+path is optional: `save()` writes to it when supplied, or uses the app's existing
+writable source. An unsaved document needs an explicit output path. File access
+follows the app bridge's configured root and permissions; automation never opens
+a Save dialog.
+
+Tools edit the app's live document. Exit, EOF and interruption leave those edits
+in the app and perform no additional save or discard. App history and failure
+semantics apply: a failed structural/script operation can leave an undoable
+partial edit. Inspect the result and use `undo()` when appropriate. Errors keep
+the session's exit status nonzero, even after a later successful explicit retry.
+Application errors and invalid replies do not trigger command replay.
 
 ## Documents
 
@@ -83,7 +113,12 @@ openpencil redo --document-id tab-123 --json
 ```json
 {
   "result": { "applied": true, "label": "Set opacity", "scope": "document" },
-  "target": { "documentId": "tab-123", "documentName": "Landing", "pageId": "0:1", "pageName": "Page 1" }
+  "target": {
+    "documentId": "tab-123",
+    "documentName": "Landing",
+    "pageId": "0:1",
+    "pageName": "Page 1"
+  }
 }
 ```
 
@@ -107,23 +142,23 @@ openpencil settings set chat.maxAgentSteps 100
 
 Values are read as JSON when they parse (`false`, `100`, `"auto"`) and as plain strings otherwise. Invalid keys and values are rejected without changing anything.
 
-| Key | Values |
-|-----|--------|
-| `appearance.theme` | `dark`, `light`, `auto` |
-| `appearance.language` | `en`, `de`, `es`, `fr`, `it`, `ja`, `pl`, `ru`, `zh-CN` |
-| `appearance.animations` | `system`, `off` |
-| `appearance.accent` | JSON object: `{"kind":"preset","preset":"green"}` with `blue`, `purple`, `pink`, `red`, `orange`, `yellow`, `green`, `graphite`, or `{"kind":"custom","color":"#FF6600"}` |
-| `editing.snapping.geometry` | `true`, `false` |
-| `editing.snapping.objects` | `true`, `false` |
-| `editing.snapping.pixelGrid` | `true`, `false` |
-| `rendering.canvasMode` | `retained`, `tiled` (applies after a reload) |
-| `recovery.enabled` | `true`, `false` |
-| `chat.reasoningDisplay` | `collapsed`, `while-thinking`, `expanded` |
-| `chat.maxAgentSteps` | integer 1–1000 |
-| `chat.changePreviewSize` | `off`, `small`, `medium`, `large` |
-| `designCheck.showOnCanvas` | `true`, `false` |
-| `designCheck.preset` | `recommended`, `strict`, `accessibility` |
-| `designCheck.disabledRules` | JSON array of rule IDs, e.g. `["no-default-names"]`; see `openpencil lint --list-rules` |
+| Key                          | Values                                                                                                                                                                    |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `appearance.theme`           | `dark`, `light`, `auto`                                                                                                                                                   |
+| `appearance.language`        | `en`, `de`, `es`, `fr`, `it`, `ja`, `pl`, `ru`, `zh-CN`                                                                                                                   |
+| `appearance.animations`      | `system`, `off`                                                                                                                                                           |
+| `appearance.accent`          | JSON object: `{"kind":"preset","preset":"green"}` with `blue`, `purple`, `pink`, `red`, `orange`, `yellow`, `green`, `graphite`, or `{"kind":"custom","color":"#FF6600"}` |
+| `editing.snapping.geometry`  | `true`, `false`                                                                                                                                                           |
+| `editing.snapping.objects`   | `true`, `false`                                                                                                                                                           |
+| `editing.snapping.pixelGrid` | `true`, `false`                                                                                                                                                           |
+| `rendering.canvasMode`       | `retained`, `tiled` (applies after a reload)                                                                                                                              |
+| `recovery.enabled`           | `true`, `false`                                                                                                                                                           |
+| `chat.reasoningDisplay`      | `collapsed`, `while-thinking`, `expanded`                                                                                                                                 |
+| `chat.maxAgentSteps`         | integer 1–1000                                                                                                                                                            |
+| `chat.changePreviewSize`     | `off`, `small`, `medium`, `large`                                                                                                                                         |
+| `designCheck.showOnCanvas`   | `true`, `false`                                                                                                                                                           |
+| `designCheck.preset`         | `recommended`, `strict`, `accessibility`                                                                                                                                  |
+| `designCheck.disabledRules`  | JSON array of rule IDs, e.g. `["no-default-names"]`; see `openpencil lint --list-rules`                                                                                   |
 
 Credentials, AI models, MCP connections, storage, and tool access are deliberately not available here: an automation client can't read secrets or grant itself access.
 

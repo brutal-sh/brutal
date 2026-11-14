@@ -1,14 +1,22 @@
 # Open Pen current board reconciliation — 2026-11-13
 
-This readback covers all 525 open cards after the Pen 1.2.23 update catalog allocation and normal Save delivery. It updates current scheduling; the [2026-11-11 audit](BOARD-AUDIT-2026-11-11.md) and intervening execution receipts remain historical. Actual Pen is the reference; OpenPencil is the implementation foundation.
+2026-11-14 dependency readback also recognizes the singular `Dependency:` label.
+Three existing edges now appear in the task table: VERIFY-STORYBOOK-REFUSAL →
+BRAND-STORYBOOK-ERROR, VERIFY-GPU-SURFACE-CONTRACTS → STAB-GPU and VERIFY-DUPES-ZERO →
+MOD-DUPES-GENERATED. Their predecessors are already Executed. All508 execution IDs,
+18primary allocations and507other terminal prerequisites reconcile without unknown
+dependencies, cycles or Executed/open-prerequisite contradictions. This does not
+infer undiscovered prerequisites or accept additional product behavior.
 
-There are 507 execution tasks and 18 milestone gates: 374 Backlog, 0 Ready, 1 Building (CLI-06), 45 Verify and 87 Executed. These are workflow states, not a product-parity percentage, an estimate of unbuilt features or a beta date. Full parity and all milestone exits remain unaccepted.
+This readback covers all 526 open cards after the Pen 1.2.23 update catalog allocation and normal Save delivery. It updates current scheduling; the [2026-11-11 audit](BOARD-AUDIT-2026-11-11.md) and intervening execution receipts remain historical. Actual Pen is the reference; OpenPencil is the implementation foundation.
+
+There are 508 execution tasks and 18 milestone gates: 374 Backlog, 0 Ready, 1 Building (LAYOUT-WRAP-IMPORT), 46 Verify and 87 Executed. These are workflow states, not a product-parity percentage, an estimate of unbuilt features or a beta date. Full parity and all milestone exits remain unaccepted.
 
 ## Checks actually executed
 
-- Re-read the complete 525-card live board after the 13 update followups, separate normal-delivery and current-schema line leaves, and current status/parent-description updates; current states and complete dependency allocation reconcile, and the delivery/handoff descriptions match their intended bytes. Earlier catalog-description readback remains separately retained.
-- Reconcile 507 unique execution IDs to exactly 507 single primary milestone owners. M02 owns 114 tasks, M05 owns 81 and M07 owns 36. M04 now owns64 tasks; remaining ownership is unchanged. An existing Note-raster child link was moved from M02's historical tail into its current primary block; its rendering acceptance stays open.
-- Expand PARITY-ALL to all 506 other execution IDs before validating the explicit dependency graph. There are no unknown named prerequisites, reachable cycles or Executed/open-prerequisite contradictions. This checks declared edges, not undiscovered real prerequisites or runtime behavior.
+- Re-read the complete 526-card live board after the 13 update followups, separate normal-delivery and current-schema line leaves, and current status/parent-description updates; current states and complete dependency allocation reconcile, and the delivery/handoff descriptions match their intended bytes. Earlier catalog-description readback remains separately retained.
+- Reconcile 508 unique execution IDs to exactly 508 single primary milestone owners. M02 owns 114 tasks, M05 owns 81 and M07 owns 36. M04 now owns65 tasks; remaining ownership is unchanged. An existing Note-raster child link was moved from M02's historical tail into its current primary block; its rendering acceptance stays open.
+- Expand PARITY-ALL to all 507 other execution IDs before validating the explicit dependency graph. There are no unknown named prerequisites, reachable cycles or Executed/open-prerequisite contradictions. This checks declared edges, not undiscovered real prerequisites or runtime behavior.
 - Preserve 18 open milestones, one Building card and no Ready cards. Catalog allocation alone promotes no feature or release gate. REF-04 has separately executed its bounded catalog criterion; FILE-NATIVE-SAVE-DELIVERY has executed its actual installed save slice.
 
 ## New bounded followups
@@ -93,3 +101,11 @@ API/connected/native/standalone and earlier strict pixel gates remain open.
 CLI-06 is the sole Building card. All507source states/owners,18allocations and506
 terminal prerequisites reconcile. No new execution card or Executed promotion;
 allmilestone exits and the full parity goal stay open.
+
+## Saved-wrap import leaf — 2026-11-14
+
+[LAYOUT-WRAP-IMPORT](https://trello.com/c/Pn8vqBeJ) isolates the confirmed omitted-width/bare-Fill60/61-versus220reopen discrepancy from the published wrapping command. Its primary owner is M04, it requires REF-04, and LAYOUT-WRAP plus PARITY-ALL require it. No original wrapping, native, history or pixel criterion is removed. It starts Backlog while CLI-06 is Building; the later guarded handoff below supersedes that scheduling state without accepting the leaf.
+
+## Guarded connected CLI handoff — 2026-11-14
+
+CLI-06 enters Verify after188owner cases/652assertions, full check0/zero clones, production build0 and35actual Node/live-browser controls with no skips/retries/unexpected/flaky cases. The matching app advertises unique document identities; older bridges are refused before opening a file. Source and scoped limits are in [Connected CLI](CLI-APP-CONNECTION.md). LAYOUT-WRAP-IMPORT becomes the sole Building card;374Backlog/46Verify/87Executed plus1Building reconcile to508tasks. All18milestones stay open; native/reference/tool-name/standalone and full parity are not accepted.

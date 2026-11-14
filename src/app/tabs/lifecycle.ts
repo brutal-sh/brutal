@@ -1,6 +1,7 @@
 import { shallowRef, computed, triggerRef } from 'vue'
 
 import type { SceneGraph } from '@open-pencil/scene-graph'
+import { randomHex } from '@open-pencil/scene-graph/random'
 
 import { setOpenPencilStore } from '@/app/browser-bridge'
 import { confirmDocumentClose } from '@/app/document/close/controller'
@@ -18,10 +19,8 @@ export interface Tab {
   kind: TabKind
 }
 
-let nextTabId = 1
-
 function generateTabId(): string {
-  return `tab-${nextTabId++}`
+  return `tab-${randomHex(16)}`
 }
 
 export const tabsRef = shallowRef<Tab[]>([])

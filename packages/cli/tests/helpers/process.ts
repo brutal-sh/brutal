@@ -26,6 +26,7 @@ async function runProcess(command: string[], options: CLIRunOptions) {
     : command
   const proc = Bun.spawn(invocation, {
     cwd: options.cwd,
+    env: { ...process.env },
     stdout: 'pipe',
     stderr: 'pipe',
     stdin: options.stdin === undefined ? undefined : Buffer.from(options.stdin)

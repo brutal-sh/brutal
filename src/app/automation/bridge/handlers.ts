@@ -29,6 +29,61 @@ import type { EditorStore } from '@/app/editor/active-store'
 type FigmaFactory = (store: EditorStore, pageId?: string) => FigmaAPI
 
 type CommandHandler = (target: AutomationTarget, args: unknown) => Promise<unknown>
+type CommandHandlers = Partial<Record<string, CommandHandler>>
+
+function handleSessionClosed(_store: EditorStore, args: unknown) {
+  const session = isUnknownRecord(args) ? args.session : undefined
+  if (typeof session === 'string') endAgentSession(session)
+  return { ok: true, result: null }
+}
+
+const globalHandlers: Partial<Record<string, (store: EditorStore, args: unknown) => unknown>> = {
+  list_documents: (store) => ({
+    ok: true,
+    result: { documents: listAutomationDocuments(store), unique_document_ids: true }
+  }),
+  list_recent_files: handleListRecentFiles,
+  agent_session_opened: (_store, args) => {
+    agentSessionOpened(args)
+    return { ok: true, result: null }
+  },
+  agent_session_closed: handleSessionClosed,
+  get_settings: handleGetSettings,
+  update_settings: (_store, args) => handleUpdateSettings(args)
+}
+
+/** Runs a command on its resolved document page, loading that page when necessary. */
+async function dispatchTargetCommand(
+  target: AutomationTarget,
+  command: string,
+  args: UnknownRecord,
+  handlers: CommandHandlers
+): Promise<unknown> {
+  if (!(await target.store.preparePageNodes(target.pageId)))
+    throw new Error(`Page "${target.pageId}" was closed before it finished loading`)
+  const handler = handlers[command]
+  const result = handler
+    ? await handler(target, args)
+    : await handleRPCFallback(target, command, args)
+  return responseWithTarget(result, target)
+}
+
+async function dispatchRequest(
+  store: EditorStore,
+  command: string,
+  args: unknown,
+  handlers: CommandHandlers
+): Promise<unknown> {
+  const globalHandler = Object.hasOwn(globalHandlers, command) ? globalHandlers[command] : undefined
+  if (globalHandler) return globalHandler(store, args)
+  if (command === 'open_file' || command === 'new_document') {
+    const handler = handlers[command]
+    if (handler) return handler(resolveAutomationTarget(store, undefined), args)
+  }
+  const rawArgs = isUnknownRecord(args) ? args : {}
+  const target = resolveAutomationTarget(store, rawArgs)
+  return dispatchTargetCommand(target, command, stripAutomationTargetArgs(rawArgs), handlers)
+}
 
 export function createAutomationCommandHandlers(makeFigma: FigmaFactory, files?: AutomationFiles) {
   const handleEval = createAutomationEvalHandler(makeFigma)
@@ -36,7 +91,7 @@ export function createAutomationCommandHandlers(makeFigma: FigmaFactory, files?:
   const { handleSaveFile, handleCloseFile, handleNewDocument, handleOpenFile } =
     createFileHandlers(files)
 
-  const commandHandlers: Partial<Record<string, CommandHandler>> = {
+  const commandHandlers: CommandHandlers = {
     eval: handleEval,
     tool: handleTool,
     export: handleExport,
@@ -51,52 +106,10 @@ export function createAutomationCommandHandlers(makeFigma: FigmaFactory, files?:
     redo: handleRedo
   }
 
-  /** Runs a command on a resolved document page, loading the page first if it was never shown. */
-  async function handleTargetCommand(
-    target: AutomationTarget,
-    command: string,
-    args: UnknownRecord
-  ): Promise<unknown> {
-    if (!(await target.store.preparePageNodes(target.pageId))) {
-      throw new Error(`Page "${target.pageId}" was closed before it finished loading`)
-    }
-    const handler = commandHandlers[command]
-    const result = handler
-      ? await handler(target, args)
-      : await handleRPCFallback(target, command, args)
-    return responseWithTarget(result, target)
+  return {
+    handleRequest: (store: EditorStore, command: string, args: unknown) =>
+      dispatchRequest(store, command, args, commandHandlers),
+    handleTargetCommand: (target: AutomationTarget, command: string, args: UnknownRecord) =>
+      dispatchTargetCommand(target, command, args, commandHandlers)
   }
-
-  async function handleRequest(
-    store: EditorStore,
-    command: string,
-    args: unknown
-  ): Promise<unknown> {
-    if (command === 'list_documents') {
-      return { ok: true, result: { documents: listAutomationDocuments(store) } }
-    }
-    if (command === 'list_recent_files') return handleListRecentFiles()
-    if (command === 'agent_session_opened') {
-      agentSessionOpened(args)
-      return { ok: true, result: null }
-    }
-    if (command === 'agent_session_closed') {
-      const session = isUnknownRecord(args) ? args.session : undefined
-      if (typeof session === 'string') endAgentSession(session)
-      return { ok: true, result: null }
-    }
-    if (command === 'get_settings') return handleGetSettings()
-    if (command === 'update_settings') return handleUpdateSettings(args)
-
-    if (command === 'open_file' || command === 'new_document') {
-      const handler = commandHandlers[command]
-      if (handler) return handler(resolveAutomationTarget(store, undefined), args)
-    }
-
-    const rawArgs = isUnknownRecord(args) ? args : {}
-    const target = resolveAutomationTarget(store, rawArgs)
-    return handleTargetCommand(target, command, stripAutomationTargetArgs(rawArgs))
-  }
-
-  return { handleRequest, handleTargetCommand }
 }

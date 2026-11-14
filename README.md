@@ -175,7 +175,12 @@ bun open-pencil interactive -i existing.pen -o edited.pen
 
 Call tools from `tool list` one line at a time; `save()` writes the output and
 `exit()` closes without another save. The [interactive guide](packages/docs/programmable/cli/app-control.md#headless-interactive-sessions)
-describes arguments, retry and current tool-name/connection limits.
+describes arguments, retry and current tool-name limits.
+
+Connect a persistent session to the running app with
+`bun open-pencil interactive --app desktop --document-id <tab-id>`. It reports
+and pins its document/page, supports `undo()`/`redo()`, and edits live; `exit()`
+performs no additional save or discard. See the [connected session guide](packages/docs/programmable/cli/app-control.md#connected-interactive-sessions).
 
 ### Control the running app
 
