@@ -1,4 +1,5 @@
 export { CODEGEN_PROMPT } from './prompts'
+export { readSkillResource } from './resources'
 
 export { getComponentCatalog, registerComponentCatalog } from './component-catalog'
 export type {

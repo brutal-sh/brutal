@@ -57,9 +57,10 @@ login when real inference is required; it does not authorize paid APIs, credenti
 creation or implicit agent launches. Native/browser restart and the full agent
 lifecycle keep their separate acceptance criteria.
 
-There is one Building task: LAYOUT-WRAP-IMPORT. This contract allocation is
-independent planning while its missing native measurements wait on desktop
-availability; it starts no parallel implementation stream. No beta date follows
+There is one Building task: MCP-03-GETAPPSTATE. MCP-03-READSKILL is Verify on its
+[bounded software delivery](CLI-SKILL-RESOURCES.md); reference/native acceptance remains open. LAYOUT-WRAP-IMPORT returns to
+Backlog while its missing native measurements wait on desktop availability;
+its owned inputs, red regression and exact re-entry remain retained. No beta date follows
 from card counts. Reassess after each bounded owner receipt or reference update.
 
 ## Aggregate exit

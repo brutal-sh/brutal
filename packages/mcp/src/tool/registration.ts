@@ -1,4 +1,3 @@
-import { Buffer } from 'node:buffer'
 import { resolve } from 'node:path'
 
 import type {
@@ -9,61 +8,24 @@ import type {
 } from '@modelcontextprotocol/server'
 // eslint-disable-next-line open-pencil/no-mixed-case-acronym-identifiers -- Upstream export spelling.
 import { toStandardJsonSchema as toStandardJSONSchema } from '@valibot/to-json-schema'
-import * as v from 'valibot'
+import type * as v from 'valibot'
 
-import { CODEGEN_PROMPT } from '@open-pencil/core/tools'
-
-import type { RPCJSONObject } from '#mcp/json'
-import { MAX_RESULT_BYTES, fail, ok, resultTooLargeMessage } from '#mcp/result'
-import { createToolDescriptors, getMCPToolDefinitions } from '#mcp/tool/manifest'
+import { createToolDescriptors } from '#mcp/tool/manifest'
 import type { ToolDescriptor, ToolEffect, ToolPolicy } from '#mcp/tool/metadata'
-import { resolveSafePath, writeToolOutput, writesFileOutput } from '#mcp/tool/output'
 import { isToolEnabled } from '#mcp/tool/policy'
-import { SELECTION_SCOPE_FILE_OUTPUT_ERROR } from '#mcp/tool/scope'
+
+import { registerCoreTools } from './registration/core'
+import { registerDocumentTools, registerListDocuments } from './registration/documents'
+import { registerFileTools } from './registration/files'
+import { registerCodegenTool, registerSettingsTools } from './registration/settings'
 
 export type RPCSender = (body: Record<string, unknown>) => Promise<unknown>
 export type MCPToolSettled = (context: ServerContext) => Promise<void>
-
-const automationTargetSchema = {
-  document_id: v.optional(
-    v.pipe(v.string(), v.description('Optional Open Pen document/tab ID to target'))
-  ),
-  page_id: v.optional(
-    v.pipe(v.string(), v.description('Optional page ID to target within the document'))
-  )
-}
-
-function splitAutomationTarget(args: Record<string, unknown>): {
-  target: { document_id?: string; page_id?: string }
-  args: Record<string, unknown>
-} {
-  const { document_id, page_id, ...rest } = args
-  const target: { document_id?: string; page_id?: string } = {}
-  if (typeof document_id === 'string') target.document_id = document_id
-  if (typeof page_id === 'string') target.page_id = page_id
-  return { target, args: rest }
-}
-
-type RPCResponse = { ok?: boolean; result?: unknown; target?: unknown; error?: string }
-
-/** The app's recent files; the server keeps only those `open_file` could reach. */
-const recentFilesResultSchema = v.object({
-  files: v.array(v.object({ path: v.string(), name: v.string(), updated_at: v.string() }))
-})
-
-async function sendCommand(
-  sendRPC: RPCSender,
-  command: string,
-  args: Record<string, unknown>
-): Promise<RPCResponse> {
-  const res = (await sendRPC({ command, args })) as RPCResponse
-  if (res.ok === false) throw new Error(res.error)
-  return res
-}
-
-function withTarget<T extends object>(body: T, res: RPCResponse): T & { target?: unknown } {
-  return res.target ? { ...body, target: res.target } : body
-}
+export type ToolRegister = <InputArgs extends v.GenericSchema>(
+  name: string,
+  options: { description?: string; inputSchema: InputArgs },
+  handler: ToolCallback<ReturnType<typeof toStandardJSONSchema<InputArgs>>>
+) => void
 
 /** Who sends a session's tool calls: any MCP client, or an ACP or Pi harness chat in the app. */
 export const MCP_AGENT_KINDS = ['mcp', 'acp', 'harness'] as const
@@ -122,11 +84,7 @@ export function registerTools(mcpServer: McpServer, options: RegisterToolsOption
   }
   const resolvedRoot = options.mcpRoot ? resolve(options.mcpRoot) : null
   const descriptors = descriptorByName(createToolDescriptors(resolvedRoot !== null))
-  const register = <InputArgs extends v.GenericSchema>(
-    name: string,
-    toolOptions: { description?: string; inputSchema: InputArgs },
-    handler: ToolCallback<ReturnType<typeof toStandardJSONSchema<InputArgs>>>
-  ) => {
+  const register: ToolRegister = (name, toolOptions, handler) => {
     const descriptor = descriptors.get(name)
     if (!descriptor) throw new Error(`Missing MCP tool descriptor for "${name}"`)
     if (!isToolEnabled(descriptor, policy)) return
@@ -148,354 +106,11 @@ export function registerTools(mcpServer: McpServer, options: RegisterToolsOption
     )
   }
 
-  for (const def of getMCPToolDefinitions()) {
-    register(
-      def.name,
-      {
-        description: def.description,
-        inputSchema: v.strictObject({ ...def.input.entries, ...automationTargetSchema })
-      },
-      async (args: Record<string, unknown>, context) => {
-        try {
-          const { target, args: toolArgs } = splitAutomationTarget(args)
-          const filePath =
-            writesFileOutput(def.name) && typeof toolArgs.path === 'string' ? toolArgs.path : null
-          if (policy.scope === 'selection' && filePath !== null) {
-            return fail(new Error(SELECTION_SCOPE_FILE_OUTPUT_ERROR))
-          }
-          const result = await sendRPC({
-            command: 'tool',
-            args: {
-              ...target,
-              name: def.name,
-              args: toolArgs,
-              agent: agent(context.mcpReq._meta),
-              // A client limited to the selection says so, whatever the server's own scope.
-              ...(policy.scope === 'selection' ? { scope: policy.scope } : {})
-            }
-          })
-          const res = result as { ok?: boolean; result?: unknown; error?: string }
-          if (res.ok === false) return fail(new Error(res.error))
-          const r = res.result as RPCJSONObject | undefined
-          if (r && filePath && resolvedRoot) {
-            const written = await writeToolOutput(def.name, r, filePath, resolvedRoot)
-            if (written) return written
-          }
-          // Only an image goes back as one; a PDF stays base64 in the JSON result, as described.
-          if (
-            r &&
-            'base64' in r &&
-            typeof r.mimeType === 'string' &&
-            r.mimeType.startsWith('image/')
-          ) {
-            const base64 = String(r.base64)
-            const bytes = Buffer.byteLength(base64, 'utf8')
-            if (bytes > MAX_RESULT_BYTES) {
-              return fail(
-                new Error(
-                  resultTooLargeMessage(
-                    `Image from "${def.name}"`,
-                    bytes,
-                    'Export a smaller region or lower the scale/resolution.'
-                  )
-                )
-              )
-            }
-            return {
-              content: [
-                {
-                  type: 'image' as const,
-                  data: base64,
-                  mimeType: r.mimeType
-                }
-              ]
-            }
-          }
-          return ok(r, def.name)
-        } catch (e) {
-          return fail(e)
-        }
-      }
-    )
-  }
-
-  register(
-    'list_documents',
-    {
-      description:
-        'List open Open Pen documents/tabs with their IDs, file paths, current pages, and pages.',
-      inputSchema: v.strictObject({})
-    },
-    async () => {
-      try {
-        const result = await sendRPC({ command: 'list_documents', args: {} })
-        const res = result as { ok?: boolean; result?: unknown; error?: string }
-        if (res.ok === false) return fail(new Error(res.error))
-        return ok(res.result ?? {})
-      } catch (e) {
-        return fail(e)
-      }
-    }
-  )
-
-  register(
-    'save_file',
-    {
-      description: resolvedRoot
-        ? 'Save the current document to disk. If path is provided, it must be inside the configured MCP root.'
-        : 'Save the current document to disk. Uses the existing file path if available, otherwise prompts for a location.',
-      inputSchema: resolvedRoot
-        ? v.strictObject({
-            path: v.optional(
-              v.pipe(
-                v.string(),
-                v.minLength(1),
-                v.description('Path for the .fig file, absolute or relative to the MCP root')
-              )
-            ),
-            ...automationTargetSchema
-          })
-        : v.strictObject({ ...automationTargetSchema })
-    },
-    async (args: { path?: string; document_id?: string; page_id?: string }) => {
-      try {
-        const safePath =
-          args.path !== undefined && resolvedRoot
-            ? await resolveSafePath(args.path, resolvedRoot)
-            : undefined
-        const { target } = splitAutomationTarget(args)
-        const result = await sendRPC({
-          command: 'save_file',
-          args: { ...target, path: safePath?.realPath }
-        })
-        const res = result as { ok?: boolean; result?: unknown; target?: unknown; error?: string }
-        if (res.ok === false) return fail(new Error(res.error))
-        const response: { saved: true; path?: string; target?: unknown } = { saved: true }
-        if (safePath) response.path = safePath.resolved
-        if (res.target) response.target = res.target
-        return ok(response)
-      } catch (e) {
-        return fail(e)
-      }
-    }
-  )
-
-  if (resolvedRoot) {
-    register(
-      'open_file',
-      {
-        description: 'Open a .fig or .pen file from inside the configured MCP root.',
-        inputSchema: v.strictObject({
-          path: v.pipe(
-            v.string(),
-            v.minLength(1),
-            v.description('Path to the design file, absolute or relative to the MCP root')
-          ),
-          ...automationTargetSchema
-        })
-      },
-      async (args: { path: string; document_id?: string; page_id?: string }) => {
-        try {
-          const safe = await resolveSafePath(args.path, resolvedRoot)
-          const { target } = splitAutomationTarget(args)
-          const result = await sendRPC({
-            command: 'open_file',
-            args: { ...target, path: safe.realPath }
-          })
-          const res = result as { ok?: boolean; result?: unknown; target?: unknown; error?: string }
-          if (res.ok === false) return fail(new Error(res.error))
-          const response: { opened: true; target?: unknown } = { opened: true }
-          if (res.target) response.target = res.target
-          return ok(response)
-        } catch (e) {
-          return fail(e)
-        }
-      }
-    )
-
-    register('list_recent_files', { inputSchema: v.strictObject({}) }, async () => {
-      try {
-        const res = await sendCommand(sendRPC, 'list_recent_files', {})
-        const { files } = v.parse(recentFilesResultSchema, res.result)
-        const insideRoot = await Promise.all(
-          files.map((file) =>
-            resolveSafePath(file.path, resolvedRoot).then(
-              () => true,
-              () => false
-            )
-          )
-        )
-        return ok({ files: files.filter((_, index) => insideRoot[index]) })
-      } catch (e) {
-        return fail(e)
-      }
-    })
-
-    register(
-      'new_document',
-      {
-        description:
-          'Create a new empty document with an optional save path inside the configured MCP root.',
-        inputSchema: v.strictObject({
-          path: v.optional(
-            v.pipe(
-              v.string(),
-              v.minLength(1),
-              v.description('Path for the new file, absolute or relative to the MCP root')
-            )
-          ),
-          ...automationTargetSchema
-        })
-      },
-      async (args: { path?: string; document_id?: string; page_id?: string }) => {
-        try {
-          const safePath =
-            args.path !== undefined ? await resolveSafePath(args.path, resolvedRoot) : undefined
-          const { target } = splitAutomationTarget(args)
-          const result = await sendRPC({
-            command: 'new_document',
-            args: { ...target, path: safePath?.realPath }
-          })
-          const res = result as { ok?: boolean; result?: unknown; target?: unknown; error?: string }
-          if (res.ok === false) return fail(new Error(res.error))
-          const response: { created: true; target?: unknown } = { created: true }
-          if (res.target) response.target = res.target
-          return ok(response)
-        } catch (e) {
-          return fail(e)
-        }
-      }
-    )
-  }
-
-  const closeEntries = {
-    unsaved: v.optional(
-      v.pipe(
-        v.picklist(['error', 'save', 'discard']),
-        v.description(
-          'What to do with unsaved changes: "error" (default) fails, "save" saves first, "discard" drops them'
-        )
-      )
-    ),
-    ...automationTargetSchema
-  }
-
-  register(
-    'close_file',
-    {
-      inputSchema: resolvedRoot
-        ? v.strictObject({
-            ...closeEntries,
-            path: v.optional(
-              v.pipe(
-                v.string(),
-                v.minLength(1),
-                v.description(
-                  'With unsaved "save": .fig path for a document never saved, inside the MCP root'
-                )
-              )
-            )
-          })
-        : v.strictObject(closeEntries)
-    },
-    async (args: {
-      unsaved?: 'error' | 'save' | 'discard'
-      path?: string
-      document_id?: string
-      page_id?: string
-    }) => {
-      try {
-        const safePath =
-          args.path !== undefined && resolvedRoot
-            ? await resolveSafePath(args.path, resolvedRoot)
-            : undefined
-        const { target } = splitAutomationTarget(args)
-        const rpcArgs: Record<string, unknown> = { ...target }
-        if (args.unsaved) rpcArgs.unsaved = args.unsaved
-        if (safePath) rpcArgs.path = safePath.realPath
-        const res = await sendCommand(sendRPC, 'close_file', rpcArgs)
-        const closed = (res.result as { closed?: boolean } | undefined)?.closed === true
-        return ok(withTarget({ closed }, res))
-      } catch (e) {
-        return fail(e)
-      }
-    }
-  )
-
-  register(
-    'activate_document',
-    {
-      inputSchema: v.strictObject({
-        document_id: v.pipe(v.string(), v.description('Document/tab ID from list_documents')),
-        page_id: automationTargetSchema.page_id
-      })
-    },
-    async (args: { document_id: string; page_id?: string }) => {
-      try {
-        const { target } = splitAutomationTarget(args)
-        const res = await sendCommand(sendRPC, 'activate_document', target)
-        return ok(withTarget({ activated: true }, res))
-      } catch (e) {
-        return fail(e)
-      }
-    }
-  )
-
-  for (const command of ['undo', 'redo'] as const) {
-    register(
-      command,
-      { inputSchema: v.strictObject({ ...automationTargetSchema }) },
-      async (args) => {
-        try {
-          const { target } = splitAutomationTarget(args)
-          const res = await sendCommand(sendRPC, command, target)
-          return ok(withTarget({ ...(res.result as RPCJSONObject | undefined) }, res))
-        } catch (e) {
-          return fail(e)
-        }
-      }
-    )
-  }
-
-  register('get_settings', { inputSchema: v.strictObject({}) }, async () => {
-    try {
-      const res = await sendCommand(sendRPC, 'get_settings', {})
-      return ok(res.result ?? {})
-    } catch (e) {
-      return fail(e)
-    }
-  })
-
-  register(
-    'update_settings',
-    {
-      inputSchema: v.strictObject({
-        settings: v.pipe(
-          v.record(v.string(), v.unknown()),
-          v.description(
-            'Partial settings, e.g. {"appearance":{"theme":"light"},"editing":{"snapping":{"pixelGrid":false}}}. Unknown keys and invalid values are rejected.'
-          )
-        )
-      })
-    },
-    async (args: { settings: Record<string, unknown> }) => {
-      try {
-        // Echo only the applied patch: with get_settings disabled, writing must not read.
-        await sendCommand(sendRPC, 'update_settings', { settings: args.settings })
-        return ok({ updated: args.settings })
-      } catch (e) {
-        return fail(e)
-      }
-    }
-  )
-
-  register(
-    'get_codegen_prompt',
-    {
-      description:
-        'Get design-to-code generation guidelines. Call before generating frontend code.',
-      inputSchema: v.strictObject({})
-    },
-    async () => ok({ prompt: CODEGEN_PROMPT })
-  )
+  const context = { register, sendRPC, policy, resolvedRoot, agent }
+  registerCoreTools(context)
+  registerListDocuments(context)
+  registerFileTools(context)
+  registerDocumentTools(context)
+  registerSettingsTools(context)
+  registerCodegenTool(context)
 }

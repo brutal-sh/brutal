@@ -71,6 +71,22 @@ export async function documentNodeX(page: Page, id: string, nodeId: string) {
   )
 }
 
+export async function documentReadState(page: Page, id: string) {
+  return page.evaluate(async (id) => {
+    const moduleURL = '/src/app/tabs/index.ts'
+    const tabs: typeof AppTabs = await import(moduleURL)
+    const tab = tabs.getTabById(id)
+    if (!tab) throw new Error('Owned document unavailable')
+    return {
+      dirty: tab.store.hasUnsavedChanges(),
+      canUndo: tab.store.undo.canUndo,
+      canRedo: tab.store.undo.canRedo,
+      selection: [...tab.store.state.selectedIds],
+      page: tab.store.state.currentPageId
+    }
+  }, id)
+}
+
 export async function documentNamedCount(page: Page, id: string, name: string) {
   return page.evaluate(
     async ({ id, name }) => {

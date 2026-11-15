@@ -5,9 +5,11 @@ Updated: 2026-11-15. Status: active; full design and functionality parity is not
 
 Current reference refresh: REA retains the installed 1.2.23 archive/outer-file inventory and delta under `local-evidence/pen-reference-1.2.23/`. REF-04 owns the [independently reviewed changed-surface catalog](pen-feature-reference/update-1.2.23-2026-11-13.md) and 13 bounded Backlog followups, with current 508-task/507-other-terminal dependency closure. No added message identifier or static declaration accepts a feature. Prior 1.2.22 receipts remain versioned; neither extracted files nor the native window correction establishes full feature parity.
 
-CLI-06 is Verify; LAYOUT-WRAP-IMPORT is the sole Building task. The [connected-session evidence](CLI-APP-CONNECTION.md)
+CLI-06 is Verify; MCP-03-READSKILL is Verify; MCP-03-GETAPPSTATE is the sole Building task. The [connected-session evidence](CLI-APP-CONNECTION.md)
 records actual Node/live-browser target pinning, refusal/retry and saved-file controls,
-including reproduced replay and renderer-replacement failures. Native/reference,
+including reproduced replay and renderer-replacement failures. The
+[bundled resource receipt](CLI-SKILL-RESOURCES.md) adds real MCP and Node guide
+delivery with preserved documents/history and explicit remaining reference gates. Native/reference,
 standalone and whole-product acceptance remain separate. REA reads and selects owned Pen controls before the Mac locks again. Current
 native comparisons wait on desktop availability; coordinate input and matched
 native/reference acceptance remain unverified. The [shared CLI contract allocation](CLI-TOOL-CONTRACTS.md)

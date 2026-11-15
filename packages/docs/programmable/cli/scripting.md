@@ -5,6 +5,15 @@ description: Execute JavaScript with a Figma-compatible Plugin API to query, bat
 
 # Scripting
 
+## Bundled guidance
+
+In an interactive session, `read_skill()` returns Open Pen's bundled guide index.
+Follow its linked resource names with `read_skill({path:"execute.md"})`. These
+resources come from the application package; paths never read local files or
+installed user skills. Reading guidance does not save the document. The MCP tool
+returns plain Markdown without an app connection in document scope, subject to
+the server's tool-access settings. Selection scope keeps its existing read tools.
+
 `openpencil eval` runs JavaScript against an OpenPencil document with a Figma-compatible `figma` global. Use it for headless batch edits, inspection, fixture setup, and automation without opening the editor UI.
 
 ## Basic usage

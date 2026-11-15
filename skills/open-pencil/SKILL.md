@@ -308,6 +308,13 @@ openpencil tool call create_page design.fig --args '{"name":"Icons"}' --write   
 
 Every command that reports structured data supports `--json` when appropriate.
 
+Interactive sessions also provide `read_skill()` for Open Pen's bundled guide
+index and `read_skill({path:"execute.md"})` for a linked resource. These names
+select packaged Markdown; they do not read local files or user-installed skills.
+Resource reads do not save the document. MCP returns plain Markdown in document
+scope without requiring an app connection, subject to tool-access settings;
+selection scope keeps its existing read tools.
+
 ## MCP Server
 
 ### Stdio MCP clients

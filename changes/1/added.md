@@ -36,3 +36,4 @@
 
 - Attach UTF-8 text and source files to agent requests and inspect their escaped content in conversation history.
 - Keep a headless document open or pin a running app document and page in an interactive tool session, use live Undo and Redo, save explicitly, and retry refused saves without losing live edits.
+- Read bundled Open Pen authoring guides through MCP and interactive CLI sessions without loading user-installed skills or local files.
