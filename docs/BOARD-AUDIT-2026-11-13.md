@@ -12,6 +12,12 @@ This readback covers all 526 open cards after the Pen 1.2.23 update catalog allo
 
 There are 508 execution tasks and 18 milestone gates: 374 Backlog, 0 Ready, 1 Building (LAYOUT-WRAP-IMPORT), 46 Verify and 87 Executed. These are workflow states, not a product-parity percentage, an estimate of unbuilt features or a beta date. Full parity and all milestone exits remain unaccepted.
 
+2026-11-15 shared CLI allocation reuses MCP-03-GETAPPSTATE / EXECUTE / READSKILL /
+GETSTYLE and MCP-04-BROWSER / AGENTS. CLI-07 explicitly requires these six plus
+CLI-05/06. No cards, primary allocations or completion states are added. The
+[contract plan](CLI-TOOL-CONTRACTS.md) separates shared semantics from client delivery;
+its dependency/readback audit is retained privately.
+
 ## Checks actually executed
 
 - Re-read the complete 526-card live board after the 13 update followups, separate normal-delivery and current-schema line leaves, and current status/parent-description updates; current states and complete dependency allocation reconcile, and the delivery/handoff descriptions match their intended bytes. Earlier catalog-description readback remains separately retained.

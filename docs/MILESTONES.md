@@ -38,3 +38,7 @@ Review after each accepted card, newly discovered failure or installed-reference
 The public-readiness milestone requires BETA-01, PARITY-ALL and REL-MAC-TRUST / REL-BETA-PACKAGE / REL-BETA-SUPPORT. Preparatory REL work can run before the terminal parity check; no execution card depends back on the public-readiness milestone. A future scope change requires an explicit revised decision and cannot retroactively accept PARITY-ALL.
 
 Every milestone's Trello card contains its linked child list, entry basis, required rollup inputs, exit criteria, decision owner and review rule. Raw card-by-card data and the filterable audit remain private under `local-evidence/board-audit-2026-11-11/`.
+
+CLI-07 also requires its six existing shared tool-contract owners and CLI-05/06;
+[the allocation](CLI-TOOL-CONTRACTS.md) changes no primary ownership, task count or
+milestone state. Each owner must pass its own criterion before aggregate CLI acceptance.
