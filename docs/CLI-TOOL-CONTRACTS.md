@@ -31,7 +31,7 @@ CLI-05 and CLI-06 own the interactive shell and connected target/session deliver
 Their bounded qualification with other tool names does not establish these six
 contracts. CLI-07 requires those two cards and the six owners above, then executes
 the combined CLI matrix. The six semantic owners retain their primary milestone allocations; the index
-now has 509 execution IDs after the separate MCP-05-SELECT discovery; shared requirements are not duplicated implementation work.
+now has 510 execution IDs after the separate MCP-05-SELECT and MCP-05-CANCEL discoveries; shared requirements are not duplicated implementation work.
 
 ## Sequence and checkpoints
 
@@ -58,7 +58,8 @@ login when real inference is required; it does not authorize paid APIs, credenti
 creation or implicit agent launches. Native/browser restart and the full agent
 lifecycle keep their separate acceptance criteria.
 
-There is one Building task: MCP-05-SELECT. MCP-03-GETAPPSTATE is Verify on its
+There is one Building task: MCP-05-CANCEL. MCP-05-SELECT is Verify on its
+[explicit selection delivery](CLI-SELECTION.md); real MCP cancellation and native/reference acceptance remain open. MCP-03-GETAPPSTATE is Verify on its
 [bounded state delivery](CLI-APP-STATE.md), with reference/native gates open. MCP-03-READSKILL is Verify on its
 [bounded software delivery](CLI-SKILL-RESOURCES.md); reference/native acceptance remains open. LAYOUT-WRAP-IMPORT returns to
 Backlog while its missing native measurements wait on desktop availability;

@@ -3,14 +3,14 @@
 2026-11-14 dependency readback also recognizes the singular `Dependency:` label.
 Three existing edges now appear in the task table: VERIFY-STORYBOOK-REFUSAL →
 BRAND-STORYBOOK-ERROR, VERIFY-GPU-SURFACE-CONTRACTS → STAB-GPU and VERIFY-DUPES-ZERO →
-MOD-DUPES-GENERATED. Their predecessors are already Executed. All509 execution IDs,
-18primary allocations and508other terminal prerequisites reconcile without unknown
+MOD-DUPES-GENERATED. Their predecessors are already Executed. All510 execution IDs,
+18primary allocations and509other terminal prerequisites reconcile without unknown
 dependencies, cycles or Executed/open-prerequisite contradictions. This does not
 infer undiscovered prerequisites or accept additional product behavior.
 
-This readback covers all 527 open cards after the Pen 1.2.23 update catalog allocation and normal Save delivery. It updates current scheduling; the [2026-11-11 audit](BOARD-AUDIT-2026-11-11.md) and intervening execution receipts remain historical. Actual Pen is the reference; OpenPencil is the implementation foundation.
+This readback covers all 528 open cards after the Pen 1.2.23 update catalog allocation and normal Save delivery. It updates current scheduling; the [2026-11-11 audit](BOARD-AUDIT-2026-11-11.md) and intervening execution receipts remain historical. Actual Pen is the reference; OpenPencil is the implementation foundation.
 
-There are 509 execution tasks and 18 milestone gates: 373 Backlog, 0 Ready, 1 Building (MCP-05-SELECT), 48 Verify and 87 Executed. These are workflow states, not a product-parity percentage, an estimate of unbuilt features or a beta date. Full parity and all milestone exits remain unaccepted.
+There are 510 execution tasks and 18 milestone gates: 373 Backlog, 0 Ready, 1 Building (MCP-05-CANCEL), 49 Verify and 87 Executed. These are workflow states, not a product-parity percentage, an estimate of unbuilt features or a beta date. Full parity and all milestone exits remain unaccepted.
 
 2026-11-15 shared CLI allocation reuses MCP-03-GETAPPSTATE / EXECUTE / READSKILL /
 GETSTYLE and MCP-04-BROWSER / AGENTS. CLI-07 explicitly requires these six plus
@@ -21,7 +21,7 @@ its dependency/readback audit is retained privately.
 ## Checks actually executed
 
 - Re-read the complete 527-card live board after the 13 update followups, separate normal-delivery and current-schema line leaves, and current status/parent-description updates; current states and complete dependency allocation reconcile, and the delivery/handoff descriptions match their intended bytes. Earlier catalog-description readback remains separately retained.
-- Reconcile 509 unique execution IDs to exactly 509 single primary milestone owners. M02 owns 114 tasks, M05 owns 82 and M07 owns 36. M04 now owns65 tasks; remaining ownership is unchanged. An existing Note-raster child link was moved from M02's historical tail into its current primary block; its rendering acceptance stays open.
+- Reconcile 510 unique execution IDs to exactly 510 single primary milestone owners. M02 owns 114 tasks, M05 owns 83 and M07 owns 36. M04 now owns65 tasks; remaining ownership is unchanged. An existing Note-raster child link was moved from M02's historical tail into its current primary block; its rendering acceptance stays open.
 - Expand PARITY-ALL to all 508 other execution IDs before validating the explicit dependency graph. There are no unknown named prerequisites, reachable cycles or Executed/open-prerequisite contradictions. This checks declared edges, not undiscovered real prerequisites or runtime behavior.
 - Preserve 18 open milestones, one Building card and no Ready cards. Catalog allocation alone promotes no feature or release gate. REF-04 has separately executed its bounded catalog criterion; FILE-NATIVE-SAVE-DELIVERY has executed its actual installed save slice.
 
@@ -141,3 +141,20 @@ Exact Pen/native/standalone/full-card acceptance stays open. MCP-05-SELECT is
 soleBuilding; complete527-card readback confirms373Backlog/1Building/48Verify/
 87Executed and525other descriptions/names/lists unchanged.509IDs/18primary
 allocations/508other terminal prerequisites remain intact.
+
+## Selection delivery handoff — 2026-11-15
+
+[Explicit selection](CLI-SELECTION.md) has bounded software evidence: 263 owner
+tests, 27 actual Node/MCP/browser cases, three outside-checkout Node controls,
+strict changed-code checks, full static zero clones and production build. All
+6,559 built files and 15 runtime/test inputs remain exact across final controls;
+17 protected file hashes/modes and three retained artifacts are preserved. The
+original valid-call/no-editor-selection, invalid-ID, ARIA and lazy-page refusal
+failures remain retained. SELECT is Verify, not accepted full parity.
+
+MCP-05-CANCEL is the sole Building task. Independent review finds the existing
+MCP RPC does not forward cancellation; actual SDK cancellation remains to be
+reproduced. This separate M05 child has no prerequisites; SELECT and MCP-05
+consume it without a backedge. There are 510 tasks/18 milestones/528 cards, with
+509 other terminal inputs and 83 primary M05 children. Native/current Pen,
+standalone, strict rendering and combined feature acceptance remain open.

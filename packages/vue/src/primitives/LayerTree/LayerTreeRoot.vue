@@ -268,6 +268,8 @@ provideLayerTree({
     as="div"
     class="flex min-h-0 flex-1 flex-col overflow-hidden"
     :items="items"
+    :model-value="[...selectedIds].map((id) => ({ id }))"
+    multiple
     :get-key="getKey"
     :get-children="getChildren"
   >

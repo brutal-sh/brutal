@@ -51,6 +51,25 @@ function target(store: EditorStore, pageId: string): AutomationTarget {
   }
 }
 
+test('a refused offscreen selection does not populate or lay out the target page', async () => {
+  const { store, pageId } = await storeWithUnshownPage()
+  store.markDocumentSaved()
+  const before = JSON.stringify([...store.graph.getAllNodes()])
+  const selection = [...store.state.selectedIds]
+  const shown = store.state.currentPageId
+  await expect(
+    handleTargetCommand(target(store, pageId), 'tool', {
+      name: 'select_nodes',
+      args: { ids: ['missing-owned-node'] }
+    })
+  ).rejects.toThrow()
+  expect(store.graph.getChildren(pageId)).toHaveLength(0)
+  expect(JSON.stringify([...store.graph.getAllNodes()])).toBe(before)
+  expect(store.state.currentPageId).toBe(shown)
+  expect([...store.state.selectedIds]).toEqual(selection)
+  expect(store.hasUnsavedChanges()).toBe(false)
+})
+
 describe('automation tools on a page that has not been shown', () => {
   test('find_nodes sees the layers of the target page', async () => {
     const { store, pageId } = await storeWithUnshownPage()

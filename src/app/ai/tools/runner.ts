@@ -21,6 +21,7 @@ import { ensureGraphFonts } from '@/app/editor/fonts'
 
 import { recordToolChange } from './changes/capture'
 import { createMutex } from './mutex'
+import { selectInEditor } from './selection'
 
 /** The reply a call belongs to: its run, and the call's id in the reply's transcript. */
 export interface ReplyCall {
@@ -28,7 +29,7 @@ export interface ReplyCall {
   toolCallId: string
 }
 
-/** One call of an OpenPencil tool, from the built-in chat, a coding agent, or another client. */
+/** One call of an Open Pen tool, from the built-in chat, a coding agent, or another client. */
 export interface EditorToolCall {
   store: EditorStore
   figma: FigmaAPI
@@ -87,10 +88,13 @@ async function execute(call: EditorToolCall, pageId: string): Promise<unknown> {
 async function recordReplyCall(
   call: EditorToolCall,
   reply: ReplyCall,
-  change: DocumentChange,
-  undoBefore: ReturnType<EditorStore['undo']['peekUndo']>,
-  viewPageId: string
+  recorded: {
+    change: DocumentChange
+    undoBefore: ReturnType<EditorStore['undo']['peekUndo']>
+    viewPageId: string
+  }
 ): Promise<void> {
+  const { change, undoBefore, viewPageId } = recorded
   const { store, figma, def } = call
   const { run, toolCallId } = reply
   if (!isEmptyDocumentChange(change)) run.changedCalls.add(toolCallId)
@@ -111,8 +115,9 @@ async function recordReplyCall(
   if (figma.currentPageId !== viewPageId) await moveRunToPage(store, run, figma.currentPageId)
 }
 
-/** Runs an edit while its document's lock is held, and records it. */
-async function editAndRecord(call: EditorToolCall, reply: ReplyCall | null): Promise<unknown> {
+/** Applies the tool while its document's lock is held; document edits record history. */
+async function applyTool(call: EditorToolCall, reply: ReplyCall | null): Promise<unknown> {
+  if (call.def.name === 'select_nodes') return selectInEditor(call)
   const { store, figma, def, args } = call
   const viewPageId = figma.currentPageId
   const pageId = writtenPageId(figma, args)
@@ -146,13 +151,13 @@ async function editAndRecord(call: EditorToolCall, reply: ReplyCall | null): Pro
     return await store.recordEditAsync(options, () => execute(call, pageId))
   } finally {
     if (reply && recorded.change) {
-      await recordReplyCall(call, reply, recorded.change, undoBefore, viewPageId)
+      await recordReplyCall(call, reply, { change: recorded.change, undoBefore, viewPageId })
     }
   }
 }
 
 /**
- * Runs one call of an OpenPencil tool. An edit runs alone in its document, is recorded as one
+ * Runs one call of an Open Pen tool. An edit runs alone in its document, is recorded as one
  * undo entry, and, for a call that belongs to a chat reply, joins the reply's run so the reply
  * can revert it and the transcript shows what it changed.
  */
@@ -178,7 +183,7 @@ export async function runEditorTool(call: EditorToolCall): Promise<unknown> {
       reply.run.beginTool()
       began = true
     }
-    return await editAndRecord(call, reply)
+    return await applyTool(call, reply)
   } finally {
     release()
     if (began) reply?.run.endTool()

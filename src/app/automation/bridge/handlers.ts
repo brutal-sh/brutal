@@ -59,6 +59,13 @@ async function dispatchTargetCommand(
   args: UnknownRecord,
   handlers: CommandHandlers
 ): Promise<unknown> {
+  // Refused selection must not populate or lay out an offscreen page.
+  if (
+    command === 'tool' &&
+    args.name === 'select_nodes' &&
+    target.pageId !== target.store.state.currentPageId
+  )
+    throw new Error('The target page is no longer visible in this document')
   if (!(await target.store.preparePageNodes(target.pageId)))
     throw new Error(`Page "${target.pageId}" was closed before it finished loading`)
   const handler = handlers[command]

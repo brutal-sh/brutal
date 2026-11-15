@@ -1,7 +1,7 @@
+import { uniq } from 'es-toolkit'
 import * as v from 'valibot'
 
-import type { FigmaNodeProxy } from '#core/figma-api'
-import { toolNumber, defineTool, nodeToResult } from '#core/tools/schema'
+import { toolNumber, defineTool, nodeToResult, NodeNotFoundError } from '#core/tools/schema'
 
 /** How far `get_selection` describes the selection's children unless asked for more. */
 const SELECTION_DEPTH = 1
@@ -35,15 +35,22 @@ export const getSelection = defineTool({
 export const selectNodes = defineTool({
   name: 'select_nodes',
 
-  description: 'Select one or more nodes by ID.',
+  description: 'Select nodes on the current page. Invalid IDs refuse the whole selection.',
   execution: { kind: 'sync', mutation: 'view' },
   input: v.strictObject({
     ids: v.pipe(v.array(v.string()), v.minLength(1), v.description('Node IDs to select'))
   }),
   execute: (figma, { ids }) => {
-    figma.currentPage.selection = ids
-      .map((id) => figma.getNodeById(id))
-      .filter((node): node is FigmaNodeProxy => node !== null)
-    return { selected: ids }
+    const page = figma.graph.getNode(figma.currentPageId)
+    if (page?.type !== 'CANVAS') throw new Error('Page not found in the selected document')
+    const nodes = uniq(ids).map((id) => {
+      const node = figma.getNodeById(id)
+      if (!node) throw new NodeNotFoundError(id)
+      if (node.type === 'CANVAS' || figma.graph.pageOf(id) !== page.id)
+        throw new Error(`Node "${id}" is not a selectable layer on the current page`)
+      return node
+    })
+    figma.currentPage.selection = nodes
+    return { selected: nodes.map((node) => node.id) }
   }
 })
