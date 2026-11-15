@@ -12,7 +12,7 @@ import {
   setTextProperties,
   updateNode
 } from '#core/tools/modify'
-import { diffJSX, findNodes, getJSX, getNode, getSelection } from '#core/tools/read'
+import { diffJSX, findNodes, getAppState, getJSX, getNode, getSelection } from '#core/tools/read'
 import { readSkill } from '#core/tools/resources'
 import type { ToolDef } from '#core/tools/schema'
 import { stockPhoto } from '#core/tools/stock-photo'
@@ -25,6 +25,7 @@ import { viewportZoomToFit } from '#core/tools/vector'
 export const CORE_TOOLS: ToolDef[] = [
   // Read
   readSkill,
+  getAppState,
   getSelection,
   getNode,
   findNodes,

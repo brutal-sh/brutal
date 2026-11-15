@@ -30,12 +30,13 @@ dated 1.2.22 receipts are historical. Access limits remain explicit.
 CLI-05 and CLI-06 own the interactive shell and connected target/session delivery.
 Their bounded qualification with other tool names does not establish these six
 contracts. CLI-07 requires those two cards and the six owners above, then executes
-the combined CLI matrix. Primary milestone allocations and all 508 execution IDs
-remain unchanged; shared requirements are not duplicated implementation work.
+the combined CLI matrix. The six semantic owners retain their primary milestone allocations; the index
+now has 509 execution IDs after the separate MCP-05-SELECT discovery; shared requirements are not duplicated implementation work.
 
 ## Sequence and checkpoints
 
-Now, establish `get_app_state` and `read_skill` contracts and map each documented
+The [resource](CLI-SKILL-RESOURCES.md) and [app-state](CLI-APP-STATE.md)
+software candidates retain separate unaccepted reference/native gates. Now map each documented
 execute operation to its existing owning implementation. An unknown schema or
 inaccessible reference result stays unknown. A confirmed independent missing
 operation is split before expanding the execute card.
@@ -57,7 +58,8 @@ login when real inference is required; it does not authorize paid APIs, credenti
 creation or implicit agent launches. Native/browser restart and the full agent
 lifecycle keep their separate acceptance criteria.
 
-There is one Building task: MCP-03-GETAPPSTATE. MCP-03-READSKILL is Verify on its
+There is one Building task: MCP-05-SELECT. MCP-03-GETAPPSTATE is Verify on its
+[bounded state delivery](CLI-APP-STATE.md), with reference/native gates open. MCP-03-READSKILL is Verify on its
 [bounded software delivery](CLI-SKILL-RESOURCES.md); reference/native acceptance remains open. LAYOUT-WRAP-IMPORT returns to
 Backlog while its missing native measurements wait on desktop availability;
 its owned inputs, red regression and exact re-entry remain retained. No beta date follows

@@ -3,14 +3,14 @@
 2026-11-14 dependency readback also recognizes the singular `Dependency:` label.
 Three existing edges now appear in the task table: VERIFY-STORYBOOK-REFUSAL →
 BRAND-STORYBOOK-ERROR, VERIFY-GPU-SURFACE-CONTRACTS → STAB-GPU and VERIFY-DUPES-ZERO →
-MOD-DUPES-GENERATED. Their predecessors are already Executed. All508 execution IDs,
-18primary allocations and507other terminal prerequisites reconcile without unknown
+MOD-DUPES-GENERATED. Their predecessors are already Executed. All509 execution IDs,
+18primary allocations and508other terminal prerequisites reconcile without unknown
 dependencies, cycles or Executed/open-prerequisite contradictions. This does not
 infer undiscovered prerequisites or accept additional product behavior.
 
-This readback covers all 526 open cards after the Pen 1.2.23 update catalog allocation and normal Save delivery. It updates current scheduling; the [2026-11-11 audit](BOARD-AUDIT-2026-11-11.md) and intervening execution receipts remain historical. Actual Pen is the reference; OpenPencil is the implementation foundation.
+This readback covers all 527 open cards after the Pen 1.2.23 update catalog allocation and normal Save delivery. It updates current scheduling; the [2026-11-11 audit](BOARD-AUDIT-2026-11-11.md) and intervening execution receipts remain historical. Actual Pen is the reference; OpenPencil is the implementation foundation.
 
-There are 508 execution tasks and 18 milestone gates: 373 Backlog, 0 Ready, 1 Building (MCP-03-GETAPPSTATE), 47 Verify and 87 Executed. These are workflow states, not a product-parity percentage, an estimate of unbuilt features or a beta date. Full parity and all milestone exits remain unaccepted.
+There are 509 execution tasks and 18 milestone gates: 373 Backlog, 0 Ready, 1 Building (MCP-05-SELECT), 48 Verify and 87 Executed. These are workflow states, not a product-parity percentage, an estimate of unbuilt features or a beta date. Full parity and all milestone exits remain unaccepted.
 
 2026-11-15 shared CLI allocation reuses MCP-03-GETAPPSTATE / EXECUTE / READSKILL /
 GETSTYLE and MCP-04-BROWSER / AGENTS. CLI-07 explicitly requires these six plus
@@ -20,9 +20,9 @@ its dependency/readback audit is retained privately.
 
 ## Checks actually executed
 
-- Re-read the complete 526-card live board after the 13 update followups, separate normal-delivery and current-schema line leaves, and current status/parent-description updates; current states and complete dependency allocation reconcile, and the delivery/handoff descriptions match their intended bytes. Earlier catalog-description readback remains separately retained.
-- Reconcile 508 unique execution IDs to exactly 508 single primary milestone owners. M02 owns 114 tasks, M05 owns 81 and M07 owns 36. M04 now owns65 tasks; remaining ownership is unchanged. An existing Note-raster child link was moved from M02's historical tail into its current primary block; its rendering acceptance stays open.
-- Expand PARITY-ALL to all 507 other execution IDs before validating the explicit dependency graph. There are no unknown named prerequisites, reachable cycles or Executed/open-prerequisite contradictions. This checks declared edges, not undiscovered real prerequisites or runtime behavior.
+- Re-read the complete 527-card live board after the 13 update followups, separate normal-delivery and current-schema line leaves, and current status/parent-description updates; current states and complete dependency allocation reconcile, and the delivery/handoff descriptions match their intended bytes. Earlier catalog-description readback remains separately retained.
+- Reconcile 509 unique execution IDs to exactly 509 single primary milestone owners. M02 owns 114 tasks, M05 owns 82 and M07 owns 36. M04 now owns65 tasks; remaining ownership is unchanged. An existing Note-raster child link was moved from M02's historical tail into its current primary block; its rendering acceptance stays open.
+- Expand PARITY-ALL to all 508 other execution IDs before validating the explicit dependency graph. There are no unknown named prerequisites, reachable cycles or Executed/open-prerequisite contradictions. This checks declared edges, not undiscovered real prerequisites or runtime behavior.
 - Preserve 18 open milestones, one Building card and no Ready cards. Catalog allocation alone promotes no feature or release gate. REF-04 has separately executed its bounded catalog criterion; FILE-NATIVE-SAVE-DELIVERY has executed its actual installed save slice.
 
 ## New bounded followups
@@ -123,3 +123,21 @@ equivalence, native delivery and full acceptance remain open. MCP-03-GETAPPSTATE
 is the sole Building task. Both card descriptions/states are exactly read back;
 all524other card descriptions/names/lists are unchanged, with526cards total.
 The508task IDs,18primary allocations and507other terminal prerequisites persist.
+
+2026-11-15 selection-delivery discovery adds one bounded Backlog leaf,
+[MCP-05-SELECT](https://trello.com/c/zValTMfQ/527-mcp-05-select-deliver-explicit-selection-to-the-targeted-editor), primaryM05, consumed by MCP-05. A built Node connected select_nodes call
+returns success while actual editor selection remains empty; retain the original
+red receipt separately from the read-only app-state candidate. The complete
+readback has527cards/509tasks/18milestones,374Backlog/1Building/47Verify/87Executed;
+GETAPPSTATE remains soleBuilding. Only the new leaf and three linked parents
+change;523other descriptions/names/lists are unchanged. M05 has82primary children;
+PARITY-ALL expands all508other required tasks. No acceptance state is promoted.
+
+2026-11-15 state delivery moves GETAPPSTATE to Verify after the
+[bounded software receipt](CLI-APP-STATE.md):277owner passes/1platformskip,
+22stable actualNode/realMCP/browser cases with0skip/retry/flaky results, fullcheck
+and productionbuild0/zero clones,6559built files unchanged across controls.
+Exact Pen/native/standalone/full-card acceptance stays open. MCP-05-SELECT is
+soleBuilding; complete527-card readback confirms373Backlog/1Building/48Verify/
+87Executed and525other descriptions/names/lists unchanged.509IDs/18primary
+allocations/508other terminal prerequisites remain intact.

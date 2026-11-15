@@ -14,6 +14,18 @@ installed user skills. Reading guidance does not save the document. The MCP tool
 returns plain Markdown without an app connection in document scope, subject to
 the server's tool-access settings. Selection scope keeps its existing read tools.
 
+## App state
+
+`get_app_state()` reads the current session's graph identity, page and selected
+layer summaries. The independent result contains `graph: {rootId, name}`,
+`page: {id, name}` and `selection: [{id, name, type}]`. A graph root ID is not an
+automation document/tab ID. Connected sessions retain their existing pinned
+document/page and refuse disappeared or replaced targets. Reading state does
+not change selection, view, history or saved files; a missing page is refused.
+The semantic input accepts no arguments. MCP additionally accepts its existing
+`document_id` and `page_id` transport targeting fields. Exact Pen response
+equivalence and normal native delivery require their separate acceptance checks.
+
 `openpencil eval` runs JavaScript against an OpenPencil document with a Figma-compatible `figma` global. Use it for headless batch edits, inspection, fixture setup, and automation without opening the editor UI.
 
 ## Basic usage

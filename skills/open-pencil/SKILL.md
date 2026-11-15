@@ -315,6 +315,13 @@ Resource reads do not save the document. MCP returns plain Markdown in document
 scope without requiring an app connection, subject to tool-access settings;
 selection scope keeps its existing read tools.
 
+Use `get_app_state()` to inspect the session's graph/page and selected layer
+summaries without changing the document or its view. Its independent result has
+`graph: {rootId, name}`, `page: {id, name}` and `selection: [{id, name, type}]`.
+The graph root ID is not an app document/tab target ID. Connected sessions keep
+their pinned target and refuse closed/replaced targets; exact Pen result
+equivalence and normal native delivery remain separate acceptance gates.
+
 ## MCP Server
 
 ### Stdio MCP clients

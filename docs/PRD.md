@@ -3,9 +3,9 @@
 Decision owner: Jason Poindexter. Implementation and evidence owner: Codex.
 Updated: 2026-11-15. Status: active; full design and functionality parity is not achieved.
 
-Current reference refresh: REA retains the installed 1.2.23 archive/outer-file inventory and delta under `local-evidence/pen-reference-1.2.23/`. REF-04 owns the [independently reviewed changed-surface catalog](pen-feature-reference/update-1.2.23-2026-11-13.md) and 13 bounded Backlog followups, with current 508-task/507-other-terminal dependency closure. No added message identifier or static declaration accepts a feature. Prior 1.2.22 receipts remain versioned; neither extracted files nor the native window correction establishes full feature parity.
+Current reference refresh: REA retains the installed 1.2.23 archive/outer-file inventory and delta under `local-evidence/pen-reference-1.2.23/`. REF-04 owns the [independently reviewed changed-surface catalog](pen-feature-reference/update-1.2.23-2026-11-13.md) and 13 bounded Backlog followups, with current 509-task/508-other-terminal dependency closure. No added message identifier or static declaration accepts a feature. Prior 1.2.22 receipts remain versioned; neither extracted files nor the native window correction establishes full feature parity.
 
-CLI-06 is Verify; MCP-03-READSKILL is Verify; MCP-03-GETAPPSTATE is the sole Building task. The [connected-session evidence](CLI-APP-CONNECTION.md)
+CLI-06 is Verify; MCP-03-READSKILL is Verify; MCP-03-GETAPPSTATE is Verify; MCP-05-SELECT is the sole Building task. The [connected-session evidence](CLI-APP-CONNECTION.md)
 records actual Node/live-browser target pinning, refusal/retry and saved-file controls,
 including reproduced replay and renderer-replacement failures. The
 [bundled resource receipt](CLI-SKILL-RESOURCES.md) adds real MCP and Node guide

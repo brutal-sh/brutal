@@ -73,6 +73,11 @@
       "import": "./dist/design-jsx/index.js",
       "default": "./dist/design-jsx/index.js"
     },
+    "./tools/read/schema": {
+      "types": "./dist/tools/read/schema.d.ts",
+      "import": "./dist/tools/read/schema.js",
+      "default": "./dist/tools/read/schema.js"
+    },
     "./tools": {
       "types": "./dist/tools/index.d.ts",
       "import": "./dist/tools/index.js",
