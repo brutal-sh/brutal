@@ -1,28 +1,17 @@
 # Tracking
 
-Updated: 2026-11-14. The full independent design and functionality parity target remains required. The replacement controller goal is Active and follows the audited plan.
+Updated: 2026-11-16. Controller goal: **active**, explicitly created after Jason cleared the prior goal. The [refreshed instructions](GOAL-REFRESH-2026-11-16.md) now govern the work. Full independent design and functionality parity remains required.
 
-Repository: [private Open Pen repository](https://github.com/jpoindexter/open-pen), branch `feat/open-pen`.
-Board: [Open Pen — independent design editor](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor), private.
+Repository: [private Open Pen](https://github.com/jpoindexter/open-pen), branch `feat/open-pen`; draft PR1. Planning edits are local to `scratch/note-candidate-checkout` and unpublished.
+Board: [Open Pen](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor).
 
-The [PRD](PRD.md) owns the outcome, constraints and release criteria.
-The [task index](TASKS.md) links all 507 execution cards; the [modularity audit](MODULARITY.md)
-records the measured review queue. Requirements come from the [feature catalog](pen-feature-reference/README.md)
-and the [native screen/menu ledger](PARITY-STATE-MATRIX.md), preserving historical Pen 1.2.21 evidence and the [1.2.22 historical inventory](pen-feature-reference/update-1.2.22-2026-11-09.md) plus [current 1.2.23 catalog](pen-feature-reference/update-1.2.23-2026-11-13.md).
+Current complete Trello readback: **554 cards / 536 execution tasks / 18 milestones**; **395 Backlog / 0 Ready / 1 reserved Building slot (MOD-20) / 52 Verify / 88 Executed**. All primary owners and 535 other terminal dependencies reconcile without unknown IDs, cycles or Executed/open-prerequisite contradictions. All milestone exits remain open.
 
-Current execution readback — 2026-11-14
+[PRD](PRD.md) owns the outcome and constraints; [TASKS](TASKS.md) is exact task/dependency membership; [MILESTONES](MILESTONES.md) owns outcome exits; [current audit](BOARD-AUDIT-2026-11-16.md) owns reconciliation. The [latest reference update](pen-feature-reference/update-audit-2026-11-16.md) covers the welcome flow and newsletter, with private evidence under `local-evidence/pen-welcome-2026-11-16/`, `pen-mail-update-2026-11-16/` and `planning-refresh-2026-11-16/`.
 
-The complete board readback has 525 cards: 507 execution tasks and 18 milestones, with 374 Backlog / 0 Ready / 1 Building (CLI-06) / 45 Verify / 87 Executed. All 507 single primary owners and 506 other terminal prerequisites reconcile without unknown declared dependencies, cycles or Executed/open-prerequisite contradictions. The 13 current-reference followups stay Backlog. The [current audit](BOARD-AUDIT-2026-11-13.md) separates current state from historical snapshots below.
+Now: refresh state and publish the already qualified importer candidate with exact owned paths and protected-work checks. MOD-19 remains Verify with MOD-16/live-Figma/native gates open. MOD-20 remains reserved for software review with MOD-17 open. Existing strict/reference/native failures are preserved; no accepted criterion is broadened by the 25 new Backlog leaves or 29 description updates.
 
-[REF-04](pen-feature-reference/update-1.2.23-2026-11-13.md) is bounded Executed for its independently reviewed catalog. [Normal Save delivery](NATIVE-SAVE-DELIVERY.md) is bounded Executed on installed `db4e528c`: actual Cancel, explicit copy, edit, announced read-only refusal, OK, restored permissions, successful Save and clean reopen preserve the original workspace and older recovery data. FILE-NATIVE-SAVE-UI remains Verify for matched critical-alert pixels.
-
-Now: [CLI-06](https://trello.com/c/rz1JCTOt/335-cli-06-interactive-app-connection) is the sole Building card for live, isolated app-connected targeting across two owned documents. [CLI-05](CLI-INTERACTIVE.md) is Verify after actual Node/PTY save, exit, interruption, failed-call/Save retry, image retention and rollback controls, 1,655 affected cases, 62 browser cases, strict limits, full repository/production build and independent review. Actual Pen tool-name/execute, connected route, native reopen, standalone/release trust and earlier Note/wrap/resource-pixel failures remain open. Normal installed db4e528c and protected work are unchanged; no milestone/full-parity/beta acceptance.
-
-The current Actions-policy audit reads all 199 authenticated owned repositories; all report disabled, with no setting changes or unverified repositories. This is a current configuration receipt, not billing or future-repository acceptance. Private inventory: `local-evidence/actions-policy-2026-11-13/`.
-
-[The new recovery comparison](RECOVERY-DECISION-LIFECYCLE.md) retains 25 diagnostic/comparison outcomes. Current observer-free five-case acceptance passes, but legacy deadline stacks can arise during teardown; independent review rejects using those later stacks to locate the first expiry. FILE-RECOVERY-CANCEL returns Verify with the original Home-state cause unresolved and no production repair claim.
-
-The original 2026-11-11 audit readback contains 479 cards: 461 execution tasks and 18 milestones. Lists are 380 Backlog, 3 Ready, 0 Building, 24 Verify and 54 Executed. [The audit](BOARD-AUDIT-2026-11-11.md) and [milestone exit gates](MILESTONES.md) own the current reconciliation; earlier snapshots below remain historical.
+Historical readbacks below remain dated receipts, not the current goal status or scheduling. Exact prior tracking text is archived privately under `local-evidence/planning-refresh-2026-11-16/docs-before/TRACKING.md`.
 
 Historical execution readback — 2026-11-12
 

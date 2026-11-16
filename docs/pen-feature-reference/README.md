@@ -362,3 +362,7 @@ The refresh also clarifies existing custom-provider limits/token options (AUTH-0
 The inventory contains 164 requirements: the original 152 across 23 historical chapter pages plus 12 current-documentation deltas. The current navigation resolves to 22 chapter pages plus the landing page; five design-system routes move and Design as Code redirects to .pen Files. It covers documented features; it cannot prove discovery of undocumented or account/OS-specific behavior. Every native surface still requires direct comparison. The private HTML cache is research evidence, not shipped documentation or production code.
 
 Re-entry: compare the remaining paint/inspector states, then the first open inspector/menu state in the native ledger. Keep this catalog and its JSON in the same change when requirements or acceptance evidence change.
+
+## 16 November 2026 reference reconciliation
+
+The [welcome and newsletter audit](update-audit-2026-11-16.md) adds seven observed welcome states and maps each reported update to bounded owners. The installed artifact remains 1.2.23. All 25 new leaves are Backlog; interactions/performance/model availability remain unaccepted. The [current board audit](../BOARD-AUDIT-2026-11-16.md) supersedes older scheduling snapshots.

@@ -1,3 +1,5 @@
+> Historical audit. Current scheduling, membership and paused-goal state are in [the 16 November audit](BOARD-AUDIT-2026-11-16.md).
+
 # Open Pen current board reconciliation — 2026-11-16
 
 Current dependency readback also recognizes the singular `Dependency:` label.
@@ -10,7 +12,7 @@ infer undiscovered prerequisites or accept additional product behavior.
 
 This readback covers all 529 open cards after the Pen 1.2.23 update catalog allocation and normal Save delivery. It updates current scheduling; the [2026-11-11 audit](BOARD-AUDIT-2026-11-11.md) and intervening execution receipts remain historical. Actual Pen is the reference; OpenPencil is the implementation foundation.
 
-There are 511 execution tasks and 18 milestone gates: 371 Backlog, 0 Ready, 1 Building (LAYOUT-WRAP-IMPORT), 51 Verify and 88 Executed. These are workflow states, not a product-parity percentage, an estimate of unbuilt features or a beta date. Full parity and all milestone exits remain unaccepted.
+There are 511 execution tasks and 18 milestone gates: 370 Backlog, 0 Ready, 1 Building (MOD-20), 52 Verify and 88 Executed. These are workflow states, not a product-parity percentage, an estimate of unbuilt features or a beta date. Full parity and all milestone exits remain unaccepted.
 
 2026-11-15 shared CLI allocation reuses MCP-03-GETAPPSTATE / EXECUTE / READSKILL /
 GETSTYLE and MCP-04-BROWSER / AGENTS. CLI-07 explicitly requires these six plus
@@ -201,3 +203,9 @@ Earlier allocation and scheduling counts remain dated historical snapshots.
 Current handoff (2026-11-16): MCP-06-SAVE is the sole Building card. LAYOUT-WRAP-IMPORT returns Backlog with the new fixed40 reference mismatch retained; current-child and Save/reopen reference gates remain open. Counts remain372Backlog/0Ready/1Building/50Verify/88Executed across511tasks; all18milestone exits remain open.
 
 Latest scheduling (2026-11-16): MCP-06-SAVE enters Verify after its own software/native URI Save qualification at `d73451a34`; vendor-runtime comparison remains unaccepted and the MCP quota binding. LAYOUT-WRAP-IMPORT resumes sole Building after REF-04. Readback covers529cards/511tasks/18milestones, with371Backlog/0Ready/1Building/51Verify/88Executed. No milestone or terminal acceptance changes.
+
+## Latest importer qualification and planning readback — 2026-11-16
+
+MOD-19 enters Verify after the [bounded software qualification](FIG-IMPORT-COORDINATION.md); MOD-16/live-Figma and native delivery remain unaccepted. MOD-20 is sole Building for the remaining exporter review; MOD-17 remains Verify. LAYOUT-WRAP-IMPORT remains Backlog with both reader failures preserved while macOS reports locked. The current terminal card corrects stale current counts to 511 tasks / 510 other prerequisites and labels the November 13 closure as historical; no historical receipt is deleted.
+
+All 529 cards / 511 execution tasks / 18 primary milestone allocations reconcile. Counts are 370 Backlog / 0 Ready / 1 Building / 52 Verify / 88 Executed. The audit reads bounded primary-child declarations, recognizes singular and plural dependency fields, and expands the expressly declared all-510 terminal membership from the canonical task index. It retains failed parser diagnostics separately rather than treating differently formatted fields as missing work. No milestone exit or product parity follows from graph consistency.

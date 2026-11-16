@@ -1,20 +1,13 @@
 # Open Pen product requirements
 
-Decision owner: Jason Poindexter. Implementation and evidence owner: Codex.
-Updated: 2026-11-15. Status: active; full design and functionality parity is not achieved.
+Decision owner: Jason Poindexter. Implementation/evidence owner: Codex.
+Updated: 2026-11-16. Controller goal: **active**; full design and functionality parity remains required and unaccepted.
 
-Current reference refresh: REA retains the installed 1.2.23 archive/outer-file inventory and delta under `local-evidence/pen-reference-1.2.23/`. REF-04 owns the [independently reviewed changed-surface catalog](pen-feature-reference/update-1.2.23-2026-11-13.md) and 13 bounded Backlog followups, with current 511-task/510-other-terminal dependency closure. No added message identifier or static declaration accepts a feature. Prior 1.2.22 receipts remain versioned; neither extracted files nor the native window correction establishes full feature parity.
+Current reference is actual Pen **1.2.23**, ASAR `d0c5c23a3a86ec1802c8754b59e82600d815f0e2b6a383f655319535e6e07925`. The [16 November update audit](pen-feature-reference/update-audit-2026-11-16.md) adds seven welcome screens and reconciles the THEFT-account newsletter. REA 6.9.0 executed a read-only capture of the current editor; full static reconstruction still rejects bundled-helper integrity. Source facts, user screenshots and reported marketing claims remain distinct from executed behavior.
 
-CLI-06 is Verify; MCP-03-READSKILL is Verify; MCP-03-GETAPPSTATE is Verify; MCP-05-SELECT is Verify; MCP-05-CANCEL is Verify; STAB-FIG-RECOVERY-WORKER is the sole Building task. The [connected-session evidence](CLI-APP-CONNECTION.md)
-records actual Node/live-browser target pinning, refusal/retry and saved-file controls,
-including reproduced replay and renderer-replacement failures. The
-[bundled resource receipt](CLI-SKILL-RESOURCES.md) adds real MCP and Node guide
-delivery with preserved documents/history and explicit remaining reference gates. Native/reference,
-standalone and whole-product acceptance remain separate. REA reads and selects owned Pen controls before the Mac locks again. Current
-native comparisons wait on desktop availability; coordinate input and matched
-native/reference acceptance remain unverified. The [shared CLI contract allocation](CLI-TOOL-CONTRACTS.md)
-links CLI-07 to its six existing semantic owners and CLI-05/06, without adding cards
-or accepting behavior.
+The live board and [task index](TASKS.md) reconcile **554 cards / 536 execution tasks / 18 milestones**, with 535 other terminal prerequisites. All 25 new leaves are Backlog. Existing requirements and native ledger rows remain binding; every newly discovered applicable state is also required. The [current audit](BOARD-AUDIT-2026-11-16.md) records exact reconciliation and [milestones](MILESTONES.md) define three welcome checkpoints within M05.
+
+Current unpublished handoff: MOD-19 is Verify after bounded importer software qualification; MOD-16/live-Figma and new native acceptance remain open. MOD-20 has the sole reserved Building slot for bounded exporter review, with MOD-17 still Verify. Reconcile/publish the preserved importer candidate before new implementation under the refreshed active goal. Native Save pixels, traffic-light pointer dragging, saved-import and strict Note failures remain unaccepted. The latest Pen editor capture succeeded; historical locked/hidden-window receipts are not current desktop blockers.
 
 ## Product outcome
 
@@ -119,7 +112,7 @@ vendor account. Hosted inference and other external services retain their own co
 
 Retain all original 152 documented requirements and the native screen/menu ledger. The
 2026-11-06 refresh adds 12 documentary deltas, for 164 allocated requirements. Qualify each
-delta against installed Pen 1.2.22, preserving historical 1.2.21 receipts, or record specific newer-only evidence before changing
+delta against installed Pen 1.2.23, preserving historical 1.2.21/1.2.22 receipts, or record specific newer-only evidence before changing
 implementation scope; do not silently upgrade schema or discard older node data. Split requirements
 that cover separate providers, platforms, tools or inspector domains into smaller tasks. Add
 newly observed states to the same traceability map before implementing them. Existing evidence
@@ -137,9 +130,13 @@ Do not rename compatibility protocols or package imports merely to remove a spel
 source. Do not rename an external provider as if Open Pen operates it. Do not split cohesive
 types/catalogs into arbitrary microfiles or weaken validation to reduce line counts.
 
-## Delivery sequence
+## Historical delivery sequence — superseded
 
-The historical [complete audit](BOARD-AUDIT-2026-11-11.md) reconciles 461 execution tasks and 18 real milestone gates; the current 489-task index includes later bounded findings. The installed reference is rechecked as Pen 1.2.22 with unchanged archive identity; the earlier complete outer-file comparison and old 1.2.21 receipts remain dated evidence. All 164 catalog requirements and 22 native rows have allocated acceptance work. That coverage is not full acceptance.
+The sequence below is retained historical planning, including its old task count,
+reference version and Now/Next assignments. Current execution follows the importer
+handoff above, [Tracking](TRACKING.md) and [Milestones](MILESTONES.md).
+
+The historical [complete audit](BOARD-AUDIT-2026-11-11.md) reconciles 461 execution tasks and 18 real milestone gates; the subsequent index at that snapshot has 489 tasks. Its reference is Pen 1.2.22; the earlier complete outer-file comparison and old 1.2.21 receipts retain their original scope. All 164 catalog requirements and 22 native rows have allocated acceptance work. That coverage is not full acceptance.
 
 | Horizon          | Outcome                                                         | Evidence checkpoint                                                                                                                                                                                                                                                                                                                                                                                                          |
 | ---------------- | --------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
