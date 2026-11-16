@@ -1,8 +1,8 @@
 # Recovery workers and browser reload
 
-STAB-FIG-RECOVERY-WORKER remains Building. This document records a software
-candidate and its limits; native recovery, the entire FILE-07 workflow and full
-Pen design/functionality parity remain unaccepted.
+STAB-FIG-RECOVERY-WORKER executes its bounded software and isolated macOS
+recovery criterion at `b90d1a15bfcabbff9294dabb3dd4e667a32f30c1`. The entire
+FILE-07 workflow, normal installed delivery and full Pen parity remain unaccepted.
 
 ## Observed failure and scope
 
@@ -87,7 +87,32 @@ retained locally and restored byte-exact; the frozen inputs match afterward.
 This supports the demonstrated lifecycle correction without claiming every
 historical worker occurrence is classified.
 
-The corresponding isolated macOS native path remains required. Full unit/browser
-suites, standalone delivery, current Pen pixel/tool equivalence and full product
-parity remain unaccepted. The installed normal app is preserved. The goal remains
-Active. Evidence: `local-evidence/fig-recovery-worker-2026-11-16/stable-software-qualification.json`.
+The corresponding isolated macOS control also passes against a separately built
+native-test binary at the same source SHA. Its two dirty external PEN documents
+produce distinct FIG archives that decode through Core IO. Normal WebView reload
+and an identity-guarded SIGKILL preserve both accepted archives and both original
+files' bytes, modes and modification times. A fresh process restores A, executes
+Duplicate/Undo and explicitly saves A while B's original and backup remain exact.
+It then restores and saves B; only each saved document's backup clears. A third
+process reopens both saved files with their distinct contents and file modes,
+without stale recovery rows. The existing single-file crash/restore control and
+cross-profile native store-isolation control also pass on this binary.
+
+The accepted two-document run has no transport retries or script timeouts. Native
+tab selection uses focus and Enter: the embedded driver's `elementClick` calls
+`el.click()` without `mousedown`, so this does not prove physical pointer delivery.
+Navigation readiness uses the installed service's native evaluation channel at
+the allocated test-driver port. Earlier wrong-runtime, URL-API, startup/tab-input
+and unconfigured-channel failures remain retained. The driver warns about cleanup
+connections after the deliberately killed process and an unavailable unused
+external driver; the selected embedded driver runs successfully. No event/error
+filter, timeout increase, assertion waiver or product hook is added.
+
+All tracked native-checkout sources and the tested binary remain exact afterward;
+the older test binary, normal installed app and protected work remain unchanged.
+This accepts the bounded recovery leaf, not the complete native, unit or browser
+suites, power-loss durability, normal installed journey, current Pen pixel/tool
+equivalence or full parity. All milestone exits remain open and the goal remains
+Active. Evidence: `local-evidence/fig-recovery-worker-2026-11-16/` contains
+`stable-software-qualification.json`, `native-qualification.json`, both accepted
+native FIG archives and the original failure logs.

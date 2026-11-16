@@ -10,7 +10,7 @@ infer undiscovered prerequisites or accept additional product behavior.
 
 This readback covers all 529 open cards after the Pen 1.2.23 update catalog allocation and normal Save delivery. It updates current scheduling; the [2026-11-11 audit](BOARD-AUDIT-2026-11-11.md) and intervening execution receipts remain historical. Actual Pen is the reference; OpenPencil is the implementation foundation.
 
-There are 511 execution tasks and 18 milestone gates: 373 Backlog, 0 Ready, 1 Building (STAB-FIG-RECOVERY-WORKER), 50 Verify and 87 Executed. These are workflow states, not a product-parity percentage, an estimate of unbuilt features or a beta date. Full parity and all milestone exits remain unaccepted.
+There are 511 execution tasks and 18 milestone gates: 372 Backlog, 0 Ready, 1 Building (LAYOUT-WRAP-IMPORT), 50 Verify and 88 Executed. These are workflow states, not a product-parity percentage, an estimate of unbuilt features or a beta date. Full parity and all milestone exits remain unaccepted.
 
 2026-11-15 shared CLI allocation reuses MCP-03-GETAPPSTATE / EXECUTE / READSKILL /
 GETSTYLE and MCP-04-BROWSER / AGENTS. CLI-07 explicitly requires these six plus
@@ -116,7 +116,6 @@ allmilestone exits and the full parity goal stay open.
 
 CLI-06 enters Verify after188owner cases/652assertions, full check0/zero clones, production build0 and35actual Node/live-browser controls with no skips/retries/unexpected/flaky cases. The matching app advertises unique document identities; older bridges are refused before opening a file. Source and scoped limits are in [Connected CLI](CLI-APP-CONNECTION.md). LAYOUT-WRAP-IMPORT becomes the sole Building card;374Backlog/46Verify/87Executed plus1Building reconcile to508tasks. All18milestones stay open; native/reference/tool-name/standalone and full parity are not accepted.
 
-
 2026-11-15 resource delivery: MCP-03-READSKILL moves to Verify after
 [bounded software qualification](CLI-SKILL-RESOURCES.md); current Pen payload
 equivalence, native delivery and full acceptance remain open. MCP-03-GETAPPSTATE
@@ -189,3 +188,12 @@ multi-tab worker observation. Current lists: 373 Backlog/0 Ready/1 Building/
 50 Verify/87 Executed across 511 tasks and 18 open milestones. Earlier
 allocation-time snapshots above remain historical. The [software receipt](CLI-CANCELLATION.md)
 does not accept full native/reference/standalone, recovery, milestone or parity gates.
+
+Recovery qualification and next work — 2026-11-16: STAB-FIG-RECOVERY-WORKER is
+bounded Executed after 34 owner, 54 browser/MCP, six original-sequence controls
+and isolated native archive/reload/SIGKILL/Restore/separate Save/fresh-process
+reopen evidence. Source b90d1a15b; [evidence and limits](RECOVERY-WORKERS.md).
+LAYOUT-WRAP-IMPORT resumes as sole Building; its prerequisite REF-04 is Executed.
+Current counts: 529 cards, 511 tasks, 18 milestones; 372 Backlog/0 Ready/1 Building/
+50 Verify/88 Executed. All milestone exits, FILE-07 and full parity remain open.
+Earlier allocation and scheduling counts remain dated historical snapshots.
