@@ -1,9 +1,44 @@
-import { expect, test, useEditorSetup } from '#tests/e2e/fixtures'
+import { expect, test, useIsolatedEditorSetupWithClear } from '#tests/e2e/fixtures'
+import { mockOfficialCloudDiscovery } from '#tests/helpers/cloud/discovery'
 
-const editor = useEditorSetup()
+const editor = useIsolatedEditorSetupWithClear('/', mockOfficialCloudDiscovery)
 
 test('populates a real lazy FIG page in the retained parse worker', async () => {
   test.setTimeout(90_000)
+  const targetPageId = await populateLastFigPage()
+
+  const currentPage = await editor.page.evaluate(() => {
+    const store = window.openPencil?.getStore?.()
+    if (!store) throw new Error('OpenPencil store not initialized')
+    return {
+      currentPageId: store.state.currentPageId,
+      childCount: store.graph.getChildren(store.state.currentPageId).length
+    }
+  })
+  expect(currentPage.currentPageId).toBe(targetPageId)
+  expect(currentPage.childCount).toBeGreaterThan(0)
+
+  const events = await editor.page.evaluate(
+    () => Reflect.get(window, 'figPopulationWorkerEvents') as Array<{ event: string }>
+  )
+  expect(events.map(({ event }) => event)).toEqual(
+    expect.arrayContaining(['registered', 'populate'])
+  )
+
+  await editor.page.evaluate(() => window.openPencil?.getStore?.()?.dispose())
+  await expect
+    .poll(() =>
+      editor.page.evaluate(
+        () =>
+          (Reflect.get(window, 'figPopulationWorkerEvents') as Array<{ event: string }>).at(-1)
+            ?.event
+      )
+    )
+    .toBe('terminated')
+  editor.canvas.assertNoErrors()
+})
+
+async function populateLastFigPage(): Promise<string> {
   await editor.page.evaluate(() => {
     const events: unknown[] = []
     Object.assign(window, { figPopulationWorkerEvents: events })
@@ -49,33 +84,5 @@ test('populates a real lazy FIG page in the retained parse worker', async () => 
     )
     .toBe(true)
 
-  const currentPage = await editor.page.evaluate(() => {
-    const store = window.openPencil?.getStore?.()
-    if (!store) throw new Error('OpenPencil store not initialized')
-    return {
-      currentPageId: store.state.currentPageId,
-      childCount: store.graph.getChildren(store.state.currentPageId).length
-    }
-  })
-  expect(currentPage.currentPageId).toBe(targetPageId)
-  expect(currentPage.childCount).toBeGreaterThan(0)
-
-  const events = await editor.page.evaluate(
-    () => Reflect.get(window, 'figPopulationWorkerEvents') as Array<{ event: string }>
-  )
-  expect(events.map(({ event }) => event)).toEqual(
-    expect.arrayContaining(['registered', 'populate'])
-  )
-
-  await editor.page.evaluate(() => window.openPencil?.getStore?.()?.dispose())
-  await expect
-    .poll(() =>
-      editor.page.evaluate(
-        () =>
-          (Reflect.get(window, 'figPopulationWorkerEvents') as Array<{ event: string }>).at(-1)
-            ?.event
-      )
-    )
-    .toBe('terminated')
-  editor.canvas.assertNoErrors()
-})
+  return targetPageId
+}

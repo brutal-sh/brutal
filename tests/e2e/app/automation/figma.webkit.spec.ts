@@ -2,6 +2,9 @@ import { expect, test } from '@playwright/test'
 
 import { createScriptGroup, saveAndReopenScriptGroup } from '#tests/helpers/automation/figma'
 import { CanvasHelper } from '#tests/helpers/canvas'
+import { mockOfficialCloudDiscovery } from '#tests/helpers/cloud/discovery'
+
+test.beforeEach(async ({ page }) => mockOfficialCloudDiscovery(page))
 
 test('automation-created Figma groups retain history and remain editable after saving', async ({
   page
