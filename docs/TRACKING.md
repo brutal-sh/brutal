@@ -2,14 +2,14 @@
 
 Updated: 2026-11-16. Controller goal: **active**, explicitly created after Jason cleared the prior goal. The [refreshed instructions](GOAL-REFRESH-2026-11-16.md) now govern the work. Full independent design and functionality parity remains required.
 
-Repository: [private Open Pen](https://github.com/jpoindexter/open-pen), branch `feat/open-pen`; draft PR1. Planning edits are local to `scratch/note-candidate-checkout` and unpublished.
+Repository: [private Open Pen](https://github.com/jpoindexter/open-pen), branch `feat/open-pen`; draft PR1. Importer source `4b180c899fc17ae78ed431a558e53c427336a161` and refreshed planning `22d0bc57c7dbf60d42d147d9054a90b31bf225a0` are published to the private draft PR. MAIN and the candidate share that head; protected work is preserved.
 Board: [Open Pen](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor).
 
 Current complete Trello readback: **554 cards / 536 execution tasks / 18 milestones**; **395 Backlog / 0 Ready / 1 reserved Building slot (MOD-20) / 52 Verify / 88 Executed**. All primary owners and 535 other terminal dependencies reconcile without unknown IDs, cycles or Executed/open-prerequisite contradictions. All milestone exits remain open.
 
 [PRD](PRD.md) owns the outcome and constraints; [TASKS](TASKS.md) is exact task/dependency membership; [MILESTONES](MILESTONES.md) owns outcome exits; [current audit](BOARD-AUDIT-2026-11-16.md) owns reconciliation. The [latest reference update](pen-feature-reference/update-audit-2026-11-16.md) covers the welcome flow and newsletter, with private evidence under `local-evidence/pen-welcome-2026-11-16/`, `pen-mail-update-2026-11-16/` and `planning-refresh-2026-11-16/`.
 
-Now: refresh state and publish the already qualified importer candidate with exact owned paths and protected-work checks. MOD-19 remains Verify with MOD-16/live-Figma/native gates open. MOD-20 remains reserved for software review with MOD-17 open. Existing strict/reference/native failures are preserved; no accepted criterion is broadened by the 25 new Backlog leaves or 29 description updates.
+Now: continue MOD-20’s bounded exporter review from the published importer handoff. Exact source/remote/policy/protected-work readback is retained under `local-evidence/importer-publication-2026-11-16/`. The first publication action of the refreshed goal has executed. MOD-19 remains Verify with MOD-16/live-Figma/native gates open. MOD-20 remains reserved for software review with MOD-17 open. Existing strict/reference/native failures are preserved; no accepted criterion is broadened by the 25 new Backlog leaves or 29 description updates.
 
 Historical readbacks below remain dated receipts, not the current goal status or scheduling. Exact prior tracking text is archived privately under `local-evidence/planning-refresh-2026-11-16/docs-before/TRACKING.md`.
 

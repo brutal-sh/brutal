@@ -10,7 +10,7 @@ Current lists: **395 Backlog / 0 Ready / 1 reserved Building slot (MOD-20) / 52 
 
 Current reference: actual Pen **1.2.23**, ASAR `d0c5c23a3a86ec1802c8754b59e82600d815f0e2b6a383f655319535e6e07925`. The seven welcome screenshots and newsletter claims add 25 Backlog leaves. Existing fullscreen/Creative/steering/image-model/language owners retain their acceptance criteria. Marketing claims and source declarations are not runtime acceptance.
 
-Re-entry: verify and publish the already qualified importer candidate from `scratch/note-candidate-checkout` with exact owned paths and protected-work checks. MOD-19 remains Verify; MOD-16/live-Figma/native prerequisites remain open. MOD-20 is reserved for bounded software review, with MOD-17 still Verify. The saved-import failures, strict Note raster, native Save pixels/traffic-light dragging and normal installed combined acceptance remain binding.
+Re-entry: the qualified importer source `4b180c899` and refreshed plan `22d0bc57c` are published to private draft PR1 and MAIN, with protected hashes checked. Continue MOD-20’s bounded software review; do not repeat the completed publication handoff. MOD-19 remains Verify; MOD-16/live-Figma/native prerequisites remain open. MOD-20 is reserved for bounded software review, with MOD-17 still Verify. The saved-import failures, strict Note raster, native Save pixels/traffic-light dragging and normal installed combined acceptance remain binding.
 
 ## Execution tasks
 

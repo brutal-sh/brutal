@@ -37,9 +37,9 @@ These checkpoints do not create extra milestone cards or duplicate implementatio
 
 ## Dependency order and re-entry
 
-Now: refresh current state and reconcile/publish the qualified unpublished importer candidate, preserving protected work.
+Now: importer source `4b180c899` and planning `22d0bc57c` are published to the private draft PR and MAIN with protected work intact. Continue the bounded MOD-20 software review.
 
-Jason explicitly activated the refreshed goal on 16 November 2026. Refresh goal/source/board/fixture identity, publish only the qualified importer slice, then continue bounded review and remaining acceptance in dependency order. MOD-19 stays Verify with its MOD-16/live-Figma/native gates; MOD-20 keeps the single reserved Building slot, with MOD-17 open. Saved-import reference failures, native Save pixels/traffic-light dragging, strict Note and normal installed combined workflows remain required.
+Jason explicitly activated the refreshed goal on 16 November 2026. Refresh goal/source/board/fixture identity and continue bounded review and remaining acceptance in dependency order; the initial importer publication is recorded, not pending. MOD-19 stays Verify with its MOD-16/live-Figma/native gates; MOD-20 keeps the single reserved Building slot, with MOD-17 open. Saved-import reference failures, native Save pixels/traffic-light dragging, strict Note and normal installed combined workflows remain required.
 
 Next: existing inspector/draft/save/recovery acceptance and domain cards with satisfied prerequisites. New welcome/performance/chat leaves are Backlog; they do not displace the preserved handoff.
 
