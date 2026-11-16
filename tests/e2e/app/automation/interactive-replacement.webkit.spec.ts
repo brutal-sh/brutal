@@ -1,11 +1,12 @@
-import { expect, test, useEditorSetupWithClear } from '#tests/e2e/fixtures'
+import { expect, test, useIsolatedEditorSetupWithClear } from '#tests/e2e/fixtures'
 import { liveTestDiscovery } from '#tests/helpers/automation/cli/bridge'
 import { privateDiscoveryDigest } from '#tests/helpers/automation/cli/connection'
 import { documentSnapshot, openOwnedBinaryDocument } from '#tests/helpers/automation/cli/documents'
 import { startLiveCLI } from '#tests/helpers/automation/cli/process'
 import { createOwnedFig } from '#tests/helpers/automation/cli/reopen'
+import { mockEditorCopyServices } from '#tests/helpers/brand/editor-services'
 
-const editor = useEditorSetupWithClear('/?test')
+const editor = useIsolatedEditorSetupWithClear('/?test', mockEditorCopyServices)
 
 test('a replacement renderer on the same bridge cannot receive an old session edit', async () => {
   const discovery = await liveTestDiscovery(editor.page)

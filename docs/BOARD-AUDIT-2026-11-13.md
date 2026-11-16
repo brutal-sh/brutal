@@ -1,16 +1,16 @@
-# Open Pen current board reconciliation — 2026-11-13
+# Open Pen current board reconciliation — 2026-11-16
 
-2026-11-14 dependency readback also recognizes the singular `Dependency:` label.
+Current dependency readback also recognizes the singular `Dependency:` label.
 Three existing edges now appear in the task table: VERIFY-STORYBOOK-REFUSAL →
 BRAND-STORYBOOK-ERROR, VERIFY-GPU-SURFACE-CONTRACTS → STAB-GPU and VERIFY-DUPES-ZERO →
-MOD-DUPES-GENERATED. Their predecessors are already Executed. All510 execution IDs,
-18primary allocations and509other terminal prerequisites reconcile without unknown
+MOD-DUPES-GENERATED. Their predecessors are already Executed. All511 execution IDs,
+18primary allocations and510other terminal prerequisites reconcile without unknown
 dependencies, cycles or Executed/open-prerequisite contradictions. This does not
 infer undiscovered prerequisites or accept additional product behavior.
 
-This readback covers all 528 open cards after the Pen 1.2.23 update catalog allocation and normal Save delivery. It updates current scheduling; the [2026-11-11 audit](BOARD-AUDIT-2026-11-11.md) and intervening execution receipts remain historical. Actual Pen is the reference; OpenPencil is the implementation foundation.
+This readback covers all 529 open cards after the Pen 1.2.23 update catalog allocation and normal Save delivery. It updates current scheduling; the [2026-11-11 audit](BOARD-AUDIT-2026-11-11.md) and intervening execution receipts remain historical. Actual Pen is the reference; OpenPencil is the implementation foundation.
 
-There are 510 execution tasks and 18 milestone gates: 373 Backlog, 0 Ready, 1 Building (MCP-05-CANCEL), 49 Verify and 87 Executed. These are workflow states, not a product-parity percentage, an estimate of unbuilt features or a beta date. Full parity and all milestone exits remain unaccepted.
+There are 511 execution tasks and 18 milestone gates: 373 Backlog, 0 Ready, 1 Building (STAB-FIG-RECOVERY-WORKER), 50 Verify and 87 Executed. These are workflow states, not a product-parity percentage, an estimate of unbuilt features or a beta date. Full parity and all milestone exits remain unaccepted.
 
 2026-11-15 shared CLI allocation reuses MCP-03-GETAPPSTATE / EXECUTE / READSKILL /
 GETSTYLE and MCP-04-BROWSER / AGENTS. CLI-07 explicitly requires these six plus
@@ -21,8 +21,8 @@ its dependency/readback audit is retained privately.
 ## Checks actually executed
 
 - Re-read the complete 527-card live board after the 13 update followups, separate normal-delivery and current-schema line leaves, and current status/parent-description updates; current states and complete dependency allocation reconcile, and the delivery/handoff descriptions match their intended bytes. Earlier catalog-description readback remains separately retained.
-- Reconcile 510 unique execution IDs to exactly 510 single primary milestone owners. M02 owns 114 tasks, M05 owns 83 and M07 owns 36. M04 now owns65 tasks; remaining ownership is unchanged. An existing Note-raster child link was moved from M02's historical tail into its current primary block; its rendering acceptance stays open.
-- Expand PARITY-ALL to all 508 other execution IDs before validating the explicit dependency graph. There are no unknown named prerequisites, reachable cycles or Executed/open-prerequisite contradictions. This checks declared edges, not undiscovered real prerequisites or runtime behavior.
+- Reconcile 511 unique execution IDs to exactly 511 single primary milestone owners. M02 owns 114 tasks, M05 owns 83 and M07 owns 37. M04 now owns65 tasks; remaining ownership is unchanged. An existing Note-raster child link was moved from M02's historical tail into its current primary block; its rendering acceptance stays open.
+- Expand PARITY-ALL to all 510 other execution IDs before validating the explicit dependency graph. There are no unknown named prerequisites, reachable cycles or Executed/open-prerequisite contradictions. This checks declared edges, not undiscovered real prerequisites or runtime behavior.
 - Preserve 18 open milestones, one Building card and no Ready cards. Catalog allocation alone promotes no feature or release gate. REF-04 has separately executed its bounded catalog criterion; FILE-NATIVE-SAVE-DELIVERY has executed its actual installed save slice.
 
 ## New bounded followups
@@ -158,3 +158,34 @@ reproduced. This separate M05 child has no prerequisites; SELECT and MCP-05
 consume it without a backedge. There are 510 tasks/18 milestones/528 cards, with
 509 other terminal inputs and 83 primary M05 children. Native/current Pen,
 standalone, strict rendering and combined feature acceptance remain open.
+
+## Owned automation fixture and worker observation — 2026-11-16
+
+The first frozen run has eight cancellation passes, eleven older automation
+failures from unisolated external Cloud discovery and sixteen serial skips.
+The local service fixture preserves every assertion; the second run has
+34 passes and one FIG worker/page error. A shared three-case profile retains
+two dirty documents from prior cases; the isolated case passes, and an
+instrumented shared sequence also passes with one 29,541-byte recovery row.
+This neither proves archive damage nor resolves the worker cause.
+
+The three target cases pass with per-case page/context ownership, without
+error suppression, retries or changed limits. STAB-FIG-RECOVERY-WORKER remains
+Backlog under M07; FILE-07 and PARITY-ALL consume it. Current allocation:
+511 tasks/18 milestones/529 cards; 374 Backlog/0 Ready/1 Building
+(MCP-05-CANCEL)/49 Verify/87 Executed. Full parity and all milestone exits remain
+open. Final combined runtime qualification is still pending; original failures
+and probe receipts remain in local-evidence/mcp-cancellation-2026-11-15/.
+
+## Qualified cancellation handoff — 2026-11-16
+
+The complete seventh check and third production build exit zero. After both
+finish, 288 owner cases pass with one Windows-only skip, and all 35 actual
+Node/MCP/WebKit cases pass without skips, retries or flaky results. All 6,558
+built files and 142 scoped inputs remain exact; protected work and retained
+binaries/originals remain exact. MCP-05-CANCEL moves Verify, not full acceptance.
+STAB-FIG-RECOVERY-WORKER is the sole Building task, retaining the separate
+multi-tab worker observation. Current lists: 373 Backlog/0 Ready/1 Building/
+50 Verify/87 Executed across 511 tasks and 18 open milestones. Earlier
+allocation-time snapshots above remain historical. The [software receipt](CLI-CANCELLATION.md)
+does not accept full native/reference/standalone, recovery, milestone or parity gates.

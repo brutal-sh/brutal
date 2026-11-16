@@ -2,7 +2,7 @@ import * as v from 'valibot'
 
 import { appStateSchema } from '@open-pencil/core/tools/read/schema'
 
-import { expect, test, useEditorSetupWithClear } from '#tests/e2e/fixtures'
+import { expect, test, useIsolatedEditorSetupWithClear } from '#tests/e2e/fixtures'
 import { liveTestDiscovery } from '#tests/helpers/automation/cli/bridge'
 import {
   activateOwnedDocument,
@@ -14,8 +14,9 @@ import {
 } from '#tests/helpers/automation/cli/documents'
 import { runLiveCLI, startLiveCLI } from '#tests/helpers/automation/cli/process'
 import { createOwnedFig } from '#tests/helpers/automation/cli/reopen'
+import { mockEditorCopyServices } from '#tests/helpers/brand/editor-services'
 
-const editor = useEditorSetupWithClear('/?test')
+const editor = useIsolatedEditorSetupWithClear('/?test', mockEditorCopyServices)
 
 test('state remains on its pinned page after the visible page and tab change', async () => {
   const discovery = await liveTestDiscovery(editor.page)

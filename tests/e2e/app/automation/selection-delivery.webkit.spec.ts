@@ -1,6 +1,6 @@
 import * as v from 'valibot'
 
-import { expect, test, useEditorSetupWithClear } from '#tests/e2e/fixtures'
+import { expect, test, useIsolatedEditorSetupWithClear } from '#tests/e2e/fixtures'
 import { activateOwnedDocument, documentReadState } from '#tests/helpers/automation/cli/documents'
 import { connectOwnedMCP } from '#tests/helpers/automation/cli/mcp'
 import { runLiveCLI } from '#tests/helpers/automation/cli/process'
@@ -9,8 +9,9 @@ import {
   openSelectionDocuments,
   selectionCheckpoint
 } from '#tests/helpers/automation/cli/selection'
+import { mockEditorCopyServices } from '#tests/helpers/brand/editor-services'
 
-const editor = useEditorSetupWithClear('/?test')
+const editor = useIsolatedEditorSetupWithClear('/?test', mockEditorCopyServices)
 const selectedSchema = v.object({ selected: v.array(v.string()) })
 const mcpTextResultSchema = v.looseObject({
   isError: v.optional(v.boolean()),

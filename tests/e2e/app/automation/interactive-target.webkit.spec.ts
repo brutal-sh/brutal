@@ -1,4 +1,4 @@
-import { expect, test, useEditorSetupWithClear } from '#tests/e2e/fixtures'
+import { expect, test, useIsolatedEditorSetupWithClear } from '#tests/e2e/fixtures'
 import { liveTestDiscovery } from '#tests/helpers/automation/cli/bridge'
 import {
   activateOwnedDocument,
@@ -9,8 +9,9 @@ import {
   switchToNewOwnedPage
 } from '#tests/helpers/automation/cli/documents'
 import { runLiveCLI, startLiveCLI } from '#tests/helpers/automation/cli/process'
+import { mockEditorCopyServices } from '#tests/helpers/brand/editor-services'
 
-const editor = useEditorSetupWithClear('/?test')
+const editor = useIsolatedEditorSetupWithClear('/?test', mockEditorCopyServices)
 
 test('interactive creation stays on the initial page after the user switches pages', async () => {
   const discovery = await liveTestDiscovery(editor.page)

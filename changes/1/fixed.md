@@ -57,5 +57,5 @@
 - Export WebP in browsers without a built-in encoder using an on-demand codec, retaining explicit quality and the default native lossless fallback.
 - Export PDF files from the Node CLI with embedded local images instead of failing or silently omitting them.
 
-- Deliver explicit tool selections to the intended editor and refuse invalid mixed selections without replacing the prior selection.
+- Deliver explicit tool selections to the intended editor and refuse invalid mixed selections without replacing the prior selection; refuse cancelled queued MCP selections before they apply.
 - Keep the Layers tree's accessible selection state consistent with its visible selection.

@@ -1,10 +1,11 @@
-import { expect, test, useEditorSetupWithClear } from '#tests/e2e/fixtures'
+import { expect, test, useIsolatedEditorSetupWithClear } from '#tests/e2e/fixtures'
 import { liveTestDiscovery } from '#tests/helpers/automation/cli/bridge'
 import { copyOwnedDiscovery, setOwnedBridgeRunning } from '#tests/helpers/automation/cli/connection'
 import { documentSnapshot, openOwnedDocuments } from '#tests/helpers/automation/cli/documents'
 import { startLiveCLI } from '#tests/helpers/automation/cli/process'
+import { mockEditorCopyServices } from '#tests/helpers/brand/editor-services'
 
-const editor = useEditorSetupWithClear('/?test')
+const editor = useIsolatedEditorSetupWithClear('/?test', mockEditorCopyServices)
 const create =
   "create_shape({type:'RECTANGLE',name:'Must not be delivered',x:0,y:0,width:32,height:32})"
 

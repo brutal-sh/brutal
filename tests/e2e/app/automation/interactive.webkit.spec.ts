@@ -1,4 +1,4 @@
-import { expect, test, useEditorSetupWithClear } from '#tests/e2e/fixtures'
+import { expect, test, useIsolatedEditorSetupWithClear } from '#tests/e2e/fixtures'
 import { liveTestDiscovery } from '#tests/helpers/automation/cli/bridge'
 import {
   documentNamedCount,
@@ -7,8 +7,9 @@ import {
   openOwnedDocuments
 } from '#tests/helpers/automation/cli/documents'
 import { runLiveCLI } from '#tests/helpers/automation/cli/process'
+import { mockEditorCopyServices } from '#tests/helpers/brand/editor-services'
 
-const editor = useEditorSetupWithClear('/?test')
+const editor = useIsolatedEditorSetupWithClear('/?test', mockEditorCopyServices)
 
 test('a returned tool error fails the live session while later explicit edits still work', async () => {
   const discovery = await liveTestDiscovery(editor.page)

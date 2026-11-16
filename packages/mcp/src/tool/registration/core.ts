@@ -81,16 +81,19 @@ async function runCoreTool(
     if (context.policy.scope === 'selection' && filePath !== null) {
       return fail(new Error(SELECTION_SCOPE_FILE_OUTPUT_ERROR))
     }
-    const response = (await context.sendRPC({
-      command: 'tool',
-      args: {
-        ...target,
-        name: def.name,
-        args: toolArgs,
-        agent: context.agent(request.mcpReq._meta),
-        ...(context.policy.scope === 'selection' ? { scope: context.policy.scope } : {})
-      }
-    })) as RPCResponse
+    const response = (await context.sendRPC(
+      {
+        command: 'tool',
+        args: {
+          ...target,
+          name: def.name,
+          args: toolArgs,
+          agent: context.agent(request.mcpReq._meta),
+          ...(context.policy.scope === 'selection' ? { scope: context.policy.scope } : {})
+        }
+      },
+      { signal: request.mcpReq.signal }
+    )) as RPCResponse
     if (response.ok === false) return fail(new Error(response.error))
     return await toolResult(def.name, response.result, filePath, context.resolvedRoot)
   } catch (error) {

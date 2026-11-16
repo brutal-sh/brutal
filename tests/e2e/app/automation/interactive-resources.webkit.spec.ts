@@ -1,6 +1,6 @@
 import * as v from 'valibot'
 
-import { expect, test, useEditorSetupWithClear } from '#tests/e2e/fixtures'
+import { expect, test, useIsolatedEditorSetupWithClear } from '#tests/e2e/fixtures'
 import { liveTestDiscovery } from '#tests/helpers/automation/cli/bridge'
 import {
   documentNodeX,
@@ -9,8 +9,9 @@ import {
   openOwnedDocuments
 } from '#tests/helpers/automation/cli/documents'
 import { runLiveCLI } from '#tests/helpers/automation/cli/process'
+import { mockEditorCopyServices } from '#tests/helpers/brand/editor-services'
 
-const editor = useEditorSetupWithClear('/?test')
+const editor = useIsolatedEditorSetupWithClear('/?test', mockEditorCopyServices)
 
 function assertResourceOutput(stdout: string, first: string) {
   const [connection, ...lines] = stdout.split('\n')

@@ -1,4 +1,5 @@
 import type { RPCJSONObject } from '#mcp/json'
+import type { RPCSender } from '#mcp/tool/registration'
 
 /**
  * What MCP clients can reach: the whole document, or only the layers the user selected. In
@@ -39,7 +40,7 @@ export const SELECTION_SCOPE_FILE_OUTPUT_ERROR =
 /** Commands the app may receive in selection scope besides calls of the tools above. */
 const SELECTION_SCOPE_COMMANDS: ReadonlySet<string> = new Set(['agent_session_closed'])
 
-type RPCSend = (msg: RPCJSONObject) => Promise<unknown>
+type RPCSend = (msg: RPCJSONObject, options?: Parameters<RPCSender>[1]) => Promise<unknown>
 
 function toolName(msg: RPCJSONObject): string | null {
   const args = msg.args
@@ -55,9 +56,9 @@ function toolName(msg: RPCJSONObject): string | null {
  */
 export function scopeRPC(send: RPCSend, scope: MCPToolScope): RPCSend {
   if (scope === 'document') return send
-  return async (msg) => {
+  return async (msg, options) => {
     const command = typeof msg.command === 'string' ? msg.command : ''
-    if (SELECTION_SCOPE_COMMANDS.has(command)) return send(msg)
+    if (SELECTION_SCOPE_COMMANDS.has(command)) return send(msg, options)
     const name = command === 'tool' ? toolName(msg) : null
     if (!name || !isSelectionScopeTool(name)) {
       return {
@@ -66,6 +67,6 @@ export function scopeRPC(send: RPCSend, scope: MCPToolScope): RPCSend {
       }
     }
     const args = msg.args as RPCJSONObject
-    return send({ ...msg, args: { ...args, scope } })
+    return send({ ...msg, args: { ...args, scope } }, options)
   }
 }

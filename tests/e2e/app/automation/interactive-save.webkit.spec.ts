@@ -1,7 +1,7 @@
 import { chmod, mkdir, readFile, stat, writeFile } from 'node:fs/promises'
 import { dirname } from 'node:path'
 
-import { expect, test, useEditorSetupWithClear } from '#tests/e2e/fixtures'
+import { expect, test, useIsolatedEditorSetupWithClear } from '#tests/e2e/fixtures'
 import { liveTestDiscovery } from '#tests/helpers/automation/cli/bridge'
 import {
   documentNodeX,
@@ -10,8 +10,9 @@ import {
 } from '#tests/helpers/automation/cli/documents'
 import { runLiveCLI, startLiveCLI } from '#tests/helpers/automation/cli/process'
 import { connectedDocumentId, reopenOwnedNode } from '#tests/helpers/automation/cli/reopen'
+import { mockEditorCopyServices } from '#tests/helpers/brand/editor-services'
 
-const editor = useEditorSetupWithClear('/?test')
+const editor = useIsolatedEditorSetupWithClear('/?test', mockEditorCopyServices)
 
 for (const format of ['pen', 'fig']) {
   test(`connected save writes ${format}; exit keeps later edits live without resaving`, async () => {

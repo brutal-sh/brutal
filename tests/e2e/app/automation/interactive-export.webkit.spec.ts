@@ -1,6 +1,6 @@
 import { writeFile } from 'node:fs/promises'
 
-import { expect, test, useEditorSetupWithClear } from '#tests/e2e/fixtures'
+import { expect, test, useIsolatedEditorSetupWithClear } from '#tests/e2e/fixtures'
 import { liveTestDiscovery } from '#tests/helpers/automation/cli/bridge'
 import {
   activateOwnedDocument,
@@ -10,8 +10,9 @@ import {
 } from '#tests/helpers/automation/cli/documents'
 import { decodeOwnedPNG, readCLIImage } from '#tests/helpers/automation/cli/images'
 import { runLiveCLI } from '#tests/helpers/automation/cli/process'
+import { mockEditorCopyServices } from '#tests/helpers/brand/editor-services'
 
-const editor = useEditorSetupWithClear('/?test')
+const editor = useIsolatedEditorSetupWithClear('/?test', mockEditorCopyServices)
 
 test('a connected export refuses a missing renderer then decodes the intended active document', async () => {
   const discovery = await liveTestDiscovery(editor.page)

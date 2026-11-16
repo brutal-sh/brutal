@@ -2,7 +2,7 @@ import * as v from 'valibot'
 
 import { appStateSchema } from '@open-pencil/core/tools/read/schema'
 
-import { expect, test, useEditorSetupWithClear } from '#tests/e2e/fixtures'
+import { expect, test, useIsolatedEditorSetupWithClear } from '#tests/e2e/fixtures'
 import { liveTestDiscovery } from '#tests/helpers/automation/cli/bridge'
 import {
   activateOwnedDocument,
@@ -12,8 +12,9 @@ import {
 } from '#tests/helpers/automation/cli/documents'
 import { connectOwnedMCP } from '#tests/helpers/automation/cli/mcp'
 import { runLiveCLI } from '#tests/helpers/automation/cli/process'
+import { mockEditorCopyServices } from '#tests/helpers/brand/editor-services'
 
-const editor = useEditorSetupWithClear('/?test')
+const editor = useIsolatedEditorSetupWithClear('/?test', mockEditorCopyServices)
 const stateTextSchema = v.pipe(v.string(), v.parseJson(), appStateSchema)
 const mcpStateSchema = v.looseObject({
   isError: v.optional(v.boolean()),

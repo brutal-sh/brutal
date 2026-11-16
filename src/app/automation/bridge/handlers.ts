@@ -28,8 +28,16 @@ import type { EditorStore } from '@/app/editor/active-store'
 
 type FigmaFactory = (store: EditorStore, pageId?: string) => FigmaAPI
 
-type CommandHandler = (target: AutomationTarget, args: unknown) => Promise<unknown>
+type CommandHandler = (
+  target: AutomationTarget,
+  args: unknown,
+  signal?: AbortSignal
+) => Promise<unknown>
 type CommandHandlers = Partial<Record<string, CommandHandler>>
+interface RequestContext {
+  handlers: CommandHandlers
+  signal?: AbortSignal
+}
 
 function handleSessionClosed(_store: EditorStore, args: unknown) {
   const session = isUnknownRecord(args) ? args.session : undefined
@@ -57,8 +65,10 @@ async function dispatchTargetCommand(
   target: AutomationTarget,
   command: string,
   args: UnknownRecord,
-  handlers: CommandHandlers
+  context: RequestContext
 ): Promise<unknown> {
+  const { handlers, signal } = context
+  signal?.throwIfAborted()
   // Refused selection must not populate or lay out an offscreen page.
   if (
     command === 'tool' &&
@@ -68,9 +78,10 @@ async function dispatchTargetCommand(
     throw new Error('The target page is no longer visible in this document')
   if (!(await target.store.preparePageNodes(target.pageId)))
     throw new Error(`Page "${target.pageId}" was closed before it finished loading`)
+  signal?.throwIfAborted()
   const handler = handlers[command]
   const result = handler
-    ? await handler(target, args)
+    ? await handler(target, args, signal)
     : await handleRPCFallback(target, command, args)
   return responseWithTarget(result, target)
 }
@@ -79,8 +90,10 @@ async function dispatchRequest(
   store: EditorStore,
   command: string,
   args: unknown,
-  handlers: CommandHandlers
+  context: RequestContext
 ): Promise<unknown> {
+  const { handlers, signal } = context
+  signal?.throwIfAborted()
   const globalHandler = Object.hasOwn(globalHandlers, command) ? globalHandlers[command] : undefined
   if (globalHandler) return globalHandler(store, args)
   if (command === 'open_file' || command === 'new_document') {
@@ -89,7 +102,7 @@ async function dispatchRequest(
   }
   const rawArgs = isUnknownRecord(args) ? args : {}
   const target = resolveAutomationTarget(store, rawArgs)
-  return dispatchTargetCommand(target, command, stripAutomationTargetArgs(rawArgs), handlers)
+  return dispatchTargetCommand(target, command, stripAutomationTargetArgs(rawArgs), context)
 }
 
 export function createAutomationCommandHandlers(makeFigma: FigmaFactory, files?: AutomationFiles) {
@@ -114,9 +127,9 @@ export function createAutomationCommandHandlers(makeFigma: FigmaFactory, files?:
   }
 
   return {
-    handleRequest: (store: EditorStore, command: string, args: unknown) =>
-      dispatchRequest(store, command, args, commandHandlers),
+    handleRequest: (store: EditorStore, command: string, args: unknown, signal?: AbortSignal) =>
+      dispatchRequest(store, command, args, { handlers: commandHandlers, signal }),
     handleTargetCommand: (target: AutomationTarget, command: string, args: UnknownRecord) =>
-      dispatchTargetCommand(target, command, args, commandHandlers)
+      dispatchTargetCommand(target, command, args, { handlers: commandHandlers })
   }
 }

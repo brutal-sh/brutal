@@ -3,9 +3,9 @@
 Decision owner: Jason Poindexter. Implementation and evidence owner: Codex.
 Updated: 2026-11-15. Status: active; full design and functionality parity is not achieved.
 
-Current reference refresh: REA retains the installed 1.2.23 archive/outer-file inventory and delta under `local-evidence/pen-reference-1.2.23/`. REF-04 owns the [independently reviewed changed-surface catalog](pen-feature-reference/update-1.2.23-2026-11-13.md) and 13 bounded Backlog followups, with current 510-task/509-other-terminal dependency closure. No added message identifier or static declaration accepts a feature. Prior 1.2.22 receipts remain versioned; neither extracted files nor the native window correction establishes full feature parity.
+Current reference refresh: REA retains the installed 1.2.23 archive/outer-file inventory and delta under `local-evidence/pen-reference-1.2.23/`. REF-04 owns the [independently reviewed changed-surface catalog](pen-feature-reference/update-1.2.23-2026-11-13.md) and 13 bounded Backlog followups, with current 511-task/510-other-terminal dependency closure. No added message identifier or static declaration accepts a feature. Prior 1.2.22 receipts remain versioned; neither extracted files nor the native window correction establishes full feature parity.
 
-CLI-06 is Verify; MCP-03-READSKILL is Verify; MCP-03-GETAPPSTATE is Verify; MCP-05-SELECT is Verify; MCP-05-CANCEL is the sole Building task. The [connected-session evidence](CLI-APP-CONNECTION.md)
+CLI-06 is Verify; MCP-03-READSKILL is Verify; MCP-03-GETAPPSTATE is Verify; MCP-05-SELECT is Verify; MCP-05-CANCEL is Verify; STAB-FIG-RECOVERY-WORKER is the sole Building task. The [connected-session evidence](CLI-APP-CONNECTION.md)
 records actual Node/live-browser target pinning, refusal/retry and saved-file controls,
 including reproduced replay and renderer-replacement failures. The
 [bundled resource receipt](CLI-SKILL-RESOURCES.md) adds real MCP and Node guide
@@ -310,3 +310,18 @@ The native Save UI correction is recorded in [NATIVE-SAVE-UI.md](NATIVE-SAVE-UI.
 [Selection delivery](CLI-SELECTION.md) qualifies bounded software behavior, with
 real MCP cancellation allocated separately to MCP-05-CANCEL. SELECT stays Verify
 until that and its native/reference criterion execute; no full-parity claim follows.
+
+### Multi-tab recovery worker observation — 2026-11-16
+
+[STAB-FIG-RECOVERY-WORKER](https://trello.com/c/G5zqj2PJ) owns the retained
+FIG export-worker/page error in a shared WebKit sequence with prior dirty tabs.
+MCP cases use separate pages and unchanged assertions; that fixture correction
+does not accept recovery. One timing probe stores a 29,541-byte recovery row;
+archive validity, root cause and native delivery remain unknown. FILE-07 and
+PARITY-ALL require this M07 leaf. Current plan: 511 tasks, 18 milestones,
+529 cards; 373 Backlog, one Building (STAB-FIG-RECOVERY-WORKER), 50 Verify, 87 Executed.
+
+The cancellation software cohort executes 288 owner cases and 35 actual
+Node/MCP/WebKit cases after complete static/build gates and artifact freeze.
+[Caveats and retained failures](CLI-CANCELLATION.md) keep native/reference,
+standalone, multi-tab recovery and full parity acceptance open.

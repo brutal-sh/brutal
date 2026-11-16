@@ -70,7 +70,12 @@ The first headless checker used an obsolete tree field; its raw CLI output is
 retained and the corrected checker uses current children and node results.
 
 SELECT moves to Verify. [MCP-05-CANCEL](https://trello.com/c/Tz0FYCSy) owns the
-remaining real request-cancellation qualification and is the sole Building task. The normal installed app and native-test binary are
+remaining real request-cancellation qualification and is now Verify on its separate bounded software receipt. STAB-FIG-RECOVERY-WORKER is the sole Building task. The normal installed app and native-test binary are
 preserved. Native/reference menu, highlight and selection behavior still require
 actual observation; package source, static extraction and browser receipts do
 not accept those gates. No vendor access-limit workaround is authorized.
+
+The [2026-11-16 cancellation receipt](CLI-CANCELLATION.md) adds actual matching-ID
+cancellation through direct MCP and built Node stdio, plus the 35-case combined
+cohort. It leaves SELECT's native/current-reference/standalone acceptance open;
+fresh MCP fixture ownership does not accept the separate recovery-worker observation.

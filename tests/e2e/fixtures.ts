@@ -39,6 +39,31 @@ export function useEditorSetupWithClear(url = '/') {
   return ctx
 }
 
+/** Automation cases own their tabs, workers and storage; none carry into the next case. */
+export function useIsolatedEditorSetupWithClear(
+  url = '/',
+  setup?: (page: Page) => Promise<unknown>
+) {
+  let page: Page
+  let canvas: CanvasHelper
+  test.beforeEach(async ({ page: ownedPage }) => {
+    page = ownedPage
+    await setup?.(page)
+    canvas = new CanvasHelper(page)
+    await page.goto(url)
+    await canvas.waitForInit()
+    await canvas.clearCanvas()
+  })
+  return {
+    get page() {
+      return page
+    },
+    get canvas() {
+      return canvas
+    }
+  }
+}
+
 export async function expectInViewport(page: Page, locator: Locator) {
   const box = await locator.boundingBox()
   if (!box) throw new Error('Expected visible element to have a bounding box')

@@ -58,7 +58,7 @@ login when real inference is required; it does not authorize paid APIs, credenti
 creation or implicit agent launches. Native/browser restart and the full agent
 lifecycle keep their separate acceptance criteria.
 
-There is one Building task: MCP-05-CANCEL. MCP-05-SELECT is Verify on its
+There is one Building task: STAB-FIG-RECOVERY-WORKER. MCP-05-CANCEL is Verify on its bounded software receipt. MCP-05-SELECT is Verify on its
 [explicit selection delivery](CLI-SELECTION.md); real MCP cancellation and native/reference acceptance remain open. MCP-03-GETAPPSTATE is Verify on its
 [bounded state delivery](CLI-APP-STATE.md), with reference/native gates open. MCP-03-READSKILL is Verify on its
 [bounded software delivery](CLI-SKILL-RESOURCES.md); reference/native acceptance remains open. LAYOUT-WRAP-IMPORT returns to

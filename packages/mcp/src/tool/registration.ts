@@ -19,7 +19,10 @@ import { registerDocumentTools, registerListDocuments } from './registration/doc
 import { registerFileTools } from './registration/files'
 import { registerCodegenTool, registerSettingsTools } from './registration/settings'
 
-export type RPCSender = (body: Record<string, unknown>) => Promise<unknown>
+export type RPCSender = (
+  body: Record<string, unknown>,
+  options?: { signal?: AbortSignal }
+) => Promise<unknown>
 export type MCPToolSettled = (context: ServerContext) => Promise<void>
 export type ToolRegister = <InputArgs extends v.GenericSchema>(
   name: string,

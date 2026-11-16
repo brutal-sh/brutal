@@ -1,38 +1,11 @@
-/**
- * Browser-side automation handler.
- *
- * Connects to the bridge via WebSocket, receives RPC requests,
- * executes them against the live EditorStore, and sends results back.
- */
-import * as v from 'valibot'
-
+/** Connect the live editor to its authenticated local automation bridge. */
 import { randomHex } from '@open-pencil/scene-graph/random'
 
-import { endAgentSession, readAgentSession } from '@/app/automation/agents'
 import { makeFigmaFromStore } from '@/app/automation/bridge/figma-factory'
 import type { AutomationFiles } from '@/app/automation/bridge/file-handlers'
 import { createAutomationCommandHandlers } from '@/app/automation/bridge/handlers'
-import { isUnknownRecord } from '@/app/automation/bridge/target'
+import { createAutomationMessages } from '@/app/automation/bridge/messages'
 import type { EditorStore } from '@/app/editor/active-store'
-
-/** Requests from the MCP bridge; other message types (such as the register prompt) are ignored. */
-const automationRequestSchema = v.pipe(
-  v.string(),
-  v.parseJson(),
-  v.object({
-    type: v.literal('request'),
-    id: v.pipe(v.string(), v.nonEmpty()),
-    command: v.string(),
-    args: v.optional(v.unknown())
-  })
-)
-
-/**
- * The connections each MCP session's calls came over, across bridges: restarting MCP opens a new
- * bridge while the old socket is still closing, and that close must not end a session the new
- * connection carries, so a session ends only with its last connection.
- */
-const sessionSockets = new Map<string, Set<WebSocket>>()
 
 /**
  * The MCP server's `/files/`, beside the socket the app connects to, where a browser app reads and
@@ -47,111 +20,76 @@ export function automationFiles(automationURL: string, token: string): Automatio
   }
 }
 
-export function connectAutomation(
-  getStore: () => EditorStore,
-  authToken: string | null = null,
-  automationURL = __OPENPENCIL_LOCAL_AUTOMATION_URL__
-) {
-  const token = authToken ?? randomHex(32)
-  let ws: WebSocket | null = null
-  let reconnectTimer: ReturnType<typeof setTimeout> | undefined
-  let intentionalDisconnect = false
+class AutomationConnection {
+  private ws: WebSocket | null = null
+  private reconnectTimer: ReturnType<typeof setTimeout> | undefined
+  private intentionalDisconnect = false
+  private closeMessages: (() => void) | undefined
+  private readonly handlers: ReturnType<typeof createAutomationCommandHandlers>
 
-  const { handleRequest: handleAutomationRequest } = createAutomationCommandHandlers(
-    makeFigmaFromStore,
-    automationFiles(automationURL, token)
-  )
-
-  async function handleRequest(_id: string, command: string, args: unknown): Promise<unknown> {
-    return handleAutomationRequest(getStore(), command, args)
+  constructor(
+    private readonly getStore: () => EditorStore,
+    readonly token: string,
+    private readonly url: string
+  ) {
+    this.handlers = createAutomationCommandHandlers(makeFigmaFromStore, automationFiles(url, token))
   }
 
-  function connect() {
+  connect = () => {
     let socket: WebSocket
     try {
-      socket = new WebSocket(automationURL)
-      ws = socket
-    } catch (e) {
+      socket = new WebSocket(this.url)
+      this.ws = socket
+    } catch (error) {
       console.error(
         '[Automation] WebSocket constructor failed:',
-        e instanceof Error ? e.message : e
+        error instanceof Error ? error.message : error
       )
-      scheduleReconnect()
+      this.scheduleReconnect()
       return
     }
-
+    const messages = createAutomationMessages(socket, (command, args, signal) =>
+      this.handlers.handleRequest(this.getStore(), command, args, signal)
+    )
+    this.closeMessages = messages.abort
     socket.onopen = () => {
       console.debug('[Automation] WebSocket connected to MCP server')
-      socket.send(JSON.stringify({ type: 'register', token }))
+      socket.send(JSON.stringify({ type: 'register', token: this.token }))
     }
-
-    socket.onmessage = async (event) => {
-      try {
-        const parsed = v.safeParse(automationRequestSchema, event.data)
-        if (!parsed.success) {
-          if (parsed.issues.some((issue) => issue.type === 'parse_json'))
-            console.warn('Failed to parse WebSocket message:', v.summarize(parsed.issues))
-          return
-        }
-        const msg = parsed.output
-        const session = isUnknownRecord(msg.args) ? readAgentSession(msg.args.agent) : null
-        if (session) {
-          const sockets = sessionSockets.get(session.session) ?? new Set<WebSocket>()
-          sockets.add(socket)
-          sessionSockets.set(session.session, sockets)
-        }
-        try {
-          const result = await handleRequest(msg.id, msg.command, msg.args)
-          if (socket.readyState !== WebSocket.OPEN) return
-          socket.send(JSON.stringify({ type: 'response', id: msg.id, ...(result as object) }))
-        } catch (e) {
-          if (socket.readyState !== WebSocket.OPEN) return
-          socket.send(
-            JSON.stringify({
-              type: 'response',
-              id: msg.id,
-              ok: false,
-              error: e instanceof Error ? e.message : String(e)
-            })
-          )
-        }
-      } catch (e) {
-        console.warn('Failed to parse WebSocket message:', e)
-      }
-    }
-
+    socket.onmessage = messages.receive
     socket.onclose = (event) => {
-      if (ws === socket) ws = null
-      // Sessions that reached the app only over this connection cannot any more, so their agents
-      // leave; ones that also came another way, such as over a newer connection, stay.
-      for (const [id, sockets] of sessionSockets) {
-        if (!sockets.delete(socket) || sockets.size > 0) continue
-        sessionSockets.delete(id)
-        endAgentSession(id)
-      }
-      if (intentionalDisconnect || event.code === 1000) return
+      if (this.ws === socket) this.ws = null
+      messages.close()
+      if (this.intentionalDisconnect || event.code === 1000) return
       console.warn('[Automation] WebSocket closed:', `code=${event.code} reason=${event.reason}`)
-      scheduleReconnect()
+      this.scheduleReconnect()
     }
-
     socket.onerror = (event) => {
       console.warn('[Automation] WebSocket error:', event)
       socket.close()
     }
   }
 
-  function scheduleReconnect() {
-    clearTimeout(reconnectTimer)
-    reconnectTimer = setTimeout(connect, 2000)
+  private scheduleReconnect = () => {
+    clearTimeout(this.reconnectTimer)
+    this.reconnectTimer = setTimeout(this.connect, 2000)
   }
 
-  function disconnect() {
-    intentionalDisconnect = true
-    clearTimeout(reconnectTimer)
-    ws?.close()
-    ws = null
+  disconnect = () => {
+    this.intentionalDisconnect = true
+    clearTimeout(this.reconnectTimer)
+    this.closeMessages?.()
+    this.ws?.close()
+    this.ws = null
   }
+}
 
-  connect()
-  return { disconnect, token }
+export function connectAutomation(
+  getStore: () => EditorStore,
+  authToken: string | null = null,
+  automationURL = __OPENPENCIL_LOCAL_AUTOMATION_URL__
+) {
+  const connection = new AutomationConnection(getStore, authToken ?? randomHex(32), automationURL)
+  connection.connect()
+  return { disconnect: connection.disconnect, token: connection.token }
 }

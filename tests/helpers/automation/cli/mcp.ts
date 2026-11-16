@@ -1,8 +1,11 @@
 import { readFile } from 'node:fs/promises'
 
 import { Client, StreamableHTTPClientTransport } from '@modelcontextprotocol/client'
+import { StdioClientTransport } from '@modelcontextprotocol/client/stdio'
 
 import { parseDiscoveryInfo } from '@open-pencil/mcp/discovery'
+
+import { repoPath } from '#tests/helpers/paths'
 
 /** Use only a discovery path already verified by liveTestDiscovery. */
 export async function connectOwnedMCP(discoveryPath: string) {
@@ -16,6 +19,32 @@ export async function connectOwnedMCP(discoveryPath: string) {
     await client.connect(
       new StreamableHTTPClientTransport(new URL(`http://127.0.0.1:${port}/mcp`), {
         requestInit: { headers: { Authorization: `Bearer ${info.authToken}` } }
+      })
+    )
+    return client
+  } catch (error) {
+    await client.close()
+    throw error
+  }
+}
+
+/** Actual Node executable and built stdio entry; no global discovery or credentials. */
+export async function connectOwnedStdioMCP(discoveryPath: string) {
+  const env: Record<string, string> = {}
+  for (const [name, value] of Object.entries(process.env)) {
+    if (!name.startsWith('OPENPENCIL_MCP_') && value !== undefined) env[name] = value
+  }
+  env.OPENPENCIL_MCP_DISCOVERY_PATH = discoveryPath
+  env.OPENPENCIL_MCP_ROOT = repoPath()
+  env.OPENPENCIL_MCP_EVAL = '0'
+  const client = new Client({ name: 'owned-cancellation-stdio-client', version: '0.0.0' })
+  try {
+    await client.connect(
+      new StdioClientTransport({
+        command: process.execPath,
+        args: [repoPath('packages/mcp/dist/stdio.mjs')],
+        env,
+        stderr: 'pipe'
       })
     )
     return client
