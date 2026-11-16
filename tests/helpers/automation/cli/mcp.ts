@@ -29,7 +29,7 @@ export async function connectOwnedMCP(discoveryPath: string) {
 }
 
 /** Actual Node executable and built stdio entry; no global discovery or credentials. */
-export async function connectOwnedStdioMCP(discoveryPath: string) {
+export async function connectOwnedStdioMCP(discoveryPath: string, args: string[] = []) {
   const env: Record<string, string> = {}
   for (const [name, value] of Object.entries(process.env)) {
     if (!name.startsWith('OPENPENCIL_MCP_') && value !== undefined) env[name] = value
@@ -42,7 +42,7 @@ export async function connectOwnedStdioMCP(discoveryPath: string) {
     await client.connect(
       new StdioClientTransport({
         command: process.execPath,
-        args: [repoPath('packages/mcp/dist/stdio.mjs')],
+        args: [repoPath('packages/mcp/dist/stdio.mjs'), ...args],
         env,
         stderr: 'pipe'
       })

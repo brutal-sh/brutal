@@ -17,6 +17,7 @@ import { isToolEnabled } from '#mcp/tool/policy'
 import { registerCoreTools } from './registration/core'
 import { registerDocumentTools, registerListDocuments } from './registration/documents'
 import { registerFileTools } from './registration/files'
+import { registerURISaveTool } from './registration/save'
 import { registerCodegenTool, registerSettingsTools } from './registration/settings'
 
 export type RPCSender = (
@@ -113,6 +114,7 @@ export function registerTools(mcpServer: McpServer, options: RegisterToolsOption
   registerCoreTools(context)
   registerListDocuments(context)
   registerFileTools(context)
+  registerURISaveTool(context)
   registerDocumentTools(context)
   registerSettingsTools(context)
   registerCodegenTool(context)

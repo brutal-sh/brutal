@@ -38,3 +38,4 @@
 - Keep a headless document open or pin a running app document and page in an interactive tool session, use live Undo and Redo, save explicitly, and retry refused saves without losing live edits.
 - Read bundled Open Pen authoring guides through MCP and interactive CLI sessions without loading user-installed skills or local files.
 - Inspect the current document graph, page and selected layers through a shared read-only app-state tool in MCP and interactive CLI sessions.
+- MCP agents save an open document by file URI, with both Save interfaces controlled by the same access setting and disable-save flag.

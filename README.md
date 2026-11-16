@@ -241,6 +241,8 @@ openpencil-mcp-http   # Unix socket on macOS/Linux + http://127.0.0.1:7600/mcp
 
 Set `OPENPENCIL_MCP_ROOT` to limit file access to one directory; it defaults to the current working directory.
 
+`save({ uri: "file:///path/to/open.pen" })` saves the matching open document without switching tabs or asking for a destination. The `save` and `save_file` interfaces share one Tool access setting; `--disable_save_tool` omits both from HTTP and stdio servers. See [URI Save behavior and qualification limits](docs/MCP-SAVE.md).
+
 ### [AI agent skill](skills/open-pencil/SKILL.md)
 
 Teach your AI coding agent to use OpenPencil — inspect designs, export assets, analyze tokens, modify .fig files:

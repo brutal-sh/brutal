@@ -10,7 +10,7 @@ infer undiscovered prerequisites or accept additional product behavior.
 
 This readback covers all 529 open cards after the Pen 1.2.23 update catalog allocation and normal Save delivery. It updates current scheduling; the [2026-11-11 audit](BOARD-AUDIT-2026-11-11.md) and intervening execution receipts remain historical. Actual Pen is the reference; OpenPencil is the implementation foundation.
 
-There are 511 execution tasks and 18 milestone gates: 372 Backlog, 0 Ready, 1 Building (LAYOUT-WRAP-IMPORT), 50 Verify and 88 Executed. These are workflow states, not a product-parity percentage, an estimate of unbuilt features or a beta date. Full parity and all milestone exits remain unaccepted.
+There are 511 execution tasks and 18 milestone gates: 372 Backlog, 0 Ready, 1 Building (MCP-06-SAVE), 50 Verify and 88 Executed. These are workflow states, not a product-parity percentage, an estimate of unbuilt features or a beta date. Full parity and all milestone exits remain unaccepted.
 
 2026-11-15 shared CLI allocation reuses MCP-03-GETAPPSTATE / EXECUTE / READSKILL /
 GETSTYLE and MCP-04-BROWSER / AGENTS. CLI-07 explicitly requires these six plus
@@ -197,3 +197,5 @@ LAYOUT-WRAP-IMPORT resumes as sole Building; its prerequisite REF-04 is Executed
 Current counts: 529 cards, 511 tasks, 18 milestones; 372 Backlog/0 Ready/1 Building/
 50 Verify/88 Executed. All milestone exits, FILE-07 and full parity remain open.
 Earlier allocation and scheduling counts remain dated historical snapshots.
+
+Current handoff (2026-11-16): MCP-06-SAVE is the sole Building card. LAYOUT-WRAP-IMPORT returns Backlog with the new fixed40 reference mismatch retained; current-child and Save/reopen reference gates remain open. Counts remain372Backlog/0Ready/1Building/50Verify/88Executed across511tasks; all18milestone exits remain open.

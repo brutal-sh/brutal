@@ -18,7 +18,12 @@ export function createDocumentSourceActions(options: DocumentSourceOptions) {
     ...createSourceIdentityActions(context),
     ...createSourceExternalSaves(saving),
     disposeDocumentIO: () => disposeSource(context, autosave),
-    saveFigFile: () => context.queue.serialize(() => context.queue.userSave(fileSaves.saveFigFile)),
+    saveFigFile: (beforeWrite?: () => void) =>
+      context.queue.serialize(() =>
+        beforeWrite
+          ? context.queue.track(() => fileSaves.saveFigFile(beforeWrite))
+          : context.queue.userSave(fileSaves.saveFigFile)
+      ),
     saveFigFileAs: () =>
       context.queue.serialize(() => context.queue.userSave(fileSaves.saveFigFileAs)),
     lastSaveFailed: context.queue.lastFailure,

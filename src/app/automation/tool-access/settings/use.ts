@@ -1,5 +1,7 @@
 import { computed, ref } from 'vue'
 
+import { toolPolicyNames } from '@open-pencil/mcp/tools'
+
 import { configurableAITools } from '@/app/ai/tools/catalog'
 import { aiToolOverrides, disabledAITools } from '@/app/ai/tools/preferences'
 import { configurableMCPTools, disabledMCPTools } from '@/app/automation/mcp/preferences'
@@ -21,7 +23,11 @@ export function openToolAccessSettings(target: ToolAccessTarget) {
 
 function countOn(tools: ToolAccessEntry[], disabled: string[]) {
   const off = new Set(disabled)
-  return { enabled: tools.filter((tool) => !off.has(tool.name)).length, total: tools.length }
+  return {
+    enabled: tools.filter((tool) => !toolPolicyNames(tool.name).some((name) => off.has(name)))
+      .length,
+    total: tools.length
+  }
 }
 
 /** How many tools each kind of agent can call, for the MCP page's link to its list. */

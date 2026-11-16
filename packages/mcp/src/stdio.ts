@@ -8,7 +8,7 @@ import { resolveMCPRoot } from '#mcp/root'
 import { MCP_VERSION, registerTools } from '#mcp/server'
 import { createStdioRPCBridge } from '#mcp/stdio/bridge'
 import type { ToolPolicy } from '#mcp/tool/metadata'
-import { parseDisabledTools } from '#mcp/tool/policy'
+import { parseDisabledTools, withSaveToolFlag } from '#mcp/tool/policy'
 import { narrowestScope, parseToolScope } from '#mcp/tool/scope'
 import { readDiscoveryFile } from '#mcp/transport/discovery'
 
@@ -28,6 +28,7 @@ if (process.argv.includes('--help') || process.argv.includes('-h')) {
       `Options:\n` +
       `  --help, -h    Show this help message\n` +
       `  --version     Print the version\n\n` +
+      `  --disable_save_tool  Omit both save interfaces\n\n` +
       `Environment variables:\n` +
       `  OPENPENCIL_MCP_SOCKET        Override socket path (auto-discovered from discovery file when unset)\n` +
       `  OPENPENCIL_MCP_AUTH_TOKEN    Bearer token for RPC auth\n` +
@@ -43,10 +44,12 @@ if (process.argv.includes('--help') || process.argv.includes('-h')) {
 const discovery = await readDiscoveryFile()
 const toolPolicy: ToolPolicy = {
   allowEval: process.env.OPENPENCIL_MCP_EVAL === '1',
-  disabledTools:
+  disabledTools: withSaveToolFlag(
     process.env.OPENPENCIL_MCP_DISABLED_TOOLS === undefined
       ? (discovery?.disabledTools ?? [])
       : parseDisabledTools(process.env.OPENPENCIL_MCP_DISABLED_TOOLS),
+    process.argv.slice(2)
+  ),
   // The server enforces its own scope on every call; this keeps the tool list in step with it,
   // and lets the client limit itself further.
   scope: narrowestScope(

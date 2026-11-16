@@ -14,14 +14,16 @@ function registerSaveFileTool(context: RegistrationContext): void {
     {
       description: resolvedRoot
         ? 'Save the current document to disk. If path is provided, it must be inside the configured MCP root.'
-        : 'Save the current document to disk. Uses the existing file path if available, otherwise prompts for a location.',
+        : 'Save an open document to its existing writable source; fail without opening a save dialog if it has no writable source.',
       inputSchema: resolvedRoot
         ? v.strictObject({
             path: v.optional(
               v.pipe(
                 v.string(),
                 v.minLength(1),
-                v.description('Path for the .fig file, absolute or relative to the MCP root')
+                v.description(
+                  'Path for the .fig or .pen file, absolute or relative to the MCP root'
+                )
               )
             ),
             ...automationTargetEntries

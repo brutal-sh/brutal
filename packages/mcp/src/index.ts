@@ -18,6 +18,7 @@ if (process.argv.includes('--help') || process.argv.includes('-h')) {
       `Options:\n` +
       `  --help, -h    Show this help message\n` +
       `  --version     Print the version\n\n` +
+      `  --disable_save_tool  Omit both save interfaces\n\n` +
       `Environment variables:\n` +
       `  PORT                         TCP port (default: 7610, set to 0 to disable TCP)\n` +
       `  OPENPENCIL_MCP_SOCKET        Override Unix socket path (recorded in the discovery file)\n` +

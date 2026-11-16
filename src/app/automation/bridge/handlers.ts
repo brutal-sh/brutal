@@ -13,6 +13,7 @@ import { createAutomationEvalHandler } from '@/app/automation/bridge/eval-handle
 import { handleExport, handleExportJSX } from '@/app/automation/bridge/export-handlers'
 import { createFileHandlers, type AutomationFiles } from '@/app/automation/bridge/file-handlers'
 import { handleRPCFallback } from '@/app/automation/bridge/rpc-handler'
+import { handleURISave } from '@/app/automation/bridge/save-uri'
 import { handleSelection } from '@/app/automation/bridge/selection-handler'
 import {
   isUnknownRecord,
@@ -31,12 +32,14 @@ type FigmaFactory = (store: EditorStore, pageId?: string) => FigmaAPI
 type CommandHandler = (
   target: AutomationTarget,
   args: unknown,
-  signal?: AbortSignal
+  signal?: AbortSignal,
+  beforeWrite?: () => void
 ) => Promise<unknown>
 type CommandHandlers = Partial<Record<string, CommandHandler>>
 interface RequestContext {
   handlers: CommandHandlers
   signal?: AbortSignal
+  files?: AutomationFiles
 }
 
 function handleSessionClosed(_store: EditorStore, args: unknown) {
@@ -94,6 +97,11 @@ async function dispatchRequest(
 ): Promise<unknown> {
   const { handlers, signal } = context
   signal?.throwIfAborted()
+  if (command === 'save_uri') {
+    const save = handlers.save_file
+    if (!save) throw new Error('Document Save is unavailable')
+    return handleURISave(args, { files: context.files, signal, save })
+  }
   const globalHandler = Object.hasOwn(globalHandlers, command) ? globalHandlers[command] : undefined
   if (globalHandler) return globalHandler(store, args)
   if (command === 'open_file' || command === 'new_document') {
@@ -128,7 +136,7 @@ export function createAutomationCommandHandlers(makeFigma: FigmaFactory, files?:
 
   return {
     handleRequest: (store: EditorStore, command: string, args: unknown, signal?: AbortSignal) =>
-      dispatchRequest(store, command, args, { handlers: commandHandlers, signal }),
+      dispatchRequest(store, command, args, { handlers: commandHandlers, signal, files }),
     handleTargetCommand: (target: AutomationTarget, command: string, args: UnknownRecord) =>
       dispatchTargetCommand(target, command, args, { handlers: commandHandlers })
   }

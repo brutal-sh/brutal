@@ -1,6 +1,6 @@
 export * from './metadata'
 export { createToolDescriptors } from './manifest'
-export { isToolEnabled, serializeDisabledTools } from './policy'
+export { isToolEnabled, serializeDisabledTools, toolPolicyNames } from './policy'
 export {
   MCP_TOOL_SCOPES,
   SELECTION_SCOPE_TOOLS,

@@ -1,11 +1,29 @@
 import { computed, ref, watch, type Ref } from 'vue'
 
+import { toolPolicyNames } from '@open-pencil/mcp/tools'
+
 import type { ToolAccessEntry } from '../types'
+import { toolAccessCategory } from './groups'
+
+function toolAccessSelection(disabled: Ref<string[]>) {
+  const disabledNames = computed(() => new Set(disabled.value))
+  const isEnabled = (tool: ToolAccessEntry) =>
+    !toolPolicyNames(tool.name).some((name) => disabledNames.value.has(name))
+  function setEnabled(names: string[], enabled: boolean) {
+    const next = new Set(disabled.value)
+    for (const name of names.flatMap(toolPolicyNames)) {
+      if (enabled) next.delete(name)
+      else next.add(name)
+    }
+    disabled.value = [...next]
+  }
+  return { isEnabled, setEnabled }
+}
 
 /** Tool access is derived from the catalog and one controlled disabled-name model. */
 export function useToolAccess(tools: Readonly<Ref<ToolAccessEntry[]>>, disabled: Ref<string[]>) {
   const search = ref('')
-  const disabledNames = computed(() => new Set(disabled.value))
+  const { isEnabled, setEnabled } = toolAccessSelection(disabled)
   const enabledCount = computed(() => tools.value.filter(isEnabled).length)
   const visibleTools = computed(() => {
     const query = search.value.trim().toLowerCase()
@@ -15,40 +33,8 @@ export function useToolAccess(tools: Readonly<Ref<ToolAccessEntry[]>>, disabled:
     )
   })
 
-  function isEnabled(tool: ToolAccessEntry) {
-    return !disabledNames.value.has(tool.name)
-  }
-
-  function setEnabled(names: string[], enabled: boolean) {
-    const next = new Set(disabled.value)
-    for (const name of names) {
-      if (enabled) next.delete(name)
-      else next.add(name)
-    }
-    disabled.value = [...next]
-  }
-
-  function category(effect: ToolAccessEntry['effect']) {
-    const members = computed(() => tools.value.filter((tool) => tool.effect === effect))
-    const count = computed(() => members.value.filter(isEnabled).length)
-    return {
-      enabled: computed({
-        get: () => count.value > 0,
-        set: (enabled: boolean) =>
-          setEnabled(
-            members.value.map((tool) => tool.name),
-            enabled
-          )
-      }),
-      state: computed<'mixed' | 'idle'>(() =>
-        count.value > 0 && count.value < members.value.length ? 'mixed' : 'idle'
-      ),
-      counts: computed(() => ({ enabled: count.value, total: members.value.length }))
-    }
-  }
-
-  const inspection = category('read')
-  const modification = category('write')
+  const inspection = toolAccessCategory(tools, 'read', { isEnabled, setEnabled })
+  const modification = toolAccessCategory(tools, 'write', { isEnabled, setEnabled })
   const expanded = ref({ read: true, write: true })
   watch(search, () => {
     expanded.value = { read: true, write: true }
