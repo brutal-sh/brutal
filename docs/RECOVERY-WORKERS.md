@@ -116,3 +116,5 @@ equivalence or full parity. All milestone exits remain open and the goal remains
 Active. Evidence: `local-evidence/fig-recovery-worker-2026-11-16/` contains
 `stable-software-qualification.json`, `native-qualification.json`, both accepted
 native FIG archives and the original failure logs.
+
+Native regression at `d73451a34` (2026-11-16): the same five-phase two-document reload/interruption/Restore/separate Save/fresh-process reopen control passes across three native PIDs after the Save-module refactor. The first setup attempted selection during startup file opening; waiting for the final source before selecting preserves the same assertions and deadline. The initial failure is retained. This rerun supplies no new actual-Pen, full native-suite or milestone acceptance. Evidence: `local-evidence/mcp-save-2026-11-16/native-recovery-receipt.json`.

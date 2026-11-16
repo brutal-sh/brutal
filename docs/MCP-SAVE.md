@@ -1,6 +1,6 @@
 # URI-addressed MCP Save
 
-MCP-06-SAVE is Building. This independently implemented candidate adds `save` with
+MCP-06-SAVE is Verify. This independently implemented candidate adds `save` with
 one required string `uri`, alongside the existing `save_file` interface. Actual
 Pen remains the reference; OpenPencil is the implementation foundation.
 
@@ -50,8 +50,22 @@ Cloud discovery; the stock fixture resolves those requests without suppressing
 errors. One launch during a package rewrite ran no cases; builds and final tests
 then run sequentially. Red controls also cover shared descriptor mutation.
 
-Native candidate delivery and live reference behavior remain open. The complete
-unit/browser suites are not represented as accepted by these bounded cohorts.
+The separate native-test build at `d73451a34` passes current-companion HTTP URI
+Save on macOS: background A saves while active B's graph, history, dirty state,
+source, file and accepted backup stay exact. Unknown and read-only targets refuse;
+explicit retry and separate B Save persist the intended geometry and modes. A
+fresh second native process opens both files without stale backups. The current
+native two-document recovery regression also passes five phases across three PIDs.
+
+Two native test corrections are retained: wait for the final startup file before
+selecting an earlier tab; identify the authored rectangle by ID and type rather
+than the same-name CANVAS page. No app-source, expected-geometry or timeout waiver
+is used. The native binary SHA256 is
+`e4c487e9f6ca0c9e3e1d9fba6dc35cdd0b8ae140b4858a934e2af684fcfe7292`.
+The test uses an isolated current Node companion, not the normal installed one.
+
+Live reference behavior, current native Save As pixel equivalence, complete
+unit/browser suites and standalone packaging remain unaccepted.
 
 Evidence: `local-evidence/mcp-save-2026-11-16/` (private local evidence).
 
@@ -65,5 +79,5 @@ MCP quota refusal remains binding; no retry or extracted helper execution is use
 
 Current catalog reference is Pen 1.2.23, ASAR SHA256
 `d0c5c23a3a86ec1802c8754b59e82600d815f0e2b6a383f655319535e6e07925`.
-Exact reference outputs, native delivery, standalone packaging and full parity
-remain unaccepted. No normal Open Pen installation or user profile is changed.
+Exact reference outputs, remaining native delivery, standalone packaging and full
+parity remain unaccepted. No normal Open Pen installation or user profile is changed.
