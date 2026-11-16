@@ -51,8 +51,11 @@ provideEditor(useFollowingEditorStore())
 useAppTheme()
 useDocumentCloseProtection()
 useRestartApprovals()
-useEventListener(window, 'pagehide', () => {
-  void prepareForReload()
+// Start the best-effort flush before pagehide tears down the worker's document.
+useEventListener(window, 'beforeunload', () => {
+  void prepareForReload().catch((error) => {
+    console.warn('[Recovery] Reload snapshot failed:', error)
+  })
 })
 
 onMounted(() => {

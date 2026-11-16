@@ -248,7 +248,7 @@ function compressViaWorker(
       worker.terminate()
     }
     worker.onerror = (err) => {
-      reject(new Error(err.message))
+      reject(new Error(err.message || 'Worker failed to compress .fig file'))
       worker.terminate()
     }
 
