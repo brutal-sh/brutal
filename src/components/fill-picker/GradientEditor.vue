@@ -126,14 +126,17 @@ function listStopClass(active: boolean) {
               class="w-14 flex-none"
               :ui="{ leading: 'hidden', field: 'pl-1.5', display: 'pl-1.5' }"
               suffix="%"
-              :model-value="s.positionPercent"
+              :aria-label="panels.position"
+              :model-value="stop.position * 100"
+              :precision="0"
+              :inherit-binding="false"
               :min="0"
               :max="100"
               @update:model-value="s.actions.updatePosition(Number($event))"
               @click.stop
             />
             <PaintField
-              :opacity="s.opacityPercent / 100"
+              :opacity="stop.color.a"
               :opacity-label="panels.opacity"
               @update:opacity="s.actions.updateOpacity($event * 100)"
               @click.stop

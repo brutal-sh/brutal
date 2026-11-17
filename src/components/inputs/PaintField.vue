@@ -66,7 +66,8 @@ const styles = computed(() => tv(paintFieldTheme)({ compact, bound }))
       :class="styles.opacity({ class: ui?.opacity })"
       :aria-label="opacityLabel"
       suffix="%"
-      :model-value="Math.round(opacity * 100)"
+      :model-value="opacity * 100"
+      :precision="0"
       :min="0"
       :max="100"
       :ui="{

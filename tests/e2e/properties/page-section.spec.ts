@@ -1,7 +1,9 @@
 import { expect, test, useEditorSetup } from '#tests/e2e/fixtures'
+import { mockOfficialCloudDiscovery } from '#tests/helpers/cloud/discovery'
+import { openAppMenu } from '#tests/helpers/menu'
 import { propertySection } from '#tests/helpers/properties'
 
-const editor = useEditorSetup()
+const editor = useEditorSetup('/', mockOfficialCloudDiscovery)
 
 function pageColor() {
   return editor.page.evaluate(() => {
@@ -12,6 +14,11 @@ function pageColor() {
 }
 
 test('page background uses the shared paint field for hex and alpha', async () => {
+  await (
+    await openAppMenu(editor.page, 'View')
+  )
+    .getByRole('menuitem', { name: 'Advanced properties', exact: true })
+    .click()
   const pageSection = propertySection(editor.page, 'Page')
   await expect(pageSection).toBeVisible()
 

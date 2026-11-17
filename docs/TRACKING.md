@@ -671,3 +671,8 @@ no-install testing hold under the user’s explicit visible-app wording request;
 release or merge occurs. Full parity and the remaining acceptance gates remain open.
 
 Historical build-only native note (2026-11-12, superseded by the executed profile journey above): FILE-07 was Building with unchanged board counts. The isolated persistent-profile candidate, pure-control results and unexecuted native restart criterion are recorded in [NATIVE-RECOVERY-PROFILE.md](NATIVE-RECOVERY-PROFILE.md). The full repository check exits zero and the isolated native-test host compiles. Computer Use is refreshed after the build and still reports locked. Actual Pen remains 1.2.22 with unchanged archive hash; normal installed binary and protected work are unchanged. No native recovery, full parity or beta acceptance is implied.
+
+
+The paint/gradient continuation preserves fractional percent models beneath integer displays. Thirty final Chromium/WebKit controls and 437 Vue cases pass, including distinct-byte gradient Save/Open and the named six paint callers. Earlier fixture, lifecycle and strict shadow-image failures remain retained; actual-Pen, exact-source native, matched visuals and normal-installed acceptance remain open. The authorized Light comparison is not executed: REA observes the installed dark window, but its menu action produces no observed window change and no appearance choice is reached. [Numeric qualification](NUMERIC-EXPRESSIONS.md) keeps the precise scope and failure receipts; UI-NUMERIC-EXPRESSIONS remains the sole Building card and all 18 milestones remain open.
+
+The paint/gradient full repository check and production build pass; strict limits and independent final review pass. No native, reference, raster, task or milestone acceptance follows.
