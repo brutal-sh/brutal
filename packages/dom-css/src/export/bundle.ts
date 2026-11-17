@@ -9,9 +9,6 @@ import type { DesignDocument, DesignElement, DesignNode, DesignStyleDeclaration 
 import { cssColor } from './css'
 import { mergeClassNames, serializeHTML, splitWhitespace } from './html'
 
-import themeCSS from 'tailwindcss/theme.css?raw'
-import utilitiesCSS from 'tailwindcss/utilities.css?raw'
-
 /** A font face the exported text uses. */
 export interface WebFontFaceRequest {
   family: string
@@ -211,7 +208,12 @@ async function tokenCSS(document: DesignDocument, format: TokenStylesheetFormat)
 
 async function compileTailwindClasses(classNames: string[], tokens: string): Promise<string> {
   if (classNames.length === 0) return ''
-  const { compile } = await import('tailwindcss')
+  // Load bundler-managed styles only when generating a standalone Tailwind stylesheet.
+  const [{ compile }, { default: themeCSS }, { default: utilitiesCSS }] = await Promise.all([
+    import('tailwindcss'),
+    import('tailwindcss/theme.css?raw'),
+    import('tailwindcss/utilities.css?raw')
+  ])
   const compiler = await compile(`${themeCSS}\n${tokens}\n${utilitiesCSS}`)
   return compiler.build(classNames)
 }
