@@ -1,9 +1,10 @@
-import { expect, test, useEditorSetup } from '#tests/e2e/fixtures'
+import { expect, test, useIsolatedEditorSetupWithClear } from '#tests/e2e/fixtures'
 import { expectDefined } from '#tests/helpers/assert'
+import { mockOfficialCloudDiscovery } from '#tests/helpers/cloud/discovery'
 import { propertyField } from '#tests/helpers/properties'
 import { getSelectedNode } from '#tests/helpers/store'
 
-const editor = useEditorSetup()
+const editor = useIsolatedEditorSetupWithClear('/', mockOfficialCloudDiscovery)
 
 function xField() {
   return propertyField(editor.page, 'x')
@@ -23,7 +24,7 @@ test.beforeEach(async () => {
   await editor.canvas.drawRect(120, 100, 80, 80)
 })
 
-test('NumberField matches Pen signed numeric entry and numeric prefixes', async () => {
+test('NumberField evaluates absolute arithmetic and preserves signed entry', async () => {
   const field = xField()
   const before = await numericFieldValue(field)
 
@@ -46,7 +47,7 @@ test('NumberField matches Pen signed numeric entry and numeric prefixes', async 
   input = await editField(field)
   await input.fill('12+2')
   await input.press('Enter')
-  expect((await getSelectedNode(editor.page))?.x).toBe(12)
+  expect((await getSelectedNode(editor.page))?.x).toBe(14)
   input = await editField(field)
   await input.fill('-4')
   await input.press('ArrowUp')

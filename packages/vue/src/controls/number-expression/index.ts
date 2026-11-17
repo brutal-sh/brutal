@@ -6,6 +6,7 @@ export {
 } from '#vue/controls/number-expression/evaluate'
 export type {
   NumberExpressionError,
+  NumberExpressionMode,
   NumberExpressionOptions,
   NumberExpressionResult
 } from '#vue/controls/number-expression/evaluate'

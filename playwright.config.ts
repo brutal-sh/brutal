@@ -91,6 +91,9 @@ export default defineConfig({
       testMatch: [
         '**/*.webkit.spec.ts',
         '**/app/primitives.spec.ts',
+        '**/properties/number-field.spec.ts',
+        '**/properties/line-height.spec.ts',
+        '**/properties/bound-visibility.spec.ts',
         '**/canvas/split-views.spec.ts',
         '**/components/library-lifecycle.spec.ts',
         '**/components/assets-panel.spec.ts',

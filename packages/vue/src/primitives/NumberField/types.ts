@@ -1,6 +1,6 @@
 import type { ComputedRef, Ref, VNode } from 'vue'
 
-import type { NumberExpressionError } from '#vue/controls/number-expression'
+import type { NumberExpressionError, NumberExpressionMode } from '#vue/controls/number-expression'
 
 export type NumberFieldEditPolicy = 'editable' | 'readonly' | 'detach-on-edit'
 export type NumberFieldMutationSource = 'edit' | 'scrub' | 'step'
@@ -14,8 +14,8 @@ export interface NumberFieldRootProps {
   max?: number
   /** Pointer-scrub and Arrow-key increment. */
   step?: number
-  /** Evaluate arithmetic and relative operators; false reads a finite numeric prefix. */
-  expressions?: boolean
+  /** True enables relative operators; absolute evaluates signed arithmetic; false reads a prefix. */
+  expressions?: NumberExpressionMode
   /** Fractional places (0–14) shown in the display and initial draft; keeps the semantic value. */
   precision?: number
   /** Multiplier applied to pointer-scrub movement. */

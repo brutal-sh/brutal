@@ -9,11 +9,13 @@ export type NumberExpressionResult =
   | { ok: true; value: number; kind: 'absolute' | 'relative' | 'percent' }
   | { ok: false; error: NumberExpressionError }
 
+export type NumberExpressionMode = boolean | 'absolute'
+
 export interface NumberExpressionOptions {
   current: number
   max?: number
   mixed?: boolean
-  expressions?: boolean
+  expressions?: NumberExpressionMode
 }
 
 class ArithmeticParser {
@@ -105,25 +107,38 @@ export function evaluateNumberExpression(
   const source = expression.trim()
   if (!source) return { ok: false, error: 'empty' }
 
-  if (!expressions) {
-    const value = Number.parseFloat(source)
-    if (Number.isNaN(value)) return { ok: false, error: 'syntax' }
-    return Number.isFinite(value)
-      ? { ok: true, value, kind: 'absolute' }
-      : { ok: false, error: 'non-finite' }
-  }
+  if (!expressions) return evaluateNumericPrefix(source)
+  if (source.endsWith('%')) return evaluatePercentage(source, max)
+  return evaluateArithmeticInput(source, { current, mixed, expressions })
+}
 
-  if (source.endsWith('%')) {
-    if (!Number.isFinite(max)) return { ok: false, error: 'percent-requires-finite-max' }
-    const percentage = evaluateArithmetic(source.slice(0, -1))
-    if (!percentage.ok) return percentage
-    const value = (max * percentage.value) / 100
-    return Number.isFinite(value)
-      ? { ok: true, value, kind: 'percent' }
-      : { ok: false, error: 'non-finite' }
-  }
+function evaluateNumericPrefix(source: string): NumberExpressionResult {
+  const value = Number.parseFloat(source)
+  if (Number.isNaN(value)) return { ok: false, error: 'syntax' }
+  return Number.isFinite(value)
+    ? { ok: true, value, kind: 'absolute' }
+    : { ok: false, error: 'non-finite' }
+}
 
-  const relative = /^[+\-*/]/.test(source)
+function evaluatePercentage(source: string, max: number): NumberExpressionResult {
+  if (!Number.isFinite(max)) return { ok: false, error: 'percent-requires-finite-max' }
+  const percentage = evaluateArithmetic(source.slice(0, -1))
+  if (!percentage.ok) return percentage
+  const value = (max * percentage.value) / 100
+  return Number.isFinite(value)
+    ? { ok: true, value, kind: 'percent' }
+    : { ok: false, error: 'non-finite' }
+}
+
+function evaluateArithmeticInput(
+  source: string,
+  {
+    current,
+    mixed,
+    expressions
+  }: Pick<NumberExpressionOptions, 'current' | 'mixed' | 'expressions'>
+): NumberExpressionResult {
+  const relative = expressions !== 'absolute' && /^[+\-*/]/.test(source)
   if (relative && mixed) return { ok: false, error: 'relative-requires-value' }
   if (relative && !Number.isFinite(current)) return { ok: false, error: 'non-finite' }
 
@@ -139,13 +154,16 @@ export function normalizeNumberValue(value: number): number {
   return Number.isFinite(value) ? Number.parseFloat(value.toPrecision(14)) : value
 }
 
+// Preserve the positional SDK call and runtime arity while grouping its optional tail.
 export function stepNumberValue(
   value: number,
   direction: 1 | -1,
   step: number,
-  modifiers: { shiftKey?: boolean; altKey?: boolean } = {},
-  min = -Infinity,
-  max = Infinity
+  ...[modifiers = {}, min = -Infinity, max = Infinity]: [
+    modifiers?: { shiftKey?: boolean; altKey?: boolean },
+    min?: number,
+    max?: number
+  ]
 ): number {
   const multiplier = (modifiers.shiftKey ? 10 : 1) * (modifiers.altKey ? 0.1 : 1)
   return clampNumberValue(normalizeNumberValue(value + direction * step * multiplier), min, max)

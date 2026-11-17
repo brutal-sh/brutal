@@ -40,7 +40,12 @@ accepts numbers, parentheses, and `+ - * /`; it never evaluates JavaScript.
 
 Set `expressions` to `false` to read a finite numeric prefix instead: `-4` becomes absolute
 `-4`, `+10` becomes `10`, and `12+2` becomes `12`. A leading operator without a number, such
-as `*2`, is rejected. This is the mode used by the app to match Pen's numeric fields.
+as `*2`, is rejected.
+
+Set `expressions` to `'absolute'` to evaluate complete arithmetic while treating leading signs
+as absolute values: `-4` becomes `-4`, `+10` becomes `10`, and `12+2` becomes `14`. This is
+the app inspector's mode. Typed results keep their full numeric precision; invalid or non-finite
+expressions restore the prior value, and valid results clamp to the field's bounds.
 
 Arrow keys step by `step`. Shift multiplies the step by 10 and Alt multiplies it by 0.1. Enter
 commits and Escape restores the interaction-start value.

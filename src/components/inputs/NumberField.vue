@@ -109,7 +109,7 @@ defineOptions({ inheritAttrs: false })
   <NumberFieldRoot
     v-slot="{ editing, actions, attrs: rootAttrs, placeholder: ph, displayValue }"
     :model-value="modelValue"
-    :expressions="false"
+    expressions="absolute"
     :precision="precision"
     :min="min"
     :max="max"
