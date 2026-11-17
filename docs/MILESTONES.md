@@ -2,7 +2,7 @@
 
 Updated: 2026-11-17. Controller goal: **active**; all **18 exits remain open**. Actual Pen 1.2.23 is the reference; OpenPencil is the foundation.
 
-554 cards: 536 execution tasks and 18 milestones. Lists: 394 Backlog / 0 Ready / 1 Building slot (SURF-PRIMITIVES) / 53 Verify / 88 Executed. Counts are neither product-parity percentages nor release estimates.
+554 cards: 536 execution tasks and 18 milestones. Lists: 393 Backlog / 0 Ready / 1 Building slot (UI-NUMERIC-EXPRESSIONS) / 54 Verify / 88 Executed. Counts are neither product-parity percentages nor release estimates.
 
 [Complete task index](TASKS.md) · [Current audit](BOARD-AUDIT-2026-11-16.md) · [Reference delta](pen-feature-reference/update-audit-2026-11-16.md)
 
@@ -37,9 +37,9 @@ These checkpoints do not create extra milestone cards or duplicate implementatio
 
 ## Dependency order and re-entry
 
-Now: exporter source `56f67d70b` is published to the private draft PR and MAIN after its bounded software checks. MOD-20 is Verify with MOD-17/live Figma/native gates open; SURF-PRIMITIVES is the sole Building task, followed by numeric-input work with its newly measured reference differences.
+Now: primitives source `ac81f3439` is published after bounded browser qualification and a matched native capture. SURF-PRIMITIVES is Verify with observed installed differences and current-source delivery still unaccepted. UI-NUMERIC-EXPRESSIONS is the sole Building task for shared-owner software work; its declared primitives prerequisite remains binding for final acceptance.
 
-Jason explicitly activated the refreshed goal on 16 November 2026. Refresh goal/source/board/fixture identity and continue bounded review and remaining acceptance in dependency order; the initial importer publication is recorded, not pending. MOD-19 stays Verify with its MOD-16/live-Figma/native gates; MOD-20 now returns Verify after software publication, with MOD-17 open; SURF-PRIMITIVES owns the single Building slot. Saved-import reference failures, native Save pixels/traffic-light dragging, strict Note and normal installed combined workflows remain required.
+Jason explicitly activated the refreshed goal on 16 November 2026. Refresh goal/source/board/fixture identity and continue bounded review and remaining acceptance in dependency order; the initial importer publication is recorded, not pending. MOD-19 stays Verify with its MOD-16/live-Figma/native gates; MOD-20 now returns Verify after software publication, with MOD-17 open; SURF-PRIMITIVES returns Verify, while UI-NUMERIC-EXPRESSIONS owns the single Building slot for bounded software entry. Saved-import reference failures, native Save pixels/traffic-light dragging, strict Note and normal installed combined workflows remain required.
 
 Next: existing inspector/draft/save/recovery acceptance and domain cards with satisfied prerequisites. New welcome/performance/chat leaves are Backlog; they do not displace the preserved handoff.
 
