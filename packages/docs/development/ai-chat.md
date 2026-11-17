@@ -77,6 +77,8 @@ Diagnostics record `chat.completed`, `chat.stopped`, or `chat.failed`.
 
 ## An ACP reply
 
+Before the first prompt, the ACP transport opens a session, checks its MCP tools and reads its model in `transports/acp/session.ts`. If Codex inherits a model outside the session catalog, Open Pen confirms an available choice through the session selector. A failed selection stops startup with a model error and leaves the message available to retry. The selection lasts for that session.
+
 An ACP agent calls OpenPencil's tools through the MCP server, and its replies keep their edits the same way. The ACP transport (`transports/acp.ts`) starts a run for each reply with `startAgentRun`, without the built-in chat's agent presence, since the agent shows through its MCP session, and ends it however the reply ends. Each MCP tool call carries the chat id from the agent's `x-openpencil-chat` header and the call's id in the agent's conversation, which Codex sends as `_meta.callId` and Claude Code as `_meta["claudecode/toolUseId"]`. While the reply goes on, a call that edits the chat's own document joins the run through `runEditorTool`, which `automation/bridge/tool-handlers.ts` calls with the reply, so Revert, Restore, and the undone marks work as for a provider model.
 
 ## Undo and the model

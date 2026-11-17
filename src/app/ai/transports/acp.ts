@@ -1,40 +1,19 @@
-import { ClientSideConnection, ndJsonStream, PROTOCOL_VERSION } from '@agentclientprotocol/sdk'
-import type {
-  Client,
-  Agent,
-  SessionNotification,
-  RequestPermissionRequest,
-  RequestPermissionResponse,
-  Usage
-} from '@agentclientprotocol/sdk'
+import type { Usage } from '@agentclientprotocol/sdk'
 import type { ChatTransport, UIMessage, UIMessageChunk } from 'ai'
-import * as v from 'valibot'
 
 import type { ACPAgentDef } from '@open-pencil/core/constants'
 
-import { parseAuthStatusUpdate } from '@/app/ai/agents/acp/auth/status'
-import { setAgentCommands } from '@/app/ai/agents/acp/commands'
 import { createUpdateMapper } from '@/app/ai/agents/acp/events'
-import { spawnACPProcess } from '@/app/ai/agents/acp/process'
-import { linkOwnTools } from '@/app/ai/agents/acp/tools'
+import type { TauriChild } from '@/app/ai/agents/acp/process'
 import SYSTEM_PROMPT from '@/app/ai/chat/system-prompt'
 import { endRun, forgetAgentChat, startAgentRun } from '@/app/ai/reply/run'
 import { describeDiagnosticError, recordACPTransportFailure } from '@/app/diagnostics'
 import type { EditorStore } from '@/app/editor/active-store'
 
-type TauriChild = Awaited<ReturnType<typeof spawnACPProcess>>['child']
+import { formatConnectionError } from './acp/errors'
+import { openACPChatSession, type ACPSession } from './acp/session'
 
-interface ACPSession {
-  connection: ClientSideConnection
-  sessionId: string
-  /** The id the agent's tool calls carry, which ties them to this chat's replies. */
-  chat: string
-  child: TauriChild
-  onUpdate: ((params: SessionNotification) => void) | null
-  dead: boolean
-  /** The model the agent says it uses, once it has said; Codex names it, Claude in its usage. */
-  model: string | null
-}
+export { formatConnectionError } from './acp/errors'
 
 /** One agent turn's tokens, as an ACP agent reports them with its answer to the prompt. */
 export interface AgentTurnUsage {
@@ -60,71 +39,6 @@ export function agentTurnUsage(usage: Usage, model: string | null): AgentTurnUsa
     cacheReadTokens,
     cacheWriteTokens
   }
-}
-
-const usageMetaSchema = v.object({ '_claude/model': v.string() })
-
-function isMissingCommandError(message: string): boolean {
-  const normalized = message.toLowerCase()
-  return normalized.includes('enoent') || normalized.includes('program not found')
-}
-
-function missingCommandMessage(agentDef?: ACPAgentDef): string {
-  if (!agentDef) return 'ACP agent CLI is not installed.'
-  if (!agentDef.installCommand) {
-    return `"${agentDef.command}" is not installed. Install it and restart Open Pen.`
-  }
-  return `"${agentDef.command}" is not installed. Install it with: ${agentDef.installCommand}`
-}
-
-const connectionErrorSchema = v.object({
-  message: v.string(),
-  data: v.optional(v.unknown())
-})
-const connectionErrorDetailsSchema = v.object({ details: v.string() })
-
-export function formatConnectionError(e: unknown, agentDef?: ACPAgentDef): string {
-  if (isAuthRequiredError(e)) {
-    return `${agentDef?.name ?? 'The agent'} is not signed in. Sign in from Set up AI, then try again.`
-  }
-  const error = v.safeParse(connectionErrorSchema, e)
-  const details = error.success
-    ? v.safeParse(connectionErrorDetailsSchema, error.output.data)
-    : null
-  let msg = error.success ? error.output.message : String(e)
-  if (details?.success && details.output.details) msg += `: ${details.output.details}`
-  if (
-    msg.includes('ECONNREFUSED') ||
-    msg.includes('fetch failed') ||
-    msg.includes('Failed to fetch')
-  ) {
-    return 'MCP server is not running. Make sure the editor is open.'
-  }
-  if (msg.includes('timeout') || msg.includes('Timeout') || msg.includes('ETIMEDOUT')) {
-    return 'MCP server did not respond in time.'
-  }
-  if (isMissingCommandError(msg)) {
-    return missingCommandMessage(agentDef)
-  }
-  return msg
-}
-
-/** ACP's `auth_required` error, which an agent returns for a new session before sign-in. */
-function isAuthRequiredError(e: unknown): boolean {
-  return typeof e === 'object' && e !== null && 'code' in e && e.code === -32000
-}
-
-/** The agent never opened its session with Open Pen's MCP server, so it has no design tools. */
-function toolsUnreachableError(agentDef: ACPAgentDef, reason: string | null): Error {
-  return new Error(
-    `${agentDef.name} couldn't reach Open Pen's tools, so your message wasn't sent.` +
-      (reason ? ` ${agentDef.name} reported: ${reason}` : '')
-  )
-}
-
-function startupError(error: unknown, agentDef: ACPAgentDef): Error {
-  recordACPTransportFailure({ operation: 'start', ...describeDiagnosticError(error) })
-  return new Error(formatConnectionError(error, agentDef))
 }
 
 export function buildCrashChunks(
@@ -190,6 +104,10 @@ export class ACPChatTransport implements ChatTransport<UIMessage> {
       if (this.destroying) {
         await started.child.kill().catch(() => undefined)
         throw new Error('The chat closed while its agent was starting.')
+      }
+      if (started.dead) {
+        this.starting = null
+        throw new Error('The agent stopped while it was starting.')
       }
       this.session = started
       this.starting = null
@@ -282,152 +200,20 @@ export class ACPChatTransport implements ChatTransport<UIMessage> {
     }
   }
 
-  private async spawnAgent(): Promise<ACPSession> {
-    let process: Awaited<ReturnType<typeof spawnACPProcess>>
-    try {
-      process = await spawnACPProcess({
-        command: this.agentDef.command,
-        args: this.agentDef.args,
-        logId: this.agentDef.id,
-        destroying: () => this.destroying,
-        onUnexpectedClose: () => {
-          if (!this.session) return
-          this.session.dead = true
-          this.session = null
-        }
-      })
-    } catch (e) {
-      recordACPTransportFailure({ operation: 'start', ...describeDiagnosticError(e) })
-      throw new Error(formatConnectionError(e, this.agentDef))
-    }
-    const { child, input, output } = process
-    const stream = ndJsonStream(input, output)
-    let onUpdate: ACPSession['onUpdate'] = null
-    // Set once the session exists; the client reads it to record the model the agent names.
-    let sessionRef: ACPSession | null = null
-    const agentId = this.agentDef.id
-
-    const clientImpl: Client = {
-      async requestPermission(
-        params: RequestPermissionRequest
-      ): Promise<RequestPermissionResponse> {
-        const { requestPermissionFromUser } = await import('@/app/ai/agents/acp/permission')
-        return requestPermissionFromUser(params)
+  private spawnAgent(): Promise<ACPSession> {
+    return openACPChatSession({
+      agentDef: this.agentDef,
+      cwd: this.cwd,
+      destroying: () => this.destroying,
+      onUnexpectedClose: (closed) => {
+        if (this.session === closed) this.session = null
       },
-
-      async sessionUpdate(params: SessionNotification): Promise<void> {
-        // Claude's adapter names its model only in its usage updates.
-        const { update } = params
-        if (update.sessionUpdate === 'usage_update') {
-          const meta = v.safeParse(usageMetaSchema, update._meta)
-          if (meta.success && sessionRef) sessionRef.model = meta.output['_claude/model']
-        }
-        if (update.sessionUpdate === 'available_commands_update') {
-          setAgentCommands(agentId, update.availableCommands)
-        }
-        onUpdate?.(params)
+      onStarting: (child) => {
+        this.starting = child
       },
-
-      extNotification: async (method, params) => {
-        const status = parseAuthStatusUpdate(method, params)
-        if (!status) return
-        const { agentAccounts } = await import('@/app/ai/agents/setup/accounts')
-        agentAccounts.report(this.agentDef.id, status)
+      onStartFailed: (child) => {
+        if (this.starting === child) this.starting = null
       }
-    }
-
-    const connection = new ClientSideConnection((_agent: Agent) => clientImpl, stream)
-    this.starting = child
-    // The SDK leaves requests pending when the agent exits, so each startup request races it.
-    const stopped = connection.closed.then((): never => {
-      throw new Error('The agent stopped while it was starting.')
     })
-    stopped.catch(() => undefined)
-    const untilStopped = <T>(request: Promise<T>): Promise<T> => Promise.race([request, stopped])
-    const { getAutomationAuthToken } = await import('@/app/automation/mcp/spawn')
-    let automationAuthToken: string | null
-    try {
-      automationAuthToken = await getAutomationAuthToken()
-    } catch (e) {
-      await child.kill().catch(() => undefined)
-      throw startupError(e, this.agentDef)
-    }
-
-    try {
-      await untilStopped(
-        connection.initialize({
-          protocolVersion: PROTOCOL_VERSION,
-          clientCapabilities: {}
-        })
-      )
-    } catch (e) {
-      await child.kill().catch(() => undefined)
-      throw startupError(e, this.agentDef)
-    }
-
-    // The agent must reach Open Pen's tools before it gets a prompt.
-    let tools: Awaited<ReturnType<typeof linkOwnTools>>
-    try {
-      tools = await linkOwnTools(automationAuthToken)
-    } catch (e) {
-      // An outside MCP connection whose credential cannot be read fails here.
-      await child.kill().catch(() => undefined)
-      throw startupError(e, this.agentDef)
-    }
-    onUpdate = ({ update }) => tools.noteUpdate(update)
-
-    let sessionResult
-    try {
-      sessionResult = await untilStopped(
-        connection.newSession({
-          cwd: this.cwd,
-          mcpServers: tools.mcpServers,
-          _meta: tools.meta
-        })
-      )
-    } catch (e) {
-      tools.stop()
-      await child.kill().catch(() => undefined)
-      throw startupError(e, this.agentDef)
-    }
-
-    let outcome: Awaited<ReturnType<typeof tools.outcome>>
-    try {
-      outcome = await untilStopped(tools.outcome())
-    } catch (e) {
-      tools.stop()
-      await child.kill().catch(() => undefined)
-      throw startupError(e, this.agentDef)
-    }
-    // Destroyed while starting, as when the chat closes: the agent must not get a prompt.
-    if (this.destroying) {
-      await child.kill().catch(() => undefined)
-      throw new Error('The chat closed while its agent was starting.')
-    }
-    if (outcome.connected === false) {
-      await child.kill().catch(() => undefined)
-      const error = toolsUnreachableError(this.agentDef, outcome.reason)
-      recordACPTransportFailure({ operation: 'start', ...describeDiagnosticError(error) })
-      throw error
-    }
-    onUpdate = null
-
-    const session: ACPSession = {
-      connection,
-      sessionId: sessionResult.sessionId,
-      chat: tools.chat,
-      child,
-      dead: false,
-      model: sessionResult.models?.currentModelId ?? null,
-      get onUpdate() {
-        return onUpdate
-      },
-      set onUpdate(fn) {
-        onUpdate = fn
-      }
-    }
-
-    sessionRef = session
-    return session
   }
 }
