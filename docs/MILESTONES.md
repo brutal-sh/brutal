@@ -2,7 +2,7 @@
 
 Updated: 2026-11-17. Controller goal: **active**; all **18 exits remain open**. Actual Pen 1.2.23 is the reference; OpenPencil is the foundation.
 
-564 cards / 546 execution tasks / 18 milestones; 401 Backlog / 1 Ready / 1 Building / 53 Verify / 90 Executed. Building: AI-CODEX-TOOLS-CHECK. Counts do not measure parity or predict dates.
+564 cards / 546 execution tasks / 18 milestones; 400 Backlog / 1 Ready / 1 Building / 53 Verify / 91 Executed. Building: AI-CODEX-REQUEST-FAILURE. Counts do not measure parity or predict dates.
 
 [Complete task index](TASKS.md) · [Current audit](BOARD-AUDIT-2026-11-16.md) · [Reference delta](pen-feature-reference/update-audit-2026-11-16.md)
 
@@ -37,7 +37,7 @@ These checkpoints do not create extra milestone cards or duplicate implementatio
 
 ## Dependency order and re-entry
 
-Now: AI-CODEX-TOOLS-CHECK owns primary app Building. The bounded label repair is published at `16bbfd9e5`; its parent/native gates stay open. Diagnose actual Codex tool reachability before its dependent request-recovery leaf, then qualify recurring native window controls. Website work stays isolated.
+AI-CODEX-REQUEST-FAILURE owns primary app Building. The bounded label repair is published at `16bbfd9e5` with its parent and native gates open. The Codex connection accepted its bounded native controls on local candidate `d18cbc54b`. The request-recovery leaf still requires its real canvas edit and safe failure controls. Recurring window controls follow. Website work stays isolated.
 
 Jason cleared the predecessor and activated the replacement controller goal on 17 November 2026. The previous 16 November activation is historical. Refresh goal/source/board/fixture identity at re-entry. MOD-19 retains MOD-16/live-Figma/native gates; MOD-20 retains MOD-17; SURF-PRIMITIVES remains Verify and unfinished numeric work stays Backlog for that prerequisite. Saved-import failures, native Save pixels/traffic-light dragging, strict Note and normal installed combined workflows remain required.
 

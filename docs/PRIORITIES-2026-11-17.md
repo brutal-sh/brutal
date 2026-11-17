@@ -9,8 +9,7 @@ The desktop Browser View/import feature remains in scope.
 
 The bounded [slider-label repair](https://trello.com/c/MeJ2EoyA) is published at
 `16bbfd9e5` and Executed for its declared browser criterion. Its controls do not
-close native, actual-Pen or parent acceptance. Codex tool reachability now owns the
-sole primary app Building slot.
+cover its wider native, actual-Pen or parent acceptance. The bounded Codex tool connection is Executed on local native candidate `d18cbc54b`, and its dependent request-recovery task owns Building.
 
 The next execution order follows current observed user impact and dependencies:
 
@@ -20,9 +19,7 @@ The next execution order follows current observed user impact and dependencies:
 | 2     | [Codex request recovery](https://trello.com/c/LPC4kXs7) | After tool reachability is accepted, an actual controlled request edits the intended canvas, with safe retry/cancel and no duplicate edit. An error message alone cannot accept this task.        |
 | 3     | [Native window controls](https://trello.com/c/8iOj7MNs) | Real traffic-light centers and behavior remain correct through launch, resize, fullscreen/restore, focus and relaunch on the exact delivered app; actual drag-region acceptance remains required. |
 
-The Codex connection is Building and window controls are Ready; neither has an
-open prerequisite. Request recovery stays Backlog behind its explicit connection
-prerequisite.
+The connection check reached a terminal timeout, cleaned up the stalled child and succeeded on retry. Settings > MCP > Restart restored the connection after a controlled loss of the test bridge. The trigger of the original live incident remains unknown. Request recovery is Building, and window controls are Ready.
 Ready/Building describe scheduling, not acceptance. No more than three Ready cards
 and one primary app Building card are allowed. Move the next eligible owner into
 Building only after the current unit has its actual accepted exit.

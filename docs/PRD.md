@@ -7,7 +7,7 @@ Current reference is actual Pen **1.2.23**, ASAR `d0c5c23a3a86ec1802c8754b59e826
 
 The live board and [task index](TASKS.md) reconcile **564 cards / 546 execution tasks / 18 milestones**, with 545 other terminal prerequisites. All original catalog/native rows, welcome/newsletter leaves and milestone exit criteria remain binding. [Current priorities](PRIORITIES-2026-11-17.md) distinguish scheduling from acceptance.
 
-Current published handoff: source16bbfd9e5 publishes bounded browser slider-label containment; b571b64cb retains prior numeric qualification. AI-CODEX-TOOLS-CHECK owns Building. The active replacement goal prioritizes the reported Codex MCP handshake/request failure and recurring traffic lights; Save/recovery remain release blockers. MOD-19, MOD-20, primitives, strict Note/raster, native/reference/Figma and normal installed acceptance remain open. Site/branding work is isolated in its separate user chat. Open Pen is a desktop product; browser checks do not announce a hosted browser edition.
+Current published handoff: source16bbfd9e5 publishes bounded browser slider-label containment; b571b64cb retains prior numeric qualification. AI-CODEX-TOOLS-CHECK executed on local native candidate `d18cbc54b`. AI-CODEX-REQUEST-FAILURE owns Building. The active replacement goal prioritizes the reported Codex MCP handshake/request failure and recurring traffic lights; Save/recovery remain release blockers. MOD-19, MOD-20, primitives, strict Note/raster, native/reference/Figma and normal installed acceptance remain open. Site/branding work is isolated in its separate user chat. Open Pen is a desktop product; browser checks do not announce a hosted browser edition.
 
 ## Product outcome
 
