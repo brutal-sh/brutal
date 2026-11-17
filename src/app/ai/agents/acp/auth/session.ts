@@ -6,6 +6,7 @@ import type { ACPAgentDef } from '@open-pencil/core/constants'
 
 import { spawnACPProcess } from '@/app/ai/agents/acp/process'
 import type { OwnToolsLink, OwnToolsOutcome } from '@/app/ai/agents/acp/tools'
+import { AGENT_CONNECT_TIMEOUT_MS } from '@/app/integrations/mcp/link'
 import { createDeferred, type Deferred } from '@/app/runtime/deferred'
 
 import {
@@ -31,6 +32,8 @@ export interface AuthSessionOptions {
   statusTimeoutMs?: number
   /** How long an agent may take to answer `initialize` before it counts as stuck. */
   initializeTimeoutMs?: number
+  /** How long an agent may take to answer the tool check's session request. */
+  sessionTimeoutMs?: number
   /** Also checks, for a signed-in agent, that a session reaches OpenPencil's tools. */
   tools?: ToolsProbe
 }
@@ -167,20 +170,30 @@ function adapterOf(init: InitializeResponse): AgentAuthCheck['adapter'] {
 type AuthSession = Awaited<ReturnType<typeof openAuthSession>>
 
 /** Starts a session as a chat would, sends nothing, and reports whether it reached the tools. */
-async function checkTools(session: AuthSession, probe: ToolsProbe): Promise<OwnToolsOutcome> {
+async function checkTools(
+  session: AuthSession,
+  probe: ToolsProbe,
+  sessionTimeoutMs: number
+): Promise<OwnToolsOutcome> {
   let link: OwnToolsLink | null = null
   try {
     // Linking reads the MCP server's token, which fails while the server is down.
     link = await probe.link()
     const linked = link
     session.onUpdate = (update) => linked.noteUpdate(update)
-    await session.untilStopped(
-      session.connection.newSession({
-        cwd: await probe.cwd(),
-        mcpServers: link.mcpServers,
-        _meta: link.meta
-      })
+    const request = session.connection.newSession({
+      cwd: await probe.cwd(),
+      mcpServers: link.mcpServers,
+      _meta: link.meta
+    })
+    const deadline = createDeferred<never>()
+    const timer = setTimeout(
+      () => deadline.reject(new Error('The agent did not start a session.')),
+      sessionTimeoutMs
     )
+    await session
+      .untilStopped(Promise.race([request, deadline.promise]))
+      .finally(() => clearTimeout(timer))
     return await session.untilStopped(link.outcome())
   } catch (error) {
     link?.stop()
@@ -195,7 +208,8 @@ export async function checkAgentAuth(
   agent: ACPAgentDef,
   options: AuthSessionOptions = {}
 ): Promise<AgentAuthCheck> {
-  const { statusTimeoutMs = STATUS_TIMEOUT_MS } = options
+  const { statusTimeoutMs = STATUS_TIMEOUT_MS, sessionTimeoutMs = AGENT_CONNECT_TIMEOUT_MS } =
+    options
   const session = await openAuthSession(agent, options)
   try {
     const status = await session.log.next(0, statusTimeoutMs)
@@ -205,7 +219,7 @@ export async function checkAgentAuth(
       adapter: adapterOf(session.init),
       tools:
         options.tools && status && isSignedIn(status)
-          ? await checkTools(session, options.tools)
+          ? await checkTools(session, options.tools, sessionTimeoutMs)
           : null
     }
   } finally {

@@ -62,3 +62,4 @@
 
 - Apply explicit color-slider calculations even when their result matches the rounded display.
 - Keep color-slider labels clear of their tracks and number fields, including longer translated labels.
+- End the coding-agent tool check when the adapter stops responding so the check can be retried.

@@ -45,6 +45,7 @@ function fakeAgent(options: {
   answersInitialize?: boolean
   /** Starts sessions, recording each request, instead of refusing them. */
   startsSessions?: boolean
+  answersNewSession?: boolean
 }) {
   const toAgent = new TransformStream<Uint8Array, Uint8Array>()
   const toClient = new TransformStream<Uint8Array, Uint8Array>()
@@ -76,6 +77,7 @@ function fakeAgent(options: {
     async newSession(params) {
       if (!options.startsSessions) throw new Error('Not used')
       sessions.push(params)
+      if (options.answersNewSession === false) return createDeferred<never>().promise
       return { sessionId: `session-${sessions.length}` }
     },
     async authenticate() {
@@ -115,6 +117,7 @@ function fakeAgent(options: {
     initialized,
     sessions,
     closed: closed.promise,
+    close: streams.close,
     authenticating: authenticating.promise
   }
 }
@@ -178,6 +181,7 @@ describe('signInWithAgent', () => {
 /** A link to OpenPencil's tools that reports the given outcome once the session exists. */
 function toolsProbe(outcome: OwnToolsOutcome) {
   const linked: string[] = []
+  const stopped: string[] = []
   const probe: ToolsProbe = {
     cwd: async () => '/workspace',
     link: async () => {
@@ -190,11 +194,11 @@ function toolsProbe(outcome: OwnToolsOutcome) {
         meta: { claudeCode: { options: { allowedTools: ['mcp__open-pencil'] } } },
         noteUpdate: () => undefined,
         outcome: async () => outcome,
-        stop: () => undefined
+        stop: () => stopped.push('stop')
       }
     }
   }
-  return { probe, linked }
+  return { probe, linked, stopped }
 }
 
 describe("checking a signed-in agent reaches OpenPencil's tools", () => {
@@ -244,5 +248,31 @@ describe("checking a signed-in agent reaches OpenPencil's tools", () => {
     expect(result.tools).toMatchObject({ connected: false })
     expect(result.tools && 'reason' in result.tools ? result.tools.reason : null).toBeString()
     await agent.closed
+  })
+
+  test('ends a stalled session request and permits a fresh check', async () => {
+    const agent = fakeAgent({ status: SIGNED_IN, startsSessions: true, answersNewSession: false })
+    const { probe, stopped } = toolsProbe({ connected: true })
+    const options = { spawn: agent.spawn, tools: probe, sessionTimeoutMs: 20 }
+    const safetyStop = setTimeout(() => void agent.close(), 500)
+    try {
+      const result = await checkAgentAuth(codex, options)
+      expect(result.status).toEqual(SIGNED_IN)
+      expect(result.tools).toEqual({
+        connected: false,
+        reason: 'The agent did not start a session.'
+      })
+      expect(agent.sessions).toHaveLength(1)
+      expect(stopped).toHaveLength(1)
+      await agent.closed
+    } finally {
+      clearTimeout(safetyStop)
+      await agent.close()
+    }
+
+    const retry = fakeAgent({ status: SIGNED_IN, startsSessions: true })
+    const result = await checkAgentAuth(codex, { spawn: retry.spawn, tools: probe })
+    expect(result.tools).toEqual({ connected: true })
+    await retry.closed
   })
 })
