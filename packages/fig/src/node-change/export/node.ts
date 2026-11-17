@@ -1,27 +1,9 @@
-import type { DerivedSymbolOverride } from '#fig/instance-overrides/types'
-import { effectiveFigmaRawNodeFields, effectiveFigmaSourcePayload } from '#fig/source-metadata'
-import { compact } from 'es-toolkit/array'
-
-import type { NodeChange } from '@open-pencil/kiwi/fig/codec'
-import { stringToGuid } from '@open-pencil/kiwi/fig/guid'
-import type {
-  ComponentPropertyDefinition,
-  ComponentPropertyReferenceField,
-  LayoutGrid,
-  SceneGraph,
-  SceneNode
-} from '@open-pencil/scene-graph'
-import { DEFAULT_STROKE_WEIGHT } from '@open-pencil/scene-graph/constants'
+import type { NodeChange, Paint } from '@open-pencil/kiwi/fig/codec'
+import type { SceneNode } from '@open-pencil/scene-graph'
 import { isGeneratedFrame } from '@open-pencil/scene-graph/generated'
-import { hasIconFills } from '@open-pencil/scene-graph/icons'
-import { layoutGridCount } from '@open-pencil/scene-graph/layout'
-import { siblingOrderKeys } from '@open-pencil/scene-graph/order-keys'
 import { OPEN_PENCIL_PLUGIN_DATA, withPluginData } from '@open-pencil/scene-graph/plugin-data'
-import type { GUID, Matrix, Vector } from '@open-pencil/scene-graph/primitives'
+import type { GUID } from '@open-pencil/scene-graph/primitives'
 
-/* eslint-disable max-lines */
-import { exportCanvasGuides } from '../canvas-guides'
-import { snapshotInstanceGeometry } from '../instance/geometry'
 import {
   applyExportSettingsPluginData,
   applyMeshPaintsPluginData,
@@ -33,518 +15,41 @@ import {
   serializePluginRelaunchData
 } from '../plugin-data'
 import { serializeNodeStatus } from '../status'
+import { applyComponentMetadata, mergeParameterBindings } from './component-properties'
 import {
-  componentPropAssignment,
-  componentPropertyValue,
-  componentPropertyVariableValue
-} from './assignments/values'
-import {
-  createFillPaints,
   createStrokePaints,
   getOrCreateNodeGuid,
-  exportedStyleReference,
-  instanceGuidResolver,
-  getOrCreatePropertyGuid,
-  parseGuidOrNull,
-  resolveInstanceComponentId,
   type KiwiNodeChange,
-  type KiwiSymbolOverridePayload,
   type SceneNodeToKiwiContext
 } from './context'
+import { applyNodeStateProps, applyNodeVisualProps, nodeToSerialize } from './fields'
 import { generatedFrameRecord, writesGeneratedFrame } from './generated'
-import { mergeOverrides, serializeRuntimePropertyOverrides } from './override-claims'
-import { applyRawFigmaNodeFields, materializeFigmaPayload } from './raw-payload'
-import { exportedNode } from './resolved-bindings'
-import { slotDefinitionFields } from './slots'
-import { applyStrokeGeometry } from './stroke'
-import { serializeText } from './text'
+import {
+  savedInFigmaBox,
+  exportNodeSize,
+  exportNodeTransform,
+  nodeForGeometryExport
+} from './geometry'
+import { applyInstancePayload } from './instance'
+import { exportOrderKey } from './order'
+import { applyRawFigmaNodeFields } from './raw-payload'
+import { applyVariableModes } from './variables'
 
+export { buildComponentPropIndex } from './component-properties'
 export type { KiwiNodeChange, SceneNodeToKiwiContext } from './context'
-
-const siblingOrderKeyCache = new WeakMap<object, Map<string, { keyById: Map<string, string> }>>()
-
-/**
- * A layer's `parentIndex.position`: its imported key where that still orders it after the
- * previous sibling, otherwise a key between its neighbours, so a round trip keeps the keys
- * Figma wrote instead of renumbering every sibling.
- *
- * Canvas children are excluded. Shared styles and variable records are written to the
- * internal canvas by other passes that continue the keys already there, and an imported
- * key would collide with them, so those keep the caller's running index.
- */
-function exportOrderKey(
-  context: SceneNodeToKiwiContext,
-  node: SceneNode,
-  childIndex: number
-): string {
-  const decided = context.orderKeys?.get(node.id)
-  if (decided) return decided
-  const parentId = node.parentId
-  if (!parentId) return context.fractionalPosition(childIndex)
-  const parent = context.graph.getNode(parentId)
-  if (!parent || parent.type === 'CANVAS') return context.fractionalPosition(childIndex)
-  let cache = siblingOrderKeyCache.get(context)
-  if (!cache) {
-    cache = new Map()
-    siblingOrderKeyCache.set(context, cache)
-  }
-  let entry = cache.get(parentId)
-  if (!entry) {
-    const siblings = context.graph.getChildren(parentId).filter((child) => !child.internalOnly)
-    const keys = siblingOrderKeys(siblings.map((sibling) => sibling.source.orderKey))
-    // Keyed by id: this runs once per child, so a scan per child would cost the parent O(n²).
-    entry = { keyById: new Map(siblings.map((sibling, index) => [sibling.id, keys[index]])) }
-    cache.set(parentId, entry)
-  }
-  return entry.keyById.get(node.id) ?? context.fractionalPosition(childIndex)
-}
+export { overridableNodeFields } from './fields'
+export { buildAssetRefToVarGuidMap } from './variables'
 
 type KiwiBooleanOperation = NonNullable<NodeChange['booleanOperation']>
 
+interface NodeLocation {
+  guid: GUID
+  parentGuid: GUID
+  childIndex: number
+}
+
 function toKiwiBooleanOperation(operation: SceneNode['booleanOperation']): KiwiBooleanOperation {
   return operation === 'EXCLUDE' ? 'XOR' : (operation ?? 'UNION')
-}
-
-/** Resolve effect variable asset refs when the Kiwi effect schema requires GUID aliases. */
-export function buildAssetRefToVarGuidMap(
-  graph: SceneGraph,
-  varIdToGuid: Map<string, GUID>
-): Map<string, GUID> {
-  const map = new Map<string, GUID>()
-  for (const [varId, variable] of graph.variables) {
-    if (!variable.key) continue
-    const guid = varIdToGuid.get(varId) ?? stringToGuid(varId)
-    map.set(variable.key, guid)
-    if (variable.version) map.set(`${variable.key}@${variable.version}`, guid)
-  }
-  return map
-}
-
-function componentPropertyTypeForKiwi(type: string) {
-  if (type === 'BOOLEAN') return 'BOOL'
-  return type
-}
-
-function serializeVariableModes(
-  node: SceneNode,
-  variableIdToGuid?: Map<string, GUID>,
-  modeIdToGuid?: Map<string, GUID>
-): NonNullable<KiwiNodeChange['variableModeBySetMap']> | undefined {
-  const entries = Object.entries(node.variableModes).flatMap(([collectionId, modeId]) => {
-    const collectionGuid = variableIdToGuid?.get(collectionId) ?? parseGuidOrNull(collectionId)
-    const modeGuid = modeIdToGuid?.get(modeId) ?? parseGuidOrNull(modeId)
-    if (!collectionGuid || !modeGuid) return []
-    return [{ variableSetID: { guid: collectionGuid }, variableModeID: modeGuid }]
-  })
-  return entries.length > 0 ? { entries } : undefined
-}
-
-function applyVariableModes(
-  context: SceneNodeToKiwiContext,
-  node: SceneNode,
-  record: KiwiNodeChange
-): void {
-  const modes = serializeVariableModes(node, context.varIdToGuid, context.modeIdToGuid)
-  if (modes) record.variableModeBySetMap = modes
-}
-
-function applyInstancePayload(
-  context: SceneNodeToKiwiContext,
-  node: SceneNode,
-  nc: KiwiNodeChange,
-  localIdCounter: { value: number }
-): void {
-  if (node.type !== 'INSTANCE' || !node.componentId) return
-  const symbolID = getOrCreateNodeGuid(
-    context,
-    resolveInstanceComponentId(context, node.componentId),
-    localIdCounter
-  )
-  if (symbolID) {
-    const symbolData: Record<string, unknown> = { symbolID }
-    const symbolOverrides: KiwiSymbolOverridePayload[] = []
-    if (node.source.fig.symbolOverrides.length > 0) {
-      symbolOverrides.push(
-        ...(materializeFigmaPayload(node.source.fig.symbolOverrides, context.blobs, {
-          blobIndexByHex: context.blobIndexByHex,
-          includePaintVariables: true,
-          includeVariableMaps: true
-        }) as KiwiSymbolOverridePayload[])
-      )
-    }
-    mergeOverrides(
-      symbolOverrides,
-      serializeRuntimePropertyOverrides(context, node, localIdCounter, (target) =>
-        overridableNodeFields(context, target)
-      )
-    )
-    if (symbolOverrides.length > 0) symbolData.symbolOverrides = symbolOverrides
-    if (!Number.isFinite(node.componentScale) || node.componentScale <= 0)
-      throw new Error('Invalid instance uniform scale')
-    if (node.componentScale !== 1 || node.source.fig.uniformScaleFactor != null) {
-      symbolData.uniformScaleFactor = node.componentScale
-    }
-    nc.symbolData = symbolData as KiwiNodeChange['symbolData']
-  }
-  if (
-    node.source.fig.componentPropAssignments.length > 0 &&
-    !node.source.editedFields.includes('componentPropertyAssignments')
-  ) {
-    nc.componentPropAssignments = materializeFigmaPayload(
-      node.source.fig.componentPropAssignments,
-      context.blobs,
-      {
-        blobIndexByHex: context.blobIndexByHex,
-        includePaintVariables: true,
-        includeVariableMaps: true
-      }
-    )
-  }
-  const retainedGeometry = materializeFigmaPayload(
-    node.source.fig.derivedSymbolData,
-    context.blobs,
-    {
-      blobIndexByHex: context.blobIndexByHex,
-      includePaintVariables: true,
-      includeVariableMaps: true
-    }
-  ) as DerivedSymbolOverride[]
-  nc.derivedSymbolData = snapshotInstanceGeometry(
-    context.graph,
-    node,
-    instanceGuidResolver(context, localIdCounter),
-    retainedGeometry,
-    (target) => ({ size: exportNodeSize(target), transform: exportNodeTransform(context, target) })
-  )
-  if (node.source.fig.derivedSymbolDataLayoutVersion != null) {
-    nc.derivedSymbolDataLayoutVersion = node.source.fig.derivedSymbolDataLayoutVersion
-  }
-}
-
-function componentPropertyPreferredValues(
-  definition: ComponentPropertyDefinition,
-  context: SceneNodeToKiwiContext
-) {
-  if (
-    (definition.type === 'INSTANCE_SWAP' || definition.type === 'SLOT') &&
-    definition.preferredValues?.length
-  ) {
-    return {
-      instanceSwapValues: definition.preferredValues.map((value) => {
-        const target = context.graph.getNode(value)
-        const key = target?.componentKey || target?.sourceLibraryKey || value
-        return { type: 'COMPONENT', key }
-      })
-    }
-  }
-  if (definition.type === 'VARIANT' && definition.variantOptions?.length) {
-    return { stringValues: [...definition.variantOptions] }
-  }
-  return undefined
-}
-
-function componentPropertyNodeField(field: ComponentPropertyReferenceField): string {
-  if (field === 'TEXT') return 'TEXT_DATA'
-  if (field === 'INSTANCE_SWAP') return 'OVERRIDDEN_SYMBOL_ID'
-  if (field === 'SLOT_CONTENT') return 'SLOT_CONTENT_ID'
-  return 'VISIBLE'
-}
-
-export function buildComponentPropIndex(
-  graph: SceneGraph
-): ReadonlyMap<string, ComponentPropertyDefinition> {
-  const definitions = new Map<string, ComponentPropertyDefinition>()
-  for (const candidate of graph.getAllNodes()) {
-    for (const definition of candidate.componentPropertyDefinitions) {
-      if (!definitions.has(definition.id)) definitions.set(definition.id, definition)
-    }
-  }
-  return definitions
-}
-
-function shouldSerializeRawBackedField(
-  node: SceneNode,
-  rawField: string,
-  hasValue: boolean,
-  alreadySerialized = false
-): boolean {
-  return hasValue && !(rawField in effectiveFigmaRawNodeFields(node)) && !alreadySerialized
-}
-
-interface ExportedPropertyReference {
-  defID: GUID
-  componentPropNodeField: string
-}
-interface ExportedParameterEntry {
-  variableField?: string
-  variableData?: {
-    value: { propRefValue: { defId: GUID } }
-    dataType: string
-    resolvedDataType: string
-  }
-}
-function mergeParameterBindings(nc: KiwiNodeChange): void {
-  const parameters = nc.parameterConsumptionMap
-  const entries = parameters?.entries ?? []
-  const fields = new Set(entries.map((entry) => entry.variableField))
-  const variables = nc.variableConsumptionMap?.entries ?? []
-  if (!variables.length) return
-  nc.parameterConsumptionMap = {
-    entries: [...variables.filter((entry) => !fields.has(entry.variableField)), ...entries]
-  }
-}
-
-function applyParameterReferences(nc: KiwiNodeChange, refs: ExportedPropertyReference[]): void {
-  if (!refs.length) return
-  const existing = nc.parameterConsumptionMap as { entries?: ExportedParameterEntry[] } | undefined
-  const fields = new Set(refs.map((ref) => ref.componentPropNodeField))
-  const entries = (existing?.entries ?? []).filter(
-    (entry) => !fields.has(entry.variableField ?? '')
-  )
-  const types: Record<string, string> = {
-    VISIBLE: 'BOOLEAN',
-    TEXT_DATA: 'STRING',
-    OVERRIDDEN_SYMBOL_ID: 'SYMBOL_ID',
-    SLOT_CONTENT_ID: 'SLOT_CONTENT_ID'
-  }
-  for (const ref of refs)
-    entries.push({
-      variableField: ref.componentPropNodeField,
-      variableData: {
-        value: { propRefValue: { defId: ref.defID } },
-        dataType: 'PROP_REF',
-        resolvedDataType: types[ref.componentPropNodeField]
-      }
-    })
-  nc.parameterConsumptionMap = { entries }
-}
-
-function applyComponentMetadata(
-  context: SceneNodeToKiwiContext,
-  node: SceneNode,
-  nc: KiwiNodeChange,
-  localIdCounter: { value: number }
-): void {
-  if (node.componentKey) nc.componentKey = node.componentKey
-  if (node.sourceLibraryKey) nc.sourceLibraryKey = node.sourceLibraryKey
-  const publishId = node.publishId ? parseGuidOrNull(node.publishId) : null
-  const overrideKey = node.overrideKey ? parseGuidOrNull(node.overrideKey) : null
-  if (publishId) nc.publishID = publishId
-  if (overrideKey) nc.overrideKey = overrideKey
-  if (node.sharedSymbolVersion) nc.sharedSymbolVersion = node.sharedSymbolVersion
-  if (node.publishedVersion) nc.publishedVersion = node.publishedVersion
-  if (node.type === 'COMPONENT_SET' || node.isPublishable) nc.isPublishable = node.isPublishable
-  if (node.type === 'COMPONENT' || node.isSymbolPublishable) {
-    nc.isSymbolPublishable = node.isSymbolPublishable
-  }
-  if (node.isExposedInstance) nc.propsAreBubbled = true
-  if (node.symbolDescription) nc.symbolDescription = node.symbolDescription
-  if (node.symbolLinks.length > 0) nc.symbolLinks = structuredClone(node.symbolLinks)
-  const componentPropDefs = node.componentPropertyDefinitions.map((def) => {
-    const record: Record<string, unknown> = {
-      id: getOrCreatePropertyGuid(context, def.id, localIdCounter),
-      name: def.name,
-      type: componentPropertyTypeForKiwi(def.type),
-      preferredValues: componentPropertyPreferredValues(def, context)
-    }
-    if (def.type === 'SLOT') Object.assign(record, slotDefinitionFields(def))
-    else {
-      record.initialValue = componentPropertyValue(
-        def.type,
-        def.defaultValue,
-        context,
-        localIdCounter
-      )
-      record.varValue = componentPropertyVariableValue(
-        def.type,
-        def.defaultValue,
-        context,
-        localIdCounter
-      )
-    }
-    if (def.description) record.description = def.description
-    return record
-  })
-  if (shouldSerializeRawBackedField(node, 'componentPropDefs', componentPropDefs.length > 0)) {
-    nc.componentPropDefs = componentPropDefs
-  }
-
-  const parameterRefs = node.componentPropertyReferences.map((ref) => ({
-    defID: getOrCreatePropertyGuid(context, ref.propertyId, localIdCounter),
-    componentPropNodeField: componentPropertyNodeField(ref.field)
-  }))
-  // Figma binds a slot frame only through its parameter map, never a legacy property ref.
-  const componentPropRefs = parameterRefs.filter(
-    (ref) => ref.componentPropNodeField !== 'SLOT_CONTENT_ID'
-  )
-  if (shouldSerializeRawBackedField(node, 'componentPropRefs', componentPropRefs.length > 0)) {
-    nc.componentPropRefs = componentPropRefs
-  }
-
-  applyParameterReferences(nc, parameterRefs)
-  const componentPropAssignments = compact(
-    Object.entries(node.componentPropertyAssignments).map(([propertyId, value]) =>
-      componentPropAssignment(context, node, propertyId, value, localIdCounter)
-    )
-  )
-  if (
-    shouldSerializeRawBackedField(
-      node,
-      'componentPropAssignments',
-      componentPropAssignments.length > 0,
-      Boolean(nc.componentPropAssignments)
-    )
-  ) {
-    nc.componentPropAssignments = componentPropAssignments
-  }
-
-  const variantPropSpecs = node.variantPropSpecs.map((spec) => ({
-    propDefId: getOrCreatePropertyGuid(context, spec.propDefId, localIdCounter),
-    value: spec.value
-  }))
-  if (shouldSerializeRawBackedField(node, 'variantPropSpecs', variantPropSpecs.length > 0)) {
-    nc.variantPropSpecs = variantPropSpecs
-  }
-}
-
-/** Whether the node is still saved in the box Figma gave it, not in its own. */
-function savedInFigmaBox(node: SceneNode): boolean {
-  const payload = effectiveFigmaSourcePayload(node)
-  return !!payload.rawSize && !!payload.rawTransform
-}
-
-function exportNodeSize(node: SceneNode): Vector {
-  // rawSize and rawTransform are a matched pair describing the ORIGINAL Figma
-  // box. Once the transform no longer backs the node, exportNodeTransform
-  // recomputes it from node dims via computeExportTransform; pairing that with
-  // an un-expanded rawSize disagrees about the box (for rotation, a different
-  // centre) and the node drifts on reimport. Use rawSize only while the
-  // transform still backs it.
-  const { rawSize } = effectiveFigmaSourcePayload(node)
-  return rawSize && savedInFigmaBox(node) ? { ...rawSize } : { x: node.width, y: node.height }
-}
-
-function exportNodeTransform(context: SceneNodeToKiwiContext, node: SceneNode): Matrix {
-  const rawTransform = effectiveFigmaSourcePayload(node).rawTransform
-  return rawTransform ? { ...rawTransform } : context.computeExportTransform(node)
-}
-
-function hasRawGeometryPayload(node: SceneNode): boolean {
-  const rawNodeFields = effectiveFigmaRawNodeFields(node)
-  return 'fillGeometry' in rawNodeFields || 'strokeGeometry' in rawNodeFields
-}
-
-function hasRawVectorPayload(node: SceneNode): boolean {
-  return 'vectorData' in effectiveFigmaRawNodeFields(node)
-}
-
-const SUPPORTED_NORMALIZED_EFFECT_TYPES = new Set([
-  'DROP_SHADOW',
-  'INNER_SHADOW',
-  'LAYER_BLUR',
-  'BACKGROUND_BLUR',
-  'FOREGROUND_BLUR'
-])
-
-function hasRawUnsupportedEffects(node: SceneNode): boolean {
-  const effects = effectiveFigmaRawNodeFields(node).effects
-  return (
-    Array.isArray(effects) &&
-    effects.some(
-      (effect) =>
-        effect &&
-        typeof effect === 'object' &&
-        'type' in effect &&
-        !SUPPORTED_NORMALIZED_EFFECT_TYPES.has(String(effect.type))
-    )
-  )
-}
-
-function nodeForGeometryExport(node: SceneNode): SceneNode {
-  if (!hasRawGeometryPayload(node) && !hasRawVectorPayload(node)) return node
-  return {
-    ...node,
-    fillGeometry: hasRawGeometryPayload(node) ? [] : node.fillGeometry,
-    strokeGeometry: hasRawGeometryPayload(node) ? [] : node.strokeGeometry,
-    vectorNetwork: hasRawVectorPayload(node) ? null : node.vectorNetwork
-  }
-}
-
-/**
- * A layout guide as the archive stores it: stripes along an axis or a grid, whichever shape it was
- * given in, Figma's plugin names (`COLUMNS`, `count`, `alignment`) or the archive's own.
- */
-function kiwiLayoutGrid(grid: LayoutGrid): LayoutGrid {
-  const rows = grid.pattern === 'ROWS' || (grid.pattern !== 'COLUMNS' && grid.axis === 'Y')
-  return {
-    type: grid.type ?? grid.alignment ?? 'STRETCH',
-    axis: rows ? 'Y' : 'X',
-    visible: grid.visible ?? true,
-    numSections: layoutGridCount(grid),
-    offset: grid.offset ?? 0,
-    // Figma's new grid is 10 px, the size the plugin API reports for one without a size.
-    sectionSize: grid.sectionSize ?? (grid.pattern === 'GRID' ? 10 : 0),
-    gutterSize: grid.gutterSize ?? 0,
-    color: grid.color ?? { r: 1, g: 0, b: 0, a: 0.1 },
-    pattern: grid.pattern === 'GRID' ? 'GRID' : 'STRIPES'
-  }
-}
-
-function applySharedStyleProps(
-  context: SceneNodeToKiwiContext,
-  node: SceneNode,
-  nc: KiwiNodeChange
-): void {
-  const reference = (id: string) => exportedStyleReference(context, id)
-  if (node.fillStyleId) nc.styleIdForFill = reference(node.fillStyleId)
-  if (node.strokeStyleId) nc.styleIdForStrokeFill = reference(node.strokeStyleId)
-  if (node.textStyleId) nc.styleIdForText = reference(node.textStyleId)
-  if (node.effectStyleId) nc.styleIdForEffect = reference(node.effectStyleId)
-  if (node.gridStyleId) nc.styleIdForGrid = reference(node.gridStyleId)
-  if (node.layoutGrids.length > 0) nc.layoutGrids = node.layoutGrids.map(kiwiLayoutGrid)
-  if (node.guides.length > 0) nc.guides = exportCanvasGuides(node.guides)
-}
-
-function applyNodeVisualProps(
-  context: SceneNodeToKiwiContext,
-  node: SceneNode,
-  nc: KiwiNodeChange
-): void {
-  applyStrokeGeometry(node, nc)
-  if (node.fills.length > 0 && !hasIconFills(node)) nc.fillPaints = createFillPaints(context, node)
-
-  context.serializeCornerRadii(node, nc)
-  // Figma draws a polygon or star from its count and inner scale; its clipboard has no geometry.
-  if (node.type === 'POLYGON' || node.type === 'STAR') nc.count = node.pointCount
-  if (node.type === 'STAR') nc.starInnerScale = node.starInnerRadius
-
-  if (node.effects.length > 0 && !hasRawUnsupportedEffects(node)) {
-    nc.effects = node.effects.map((effect) => ({
-      type: effect.type === 'LAYER_BLUR' ? 'FOREGROUND_BLUR' : effect.type,
-      color: context.safeColor(effect.color),
-      offset: effect.offset,
-      radius: effect.radius,
-      spread: effect.spread,
-      visible: effect.visible,
-      blendMode: effect.blendMode ?? 'NORMAL',
-      showShadowBehindNode: effect.showShadowBehindNode
-    }))
-  }
-
-  if (node.type === 'TEXT') serializeText(context, node, nc)
-
-  if (node.type !== 'VECTOR') nc.frameMaskDisabled = !node.clipsContent
-  applySharedStyleProps(context, node, nc)
-  if (node.horizontalConstraint !== 'MIN') nc.horizontalConstraint = node.horizontalConstraint
-  if (node.verticalConstraint !== 'MIN') nc.verticalConstraint = node.verticalConstraint
-  if (node.arcData) {
-    nc.arcData = {
-      startingAngle: node.arcData.startingAngle,
-      endingAngle: node.arcData.endingAngle,
-      innerRadius: node.arcData.innerRadius
-    }
-  }
-  if (!node.autoRename) nc.autoRename = false
 }
 
 /**
@@ -559,19 +64,6 @@ function exportKiwiNodeType(node: SceneNode, context: SceneNodeToKiwiContext): s
   // A generated frame that lost its template's layers is kept as a frame; see `writesGeneratedFrame`.
   if (isGeneratedFrame(node) && !writesGeneratedFrame(context, node)) return 'FRAME'
   return context.mapToFigmaType(node.type)
-}
-
-/**
- * The node a record is written from. Serializing writes plugin data onto the node it is given,
- * and the export reads the live document, so each record gets a copy that lives only while it is
- * written, carrying any plugin data the export renamed.
- */
-function nodeToSerialize(context: SceneNodeToKiwiContext, source: SceneNode): SceneNode {
-  const resolved = exportedNode(context, source)
-  return {
-    ...resolved,
-    pluginData: context.pluginDataOverrides?.get(source.id) ?? resolved.pluginData
-  }
 }
 
 /**
@@ -591,72 +83,18 @@ function exportedChildren(node: SceneNode, context: SceneNodeToKiwiContext): Sce
     .filter((child) => !child.internalOnly && child.sharedStyleType === null)
 }
 
-/** Stroke geometry and lock state, which a layer's record and its instance claims both write. */
-function applyNodeStateProps(node: SceneNode, nc: KiwiNodeChange): void {
-  // With strokes, their geometry is the node's. Without, the node keeps its own weight and
-  // alignment, written when set or when the source file carried them.
-  if (node.strokes.length > 0) {
-    nc.strokeWeight = node.strokes[0].weight
-    nc.strokeAlign = node.strokes[0].align
-  } else {
-    const rawNodeFields = effectiveFigmaRawNodeFields(node)
-    if (node.strokeWeight !== DEFAULT_STROKE_WEIGHT || 'strokeWeight' in rawNodeFields) {
-      nc.strokeWeight = node.strokeWeight
-    }
-    // Kiwi reads a missing alignment as centered.
-    if (node.strokeAlign !== 'CENTER' || 'strokeAlign' in rawNodeFields) {
-      nc.strokeAlign = node.strokeAlign
-    }
-  }
-  if (node.locked) nc.locked = true
-}
-
-/**
- * The style fields of a layer as its own record writes them, for the instance override claims
- * that carry them. Text is written without derived glyphs: a claim never carries them.
- */
-export function overridableNodeFields(
+function initialNodeRecord(
   context: SceneNodeToKiwiContext,
-  source: SceneNode
+  node: SceneNode,
+  location: NodeLocation
 ): KiwiNodeChange {
-  const node = nodeToSerialize(context, source)
-  const nc: KiwiNodeChange = {}
-  if (node.blendMode !== 'PASS_THROUGH') nc.blendMode = node.blendMode
-  applyNodeStateProps(node, nc)
-  applyNodeVisualProps({ ...context, fontDigestMap: undefined }, node, nc)
-  context.serializeLayoutProps(node, nc)
-  applyVariableModes(context, node, nc)
-  context.serializeVariableBindings(node, nc, context.graph, context.varIdToGuid)
-  applyMeshPaintsPluginData(node)
-  applyShaderPaintsPluginData(node, context.graph.images)
-  applyIconFillsPluginData(node, context.graph.images)
-  // An empty list clears inherited mesh metadata when this occurrence changes to a solid.
-  nc.pluginData = mergePluginData(node.pluginData)
-  return nc
-}
-
-export function sceneNodeToKiwiWithContext(
-  source: SceneNode,
-  parentGuid: GUID,
-  childIndex: number,
-  localIdCounter: { value: number },
-  context: SceneNodeToKiwiContext
-): KiwiNodeChange[] {
-  const node = nodeToSerialize(context, source)
-  const guid = getOrCreateNodeGuid(context, node.id, localIdCounter) ?? {
-    sessionID: 1,
-    localID: localIdCounter.value++
-  }
-
-  const strokePaints = createStrokePaints(context, node)
-
   const exportType = exportKiwiNodeType(node, context)
 
   const nc: KiwiNodeChange = {
-    guid,
+    guid: location.guid,
     parentIndex: {
-      guid: parentGuid,
-      position: exportOrderKey(context, node, childIndex)
+      guid: location.parentGuid,
+      position: exportOrderKey(context, node, location.childIndex)
     },
     type: exportType,
     name: node.name,
@@ -672,24 +110,23 @@ export function sceneNodeToKiwiWithContext(
   if (node.type === 'GROUP') {
     nc.resizeToFit = true
   }
-  applyNodeStateProps(node, nc)
-  applyNodeVisualProps(context, node, nc)
-  applyComponentMetadata(context, node, nc, localIdCounter)
-  applyInstancePayload(context, node, nc, localIdCounter)
+  return nc
+}
+
+function applySpecialNodeProps(node: SceneNode, nc: KiwiNodeChange, strokePaints: Paint[]): void {
   if (node.type === 'COMPONENT_SET')
     node.pluginData = withPluginData(node.pluginData, OPEN_PENCIL_PLUGIN_DATA.nodeType, node.type)
   if (nc.type === 'CANVAS') nc.pageType = 'DESIGN'
   if (node.type === 'BOOLEAN_OPERATION')
     nc.booleanOperation = toKiwiBooleanOperation(node.booleanOperation)
   if (strokePaints.length > 0) nc.strokePaints = strokePaints
+}
 
-  context.serializeLayoutProps(node, nc)
-  context.serializeGeometry(nodeForGeometryExport(node), nc, context.blobs)
-  context.serializeVariableBindings(node, nc, context.graph, context.varIdToGuid)
-  mergeParameterBindings(nc)
-  applyRawFigmaNodeFields(context, node, nc)
-  applyVariableModes(context, node, nc)
-
+function applyNodePluginData(
+  context: SceneNodeToKiwiContext,
+  node: SceneNode,
+  nc: KiwiNodeChange
+): void {
   applyMeshPaintsPluginData(node)
   applyShaderPaintsPluginData(node, context.graph.images)
   applyIconFillsPluginData(node, context.graph.images)
@@ -702,6 +139,39 @@ export function sceneNodeToKiwiWithContext(
   if (node.pluginRelaunchData.length > 0) {
     nc.pluginRelaunchData = serializePluginRelaunchData(node.pluginRelaunchData)
   }
+}
+
+// eslint-disable-next-line max-params -- Preserve the existing public five-argument API; see docs/FIG-EXPORT-COORDINATION.md.
+export function sceneNodeToKiwiWithContext(
+  source: SceneNode,
+  parentGuid: GUID,
+  childIndex: number,
+  localIdCounter: { value: number },
+  context: SceneNodeToKiwiContext
+): KiwiNodeChange[] {
+  const node = nodeToSerialize(context, source)
+  const guid = getOrCreateNodeGuid(context, node.id, localIdCounter) ?? {
+    sessionID: 1,
+    localID: localIdCounter.value++
+  }
+
+  const strokePaints = createStrokePaints(context, node)
+
+  const nc = initialNodeRecord(context, node, { guid, parentGuid, childIndex })
+  applyNodeStateProps(node, nc)
+  applyNodeVisualProps(context, node, nc)
+  applyComponentMetadata(context, node, nc, localIdCounter)
+  applyInstancePayload(context, node, nc, localIdCounter)
+  applySpecialNodeProps(node, nc, strokePaints)
+
+  context.serializeLayoutProps(node, nc)
+  context.serializeGeometry(nodeForGeometryExport(node), nc, context.blobs)
+  context.serializeVariableBindings(node, nc, context.graph, context.varIdToGuid)
+  mergeParameterBindings(nc)
+  applyRawFigmaNodeFields(context, node, nc)
+  applyVariableModes(context, node, nc)
+
+  applyNodePluginData(context, node, nc)
 
   const result: KiwiNodeChange[] = [generatedFrameRecord(context, node, nc) ?? nc]
   const children = exportedChildren(node, context)
