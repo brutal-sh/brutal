@@ -10,13 +10,14 @@ import {
 
 import theme from '@/theme/color-picker-number-field'
 
-const { label, min, max, step } = defineProps<{
+const { label, modelValue, min, max, step } = defineProps<{
   label: string
+  modelValue: number
   min: number
   max: number
   step?: number
 }>()
-const value = defineModel<number>({ required: true })
+const emit = defineEmits<{ 'update:modelValue': [value: number] }>()
 const attrs = useAttrs()
 const styles = tv(theme)()
 defineOptions({ inheritAttrs: false })
@@ -25,14 +26,14 @@ defineOptions({ inheritAttrs: false })
 <template>
   <NumberFieldRoot
     v-slot="{ attrs: fieldAttrs }"
-    :model-value="value"
+    :model-value="modelValue"
     :aria-label="label"
     :min="min"
     :max="max"
     :step="step"
     expressions="absolute"
     :inherit-binding="false"
-    @commit="value = $event"
+    @commit="emit('update:modelValue', $event)"
   >
     <div
       v-bind="{ ...attrs, ...fieldAttrs }"

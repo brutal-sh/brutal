@@ -122,7 +122,7 @@ test('RGBA alpha evaluates arithmetic and retains its value after division by ze
   editor.canvas.assertNoErrors()
 })
 
-test('focus, blur and Enter preserve untouched fractional color channels', async () => {
+async function setFractionalColor() {
   await editor.page.getByTestId('color-format-select').click()
   await editor.page.getByRole('option', { name: 'CSS', exact: true }).click()
   const css = editor.page.getByRole('textbox', { name: 'CSS', exact: true })
@@ -132,6 +132,11 @@ test('focus, blur and Enter preserve untouched fractional color channels', async
   expect(before).toEqual({ r: 38.25 / 255, g: 100.5 / 255, b: 235.75 / 255, a: 0.123456 })
   await editor.page.getByTestId('color-format-select').click()
   await editor.page.getByRole('option', { name: 'RGBA', exact: true }).click()
+  return before
+}
+
+test('focus, blur and Enter preserve untouched fractional color channels', async () => {
+  const before = await setFractionalColor()
   for (const name of ['Red', 'Green', 'Blue', 'Alpha']) {
     const input = editor.page.getByRole('spinbutton', { name, exact: true })
     await input.focus()
@@ -141,6 +146,30 @@ test('focus, blur and Enter preserve untouched fractional color channels', async
     await input.press('Enter')
     expect((await getSelectedNode(editor.page))?.fills[0]?.color).toEqual(before)
   }
+  editor.canvas.assertNoErrors()
+})
+
+test('explicit RGB arithmetic applies a result equal to the rounded display', async () => {
+  await setFractionalColor()
+  await enterChannel('Red', '19*2')
+  expect((await getSelectedNode(editor.page))?.fills[0]?.color).toEqual({
+    r: 38 / 255,
+    g: 100.5 / 255,
+    b: 235.75 / 255,
+    a: 0.123456
+  })
+  editor.canvas.assertNoErrors()
+})
+
+test('explicit alpha arithmetic applies a result equal to the rounded display', async () => {
+  await setFractionalColor()
+  await enterChannel('Alpha', '0.06*2')
+  expect((await getSelectedNode(editor.page))?.fills[0]?.color).toEqual({
+    r: 38.25 / 255,
+    g: 100.5 / 255,
+    b: 235.75 / 255,
+    a: 0.12
+  })
   editor.canvas.assertNoErrors()
 })
 
