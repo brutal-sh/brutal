@@ -1,3 +1,5 @@
+> Execution update — 17 November: complete live readback remains 554 cards / 536 execution tasks / 18 milestones; 394 Backlog / 0 Ready / 1 Building (SURF-PRIMITIVES) / 53 Verify / 88 Executed. MOD-20 source `56f67d70b` is published after bounded software checks and returns to Verify for its remaining gates. The dated audit below remains the 16 November planning receipt; current execution is in TRACKING.md.
+
 > Goal activation update: Jason cleared the prior goal and activated the replacement on 16 November 2026. The paused status below describes the planning audit before activation; its task counts and acceptance boundaries remain unchanged.
 
 # Board reconciliation — 16 November 2026
