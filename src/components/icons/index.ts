@@ -15,10 +15,10 @@ import IconMinus from '~icons/lucide/minus'
 import IconMousePointer from '~icons/lucide/mouse-pointer'
 import IconPenTool from '~icons/lucide/pen-tool'
 import IconPencil from '~icons/lucide/pencil'
-import IconPuzzle from '~icons/lucide/puzzle'
 import IconRows from '~icons/lucide/rows-3'
 import IconScaling from '~icons/lucide/scaling'
 import IconShapes from '~icons/lucide/shapes'
+import IconSparkle from '~icons/lucide/sparkle'
 import IconSpline from '~icons/lucide/spline'
 import IconSquare from '~icons/lucide/square'
 import IconSlot from '~icons/lucide/square-dashed'
@@ -55,7 +55,7 @@ export const toolIcons: Record<Tool, Component> = {
   STICKY: IconStickyNote,
   NOTE: IconStickyNote,
   SCRIPT: IconCode,
-  ICON: IconPuzzle,
+  ICON: IconSparkle,
   SHAPE_WITH_TEXT: IconShapes,
   CONNECTOR: IconSpline,
   HAND: IconHand,

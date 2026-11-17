@@ -2,15 +2,16 @@ import { readFile } from 'node:fs/promises'
 
 import { parsePenDocument } from '@open-pencil/pen'
 
-import { expect, test, useEditorSetupWithClear } from '#tests/e2e/fixtures'
+import { expect, test, useIsolatedEditorSetupWithClear } from '#tests/e2e/fixtures'
+import { mockOfficialCloudDiscovery } from '#tests/helpers/cloud/discovery'
 import { openAppMenu } from '#tests/helpers/menu'
 import { openAdvancedProperties, propertyField } from '#tests/helpers/properties'
 import { getNodeById, getPageChildren, getSelectedNode } from '#tests/helpers/store'
 import { toolbarFlyoutTestId, toolbarToolTestId } from '#tests/helpers/test-ids'
 
-const ctx = useEditorSetupWithClear()
-test.beforeAll(async () => {
-  await ctx.page.route('https://api.iconify.design/lucide.json*', (route) =>
+const ctx = useIsolatedEditorSetupWithClear('/', async (page) => {
+  await mockOfficialCloudDiscovery(page)
+  await page.route('https://api.iconify.design/lucide.json*', (route) =>
     route.fulfill({
       json: {
         prefix: 'lucide',

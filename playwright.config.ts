@@ -90,6 +90,7 @@ export default defineConfig({
       testIgnore: ['**/native/**', '**/storybook/**'],
       testMatch: [
         '**/*.webkit.spec.ts',
+        '**/app/primitives.spec.ts',
         '**/canvas/split-views.spec.ts',
         '**/components/library-lifecycle.spec.ts',
         '**/components/assets-panel.spec.ts',

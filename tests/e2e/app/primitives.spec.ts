@@ -4,6 +4,9 @@ import { exportFigFile } from '@open-pencil/core/io/formats/fig'
 import { SceneGraph } from '@open-pencil/scene-graph'
 
 import { CanvasHelper } from '#tests/helpers/canvas'
+import { mockOfficialCloudDiscovery } from '#tests/helpers/cloud/discovery'
+import { getPageChildren } from '#tests/helpers/store'
+import { toolbarToolTestId } from '#tests/helpers/test-ids'
 
 const selectedNames = (page: Page) =>
   page.evaluate(() =>
@@ -13,55 +16,34 @@ const selectedNames = (page: Page) =>
       .map((node) => node.name)
   )
 
-test('Primitives opens the icon picker even when its standalone toolbar button is hidden', async ({
+test.beforeEach(async ({ page }) => {
+  await mockOfficialCloudDiscovery(page)
+})
+
+test('Primitives Icon arms placement without opening the glyph picker', async ({
   page
 }, testInfo) => {
-  await page.route('https://api.iconify.design/**', async (route) => {
-    const path = new URL(route.request().url()).pathname
-    const set = {
-      prefix: 'test',
-      width: 24,
-      height: 24,
-      icons: { 'parity-test-square': { body: '<path fill="currentColor" d="M2 2h20v20H2z"/>' } }
-    }
-    if (path === '/search') {
-      await route.fulfill({
-        json: {
-          icons: ['test:parity-test-square'],
-          total: 1,
-          collections: { test: { name: 'Test Icons', total: 1 } }
-        }
-      })
-    } else if (path === '/collections') {
-      await route.fulfill({
-        json: { test: { name: 'Test Icons', total: 1, license: { title: 'MIT' } } }
-      })
-    } else await route.fulfill({ json: set })
-  })
   await page.goto('/')
   const canvas = new CanvasHelper(page)
   await canvas.waitForInit()
   await expect(page.getByRole('button', { name: 'Insert icon', exact: true })).toHaveCount(0)
-  await page.getByRole('button', { name: 'Primitives', exact: true }).click()
-  await page.screenshot({ path: testInfo.outputPath('primitives-menu.png') })
-  await page.getByRole('menuitem', { name: 'Icon', exact: true }).click()
-  const picker = page.getByRole('dialog', { name: 'Insert icon', exact: true })
-  await expect(picker).toBeVisible()
-  await picker.getByRole('textbox').fill('parity-test-square')
-  await picker.getByRole('option', { name: 'parity-test-square', exact: true }).click()
-  await expect(picker).toBeHidden()
-  await expect.poll(() => selectedNames(page)).toEqual(['parity-test-square'])
-  await canvas.undo()
-  await expect
-    .poll(() =>
-      page.evaluate(
-        () =>
-          window.openPencil
-            ?.getStore?.()
-            .graph.getChildren(window.openPencil.getStore().state.currentPageId).length
-      )
-    )
-    .toBe(0)
+  const trigger = page.getByRole('button', { name: 'Primitives', exact: true })
+  await trigger.click()
+  await expect(page.getByRole('menu', { name: 'Primitives', exact: true })).toBeVisible()
+  await page.screenshot({
+    path: testInfo.outputPath('primitives-menu.png'),
+    animations: 'disabled'
+  })
+  await page.getByRole('menuitemradio', { name: 'Icon', exact: true }).click()
+  await expect(page.getByTestId(toolbarToolTestId('ICON'))).toHaveAttribute('aria-pressed', 'true')
+  await expect(page.getByRole('dialog', { name: 'Insert icon', exact: true })).toBeHidden()
+  expect(await getPageChildren(page)).toHaveLength(0)
+  await canvas.pressKey('Escape')
+  await expect(page.getByTestId(toolbarToolTestId('SELECT'))).toHaveAttribute(
+    'aria-pressed',
+    'true'
+  )
+  expect(await getPageChildren(page)).toHaveLength(0)
   canvas.assertNoErrors()
 })
 

@@ -11,6 +11,8 @@ Current complete Trello readback: **554 cards / 536 execution tasks / 18 milesto
 
 Now: qualify the primitives toolbar/flyout under SURF-PRIMITIVES, the sole Building card and a declared prerequisite of UI-NUMERIC-EXPRESSIONS. MOD-20 returns Verify after bounded exporter software publication; MOD-17/live Figma/native criteria remain open. [Exporter qualification](FIG-EXPORT-COORDINATION.md) records the delegated public-API exception and executed software controls. Actual native arithmetic mismatches are retained under `local-evidence/numeric-expressions-2026-11-17/`; no arithmetic correction is accepted yet. The initial importer publication is complete. All original strict/reference/native and terminal parity criteria remain required except the explicitly delegated single public-symbol parameter-count disposition.
 
+Current primitives evidence: [qualification](PRIMITIVES.md) records the actual installed menu/keyboard differences and the small shared-glyph correction. Eighteen isolated Chromium/WebKit controls execute without skips or retries; the first public-Cloud CORS failures and incomplete animated capture are preserved. A subsequent matched native capture executes at 1512 × 949 Light/2×; the older installed menu differences and current-source delivery remain unaccepted. Original numeric-input acceptance remains dependent.
+
 Historical readbacks below remain dated receipts, not the current goal status or scheduling. Exact prior tracking text is archived privately under `local-evidence/planning-refresh-2026-11-16/docs-before/TRACKING.md`.
 
 Historical execution readback — 2026-11-12

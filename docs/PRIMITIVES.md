@@ -1,0 +1,19 @@
+# Primitives qualification
+
+Actual Pen 1.2.23 is the reference. SURF-PRIMITIVES records bounded software qualification; current-source native visual acceptance and its original Done criteria remain binding.
+
+On 17 November, the running Pen menu presents Rectangle, Ellipse, Polygon, Icon, Script, image/SVG import and Figma import. Down from Rectangle focuses Ellipse; Escape dismisses the menu and restores trigger focus. Ellipse and Icon select drawing tools; Icon opens no glyph picker. The original Rectangle choice and Move are restored without editing or saving the reference document.
+
+The installed Open Pen binary `db4e528c` has extra Line/Star entries and a puzzle-piece Icon glyph. Its Down key therefore reaches Line first. Escape restores trigger focus; selecting Ellipse arms it, and Escape returns to Move. The owned fixture closes cleanly to Home with its saved digest unchanged. Current source already hides secondary Line/Star by default while keeping toolbar customization. The shared Icon glyph now uses the installed Lucide four-point outline; no proprietary artwork or new dependency is introduced.
+
+The native captures differ: Pen is 1496 × 933 Light; installed Open Pen is 1320 × 838 Dark. Both menus fit their captured windows. These observations do not accept matched placement, exact typography/borders, small-viewport behavior, screen-reader output or delivery of current source into the installed app.
+
+Private evidence is in `local-evidence/primitives-native-2026-11-17/REPORT.md`. REA parent IDs are `ev_f8ad6e5999437e41a2359b2ba28dfe2c242c69f3cbca48c2b71bae440fe4cf31` and `ev_f9db5c9d9a97df91973253545b0d6609f5c35fda55e4a56874393a4a5d11c805`; both retained screenshots visibly contain the menus and their bytes match the returned digests. Action/focus outcomes are in the corresponding CUA receipts.
+
+Browser checks reuse the existing primitive imports and Icon arming, placement, history, save/reopen and keyboard controls. The old app test's picker expectation is replaced with observed arming/cancel; separate Insert Icon picker coverage remains. Existing Cloud discovery and isolated-editor fixtures keep these controls local without weakening existing console assertions. Public Cloud behavior is outside this qualification.
+
+The first run retains six Cloud CORS console failures and twelve serial skips. The isolated run executes all 18 controls in Chromium/WebKit with no failures, skips, retries or flakies. A separate capture run executes two arming controls. Its first WebKit image catches the opening animation and is retained as incomplete visual evidence; the stable capture rerun executes both controls again with screenshot animation disabled, and the WebKit image visibly shows the seven-row menu and four-point glyph. The full repository check exits zero with zero duplication findings; final documentation checks also exit zero. These browser images remain separate from native visual acceptance.
+
+No new renderer, import or Script acceptance follows from this menu audit. Reuse their existing task owners; preserve native/reference/Figma requirements and the numeric-input prerequisite.
+
+The subsequent approved native comparison executes the capture criterion at **1512 × 949 Light, 2×** for both existing apps. CUA image headers independently report 3024 × 1898 pixels. REA IDs are `ev_79f289d9b63919abd79c6732bc46ae9fd2c3036bd61ccadff8253d388a6ffa5a` and `ev_a8a4debfb802cbd9bb412a437c631d9acf0447bac4f9c0baf52a05023acd20a6`. The installed Open Pen menu is taller from the extra entries and its anchor is slightly right/lower; no exact typography, border or anchor repair is claimed. These differences remain in Verify until current-source native delivery and the original acceptance run. Both prior window sizes are restored, Open Pen returns to Dark/Home, menus close and both owned fixture digests still match. No document is saved.
