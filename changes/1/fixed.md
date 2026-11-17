@@ -61,3 +61,4 @@
 - Keep the Layers tree's accessible selection state consistent with its visible selection.
 
 - Apply explicit color-slider calculations even when their result matches the rounded display.
+- Keep color-slider labels clear of their tracks and number fields, including longer translated labels.

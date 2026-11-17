@@ -33,6 +33,16 @@ async function getSelectedFill() {
   })
 }
 
+type SelectedFill = Awaited<ReturnType<typeof getSelectedFill>>
+
+function expectRGBChanged(before: SelectedFill, after: SelectedFill) {
+  expect(
+    before?.color.r !== after?.color.r ||
+      before?.color.g !== after?.color.g ||
+      before?.color.b !== after?.color.b
+  ).toBe(true)
+}
+
 async function getSelectedFillOkHCL() {
   const value = await page.evaluate(() => {
     const store = window.openPencil?.getStore?.()
@@ -66,12 +76,16 @@ async function dragSlider(testId: string, ratio: number) {
   const slider = page.getByTestId(testId).locator(':scope > [data-orientation="horizontal"]')
   const box = await slider.boundingBox()
   if (!box) throw new Error(`Missing slider: ${testId}`)
-  await slider.click({
-    position: {
-      x: Math.max(2, Math.min(box.width - 2, box.width * ratio)),
-      y: box.height / 2
-    }
-  })
+  const thumb = await slider.getByRole('slider').boundingBox()
+  if (!thumb) throw new Error(`Missing slider thumb: ${testId}`)
+  const startX = thumb.x + thumb.width / 2
+  const y = box.y + box.height / 2
+  const targetX = box.x + thumb.width / 2 + (box.width - thumb.width) * ratio
+  await page.mouse.move(startX, y)
+  await page.mouse.down()
+  await page.mouse.move(startX + 0.1, y)
+  await page.mouse.move(targetX, y, { steps: 12 })
+  await page.mouse.up()
   await canvas.waitForRender()
 }
 
@@ -86,11 +100,7 @@ test('rgb hue slider updates selected fill color', async () => {
   const after = await getSelectedFill()
 
   expect(after).not.toBeNull()
-  expect(
-    before?.color.r !== after?.color.r ||
-      before?.color.g !== after?.color.g ||
-      before?.color.b !== after?.color.b
-  ).toBe(true)
+  expectRGBChanged(before, after)
 })
 
 test('rgb alpha slider updates fill opacity and alpha', async () => {
@@ -111,11 +121,7 @@ test('hsl saturation slider changes saturation', async () => {
   const after = await getSelectedFill()
 
   expect(after).not.toBeNull()
-  expect(
-    before?.color.r !== after?.color.r ||
-      before?.color.g !== after?.color.g ||
-      before?.color.b !== after?.color.b
-  ).toBe(true)
+  expectRGBChanged(before, after)
 })
 
 test('hsl lightness slider changes color independently', async () => {
@@ -126,11 +132,7 @@ test('hsl lightness slider changes color independently', async () => {
   const after = await getSelectedFill()
 
   expect(after).not.toBeNull()
-  expect(
-    before?.color.r !== after?.color.r ||
-      before?.color.g !== after?.color.g ||
-      before?.color.b !== after?.color.b
-  ).toBe(true)
+  expectRGBChanged(before, after)
 })
 
 test('hsb saturation and brightness sliders both affect fill color', async () => {
@@ -141,21 +143,13 @@ test('hsb saturation and brightness sliders both affect fill color', async () =>
   await dragSlider('color-slider-hsb-s', 0.75)
   const afterS = await getSelectedFill()
   expect(afterS).not.toBeNull()
-  expect(
-    beforeS?.color.r !== afterS?.color.r ||
-      beforeS?.color.g !== afterS?.color.g ||
-      beforeS?.color.b !== afterS?.color.b
-  ).toBe(true)
+  expectRGBChanged(beforeS, afterS)
 
   const beforeB = await getSelectedFill()
   await dragSlider('color-slider-hsb-b', 0.9)
   const afterB = await getSelectedFill()
   expect(afterB).not.toBeNull()
-  expect(
-    beforeB?.color.r !== afterB?.color.r ||
-      beforeB?.color.g !== afterB?.color.g ||
-      beforeB?.color.b !== afterB?.color.b
-  ).toBe(true)
+  expectRGBChanged(beforeB, afterB)
 })
 
 test('gradient stops support keyboard nudging and removal', async () => {
