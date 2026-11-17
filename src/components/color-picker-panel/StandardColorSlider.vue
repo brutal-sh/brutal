@@ -69,6 +69,7 @@ const styles = useColorSliderUI(
       :class="styles.input.value"
       :aria-label="label"
       :model-value="numberValue"
+      :precision="0"
       :min="numberMin"
       :max="numberMax"
       :step="numberStep"
