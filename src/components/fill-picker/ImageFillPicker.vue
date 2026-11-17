@@ -74,7 +74,7 @@ const scaleMode = computed({
 })
 
 /** A tile's size as a percentage of the image's own. */
-const tileScale = computed(() => Math.round((fill.scale && fill.scale > 0 ? fill.scale : 1) * 100))
+const tileScale = computed(() => (fill.scale && fill.scale > 0 ? fill.scale : 1) * 100)
 function setTileScale(percent: number) {
   if (percent > 0) emit('update', { ...fill, scale: percent / 100 })
 }
@@ -110,7 +110,9 @@ function rotate() {
       />
       <div v-if="scaleMode === 'TILE'" class="w-16 flex-none">
         <NumberField
+          :inherit-binding="false"
           :model-value="tileScale"
+          :precision="0"
           :min="1"
           suffix="%"
           :aria-label="panels.imageTileScale"
