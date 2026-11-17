@@ -60,4 +60,4 @@
 - Deliver explicit tool selections to the intended editor and refuse invalid mixed selections without replacing the prior selection; refuse cancelled queued MCP selections before they apply.
 - Keep the Layers tree's accessible selection state consistent with its visible selection.
 
-- Apply explicit Alpha slider calculations even when their result matches the rounded display.
+- Apply explicit color-slider calculations even when their result matches the rounded display.
