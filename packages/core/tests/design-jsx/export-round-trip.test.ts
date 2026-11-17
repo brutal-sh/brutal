@@ -5,9 +5,45 @@ import { findByName, PROPERTY_CASES } from '#core-tests/helpers/property-cases'
 import { pick } from 'es-toolkit'
 
 import { renderJSX } from '@open-pencil/core/design-jsx'
+import { IORegistry, penFormat } from '@open-pencil/core/io'
 import { sceneNodeToJSX } from '@open-pencil/design-jsx'
 import { SceneGraph } from '@open-pencil/scene-graph'
 import { shaderOfPaint } from '@open-pencil/scene-graph/shaders'
+
+test('saves and reopens a JSX rectangle that does not specify layout direction', async () => {
+  const graph = new SceneGraph()
+  const [rectangle] = await renderJSX(
+    graph,
+    '<Rectangle name="Agent rectangle" x={100} y={100} w={160} h={100} fill="#FF0000" />'
+  )
+  const io = new IORegistry([penFormat])
+  const saved = await io.writeDocument('pen', graph)
+  const { graph: reopened } = await io.readDocument({
+    name: 'agent-rectangle.pen',
+    data: new TextEncoder().encode(String(saved.data))
+  })
+  expect(getNodeOrThrow(reopened, rectangle.id)).toMatchObject({
+    name: 'Agent rectangle',
+    type: 'RECTANGLE',
+    x: 100,
+    y: 100,
+    width: 160,
+    height: 100,
+    layoutDirection: 'AUTO',
+    fills: [{ type: 'SOLID', color: { r: 1, g: 0, b: 0, a: 1 } }]
+  })
+})
+
+test('keeps an omitted text direction at its default and applies an explicit direction', async () => {
+  const graph = new SceneGraph()
+  const [automatic, rightToLeft, flow] = await renderJSX(
+    graph,
+    '<><Text>Default</Text><Text dir="rtl">Explicit</Text><Frame flow="rtl" /></>'
+  )
+  expect(getNodeOrThrow(graph, automatic.id).textDirection).toBe('AUTO')
+  expect(getNodeOrThrow(graph, rightToLeft.id).textDirection).toBe('RTL')
+  expect(getNodeOrThrow(graph, flow.id).layoutDirection).toBe('RTL')
+})
 
 describe('attribute string round-trip', () => {
   it.each([

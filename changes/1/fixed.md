@@ -64,3 +64,4 @@
 - Keep color-slider labels clear of their tracks and number fields, including longer translated labels.
 - End the coding-agent tool check when the adapter stops responding so the check can be retried.
 - Recover from an unavailable inherited Codex model before sending a message.
+- Save compatible agent-created rectangles and text to `.pen` when no direction is specified.

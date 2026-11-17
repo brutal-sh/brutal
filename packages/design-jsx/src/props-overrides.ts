@@ -313,8 +313,8 @@ function applyLayoutOverrides(
     applyAutoLayoutSizing(o, props, w, h)
   }
 
-  o.layoutDirection =
-    parseDirection(props.flow ?? (!isText ? props.dir : undefined)) ?? o.layoutDirection
+  const direction = parseDirection(props.flow ?? (!isText ? props.dir : undefined))
+  if (direction !== undefined) o.layoutDirection = direction
 
   if (props.gap !== undefined) o.itemSpacing = props.gap as number
 
@@ -412,7 +412,8 @@ function applyTextOverrides(
   parentLayout: SceneNode['layoutMode']
 ): void {
   applyTextStyleOverrides(props, o)
-  o.textDirection = parseDirection(props.dir) ?? o.textDirection
+  const direction = parseDirection(props.dir)
+  if (direction !== undefined) o.textDirection = direction
   applyTextAutoResize(props, o, parentLayout)
 }
 
