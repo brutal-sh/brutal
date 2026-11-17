@@ -2,6 +2,7 @@ import { expect, test, type Page } from '@playwright/test'
 
 import { CanvasHelper } from '#tests/helpers/canvas'
 import { fillDriver } from '#tests/helpers/canvas/fill-driver'
+import { mockOfficialCloudDiscovery } from '#tests/helpers/cloud/discovery'
 
 // Figma desktop 126 undoes with a colour picker open; other shortcuts still wait for it to close.
 
@@ -12,6 +13,7 @@ test.describe.configure({ mode: 'serial' })
 
 test.beforeAll(async ({ browser }) => {
   page = await browser.newPage()
+  await mockOfficialCloudDiscovery(page)
   await page.goto('/')
   canvas = new CanvasHelper(page)
   await canvas.waitForInit()

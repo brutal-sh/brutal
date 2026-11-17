@@ -106,8 +106,11 @@ function keepOpenOnFocus(event: FocusOutsideEvent) {
     event.preventDefault()
 }
 
-function stopEscapePropagation(event: KeyboardEvent) {
+function closeFromEscape(event: KeyboardEvent) {
+  event.preventDefault()
   event.stopPropagation()
+  popupOpen.value = false
+  emit('openChange', false)
 }
 </script>
 
@@ -138,7 +141,7 @@ function stopEscapePropagation(event: KeyboardEvent) {
           :side-offset="4"
           side="left"
           data-picker-content
-          @escape-key-down="stopEscapePropagation"
+          @escape-key-down="closeFromEscape"
           @pointer-down-outside="keepOpenOnPress"
           @focus-outside="keepOpenOnFocus"
         >

@@ -35,8 +35,12 @@ const { open: popupOpen, portalActive } = useRetainedPopup(undefined, () => {
 })
 
 function cancelFromEscape(event: KeyboardEvent) {
+  event.preventDefault()
   event.stopPropagation()
   emit('cancel')
+  // A numeric field cancels its draft before the picker dismisses.
+  popupOpen.value = false
+  emit('openChange', false)
 }
 </script>
 

@@ -18,7 +18,7 @@
 - Gap and padding fields preserve fractional values when displaying and editing layout, including paired and individual padding.
 - Width, Height and selection-size badges show fractional dimensions to two decimals while preserving the full saved and variable values.
 - Position fields retain fractional coordinates, compare mixed selections before formatting, and normalize typed turns without clamping them to one revolution.
-- Numeric inspector fields evaluate arithmetic and signed absolute values while preserving committed values after invalid expressions.
+- Numeric inspector fields, including RGB, HSL and HSB color channels, evaluate arithmetic and signed absolute values while preserving committed values after invalid expressions.
 - Text ending in a newline reserves its final empty line when sizing the layer and its containing layout.
 - Zoom buttons and menu actions keep the canvas center stationary when side panels offset the canvas.
 - Desktop tool flyouts focus the selected tool when opened and use the measured spacing, checks and corners; Primitives import labels follow the reference menu.

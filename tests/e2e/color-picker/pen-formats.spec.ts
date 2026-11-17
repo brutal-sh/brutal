@@ -1,8 +1,9 @@
 import { expect, test, useEditorSetup } from '#tests/e2e/fixtures'
+import { mockOfficialCloudDiscovery } from '#tests/helpers/cloud/discovery'
 import { propertyItems, propertySection } from '#tests/helpers/properties'
 import { getSelectedNode } from '#tests/helpers/store'
 
-const editor = useEditorSetup()
+const editor = useEditorSetup('/', mockOfficialCloudDiscovery)
 
 async function chooseFormat(name: string) {
   await editor.page.getByTestId('color-format-select').click()
@@ -17,6 +18,7 @@ test('compact RGBA, HEX, CSS and HSL edit the same color and retain a global for
   await expect(panel).toHaveCSS('width', '264px')
   await expect(panel.locator('.cursor-crosshair')).toHaveCSS('height', '194px')
   const alpha = panel.getByRole('spinbutton', { name: 'Alpha', exact: true })
+  await alpha.focus()
   await alpha.fill('0.25')
   await alpha.press('Tab')
   await chooseFormat('HEX')
@@ -69,14 +71,21 @@ test('compact RGBA, HEX, CSS and HSL edit the same color and retain a global for
   await expect(css).not.toHaveAttribute('aria-invalid', 'true')
   await chooseFormat('HSL')
   const hue = panel.getByRole('spinbutton', { name: 'Hue', exact: true })
+  await hue.focus()
   await expect(hue).toHaveValue('120')
+  await alpha.focus()
   await expect(alpha).toHaveValue('0.75')
+  await hue.focus()
   await hue.fill('240')
   await hue.press('Tab')
+  await alpha.focus()
   await alpha.fill('0.5')
   await alpha.press('Tab')
   await chooseFormat('RGBA')
-  await expect(panel.getByRole('spinbutton', { name: 'Blue', exact: true })).toHaveValue('255')
+  const blue = panel.getByRole('spinbutton', { name: 'Blue', exact: true })
+  await blue.focus()
+  await expect(blue).toHaveValue('255')
+  await alpha.focus()
   await expect(alpha).toHaveValue('0.5')
   await chooseFormat('CSS')
   await editor.page.keyboard.press('Escape')
@@ -134,6 +143,7 @@ test('picker keyboard navigation edits color without nudging the selected layer'
   await expect(editor.page.getByRole('textbox', { name: 'CSS', exact: true })).toBeVisible()
   await chooseFormat('HSL')
   const hue = editor.page.getByRole('spinbutton', { name: 'Hue', exact: true })
+  await hue.focus()
   await hue.fill('120')
   await hue.press('Tab')
   const thumb = editor.page.getByRole('slider', { name: 'Saturation, Brightness', exact: true })

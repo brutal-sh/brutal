@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { colorToCSS } from '@open-pencil/scene-graph/color'
 import { useI18n } from '@open-pencil/vue/i18n'
-import { inputNumberValue } from '@open-pencil/vue/shared/dom-events'
 
+import ColorPickerPanelNumberField from '@/components/color-picker-panel/ColorPickerPanelNumberField.vue'
 import { useColorPickerPanelContext } from '@/components/color-picker-panel/context'
 import StandardColorSlider from '@/components/color-picker-panel/StandardColorSlider.vue'
 
@@ -12,31 +12,30 @@ const { panels } = useI18n()
 
 <template>
   <div
+    role="group"
+    :aria-label="panels.colorFormatHsb"
     class="grid grid-cols-[repeat(3,minmax(0,1fr))] gap-px overflow-hidden rounded border border-border bg-border"
   >
-    <input
-      type="number"
-      class="bg-input px-2 py-1 text-xs text-surface outline-none"
-      :value="Math.round(ctx.hsbColor.h)"
-      min="0"
-      max="360"
-      @change="ctx.updateHSBChannelValue('h', inputNumberValue($event))"
+    <ColorPickerPanelNumberField
+      :label="panels.hue"
+      :model-value="Math.round(ctx.hsbColor.h)"
+      :min="0"
+      :max="360"
+      @update:model-value="ctx.updateHSBChannelValue('h', $event)"
     />
-    <input
-      type="number"
-      class="bg-input px-2 py-1 text-xs text-surface outline-none"
-      :value="Math.round(ctx.hsbColor.s)"
-      min="0"
-      max="100"
-      @change="ctx.updateHSBChannelValue('s', inputNumberValue($event))"
+    <ColorPickerPanelNumberField
+      :label="panels.saturation"
+      :model-value="Math.round(ctx.hsbColor.s)"
+      :min="0"
+      :max="100"
+      @update:model-value="ctx.updateHSBChannelValue('s', $event)"
     />
-    <input
-      type="number"
-      class="bg-input px-2 py-1 text-xs text-surface outline-none"
-      :value="Math.round(ctx.hsbColor.b)"
-      min="0"
-      max="100"
-      @change="ctx.updateHSBChannelValue('b', inputNumberValue($event))"
+    <ColorPickerPanelNumberField
+      :label="panels.brightness"
+      :model-value="Math.round(ctx.hsbColor.b)"
+      :min="0"
+      :max="100"
+      @update:model-value="ctx.updateHSBChannelValue('b', $event)"
     />
   </div>
 

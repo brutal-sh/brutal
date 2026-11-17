@@ -20,6 +20,11 @@ watchEffect(() => {
   ctx.inputRef.value = inputEl.value
 })
 
+function onKeydown(event: KeyboardEvent) {
+  ctx.actions.keydown(event)
+  if (event.key !== 'Tab' && event.key !== 'Escape') event.stopPropagation()
+}
+
 defineOptions({ inheritAttrs: false })
 </script>
 
@@ -36,7 +41,7 @@ defineOptions({ inheritAttrs: false })
     :disabled="ctx.disabled.value"
     :value="ctx.draftValue.value"
     @blur="ctx.actions.commitEdit"
-    @keydown.stop="ctx.actions.keydown"
+    @keydown="onKeydown"
     @input="ctx.actions.input"
   />
 </template>

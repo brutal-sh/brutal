@@ -1,11 +1,44 @@
 import { expect, test, type Page } from '@playwright/test'
 
 import { CanvasHelper } from '#tests/helpers/canvas'
+import { mockOfficialCloudDiscovery } from '#tests/helpers/cloud/discovery'
 
 async function openSettings(page: Page) {
   await page.keyboard.press(process.platform === 'darwin' ? 'Meta+,' : 'Control+,')
   await expect(page.getByRole('dialog', { name: 'Settings', exact: true })).toBeVisible()
 }
+
+test('Home accent arithmetic works before any document is opened and persists', async ({
+  page
+}) => {
+  const canvas = new CanvasHelper(page)
+  await mockOfficialCloudDiscovery(page)
+  await page.goto('/?recent-files')
+  await expect(page.getByTestId('recent-files-home')).toBeVisible()
+  await expect(page.getByTestId('tabbar-close')).toHaveCount(0)
+  await expect(page.locator('canvas')).toHaveCount(0)
+  await openSettings(page)
+  await page.getByTestId('settings-accent-custom').click()
+  const red = page.getByRole('spinbutton', { name: 'Red', exact: true })
+  await red.focus()
+  await red.press('ControlOrMeta+a')
+  await red.pressSequentially('120*2')
+  await red.press('Enter')
+  await red.focus()
+  await expect(red).toHaveValue('240')
+  await page.getByTestId('settings-accent-custom').click()
+  await page.getByTestId('app-settings-done').click()
+  await page.reload()
+  await expect(page.getByTestId('recent-files-home')).toBeVisible()
+  await openSettings(page)
+  await page.getByTestId('settings-accent-custom').click()
+  await red.focus()
+  await expect(red).toHaveValue('240')
+  await red.press('Escape')
+  await expect(page.locator('[data-picker-content]')).toHaveCount(0)
+  await expect(page.getByRole('dialog', { name: 'Settings', exact: true })).toBeVisible()
+  canvas.assertNoErrors()
+})
 
 test('Appearance groups theme and animation controls and uses the persisted app theme', async ({
   page
@@ -64,6 +97,7 @@ test('Accent color recolors the interface, persists, and a cancelled custom pick
   await openSettings(page)
   await page.getByTestId('settings-accent-custom').click()
   const red = page.getByRole('spinbutton', { name: 'Red', exact: true })
+  await red.focus()
   await red.fill('0')
   await red.press('Enter')
   await expect(page.getByTestId('settings-accent-custom')).toHaveAttribute('aria-pressed', 'true')

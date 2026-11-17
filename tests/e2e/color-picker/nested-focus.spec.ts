@@ -1,8 +1,9 @@
 import { expect, test, useEditorSetupWithClear } from '#tests/e2e/fixtures'
 import { meshDriver } from '#tests/helpers/canvas/mesh/driver'
+import { mockOfficialCloudDiscovery } from '#tests/helpers/cloud/discovery'
 import { propertyItems } from '#tests/helpers/properties'
 
-const editor = useEditorSetupWithClear('/?test&no-rulers')
+const editor = useEditorSetupWithClear('/?test&no-rulers', mockOfficialCloudDiscovery)
 const mesh = meshDriver(() => editor.page)
 
 test('a closed format menu releases the parent Tab loop before deferred timers run', async () => {

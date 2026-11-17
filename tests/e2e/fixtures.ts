@@ -2,7 +2,7 @@ import { test, expect, type Locator, type Page } from '@playwright/test'
 
 import { CanvasHelper } from '#tests/helpers/canvas'
 
-export function useEditorSetup(url = '/') {
+export function useEditorSetup(url = '/', setup?: (page: Page) => Promise<unknown>) {
   let page: Page
   let canvas: CanvasHelper
 
@@ -10,6 +10,7 @@ export function useEditorSetup(url = '/') {
 
   test.beforeAll(async ({ browser }) => {
     page = await browser.newPage()
+    await setup?.(page)
     await page.goto(url)
     canvas = new CanvasHelper(page)
     await canvas.waitForInit()
@@ -29,8 +30,8 @@ export function useEditorSetup(url = '/') {
   }
 }
 
-export function useEditorSetupWithClear(url = '/') {
-  const ctx = useEditorSetup(url)
+export function useEditorSetupWithClear(url = '/', setup?: (page: Page) => Promise<unknown>) {
+  const ctx = useEditorSetup(url, setup)
 
   test.beforeEach(async () => {
     await ctx.canvas.clearCanvas()

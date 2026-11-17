@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { colorToCSS } from '@open-pencil/scene-graph/color'
 import { useI18n } from '@open-pencil/vue/i18n'
-import { inputNumberValue } from '@open-pencil/vue/shared/dom-events'
 
+import ColorPickerPanelNumberField from '@/components/color-picker-panel/ColorPickerPanelNumberField.vue'
 import { useColorPickerPanelContext } from '@/components/color-picker-panel/context'
 import StandardColorSlider from '@/components/color-picker-panel/StandardColorSlider.vue'
 
@@ -12,6 +12,8 @@ const { panels } = useI18n()
 
 <template>
   <div
+    role="group"
+    :aria-label="panels.colorFormatHsl"
     class="grid"
     :data-alpha="ctx.showAlpha"
     :class="
@@ -20,46 +22,39 @@ const { panels } = useI18n()
         : 'grid-cols-3 gap-px overflow-hidden rounded border border-border bg-border'
     "
   >
-    <input
-      type="number"
-      :aria-label="panels.hue"
-      class="min-w-0 bg-input px-2 py-1 text-xs text-surface outline-none"
+    <ColorPickerPanelNumberField
+      :label="panels.hue"
       :class="{ rounded: ctx.compact }"
-      :value="Math.round(ctx.hslColor.h ?? 0)"
-      min="0"
-      max="360"
-      @change="ctx.updateHSLChannelValue('h', inputNumberValue($event))"
+      :model-value="Math.round(ctx.hslColor.h ?? 0)"
+      :min="0"
+      :max="360"
+      @update:model-value="ctx.updateHSLChannelValue('h', $event)"
     />
-    <input
-      type="number"
-      :aria-label="panels.saturation"
-      class="min-w-0 bg-input px-2 py-1 text-xs text-surface outline-none"
+    <ColorPickerPanelNumberField
+      :label="panels.saturation"
       :class="{ rounded: ctx.compact }"
-      :value="Math.round(ctx.hslColor.s ?? 0)"
-      min="0"
-      max="100"
-      @change="ctx.updateHSLChannelValue('s', inputNumberValue($event))"
+      :model-value="Math.round(ctx.hslColor.s ?? 0)"
+      :min="0"
+      :max="100"
+      @update:model-value="ctx.updateHSLChannelValue('s', $event)"
     />
-    <input
-      type="number"
-      :aria-label="panels.lightness"
-      class="min-w-0 bg-input px-2 py-1 text-xs text-surface outline-none"
+    <ColorPickerPanelNumberField
+      :label="panels.lightness"
       :class="{ rounded: ctx.compact }"
-      :value="Math.round(ctx.hslColor.l ?? 0)"
-      min="0"
-      max="100"
-      @change="ctx.updateHSLChannelValue('l', inputNumberValue($event))"
+      :model-value="Math.round(ctx.hslColor.l ?? 0)"
+      :min="0"
+      :max="100"
+      @update:model-value="ctx.updateHSLChannelValue('l', $event)"
     />
-    <input
+    <ColorPickerPanelNumberField
       v-if="ctx.compact && ctx.showAlpha"
-      type="number"
-      :aria-label="panels.alpha"
-      class="min-w-0 rounded bg-input px-2 py-1 text-xs text-surface outline-none"
-      :value="Number(ctx.color.a.toFixed(2))"
-      min="0"
-      max="1"
-      step="0.01"
-      @change="ctx.updateRGBAAlpha(inputNumberValue($event))"
+      :label="panels.alpha"
+      class="rounded"
+      :model-value="Number(ctx.color.a.toFixed(2))"
+      :min="0"
+      :max="1"
+      :step="0.01"
+      @update:model-value="ctx.updateRGBAAlpha($event)"
     />
   </div>
 

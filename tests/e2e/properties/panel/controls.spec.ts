@@ -1,5 +1,6 @@
 import { expect, test, useEditorSetup } from '#tests/e2e/fixtures'
 import { expectDefined } from '#tests/helpers/assert'
+import { mockOfficialCloudDiscovery } from '#tests/helpers/cloud/discovery'
 import {
   openAdvancedProperties,
   propertyField,
@@ -8,7 +9,7 @@ import {
 } from '#tests/helpers/properties'
 import { getPageChildren, getSelectedNode } from '#tests/helpers/store'
 
-const editor = useEditorSetup()
+const editor = useEditorSetup('/', mockOfficialCloudDiscovery)
 
 test.beforeAll(async () => openAdvancedProperties(editor.page))
 
@@ -267,6 +268,7 @@ test('fill color can bind an existing variable', async () => {
   )
   await fillSwatch.click()
   const redInput = editor.page.getByRole('spinbutton', { name: 'Red' })
+  await redInput.focus()
   await expect(redInput).toHaveValue('255')
   await redInput.fill('0')
   await redInput.press('Enter')
@@ -508,7 +510,9 @@ test('alignment buttons align nodes to same X', async () => {
   await editor.canvas.pressKey('Meta+a')
   await editor.canvas.waitForRender()
 
-  await propertySection(editor.page, 'Alignment').getByRole('button', { name: 'Align left' }).click()
+  await propertySection(editor.page, 'Alignment')
+    .getByRole('button', { name: 'Align left' })
+    .click()
   await editor.canvas.waitForRender()
 
   const children = await getPageChildren(editor.page)

@@ -1,8 +1,9 @@
 import { expect, test, useEditorSetupWithClear } from '#tests/e2e/fixtures'
+import { mockOfficialCloudDiscovery } from '#tests/helpers/cloud/discovery'
 import { propertySection } from '#tests/helpers/properties'
 import { getSelectedNode } from '#tests/helpers/store'
 
-const editor = useEditorSetupWithClear()
+const editor = useEditorSetupWithClear('/', mockOfficialCloudDiscovery)
 
 function readEffects() {
   return editor.page.evaluate(() => {

@@ -1,10 +1,11 @@
 import { expect, test, useEditorSetup } from '#tests/e2e/fixtures'
 import { expectDefined } from '#tests/helpers/assert'
 import { readScenePixels } from '#tests/helpers/canvas/pixels'
+import { mockOfficialCloudDiscovery } from '#tests/helpers/cloud/discovery'
 import { propertyItems, propertySection } from '#tests/helpers/properties'
 import { getSelectedNode } from '#tests/helpers/store'
 
-const editor = useEditorSetup()
+const editor = useEditorSetup('/', mockOfficialCloudDiscovery)
 
 test('gradient stops edit in a separate popup, retain Escape changes and render with one stop', async () => {
   await editor.canvas.clearCanvas()
@@ -31,10 +32,14 @@ test('gradient stops edit in a separate popup, retain Escape changes and render 
   await expect(editor.page.getByRole('spinbutton', { name: 'Red', exact: true })).toHaveCount(0)
   await editor.page.getByRole('button', { name: 'Edit color', exact: true }).first().click()
   const red = editor.page.getByRole('spinbutton', { name: 'Red', exact: true })
+  await red.focus()
   await red.fill('17')
   await red.press('Tab')
-  await editor.page.getByRole('spinbutton', { name: 'Green', exact: true }).fill('0')
+  const green = editor.page.getByRole('spinbutton', { name: 'Green', exact: true })
+  await green.focus()
+  await green.fill('0')
   const blue = editor.page.getByRole('spinbutton', { name: 'Blue', exact: true })
+  await blue.focus()
   await blue.fill('255')
   await blue.press('Tab')
   await expect
