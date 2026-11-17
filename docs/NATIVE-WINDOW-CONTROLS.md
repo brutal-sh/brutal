@@ -29,3 +29,11 @@ One additional isolated launch times out before a visible ready canvas; it is no
 Pointer-drag attempts report no window displacement, including on the pill padding. Native accessibility movement succeeds, but it does not prove pointer dragging. This remains an explicit Verify criterion; no draggable-region repair is claimed by the two configuration changes.
 
 No full macOS packaging/notarization, other-platform, complete native menu, matched Pen raster or public-beta acceptance follows. The installed local package remains ad-hoc signed. Save-dialog correction continues separately under FILE-NATIVE-SAVE-UI.
+
+## Pointer re-entry — 2026-11-17
+
+The normal installed executable is now `db4e528c`, delivered under the separate Save task. Exact PID 680, launch identity and main window 87 are retained without replacement. Two earlier Computer Use drags leave 1280×800 at x116/y71 unchanged and report the app inactive, including after Jason brings it forward. This does not establish a product dragging defect. The user asks the agent to handle the test; no manual test is required from him.
+
+A different control uses the native Window → Bring All to Front action, then a header double-click followed by a drag before measurement. This combined control changes the main window from 1320×838 at x116/y33 to 1512×949 at x0/y33; it does not isolate which input causes the change. A second double-click alone restores the exact prior bounds. A subsequent isolated drag from screenshot coordinates 475,88 to 635,168 leaves those restored bounds unchanged. The isolated double-click restores the prior geometry; pointer dragging remains unaccepted. The earlier combined zoom/drag measurement is retained separately and is not called successful movement by dragging.
+
+Evidence is in `local-evidence/native-window-final-2026-11-17/`, including `isolated-drag-result.json`. These captures use the OS window-sharing indicator, so they do not remeasure the three native button centers. No CSS, capability, dependency, input-security setting or window configuration changes. The app remains at its pre-control 1320×838/x116/y33 bounds with Home selected. UI-MAC-WINDOW-CONTROLS remains Verify for its remaining pointer criterion.
