@@ -2,6 +2,10 @@ import * as v from 'valibot'
 
 import type { ACPAgentDef } from '@open-pencil/core/constants'
 
+export class CodexModelSelectionError extends Error {
+  override name = 'CodexModelSelectionError'
+}
+
 function isMissingCommandError(message: string): boolean {
   const normalized = message.toLowerCase()
   return normalized.includes('enoent') || normalized.includes('program not found')

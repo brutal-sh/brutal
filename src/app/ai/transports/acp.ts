@@ -3,6 +3,7 @@ import type { ChatTransport, UIMessage, UIMessageChunk } from 'ai'
 
 import type { ACPAgentDef } from '@open-pencil/core/constants'
 
+import { formatConnectionError } from '@/app/ai/agents/acp/errors'
 import { createUpdateMapper } from '@/app/ai/agents/acp/events'
 import type { TauriChild } from '@/app/ai/agents/acp/process'
 import SYSTEM_PROMPT from '@/app/ai/chat/system-prompt'
@@ -10,10 +11,9 @@ import { endRun, forgetAgentChat, startAgentRun } from '@/app/ai/reply/run'
 import { describeDiagnosticError, recordACPTransportFailure } from '@/app/diagnostics'
 import type { EditorStore } from '@/app/editor/active-store'
 
-import { formatConnectionError } from './acp/errors'
 import { openACPChatSession, type ACPSession } from './acp/session'
 
-export { formatConnectionError } from './acp/errors'
+export { formatConnectionError } from '@/app/ai/agents/acp/errors'
 
 /** One agent turn's tokens, as an ACP agent reports them with its answer to the prompt. */
 export interface AgentTurnUsage {

@@ -9,9 +9,7 @@ import type { ACPAgentID } from '@open-pencil/core/constants'
 import { AGENT_CONNECT_TIMEOUT_MS } from '@/app/integrations/mcp/link'
 import { createDeferred } from '@/app/runtime/deferred'
 
-export class CodexModelSelectionError extends Error {
-  override name = 'CodexModelSelectionError'
-}
+import { CodexModelSelectionError } from './errors'
 
 type SelectModel = (
   request: SetSessionConfigOptionRequest

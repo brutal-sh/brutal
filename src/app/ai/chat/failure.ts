@@ -1,11 +1,14 @@
 import { APICallError, StreamProviderError } from 'ai'
 
+import { CodexModelSelectionError } from '@/app/ai/agents/acp/errors'
+
 export type AIChatFailureReason =
   | 'authentication'
   | 'forbidden'
   | 'insufficient-credit'
   | 'cloud-credits-exhausted'
   | 'model-not-found'
+  | 'agent-model-unavailable'
   | 'network'
   | 'output-limit'
   | 'rate-limit'
@@ -86,6 +89,7 @@ function statusFailureReason(status: number | null): AIChatFailureReason | null 
 }
 
 function failureReason(error: unknown): AIChatFailureReason {
+  if (error instanceof CodexModelSelectionError) return 'agent-model-unavailable'
   const statusReason = statusFailureReason(providerErrorStatus(error))
   if (statusReason) return statusReason
   if (isInsufficientCreditError(error)) return 'insufficient-credit'

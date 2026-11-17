@@ -6,12 +6,11 @@ import type { ACPAgentDef, ACPAgentID } from '@open-pencil/core/constants'
 
 import { parseAuthStatusUpdate } from '@/app/ai/agents/acp/auth/status'
 import { setAgentCommands } from '@/app/ai/agents/acp/commands'
-import { CodexModelSelectionError, selectACPChatModel } from '@/app/ai/agents/acp/model'
+import { CodexModelSelectionError, formatConnectionError } from '@/app/ai/agents/acp/errors'
+import { selectACPChatModel } from '@/app/ai/agents/acp/model'
 import { spawnACPProcess, type TauriChild } from '@/app/ai/agents/acp/process'
 import { linkOwnTools, type OwnToolsLink } from '@/app/ai/agents/acp/tools'
 import { describeDiagnosticError, recordACPTransportFailure } from '@/app/diagnostics'
-
-import { formatConnectionError } from './errors'
 
 export interface ACPSession {
   connection: ClientSideConnection

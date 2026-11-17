@@ -2,6 +2,7 @@ import { describe, expect, test } from 'bun:test'
 
 import { APICallError, StreamProviderError } from 'ai'
 
+import { CodexModelSelectionError } from '@/app/ai/agents/acp/errors'
 import {
   classifyAIChatError,
   classifyAIChatFinish,
@@ -89,5 +90,15 @@ describe('AI chat failures', () => {
       reason: 'request-failed',
       detail: 'Provider unavailable'
     })
+  })
+})
+
+test('uses the model selection failure and preserves its guidance for Codex sign-in', () => {
+  const detail = 'Test model is unavailable. Choose an available model in Codex, then retry.'
+  expect(
+    classifyAIChatError(new CodexModelSelectionError(detail), { signInOnly: true })
+  ).toMatchObject({
+    reason: 'agent-model-unavailable',
+    detail
   })
 })

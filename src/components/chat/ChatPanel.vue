@@ -179,6 +179,8 @@ const failureMessage = computed(() => {
       return ai.value.chatInsufficientCredit
     case 'cloud-credits-exhausted':
       return cloudCreditsMessage(chatFailure.value.resetsAt)
+    case 'agent-model-unavailable':
+      return chatFailure.value.detail ?? ai.value.chatModelNotFound
     case 'model-not-found':
       return ai.value.chatModelNotFound
     case 'network':
