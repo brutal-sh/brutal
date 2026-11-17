@@ -19,16 +19,17 @@ The next execution order follows current observed user impact and dependencies:
 | 2     | [Codex request recovery](https://trello.com/c/LPC4kXs7) | After tool reachability is accepted, an actual controlled request edits the intended canvas, with safe retry/cancel and no duplicate edit. An error message alone cannot accept this task.        |
 | 3     | [Native window controls](https://trello.com/c/8iOj7MNs) | Real traffic-light centers and behavior remain correct through launch, resize, fullscreen/restore, focus and relaunch on the exact delivered app; actual drag-region acceptance remains required. |
 
-The connection check reached a terminal timeout, cleaned up the stalled child and succeeded on retry. Settings > MCP > Restart restored the connection after a controlled loss of the test bridge. The trigger of the original live incident remains unknown. A live request recovered from the unsupported inherited model, made one canvas edit and verified Undo. A separate native stand-in verified specific error copy, one-edit Retry and no-edit Stop. Window controls now own Building.
+The connection check reached a terminal timeout, cleaned up the stalled child and succeeded on retry. Settings > MCP > Restart restored the connection after a controlled loss of the test bridge. The trigger of the original live incident remains unknown. A live request recovered from the unsupported inherited model, made one canvas edit and verified Undo. A separate native stand-in verified specific error copy, one-edit Retry and no-edit Stop. The installed window controls passed the native lifecycle and the drag below the + button. The card is in Verify while the original screenshot’s build and the left-side drag limit remain unresolved.
 Ready/Building describe scheduling, not acceptance. No more than three Ready cards
 and one primary app Building card are allowed. Move the next eligible owner into
 Building only after the current unit has its actual accepted exit.
 
 Save/recovery retain release-blocking priority. Existing normal Save delivery has
-bounded executed evidence; [FILE-07](https://trello.com/c/pLxRX3u0),
-[FILE-08](https://trello.com/c/ZHvzXqoN) and
-[native Save UI](https://trello.com/c/ysa9PnRd) remain unaccepted for their remaining
-native, normal-app, reference and combined criteria. The old untraced
+bounded executed evidence. The [native Save UI](https://trello.com/c/ysa9PnRd)
+comparison is Executed after matched installed native alert captures and successful
+refusal and retry in both apps. [FILE-07](https://trello.com/c/pLxRX3u0) and
+[FILE-08](https://trello.com/c/ZHvzXqoN) retain their broader native, reference, and
+combined criteria. The old untraced
 [Cancel/Home observation](https://trello.com/c/jMQrSjFS) remains unclassified.
 Do not repeat green controls indefinitely or call them a repair. Capture an actual
 recurrence and its first failing transition before assigning a cause.

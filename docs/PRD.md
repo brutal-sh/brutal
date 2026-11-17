@@ -298,11 +298,11 @@ The historical 2026-11-12 503-card index comprises 485 execution tasks and 18 mi
 
 ## Native Save UI update — 2026-11-13
 
-The native Save UI correction is recorded in [NATIVE-SAVE-UI.md](NATIVE-SAVE-UI.md): current Pen 1.2.23 reference, correctly titled/theme-aligned native picker, actionable permission feedback, persistent fallback and exact recovery/cancel/copy/refusal/retry preservation. Current owner/browser/strict/full-check gates pass. FILE-NATIVE-SAVE-UI remains Verify for matched critical-alert pixels; normal installed and full beta acceptance remain separate. REF-04 continues the current reference delta catalog.
+The native Save UI correction is recorded in [NATIVE-SAVE-UI.md](NATIVE-SAVE-UI.md): current Pen 1.2.23 reference, correctly titled/theme-aligned native picker, actionable permission feedback, persistent fallback and exact recovery/cancel/copy/refusal/retry preservation. Current owner/browser/strict/full-check gates pass. The [November 17 matched native comparison](NATIVE-SAVE-UI.md#matched-dark-native-save-alerts--2026-11-17) closes the bounded alert comparison. The combined normal installed journey and full beta acceptance remain open. REF-04 continues the current reference delta catalog.
 
 ## Normal installed Save delivery — 2026-11-13
 
-[Normal Save delivery](NATIVE-SAVE-DELIVERY.md) records installed production `db4e528c` and the executed Cancel/copy/edit/refusal/OK/retry/clean-reopen slice, preserving the original workspace and two older recovery records. This separate leaf is bounded Executed; native critical-alert pixels, broader recovery/process-loss, the combined core journey and public readiness remain open. REF-04 is bounded Executed for its versioned catalog; FILE-RECOVERY-CANCEL resumes the original unclassified Home-state failure.
+[Normal Save delivery](NATIVE-SAVE-DELIVERY.md) records installed production `db4e528c` and the executed Cancel/copy/edit/refusal/OK/retry/clean-reopen slice, preserving the original workspace and two older recovery records. This separate leaf is bounded Executed. The later matched comparison accepts the native critical alert. Broader recovery and process-loss, the combined core journey, and public readiness remain open. REF-04 is bounded Executed for its versioned catalog; FILE-RECOVERY-CANCEL resumes the original unclassified Home-state failure.
 
 [Selection delivery](CLI-SELECTION.md) qualifies bounded software behavior, with
 real MCP cancellation allocated separately to MCP-05-CANCEL. SELECT stays Verify

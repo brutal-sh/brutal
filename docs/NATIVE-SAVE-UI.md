@@ -49,3 +49,13 @@ REA's exact parent-window capture now contains the visible native critical alert
 Jason authorizes temporary Pen Light→Dark→Light comparison. Both Dark attempts show the alert in Computer Use, but the later REA rasters omit it; these remain failed alert-capture controls. The owned files remain exact during refusal, permissions return to their recorded modes, writable Save persists the test edits, the clean owned tabs close, and the original document and Light appearance return. No automated alert dismissal is claimed where fresh state shows the alert already gone. Pen's Save As normalizes its saved copy to version 2.22; its owned source remains version 2.21 with the original bytes. No app source or installed executable changes in this recheck.
 
 FILE-NATIVE-SAVE-UI stays Verify. Matched critical-alert appearance, live OS Auto-theme transitions, updater lifecycle, broader recovery and the combined beta journey remain separate acceptance gates. Historical suite results above are not a new full-check claim.
+
+## Matched dark native Save alerts — 2026-11-17
+
+Installed Open Pen `db4e528c` and actual installed Pen 1.2.23 each display the native permission alert after saving a real edit to an owned read-only file. Both foreground windows are 1280×800 in Dark on the same 2× display. A capture bounded to the live AppKit sheet records the alert pixels while accessibility still reports the sheet as focused. The previous blank or unmatched captures remain in the private evidence history.
+
+Both sheets are 260 points wide and centered at (640,400) in their parent. The measured warning mask, text start positions, OK button dimensions, and button bottom inset agree. Open Pen’s two additional lines of recovery guidance make its sheet 282 points tall. The comparator is 250 points tall. Both alerts show the owned filename and direct the user to Save As.
+
+Both read-only attempts preserve the pre-save bytes. Native OK dismisses each sheet. Writable Save then persists the owned edits, and the public Core reader verifies the original and both resulting files. The Open Pen test tab closes to Home. The reference returns to its previous document, Light appearance, and original 1496×933 frame. Technical receipts and separate alert crops are retained under `local-evidence/native-alert-pixels-2026-11-17/matched-dark-hid/`.
+
+FILE-NATIVE-SAVE-UI is Executed for the bounded native presentation and refusal/retry path, including the matched alert comparison. The broader file recovery, live OS Auto switching, updater, and combined beta journey remain open. The source and installed bundles are the same ones used before the comparison.
