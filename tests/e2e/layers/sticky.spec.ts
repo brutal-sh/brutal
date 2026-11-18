@@ -2,12 +2,15 @@ import { expect, test, type Page } from '@playwright/test'
 
 import { CanvasHelper } from '#tests/helpers/canvas'
 import { layerDriver } from '#tests/helpers/canvas/layers'
+import { mockOfficialCloudDiscovery } from '#tests/helpers/cloud/discovery'
 
 /** A frame with enough children to scroll past its own row, expanded in the layers panel. */
 async function scrolledFrame(page: Page) {
+  await mockOfficialCloudDiscovery(page)
   await page.goto('/')
   const canvas = new CanvasHelper(page)
   await canvas.waitForInit()
+  await page.getByRole('tab', { name: 'Layers', exact: true }).click()
   canvas.errors.length = 0
   await canvas.clearCanvas()
 

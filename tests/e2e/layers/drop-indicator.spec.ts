@@ -3,6 +3,7 @@ import { expect, test, type Page } from '@playwright/test'
 import type { Vector } from '@open-pencil/scene-graph/primitives'
 
 import { CanvasHelper } from '#tests/helpers/canvas'
+import { mockOfficialCloudDiscovery } from '#tests/helpers/cloud/discovery'
 
 async function dragLayerAndObserveIndicator(
   page: Page,
@@ -30,9 +31,11 @@ async function dragLayerAndObserveIndicator(
 }
 
 test('layer reorder exposes a visible drop indicator before dropping', async ({ page }) => {
+  await mockOfficialCloudDiscovery(page)
   await page.goto('/')
   const canvas = new CanvasHelper(page)
   await canvas.waitForInit()
+  await page.getByRole('tab', { name: 'Layers', exact: true }).click()
   canvas.errors.length = 0
   await canvas.clearCanvas()
 
@@ -58,9 +61,11 @@ test('layer reorder exposes a visible drop indicator before dropping', async ({ 
 })
 
 test('layer child drop exposes a visible container highlight before dropping', async ({ page }) => {
+  await mockOfficialCloudDiscovery(page)
   await page.goto('/')
   const canvas = new CanvasHelper(page)
   await canvas.waitForInit()
+  await page.getByRole('tab', { name: 'Layers', exact: true }).click()
   canvas.errors.length = 0
   await canvas.clearCanvas()
 

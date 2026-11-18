@@ -1,11 +1,14 @@
 import { expect, test } from '@playwright/test'
 
 import { CanvasHelper } from '#tests/helpers/canvas'
+import { mockOfficialCloudDiscovery } from '#tests/helpers/cloud/discovery'
 
 test('pages and layers panels scroll inside splitter panes', async ({ page }) => {
+  await mockOfficialCloudDiscovery(page)
   await page.goto('/')
   const canvas = new CanvasHelper(page)
   await canvas.waitForInit()
+  await page.getByRole('tab', { name: 'Layers', exact: true }).click()
   canvas.errors.length = 0
 
   // Adding a page opens it, so the layers go on the first page and the editor returns there.

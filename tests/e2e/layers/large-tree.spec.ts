@@ -1,13 +1,16 @@
 import { test, expect } from '@playwright/test'
 
 import { CanvasHelper } from '#tests/helpers/canvas'
+import { mockOfficialCloudDiscovery } from '#tests/helpers/cloud/discovery'
 
 const NODE_COUNT = 5000
 
 test('large layer trees stay virtualized and scrollable', async ({ page }) => {
   const canvas = new CanvasHelper(page)
+  await mockOfficialCloudDiscovery(page)
   await page.goto('/?test&no-rulers')
   await canvas.waitForInit()
+  await page.getByRole('tab', { name: 'Layers', exact: true }).click()
 
   const replaceStartedAt = await page.evaluate((count: number) => {
     const store = window.openPencil?.getStore?.()
@@ -112,8 +115,10 @@ test('large layer trees stay virtualized and scrollable', async ({ page }) => {
 
 test('layer tree supports range and additive selection', async ({ page }) => {
   const canvas = new CanvasHelper(page)
+  await mockOfficialCloudDiscovery(page)
   await page.goto('/?test&no-rulers')
   await canvas.waitForInit()
+  await page.getByRole('tab', { name: 'Layers', exact: true }).click()
 
   await page.evaluate(() => {
     const store = window.openPencil?.getStore?.()

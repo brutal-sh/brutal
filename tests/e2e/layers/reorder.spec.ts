@@ -2,6 +2,7 @@ import { expect, test, type Page } from '@playwright/test'
 
 import { CanvasHelper } from '#tests/helpers/canvas'
 import { layerDriver } from '#tests/helpers/canvas/layers'
+import { mockOfficialCloudDiscovery } from '#tests/helpers/cloud/discovery'
 
 async function layerOrder(page: Page, parentId?: string) {
   return page.evaluate((id) => {
@@ -12,9 +13,11 @@ async function layerOrder(page: Page, parentId?: string) {
 }
 
 test('dragging layers reorders scene nodes', async ({ page }) => {
+  await mockOfficialCloudDiscovery(page)
   await page.goto('/')
   const canvas = new CanvasHelper(page)
   await canvas.waitForInit()
+  await page.getByRole('tab', { name: 'Layers', exact: true }).click()
   canvas.errors.length = 0
   await canvas.clearCanvas()
 
@@ -43,9 +46,11 @@ test('dragging layers reorders scene nodes', async ({ page }) => {
 })
 
 test('an auto layout lists and reorders its layers in flow order', async ({ page }) => {
+  await mockOfficialCloudDiscovery(page)
   await page.goto('/')
   const canvas = new CanvasHelper(page)
   await canvas.waitForInit()
+  await page.getByRole('tab', { name: 'Layers', exact: true }).click()
   canvas.errors.length = 0
   await canvas.clearCanvas()
 
@@ -71,9 +76,11 @@ test('an auto layout lists and reorders its layers in flow order', async ({ page
 })
 
 test('dragging a layer into a container expands it and shows the child', async ({ page }) => {
+  await mockOfficialCloudDiscovery(page)
   await page.goto('/')
   const canvas = new CanvasHelper(page)
   await canvas.waitForInit()
+  await page.getByRole('tab', { name: 'Layers', exact: true }).click()
   canvas.errors.length = 0
   await canvas.clearCanvas()
 
