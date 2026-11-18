@@ -16,9 +16,13 @@ import { shapeText } from './shape'
  * The glyphs the canvas draws, list markers included, when every one has an outline; text set
  * partly in a fallback or variable font has none and keeps the outline layout's own glyphs.
  */
-function shapedOutlines(r: SkiaRenderer, node: SceneNode): TextOutlineGlyph[] | null {
+function shapedOutlines(
+  r: SkiaRenderer,
+  node: SceneNode,
+  outlineOverride?: Parameters<typeof shapeText>[3]
+): TextOutlineGlyph[] | null {
   if (!r.fontProvider || !getTextOutlineSupport(node).supported) return null
-  const shaped = shapeText(r.ck, r.fontProvider, node)
+  const shaped = shapeText(r.ck, r.fontProvider, node, outlineOverride)
   if (!shaped) return null
   const outlines: TextOutlineGlyph[] = []
   for (const glyph of shaped.glyphs) {
@@ -45,9 +49,10 @@ export function textGlyphPaths(r: SkiaRenderer, node: SceneNode): Path[] | null 
 export function textNodeToOutlinePath(
   r: SkiaRenderer,
   node: SceneNode,
-  baseline: 'preserve' | 'pixel' = 'preserve'
+  baseline: 'preserve' | 'pixel' = 'preserve',
+  outlineOverride?: Parameters<typeof shapeText>[3]
 ): Path | null {
-  const glyphs = shapedOutlines(r, node) ?? textNodeToOutlineLayout(node)?.glyphs
+  const glyphs = shapedOutlines(r, node, outlineOverride) ?? textNodeToOutlineLayout(node)?.glyphs
   if (!glyphs) return null
 
   const path = new r.ck.PathBuilder()

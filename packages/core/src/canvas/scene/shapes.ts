@@ -18,7 +18,7 @@ import { isLayerContainer } from '#core/canvas/shadows/silhouette'
 import { isPathTextWithStrokeGeometry, paintNodeStrokes } from '#core/canvas/strokes/paint'
 import { vectorStrokePaths } from '#core/canvas/strokes/vector'
 import { drawReflowedPathTextSilhouettes, isReflowedPathText } from '#core/canvas/text/derived'
-import { drawNoteText } from '#core/canvas/text/notes'
+import { drawNoteFill } from '#core/canvas/text/notes'
 import { drawTextEmoji } from '#core/canvas/text/renderer'
 /** The effects `renderShape` draws: a container's shadows are drawn around its children instead. */
 function shapeEffects(node: SceneNode): SceneNode['effects'] {
@@ -200,7 +200,7 @@ function paintShapeFills(context: NodePaintContext, afterFills?: () => void): vo
   if (isolated) canvas.saveLayer()
   if (!drawVectorMultiStyleFills(r, canvas, node, graph)) {
     drawVisibleFills(r, node, graph, (fill) => {
-      if (!drawNoteText(r, canvas, node, graph)) r.drawNodeFill(canvas, node, fill)
+      if (!drawNoteFill(context, fill)) r.drawNodeFill(canvas, node, fill)
     })
   }
   if (node.type === 'TEXT') drawTextEmoji(r, canvas, node)

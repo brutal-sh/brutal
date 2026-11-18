@@ -3,6 +3,7 @@ import type { CanvasKit, Canvas, Surface, Image, MallocObj } from 'canvaskit-was
 import type { SceneGraph } from '@open-pencil/scene-graph'
 
 import type { SkiaRenderer } from '#core/canvas'
+import { renderWithNoteRaster } from '#core/canvas/note-raster'
 
 import { encodeExportSurface, type RasterEncodingOptions } from './encode'
 
@@ -101,7 +102,9 @@ export function renderToSurface(
     const canvas = surface.getCanvas()
     canvas.scale(renderScale, renderScale)
     request.setup(canvas)
-    renderer.renderSceneToCanvas(canvas, request.graph, request.pageId)
+    renderWithNoteRaster(canvas, renderScale, () => {
+      renderer.renderSceneToCanvas(canvas, request.graph, request.pageId)
+    })
     surface.flush()
     highResImage = surface.makeImageSnapshot()
     downsampleSurface = downsample(ck, surface, highResImage, {

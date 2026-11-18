@@ -46,6 +46,7 @@
     "tools/generate/emoji-metrics",
     "tools/generate/landing-posters",
     "tools/generate/mermaid-sources",
+    "tools/generate/note-strike",
     "tools/generate/tauri-menu",
     "tools/generate/visual-oracles",
     "tools/release/package-artifacts",

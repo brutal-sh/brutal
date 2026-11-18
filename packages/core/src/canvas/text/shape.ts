@@ -87,15 +87,22 @@ function savedEmoji(node: SceneNode, text: string, glyph: LaidOutGlyph): SavedEm
 function savedOutline(
   glyph: LaidOutGlyph,
   text: string,
-  emoji: SavedEmoji | undefined,
-  insideEmoji: boolean
+  {
+    emoji,
+    insideEmoji,
+    override
+  }: {
+    emoji: SavedEmoji | undefined
+    insideEmoji: boolean
+    override?: (glyph: LaidOutGlyph) => OutlineCommand[] | undefined
+  }
 ): OutlineCommand[] | null {
   if (insideEmoji) return []
   if (emoji) return emojiPlaceholder(glyph.fontSize)
   const character = glyph.firstCharacter
   if (character !== undefined && text[character] === COMBINING_KEYCAP)
     return keycapFrame(glyph.fontSize)
-  return glyph.source?.outline(glyph.id, glyph.fontSize) ?? null
+  return override?.(glyph) ?? glyph.source?.outline(glyph.id, glyph.fontSize) ?? null
 }
 
 /**
@@ -109,7 +116,8 @@ function savedOutline(
 export function shapeText(
   ck: CanvasKit,
   fontProvider: TypefaceFontProvider,
-  node: SceneNode
+  node: SceneNode,
+  outlineOverride?: (glyph: LaidOutGlyph) => OutlineCommand[] | undefined
 ): ShapedText | null {
   const text = shownText(node)
   if (!canShape(node, text)) return null
@@ -134,7 +142,7 @@ export function shapeText(
       const emoji = insideEmoji ? undefined : savedEmoji(node, text, glyph)
       if (emoji && start !== undefined) emojiRange = { start, end: emoji.end }
       return {
-        commands: savedOutline(glyph, text, emoji, insideEmoji),
+        commands: savedOutline(glyph, text, { emoji, insideEmoji, override: outlineOverride }),
         x: glyph.x,
         y: glyph.y,
         fontSize: glyph.fontSize,

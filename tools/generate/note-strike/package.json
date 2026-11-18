@@ -1,0 +1,9 @@
+{
+  "name": "@open-pencil/note-strike-tools",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@open-pencil/package-artifacts-tools": "workspace:*",
+    "js-base64": "^3.9.3"
+  }
+}

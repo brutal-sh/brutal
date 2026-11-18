@@ -249,6 +249,7 @@ export function getGlyphOutlineMetricsSync(
 
 /** Outlines of one loaded font, addressed by the glyph IDs a shaper produced. */
 export interface GlyphOutlineSource {
+  readonly fontData: ArrayBuffer
   /** Whether the font has a glyph for every code point, so a shaper used it rather than a fallback. */
   covers(text: string): boolean
   /** The glyph the font maps `character` to, to check a shaper's glyph IDs are this font's. */
@@ -269,6 +270,7 @@ export function glyphOutlineSourceSync(
   if (!parsed) return null
   const instance = fontInstance(parsed, variations)
   return {
+    fontData: parsed.bytes,
     covers: (text) => Array.from(text).every((char) => glyphIndex(parsed, char) !== 0),
     glyphOf: (character) => glyphIndex(parsed, character),
     outline: (glyphId, fontSize) =>

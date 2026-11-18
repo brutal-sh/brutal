@@ -844,6 +844,13 @@
         "valibot": "^1.5.0",
       },
     },
+    "tools/generate/note-strike": {
+      "name": "@open-pencil/note-strike-tools",
+      "dependencies": {
+        "@open-pencil/package-artifacts-tools": "workspace:*",
+        "js-base64": "^3.9.3",
+      },
+    },
     "tools/generate/tauri-menu": {
       "name": "@open-pencil/tauri-menu-tools",
       "dependencies": {
@@ -1732,6 +1739,8 @@
     "@open-pencil/mermaid-sources-tools": ["@open-pencil/mermaid-sources-tools@workspace:tools/generate/mermaid-sources"],
 
     "@open-pencil/navigation-benchmark-tools": ["@open-pencil/navigation-benchmark-tools@workspace:tools/dev/navigation-benchmark"],
+
+    "@open-pencil/note-strike-tools": ["@open-pencil/note-strike-tools@workspace:tools/generate/note-strike"],
 
     "@open-pencil/package-artifacts-tools": ["@open-pencil/package-artifacts-tools@workspace:tools/release/package-artifacts"],
 
