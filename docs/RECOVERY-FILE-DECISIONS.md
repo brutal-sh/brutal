@@ -37,3 +37,19 @@ The first traced held-read case passes. The complete eight-case cohort then pass
 A fresh twenty-repeat Cancel run yields nineteen passes and one total 15-second test deadline at the final already-open unrelated file. This differs from the older Home-state timeout; its in-flight transition remains unobserved. The fixture's cold startup/file/backup construction now uses the existing canvas-spec beforeAll/afterAll pattern. Setup and decision phases each keep the canonical 15-second limit; combined wall time can exceed 15 seconds.
 
 All eight scenarios and every original decision/data/history statement remain equal under the AST/token control. The candidate passes all twenty Cancel repetitions in 293.723 seconds and the complete twenty-case Chromium/WebKit recovery cohort in 223.796 seconds, without skips/retries/flaky cases. Strict/type/full-static checks pass, with zero clones. This is a bounded fixture qualification, not a demonstrated production restore repair or complete FILE-07/08 acceptance. [Lifecycle evidence and limits](RECOVERY-DECISION-LIFECYCLE.md) retain both failures.
+
+## Installed macOS two-file decisions — 2026-11-18
+
+The normal Open Pen app (executable SHA-256 `0cab0ec48c05d2d67e291f262df3d789c1cca68d70ba23ab2bd3c081eb6f6e51`) opens two disposable existing `.pen` files. Duplicate creates two rectangles per file. Automatic persistence adds two recovery records and one blob per file, alongside four records and two blobs present at launch. Recovery reads use a read-only SQLite transaction and compare SHA-256 digests.
+
+- Cancel from File → Close Tab keeps both dirty tabs, both target rectangles and every recovery record, blob and source file byte-identical.
+- Don’t Save on the same named alert closes the target and removes only its two records and blob. Both source files, the other dirty tab’s recovery data and the older backups retain their exact digests.
+- Save writes two distinct 91 × 100 rectangles to the remaining source. Close and reopen shows both layers from disk. Opening and closing the saved file preserves the exact four pre-existing recovery records and both blobs.
+
+This exercises the installed app’s Close Tab alert and a writable Save. The earlier untraced Cancel-to-Home report and FILE-08’s broader reference and recovery-offer criteria remain open. Private receipts are under `local-evidence/user-native-regressions-2026-11-17/full-run-mac-2026-11-18/native-two-file-recovery/`.
+
+## Playwright recovery replay — 2026-11-18
+
+Local autosave, automatic draft and isolated Chromium process-loss contexts explicitly use the existing Cloud discovery fixture. The affected browser cases had reported public discovery CORS. The five focused Chromium cases now pass, including Save and a second process restart.
+
+Chromium also hung on a cancelled `page.reload()` three times. The trace ends during Playwright’s wait for navigation after the browser dismisses the beforeunload prompt. The test now requests a real reload from the page, requires the actual beforeunload prompt and dismisses it, then verifies live geometry, both flush requests and both restored archive contents. Chromium and WebKit each pass three cancelled-reload repetitions and three automatic draft repetitions at the original deadlines. The changes apply to test fixtures and navigation only.

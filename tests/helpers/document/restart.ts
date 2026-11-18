@@ -4,6 +4,8 @@ import { promisify } from 'node:util'
 
 import { expect, type BrowserContext, type BrowserType, type TestInfo } from '@playwright/test'
 
+import { mockOfficialCloudDiscovery } from '#tests/helpers/cloud/discovery'
+
 type LaunchOptions = NonNullable<Parameters<BrowserType['launchPersistentContext']>[1]>
 type StorageState = Parameters<BrowserContext['setStorageState']>[0]
 const executeFile = promisify(execFile)
@@ -53,6 +55,7 @@ export async function createRecoveryRestartProfile(
       }
       const identity = await ownedBrowser(context, profile)
       const page = context.pages().at(0) ?? (await context.newPage())
+      await mockOfficialCloudDiscovery(page)
       return { page, pid: identity.pid, version: identity.version, profile }
     },
     async crash() {

@@ -2,6 +2,7 @@ import { BUILTIN_IO_FORMATS, IORegistry } from '@open-pencil/core/io'
 
 import { expect, test, useEditorSetup } from '#tests/e2e/fixtures'
 import { CanvasHelper } from '#tests/helpers/canvas'
+import { mockOfficialCloudDiscovery } from '#tests/helpers/cloud/discovery'
 import { recoveryBytes } from '#tests/helpers/document/recovery'
 import { openAppMenu } from '#tests/helpers/menu'
 
@@ -67,6 +68,7 @@ test('an unsaved design keeps a recovery draft without opening a file picker', a
   })
   try {
     const page = await context.newPage()
+    await mockOfficialCloudDiscovery(page)
     await page.goto('/')
     const canvas = new CanvasHelper(page)
     await canvas.waitForInit()

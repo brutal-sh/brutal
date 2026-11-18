@@ -83,12 +83,14 @@ test.describe('cancelled cold reload', () => {
     const flush = await observeRecoveryFlush(page, ids)
     try {
       expect(await flush.evaluate((probe) => probe.calls())).toEqual([])
-      page.once('dialog', (dialog) => dialog.dismiss())
-      const navigation = await page.reload().then(
-        () => 'navigated',
-        () => 'cancelled'
-      )
-      expect(navigation).toBe('cancelled')
+      const dialogShown = page.waitForEvent('dialog')
+      // A dismissed reload can leave Playwright waiting for a navigation that never commits.
+      await page.evaluate(() => {
+        setTimeout(() => window.location.reload(), 0)
+      })
+      const dialog = await dialogShown
+      await dialog.dismiss()
+      expect(dialog.type()).toBe('beforeunload')
       expect((await flush.evaluate((probe) => probe.calls())).toSorted()).toEqual(ids.toSorted())
     } finally {
       await flush.evaluate((probe) => probe.restore())

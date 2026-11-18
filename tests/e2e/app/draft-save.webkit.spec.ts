@@ -5,6 +5,7 @@ import { expect, test, type Dialog, type Page } from '@playwright/test'
 import { BUILTIN_IO_FORMATS, IORegistry } from '@open-pencil/core/io'
 
 import { CanvasHelper } from '#tests/helpers/canvas'
+import { mockOfficialCloudDiscovery } from '#tests/helpers/cloud/discovery'
 import { recoveryBytes } from '#tests/helpers/document/recovery'
 import { openAppMenu } from '#tests/helpers/menu'
 
@@ -16,6 +17,7 @@ async function showLayers(page: Page) {
 }
 
 async function recoverAutomaticDraft(page: Page) {
+  await mockOfficialCloudDiscovery(page)
   await page.goto('/?recent-files')
   const home = page.getByTestId('recent-files-home')
   await home.getByRole('button', { name: 'New design', exact: true }).click()
