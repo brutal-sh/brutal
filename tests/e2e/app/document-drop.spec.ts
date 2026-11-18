@@ -3,6 +3,10 @@ import { readFile } from 'node:fs/promises'
 import { expect, test, type Page } from '@playwright/test'
 
 import { CanvasHelper } from '#tests/helpers/canvas'
+import { mockOfficialCloudDiscovery } from '#tests/helpers/cloud/discovery'
+import { showLayers } from '#tests/helpers/document/existing-file-recovery'
+
+test.beforeEach(({ page }) => mockOfficialCloudDiscovery(page))
 
 /** Drops files on the canvas the way a drag from the desktop delivers them. */
 async function dropOnCanvas(page: Page, files: Array<{ name: string; bytes: number[] }>) {
@@ -75,6 +79,7 @@ test('an SVG dropped on the canvas is placed, not opened as a document', async (
 
   await dropOnCanvas(page, [{ name: 'mark.svg', bytes: [...new TextEncoder().encode(svg)] }])
 
+  await showLayers(page)
   await expect(page.getByTestId('layers-item').filter({ hasText: 'mark' })).toHaveCount(1)
   await expect(page.getByText('Could not open', { exact: false })).toHaveCount(0)
   await expect(tabs.getByRole('tab')).toHaveCount(1)
@@ -110,18 +115,14 @@ test('unsupported .pen content reports its loss and preserves the current unsave
     }
   ])
 
-  await expect(page.getByText('Could not open “unsupported.pen”', { exact: false })).toBeVisible()
+  const notifications = page.getByRole('region', { name: 'Notifications (F8)' })
+  await expect(notifications.getByText('Could not open “unsupported.pen”')).toBeVisible()
   await expect(
-    page
-      .getByRole('region', { name: 'Notifications (F8)' })
-      .getByText(/Node type browser has no equivalent editor behavior/)
+    notifications.getByText(/Node type browser has no equivalent editor behavior/)
   ).toBeVisible()
   await expect(tabs).toHaveCount(1)
   await expect(tabs.first()).toHaveText(current ?? '')
-  await page
-    .getByRole('tablist', { name: 'Workspace panels' })
-    .getByRole('tab', { name: 'Layers', exact: true })
-    .click()
+  await showLayers(page)
   await expect(page.getByTestId('layers-item').filter({ hasText: 'Rectangle 1' })).toHaveCount(1)
   await expect(tabs.first().getByRole('img', { name: 'Unsaved changes' })).toHaveCount(1)
 })
@@ -159,6 +160,7 @@ test('a supported .pen opens as an editable document while preserving the origin
   const tabs = page.getByTestId('tabbar-tab')
   await expect(tabs).toHaveCount(2)
   await expect(tabs.last()).toContainText('editable')
+  await showLayers(page)
   await expect(page.getByTestId('layers-item').filter({ hasText: 'Imported card' })).toHaveCount(1)
   await page.getByTestId('layers-item').filter({ hasText: 'Imported card' }).click()
   await page.keyboard.press('Meta+d')
@@ -166,6 +168,7 @@ test('a supported .pen opens as an editable document while preserving the origin
   await page.keyboard.press('Meta+z')
   await expect(page.getByTestId('layers-item').filter({ hasText: 'Imported card' })).toHaveCount(1)
   await tabs.first().click()
+  await showLayers(page)
   await expect(page.getByTestId('layers-item').filter({ hasText: 'Rectangle 1' })).toHaveCount(1)
   canvas.assertNoErrors()
 })
