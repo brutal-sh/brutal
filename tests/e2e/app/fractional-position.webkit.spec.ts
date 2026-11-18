@@ -5,8 +5,13 @@ import { expect, test, type Page } from '@playwright/test'
 import { parsePenDocument, type PenNode } from '@open-pencil/pen'
 
 import { CanvasHelper } from '#tests/helpers/canvas'
+import { mockOfficialCloudDiscovery } from '#tests/helpers/cloud/discovery'
 import { openAppMenu } from '#tests/helpers/menu'
 import { getPageChildren, getSelectedIds, getSelectedNode } from '#tests/helpers/store'
+
+test.beforeEach(async ({ page }) => {
+  await mockOfficialCloudDiscovery(page)
+})
 
 const nodes: PenNode[] = [
   {

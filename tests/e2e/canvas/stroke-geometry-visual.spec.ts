@@ -1,6 +1,7 @@
 import { expect, test, useEditorSetupWithClear } from '#tests/e2e/fixtures'
+import { mockOfficialCloudDiscovery } from '#tests/helpers/cloud/discovery'
 
-const editor = useEditorSetupWithClear('/?test&no-chrome&no-rulers')
+const editor = useEditorSetupWithClear('/?test&no-chrome&no-rulers', mockOfficialCloudDiscovery)
 
 test('stroke caps joins and miter limits', async () => {
   await editor.page.evaluate(() => {

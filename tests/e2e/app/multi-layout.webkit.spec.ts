@@ -6,7 +6,12 @@ import { parsePenDocument } from '@open-pencil/pen'
 
 import { CanvasHelper } from '#tests/helpers/canvas'
 import { layerDriver } from '#tests/helpers/canvas/layers'
+import { mockOfficialCloudDiscovery } from '#tests/helpers/cloud/discovery'
 import { openAppMenu } from '#tests/helpers/menu'
+
+test.beforeEach(async ({ page }) => {
+  await mockOfficialCloudDiscovery(page)
+})
 
 test('multi-frame flex controls edit every applicable frame in one history step', async ({
   page

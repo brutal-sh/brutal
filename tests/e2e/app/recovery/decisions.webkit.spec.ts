@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test'
 
+import { mockOfficialCloudDiscovery } from '#tests/helpers/cloud/discovery'
 import { recoveryBytes } from '#tests/helpers/document/recovery'
 import {
   expectUnrelatedEditable,
@@ -11,6 +12,10 @@ import {
   TARGET_DRAFT,
   UNRELATED_DRAFT
 } from '#tests/helpers/document/recovery/decisions'
+
+test.beforeEach(async ({ page }) => {
+  await mockOfficialCloudDiscovery(page)
+})
 
 for (const decision of ['Save', 'Save As', 'Cancel', 'Close', 'Discard'] as const) {
   test(`${decision} affects only its selected draft and preserves unrelated recovery`, async ({
