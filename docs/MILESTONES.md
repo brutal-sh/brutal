@@ -2,7 +2,7 @@
 
 Updated: 2026-11-18. Controller goal: **active**; all **18 exits remain open**. Actual Pen 1.2.23 is the reference; OpenPencil is the foundation.
 
-565 cards / 547 execution tasks / 18 milestones. 398 Backlog / 0 Ready / 0 Building / 54 Verify / 95 Executed. Counts do not measure parity or predict dates.
+565 cards / 547 execution tasks / 18 milestones. 397 Backlog / 0 Ready / 0 Building / 55 Verify / 95 Executed. Counts do not measure parity or predict dates.
 
 [Complete task index](TASKS.md) · [Current audit](BOARD-AUDIT-2026-11-16.md) · [Reference delta](pen-feature-reference/update-audit-2026-11-16.md)
 

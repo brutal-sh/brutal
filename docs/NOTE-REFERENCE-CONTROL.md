@@ -251,3 +251,18 @@ in Chromium and 2,286 in WebKit. This rejects baseline coordinate representation
 a correction for that decomposition; it does not isolate Skia's internal algorithm.
 Neither variant enters production. `note-line-three-replay-summary.json` retains
 those results, with the earlier two-arm trial kept separately.
+
+## Current Note authoring in Pen 1.2.23 and Open Pen
+
+Both apps created a 250 × 219 Note, preserved the typed text through Undo and
+Redo, applied the Purple preset and reopened the custom #ABCDEF Note with the
+same text and visible color. Pen recorded explicit dimensions. Open Pen
+reconstructed the default geometry when the fields were omitted. Both owned
+files were retained and the previous Pen tab was restored.
+
+The isolated native Open Pen run used a guarded Unicode text event. Embedded
+individual key input dropped spaces, and a separate hardware-key attempt lost
+foreground focus. Fourteen current Chromium and WebKit authoring controls
+passed, including picker cancel and read-only workflows. The current captures
+use different zoom and theme settings. DRAW-16-AUTHOR remains in Verify for the
+remaining native input and matched appearance evidence.

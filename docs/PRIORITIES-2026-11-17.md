@@ -13,7 +13,7 @@ cover its wider native, actual-Pen or parent acceptance. The bounded Codex tool 
 
 The current order follows observed user impact and dependencies:
 
-1. Compare the remaining Note authoring states in actual Pen and Open Pen. Published source `2ec06fd18` closes the Core raster leaf, and the isolated native export matched before and after Save and Recents reopen.
+1. Complete the remaining matched Note appearance and native input gates. The current Pen reference and isolated Open Pen both rendered the saved text and custom color after reopening, and DRAW-16-AUTHOR is in Verify.
 2. Run the normal installed Codex edit, Undo, Save and reopen journey. Retain the actual Pen provider runtime gates and check native window controls on the delivered candidate.
 3. Continue the broader Save and recovery criteria, including evidence of the first failing transition if the old Cancel/Home behavior recurs.
 
