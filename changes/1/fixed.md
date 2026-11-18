@@ -65,3 +65,4 @@
 - End the coding-agent tool check when the adapter stops responding so the check can be retried.
 - Recover from an unavailable inherited Codex model before sending a message.
 - Save compatible agent-created rectangles and text to `.pen` when no direction is specified.
+- Preserve Note text and rounded corners in raster exports across save and reopen.
