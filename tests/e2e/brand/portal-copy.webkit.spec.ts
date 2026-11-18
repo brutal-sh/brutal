@@ -91,6 +91,8 @@ for (const locale of AVAILABLE_LOCALES) {
         await capture(column, testInfo, 'welcome')
         await page.getByRole('button', { name: words.signIn, exact: true }).click()
         await expect(page).toHaveURL(new URL('/auth/sign-in', baseURL).href)
+        await expect(page.getByRole('textbox').first()).toBeVisible()
+        await expect(page.getByRole('button', { name: words.signIn, exact: true })).toBeVisible()
         await page.goto('/auth/sign-in?redirect=%2Fauth%2Fdevice%3Fuser_code%3DABCD-EFGH')
         await expect(page.getByRole('textbox').first()).toBeVisible()
         await expect(page.getByRole('button', { name: words.signIn, exact: true })).toBeVisible()
