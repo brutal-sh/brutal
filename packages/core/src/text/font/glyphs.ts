@@ -121,11 +121,19 @@ function lineMetrics(parsed: HarfBuzzFont): LineMetrics {
 
 export function measureTextWithFont(
   text: string,
-  fontSize: number,
-  family: string,
-  style: string,
-  maxWidth?: number,
-  lineHeight?: number
+  {
+    family,
+    style,
+    fontSize,
+    maxWidth,
+    lineHeight
+  }: {
+    family: string
+    style: string
+    fontSize: number
+    maxWidth?: number
+    lineHeight?: number
+  }
 ): { width: number; height: number } | null {
   const parsed = getParsedFont(family, style)
   if (!parsed) return null

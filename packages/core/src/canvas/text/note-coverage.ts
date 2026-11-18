@@ -1,5 +1,7 @@
 import type { CanvasKit, Path } from 'canvaskit-wasm'
 
+import type { Vector } from '@open-pencil/scene-graph/primitives'
+
 interface TextTransform {
   scale: number
   x: number
@@ -8,19 +10,14 @@ interface TextTransform {
 
 type PixelCoverage = (x: number, y: number) => number
 
-interface Point {
-  x: number
-  y: number
-}
-
 interface Edge {
-  top: Point
-  bottom: Point
+  top: Vector
+  bottom: Vector
   winding: number
 }
 
 const SUBPIXELS = 256
-const normalSamples: readonly Point[] = [
+const normalSamples: readonly Vector[] = [
   { x: 1, y: 5 },
   { x: 3, y: 1 },
   { x: 5, y: 7 },
@@ -30,10 +27,10 @@ const transposedSamples = normalSamples.map(({ x, y }) => ({ x: y, y: x }))
 const coverageAlpha = [0, 64 / 255, 128 / 255, 191 / 255, 1]
 
 function flattenQuadratic(
-  point: Point,
-  control: Point,
-  end: Point,
-  add: (from: Point, to: Point) => void
+  point: Vector,
+  control: Vector,
+  end: Vector,
+  add: (from: Vector, to: Vector) => void
 ): void {
   const deviation = Math.hypot(point.x - 2 * control.x + end.x, point.y - 2 * control.y + end.y)
   // Skia's quadratic tessellation limits the error to a quarter of a device pixel.
@@ -54,27 +51,30 @@ function flattenQuadratic(
 function pathEdges(ck: CanvasKit, path: Path, transform: TextTransform): Edge[] | null {
   const commands = path.toCmds()
   const edges: Edge[] = []
-  let point: Point | undefined
-  let first: Point | undefined
+  let point: Vector | undefined
+  let first: Vector | undefined
   let offset = 0
-  const read = (): Point => ({
+  const read = (): Vector => ({
     x: commands[offset++] * transform.scale + transform.x,
     y: commands[offset++] * transform.scale + transform.y
   })
-  const snapped = (p: Point): Point => ({
+  const snapped = (p: Vector): Vector => ({
     x: Math.round(p.x * SUBPIXELS),
     y: Math.round(p.y * SUBPIXELS)
   })
-  const add = (from: Point, to: Point) => {
+  const add = (from: Vector, to: Vector) => {
     const a = snapped(from)
     const b = snapped(to)
     if (a.y < b.y) edges.push({ top: a, bottom: b, winding: 1 })
     if (a.y > b.y) edges.push({ top: b, bottom: a, winding: -1 })
   }
+  const closeContour = () => {
+    if (first && point) add(point, first)
+  }
   while (offset < commands.length) {
     const verb = commands[offset++]
     if (verb === ck.MOVE_VERB) {
-      if (first && point) add(point, first)
+      closeContour()
       first = point = read()
     } else if (!point || !first) {
       return null
@@ -94,11 +94,11 @@ function pathEdges(ck: CanvasKit, path: Path, transform: TextTransform): Edge[] 
       return null
     }
   }
-  if (point && first) add(point, first)
+  closeContour()
   return edges
 }
 
-function rowCoverage(edges: Edge[], samplePoints: readonly Point[]): PixelCoverage {
+function rowCoverage(edges: Edge[], samplePoints: readonly Vector[]): PixelCoverage {
   let previousY = Number.NaN
   let crossings: { x: number; winding: number }[][] = []
   let positions: number[] = []

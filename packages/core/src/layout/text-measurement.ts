@@ -29,13 +29,26 @@ export function estimateTextSize(
   const fontSize = node.fontSize || 14
   const family = node.fontFamily || 'Inter'
   const style = weightToStyle(node.fontWeight || 400, node.italic)
-  const text = node.text || ''
+  const text = node.text
 
   const ownLineH = lineHeightPixels(node.lineHeight, fontSize) ?? 0
   const explicitLineH = ownLineH > 0 ? ownLineH : undefined
-  const measured = measureTextWithFont(text, fontSize, family, style, maxWidth, explicitLineH)
-  if (measured) return measured
+  const measured = measureTextWithFont(text, {
+    fontSize,
+    family,
+    style,
+    maxWidth,
+    lineHeight: explicitLineH
+  })
+  return measured ?? estimateTextWithoutFont(text, fontSize, maxWidth, explicitLineH)
+}
 
+function estimateTextWithoutFont(
+  text: string,
+  fontSize: number,
+  maxWidth: number | undefined,
+  explicitLineH: number | undefined
+): { width: number; height: number } {
   const charWidth = fontSize * GLYPH_WIDTH_FACTOR
   const singleLineWidth = Math.ceil(text.length * charWidth)
   const lineH = explicitLineH ?? Math.ceil(fontSize * 1.4)

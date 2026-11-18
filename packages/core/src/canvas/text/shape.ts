@@ -14,6 +14,7 @@ import { buildParagraph, measureTextNode, textVerticalOffset } from '#core/canva
 import { textDecorationRects, type DecoratedGlyph } from '#core/canvas/text/decorations'
 import { outlineInk, savedGlyphInk } from '#core/canvas/text/ink'
 import { COMBINING_KEYCAP, keycapFrame } from '#core/canvas/text/keycap'
+import type { TextLayout } from '#core/canvas/text/layout'
 import { characterFamily, laidOutGlyphs, type LaidOutGlyph } from '#core/canvas/text/placed'
 import { getCanvasKit } from '#core/canvaskit'
 import type { TextMeasurer } from '#core/layout/text-measurement'
@@ -105,6 +106,18 @@ function savedOutline(
   return override?.(glyph) ?? glyph.source?.outline(glyph.id, glyph.fontSize) ?? null
 }
 
+function shapedBaselines(layout: TextLayout, offsetY: number, textLength: number) {
+  return layout.getLineMetrics().map((line) => ({
+    firstCharacter: line.startIndex,
+    endCharacter: Math.min(line.endIncludingNewline, textLength),
+    position: { x: line.left, y: line.baseline + offsetY },
+    width: line.width,
+    lineY: line.baseline - line.ascent + offsetY,
+    lineHeight: line.height,
+    lineAscent: line.ascent
+  }))
+}
+
 /**
  * Lay a text node out as the renderer draws it and pair each shaped glyph with the outline of
  * the glyph ID CanvasKit chose, so ligatures and contextual forms keep their shapes. An emoji the
@@ -129,7 +142,6 @@ export function shapeText(
     const offsetY = textVerticalOffset(node, paragraph.getHeight())
     const placed = laidOutGlyphs(node, paragraph, text, offsetY)
     if (!placed) return null
-    const metrics = paragraph.getLineMetrics()
     const characterOffsets: Array<number | undefined> = Array.from({ length: text.length })
     // A sequence the font does not join is several glyphs: the first stands for the emoji, and
     // the rest keep their place and draw nothing. Glyphs come in visual order, so in
@@ -155,15 +167,7 @@ export function shapeText(
     const outlined = glyphs.every((glyph) => glyph.commands)
     return {
       glyphs: outlined ? glyphs : glyphs.map((glyph) => ({ ...glyph, commands: null })),
-      baselines: metrics.map((line) => ({
-        firstCharacter: line.startIndex,
-        endCharacter: Math.min(line.endIncludingNewline, text.length),
-        position: { x: line.left, y: line.baseline + offsetY },
-        width: line.width,
-        lineY: line.baseline - line.ascent + offsetY,
-        lineHeight: line.height,
-        lineAscent: line.ascent
-      })),
+      baselines: shapedBaselines(paragraph, offsetY, text.length),
       logicalIndexToCharacterOffsetMap: completeCharacterOffsets(characterOffsets)
     }
   } finally {

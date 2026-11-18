@@ -433,11 +433,6 @@ export class FontManager {
     return this.loadedFamilies.get(`${family}|${style}`) ?? null
   }
 
-  bundledData(family: string, style: string): ArrayBuffer | null {
-    const key = `${family}|${style}`
-    return this.loadedFamilySources.get(key) === 'bundled' ? this.loadedData(family, style) : null
-  }
-
   /**
    * The variation axes and named instances of a family's variable font, from a face it has loaded,
    * in the slant asked for where it has one: `null` when the faces it has loaded are static,
