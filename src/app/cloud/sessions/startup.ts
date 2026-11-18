@@ -55,7 +55,10 @@ export async function startCloudSessions(options: {
   const pending = takePendingCloudSignIn()
   try {
     if (IS_CLOUD_SITE) await addCloudSiteServer()
-    void checkCloudAvailability(globalThis.location.href)
+    // Local editor tests have no dependency on the public Cloud listing.
+    if (!import.meta.env.DEV || import.meta.env.MODE !== 'e2e') {
+      void checkCloudAvailability(globalThis.location.href)
+    }
     const address = new URL(globalThis.location.href)
     const link = readCloudLink(address)
     const documentLink = readCloudDocumentLink(address)

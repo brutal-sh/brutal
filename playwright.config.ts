@@ -139,7 +139,7 @@ export default defineConfig({
       ? []
       : [
           {
-            command: `bun run dev --port ${appPort} --strictPort`,
+            command: `bun run dev --mode e2e --port ${appPort} --strictPort`,
             cwd: import.meta.dirname,
             url: origin,
             env: {
