@@ -6,6 +6,7 @@ import { noteBody } from '@open-pencil/scene-graph/generated'
 import {
   drawNoteBodyCoverage,
   drawNoteTextCoverage,
+  isNoteRasterExport,
   noteRasterFor,
   type NoteRaster
 } from '#core/canvas/note-raster'
@@ -23,11 +24,18 @@ export function drawNoteFill(
 ): boolean {
   const rasterFill = fill.type === 'SOLID' && (!fill.blendMode || fill.blendMode === 'NORMAL')
   if (node.type !== 'TEXT') {
-    if (!rasterFill || node.independentCorners || node.cornerSmoothing !== 0) return false
+    if (
+      !rasterFill ||
+      node.childIds.length !== 1 ||
+      node.independentCorners ||
+      node.cornerSmoothing !== 0 ||
+      !isNoteRasterExport(canvas) ||
+      !noteBody(graph, node)
+    ) {
+      return false
+    }
     const raster = noteRasterFor(renderer.ck, canvas)
-    return (
-      !!raster && !!noteBody(graph, node) && drawNoteBodyCoverage(raster, node, renderer.fillPaint)
-    )
+    return !!raster && drawNoteBodyCoverage(raster, node, renderer.fillPaint)
   }
 
   const parent = node.parentId && graph.getNode(node.parentId)

@@ -24,6 +24,10 @@ export interface NoteRaster {
   clip: Int32Array
 }
 
+export function isNoteRasterExport(canvas: Canvas): boolean {
+  return exportScales.has(canvas)
+}
+
 export function noteRasterFor(ck: CanvasKit, canvas: Canvas): NoteRaster | null {
   const supersampling = exportScales.get(canvas)
   if (!supersampling) return null
