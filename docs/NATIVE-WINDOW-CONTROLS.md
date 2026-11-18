@@ -1,6 +1,6 @@
 # Native macOS window controls
 
-The installed Open Pen position correction executes on 2026-11-13. UI-MAC-WINDOW-CONTROLS remains Verify for pointer dragging and independent review; this is not full native-chrome or Pen-parity acceptance.
+The November 13 position correction and the November 18 installed-window qualification verify the native controls in Open Pen’s header. Broader native-chrome and Pen parity criteria remain open.
 
 ## Correction
 
@@ -37,3 +37,14 @@ The normal installed executable is now `db4e528c`, delivered under the separate 
 A different control uses the native Window → Bring All to Front action, then a header double-click followed by a drag before measurement. This combined control changes the main window from 1320×838 at x116/y33 to 1512×949 at x0/y33; it does not isolate which input causes the change. A second double-click alone restores the exact prior bounds. A subsequent isolated drag from screenshot coordinates 475,88 to 635,168 leaves those restored bounds unchanged. The isolated double-click restores the prior geometry; pointer dragging remains unaccepted. The earlier combined zoom/drag measurement is retained separately and is not called successful movement by dragging.
 
 Evidence is in `local-evidence/native-window-final-2026-11-17/`, including `isolated-drag-result.json`. These captures use the OS window-sharing indicator, so they do not remeasure the three native button centers. No CSS, capability, dependency, input-security setting or window configuration changes. The app remains at its pre-control 1320×838/x116/y33 bounds with Home selected. UI-MAC-WINDOW-CONTROLS remains Verify for its remaining pointer criterion.
+
+
+## Installed window qualification — 2026-11-18
+
+The optimized Open Pen executable `0cab0ec48c05` from runtime source `5d019e320` ran from `/Applications/Open Pen.app`. A physical drag below the header plus button moved the window 56 points right and 44 points down. Resizing by dragging the right edge changed its width from 1280 to 900 points. All 20 live resize samples retained native centers at (21, 28), (44, 28), and (67, 28). Three separate 880 × 600 accessibility resize cycles also retained those centers, and every cycle restored the starting frame.
+
+The native controls minimized the window, entered fullscreen, and closed the app from Home. The window and buttons returned to their original geometry after restore, fullscreen exit, foreground changes, and a new-process launch. The new process still offered both pending recovery entries. Closing the recovery dialog left both entries alone. The installed executable rejected the reserved native-test profile argument before startup and created no profile.
+
+Pen 1.2.23 and the installed Open Pen were captured in Light at the same active 1280 × 800 viewport and 2× display scale. Both showed 16-point native Graphite controls with 23-point spacing. Pen centers were (27, 29), (50, 29), and (73, 29). Open Pen centers align with its existing header and 72-point leading area. Both window frames and Open Pen’s original Dark setting were restored.
+
+An extra diagnostic resized the window and immediately rewrote its existing position. One Accessibility sample returned temporary default control coordinates at 5.1 ms and the next sample showed the configured coordinates at 12.7 ms. The physical resize and size-only cycles never showed that displacement. The original off-center screenshot remains unattributed to a specific build. Private captures and retained failures are under `local-evidence/user-native-regressions-2026-11-17/full-run-mac-2026-11-18/window-parity/`.
