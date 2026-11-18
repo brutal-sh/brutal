@@ -68,3 +68,4 @@
 - Preserve Note text and rounded corners in raster exports across save and reopen.
 - macOS window controls have more room at the leading edge of the tab bar.
 - Describe gives agents a way to find the required node ID, and stock photo calls without a provider guide agents to finish the design with placeholders.
+- Cloud Sessions waits for its first response before displaying the session list.

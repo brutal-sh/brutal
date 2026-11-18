@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test'
 
-import { effectScope, nextTick } from 'vue'
+import { effectScope, nextTick, watchEffect } from 'vue'
 
 import { usePortalLoad } from '@/app/cloud-portal/state'
 
@@ -36,8 +36,18 @@ describe('usePortalLoad', () => {
     if (!load) throw new Error('The load did not start')
     try {
       expect(load.status.value).toBe('loading')
+      const observed: { status: string; value: string }[] = []
+      scope.run(() =>
+        watchEffect(() => {
+          observed.push({ status: load.status.value, value: load.data.value })
+        })
+      )
       requests[0]?.answer('first')
       await settle()
+      expect(observed).toEqual([
+        { status: 'loading', value: '' },
+        { status: 'ready', value: 'first' }
+      ])
       expect(load.status.value).toBe('ready')
       expect(load.data.value).toBe('first')
 

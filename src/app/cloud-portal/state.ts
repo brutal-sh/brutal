@@ -1,5 +1,5 @@
 import { noop, useAsyncState } from '@vueuse/core'
-import { computed, getCurrentInstance, onActivated, shallowRef } from 'vue'
+import { computed, getCurrentInstance, onActivated, shallowRef, watch } from 'vue'
 
 import { usePortalFailureMessages } from './failure'
 
@@ -17,20 +17,18 @@ export type PortalLoadStatus = 'loading' | 'failed' | 'refreshing' | 'ready'
  */
 export function usePortalLoad<T>(load: () => Promise<T>, initial: T) {
   const failures = usePortalFailureMessages()
-  // `useAsyncState` resets its own `isReady` on every run, so whether anything ever loaded is kept
-  // here: it tells a first load, with nothing to show, from a refresh. Only the newest request
-  // counts, as for the value: an older one that succeeds after a newer one failed shows nothing.
   const loaded = shallowRef(false)
-  let latest = 0
-  const { state, isLoading, error, execute } = useAsyncState(
-    async () => {
-      const request = ++latest
-      const value = await load()
-      if (request === latest) loaded.value = true
-      return value
+  const { state, isReady, isLoading, error, execute } = useAsyncState(load, initial, {
+    resetOnExecute: false,
+    onError: noop
+  })
+  // VueUse accepts only the newest result and assigns its data before marking it ready.
+  watch(
+    isReady,
+    (ready) => {
+      if (ready) loaded.value = true
     },
-    initial,
-    { resetOnExecute: false, onError: noop }
+    { flush: 'sync' }
   )
   const status = computed<PortalLoadStatus>(() => {
     if (loaded.value) return isLoading.value ? 'refreshing' : 'ready'
