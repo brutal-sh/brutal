@@ -26,7 +26,7 @@ test('reused Unicode section labels match fresh paragraphs across zoom reversals
     }
   ])
   try {
-    await page.goto('/?test&no-rulers&navigation-benchmark')
+    await page.goto('/?test&no-chrome&no-rulers&navigation-benchmark')
     const canvas = new CanvasHelper(page)
     await canvas.waitForInit()
     await page.evaluate(() => {
@@ -155,7 +155,7 @@ for (const rotation of [-145, -40, 50]) {
 
 for (const zoom of [0.5, 1, 2]) {
   test(`section pills retain their size and hover target at ${zoom} zoom`, async ({ page }) => {
-    await page.goto('/?test&no-rulers')
+    await page.goto('/?test&no-chrome&no-rulers')
     const canvas = new CanvasHelper(page)
     await canvas.waitForInit()
     const lightId = await page.evaluate((scale) => {

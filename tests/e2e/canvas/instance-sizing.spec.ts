@@ -1,7 +1,8 @@
 import { expect, test, useEditorSetupWithClear } from '#tests/e2e/fixtures'
 import type * as SizingFixture from '#tests/helpers/canvas/instance-sizing'
 
-test.use({ viewport: { width: 900, height: 700 } })
+// The shell reserves 56 px above the 664 px canvas in the reference capture.
+test.use({ viewport: { width: 900, height: 720 } })
 
 const editor = useEditorSetupWithClear('/?test&no-chrome&no-rulers')
 
