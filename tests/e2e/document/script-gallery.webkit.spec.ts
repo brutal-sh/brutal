@@ -8,7 +8,6 @@ import { scriptOfNode } from '@open-pencil/scene-graph/scripts'
 
 import { create, generated, exportScript } from '#tests/helpers/document/scripts'
 import { openAppMenu } from '#tests/helpers/menu'
-import { repoPath } from '#tests/helpers/paths'
 
 const examples = [
   ['Candlestick', 540, 361],
@@ -133,10 +132,10 @@ test('gallery Snapshot includes a relative JavaScript dependency without changin
   const chart = before && graph.getNode(before.id)
   expect(chart && scriptOfNode(chart)?.uri).toBe('scripts/1.js')
   expect(new TextDecoder().decode(archive['scripts/1.js'])).toContain('@input stroke: number')
-  await writeFile(
-    repoPath(`local-evidence/script-chart-snapshot-${testInfo.project.name}.zip`),
-    bytes
-  )
+  await testInfo.attach('gallery-snapshot', {
+    body: Buffer.from(bytes),
+    contentType: 'application/zip'
+  })
   await expect(dialog).toBeHidden()
   expect(await generated(page)).toEqual(before)
   canvas.assertNoErrors()

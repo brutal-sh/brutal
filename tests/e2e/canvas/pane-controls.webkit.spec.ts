@@ -1,6 +1,7 @@
 import { expect, test, type Page } from '@playwright/test'
 
 import { CanvasHelper } from '#tests/helpers/canvas'
+import { mockOfficialCloudDiscovery } from '#tests/helpers/cloud/discovery'
 import { openAppMenu } from '#tests/helpers/menu'
 import { getPageChildren, getSelectedIds } from '#tests/helpers/store'
 
@@ -27,6 +28,7 @@ for (const layout of [
       test(`pointer closes ${layout.name} panes from ${closeFrom} ${selected ? 'with' : 'without'} the inspector`, async ({
         page
       }, info) => {
+        await mockOfficialCloudDiscovery(page)
         await page.goto('/')
         const canvas = new CanvasHelper(page)
         await canvas.waitForInit()

@@ -6,6 +6,7 @@ import { parsePenDocument } from '@open-pencil/pen'
 
 import { CanvasHelper } from '#tests/helpers/canvas'
 import { waitForSettledScene } from '#tests/helpers/canvas/color-space'
+import { mockOfficialCloudDiscovery } from '#tests/helpers/cloud/discovery'
 import { create, chooseSource, generated, exportScript } from '#tests/helpers/document/scripts'
 import { openAppMenu } from '#tests/helpers/menu'
 
@@ -162,6 +163,7 @@ test('Script creates, links, edits inputs, converts to editable layers and undoe
 test('Script authored inputs save and reopen while generated layers remain derived', async ({
   page
 }) => {
+  await mockOfficialCloudDiscovery(page)
   await page.addInitScript(() => {
     window.showOpenFilePicker = undefined
     window.showSaveFilePicker = undefined

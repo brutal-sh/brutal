@@ -1,6 +1,7 @@
 import { expect, test, type Locator, type Page } from '@playwright/test'
 
 import { CanvasHelper } from '#tests/helpers/canvas'
+import { mockOfficialCloudDiscovery } from '#tests/helpers/cloud/discovery'
 import { openAppMenu } from '#tests/helpers/menu'
 
 async function activateControl(
@@ -38,6 +39,7 @@ async function constrainWorkspace(page: Page) {
 
 async function prepareNarrowPane(page: Page, edge: string, constrained: boolean) {
   if (constrained) await page.setViewportSize({ width: 880, height: 800 })
+  await mockOfficialCloudDiscovery(page)
   await page.goto('/')
   const canvas = new CanvasHelper(page)
   await canvas.waitForInit()

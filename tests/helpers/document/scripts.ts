@@ -1,6 +1,7 @@
 import { expect, type Page } from '@playwright/test'
 
 import { CanvasHelper } from '#tests/helpers/canvas'
+import { mockOfficialCloudDiscovery } from '#tests/helpers/cloud/discovery'
 
 const source = `/**
  * @schema 2.21
@@ -64,6 +65,7 @@ export async function chooseSource(page: Page, code = source) {
 }
 
 export async function create(page: Page) {
+  await mockOfficialCloudDiscovery(page)
   await page.addInitScript(() => {
     window.showOpenFilePicker = undefined
     window.showSaveFilePicker = undefined
