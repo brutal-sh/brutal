@@ -70,8 +70,10 @@ for (const width of [390, 1496]) {
     await expect(home.getByRole('tabpanel')).toBeVisible()
     await home.getByRole('tab', { name: 'Design Systems', exact: true }).click()
     await home.getByRole('button', { name: 'Manage libraries' }).click()
-    await expect(page.getByRole('dialog')).toBeVisible()
+    const libraries = page.getByRole('dialog', { name: 'Manage libraries', exact: true })
+    await expect(libraries.locator(':focus')).toBeVisible()
     await page.keyboard.press('Escape')
+    await expect(libraries).toBeHidden()
     await home.getByRole('tab', { name: 'Recents', exact: true }).click()
     await expect(home).toHaveJSProperty(
       'scrollWidth',
