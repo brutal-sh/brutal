@@ -1,6 +1,7 @@
 import { test, expect, type Locator, type Page } from '@playwright/test'
 
 import { CanvasHelper } from '#tests/helpers/canvas'
+import { mockOfficialCloudDiscovery } from '#tests/helpers/cloud/discovery'
 
 export function useEditorSetup(url = '/', setup?: (page: Page) => Promise<unknown>) {
   let page: Page
@@ -10,6 +11,7 @@ export function useEditorSetup(url = '/', setup?: (page: Page) => Promise<unknow
 
   test.beforeAll(async ({ browser }) => {
     page = await browser.newPage()
+    await mockOfficialCloudDiscovery(page)
     await setup?.(page)
     await page.goto(url)
     canvas = new CanvasHelper(page)
@@ -49,6 +51,7 @@ export function useIsolatedEditorSetupWithClear(
   let canvas: CanvasHelper
   test.beforeEach(async ({ page: ownedPage }) => {
     page = ownedPage
+    await mockOfficialCloudDiscovery(page)
     await setup?.(page)
     canvas = new CanvasHelper(page)
     await page.goto(url)

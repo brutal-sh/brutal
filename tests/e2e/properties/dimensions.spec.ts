@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test'
 
 import { CanvasHelper } from '#tests/helpers/canvas'
+import { openAdvancedProperties } from '#tests/helpers/properties'
 
 for (const theme of ['light', 'dark']) {
   test.describe(`dimension fields in ${theme}`, () => {
@@ -27,6 +28,7 @@ for (const theme of ['light', 'dark']) {
         const id = editor.createShape('FRAME', 0, 0, 12345, 6789)
         editor.select([id])
       })
+      await openAdvancedProperties(page)
       const section = page.getByRole('region', { name: 'Layout', exact: true })
       const width = section.locator('[data-property="width"]')
       await expect(width).toContainText('12345')
@@ -49,11 +51,11 @@ for (const theme of ['light', 'dark']) {
         .fill('Dimensions/Content/Maximum comfortable width')
       await page.getByRole('button', { name: 'Create', exact: true }).click()
       await expect(width).toHaveAttribute('data-bound')
-      if (theme === 'light') await expect(section).toHaveScreenshot('dimensions-bound-light.png')
       await width.getByRole('combobox', { name: 'Width', exact: true }).click()
       await expect(page.getByRole('option', { name: 'Fixed', exact: true })).toBeVisible()
       await page.keyboard.press('Escape')
       await expect(width).toHaveAttribute('data-bound')
+      if (theme === 'light') await expect(section).toHaveScreenshot('dimensions-bound-light.png')
     })
   })
 }

@@ -20,7 +20,9 @@ export class ChatHarness {
   }
 
   get profileTrigger() {
-    return this.page.getByTestId('chat-profile-selector')
+    return this.page
+      .getByTestId('chat-panel')
+      .getByRole('combobox', { name: 'Select design model', exact: true })
   }
 
   userMessage() {

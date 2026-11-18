@@ -56,15 +56,15 @@ test.describe('a populated recent files list', () => {
 })
 
 test.describe('on a phone', () => {
-  // A touch screen: a narrow desktop window keeps mouse-sized controls and focuses the search.
   test.use({ hasTouch: true, isMobile: true, viewport: { width: 390, height: 844 } })
 
   test('keeps the New tab layout usable', async ({ page }) => {
     await page.goto('/?recent-files')
 
-    const search = page.getByLabel('Search files…')
+    const search = page.getByRole('searchbox', { name: 'Search files…' })
+    await expect(search).toBeHidden()
+    await page.getByRole('button', { name: 'Search files…', exact: true }).tap()
     await expect(search).toBeVisible()
-    await expect(search).not.toBeFocused()
     await expect(search).toHaveAttribute('placeholder', 'Search files…')
     await expect(page.getByTestId('home-open-file')).toBeVisible()
     await expect(page.getByTestId('home-new-document')).toBeVisible()
@@ -75,15 +75,18 @@ test.describe('on a phone', () => {
   })
 })
 
-test('a narrow window with a mouse keeps mouse-sized controls and focuses the search', async ({
-  page
-}) => {
+test('a narrow desktop window focuses search when its popover opens', async ({ page }) => {
   await page.setViewportSize({ width: 600, height: 800 })
   await page.goto('/?recent-files')
 
-  await expect(page.getByLabel('Search files…')).toBeFocused()
-  // Medium buttons, 32 px tall; touch screens get the 36 px large ones.
-  expect((await page.getByTestId('home-open-file').boundingBox())?.height).toBe(32)
+  const trigger = page.getByRole('button', { name: 'Search files…', exact: true })
+  const search = page.getByRole('searchbox', { name: 'Search files…' })
+  await expect(search).toBeHidden()
+  await trigger.click()
+  await expect(search).toBeFocused()
+  await search.press('Escape')
+  await expect(search).toBeHidden()
+  await expect(trigger).toBeFocused()
 })
 
 test('opens to the recent-files home and starts a new document', async ({ page }) => {
@@ -91,27 +94,28 @@ test('opens to the recent-files home and starts a new document', async ({ page }
 
   await expect(page.getByTestId('recent-files-home')).toBeVisible()
   await expect(page.getByText('No recent files yet')).toBeVisible()
-  await expect(page.getByTestId('tabbar-tab')).toHaveCount(1)
+  const tabs = page.getByTestId('tabbar-tab')
+  const home = page.getByRole('tab', { name: 'Home', exact: true })
+  await expect(tabs).toHaveCount(1)
+  await expect(home).toHaveAttribute('aria-selected', 'true')
 
   await page.getByTestId('home-new-document').click()
 
   await expect(page.getByTestId('recent-files-home')).toBeHidden()
-  const tab = page.getByTestId('tabbar-tab')
-  await expect(tab).toHaveCount(1)
-  await expect(tab).toContainText('Untitled')
+  await expect(tabs).toHaveCount(2)
+  await expect(tabs.last()).toHaveText('Untitled')
+  await expect(tabs.last()).toHaveAttribute('aria-selected', 'true')
   await expect(page.getByTestId('tabbar-close')).toHaveCount(1)
 
   await page.getByTestId('tabbar-new').click()
 
-  await expect(page.getByTestId('recent-files-home')).toBeVisible()
-  await expect(page.getByTestId('tabbar-tab')).toHaveCount(2)
-  await expect(page.getByTestId('tabbar-tab').last()).toContainText('New tab')
-  await expect(page.getByLabel('Search files…')).toBeFocused()
+  await expect(tabs).toHaveCount(3)
+  await expect(tabs.last()).toHaveAttribute('aria-selected', 'true')
   await expect(page.getByTestId('tabbar-close')).toHaveCount(2)
 
-  await page.getByTestId('tabbar-tab').first().click()
-  await page.getByTestId('tabbar-tab').first().hover()
-  await page.locator('[data-slot="tab-item"]').first().getByTestId('tabbar-close').click()
-
+  await home.click()
   await expect(page.getByTestId('recent-files-home')).toBeVisible()
+  await page.locator('[data-slot="tab-item"]').last().getByTestId('tabbar-close').click()
+  await expect(tabs).toHaveCount(2)
+  await expect(home).toHaveAttribute('aria-selected', 'true')
 })
