@@ -5,8 +5,13 @@ import { expect, test } from '@playwright/test'
 import { parsePenDocument } from '@open-pencil/pen'
 
 import { CanvasHelper } from '#tests/helpers/canvas'
+import { mockOfficialCloudDiscovery } from '#tests/helpers/cloud/discovery'
 import { openAppMenu } from '#tests/helpers/menu'
 import { getSelectedNode } from '#tests/helpers/store'
+
+test.beforeEach(async ({ page }) => {
+  await mockOfficialCloudDiscovery(page)
+})
 
 test('top-level Fill sizing retains geometry, supports Undo and numeric override, and saves and reopens', async ({
   page

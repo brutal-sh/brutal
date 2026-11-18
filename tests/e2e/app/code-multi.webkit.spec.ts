@@ -7,9 +7,11 @@ import type { PenNode } from '@open-pencil/pen'
 
 import { CanvasHelper } from '#tests/helpers/canvas'
 import { layerDriver } from '#tests/helpers/canvas/layers'
+import { mockOfficialCloudDiscovery } from '#tests/helpers/cloud/discovery'
 import { openAppMenu } from '#tests/helpers/menu'
 
 async function setup(page: Page, children?: PenNode[]) {
+  await mockOfficialCloudDiscovery(page)
   await page.addInitScript(() => {
     window.showOpenFilePicker = undefined
     window.showSaveFilePicker = undefined

@@ -5,6 +5,7 @@ import { expect, test, type Page } from '@playwright/test'
 import { parsePenDocument } from '@open-pencil/pen'
 
 import { CanvasHelper } from '#tests/helpers/canvas'
+import { mockOfficialCloudDiscovery } from '#tests/helpers/cloud/discovery'
 import { openAppMenu } from '#tests/helpers/menu'
 
 const fixture = Buffer.from(
@@ -48,6 +49,7 @@ async function openFixture(page: Page, bytes = fixture) {
 }
 
 async function setup(page: Page) {
+  await mockOfficialCloudDiscovery(page)
   await page.addInitScript(() => {
     window.showOpenFilePicker = undefined
     window.showSaveFilePicker = undefined

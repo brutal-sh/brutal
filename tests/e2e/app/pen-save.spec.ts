@@ -5,7 +5,12 @@ import { expect, test } from '@playwright/test'
 import { BUILTIN_IO_FORMATS, IORegistry } from '@open-pencil/core/io'
 
 import { CanvasHelper } from '#tests/helpers/canvas'
+import { mockOfficialCloudDiscovery } from '#tests/helpers/cloud/discovery'
 import { openAppMenu } from '#tests/helpers/menu'
+
+test.beforeEach(async ({ page }) => {
+  await mockOfficialCloudDiscovery(page)
+})
 
 const design = JSON.stringify({
   version: '2.7',
