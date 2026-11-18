@@ -6,6 +6,21 @@ import type { Color } from '@open-pencil/scene-graph/primitives'
 import { expectDefined } from '#tests/helpers/assert'
 import { getTool, setupToolTest, type ToolResult } from '#tests/helpers/tools'
 
+test('a missing Describe target can be recovered from the selection', () => {
+  const { figma } = setupToolTest()
+  const frame = figma.createFrame()
+  figma.currentPage.selection = [frame]
+  const tool = getTool('describe')
+  const refused = tool.execute(figma, {}) as ToolResult
+  expect(refused.error).toContain('get_selection')
+  expect(refused).not.toHaveProperty('nodes')
+  const state = getTool('get_selection').execute(figma, {}) as {
+    selection: Array<{ id: string }>
+  }
+  const target = expectDefined(state.selection[0], 'selected target')
+  expect(tool.execute(figma, { id: target.id })).toMatchObject({ id: frame.id })
+})
+
 const NAVY: Color = { r: 2 / 255, g: 26 / 255, b: 59 / 255, a: 1 }
 
 const HIDDEN_STROKE: Stroke = {

@@ -7,7 +7,7 @@ import { autoDepth, describeOneNode } from './tree'
 export const describe = defineTool({
   name: 'describe',
   description:
-    'Semantic description of one or more nodes. Pass `id` for a single node, or `ids` for multiple nodes in one call. Omit depth for auto — adapts to subtree size (small block → deeper, large page → shallower).',
+    'Describe the layout and design of specific nodes. Find their IDs with get_selection or get_page_tree first. Pass `id` for one node or `ids` for several. Omit depth for automatic detail based on the subtree size.',
   execution: { kind: 'sync', mutation: 'none' },
   exposure: { webmcp: false },
   input: v.strictObject({
@@ -38,7 +38,12 @@ export const describe = defineTool({
       }
     }
 
-    if (!args.id) return { error: 'Provide id (string) or ids (string[])' }
+    if (!args.id) {
+      return {
+        error:
+          'Describe needs a node ID. Find the target with get_selection or get_page_tree, then retry with id or ids.'
+      }
+    }
     const depth = Math.min(args.depth ?? autoDepth(figma.graph, args.id), 5)
     return describeOneNode(figma, args.id, depth, gridSize)
   }

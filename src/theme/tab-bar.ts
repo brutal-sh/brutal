@@ -25,7 +25,7 @@ const tabBarTheme = {
     mobile: {
       true: {},
       false: {
-        root: 'inline-flex h-[42px] w-max max-w-full min-w-0 items-center gap-1 rounded-[20px] border border-island-border bg-panel px-2 data-[macos=true]:pl-[72px]',
+        root: 'inline-flex h-[42px] w-max max-w-full min-w-0 items-center gap-1 rounded-[20px] border border-island-border bg-panel px-2 data-[macos=true]:pl-[88px]',
         scroller: 'h-7',
         list: 'items-center gap-1',
         item: 'h-7 rounded-full border-r-0 pr-1',

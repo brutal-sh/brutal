@@ -396,7 +396,8 @@ Discover available tools and their arguments from the connected server or browse
 - **`get_jsx`** — inspect any node as JSX in the same format accepted by `render`.
 - **`diff_jsx` / `diff_create`** — compare two nodes as a JSX line diff or as an appliable patch of JSX attributes; `diff_show` previews setting attributes and `diff_apply` applies a patch only if the nodes still match it.
 - **`diff_visual`** — pixel diff between two rendered nodes; use it to confirm an edit changed only the intended region.
-- **`describe`** — semantic analysis of role, visual style, layout, and design issues.
+- **`describe`** — analyze a node’s role, visual style, layout and design issues. Pass `id` or `ids` from a tool result, `get_selection`, or `get_page_tree`.
+- **`stock_photo`** — fill image placeholders through a configured provider. When it reports that a provider is unavailable, keep the placeholders and finish the rest of the design.
 - **`batch_update`** — apply multiple node updates efficiently.
 - **`export_image` / `export_svg` / `export_pdf`** — visual verification and deliverables.
 - **`viewport_zoom_to_fit` / `viewport_set` / `viewport_get`** — move the user's view only when they ask to be shown something.

@@ -21,7 +21,7 @@ export const stockPhoto = defineTool({
   name: 'stock_photo',
 
   description:
-    'Search stock photos and apply to leaf image placeholders or closed area geometry. ' +
+    'Search a configured Pexels or Unsplash provider and apply photos to leaf image placeholders or closed areas. ' +
     'Pass a JSON array; each item is {id, query, index?, orientation?}. ' +
     'Containers with content, text, lines, and structural nodes are rejected.',
   execution: { kind: 'async', mutation: 'document' },
@@ -38,7 +38,8 @@ export const stockPhoto = defineTool({
     const provider = getActiveProvider()
     if (!provider) {
       return {
-        error: `No stock photo provider configured. Ask the user to add an API key in AI chat settings. Available providers: Pexels, Unsplash.`
+        error:
+          'No stock photo provider is configured. Keep the image placeholder and continue the design. For stock photos, configure Pexels or Unsplash in Settings → Image services.'
       }
     }
 

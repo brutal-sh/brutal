@@ -48,3 +48,11 @@ The native controls minimized the window, entered fullscreen, and closed the app
 Pen 1.2.23 and the installed Open Pen were captured in Light at the same active 1280 × 800 viewport and 2× display scale. Both showed 16-point native Graphite controls with 23-point spacing. Pen centers were (27, 29), (50, 29), and (73, 29). Open Pen centers align with its existing header and 72-point leading area. Both window frames and Open Pen’s original Dark setting were restored.
 
 An extra diagnostic resized the window and immediately rewrote its existing position. One Accessibility sample returned temporary default control coordinates at 5.1 ms and the next sample showed the configured coordinates at 12.7 ms. The physical resize and size-only cycles never showed that displacement. The original off-center screenshot remains unattributed to a specific build. Private captures and retained failures are under `local-evidence/user-native-regressions-2026-11-17/full-run-mac-2026-11-18/window-parity/`.
+
+## Leading spacing revision — 2026-11-18
+
+The supplied crop shows an approximately 13-point inset from the pill to the first native button center and 23 points from the plus center to the other edge. The revised Open Pen header reserves 88 points for the native group. The raster reference and reviewed candidate measurements are catalogued in the private Pen reference workbook.
+
+The isolated native build reports AppKit centers x29/52/75 at y28 with the original 23-point pitch. The built WebView reports a 42-point pill with its centerline and plus centered at y28. The measured edge-to-center distances are 21 points on the leading side and 23 points on the trailing side. All 205 samples across three native resize and restore cycles retain those centers. The 880 × 600 and 1280 × 800 frames are recorded.
+
+The first bare test binary mounted the WebView. Its native accessibility focus guard refused measurement. Packaging the same test binary with an isolated bundle identity made native window measurement possible. The receipt is in `local-evidence/pen-reference-2026-11-18/open-pen-candidate-native.json`.

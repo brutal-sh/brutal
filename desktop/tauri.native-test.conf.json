@@ -14,7 +14,7 @@
         "height": 800,
         "titleBarStyle": "Overlay",
         "hiddenTitle": true,
-        "trafficLightPosition": { "x": 14, "y": 30 },
+        "trafficLightPosition": { "x": 22, "y": 30 },
         "dragDropEnabled": false
       }
     ],

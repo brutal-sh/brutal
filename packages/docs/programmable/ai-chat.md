@@ -93,7 +93,7 @@ The configurable tool catalog covers these categories; the tools offered to a mo
 - **Components** — create components, instances, component sets, and slots. Manage overrides. Give components Reka UI behaviours so they work in preview.
 - **Variables** — create/edit variables, collections, modes. Bind to fills.
 - **Query** — find nodes, XPath selectors, read properties, list pages, fonts, selection.
-- **Inspect** — `get_jsx` for JSX roundtrip view, `diff_create` and `diff_jsx` for structural diffs, `diff_visual` for pixel diffs, `describe` for semantic role and design issue detection.
+- **Inspect** — `get_jsx` for JSX roundtrip view, `diff_create` and `diff_jsx` for structural diffs, `diff_visual` for pixel diffs, `describe` for semantic role and design issues. Pass `id` or `ids` from the selection, page tree, or a tool result.
 - **Analyze** — color palette, typography audit, spacing consistency, cluster detection.
 - **Export** — PNG, SVG, JSX with Tailwind classes. Vision-based verification via `export_image`.
 - **Vector** — boolean operations, path manipulation.
