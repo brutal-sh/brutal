@@ -51,7 +51,7 @@ for (const renderer of ['retained', 'tiled'] as const) {
   test(`${renderer}: zoom fallback does not resurrect a picture from before creation`, async ({
     page
   }) => {
-    await page.goto(`/?test&no-rulers&renderer=${renderer}&navigation-benchmark`)
+    await page.goto(`/?test&no-chrome&no-rulers&renderer=${renderer}&navigation-benchmark`)
     const canvas = new CanvasHelper(page)
     await canvas.waitForInit()
     await page.evaluate(() => {

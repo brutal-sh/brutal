@@ -3,6 +3,7 @@ import type { Page } from '@playwright/test'
 import { expect, test } from '#tests/e2e/fixtures'
 import { expectDefined } from '#tests/helpers/assert'
 import { CanvasHelper } from '#tests/helpers/canvas'
+import { mockFontsource } from '#tests/helpers/fonts/fontsource'
 import { propertyField } from '#tests/helpers/properties'
 
 test.use({ viewport: { width: 1400, height: 900 }, deviceScaleFactor: 1 })
@@ -76,6 +77,7 @@ async function directReference(page: Page) {
 }
 
 test.beforeEach(async ({ page }) => {
+  await mockFontsource(page, [])
   await page.goto('/?test&no-rulers&renderer=tiled&navigation-benchmark')
   await new CanvasHelper(page).waitForInit()
   await page.evaluate(() => {
@@ -160,7 +162,8 @@ for (const [property, label] of [
 test('font arrival invalidates tiled text and matches a fresh direct render', async ({ page }) => {
   const requested = Promise.withResolvers<undefined>()
   const release = Promise.withResolvers<undefined>()
-  await page.route('**/Inter-Bold*.ttf', async (route) => {
+  const fontAsset = '**/Anton-Regular*.ttf'
+  await page.route(fontAsset, async (route) => {
     requested.resolve(undefined)
     await release.promise
     await route.continue()
@@ -172,7 +175,7 @@ test('font arrival invalidates tiled text and matches a fresh direct render', as
       const frame = store.getSelectedNodes()[0]
       const textId = frame?.childIds[0]
       if (!textId) throw new Error('Text fixture missing')
-      store.updateNode(textId, { fontWeight: 700 })
+      store.updateNode(textId, { fontFamily: 'Anton' })
     })
     await requested.promise
     await settle(page)
@@ -190,6 +193,6 @@ test('font arrival invalidates tiled text and matches a fresh direct render', as
     expect(tiled.equals(await directReference(page))).toBe(true)
   } finally {
     release.resolve(undefined)
-    await page.unroute('**/Inter-Bold*.ttf')
+    await page.unroute(fontAsset)
   }
 })
