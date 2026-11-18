@@ -1,5 +1,6 @@
 import { expect, test } from '#tests/e2e/fixtures'
 import { CanvasHelper } from '#tests/helpers/canvas'
+import { mockOfficialCloudDiscovery } from '#tests/helpers/cloud/discovery'
 import { trackFontModuleResources } from '#tests/helpers/fonts/runtime'
 
 async function expectCanvas(canvas: CanvasHelper, name: string): Promise<void> {
@@ -11,6 +12,7 @@ async function expectCanvas(canvas: CanvasHelper, name: string): Promise<void> {
 test('first edit replaces baked missing-font glyphs with visible live substitution', async ({
   page
 }) => {
+  await mockOfficialCloudDiscovery(page)
   await trackFontModuleResources(page)
   await page.goto('/?test&no-chrome&no-rulers')
   const editor = { page, canvas: new CanvasHelper(page) }

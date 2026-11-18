@@ -2,16 +2,20 @@ import { Buffer } from 'node:buffer'
 
 import type { Page } from '@playwright/test'
 
+import { PAGE_DEFAULT_BACKGROUNDS } from '@open-pencil/core/constants'
+
 import type { FontManager } from '#core/text/fonts'
 
 import { expect, test } from '#tests/e2e/fixtures'
 import { CanvasHelper } from '#tests/helpers/canvas'
+import { mockOfficialCloudDiscovery } from '#tests/helpers/cloud/discovery'
 import { mockFontsource } from '#tests/helpers/fonts/fontsource'
 import { trackFontModuleResources } from '#tests/helpers/fonts/runtime'
 
 test.use({ colorScheme: 'dark' })
 
 async function openEditor(page: Page): Promise<CanvasHelper> {
+  await mockOfficialCloudDiscovery(page)
   await trackFontModuleResources(page)
   // These tests install fixture fonts explicitly; remote arrivals must not race those fixtures.
   await mockFontsource(page, [])
@@ -206,9 +210,10 @@ test('international text is correct on its first visible paint', async ({ page }
 test('typed and tool-created text repaint with the same resolved fallbacks', async ({ page }) => {
   const canvas = await openEditor(page)
 
-  const ids = await page.evaluate(async () => {
+  const ids = await page.evaluate(async (background) => {
     const store = window.openPencil?.getStore?.()
     if (!store) throw new Error('OpenPencil store not initialized')
+    store.setPageColor(background)
     const pageId = store.state.currentPageId
 
     const labels = ['Tool-created', 'Interactively typed']
@@ -273,7 +278,7 @@ test('typed and tool-created text repaint with the same resolved fallbacks', asy
     store.startTextEditing(typed.id)
     store.requestRender()
     return { nodeIds, toolId: tool.id, typedId: typed.id }
-  })
+  }, PAGE_DEFAULT_BACKGROUNDS.dark)
 
   await page.locator('textarea[aria-hidden="true"]').fill('OpenPencil · 你好 · مرحبا')
   await page.evaluate(() => {

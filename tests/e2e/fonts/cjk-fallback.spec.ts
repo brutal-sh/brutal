@@ -5,9 +5,11 @@ import type * as AppFonts from '@/app/editor/fonts'
 import type { FontManager } from '#core/text/fonts'
 
 import { CanvasHelper } from '#tests/helpers/canvas'
+import { mockOfficialCloudDiscovery } from '#tests/helpers/cloud/discovery'
 import { trackFontModuleResources } from '#tests/helpers/fonts/runtime'
 
 test.beforeEach(async ({ page }) => {
+  await mockOfficialCloudDiscovery(page)
   await trackFontModuleResources(page)
 })
 
@@ -103,6 +105,11 @@ test('CJK text waits for fallback fonts and repaints after they load', async ({ 
     })
     cjkFallbackFamilies.length = 0
 
+    let finishFallbackPaint: () => void = () => undefined
+    const fallbackPainted = new Promise<void>((resolve) => {
+      finishFallbackPaint = resolve
+    })
+    const originalFontSettled = renderer.onFontResolutionSettled
     let fallbackRenderCount = 0
     let renderCount = 0
     const originalRender = renderer.renderFromEditorState.bind(renderer)
@@ -119,19 +126,6 @@ test('CJK text waits for fallback fonts and repaints after they load', async ({ 
       return originalRender(...args)
     }
 
-    const text = store.graph.createNode('TEXT', store.state.currentPageId, {
-      name: 'CJK Regression',
-      x: 80,
-      y: 80,
-      width: 300,
-      height: 60,
-      text: '你好世界App',
-      textLanguage: 'zh-Hans',
-      fontSize: 32,
-      fontFamily: 'Inter',
-      fills: [{ type: 'SOLID', color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]
-    })
-
     try {
       await renderer.loadFonts(() => {
         fallbackRenderCount += 1
@@ -144,14 +138,24 @@ test('CJK text waits for fallback fonts and repaints after they load', async ({ 
           false,
           'full'
         )
+        finishFallbackPaint()
+      })
+      const text = store.graph.createNode('TEXT', store.state.currentPageId, {
+        name: 'CJK Regression',
+        x: 80,
+        y: 80,
+        width: 300,
+        height: 60,
+        text: '你好世界App',
+        textLanguage: 'zh-Hans',
+        fontSize: 32,
+        fontFamily: 'Inter',
+        fills: [{ type: 'SOLID', color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]
       })
       const loadedBeforeFallback = renderer.isNodeFontLoaded(text)
       releaseFallback()
-      await fallbackGate
-      await new Promise<void>((resolve) => {
-        setTimeout(resolve, 0)
-      })
-      await new Promise(requestAnimationFrame)
+      // Releasing the mock fetch does not complete registration or the settlement repaint.
+      await fallbackPainted
       return {
         loadedBeforeFallback,
         loadedAfterFallback: renderer.isNodeFontLoaded(text),
@@ -163,6 +167,7 @@ test('CJK text waits for fallback fonts and repaints after they load', async ({ 
       cjkFallbackFamilies.length = 0
       cjkFallbackFamilies.push(...originalFamilies)
       fontManager.ensureFallbackPack = originalEnsureFallbackPack
+      renderer.onFontResolutionSettled = originalFontSettled
       renderer.renderFromEditorState = originalRender
     }
   })
