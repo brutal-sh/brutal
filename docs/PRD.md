@@ -7,7 +7,7 @@ Current reference is actual Pen **1.2.23**, ASAR `d0c5c23a3a86ec1802c8754b59e826
 
 The live board and [task index](TASKS.md) reconcile **565 cards / 547 execution tasks / 18 milestones**, with 546 other terminal prerequisites. All original catalog/native rows, welcome/newsletter leaves and milestone exit criteria remain binding. [Current priorities](PRIORITIES-2026-11-17.md) distinguish scheduling from acceptance.
 
-Current candidate handoff: the bounded Codex connection and request recovery executed on isolated native candidates. Native window recurrence is in Verify. Pen 1.2.23 opened the saved Codex file with the expected raster. The normal installed candidate and Pen provider runtime comparison remain open. Save/recovery, strict Note raster, primitives, modularity, and native/Figma acceptance retain their required exits. The website and help work is in its own checkout. Open Pen is a desktop product.
+Current candidate handoff: source `2ec06fd18` is published on the private draft. The strict Core Note raster owner is Executed and native raster delivery matched in an isolated profile. Note authoring remains open. The bounded Codex connection and request recovery executed on isolated native candidates. Native window recurrence is in Verify. Pen 1.2.23 opened the saved Codex file with the expected raster. The normal installed candidate and Pen provider runtime comparison remain open. Save/recovery, broader Note acceptance, primitives, modularity, and native/Figma acceptance retain their required exits. The website and help work is in its own checkout. Open Pen is a desktop product.
 
 ## Product outcome
 
