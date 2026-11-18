@@ -1,11 +1,11 @@
 # Tracking
 
-Updated: 2026-11-17. Replacement controller goal: **active**, created after Jason cleared its predecessor. [Current priorities](PRIORITIES-2026-11-17.md) and [refreshed instructions](GOAL-REFRESH-2026-11-16.md) govern execution; full independent desktop design and functionality parity remains required.
+Updated: 2026-11-18. Replacement controller goal: **active**, created after Jason cleared its predecessor. [Current priorities](PRIORITIES-2026-11-17.md) and [refreshed instructions](GOAL-REFRESH-2026-11-16.md) govern execution; full independent desktop design and functionality parity remains required.
 
 Repository: [private Open Pen](https://github.com/jpoindexter/open-pen), branch `feat/open-pen`, open draft PR1. Source `16bbfd9e5` publishes the bounded browser slider-label repair; earlier source-specific numeric, file and native receipts retain their precise limits. Current primary app work is Codex canvas-tool reachability. Source WIP and the normal installed binary match; six older isolated test executables are absent and are recorded as an artifact gap, not current native qualification.
 Board: [Open Pen](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor).
 
-Current complete Trello readback: **564 cards / 546 execution tasks / 18 milestones**; **400 Backlog / 0 Ready / 0 Building / 53 Verify / 93 Executed**. The installed window-control check is in Verify. The matched native Save UI comparison is Executed. All primary owners and 545 terminal dependencies reconcile without duplicate task IDs, unknowns, cycles or Ready/Executed blocked prerequisites. All milestone exits remain open.
+Current complete Trello readback: **565 cards / 547 execution tasks / 18 milestones**. **399 Backlog / 0 Ready / 0 Building / 54 Verify / 94 Executed**. The installed window-control check is in Verify. The matched native Save UI comparison is Executed. All primary owners and 546 terminal dependencies reconcile without duplicate task IDs, unknowns, cycles or Ready/Executed blocked prerequisites. All milestone exits remain open.
 
 [PRD](PRD.md) owns the outcome and constraints; [TASKS](TASKS.md) is exact task/dependency membership; [MILESTONES](MILESTONES.md) owns outcome exits; [current audit](BOARD-AUDIT-2026-11-16.md) owns reconciliation. The [latest reference update](pen-feature-reference/update-audit-2026-11-16.md) covers the welcome flow and newsletter, with private evidence under `local-evidence/pen-welcome-2026-11-16/`, `pen-mail-update-2026-11-16/` and `planning-refresh-2026-11-16/`.
 
@@ -694,11 +694,13 @@ The five remaining Standard Hue/HSL/HSB slider projections reproduce ten equal-r
 
 The first channel full check fails at a test type import; changing only that import to its public owner passes canonical types and two fresh browser controls. Runtime and all test assertions stay unchanged. The corrected full check passes with zero clones, then 437 Vue tests and production build pass. The earlier 52-case report is not relabelled as a rerun. Existing shared slider-label overlap remains a separate SURF-PAINT-COLOR difference; whole-picker visual acceptance remains open.
 
-## Current priority refresh — 2026-11-17
+## Current priority refresh — 2026-11-18
 
-564 cards / 546 execution tasks / 18 milestones; 400 Backlog / 0 Ready / 0 Building / 53 Verify / 93 Executed. The native window recurrence stays in Verify.
+565 cards / 547 execution tasks / 18 milestones. 399 Backlog / 0 Ready / 0 Building / 54 Verify / 94 Executed. The native window recurrence stays in Verify.
 
 Source `16bbfd9e5` publishes the bounded label repair. Local native candidate `d18cbc54b` accepted the bounded Codex connection controls. Candidate `260ef4846` recovered the unsupported inherited model and completed one live canvas edit and Undo. Candidate `01727ee4c` showed the actionable model error and passed one-edit Retry and no-edit Stop with a test-owned adapter. The original reported failures lack a recovered trigger. The installed window retained its control geometry through the native lifecycle and drag below the + button. The left-side drag and original off-center screenshot remain in Verify. [Native Save UI](NATIVE-SAVE-UI.md#matched-dark-native-save-alerts--2026-11-17) is Executed for the matched dark native alert and successful writable retry. Broader recovery remains a release blocker, including actual recurrence evidence for the old untraced Cancel failure.
+
+The authenticated Codex file journey found an unset Design JSX direction blocking native .pen export. Candidate `1f0b07bfb` repairs production of the node, and FILE-JSX-DIRECTION is Executed on the isolated native candidate. A public reader and rendered pixels verify the reopened file. The WebDriver run retains a failed raw assertion on null versus omitted blend mode. AUTH-02-CODEX remains Verify for the normal installed and reference criteria.
 
 The website chat owns six smaller canonical branding leaves in its isolated checkout. Three new overlapping draft allocations are archived with their full text/history and canonical mapping retained. REPO-BRANCH-PROTECTION accepts only the actual protection configuration readback. Necessary OpenPencil credit/licenses and code/protocol references remain. Site pages do not constitute a hosted browser product or beta release.
 

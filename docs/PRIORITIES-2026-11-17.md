@@ -34,6 +34,8 @@ combined criteria. The old untraced
 Do not repeat green controls indefinitely or call them a repair. Capture an actual
 recurrence and its first failing transition before assigning a cause.
 
+The [agent-created .pen Save fix](https://trello.com/c/8ZY96bsg) is Executed on the isolated native candidate after real Codex creation and saved reopen. The [Codex acceptance parent](https://trello.com/c/3NQFXUXH) still needs the normal installed and actual Pen comparisons.
+
 After the current user blockers, continue file preservation and native delivery,
 core editing/portable-file compatibility and M05 agent/welcome workflows, then the
 remaining required domains in dependency order. Performance, modularity, Figma and
