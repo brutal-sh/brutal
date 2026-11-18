@@ -78,3 +78,15 @@ Private receipts: `local-evidence/pen-version-2026-11-13/`, including
 `independent-review.json` and `complete-check-after-review.json`. Re-entry starts with the current card and those
 source/output boundaries. Reuse existing file/recovery helpers; stop repeated
 private-WebKit filesystem setup attempts and use the explicit fallback path.
+
+## Installed Mac round trip — 2026-11-18
+
+Open Pen 0.16.0 (executable SHA-256 `f911038709287031c11e0d25d177a6315f6cec2d8e62951734f767a86b72ae73`) opened an owned commented 2.22 document. The Layers panel showed its named rectangle. Opening a separate 2.23 fixture displayed the unsupported schema warning and left the 2.22 document available. No future-version document tab appeared.
+
+The same installed app opened an owned copy of a commented 2.7 document. Duplicate produced two layers, Undo returned to one, and Redo restored two. Save wrote 2.22 with two distinct rectangle IDs and dimensions of 100 × 60. Closing and reopening through macOS showed both editable layers again. All three source fixtures, four existing recovery records, and two recovery blobs retained their checksums.
+
+Pen 1.2.23 opened the exact file Open Pen saved. A REA window capture shows the resulting blue rectangle on the canvas. Both identical rectangles overlap in the file, so this capture establishes the visible result for the sample. The file checksum remained identical after the reference tab closed.
+
+Private receipts are under `local-evidence/pen-reference-2026-11-18/native-schema/`. FMT-01 remains in Verify for FMT-LINE-2-22 and the wider legacy and native comparisons.
+
+Pen 1.2.23 also saved two separately authored, open two-point paths in 2.22. The horizontal path has width 240, height 0, and a one-pixel stroke. The diagonal has width 240, height 80, and the same stroke. The Open Pen CLI re-serialized both with the same placement, endpoints, dimensions, and stroke width. These samples establish a current path representation for the line work. Legacy `LINE` conversion, rotated and nested controls, and matched path pixels remain open.
