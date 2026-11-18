@@ -182,11 +182,14 @@ export function createFigDocumentSession(
     pages: archive.reader.pages,
     /** Where a patch of this archive starts its new GUIDs and blob indices. */
     archiveRecordInfo(): FigArchiveRecordInfo {
-      recordInfo ??= figArchiveRecordInfo({
-        records: archive.records,
-        blobCount: archive.blobs.length,
-        imageHashes: archive.images.map(([hash]) => hash)
-      })
+      recordInfo ??= {
+        ...figArchiveRecordInfo({
+          records: archive.records,
+          blobCount: archive.blobs.length,
+          imageHashes: archive.images.map(([hash]) => hash)
+        }),
+        kind: archive.kind
+      }
       return recordInfo
     },
     /** `onProgress` is called as the load advances, so a caller can tell a slow load from a stuck one. */

@@ -1,4 +1,5 @@
 import { downloadBlob } from '@/app/document/io/browser'
+import { IS_TAURI } from '@/constants'
 
 import { saveDocumentAs } from './destination'
 import { buildVersionedFile } from './encode'
@@ -41,7 +42,7 @@ export async function saveCurrentDocument(context: SaveContext, beforeWrite?: ()
   const downloadName = context.getDownloadName()
   const format = currentFormat(context)
   if (context.hasWritableSource()) return saveWritableDocument(context, format, beforeWrite)
-  if (downloadName) {
+  if (downloadName && !IS_TAURI) {
     const { data, version } = await buildVersionedFile(context, format)
     beforeWrite?.()
     downloadBlob(new Uint8Array(data), downloadName, documentSaveMime(format))

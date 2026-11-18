@@ -70,10 +70,15 @@ async function decideFileOpening(input: FileOpeningInput, identity: DocumentSour
 async function readFileGraph(file: File, path: string | undefined, load: DocumentLoadSession) {
   await yieldToUI()
   load.update({ phase: 'reading', detail: file.name })
-  const isFig = file.name.toLowerCase().endsWith('.fig')
-  if (isFig) {
+  const lowerName = file.name.toLowerCase()
+  const isFig = lowerName.endsWith('.fig')
+  if (isFig || lowerName.endsWith('.jam')) {
     load.update({ phase: 'decoding', detail: file.name })
-    return { imported: await readFigForTab(file, load.signal), sourceFormat: 'fig', isFig }
+    return {
+      imported: await readFigForTab(file, load.signal),
+      sourceFormat: isFig ? 'fig' : 'jam',
+      isFig
+    }
   }
   const result = await io.readDocument(
     {

@@ -51,6 +51,7 @@ export const RECORD_HEADER_FIELDS = [
 export function createArchiveDocumentReader(bytes: ArrayBuffer, pageIds?: ReadonlySet<string>) {
   const parsed = parseFigBuffer(bytes, undefined, { NodeChange: RECORD_HEADER_FIELDS })
   return {
+    kind: parsed.kind,
     figKiwiVersion: parsed.figKiwiVersion,
     figSchemaDeflated: parsed.figSchemaDeflated,
     reader: createScopedReader(archiveRecords(parsed.nodeChanges), pageIds),

@@ -375,27 +375,22 @@ async function buildPatch(
   }
 }
 
-const archiveImagesChecked = new WeakMap<FigArchiveAccess, Promise<boolean>>()
+const archiveReuse = new WeakMap<FigArchiveAccess, Promise<{ patch: boolean; copy: boolean }>>()
 
-/**
- * Whether every image the archive `graph` was opened from holds is stored under the SHA-1 of its
- * bytes, the only name Figma reads. Archives OpenPencil wrote before image names were SHA-1 are
- * not, and records a save leaves untouched point at those names, so such a document is written
- * whole, which names every image as Figma needs, instead of reusing its archive. The archive
- * does not change, so it is checked once; a document with no archive has nothing to check.
- */
-export function archiveImagesNamedForFigma(graph: SceneGraph): Promise<boolean> {
+/** Only reuse records whose image names Figma can resolve. A board must get a design header. */
+export function figArchiveReuse(graph: SceneGraph) {
   const archive = figArchive(graph)
-  if (!archive) return Promise.resolve(true)
-  let checked = archiveImagesChecked.get(archive)
+  if (!archive) return Promise.resolve({ patch: true, copy: true })
+  let checked = archiveReuse.get(archive)
   if (!checked) {
-    checked = archive.info().then(({ imageHashes }) =>
-      imageHashes.every((name) => {
+    checked = archive.info().then(({ imageHashes, kind }) => {
+      const patch = imageHashes.every((name) => {
         const bytes = graph.images.get(name)
         return !bytes || computeImageHash(bytes) === name
       })
-    )
-    archiveImagesChecked.set(archive, checked)
+      return { patch, copy: patch && kind !== 'board' }
+    })
+    archiveReuse.set(archive, checked)
   }
   return checked
 }

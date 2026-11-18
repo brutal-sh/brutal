@@ -1,6 +1,7 @@
 import { readFile } from 'node:fs/promises'
 
 import { expect, test, type Page } from '@playwright/test'
+import { unzipSync, zipSync } from 'fflate'
 
 import { CanvasHelper } from '#tests/helpers/canvas'
 import { mockOfficialCloudDiscovery } from '#tests/helpers/cloud/discovery'
@@ -37,6 +38,25 @@ test('a document dropped on the canvas opens in a new tab', async ({ page }) => 
 
   await expect(tabs.getByRole('tab').last()).toContainText('circle-text')
   await expect(tabs.getByRole('tab').last()).toHaveAttribute('aria-selected', 'true')
+})
+
+test('a dropped FigJam board opens as an editable document tab', async ({ page }) => {
+  await page.goto('/?test')
+  const canvas = new CanvasHelper(page)
+  await canvas.waitForInit()
+  const archive = unzipSync(await readFile('tests/fixtures/circle-text.fig'))
+  // Use Figma Design fixture records in a synthetic FigJam envelope.
+  archive['canvas.fig'].set(new TextEncoder().encode('fig-jam.'))
+  await dropOnCanvas(page, [{ name: 'board.jam', bytes: [...zipSync(archive)] }])
+
+  const tab = page.getByRole('tab', { name: 'board' })
+  await expect(tab).toHaveAttribute('aria-selected', 'true')
+  await showLayers(page)
+  const layer = page.getByTestId('layers-item').first()
+  await expect(layer).toBeVisible()
+  await layer.click()
+  await expect(layer).toHaveAttribute('data-selected', 'true')
+  canvas.assertNoErrors()
 })
 
 test('a dropped file that is neither a document nor an image reports that it cannot open', async ({

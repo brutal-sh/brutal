@@ -6,7 +6,8 @@ import type { NodeChange } from '@open-pencil/kiwi/fig/codec'
 import {
   buildFigKiwi,
   parseFigKiwiChunks,
-  type FigDataCompressor
+  type FigDataCompressor,
+  type FigFileKind
 } from '@open-pencil/kiwi/fig/container'
 import { decodeFigKiwiCanvas, parseFigKiwiContainer } from '@open-pencil/kiwi/fig/parse'
 import type { HeaderFields } from '@open-pencil/kiwi/schema-runtime'
@@ -32,6 +33,7 @@ export interface WriteFigArchiveInput {
 }
 
 export interface FigParseResult {
+  kind: FigFileKind
   nodeChanges: NodeChange[]
   blobs: Uint8Array[]
   images: Array<[string, Uint8Array]>

@@ -5,6 +5,17 @@ import { isZstdCompressed } from './protocol'
 
 export const FIG_KIWI_DEFAULT_VERSION = 101
 
+// Figma Design and FigJam store the same Kiwi container under distinct headers.
+export const FIG_FILE_HEADERS = { design: 'fig-kiwi', board: 'fig-jam.' } as const
+export type FigFileKind = keyof typeof FIG_FILE_HEADERS
+
+export function figFileKind(binary: Uint8Array): FigFileKind | null {
+  const header = new TextDecoder().decode(binary.subarray(0, 8))
+  if (header === FIG_FILE_HEADERS.design) return 'design'
+  if (header === FIG_FILE_HEADERS.board) return 'board'
+  return null
+}
+
 /** Compresses a fig-kiwi data chunk. */
 export type FigDataCompressor = (data: Uint8Array) => Uint8Array
 
@@ -108,16 +119,17 @@ function decompressZstd(compressed: Uint8Array): Uint8Array {
 }
 
 export function parseFigKiwiChunks(binary: Uint8Array): Uint8Array[] | null {
-  const header = new TextDecoder().decode(binary.slice(0, 8))
-  if (header !== 'fig-kiwi') return null
+  if (binary.length < 12 || !figFileKind(binary)) return null
 
   const view = new DataView(binary.buffer, binary.byteOffset, binary.byteLength)
   let offset = 12
 
   const chunks: Uint8Array[] = []
   while (offset < binary.length) {
+    if (offset + 4 > binary.length) return null
     const chunkLen = view.getUint32(offset, true)
     offset += 4
+    if (offset + chunkLen > binary.length) return null
     chunks.push(binary.slice(offset, offset + chunkLen))
     offset += chunkLen
   }
@@ -146,7 +158,7 @@ export function buildFigKiwi(
   const out = new Uint8Array(total)
   const view = new DataView(out.buffer)
 
-  out.set(new TextEncoder().encode('fig-kiwi'), 0)
+  out.set(new TextEncoder().encode(FIG_FILE_HEADERS.design), 0)
   view.setUint32(8, version, true)
 
   let offset = 12

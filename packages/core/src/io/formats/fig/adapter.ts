@@ -8,6 +8,20 @@ import type { ExportResult, FigWriteOptions, IOContext, IOFormatAdapter } from '
 
 import { exportFigFile, parseFigFile } from './index'
 
+export const jamFormat: IOFormatAdapter<'jam'> = {
+  id: 'jam',
+  label: 'FigJam Board',
+  role: 'interchange-document',
+  category: 'document',
+  extensions: ['jam'],
+  mimeTypes: [],
+  support: { readDocument: true },
+  async readDocument(input) {
+    const graph = await parseFigFile(new Uint8Array(input.data).buffer, { populate: 'first-page' })
+    return { graph, sourceFormat: 'jam' }
+  }
+}
+
 export const figFormat: IOFormatAdapter<'fig'> = {
   id: 'fig',
   label: 'Open Pen Document',

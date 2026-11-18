@@ -2,7 +2,7 @@ import { inflateSync } from 'fflate'
 
 import type { GUID } from '@open-pencil/kiwi/fig'
 import type { NodeChange } from '@open-pencil/kiwi/fig/codec'
-import type { FigDataCompressor } from '@open-pencil/kiwi/fig/container'
+import type { FigDataCompressor, FigFileKind } from '@open-pencil/kiwi/fig/container'
 import { guidToString } from '@open-pencil/kiwi/fig/guid'
 import {
   ByteBuffer,
@@ -44,6 +44,7 @@ export interface FigRecordPatch {
 
 /** Archive facts a patch is built against: where new blob indices and new GUIDs start. */
 export interface FigArchiveRecordInfo {
+  kind?: FigFileKind
   /** Record identities on every page, including pages not materialized in the graph. */
   recordIds: string[]
   blobCount: number

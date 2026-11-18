@@ -23,7 +23,7 @@ import {
 } from '#core/kiwi/fig/session/document-state'
 import { originalFigArchive } from '#core/kiwi/fig/session/original-archive'
 
-import { archiveImagesNamedForFigma, writePatchedFigFile } from './patch'
+import { figArchiveReuse, writePatchedFigFile } from './patch'
 import {
   exportSchema,
   figExportRecordOptions,
@@ -108,9 +108,8 @@ export async function exportFigFile(
   sourceGraph: SceneGraph,
   options: FigFileExtrasOptions = {}
 ): Promise<Uint8Array> {
-  // An archive whose images Figma cannot read is written whole rather than reused.
-  const reuseArchive = await archiveImagesNamedForFigma(sourceGraph)
-  const originalArchive = reuseArchive ? await originalFigArchive(sourceGraph) : null
+  const reuse = await figArchiveReuse(sourceGraph)
+  const originalArchive = reuse.copy ? await originalFigArchive(sourceGraph) : null
   const reused =
     originalArchive && options.documentName
       ? renameFigArchive(originalArchive, options.documentName)
@@ -120,7 +119,7 @@ export async function exportFigFile(
     sourceGraph,
     options.ck,
     async (runtime) =>
-      (reuseArchive ? await writePatchedFigFile(sourceGraph, runtime, options) : null) ??
+      (reuse.patch ? await writePatchedFigFile(sourceGraph, runtime, options) : null) ??
       writeFigFile(sourceGraph, runtime, options)
   )
 }

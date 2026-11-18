@@ -5,7 +5,7 @@ import type { SceneGraph } from '@open-pencil/scene-graph'
 import { layoutAuthoredNodes } from '#core/layout'
 
 import type { DrawIOExportTarget } from './formats/drawio/export'
-import { figFormat } from './formats/fig/adapter'
+import { figFormat, jamFormat } from './formats/fig/adapter'
 import { mermaidFormat } from './formats/mermaid/adapter'
 import { penFormat } from './formats/pen/adapter'
 import type { PPTXExportOptions } from './formats/pptx'
@@ -285,6 +285,7 @@ export const tailwindJSXFormat: IOFormatAdapter<'tailwind-jsx'> = {
 
 export const BUILTIN_IO_FORMATS = [
   figFormat,
+  jamFormat,
   penFormat,
   drawioFormat,
   mermaidFormat,

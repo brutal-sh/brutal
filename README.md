@@ -25,6 +25,8 @@ Cloud and feedback are off in the supplied environment example. Core editing req
 
 Follow [the full feature catalog](docs/pen-feature-reference/README.md), [the parity matrix](docs/PARITY.md), [execution evidence](docs/ACCEPTANCE.md), and [the private tracking board](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor). Supported `.pen` files can be edited and saved; unsupported content is rejected before conversion or writing. New local documents suggest `.pen` on first Save; existing `.fig` documents and remote storage retain `.fig`. See [format limits](packages/pen/README.md).
 
+On desktop, **File → Open** imports supported FigJam layers from a local `.jam` archive. Save an imported board to a separate `.fig` design copy.
+
 The [PRD](docs/PRD.md) defines the product and acceptance gates. The [task index](docs/TASKS.md) links the complete execution backlog; the [modularity audit](docs/MODULARITY.md) records the oversized-module review queue. See [tracking rules](docs/TRACKING.md) for the current work limit.
 
 Start with the [prompt gallery](docs/PROMPTS.md), [Cursor/VS Code setup](docs/EDITOR-INTEGRATIONS.md), or [local Codex runtime guide](docs/LOCAL-RUNTIME.md). These guides state their verification limits; visual IDE extensions remain open.
