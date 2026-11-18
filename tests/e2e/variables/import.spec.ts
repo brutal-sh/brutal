@@ -1,4 +1,5 @@
 import { expect, test, useEditorSetup } from '#tests/e2e/fixtures'
+import { openAppMenu } from '#tests/helpers/menu'
 
 const editor = useEditorSetup()
 
@@ -13,10 +14,8 @@ const theme = (background: string) =>
   })
 
 test('design token files import as a collection with a mode per file', async () => {
-  await editor.page
-    .getByRole('region', { name: 'Variables' })
-    .getByRole('button', { name: 'Open variables' })
-    .click()
+  const view = await openAppMenu(editor.page, 'View')
+  await view.getByRole('menuitem', { name: 'Variables…', exact: true }).click()
   const dialog = editor.page.getByTestId('variables-dialog')
   await expect(dialog).toBeVisible()
 
