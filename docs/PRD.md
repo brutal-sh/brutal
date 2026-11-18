@@ -1,13 +1,13 @@
 # Open Pen product requirements
 
 Decision owner: Jason Poindexter. Implementation/evidence owner: Codex.
-Updated: 2026-11-17. Controller goal: **active**; full design and functionality parity remains required and unaccepted.
+Updated: 2026-11-18. Controller goal: **active**; full design and functionality parity remains required and unaccepted.
 
 Current reference is actual Pen **1.2.23**, ASAR `d0c5c23a3a86ec1802c8754b59e82600d815f0e2b6a383f655319535e6e07925`. The [16 November update audit](pen-feature-reference/update-audit-2026-11-16.md) adds seven welcome screens and reconciles the THEFT-account newsletter. REA 6.9.0 executed a read-only capture of the current editor; full static reconstruction still rejects bundled-helper integrity. Source facts, user screenshots and reported marketing claims remain distinct from executed behavior.
 
-The live board and [task index](TASKS.md) reconcile **564 cards / 546 execution tasks / 18 milestones**, with 545 other terminal prerequisites. All original catalog/native rows, welcome/newsletter leaves and milestone exit criteria remain binding. [Current priorities](PRIORITIES-2026-11-17.md) distinguish scheduling from acceptance.
+The live board and [task index](TASKS.md) reconcile **565 cards / 547 execution tasks / 18 milestones**, with 546 other terminal prerequisites. All original catalog/native rows, welcome/newsletter leaves and milestone exit criteria remain binding. [Current priorities](PRIORITIES-2026-11-17.md) distinguish scheduling from acceptance.
 
-Current published handoff: source16bbfd9e5 publishes bounded browser slider-label containment; b571b64cb retains prior numeric qualification. AI-CODEX-TOOLS-CHECK executed on local native candidate `d18cbc54b`. AI-CODEX-REQUEST-FAILURE executed its isolated native request and recovery criteria. UI-MAC-WINDOW-CONTROLS owns Building. The active replacement goal prioritizes the reported Codex MCP handshake/request failure and recurring traffic lights; Save/recovery remain release blockers. MOD-19, MOD-20, primitives, strict Note/raster, native/reference/Figma and normal installed acceptance remain open. Site/branding work is isolated in its separate user chat. Open Pen is a desktop product; browser checks do not announce a hosted browser edition.
+Current candidate handoff: the bounded Codex connection and request recovery executed on isolated native candidates. Native window recurrence is in Verify. Pen 1.2.23 opened the saved Codex file with the expected raster. The normal installed candidate and Pen provider runtime comparison remain open. Save/recovery, strict Note raster, primitives, modularity, and native/Figma acceptance retain their required exits. The website and help work is in its own checkout. Open Pen is a desktop product.
 
 ## Product outcome
 

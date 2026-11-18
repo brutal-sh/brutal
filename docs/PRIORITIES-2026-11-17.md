@@ -11,13 +11,11 @@ The bounded [slider-label repair](https://trello.com/c/MeJ2EoyA) is published at
 `16bbfd9e5` and Executed for its declared browser criterion. Its controls do not
 cover its wider native, actual-Pen or parent acceptance. The bounded Codex tool connection is Executed on local native candidate `d18cbc54b`, and native request recovery is Executed on local candidates `260ef4846` and `01727ee4c`.
 
-The next execution order follows current observed user impact and dependencies:
+The current order follows observed user impact and dependencies:
 
-| Order | Bounded task                                            | Observable exit                                                                                                                                                                                   |
-| ----- | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1     | [Codex tools](https://trello.com/c/NOOLldKf)            | Identify the native MCP handshake failure, then actual Check again reaches Open Pen canvas tools; failure, timeout, cancel and retry controls retain accurate state.                              |
-| 2     | [Codex request recovery](https://trello.com/c/LPC4kXs7) | After tool reachability is accepted, an actual controlled request edits the intended canvas, with safe retry/cancel and no duplicate edit. An error message alone cannot accept this task.        |
-| 3     | [Native window controls](https://trello.com/c/8iOj7MNs) | Real traffic-light centers and behavior remain correct through launch, resize, fullscreen/restore, focus and relaunch on the exact delivered app; actual drag-region acceptance remains required. |
+1. Review the isolated Note raster correction. Verify the original zero-difference Core and browser cases after integration, then qualify the combined candidate.
+2. Run the normal installed Codex edit, Undo, Save and reopen journey. Retain the actual Pen provider runtime gates and check native window controls on the delivered candidate.
+3. Continue the broader Save and recovery criteria, including evidence of the first failing transition if the old Cancel/Home behavior recurs.
 
 The connection check reached a terminal timeout, cleaned up the stalled child and succeeded on retry. Settings > MCP > Restart restored the connection after a controlled loss of the test bridge. The trigger of the original live incident remains unknown. A live request recovered from the unsupported inherited model, made one canvas edit and verified Undo. A separate native stand-in verified specific error copy, one-edit Retry and no-edit Stop. The installed window controls passed the native lifecycle and the drag below the + button. The card is in Verify while the original screenshot’s build and the left-side drag limit remain unresolved.
 Ready/Building describe scheduling, not acceptance. No more than three Ready cards
@@ -34,7 +32,7 @@ combined criteria. The old untraced
 Do not repeat green controls indefinitely or call them a repair. Capture an actual
 recurrence and its first failing transition before assigning a cause.
 
-The [agent-created .pen Save fix](https://trello.com/c/8ZY96bsg) is Executed on the isolated native candidate after real Codex creation and saved reopen. The [Codex acceptance parent](https://trello.com/c/3NQFXUXH) still needs the normal installed and actual Pen comparisons.
+The [agent-created .pen Save fix](https://trello.com/c/8ZY96bsg) is Executed on the isolated native candidate after real Codex creation and saved reopen. Pen 1.2.23 renders the saved file with the expected pixels. The [Codex acceptance parent](https://trello.com/c/3NQFXUXH) remains in Verify for the normal installed journey and Pen provider runtime criteria.
 
 After the current user blockers, continue file preservation and native delivery,
 core editing/portable-file compatibility and M05 agent/welcome workflows, then the
@@ -85,8 +83,8 @@ disabled Actions remain required.
 
 ## Canonical inventory and review
 
-Current scheduling inventory: 564 cards, 546 execution tasks and 18 milestones;
-PARITY-ALL explicitly expands all 545 other execution tasks. Each task has exactly
+Current scheduling inventory: 565 cards, 547 execution tasks and 18 milestones.
+PARITY-ALL explicitly expands all 546 other execution tasks. Each task has exactly
 one primary milestone owner. Independent live-board comparison verifies unique IDs,
 no unknown prerequisites/cycles, and no Ready/Executed card blocked by an open
 prerequisite. All 18 original milestone exit blocks are byte-identical.

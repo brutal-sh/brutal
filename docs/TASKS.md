@@ -1,16 +1,16 @@
 # Open Pen task index
 
-Updated: 2026-11-17 from the complete live-board readback. Controller goal: **active**. Full design/functionality parity remains unaccepted.
+Updated: 2026-11-18 from the complete live-board readback. Controller goal: **active**. Full design/functionality parity remains unaccepted.
 
-The board contains **546 execution tasks** and **18 outcome milestones**, covering the existing **164 catalog requirements**, **22 baseline native screen/menu rows**, and newly discovered applicable states including the seven-screen welcome journey. Counts are workflow inventory, not product-parity percentages.
+The board contains **547 execution tasks** and **18 outcome milestones**, covering the existing **164 catalog requirements**, **22 baseline native screen/menu rows**, and newly discovered applicable states including the seven-screen welcome journey. Counts are workflow inventory, not product-parity percentages.
 
-Current lists: **400 Backlog / 0 Ready / 1 Building / 53 Verify / 92 Executed**. The sole Building task is **UI-MAC-WINDOW-CONTROLS**. Full parity and all milestone exits remain open.
+Current lists: **399 Backlog / 0 Ready / 0 Building / 54 Verify / 94 Executed**. Full parity and all milestone exits remain open.
 
 [Current audit](BOARD-AUDIT-2026-11-16.md) · [Milestones](MILESTONES.md) · [PRD](PRD.md) · [Tracking](TRACKING.md) · [Reference update](pen-feature-reference/update-audit-2026-11-16.md) · [Board](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor)
 
 Current reference: actual Pen **1.2.23**, ASAR `d0c5c23a3a86ec1802c8754b59e82600d815f0e2b6a383f655319535e6e07925`. The seven welcome screenshots and newsletter claims add 25 Backlog leaves. Existing fullscreen/Creative/steering/image-model/language owners retain their acceptance criteria. Marketing claims and source declarations are not runtime acceptance.
 
-Re-entry: UI-MAC-WINDOW-CONTROLS owns the sole primary app Building slot. The Codex connection and request-recovery controls executed on isolated native candidates. Verify recurring traffic-light placement and real pointer dragging on the exact normal installed build. Save/recovery and all other acceptance criteria remain required. See PRIORITIES-2026-11-17.md.
+Re-entry: review the isolated Note raster correction and qualify one exact combined app candidate. The bounded Codex connection, request recovery, and agent-created file repair are Executed. The installed window recurrence and the remaining normal installed and Pen provider criteria for Codex are in Verify. See [current priorities](PRIORITIES-2026-11-17.md).
 
 ## Execution tasks
 
