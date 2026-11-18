@@ -8,7 +8,11 @@ import {
   holdOwnedEditorLock,
   observeSelectionRequests
 } from '#tests/helpers/automation/cli/cancellation'
-import { connectOwnedMCP, connectOwnedStdioMCP } from '#tests/helpers/automation/cli/mcp'
+import {
+  closeOwnedMCP,
+  connectOwnedMCP,
+  connectOwnedStdioMCP
+} from '#tests/helpers/automation/cli/mcp'
 import {
   openSelectionDocuments,
   selectionCheckpoint
@@ -97,7 +101,7 @@ for (const transport of ['http', 'stdio']) {
         controller.abort()
         await lock.evaluate((held) => held.release())
         await lock.dispose()
-        await client.close()
+        await closeOwnedMCP(client)
       }
     })
   }
@@ -125,7 +129,7 @@ for (const transport of ['http', 'stdio']) {
       ])
       canvas.assertNoErrors()
     } finally {
-      await client.close()
+      await closeOwnedMCP(client)
     }
   })
 
@@ -169,7 +173,7 @@ for (const transport of ['http', 'stdio']) {
         await lock.evaluate((held) => held.release())
         await lock.dispose()
       }
-      await client.close()
+      await closeOwnedMCP(client)
     }
   })
 }

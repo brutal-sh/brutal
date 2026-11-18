@@ -2,7 +2,7 @@ import * as v from 'valibot'
 
 import { expect, test, useIsolatedEditorSetupWithClear } from '#tests/e2e/fixtures'
 import { activateOwnedDocument, documentReadState } from '#tests/helpers/automation/cli/documents'
-import { connectOwnedMCP } from '#tests/helpers/automation/cli/mcp'
+import { closeOwnedMCP, connectOwnedMCP } from '#tests/helpers/automation/cli/mcp'
 import { runLiveCLI } from '#tests/helpers/automation/cli/process'
 import { reopenOwnedNode } from '#tests/helpers/automation/cli/reopen'
 import {
@@ -130,7 +130,7 @@ test('real MCP selection refuses a cross-document ID atomically and reports actu
     await expect(row).toHaveAttribute('aria-selected', 'false')
     assertPreserved(retried, await selectionCheckpoint(editor.page, docs))
   } finally {
-    await client.close()
+    await closeOwnedMCP(client)
   }
   editor.canvas.assertNoErrors()
 })

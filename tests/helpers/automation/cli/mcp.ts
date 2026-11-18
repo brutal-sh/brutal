@@ -28,6 +28,16 @@ export async function connectOwnedMCP(discoveryPath: string) {
   }
 }
 
+/** Release the server-side HTTP session before closing the local transport. */
+export async function closeOwnedMCP(client: Client): Promise<void> {
+  const transport = client.transport
+  try {
+    if (transport instanceof StreamableHTTPClientTransport) await transport.terminateSession()
+  } finally {
+    await client.close()
+  }
+}
+
 /** Actual Node executable and built stdio entry; no global discovery or credentials. */
 export async function connectOwnedStdioMCP(discoveryPath: string, args: string[] = []) {
   const env: Record<string, string> = {}

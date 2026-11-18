@@ -4,7 +4,11 @@ import { pathToFileURL } from 'node:url'
 import { expect, test } from '#tests/e2e/fixtures'
 import { liveTestDiscovery } from '#tests/helpers/automation/cli/bridge'
 import { documentReadState, documentSnapshot } from '#tests/helpers/automation/cli/documents'
-import { connectOwnedMCP, connectOwnedStdioMCP } from '#tests/helpers/automation/cli/mcp'
+import {
+  closeOwnedMCP,
+  connectOwnedMCP,
+  connectOwnedStdioMCP
+} from '#tests/helpers/automation/cli/mcp'
 import {
   editOwnedSaveSource,
   openOwnedSaveSource
@@ -65,7 +69,7 @@ for (const transport of ['http', 'stdio']) {
       controller.abort()
       await held.evaluate((hold) => hold.restore())
       await held.dispose()
-      await client.close()
+      await closeOwnedMCP(client)
     }
   })
   for (const change of ['read-only', 'source'] as const) {
@@ -98,7 +102,7 @@ for (const transport of ['http', 'stdio']) {
       } finally {
         await held.evaluate((hold) => hold.restore())
         await held.dispose()
-        await client.close()
+        await closeOwnedMCP(client)
       }
     })
   }

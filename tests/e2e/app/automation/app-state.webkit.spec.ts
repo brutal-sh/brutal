@@ -10,7 +10,7 @@ import {
   documentSnapshot,
   openOwnedDocuments
 } from '#tests/helpers/automation/cli/documents'
-import { connectOwnedMCP } from '#tests/helpers/automation/cli/mcp'
+import { closeOwnedMCP, connectOwnedMCP } from '#tests/helpers/automation/cli/mcp'
 import { runLiveCLI } from '#tests/helpers/automation/cli/process'
 import { mockEditorCopyServices } from '#tests/helpers/brand/editor-services'
 
@@ -97,7 +97,7 @@ test('real MCP state targets the intended document on the actual browser bridge'
     expect(await documentSnapshot(editor.page, second)).toBe(other)
     expect(await documentReadState(editor.page, first)).toEqual(state)
   } finally {
-    await client.close()
+    await closeOwnedMCP(client)
   }
   editor.canvas.assertNoErrors()
 })

@@ -6,7 +6,11 @@ import { pathToFileURL } from 'node:url'
 import { expect, test, useIsolatedEditorSetupWithClear } from '#tests/e2e/fixtures'
 import { liveTestDiscovery } from '#tests/helpers/automation/cli/bridge'
 import { documentReadState, documentSnapshot } from '#tests/helpers/automation/cli/documents'
-import { connectOwnedMCP, connectOwnedStdioMCP } from '#tests/helpers/automation/cli/mcp'
+import {
+  closeOwnedMCP,
+  connectOwnedMCP,
+  connectOwnedStdioMCP
+} from '#tests/helpers/automation/cli/mcp'
 import { reopenOwnedNode } from '#tests/helpers/automation/cli/reopen'
 import {
   editOwnedSaveSource,
@@ -48,7 +52,7 @@ for (const transport of ['http', 'stdio']) {
       )
       editor.canvas.assertNoErrors()
     } finally {
-      await client.close()
+      await closeOwnedMCP(client)
     }
   })
 
@@ -75,7 +79,7 @@ for (const transport of ['http', 'stdio']) {
       }
       editor.canvas.assertNoErrors()
     } finally {
-      await client.close()
+      await closeOwnedMCP(client)
     }
   })
 }
@@ -94,7 +98,7 @@ test('the actual stdio disable-save flag removes both interfaces without changin
     await expect(client.callTool({ name: 'save_file', arguments: {} })).rejects.toThrow()
     editor.canvas.assertNoErrors()
   } finally {
-    await client.close()
+    await closeOwnedMCP(client)
   }
 })
 
@@ -129,7 +133,7 @@ test('URI Save refuses a symlink outside its root and accepts an in-root alias',
     expect((await reopenOwnedNode(discovery, path, 'URI owned shape')).x).toBe(61)
     editor.canvas.assertNoErrors()
   } finally {
-    await client.close()
+    await closeOwnedMCP(client)
     await rm(outside, { recursive: true, force: true })
   }
 })
