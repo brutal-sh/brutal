@@ -89,12 +89,13 @@ export class CanvasHelper {
     return this.canvas.screenshot()
   }
 
-  async screenshotCanvasRegion(width = 900, height = 700) {
+  async screenshotCanvasRegion(width = 900, height = 700, style?: string) {
     const box = await this.canvas.boundingBox()
     if (!box) throw new Error('Canvas has no bounding box — is it visible?')
     const viewport = this.page.viewportSize()
     if (!viewport) throw new Error('Viewport unavailable')
     return this.page.screenshot({
+      style,
       clip: {
         x: box.x,
         y: box.y,

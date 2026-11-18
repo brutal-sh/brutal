@@ -1,7 +1,12 @@
 import { CanvasHelper } from '#tests/helpers/canvas'
 import { expect, test } from '#tests/helpers/chat/fixture'
 import { setupPlacementScene, type PlacementScenario } from '#tests/helpers/chat/placement-scene'
-import { documentSnapshot, previewKey, setupCanvas } from '#tests/helpers/chat/render-preview'
+import {
+  documentSnapshot,
+  previewKey,
+  SCENE_SCREENSHOT_STYLE,
+  setupCanvas
+} from '#tests/helpers/chat/render-preview'
 import { installRenderStream } from '#tests/helpers/chat/render-stream'
 
 const scenarios: PlacementScenario[] = [
@@ -14,7 +19,7 @@ const scenarios: PlacementScenario[] = [
 ]
 
 for (const scenario of scenarios) {
-  test(`matches the final render for ${scenario}`, async ({ configuredChat: chat }) => {
+  test(`matches the final render for ${scenario}`, async ({ configuredChat: chat }, testInfo) => {
     await setupCanvas(chat.page)
     const scene = await setupPlacementScene(chat.page, scenario)
     const before = await documentSnapshot(chat.page)
@@ -28,7 +33,7 @@ for (const scenario of scenarios) {
       await expect.poll(() => previewKey(chat.page)).not.toBe('')
       expect(await documentSnapshot(chat.page)).toEqual(before)
       await canvas.waitForRender()
-      expect(await canvas.screenshotCanvasRegion(640, 400)).toMatchSnapshot(snapshot)
+      const preview = await canvas.screenshotCanvasRegion(640, 400, SCENE_SCREENSHOT_STYLE)
       await stream.evaluate((s) => s.complete())
       await expect(chat.assistantMessage()).toContainText('Rendered.')
       await expect.poll(() => previewKey(chat.page)).toBe('')
@@ -40,10 +45,15 @@ for (const scenario of scenarios) {
         store.requestRepaint()
       })
       await canvas.waitForRender()
-      // Both speculative and authoritative output must match the same visual baseline.
-      expect(await canvas.screenshotCanvasRegion(640, 400)).toMatchSnapshot(snapshot)
+      const committed = await canvas.screenshotCanvasRegion(640, 400, SCENE_SCREENSHOT_STYLE)
+      if (!preview.equals(committed)) {
+        await testInfo.attach('preview', { body: preview, contentType: 'image/png' })
+        await testInfo.attach('committed', { body: committed, contentType: 'image/png' })
+      }
+      expect(preview.equals(committed), 'preview and committed artwork pixels').toBe(true)
       await chat.page.evaluate(() => window.openPencil?.getStore?.().undoAction())
       expect(await documentSnapshot(chat.page)).toEqual(before)
+      expect(committed).toMatchSnapshot(snapshot)
     } finally {
       await stream.evaluate((s) => s.dispose())
       await stream.dispose()

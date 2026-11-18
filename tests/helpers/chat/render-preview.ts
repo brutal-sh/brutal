@@ -1,5 +1,11 @@
 import type { Page } from '@playwright/test'
 
+/** Suppress editor controls and the overlay canvas for artwork-only screenshots. */
+export const SCENE_SCREENSHOT_STYLE = `
+  body, body * { visibility: hidden !important; }
+  [data-test-id="scene-canvas-element"] { visibility: visible !important; }
+`
+
 /** Clears the page and fixes the view; rendering snapshots compare it, so agents are not followed. */
 export async function setupCanvas(page: Page) {
   const followAgents = page.getByTestId('chat-follow-agents')

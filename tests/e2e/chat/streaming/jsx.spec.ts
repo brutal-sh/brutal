@@ -4,6 +4,7 @@ import {
   addPage,
   documentState,
   previewKey,
+  SCENE_SCREENSHOT_STYLE,
   setupCanvas,
   switchPage
 } from '#tests/helpers/chat/render-preview'
@@ -31,14 +32,14 @@ test('renders streamed JSX without document mutations, then commits once with un
     expect(await documentState(chat.page)).toEqual({ children: [], undo: false })
     const canvas = new CanvasHelper(chat.page)
     await canvas.waitForRender()
-    expect(await canvas.screenshotCanvasRegion(640, 400)).toMatchSnapshot(
+    expect(await canvas.screenshotCanvasRegion(640, 400, SCENE_SCREENSHOT_STYLE)).toMatchSnapshot(
       'jsx-streaming-open-text.png'
     )
     const first = await previewKey(chat.page)
     await stream.evaluate((s) => s.advance())
     await expect.poll(() => previewKey(chat.page)).not.toBe(first)
     await canvas.waitForRender()
-    expect(await canvas.screenshotCanvasRegion(640, 400)).toMatchSnapshot(
+    expect(await canvas.screenshotCanvasRegion(640, 400, SCENE_SCREENSHOT_STYLE)).toMatchSnapshot(
       'jsx-streaming-complete-preview.png'
     )
     expect(await documentState(chat.page)).toEqual({ children: [], undo: false })
@@ -51,7 +52,7 @@ test('renders streamed JSX without document mutations, then commits once with un
       store.requestRepaint()
     })
     await canvas.waitForRender()
-    expect(await canvas.screenshotCanvasRegion(640, 400)).toMatchSnapshot(
+    expect(await canvas.screenshotCanvasRegion(640, 400, SCENE_SCREENSHOT_STYLE)).toMatchSnapshot(
       'jsx-streaming-zoomed-preview.png'
     )
     await stream.evaluate((s) => s.complete())
@@ -126,6 +127,8 @@ test('keeps the run and its preview on their page while the user views another',
     // Away from the run's page: the chat says where it works, and the page list marks it.
     const location = chat.page.getByTestId('chat-run-location')
     await expect(location).toContainText('is working on “Page 1”')
+    const panels = chat.page.getByRole('tablist', { name: 'Workspace panels' })
+    await panels.getByRole('tab', { name: 'Layers', exact: true }).click()
     await expect(
       chat.page
         .getByTestId('pages-row')
@@ -133,6 +136,7 @@ test('keeps the run and its preview on their page while the user views another',
         .getByTestId('presence-markers')
     ).toBeVisible()
 
+    await chat.chatTab.click()
     await location.getByRole('button', { name: 'Go to page' }).click()
     await expect.poll(() => previewKey(chat.page)).not.toBe('')
     await expect(location).toHaveCount(0)
