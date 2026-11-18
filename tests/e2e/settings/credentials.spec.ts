@@ -6,7 +6,7 @@ test('storage settings keep secrets behind the credential manager', async ({ pag
   await page.goto('/?test')
   const canvas = new CanvasHelper(page)
   await canvas.waitForInit()
-  await page.getByTestId('app-settings-trigger').click()
+  await page.keyboard.press('ControlOrMeta+,')
   await page.getByTestId('settings-section-storage').click()
   const connection = page.getByRole('button', { name: /S3 storage/ })
   await connection.click()
@@ -35,7 +35,7 @@ test('storage settings keep secrets behind the credential manager', async ({ pag
   await page.getByTestId('app-settings-done').click()
   await page.reload()
   await canvas.waitForInit()
-  await page.getByTestId('app-settings-trigger').click()
+  await page.keyboard.press('ControlOrMeta+,')
   await page.getByTestId('settings-section-storage').click()
   await connection.click()
   await expect(page.getByLabel('Endpoint', { exact: true })).toHaveValue('https://s3.example.com')
@@ -47,7 +47,7 @@ test('MCP connections keep bearer tokens out of ordinary settings', async ({ pag
   const canvas = new CanvasHelper(page)
   await canvas.waitForInit()
 
-  await page.getByTestId('app-settings-trigger').click()
+  await page.keyboard.press('ControlOrMeta+,')
   await page.getByTestId('settings-section-mcp').click()
   const section = page.getByTestId('app-settings-dialog')
   await section.getByRole('button', { name: 'Add connection' }).click()
@@ -69,7 +69,7 @@ test('MCP connections keep bearer tokens out of ordinary settings', async ({ pag
   await page.getByTestId('app-settings-done').click()
   await page.reload()
   await canvas.waitForInit()
-  await page.getByTestId('app-settings-trigger').click()
+  await page.keyboard.press('ControlOrMeta+,')
   await page.getByTestId('settings-section-mcp').click()
   await expect(section).toContainText('https://example.com/mcp')
   await expect(section).toContainText('Enabled')
@@ -120,7 +120,7 @@ test('MCP automation settings filter and persist tool availability', async ({ pa
   const canvas = new CanvasHelper(page)
   await canvas.waitForInit()
 
-  await page.getByTestId('app-settings-trigger').click()
+  await page.keyboard.press('ControlOrMeta+,')
   await page.getByTestId('settings-section-mcp').click()
 
   const authentication = page.getByTestId('settings-mcp-authentication')
@@ -128,7 +128,7 @@ test('MCP automation settings filter and persist tool availability', async ({ pa
   await authentication.click()
   await page.reload()
   await canvas.waitForInit()
-  await page.getByTestId('app-settings-trigger').click()
+  await page.keyboard.press('ControlOrMeta+,')
   await page.getByTestId('settings-section-mcp').click()
   await expect(authentication).toHaveAttribute('data-state', 'unchecked')
   await authentication.click()
@@ -144,7 +144,7 @@ test('MCP automation settings filter and persist tool availability', async ({ pa
   await createShape.click()
   await page.reload()
   await canvas.waitForInit()
-  await page.getByTestId('app-settings-trigger').click()
+  await page.keyboard.press('ControlOrMeta+,')
   await page.getByTestId('settings-section-mcp').click()
   await page.getByTestId('settings-mcp-tool-access').click()
   await expect(createShape).toHaveAttribute('data-state', 'unchecked')
@@ -158,7 +158,7 @@ test('model library keeps reusable profiles and role assignments', async ({ page
   const canvas = new CanvasHelper(page)
   await canvas.waitForInit()
 
-  await page.getByTestId('app-settings-trigger').click()
+  await page.keyboard.press('ControlOrMeta+,')
   await page.getByTestId('settings-section-ai').click()
   await page.getByTestId('settings-add-model').click()
   await page.locator('[data-provider="google"]').click()
@@ -185,7 +185,7 @@ test('model library keeps reusable profiles and role assignments', async ({ page
 
   await page.reload()
   await canvas.waitForInit()
-  await page.getByTestId('app-settings-trigger').click()
+  await page.keyboard.press('ControlOrMeta+,')
   await page.getByTestId('settings-section-ai').click()
   await expect(page.getByTestId('settings-model-list')).toContainText('Fast model')
   await expect(page.getByTestId('settings-model-list')).toContainText('Vision model')
@@ -198,7 +198,7 @@ test('remembered browser credentials survive reload and clear centrally', async 
   const canvas = new CanvasHelper(page)
   await canvas.waitForInit()
 
-  await page.getByRole('tab', { name: 'AI' }).click()
+  await page.getByRole('tab', { name: 'Agent', exact: true }).click()
   await page.getByTestId('provider-setup-open-settings').click()
 
   await page.getByTestId('settings-section-general').click()
@@ -217,10 +217,10 @@ test('remembered browser credentials survive reload and clear centrally', async 
 
   await page.reload()
   await canvas.waitForInit()
-  await page.getByRole('tab', { name: 'AI' }).click()
+  await page.getByRole('tab', { name: 'Agent', exact: true }).click()
   await expect(page.getByTestId('chat-input')).toBeVisible()
 
-  await page.getByTestId('app-settings-trigger').click()
+  await page.keyboard.press('ControlOrMeta+,')
   await page.getByTestId('settings-section-ai').click()
   await page.locator('[data-model-id]').first().click()
   await page.getByTestId('provider-settings-clear-key').click()
@@ -234,7 +234,7 @@ test('remembered browser credentials survive reload and clear centrally', async 
 
   await page.reload()
   await canvas.waitForInit()
-  await page.getByRole('tab', { name: 'AI' }).click()
+  await page.getByRole('tab', { name: 'Agent', exact: true }).click()
   await expect(page.getByTestId('provider-setup-open-settings')).toBeVisible()
 })
 

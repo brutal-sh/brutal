@@ -34,7 +34,7 @@ test('shows staged and determinate document loading progress in the existing can
       module.useAppTheme().setTheme(appearance)
     }, appearance)
     const mark = loader.locator('img')
-    await expect(mark).toHaveAttribute('src', '/brand/app-icon.svg')
+    await expect(mark).toHaveAttribute('src', '/brand/open-pen-app.png')
     await expect(mark).toHaveAttribute('alt', '')
     await expect(mark).toHaveScreenshot(`loading-brand-${appearance}.png`, {
       maxDiffPixels: 0,
