@@ -1,6 +1,6 @@
 # Open Pen
 
-Private local-first design editor, built on the MIT-licensed [OpenPencil](https://github.com/open-pencil/open-pencil) engine. The target is functional parity with Pen without an editor subscription or license activation. **Parity is not yet achieved.**
+Open Pen is a local-first desktop design editor built on the MIT-licensed OpenPencil engine. The public Mac beta is in preparation. Full functional parity with Pen without an editor subscription or license activation remains on the roadmap. [OpenPencil engine](https://github.com/open-pencil/open-pencil)
 
 [Open Pen website](https://open-pen.vercel.app/) · [Help docs](https://open-pen.vercel.app/help/#docs) · [Desktop setup](https://open-pen.vercel.app/help/getting-started/)
 
@@ -18,10 +18,11 @@ Use Bun 1.4.2 or newer. Install Git LFS and retrieve fixtures before running fix
 bun install --frozen-lockfile
 cp .env.example .env.local
 bun run build:packages
-bun run dev
 ```
 
-The desktop wrapper uses Tauri 2 and requires the Rust/macOS development toolchain: `bun run tauri dev`. Open Pen has its own bundle identity, credential service, deep links and local MCP endpoint. See [desktop configuration](docs/DESKTOP.md). The upstream updater is disabled; this fork has no release feed yet.
+Launch the desktop app with `bun run tauri dev`. This requires Tauri 2’s Rust and platform development tools. Use `bun run dev` for browser development and `bun run storybook` for component checks. Both are contributor tools.
+
+Open Pen has its own bundle identity, credential service, deep links and local MCP endpoint. See [desktop configuration](docs/DESKTOP.md). The upstream updater is disabled. This fork has no release feed yet.
 
 Cloud and feedback are off in the supplied environment example. Core editing requires no account. Optional external AI and image providers retain their own authentication and costs; local model support does not make hosted inference free.
 
@@ -43,7 +44,7 @@ Start with the [prompt gallery](docs/PROMPTS.md), [Cursor/VS Code setup](docs/ED
 
 ## Open Pen system requirements
 
-The browser build targets Chrome 111+, Edge 111+, Firefox 128+, Safari 16.4+ and iOS 16.4+.
+The contributor browser build targets Chrome 111+, Edge 111+, Firefox 128+, Safari 16.4+ and iOS 16.4+.
 Startup also checks WebAssembly, WebGL 2 and required JavaScript/CSS features; a browser
 policy or disabled feature can prevent startup even when its version meets the baseline.
 These are configured support thresholds, not evidence that every platform is qualified.

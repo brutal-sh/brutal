@@ -114,10 +114,15 @@ journey and broader file, agent and visual acceptance remain open.
 [Desktop file and provider limits](../README.md)
 
 The [Help support section](https://open-pen.vercel.app/help/#support) resolves and
-links to the fork's bug report and question issue forms. GitHub confirms the fork
-is private and Issues are enabled. Confirm that invited testers can use the
-intended report destination before sending the package. Use the reporting steps
-above and review exports and fixtures before sharing. [BRAND-LINKS](https://trello.com/c/Nyoko3k5)
+links to the private fork's issue forms. The bug-report form returned HTTP 404
+without GitHub authentication on 19 November. The website owner proposes a
+monitored support inbox linked from `/help/troubleshooting/#report` and
+`/help/#support`, and a signed installer and SHA-256 at
+`/help/getting-started/#download`. Both routes remain proposals pending Jason's
+approval of the inbox, artifact host and public launch. Report guidance should
+include the app version, macOS version and reproduction steps. Review exports
+and fixtures before sharing. Verify the download, installer and report intake
+without private repository access. [BRAND-LINKS](https://trello.com/c/Nyoko3k5)
 retains the normal-app destination walkthrough.
 
 Jason owns distribution, rollout and rollback decisions. Hold new invites on a
