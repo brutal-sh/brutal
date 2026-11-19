@@ -36,7 +36,7 @@ The current native journey passes with three distinct verified PIDs, one persist
 
 The same host also passes twelve native document changes, original-layer preservation, P3/sRGB changes and resizing with at most three no-error contexts. Saved native screenshots independently contain exact red/gray center pixels; see `renderer-native-resources/verification.json`. These are synthetic native controls, not full matched Pen visuals.
 
-## Executed native journey
+## Original native journey
 
 After Computer Use observes an unlocked desktop, build only the isolated host:
 
@@ -63,3 +63,9 @@ Current source `6bb36166a` plus the compact pane-header candidate builds the sep
 Independent review maps the original four Done criteria to this execution and retained checks for unchanged owners: all69native/config source hashes and the six restart helpers match current HEAD. The corrected namespace prerequisite is bounded Executed. This restores TEST-RECOVERY-NATIVE-PROFILE to bounded Executed; prior same-profile results do not regain the disproved cross-profile claim. Private evidence: `local-evidence/native-recovery-reentry-2026-11-12/{formal-profile-receipt.json,formal-profile.log,native-source-freeze.json,independent-formal-review.json}`.
 
 Real native OS picker/refusal/retry outcomes now have separate [panel evidence](NATIVE-RECOVERY-PANELS.md). Neither result accepts normal-installed recovery, physical input, power-loss durability or matched current Pen recovery states.
+
+## Automatic backup through a native edit — 2026-11-19
+
+The three-process runner now uses the visible Layers panel and the Duplicate shortcut on an existing-file fixture with source autosave off. The first process starts with no backup. It waits for the automatic backup without forcing a flush, verifies the file still contains the original bytes, and stops only that verified test process. The second process opens the actual Recovery dialog on the same isolated WebKit store, finds the exact backup digest, and restores both layers while the source bytes remain unchanged. After the dialog closes and the restored document receives focus, Save writes two editable 64 × 64 rectangles and removes the backup. A third distinct process reopens the saved file without a new recovery offer, then exercises Duplicate and Undo.
+
+This run used the Mac test executable built from `0610afcbe`. The earlier attempt reached Restore, but an embedded-driver Save shortcut issued before waiting for dialog dismissal and document focus left the original file and backup intact. The retained result does not establish a failure after focus returns. The successful run waits for those observable states. Private receipts are under `local-evidence/native-auto-backup-2026-11-19/`. FILE-07 remains in Verify for the normal-installed and reference recovery criteria. The old Cancel-to-Home report remains unclassified.

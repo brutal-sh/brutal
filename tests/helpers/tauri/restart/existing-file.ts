@@ -45,24 +45,39 @@ async function expectNodes(session: WebdriverIO.Browser, count: number) {
   )
 }
 
+async function selectOriginalLayer(session: WebdriverIO.Browser) {
+  const layers = session.$('[role="tab"][aria-label="Layers"]')
+  if ((await layers.getAttribute('aria-selected')) !== 'true') {
+    await layers.click()
+    if ((await layers.getAttribute('aria-selected')) !== 'true') await session.keys('Enter')
+  }
+  const tree = session.$('[data-test-id="layers-tree"]')
+  await tree.waitForDisplayed()
+  const original = tree.$('span=Existing rectangle')
+  await original.waitForDisplayed()
+  await original.click()
+  await session.$('[data-test-id="layers-item"][data-selected]').waitForDisplayed()
+}
+
 async function editExisting(session: WebdriverIO.Browser) {
   await visibleEditor(session)
   await expectNodes(session, 1)
-  await session
-    .executeAsync(async (done) => {
-      try {
-        const store = window.openPencil?.getStore?.()
-        if (!store) throw new Error('Missing native editor')
-        if (store.state.autosaveEnabled) throw new Error('Fixture requires local file autosave off')
-        store.createShape('RECTANGLE', 120, 120, 64, 64)
-        await store.persistRecoveryNow()
-        done(null)
-      } catch (error) {
-        done(String(error))
-      }
-    })
-    .then((error) => assert.equal(error, null))
+  const autosaveEnabled = await session.execute(
+    () => window.openPencil?.getStore?.().state.autosaveEnabled
+  )
+  assert.equal(autosaveEnabled, false, 'Fixture requires local file autosave off')
+  assert.deepEqual(await readNativeRecoveryDigests(session), { digests: [] })
+  await selectOriginalLayer(session)
+  await session.keys(['Meta', 'd'])
   await expectNodes(session, 2)
+  await session.waitUntil(
+    async () => {
+      const recovery = await readNativeRecoveryDigests(session)
+      assert.equal(recovery.failure, undefined)
+      return recovery.digests?.length === 1
+    },
+    { timeout: 10_000, timeoutMsg: 'Automatic recovery did not back up the duplicate' }
+  )
   const backup = await readNativeRecoveryDigests(session)
   assert.equal(backup.failure, undefined)
   assert.equal(backup.digests?.length, 1)
@@ -81,7 +96,9 @@ async function restoreAndSave(
   assert.equal(await readFile(path, 'utf8'), design)
   await offer.$('button=Restore').click()
   await expectNodes(session, 2)
+  await session.$('[data-test-id="recovery-dialog"]').waitForExist({ reverse: true })
   assert.equal(await readFile(path, 'utf8'), design)
+  await selectOriginalLayer(session)
   await session.keys(['Meta', 's'])
   await session.waitUntil(
     async () => {
@@ -146,13 +163,7 @@ async function verifyReopened(session: WebdriverIO.Browser) {
     false
   )
   assert.deepEqual(await readNativeRecoveryDigests(session), { digests: [] })
-  await session.execute(() => {
-    const store = window.openPencil?.getStore?.()
-    if (!store) throw new Error('Missing editable reopened document')
-    const node = store.graph.getChildren(store.state.currentPageId)[0]
-    if (!node) throw new Error('Missing reopened layer')
-    store.select([node.id])
-  })
+  await selectOriginalLayer(session)
   await session.keys(['Meta', 'd'])
   await expectNodes(session, 3)
   await session.keys(['Meta', 'z'])
