@@ -5,7 +5,7 @@ import { CanvasHelper } from '#tests/helpers/canvas'
 import { relayURLFor, roomLinkPath, startRelay } from '#tests/helpers/collab/room'
 import { getSelectedNode } from '#tests/helpers/store'
 
-const SETUP_URL = 'https://github.com/jpoindexter/open-pen#run-this-fork'
+const SETUP_URL = 'https://open-pen.vercel.app/help/getting-started/'
 const LOCALES = [
   { locale: 'en', label: 'Desktop setup' },
   { locale: 'de', label: 'Desktop-Einrichtung' },
@@ -29,7 +29,7 @@ for (const { locale, label } of LOCALES) {
         const relay = await startRelay()
         try {
           const interceptedURLs = await mockEditorCopyServices(page)
-          await context.route('https://github.com/jpoindexter/open-pen', (route) =>
+          await context.route(SETUP_URL, (route) =>
             route.fulfill({
               contentType: 'text/html',
               body: '<title>Open Pen desktop setup</title>'
@@ -38,8 +38,13 @@ for (const { locale, label } of LOCALES) {
           const canvas = new CanvasHelper(page)
           let surface: Locator
           if (mode === 'waiting') {
+            const connected = page.waitForEvent('websocket', (socket) =>
+              socket.url().startsWith(relay.url)
+            )
             await page.goto(relayURLFor(roomLinkPath(), relay.url))
+            await connected
             surface = page.getByTestId('room-screen')
+            await expect(surface).toHaveAttribute('data-status', /^(looking|waiting)$/)
             await expect(surface).toHaveAttribute('data-status', 'waiting')
           } else {
             await page.goto(relayURLFor('/', relay.url))

@@ -4,7 +4,7 @@ import { mockEditorCopyServices } from '#tests/helpers/brand/editor-services'
 import { CanvasHelper } from '#tests/helpers/canvas'
 import { getSelectedNode } from '#tests/helpers/store'
 
-const SETUP_URL = 'https://github.com/jpoindexter/open-pen#run-this-fork'
+const SETUP_URL = 'https://open-pen.vercel.app/help/getting-started/'
 
 for (const surface of ['guided setup', 'provider chooser', 'MCP settings'] as const) {
   test(`${surface} offers desktop setup only when needed and preserves the design`, async ({
@@ -13,7 +13,7 @@ for (const surface of ['guided setup', 'provider chooser', 'MCP settings'] as co
   }, testInfo) => {
     const interceptedURLs = await mockEditorCopyServices(page)
     const destinations: string[] = []
-    await context.route('https://github.com/jpoindexter/open-pen', async (route) => {
+    await context.route(SETUP_URL, async (route) => {
       destinations.push(route.request().url())
       await route.fulfill({
         contentType: 'text/html',
@@ -70,7 +70,7 @@ for (const surface of ['guided setup', 'provider chooser', 'MCP settings'] as co
     }
     await expect(panel).toBeVisible()
     expect(await getSelectedNode(page)).toEqual(before)
-    expect(destinations).toEqual(['https://github.com/jpoindexter/open-pen'])
+    expect(destinations).toEqual([SETUP_URL])
     expect(interceptedURLs).toEqual([])
     canvas.assertNoErrors()
   })

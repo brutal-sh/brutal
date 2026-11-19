@@ -2,6 +2,8 @@
 
 Private local-first design editor, built on the MIT-licensed [OpenPencil](https://github.com/open-pencil/open-pencil) engine. The target is functional parity with Pen without an editor subscription or license activation. **Parity is not yet achieved.**
 
+[Open Pen website](https://open-pen.vercel.app/) · [Help docs](https://open-pen.vercel.app/help/#docs) · [Desktop setup](https://open-pen.vercel.app/help/getting-started/)
+
 The implementation baseline is OpenPencil `24461adec7073312d460d76f08f069de18e4fb78`. Its attribution and MIT license remain intact. Pen's proprietary code and assets are not part of this repository.
 
 The Script Gallery bundles eleven MIT examples from [High Agency's public pencil-scripts repository](https://github.com/highagency/pencil-scripts), with its [license notice](public/licenses/pencil-scripts.txt). Gallery previews are rendered by Open Pen; bundled example fonts retain their OFL notices.

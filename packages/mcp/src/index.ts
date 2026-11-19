@@ -37,6 +37,8 @@ if (process.argv.includes('--help') || process.argv.includes('-h')) {
       `  OPENPENCIL_MCP_CORS_ORIGIN   Allowed CORS origins, comma-separated.\n` +
       `                               Defaults to the desktop app origin, since the app\n` +
       `                               webview is the only view that calls this server.\n` +
+      `  OPENPENCIL_MCP_APP_WAIT_TIMEOUT_MS\n` +
+      `                               Wait this many ms for an app to attach before refusing an RPC (default: 10000).\n` +
       `  OPENPENCIL_MCP_APP_TIMEOUT_MS  If set, close the server and remove its discovery\n` +
       `                               file after no app is attached for this many ms. The\n` +
       `                               grace period starts at startup and after disconnects.\n` +
@@ -83,6 +85,7 @@ function readTimeoutEnv(name: string): number | undefined {
   return timeoutMs
 }
 
+const appWaitTimeoutMs = readTimeoutEnv('OPENPENCIL_MCP_APP_WAIT_TIMEOUT_MS')
 const appAttachTimeoutMs = readTimeoutEnv('OPENPENCIL_MCP_APP_TIMEOUT_MS')
 const sessionIdleTimeoutMs = readTimeoutEnv('OPENPENCIL_MCP_SESSION_IDLE_TIMEOUT_MS')
 
@@ -114,6 +117,7 @@ const handle = await startServer({
     return trimmed
   })(),
   corsOrigin: resolveCORSOrigins(process.env.OPENPENCIL_MCP_CORS_ORIGIN),
+  appWaitTimeoutMs,
   appAttachTimeoutMs,
   sessionIdleTimeoutMs
 })

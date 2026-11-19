@@ -1,6 +1,6 @@
 import { expect, test, useIsolatedEditorSetupWithClear } from '#tests/e2e/fixtures'
 import { liveTestDiscovery } from '#tests/helpers/automation/cli/bridge'
-import { copyOwnedDiscovery, setOwnedBridgeRunning } from '#tests/helpers/automation/cli/connection'
+import { copyOwnedDiscovery, disconnectOwnedBridge } from '#tests/helpers/automation/cli/connection'
 import { documentSnapshot, openOwnedDocuments } from '#tests/helpers/automation/cli/documents'
 import { startLiveCLI } from '#tests/helpers/automation/cli/process'
 import { mockEditorCopyServices } from '#tests/helpers/brand/editor-services'
@@ -42,7 +42,7 @@ test('a disconnected real bridge refuses a session command without editing eithe
   const cli = startLiveCLI(discovery, ['interactive', '-a', 'desktop', '--document-id', first])
   try {
     await expect.poll(cli.output).toContain(first)
-    expect((await setOwnedBridgeRunning(editor.page, false)).ok).toBe(true)
+    expect((await disconnectOwnedBridge(editor.page)).ok).toBe(true)
     await expect
       .poll(async () => {
         const response = await editor.page.request.get(
@@ -55,11 +55,10 @@ test('a disconnected real bridge refuses a session command without editing eithe
     cli.send('exit()')
     cli.finish()
     expect(await cli.completed).toBe(1)
-    expect(cli.errors().length).toBeGreaterThan(0)
+    expect(cli.errors()).toContain('Open Pen app is not connected')
     expect(await Promise.all(ids.map((id) => documentSnapshot(editor.page, id)))).toEqual(before)
     editor.canvas.assertNoErrors()
   } finally {
     cli.stop()
-    expect((await setOwnedBridgeRunning(editor.page, true)).ok).toBe(true)
   }
 })

@@ -57,13 +57,13 @@ test('a share link opens the room in its own tab, waiting until someone with it 
     )
     await expect(guest.page.getByRole('link', { name: 'Desktop setup' })).toHaveAttribute(
       'href',
-      'https://github.com/jpoindexter/open-pen#run-this-fork'
+      'https://open-pen.vercel.app/help/getting-started/'
     )
 
-    const setupURL = 'https://github.com/jpoindexter/open-pen#run-this-fork'
+    const setupURL = 'https://open-pen.vercel.app/help/getting-started/'
     await guest.page
       .context()
-      .route('https://github.com/jpoindexter/open-pen', (route) =>
+      .route(setupURL, (route) =>
         route.fulfill({ contentType: 'text/html', body: '<title>Open Pen desktop setup</title>' })
       )
     const opening = guest.page.waitForEvent('popup')

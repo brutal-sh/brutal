@@ -10,6 +10,7 @@ import {
 import { previewAddressLabel } from '@/app/browser-preview/schema'
 import AppButton from '@/components/ui/button/AppButton.vue'
 import IconButton from '@/components/ui/button/IconButton.vue'
+import { OPEN_PEN_HELP_URL, OPEN_PEN_WEBSITE_URL } from '@/constants'
 import theme from '@/theme/browser-preview'
 
 const { busy } = defineProps<{ busy: boolean }>()
@@ -101,7 +102,7 @@ const ui = tv(theme)()
           </div>
           <template v-if="!browserHistory.length">
             <AppButton
-              v-for="url in ['pen.dev', 'docs.pen.dev', 'localhost:8080']"
+              v-for="url in [OPEN_PEN_WEBSITE_URL, OPEN_PEN_HELP_URL]"
               :key="url"
               variant="ghost"
               :class="ui.historyRow()"

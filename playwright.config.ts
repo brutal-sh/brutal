@@ -145,6 +145,8 @@ export default defineConfig({
             env: {
               OPENPENCIL_DEV_ORIGIN: origin,
               OPENPENCIL_DEV_MCP_PORT: mcpPort,
+              // The suite observes disconnected bridges without waiting through the production grace period.
+              OPENPENCIL_MCP_APP_WAIT_TIMEOUT_MS: '1000',
               PORTLESS_URL: ''
             },
             reuseExistingServer: !process.env.CI && reuse === '1'

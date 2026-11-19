@@ -89,13 +89,20 @@ test('Help reaches this fork’s documentation, setup and support without editin
   const { page, canvas } = editor
   await canvas.drawRect(350, 300, 160, 100)
   const before = await getSelectedNode(page)
-  for (const [label, path] of [
-    ['Open Pen Documentation', '/blob/HEAD/README.md'],
-    ['Prompt Gallery & Tips', '/blob/HEAD/docs/PROMPTS.md'],
-    ['Open Pen Website', ''],
-    ['Cursor Setup…', '/blob/HEAD/docs/EDITOR-INTEGRATIONS.md#cursor'],
-    ['VS Code Setup…', '/blob/HEAD/docs/EDITOR-INTEGRATIONS.md#vs-code'],
-    ['Support & Feedback', '/issues']
+  const website = 'https://open-pen.vercel.app/'
+  const repository = 'https://github.com/jpoindexter/open-pen'
+  await page
+    .context()
+    .route(`${repository}/blob/HEAD/**`, (route) =>
+      route.fulfill({ contentType: 'text/html', body: '<title>Open Pen repository guide</title>' })
+    )
+  for (const [label, url] of [
+    ['Open Pen Documentation', `${website}help/#docs`],
+    ['Prompt Gallery & Tips', `${repository}/blob/HEAD/docs/PROMPTS.md`],
+    ['Open Pen Website', website],
+    ['Cursor Setup…', `${repository}/blob/HEAD/docs/EDITOR-INTEGRATIONS.md#cursor`],
+    ['VS Code Setup…', `${repository}/blob/HEAD/docs/EDITOR-INTEGRATIONS.md#vs-code`],
+    ['Support & Feedback', `${website}help/#support`]
   ]) {
     const opening = page.waitForEvent('popup')
     await (
@@ -105,7 +112,7 @@ test('Help reaches this fork’s documentation, setup and support without editin
       .click()
     const popup = await opening
     try {
-      await expect(popup).toHaveURL(`https://github.com/jpoindexter/open-pen${path}`)
+      await expect(popup).toHaveURL(url)
     } finally {
       await popup.close()
     }
