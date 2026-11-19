@@ -11,11 +11,37 @@ The bounded [slider-label repair](https://trello.com/c/MeJ2EoyA) is published at
 `16bbfd9e5` and Executed for its declared browser criterion. Its controls do not
 cover its wider native, actual-Pen or parent acceptance. The bounded Codex tool connection is Executed on local native candidate `d18cbc54b`, and native request recovery is Executed on local candidates `260ef4846` and `01727ee4c`.
 
-The current order follows observed user impact and dependencies:
+## Public beta qualification order
 
-1. Follow up on the differences in the [matched Note appearance check](NOTE-REFERENCE-CONTROL.md#matched-foreground-note-appearance--2026-11-19). Regular installed Open Pen verified the N shortcut, text entry with spaces, Undo, Redo, Save and Recents reopen. The foreground comparison confirmed the saved text, default fill, dimensions and eight presets. DRAW-16-AUTHOR remains in Verify for remaining appearance differences.
-2. Compare the remaining provider runtime states with actual Pen. The normal installed Codex edit, Undo, Redo, Save and reopen journey executed on November 19. Continue the remaining window checks on the delivered candidate.
-3. Continue the broader Save and recovery criteria, including evidence of the first failing transition if the old Cancel/Home behavior recurs.
+The live board and task index agree on 550 required execution tasks, one
+deferred Photoshop follow-up and 18 milestone cards. The live board also
+retains three archived cards. The required dependency graph has no cycles. All 549 other required
+tasks remain inputs to PARITY-ALL. Board positions express sequence. Acceptance
+continues to require the original evidence on each card.
+
+1. **Finish the macOS file safety and core journey.**
+   [FILE-07](https://trello.com/c/pLxRX3u0) is Building for the remaining
+   installed and Pen-reference recovery criteria. [FILE-RECOVERY-CANCEL](https://trello.com/c/jMQrSjFS),
+   [FILE-08](https://trello.com/c/ZHvzXqoN), [FIRST-03](https://trello.com/c/apRnHd1j),
+   [STAB-WEBKIT-MIXED](https://trello.com/c/ech6H0Xm), and
+   [VERIFY-INSPECTOR-CONTROLS](https://trello.com/c/ngc2tr1y) lead Verify in that
+   order. The [installed Save As check](RECOVERY-FILE-DECISIONS.md#installed-macos-save-as-cancel-and-write-back--2026-11-19)
+   now covers Cancel, separate-file write-back and reopen.
+2. **Qualify the normal package and support path.**
+   [ENV-01-MAC](https://trello.com/c/hzrysOeC) is Ready and unlocks the
+   [distribution trust](https://trello.com/c/eAB7Tdzk) and
+   [install and rollback](https://trello.com/c/2OSPK0Pb) cards. The support
+   packet needs [sanitized diagnostics](https://trello.com/c/OTshm7tR) and
+   [verified support links](https://trello.com/c/Nyoko3k5). Backlog puts the
+   original website and branding dependencies before their release consumers.
+   The existing website/help chat retains ownership.
+3. **Qualify one exact release candidate.**
+   [BETA-01](https://trello.com/c/sYpWJdvu) requires its six remaining direct
+   gates: brand verification, both recovery owners, the draft journey,
+   WebKit reliability, and inspector controls. The
+   [public beta decision](https://trello.com/c/8HWMW9GE) additionally requires
+   [PARITY-ALL](https://trello.com/c/cr0YPLzZ) and all three release artifacts
+   on the exact build. Jason decides whether to publish.
 
 The connection check reached a terminal timeout, cleaned up the stalled child and succeeded on retry. Settings > MCP > Restart restored the connection after a controlled loss of the test bridge. The trigger of the original live incident remains unknown. A live request recovered from the unsupported inherited model, made one canvas edit and verified Undo. A separate native stand-in verified specific error copy, one-edit Retry and no-edit Stop. The installed window passed pointer drags below the plus and minimize buttons. The [regular Mac close and relaunch](NATIVE-WINDOW-CONTROLS.md#regular-mac-close-and-relaunch--2026-11-19) restored the exact frame, controls, and recovery offers. The card stays in Verify for visual sign-off. The original screenshot’s build remains unknown.
 Ready/Building describe scheduling, not acceptance. No more than three Ready cards

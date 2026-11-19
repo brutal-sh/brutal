@@ -53,3 +53,31 @@ This exercises the installed app’s Close Tab alert and a writable Save. The ea
 Local autosave, automatic draft and isolated Chromium process-loss contexts explicitly use the existing Cloud discovery fixture. The affected browser cases had reported public discovery CORS. The five focused Chromium cases now pass, including Save and a second process restart.
 
 Chromium also hung on a cancelled `page.reload()` three times. The trace ends during Playwright’s wait for navigation after the browser dismisses the beforeunload prompt. The test now requests a real reload from the page, requires the actual beforeunload prompt and dismisses it, then verifies live geometry, both flush requests and both restored archive contents. Chromium and WebKit each pass three cancelled-reload repetitions and three automatic draft repetitions at the original deadlines. The changes apply to test fixtures and navigation only.
+
+## Installed macOS Save As, Cancel and write-back — 2026-11-19
+
+The installed executable from `7b72a75ba` opened a disposable external
+`.pen` containing one red 64 × 100 rectangle. Native Command-D added a
+second rectangle. The app offered a dirty tab, and automatic persistence
+added two recovery records and one blob while the original file retained
+its exact bytes.
+
+Cancel in the real File → Save As panel kept the original tab selected
+with both rectangles. No destination file appeared. The dirty-state
+recovery digest set, the original file and the four existing recovery
+records and two blobs all matched the pre-cancel readback.
+
+On retry, the native Go to Folder control selected a separate directory,
+and Save wrote the new file with two distinct editable 64 × 100 red
+rectangles. The original remained byte-identical. Recovery returned to
+the exact baseline set. A further Command-D and ordinary File → Save
+wrote three distinct red rectangles to the new copy and preserved the
+original. Closing and reopening the copy from Recents rendered all three
+layers and preserved its checksum and the baseline recovery digest set.
+
+This qualifies the installed app's existing-file Save As Cancel and
+write-back path. The prior intermittent Cancel/Home report remains
+unclassified. The Pen reference tab was opened and closed without edits
+when the work moved to the beta board audit. The current reference
+decision matrix remains open. Private evidence is under
+`local-evidence/regular-save-as-2026-11-19/`.
