@@ -15,9 +15,9 @@ cover its wider native, actual-Pen or parent acceptance. The bounded Codex tool 
 
 Open Pen is a working Mac candidate. The public beta still needs release qualification.
 
-The live board and task index agree on 551 required execution tasks, one
+The live board and task index agree on 552 required execution tasks, one
 deferred Photoshop follow-up and 18 milestone cards. The live board also
-retains three archived cards. The required dependency graph has no cycles. All 550 other required
+retains three archived cards. The required dependency graph has no cycles. All 551 other required
 tasks remain inputs to PARITY-ALL. Board positions express sequence. Acceptance
 continues to require the original evidence on each card.
 
@@ -39,6 +39,9 @@ continues to require the original evidence on each card.
    verified direct recovered-tab reopening and the close-and-retain choice.
    [FILE-RECOVERY-KEEP](https://trello.com/c/vvn9pBkm) is Executed on the
    [isolated normal-feature Mac build](RECOVERY-FILE-DECISIONS.md#keep-an-existing-file-recovery-backup-on-macos--2026-11-19).
+   [FILE-WATCH-METADATA](https://trello.com/c/HPooh1BH) is Executed for the
+   metadata-only conflict repair. The [regular installed history checks](RECOVERY-FILE-DECISIONS.md#installed-file-history-and-metadata-only-changes--2026-11-19)
+   exercised Undo, Redo, Cancel, Save and reopen with an owned file.
 2. **Qualify the normal package and support path.**
    [ENV-01-MAC](https://trello.com/c/hzrysOeC) is Ready and unlocks the
    [distribution trust](https://trello.com/c/eAB7Tdzk) and
@@ -51,6 +54,16 @@ continues to require the original evidence on each card.
    [verified support links](https://trello.com/c/Nyoko3k5). Backlog puts the
    original website and branding dependencies before their release consumers.
    The existing website/help chat retains ownership.
+
+   A local arm64 package from `de105fe1b` contains the live Help link and
+   file-watcher fix. The archive hash is
+   `c4c4979a152ccf3864519bbe620959dbcd6257f8b8e4b51decbfe8f27077f1fe`.
+   All four bundle files matched after extraction, and strict signature
+   verification passed. Gatekeeper rejected the extracted bundle. The
+   normal bundle refused the reserved native-test profile argument without
+   creating a profile. The package has no install, upgrade, rollback or
+   clean-machine launch evidence. Its private receipt is
+   `local-evidence/normal-installed-recovery-2026-11-19/integrated-package-receipt.json`.
 3. **Qualify one exact release candidate.**
    [BETA-01](https://trello.com/c/sYpWJdvu) requires its six remaining direct
    gates: brand verification, both recovery owners, the draft journey,
@@ -127,9 +140,9 @@ disabled Actions remain required.
 
 ## Canonical inventory and review
 
-Current scheduling inventory: 570 cards, 551 required tasks, one deferred task and 18 milestones.
-The board contains 397 Backlog, 1 Ready, 1 Building, 55 Verify and 98 Executed cards.
-PARITY-ALL explicitly expands all 550 other required execution tasks. Each task has exactly
+Current scheduling inventory: 571 cards, 552 required tasks, one deferred task and 18 milestones.
+The board contains 397 Backlog, 1 Ready, 1 Building, 55 Verify and 99 Executed cards.
+PARITY-ALL explicitly expands all 551 other required execution tasks. Each task has exactly
 one primary milestone owner. Independent live-board comparison verifies unique IDs,
 no unknown prerequisites/cycles, and no Ready/Executed card blocked by an open
 prerequisite. All 18 original milestone exit blocks are byte-identical.
