@@ -1,11 +1,11 @@
 # Tracking
 
-Updated: 2026-11-18. Replacement controller goal: **active**, created after Jason cleared its predecessor. [Current priorities](PRIORITIES-2026-11-17.md) and [refreshed instructions](GOAL-REFRESH-2026-11-16.md) govern execution; full independent desktop design and functionality parity remains required.
+Updated: 2026-11-19. Replacement controller goal: **active**, created after Jason cleared its predecessor. [Current priorities](PRIORITIES-2026-11-17.md) and [refreshed instructions](GOAL-REFRESH-2026-11-16.md) govern execution; full independent desktop design and functionality parity remains required.
 
 Repository: [private Open Pen](https://github.com/jpoindexter/open-pen), branch `feat/open-pen`, open draft PR1. Source `16bbfd9e5` publishes the bounded browser slider-label repair; earlier source-specific numeric, file and native receipts retain their precise limits. Current app work is combined candidate qualification, with the standalone Tailwind fix integrated at `dfd797a60`. Source WIP and the normal installed binary match; six older isolated test executables are absent and are recorded as an artifact gap, not current native qualification.
 Board: [Open Pen](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor).
 
-Current complete Trello readback: **565 cards / 547 execution tasks / 18 milestones**. **397 Backlog / 0 Ready / 0 Building / 55 Verify / 95 Executed**. The installed window-control check is in Verify. The matched native Save UI comparison is Executed. All primary owners and 546 terminal dependencies reconcile without duplicate task IDs, unknowns, cycles or Ready/Executed blocked prerequisites. All milestone exits remain open.
+Current complete Trello readback: **569 cards / 550 required tasks / 1 deferred task / 18 milestones**. **398 Backlog / 0 Ready / 0 Building / 58 Verify / 95 Executed**. PARITY-ALL lists all 549 other required tasks. All milestone exits remain open.
 
 [PRD](PRD.md) owns the outcome and constraints; [TASKS](TASKS.md) is exact task/dependency membership; [MILESTONES](MILESTONES.md) owns outcome exits; [current audit](BOARD-AUDIT-2026-11-16.md) owns reconciliation. The [latest reference update](pen-feature-reference/update-audit-2026-11-16.md) covers the welcome flow and newsletter, with private evidence under `local-evidence/pen-welcome-2026-11-16/`, `pen-mail-update-2026-11-16/` and `planning-refresh-2026-11-16/`.
 
@@ -694,7 +694,7 @@ The five remaining Standard Hue/HSL/HSB slider projections reproduce ten equal-r
 
 The first channel full check fails at a test type import; changing only that import to its public owner passes canonical types and two fresh browser controls. Runtime and all test assertions stay unchanged. The corrected full check passes with zero clones, then 437 Vue tests and production build pass. The earlier 52-case report is not relabelled as a rerun. Existing shared slider-label overlap remains a separate SURF-PAINT-COLOR difference; whole-picker visual acceptance remains open.
 
-## Current priority refresh — 2026-11-18
+## Priority refresh — 2026-11-18
 
 565 cards / 547 execution tasks / 18 milestones. 397 Backlog / 0 Ready / 0 Building / 55 Verify / 95 Executed. The native window recurrence stays in Verify.
 
@@ -711,3 +711,9 @@ The local macOS bundle passed signature verification and excludes the test comma
 The website chat owns six smaller canonical branding leaves in its isolated checkout. Three new overlapping draft allocations are archived with their full text/history and canonical mapping retained. REPO-BRANCH-PROTECTION accepts only the actual protection configuration readback. Necessary OpenPencil credit/licenses and code/protocol references remain. Site pages do not constitute a hosted browser product or beta release.
 
 [Current priorities](PRIORITIES-2026-11-17.md) specify the immediate evidence checkpoints and dependency order. Independent live-board/source-plan comparison and 18 byte-exact exit blocks are retained privately.
+
+## Current priority refresh — 2026-11-19
+
+M05 now owns [Describe target recovery](https://trello.com/c/of0mQo8W) and [unavailable stock photo recovery](https://trello.com/c/HUgrREF3). Both stay in Verify pending controlled native chat evidence. M04 owns [design-file import](https://trello.com/c/qsk5WUmG). Its existing editor-specific results and remaining open controls stay on the card. The [Photoshop layer follow-up](https://trello.com/c/oPMQEahj) stays deferred under M04 in the Backlog.
+
+The regular installed Open Pen completed the Codex edit, Undo, Redo, Save and reopen journey. Isolated macOS testing verified automatic backup, Restore and Save across process loss. The native recovery and applicable Pen reference gates remain open. No task changes workflow stage during this reconciliation.

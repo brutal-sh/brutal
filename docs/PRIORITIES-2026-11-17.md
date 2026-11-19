@@ -34,6 +34,8 @@ recurrence and its first failing transition before assigning a cause.
 
 The [agent-created .pen Save fix](https://trello.com/c/8ZY96bsg) is Executed on the isolated native candidate after real Codex creation and saved reopen. Pen 1.2.23 renders the saved file with the expected pixels. The [Codex acceptance parent](https://trello.com/c/3NQFXUXH) remains in Verify for the remaining Pen provider runtime criteria.
 
+The reported Describe and stock-photo failures stay in Verify for controlled native chat. The broader format request stays in Backlog. Additional Photoshop verification is deferred and its existing native evidence remains available.
+
 After the current user blockers, continue file preservation and native delivery,
 core editing/portable-file compatibility and M05 agent/welcome workflows, then the
 remaining required domains in dependency order. Performance, modularity, Figma and
@@ -83,8 +85,8 @@ disabled Actions remain required.
 
 ## Canonical inventory and review
 
-Current scheduling inventory: 565 cards, 547 execution tasks and 18 milestones.
-PARITY-ALL explicitly expands all 546 other execution tasks. Each task has exactly
+Current scheduling inventory: 569 cards, 550 required tasks, one deferred task and 18 milestones.
+PARITY-ALL explicitly expands all 549 other required execution tasks. Each task has exactly
 one primary milestone owner. Independent live-board comparison verifies unique IDs,
 no unknown prerequisites/cycles, and no Ready/Executed card blocked by an open
 prerequisite. All 18 original milestone exit blocks are byte-identical.

@@ -1,13 +1,13 @@
 # Open Pen product requirements
 
 Decision owner: Jason Poindexter. Implementation/evidence owner: Codex.
-Updated: 2026-11-18. Controller goal: **active**; full design and functionality parity remains required and unaccepted.
+Updated: 2026-11-19. Controller goal: **active**; full design and functionality parity remains required and unaccepted.
 
 Current reference is actual Pen **1.2.23**, ASAR `d0c5c23a3a86ec1802c8754b59e82600d815f0e2b6a383f655319535e6e07925`. The [16 November update audit](pen-feature-reference/update-audit-2026-11-16.md) adds seven welcome screens and reconciles the THEFT-account newsletter. REA 6.9.0 executed a read-only capture of the current editor; full static reconstruction still rejects bundled-helper integrity. Source facts, user screenshots and reported marketing claims remain distinct from executed behavior.
 
-The live board and [task index](TASKS.md) reconcile **565 cards / 547 execution tasks / 18 milestones**, with 546 other terminal prerequisites. All original catalog/native rows, welcome/newsletter leaves and milestone exit criteria remain binding. [Current priorities](PRIORITIES-2026-11-17.md) distinguish scheduling from acceptance.
+The live board and [task index](TASKS.md) reconcile **569 cards / 550 required tasks / 1 deferred task / 18 milestones**, with 549 other terminal prerequisites. All original catalog/native rows, welcome/newsletter leaves and milestone exit criteria remain binding. [Current priorities](PRIORITIES-2026-11-17.md) distinguish scheduling from acceptance.
 
-Current candidate handoff: source `2ec06fd18` is published on the private draft. The strict Core Note raster owner is Executed and native raster delivery matched in an isolated profile. Note authoring is in Verify after both apps saved and reopened matching text, geometry and custom color. The bounded Codex connection and request recovery executed on isolated native candidates. Native window recurrence is in Verify. Pen 1.2.23 opened the saved Codex file with the expected raster. The normal installed candidate and Pen provider runtime comparison remain open. Save/recovery, broader Note acceptance, primitives, modularity, and native/Figma acceptance retain their required exits. The website and help work is in its own checkout. Open Pen is a desktop product.
+Current candidate handoff: source `2ec06fd18` is published on the private draft. The strict Core Note raster owner is Executed and native raster delivery matched in an isolated profile. Note authoring is in Verify after both apps saved and reopened matching text, geometry and custom color. The bounded Codex connection and request recovery executed on isolated native candidates. Native window recurrence is in Verify. Pen 1.2.23 opened the saved Codex file with the expected raster. The regular installed app completed the Codex edit, Undo, Redo, Save and reopen journey. The Pen provider runtime comparison remains open. Save/recovery, broader Note acceptance, primitives, modularity, and native/Figma acceptance retain their required exits. The website and help work is in its own checkout. Open Pen is a desktop product.
 
 ## Product outcome
 
