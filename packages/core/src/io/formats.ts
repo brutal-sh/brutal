@@ -10,7 +10,12 @@ import { mermaidFormat } from './formats/mermaid/adapter'
 import { penFormat } from './formats/pen/adapter'
 import type { PPTXExportOptions } from './formats/pptx'
 import { jpgFormat, pngFormat, webpFormat } from './formats/raster/adapter'
-import { EXPORT_EVERY_TARGET, FIXED_SIZE_EXPORT, lowerExt } from './formats/shared'
+import {
+  EXPORT_EVERY_TARGET,
+  FIXED_SIZE_EXPORT,
+  lowerExt,
+  MAX_SVG_DOCUMENT_BYTES
+} from './formats/shared'
 import { sketchFormat } from './formats/sketch/adapter'
 import { ensureSingleNode, resolveExportNodes } from './formats/targets'
 import type {
@@ -99,12 +104,18 @@ async function writeDrawIO(graph: SceneGraph, target: DrawIOExportTarget): Promi
 export const svgFormat: IOFormatAdapter<'svg'> = {
   id: 'svg',
   label: 'SVG',
-  role: 'derived-export',
+  role: 'interchange-document',
   category: 'vector',
-  extensions: ['svg'],
+  extensions: ['svg', 'svgz'],
   mimeTypes: ['image/svg+xml'],
-  support: EXPORT_EVERY_TARGET,
+  support: { ...EXPORT_EVERY_TARGET, readDocument: true },
+  maxReadBytes: MAX_SVG_DOCUMENT_BYTES,
+  laysOutOnRead: true,
   exportOptions: { ...FIXED_SIZE_EXPORT, colorSpace: true },
+  async readDocument(input) {
+    const { readSVGDocument } = await import('./formats/svg/read')
+    return readSVGDocument(input)
+  },
   async exportContent(request, options?: SVGExportOptions) {
     const target = resolveExportNodes(request)
     if (!target) throw new Error('Nothing to export')

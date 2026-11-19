@@ -1,5 +1,7 @@
 import type { IOFormatExportOptions, IOFormatSupport } from '#core/io/types'
 
+export const MAX_SVG_DOCUMENT_BYTES = 4 * 1024 * 1024
+
 /** Formats that export a document, page, selection, or single node alike. */
 export const EXPORT_EVERY_TARGET: IOFormatSupport = {
   exportDocument: true,

@@ -112,5 +112,6 @@ describe('isSVGFile', () => {
     expect(isSVGFile({ name: 'icon', type: 'image/svg+xml' })).toBe(true)
     expect(isSVGFile({ name: 'Icon.SVG', type: '' })).toBe(true)
     expect(isSVGFile({ name: 'icon.svg', type: 'image/png' })).toBe(false)
+    expect(isSVGFile({ name: 'Icon.SVGZ', type: 'image/svg+xml' })).toBe(false)
   })
 })

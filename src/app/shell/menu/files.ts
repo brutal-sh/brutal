@@ -192,6 +192,7 @@ export async function openFileDialog() {
             accept: {
               'application/octet-stream': ['.fig', '.jam', '.sketch'],
               'application/json': ['.pen'],
+              'image/svg+xml': ['.svg', '.svgz'],
               'text/html': ['.html', '.htm'],
               'application/xhtml+xml': ['.xhtml'],
               'text/plain': ['.pen']

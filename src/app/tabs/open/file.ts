@@ -141,6 +141,7 @@ async function loadFileOpening({ file, handle, path }: FileOpeningInput, owner: 
     if (sourceFormat === 'psd' || sourceFormat === 'psb') {
       toast.info(notificationMessages.get().photoshopArtworkImported)
     }
+    if (sourceFormat === 'svg') toast.info(notificationMessages.get().svgImported)
     if (sourceFormat === 'sketch') {
       const messages = notificationMessages.get()
       if (importWarnings?.length)

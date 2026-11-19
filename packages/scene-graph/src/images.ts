@@ -49,11 +49,12 @@ export const IMPORTABLE_RASTER_TYPES: ReadonlySet<string> = new Set([
   'image/avif'
 ])
 
-/** Whether a file is an SVG image, which some systems report without a media type. */
+/** Whether a file is an SVG image that can be read directly as markup. */
 export function isSVGFile(file: { name: string; type: string }): boolean {
-  return (
-    file.type === 'image/svg+xml' || (file.type === '' && file.name.toLowerCase().endsWith('.svg'))
-  )
+  const name = file.name.toLowerCase()
+  // Finder assigns the SVG media type to compressed SVGZ documents too.
+  if (name.endsWith('.svgz')) return false
+  return file.type === 'image/svg+xml' || (file.type === '' && name.endsWith('.svg'))
 }
 
 export interface ImageHeader extends Size {

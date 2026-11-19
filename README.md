@@ -29,6 +29,8 @@ On desktop, **File → Open** imports supported FigJam layers from a local `.jam
 
 **File → Open** also imports modern `.sketch` archives as editable copies. The first importer covers pages, artboards, groups, rectangles, ovals, basic text, solid fills and borders, and common embedded images. Some layers and styles are omitted. Review the import notice and save edits to a separate `.fig` design copy.
 
+**File → Open** imports supported vectors and text from `.svg` and compressed `.svgz` files as editable layers. SVG raster images and some SVG effects may be omitted. The source stays intact when you save a separate `.fig` copy. SVG documents must be 4 MB or smaller before and after decompression.
+
 On macOS, **File → Open** places each page of a PDF or a PDF-compatible Illustrator (`.ai`) file as an image on its own canvas page. Save the artwork in a separate `.fig` copy. PDF text and Illustrator vectors are flattened. This importer accepts up to 32 pages and 32 MB, with bitmap size limits for larger pages or documents.
 
 On macOS, **File → Open** can also place the saved composite of a Photoshop `.psd` or `.psb` as one image at the original canvas size. Save a separate `.fig` copy to keep edits. Photoshop layers stay flattened. Files up to 32 MB and 24 megapixels are accepted subject to the decoded size limit. The placed bitmap is up to 2048 pixels on its longest side.

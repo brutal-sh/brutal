@@ -28,6 +28,8 @@ export const notificationMessageDefaults = {
     'Opened each PDF page as an image. Save a separate .fig copy to keep your changes.',
   photoshopArtworkImported:
     'Opened the saved Photoshop composite as one image. Save a separate .fig copy to keep your changes.',
+  svgImported:
+    'Opened supported SVG vectors and text as editable layers. Review images and effects before saving a .fig copy.',
   sketchImported: 'Imported Sketch as an editable copy. Review it before saving.',
   sketchImportPartial: params(
     'Imported an editable Sketch copy. Some content was simplified or omitted ({features}).'
