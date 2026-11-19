@@ -1,7 +1,7 @@
 # Support diagnostics
 
-Updated 2026-11-13. ERR-07 is Verify; CLI-04-JPEG is the sole Building card. The full parity goal remains
-Active; LAYOUT-WRAP is Verify with its native/import gates retained.
+Updated 2026-11-19. [ERR-07](https://trello.com/c/OTshm7tR) stays in Verify. The
+native report-save check below adds evidence for the macOS beta support packet.
 
 ## Outcome and authority
 
@@ -50,9 +50,22 @@ It is not installed, normally launched or notarized. Normal installed `db4e528c`
 and isolated native-test `5b19ef31` remain byte-identical. Build, source, signature,
 archive and guard receipts stay private with the downloaded report evidence.
 
-Next: complete applicable reference/native states, native-speaker review and the
-dependent beta support packet when available. Native work waits on the unchanged
-hidden-window readiness guard. Continue independent CLI-04-JPEG work meanwhile.
+## Native report export after a file-open failure
+
+On 2026-11-19, the isolated normal-feature macOS candidate built from
+`4926f5f36bb3be9c131efa4fc9d7d36a99c77aec` opened an owned project containing a
+unique layer-name marker. Opening a separate malformed `.pen` showed the file-open
+error. Settings > Diagnostics > Save diagnostics opened the native Save panel and
+wrote `Open Pen diagnostics.json` to the selected temporary folder.
+
+The JSON reported Open Pen 0.16.0, `shell: desktop` and a typed document-open
+failure with `decode-failed`. It omitted both fixture filenames, the temporary
+path, the open layer name and the malformed file's content marker. Canceling a
+second Save panel preserved the report checksum. The project remained open and
+its test process exited normally. The regular installed executable hash and
+recovery digests matched the preflight. The private export receipt uses synthetic
+fixtures. Earlier browser credential-redaction cases, remaining actual Pen
+reference states and native-speaker review keep their own evidence requirements.
 
 ## Done evidence and re-entry
 
@@ -83,3 +96,33 @@ and attach a minimal non-sensitive fixture only when it is needed. Reports do no
 automatically attach the open design or conversation. Exact existing telemetry and
 branding behavior is covered by its own tests; this report fix does not establish
 universal content redaction, all native dialogs or full Pen parity.
+
+## Beta support packet draft
+
+The candidate is Open Pen 0.16.0 for Apple silicon. The package declares macOS
+13.0 as its minimum. The recorded native trial ran on macOS 27.3. The current
+local archive uses an ad hoc signature and fails Gatekeeper assessment. Public
+distribution, first launch on a clean Mac and signed updates remain open. Windows,
+Linux and browser deployment are outside this Mac candidate's qualification.
+[Package and native launch receipt](NATIVE-SAVE-DELIVERY.md#exact-regular-identity-package-trial-on-macos)
+
+Core local editing and saving require no account. Share a copy of any document
+used to reproduce a problem. Use the reported format limits before using an
+import for production work. Optional agent and image providers use their own
+sign-in or credentials and may charge for usage. The normal installed core
+journey and broader file, agent and visual acceptance remain open.
+[Desktop file and provider limits](../README.md)
+
+The [Help support section](https://open-pen.vercel.app/help/#support) resolves and
+links to the fork's bug report and question issue forms. GitHub confirms the fork
+is private and Issues are enabled. Confirm that invited testers can use the
+intended report destination before sending the package. Use the reporting steps
+above and review exports and fixtures before sharing. [BRAND-LINKS](https://trello.com/c/Nyoko3k5)
+retains the normal-app destination walkthrough.
+
+Jason owns distribution, rollout and rollback decisions. Hold new invites on a
+reproduced startup failure, loss of design or recovery data, exposed credentials,
+or a trust failure on the exact candidate. Record the build, steps and sanitized
+report locally. Resume after the correction or rollback is verified on a
+disposable Mac profile and the owner approves expansion.
+[Install and rollback qualification](https://trello.com/c/2OSPK0Pb)

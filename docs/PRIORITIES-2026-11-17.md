@@ -42,6 +42,10 @@ continues to require the original evidence on each card.
    [FILE-WATCH-METADATA](https://trello.com/c/HPooh1BH) is Executed for the
    metadata-only conflict repair. The [regular installed history checks](RECOVERY-FILE-DECISIONS.md#installed-file-history-and-metadata-only-changes--2026-11-19)
    exercised Undo, Redo, Cancel, Save and reopen with an owned file.
+   The [native draft-to-project check](DRAFT-SAVE.md#native-draft-to-project-workflow)
+   covers draft recovery after process loss, native Save As, history, read-only
+   refusal, writable retry and editable reopen. FIRST-03 stays in Verify for the
+   default installed build and the remaining isolated Pen reference states.
 2. **Qualify the normal package and support path.**
    [ENV-01-MAC](https://trello.com/c/hzrysOeC) is Ready and unlocks the
    [distribution trust](https://trello.com/c/eAB7Tdzk) and
@@ -53,7 +57,9 @@ continues to require the original evidence on each card.
    packet needs [sanitized diagnostics](https://trello.com/c/OTshm7tR) and
    [verified support links](https://trello.com/c/Nyoko3k5). Backlog puts the
    original website and branding dependencies before their release consumers.
-   The existing website/help chat retains ownership.
+   The [support packet draft](SUPPORT-DIAGNOSTICS.md#beta-support-packet-draft)
+   records the native JSON export and the need to verify tester access to the
+   report destination. The existing website/help chat retains ownership.
 
    A local arm64 package from `de105fe1b` contains the live Help link and
    file-watcher fix. The archive hash is
