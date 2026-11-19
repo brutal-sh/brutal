@@ -1,5 +1,7 @@
 //! The `PATH` agents and companions are found and started with.
 
+#[cfg(target_os = "macos")]
+use std::path::Path;
 use std::path::PathBuf;
 
 /// Directories that commonly hold a globally installed Node/Bun CLI.
@@ -61,10 +63,47 @@ pub fn augment_path(path: &str, candidates: &[PathBuf]) -> String {
         .unwrap_or_else(|_| path.to_string())
 }
 
+#[cfg(target_os = "macos")]
+fn bundled_bridge_dir(executable: &Path) -> Option<&Path> {
+    let directory = executable.parent()?;
+    let contents = directory.parent()?;
+    let bundle = contents.parent()?;
+    if directory.file_name()? != "MacOS"
+        || contents.file_name()? != "Contents"
+        || bundle.extension()? != "app"
+        || !directory
+            .join(super::mcp::MCP_EXECUTABLE)
+            .symlink_metadata()
+            .ok()?
+            .is_file()
+    {
+        return None;
+    }
+    Some(directory)
+}
+
+#[cfg(target_os = "macos")]
+fn prefer_bundled_bridge(path: &str, executable: &Path) -> String {
+    let Some(directory) = bundled_bridge_dir(executable) else {
+        return path.to_owned();
+    };
+    let installed = std::env::split_paths(path).filter(|entry| entry != directory);
+    std::env::join_paths(std::iter::once(directory.to_path_buf()).chain(installed))
+        .map(|joined| joined.to_string_lossy().into_owned())
+        .unwrap_or_else(|_| path.to_owned())
+}
+
 /// Make globally installed CLIs visible to `which` and to spawned children.
 pub fn augment_process_path() {
     let current = std::env::var("PATH").unwrap_or_default();
     let next = augment_path(&current, &candidate_dirs());
+    // The bundled bridge has the editor's version. Use the same binary for
+    // diagnostics and launch through the existing fixed-name shell permission.
+    #[cfg(target_os = "macos")]
+    let next = match std::env::current_exe() {
+        Ok(executable) => prefer_bundled_bridge(&next, &executable),
+        Err(_) => next,
+    };
     if next != current {
         std::env::set_var("PATH", next);
     }
@@ -73,6 +112,40 @@ pub fn augment_process_path() {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[cfg(target_os = "macos")]
+    #[test]
+    fn only_the_bridge_inside_the_app_takes_precedence() {
+        use std::os::unix::fs::symlink;
+
+        let fixture = std::env::temp_dir().join(format!("openpen-path-{}", std::process::id()));
+        let directory = fixture.join("Open Pen.app/Contents/MacOS");
+        std::fs::create_dir_all(&directory).unwrap();
+        let executable = directory.join("OpenPencil");
+        let bridge = directory.join(super::super::mcp::MCP_EXECUTABLE);
+        let existing = "/usr/local/bin:/usr/bin";
+
+        assert_eq!(prefer_bundled_bridge(existing, &executable), existing);
+        let outside = fixture.join("external-bridge");
+        std::fs::write(&outside, "").unwrap();
+        symlink(&outside, &bridge).unwrap();
+        assert_eq!(prefer_bundled_bridge(existing, &executable), existing);
+        std::fs::remove_file(&bridge).unwrap();
+        std::fs::write(&bridge, "").unwrap();
+
+        let resolved = prefer_bundled_bridge(existing, &executable);
+        assert_eq!(
+            std::env::split_paths(&resolved).collect::<Vec<_>>(),
+            [
+                directory,
+                PathBuf::from("/usr/local/bin"),
+                PathBuf::from("/usr/bin")
+            ]
+        );
+        assert_eq!(prefer_bundled_bridge(&resolved, &executable), resolved);
+        assert_eq!(prefer_bundled_bridge(existing, &outside), existing);
+        std::fs::remove_dir_all(fixture).unwrap();
+    }
 
     #[test]
     fn augment_path_appends_missing_candidates_once() {

@@ -64,6 +64,7 @@ storybook-static/
 /.cache/landing-posters/
 /public/demo.fig
 /desktop/icons/
+/desktop/binaries/
 
 # Documentation build/cache output
 packages/docs/.vitepress/cache/

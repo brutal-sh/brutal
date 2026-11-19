@@ -4,6 +4,8 @@ use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
 use std::time::{Duration, Instant};
 
+use super::mcp::MCP_EXECUTABLE;
+
 // Only inspect known executables. Discovery never launches an agent or reads credentials;
 // it runs only OpenPencil's own companions, and only to ask their version.
 const EXECUTABLES: &[&str] = &[
@@ -12,7 +14,7 @@ const EXECUTABLES: &[&str] = &[
     "codex",
     "codex-acp",
     "gemini",
-    "openpen-mcp-http",
+    MCP_EXECUTABLE,
     "openpencil-harness",
     "npm",
     "bun",
@@ -20,7 +22,7 @@ const EXECUTABLES: &[&str] = &[
 
 // OpenPencil's own companions, whose installed version must match the app.
 const PACKAGES: &[(&str, &str)] = &[
-    ("openpen-mcp-http", "@open-pencil/mcp"),
+    (MCP_EXECUTABLE, "@open-pencil/mcp"),
     ("openpencil-harness", "@open-pencil/harness"),
 ];
 
@@ -276,10 +278,7 @@ mod tests {
             Some("1.0.0-beta.2".to_owned())
         );
         // A release older than `--version` prints its help instead.
-        assert_eq!(
-            parse_version("openpen-mcp-http\n\nStart the server."),
-            None
-        );
+        assert_eq!(parse_version("openpen-mcp-http\n\nStart the server."), None);
         assert_eq!(parse_version("1.2\n"), None);
         assert_eq!(parse_version(""), None);
     }

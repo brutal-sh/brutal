@@ -41,5 +41,6 @@
 
 - Software Update links to Open Pen’s change history and shows translated availability guidance with readable release-note placeholders, including manual checks when updates are not configured.
 - Startup support notices link to the public Help site and bug form and keep diagnostics visible for review before sharing.
+- The Apple-silicon macOS beta bundles its matching canvas bridge for coding agents.
 - CLI subcommand help shows the full command path instead of the local entry script path.
 - Codex chats use explicitly invoked skills without injecting the full installed skill catalog into every turn.

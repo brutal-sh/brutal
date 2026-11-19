@@ -34,7 +34,9 @@ const setupProblemMessage = useSetupProblemMessage()
 const { copy, copied } = useClipboard({ copiedDuring: 1500 })
 
 const detected = computed(() => setup.detected)
-const prompt = computed(() => codingAgentSetupPrompt(agent.id))
+const prompt = computed(() =>
+  codingAgentSetupPrompt(agent.id, setup.bridge && !setup.bridgeOutdated)
+)
 const view = computed(() => agentSetupView(agent, setup))
 const agentAction = computed(() => {
   if (!view.value.canInstallAdapter) return undefined

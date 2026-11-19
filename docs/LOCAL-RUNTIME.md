@@ -1,6 +1,14 @@
 # Local desktop AI runtime
 
-Open Pen's macOS/Linux developer installer builds a standalone MCP canvas bridge under `~/.local/share/openpen/runtime`. Normal launch does not load bridge code from the checkout. Packaging the companion inside the `.app` remains unimplemented; setup still requires the checkout and its dependencies. Bun 1.4.2 is the tested build runtime.
+The Apple-silicon macOS beta build bundles the standalone MCP canvas bridge in
+`Open Pen.app`. Build it locally with `bun run build:macos-beta`. The build checks
+the exact bridge version and authenticated startup before putting it in the
+app bundle. Install the Codex adapter separately through Open Pen, then sign in
+to Codex. Open Pen detects the bundled bridge at launch.
+
+For development, the macOS/Linux installer can still build a standalone MCP
+canvas bridge under `~/.local/share/openpen/runtime`. It requires the checkout
+and its dependencies at setup. Bun 1.4.2 is the tested build runtime.
 
 With Node.js, npm, and Bun available, run these commands from the Open Pen checkout:
 

@@ -8,11 +8,12 @@ import { CODING_AGENTS_GUIDE_URL } from '@/constants'
 const SIGN_IN: Record<ACPAgentID, string> = {
   'claude-code':
     'Make sure I am signed in to Claude Code: run `claude` and use `/login` if it asks me to sign in.',
-  codex: 'Make sure I am signed in to Codex: run `codex login` if I am not.',
+  codex: 'If I am not signed in to Codex, have me use Sign in in Open Pen’s Codex setup.',
   'gemini-cli': 'Make sure I am signed in to Gemini CLI: run `gemini` and choose a sign-in method.'
 }
 
 export function codingAgentGuideURL(agentID: ACPAgentID): string {
+  if (agentID === 'codex') return 'https://github.com/agentclientprotocol/codex-acp#installation'
   return `${CODING_AGENTS_GUIDE_URL}#${agentID}`
 }
 
@@ -20,20 +21,28 @@ export function codingAgentGuideURL(agentID: ACPAgentID): string {
  * Markdown to paste into a coding agent the person already uses, asking it to install what
  * Open Pen needs to start it. Written for the agent, so it stays in English.
  */
-export function codingAgentSetupPrompt(agentID: ACPAgentID): string {
+export function codingAgentSetupPrompt(agentID: ACPAgentID, bridgeReady: boolean): string {
   const agent = ACP_AGENTS.find((candidate) => candidate.id === agentID)
   if (!agent) return ''
   const install = agent.installCommand ?? `Install ${agent.name}`
+  const bridgeStep = bridgeReady
+    ? 'Open Pen has already detected its compatible canvas bridge.'
+    : dedent`
+        If the canvas bridge is missing from a developer build, run \`${MCP_INSTALL_COMMAND}\`
+        from the built Open Pen checkout. For the packaged Mac beta, reinstall the
+        app if it cannot find its bundled bridge. Use Open Pen's bridge with either build.
+      `
   return dedent`
-    Help me connect ${agent.name} to Open Pen, an open-source design editor. Open Pen starts ${agent.name} through the Agent Client Protocol and gives it canvas tools through Open Pen's local MCP server, so both need to be installed on this computer.
+    Help me connect ${agent.name} to Open Pen, a desktop design editor. Open Pen starts ${agent.name} through the Agent Client Protocol and provides canvas tools through its local MCP bridge.
 
     Please do this for me:
 
     1. If \`${agent.command}\` is not on my PATH, install it: \`${install}\`
-    2. If \`openpen-mcp-http\` is not on my PATH, run \`${MCP_INSTALL_COMMAND}\` from the built Open Pen checkout. Setup requires the checkout; normal launch uses the installed standalone bridge. Do not install the upstream @open-pencil/mcp package
-    3. If npm fails with a permission error (EACCES), set up a global npm folder in my home directory (for example \`npm config set prefix ~/.npm-global\` and add \`~/.npm-global/bin\` to my PATH) and install again; use sudo only if I agree.
-    4. Confirm both commands are found, for example with \`which ${agent.command}\` and \`which openpen-mcp-http\` (\`where\` on Windows). If a global npm folder is missing from my PATH, tell me how to add it.
-    5. ${SIGN_IN[agentID]}
+    2. If npm fails with a permission error (EACCES), set up a global npm folder in my home directory (for example \`npm config set prefix ~/.npm-global\` and add \`~/.npm-global/bin\` to my PATH) and install again. Use sudo only if I agree.
+    3. Confirm \`${agent.command}\` is found with \`which\` (\`where\` on Windows). If a global npm folder is missing from my PATH, tell me how to add it.
+    4. ${SIGN_IN[agentID]}
+
+    ${bridgeStep}
 
     Then tell me what you installed and anything I still need to do myself. I will press "Check again" in Open Pen's AI setup afterwards.
 
