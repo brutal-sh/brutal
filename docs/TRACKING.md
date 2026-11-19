@@ -5,7 +5,7 @@ Updated: 2026-11-19. Replacement controller goal: **active**, created after Jaso
 Repository: [private Open Pen](https://github.com/jpoindexter/open-pen), branch `feat/open-pen`, open draft PR1. Source `16bbfd9e5` publishes the bounded browser slider-label repair; earlier source-specific numeric, file and native receipts retain their precise limits. Current app work is combined candidate qualification, with the standalone Tailwind fix integrated at `dfd797a60`. Source WIP and the normal installed binary match; six older isolated test executables are absent and are recorded as an artifact gap, not current native qualification.
 Board: [Open Pen](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor).
 
-Current complete Trello readback: **569 cards / 550 required tasks / 1 deferred task / 18 milestones**. **398 Backlog / 0 Ready / 0 Building / 58 Verify / 95 Executed**. PARITY-ALL lists all 549 other required tasks. All milestone exits remain open.
+Current complete Trello readback: **569 cards / 550 required tasks / 1 deferred task / 18 milestones**. **398 Backlog / 0 Ready / 0 Building / 57 Verify / 96 Executed**. PARITY-ALL lists all 549 other required tasks. All milestone exits remain open.
 
 [PRD](PRD.md) owns the outcome and constraints; [TASKS](TASKS.md) is exact task/dependency membership; [MILESTONES](MILESTONES.md) owns outcome exits; [current audit](BOARD-AUDIT-2026-11-16.md) owns reconciliation. The [latest reference update](pen-feature-reference/update-audit-2026-11-16.md) covers the welcome flow and newsletter, with private evidence under `local-evidence/pen-welcome-2026-11-16/`, `pen-mail-update-2026-11-16/` and `planning-refresh-2026-11-16/`.
 
@@ -714,6 +714,6 @@ The website chat owns six smaller canonical branding leaves in its isolated chec
 
 ## Current priority refresh — 2026-11-19
 
-M05 now owns [Describe target recovery](https://trello.com/c/of0mQo8W) and [unavailable stock photo recovery](https://trello.com/c/HUgrREF3). Both stay in Verify pending controlled native chat evidence. M04 owns [design-file import](https://trello.com/c/qsk5WUmG). Its existing editor-specific results and remaining open controls stay on the card. The [Photoshop layer follow-up](https://trello.com/c/oPMQEahj) stays deferred under M04 in the Backlog.
+M05 now owns [Describe target recovery](https://trello.com/c/of0mQo8W) and [unavailable stock photo recovery](https://trello.com/c/HUgrREF3). Describe is Executed after the installed Mac chat reported its missing-ID guidance, found the target and retried successfully. The stock-photo card remains in Verify for its native check. M04 owns [design-file import](https://trello.com/c/qsk5WUmG). Its existing editor-specific results and remaining open controls stay on the card. The [Photoshop layer follow-up](https://trello.com/c/oPMQEahj) stays deferred under M04 in the Backlog.
 
-The regular installed Open Pen completed the Codex edit, Undo, Redo, Save and reopen journey. Isolated macOS testing verified automatic backup, Restore and Save across process loss. The native recovery and applicable Pen reference gates remain open. No task changes workflow stage during this reconciliation.
+The regular installed Open Pen completed the Codex edit, Undo, Redo, Save and reopen journey. Isolated macOS testing verified automatic backup, Restore and Save across process loss. The native recovery and applicable Pen reference gates remain open. All other tasks retain their workflow stages.

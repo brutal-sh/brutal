@@ -1,4 +1,4 @@
-> Current inventory — 19 November: 569 cards / 550 required tasks / 1 deferred task / 18 milestones. 398 Backlog / 0 Ready / 0 Building / 58 Verify / 95 Executed. The [task index](TASKS.md) records all required dependencies and the deferred Photoshop follow-up. All 18 milestone exit blocks retain their original text.
+> Current inventory — 19 November: 569 cards / 550 required tasks / 1 deferred task / 18 milestones. 398 Backlog / 0 Ready / 0 Building / 57 Verify / 96 Executed. The [task index](TASKS.md) records all required dependencies and the deferred Photoshop follow-up. All 18 milestone exit blocks retain their original text.
 
 > Historical inventory — 18 November: 565 cards / 547 execution tasks / 18 milestones. 397 Backlog / 0 Ready / 0 Building / 55 Verify / 95 Executed. The live readback matches all task IDs, card links and stages in [TASKS](TASKS.md). The replacement goal is active. [Current priorities](PRIORITIES-2026-11-17.md) carry the next evidence checks.
 

@@ -34,7 +34,7 @@ recurrence and its first failing transition before assigning a cause.
 
 The [agent-created .pen Save fix](https://trello.com/c/8ZY96bsg) is Executed on the isolated native candidate after real Codex creation and saved reopen. Pen 1.2.23 renders the saved file with the expected pixels. The [Codex acceptance parent](https://trello.com/c/3NQFXUXH) remains in Verify for the remaining Pen provider runtime criteria.
 
-The reported Describe and stock-photo failures stay in Verify for controlled native chat. The broader format request stays in Backlog. Additional Photoshop verification is deferred and its existing native evidence remains available.
+Describe recovery is Executed after a controlled chat in the installed Mac app. The reported stock-photo failure stays in Verify for controlled native chat. The broader format request stays in Backlog. Additional Photoshop verification is deferred and its existing native evidence remains available.
 
 After the current user blockers, continue file preservation and native delivery,
 core editing/portable-file compatibility and M05 agent/welcome workflows, then the
