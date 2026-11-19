@@ -128,7 +128,7 @@ describe('Tauri file actions', () => {
       if (cmd === 'plugin:fs|watch') {
         expect(args).toMatchObject({
           paths: ['/tmp'],
-          options: { delayMs: 500 }
+          options: {}
         })
         watcher.onEvent = (
           args as { onEvent: { onmessage: (event: unknown) => void } }
@@ -147,12 +147,13 @@ describe('Tauri file actions', () => {
       () => calls.push('reload')
     )
     watcher.onEvent?.({ type: { modify: { kind: 'data' } }, paths: ['/tmp/design.fig'] })
-    expect(calls).toEqual(['reload'])
     watcher.onEvent?.({
       type: { modify: { kind: 'rename', mode: 'both' } },
       paths: ['/tmp/replacement', '/tmp/design.fig']
     })
-    expect(calls).toEqual(['reload', 'reload'])
+    expect(calls).toEqual([])
+    await Bun.sleep(550)
+    expect(calls).toEqual(['reload'])
     calls.length = 0
     watcher.onEvent?.({
       type: { access: { kind: 'open', mode: 'read' } },
@@ -161,9 +162,13 @@ describe('Tauri file actions', () => {
     watcher.onEvent?.({ type: 'any', paths: ['/tmp/sibling.fig'] })
     lastWrite = Date.now()
     watcher.onEvent?.({ type: 'any', paths: ['/tmp/design.fig'] })
+    await Bun.sleep(550)
     expect(calls).toEqual([])
 
+    lastWrite = 0
+    watcher.onEvent?.({ type: 'any', paths: ['/tmp/design.fig'] })
     unwatch()
+    await Bun.sleep(550)
     expect(calls).toEqual(['plugin:resources|close'])
     lastWrite = 0
     watcher.onEvent?.({ type: 'any', paths: ['/tmp/design.fig'] })

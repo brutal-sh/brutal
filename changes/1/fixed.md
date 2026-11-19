@@ -69,3 +69,4 @@
 - macOS window controls have more room at the leading edge of the tab bar.
 - Describe gives agents a way to find the required node ID, and stock photo calls without a provider guide agents to finish the design with placeholders.
 - Cloud Sessions waits for its first response before displaying the session list.
+- Open and save local documents without waiting for a scan of nearby files.

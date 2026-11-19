@@ -1,5 +1,5 @@
 import type { FileInfo, WatchEvent } from '@tauri-apps/plugin-fs'
-import { useIntervalFn } from '@vueuse/core'
+import { useIntervalFn, useTimeoutFn } from '@vueuse/core'
 
 const RECENT_WRITE_MS = 1000
 const BROWSER_POLL_MS = 2000
@@ -36,7 +36,7 @@ export async function watchTauriFile(
   getLastWriteTime: () => number,
   reloadFromDisk: () => void
 ) {
-  const [{ watch: tauriWatch, stat }, { basename, dirname, resolve }] = await Promise.all([
+  const [{ watchImmediate, stat }, { basename, dirname, resolve }] = await Promise.all([
     import('@tauri-apps/plugin-fs'),
     import('@tauri-apps/api/path')
   ])
@@ -46,6 +46,13 @@ export async function watchTauriFile(
   const identity = await stat(folder).catch(() => null)
   let active = true
   const isActive = () => active
+  const reload = useTimeoutFn(
+    () => {
+      if (isActive() && Date.now() - getLastWriteTime() >= RECENT_WRITE_MS) reloadFromDisk()
+    },
+    TAURI_WATCH_DELAY_MS,
+    { immediate: false }
+  )
   async function onEvent(event: WatchEvent) {
     const lastWrite = getLastWriteTime()
     if (!isActive() || !canReloadFile(event, lastWrite)) return
@@ -63,13 +70,13 @@ export async function watchTauriFile(
           break
         }
       }
-    if (isActive() && matches && canReloadFile(event, getLastWriteTime())) reloadFromDisk()
+    if (isActive() && matches && canReloadFile(event, getLastWriteTime())) reload.start()
   }
-  const unwatch = await tauriWatch(folder, (event) => void onEvent(event), {
-    delayMs: TAURI_WATCH_DELAY_MS
-  })
+  // The plugin's debounced watcher synchronously walks the folder to seed its rename cache.
+  const unwatch = await watchImmediate(folder, (event) => void onEvent(event))
   return () => {
     active = false
+    reload.stop()
     unwatch()
   }
 }
