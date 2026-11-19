@@ -108,3 +108,52 @@ hashes, state transitions and owned output are retained privately in
 process-loss path on the isolated normal-feature bundle. Process loss on
 the installed identity and the corresponding Pen recovery-state matrix
 remain open on FILE-07.
+
+## macOS bundle replacement and rollback — 2026-11-19
+
+Two arm64 v0.16.0 builds use the normal app features and the same
+disposable bundle ID, `dev.jpoindexter.openpen.packageqa20261119`. The
+shared build override changes the product name and bundle ID and removes
+file and deep-link registrations. Both bundles pass strict local ad-hoc
+signature verification. The test ran on macOS 27.3 (26C5047e).
+
+| Test bundle | Source | Executable SHA-256 | ZIP SHA-256 |
+| --- | --- | --- | --- |
+| Baseline | `7b72a75baba210ee6bc42a7e104186ded9f95af8` | `6c7c2ecd3e1648b0ac166ce313757baefd567d3254dd9487c8f53940268e6c16` | `430132fc72191777a4883e20cb049a275749e3b24f26d2578385ca021f8eb58f` |
+| Candidate | `a30883a181d1c2e4b00b14f5c007c53577f97858` | `350bc71a19512bbd995a6354ab8633acf858a89617190e207c2bc062b7c17ab1` | `7278d2b80f10b14967355739960ae4197e1e6c6e09789d17f2a2fe681acea7d0` |
+
+1. Extract the baseline ZIP into a private test install directory. Start
+   from Home and open a synthetic existing `.pen` file. Duplicate its
+   rectangle and Save. Open a second synthetic file and duplicate its
+   rectangle. The automatic backup adds two records and one blob, and
+   the second source still matches its original checksum. Interrupt the
+   confirmed test process. The backup digests match after interruption.
+2. Move the old bundle aside and extract the candidate at the same
+   install path. Launch and Restore the second file. Duplicate the two
+   recovered layers and select **Close and Keep Backup**. A normal quit
+   and new process shows the startup recovery offer. Dismiss the offer
+   and open the original file to restore the four dirty layers directly.
+   Both source checksums match their expected values. Quit and keep the
+   backup again.
+3. Replace the candidate with the preserved baseline bundle at the same
+   path. Its signature and executable hash match the original baseline.
+   Launch, Restore and Save the four recovered layers. Decode the output
+   to check four distinct 83 × 57 rectangle IDs and the original name
+   and color. Reopen that file and the earlier saved file in the app.
+   The backup is empty after Save and after Quit.
+
+The initial baseline launch with the document passed at startup stalled
+with its synchronous file-watcher registration on the main thread. The
+successful transition starts at Home and uses copies in a dedicated
+temporary folder. A separate candidate launch opens the initial file at
+its original path, shows its one editable layer, and quits normally.
+This candidate check uses the already initialized disposable profile.
+
+The regular installation has the same running process and executable
+checksum. All four normal recovery records and both blobs retain their
+original digests. The private receipts are in
+`local-evidence/macos-package-transition-2026-11-19/`. This establishes
+manual bundle replacement, restart and rollback with the disposable
+identifier. The real release identifier, updater delivery, clean-machine
+trust, and remaining installed-identity and Pen recovery criteria are
+open. Both packages report the same version.

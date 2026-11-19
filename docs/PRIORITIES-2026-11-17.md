@@ -64,6 +64,12 @@ continues to require the original evidence on each card.
    creating a profile. The package has no install, upgrade, rollback or
    clean-machine launch evidence. Its private receipt is
    `local-evidence/normal-installed-recovery-2026-11-19/integrated-package-receipt.json`.
+
+   The [two-build native trial](NATIVE-RECOVERY-PROFILE.md#macos-bundle-replacement-and-rollback--2026-11-19)
+   verifies install into a private directory, manual replacement, restart,
+   rollback and recovery. The regular installation and its recovery data
+   matched their original checksums. Clean-machine first launch and
+   signed updater delivery remain open for the exact release package.
 3. **Qualify one exact release candidate.**
    [BETA-01](https://trello.com/c/sYpWJdvu) requires its six remaining direct
    gates: brand verification, both recovery owners, the draft journey,
