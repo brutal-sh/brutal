@@ -13,6 +13,8 @@ cover its wider native, actual-Pen or parent acceptance. The bounded Codex tool 
 
 ## Public beta qualification order
 
+Open Pen is a working Mac candidate. The public beta still needs release qualification.
+
 The live board and task index agree on 551 required execution tasks, one
 deferred Photoshop follow-up and 18 milestone cards. The live board also
 retains three archived cards. The required dependency graph has no cycles. All 550 other required
@@ -23,9 +25,11 @@ continues to require the original evidence on each card.
    [FILE-07](https://trello.com/c/pLxRX3u0) is Building for the remaining
    installed and Pen-reference recovery criteria. [FILE-RECOVERY-CANCEL](https://trello.com/c/jMQrSjFS),
    [FILE-08](https://trello.com/c/ZHvzXqoN), [FIRST-03](https://trello.com/c/apRnHd1j),
-   [STAB-WEBKIT-MIXED](https://trello.com/c/ech6H0Xm), and
-   [VERIFY-INSPECTOR-CONTROLS](https://trello.com/c/ngc2tr1y) lead Verify in that
-   order. The [installed Save As check](RECOVERY-FILE-DECISIONS.md#installed-macos-save-as-cancel-and-write-back--2026-11-19)
+   [UI-MAC-WINDOW-CONTROLS](https://trello.com/c/8iOj7MNs),
+   [AUTH-02-CODEX](https://trello.com/c/3NQFXUXH),
+   [STAB-WEBKIT-MIXED](https://trello.com/c/ech6H0Xm),
+   [VERIFY-INSPECTOR-CONTROLS](https://trello.com/c/ngc2tr1y), and
+   [ERR-07](https://trello.com/c/OTshm7tR) lead Verify in that order. The [installed Save As check](RECOVERY-FILE-DECISIONS.md#installed-macos-save-as-cancel-and-write-back--2026-11-19)
    now covers Cancel, separate-file write-back and reopen. The
    [current Pen comparison](RECOVERY-FILE-DECISIONS.md#pen-1223-native-decision-reference--2026-11-19)
    also verifies both Cancel paths and reopening Pen’s saved copy in both apps.
@@ -33,11 +37,16 @@ continues to require the original evidence on each card.
    now covers interruption, Restore, Save and reopening in a third process.
    The [Pen recovery comparison](RECOVERY-FILE-DECISIONS.md#pen-1223-recovery-after-process-loss--2026-11-19)
    verified direct recovered-tab reopening and the close-and-retain choice.
-   [FILE-RECOVERY-KEEP](https://trello.com/c/vvn9pBkm) owns that missing decision.
+   [FILE-RECOVERY-KEEP](https://trello.com/c/vvn9pBkm) owns that missing decision
+   and is first in Ready.
 2. **Qualify the normal package and support path.**
    [ENV-01-MAC](https://trello.com/c/hzrysOeC) is Ready and unlocks the
    [distribution trust](https://trello.com/c/eAB7Tdzk) and
-   [install and rollback](https://trello.com/c/2OSPK0Pb) cards. The support
+   [install and rollback](https://trello.com/c/2OSPK0Pb) cards, which lead Backlog.
+   The installed arm64 v0.16.0 bundle passed strict local signature verification
+   with an ad-hoc signature and was rejected by Gatekeeper. Open Pen’s signing
+   team and notarization credentials need qualification before a first-launch
+   test of the final distribution package. The support
    packet needs [sanitized diagnostics](https://trello.com/c/OTshm7tR) and
    [verified support links](https://trello.com/c/Nyoko3k5). Backlog puts the
    original website and branding dependencies before their release consumers.
@@ -119,6 +128,7 @@ disabled Actions remain required.
 ## Canonical inventory and review
 
 Current scheduling inventory: 570 cards, 551 required tasks, one deferred task and 18 milestones.
+The board contains 397 Backlog, 2 Ready, 1 Building, 55 Verify and 97 Executed cards.
 PARITY-ALL explicitly expands all 550 other required execution tasks. Each task has exactly
 one primary milestone owner. Independent live-board comparison verifies unique IDs,
 no unknown prerequisites/cycles, and no Ready/Executed card blocked by an open
