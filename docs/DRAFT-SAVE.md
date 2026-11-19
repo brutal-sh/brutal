@@ -1,6 +1,6 @@
 # Automatic drafts and project-file acceptance
 
-Updated: 2026-11-11. [FIRST-03](https://trello.com/c/apRnHd1j) retains the full draft/restart/Save As/edit/Save/reopen criterion and actual Pen 1.2.22 comparison. [FIRST-DRAFT-REFRESH](https://trello.com/c/F5Uw69NM) owns the narrower observed Home-list correction. Neither substitutes browser reload for an OS restart or download for a native writable file.
+Updated 2026-11-19. [FIRST-03](https://trello.com/c/apRnHd1j) retains the full draft, restart, Save As, edit, Save and reopen criterion. Pen 1.2.23 is the current native reference. [FIRST-DRAFT-REFRESH](https://trello.com/c/F5Uw69NM) owns the narrower Home-list correction.
 
 ## Observed Home-list defect
 
@@ -24,6 +24,12 @@ The inherited autosave test only checks that a picker function exists. Its repla
 
 The first new attempt leaves Autosave off and fails on the empty saved graph; its following serial case does not run. That is retained as a setup/disabled-mode control, not a product defect. The enabled pair passes in 18.1 seconds; focused types, lint, format and 300/50/10/4/4 checks pass. Independent source review finds no actionable test defect. This executes Chromium's browser-owned real writable-handle path; the mocked picker choice does not accept a native OS panel, arbitrary user-folder access, WebKit writable handles or a physical restart. Application source remains unchanged from719438873.
 
-## Remaining full-journey gates
+## Native draft-to-project workflow
 
-Actual Pen initial Frame geometry, matched Home/native state matrices, trusted native file panels, physical restart, write-in-place and error/read-only workflows remain on FIRST-03 and their existing owners. The Mac is locked at the latest Computer Use attempt. The normal installed app, user profile/recovery, credentials and protected icon work are unchanged. Full parity and beta remain unaccepted.
+On 2026-11-19, the ad hoc signed Open Pen Mac candidate built from `4926f5f36bb3be9c131efa4fc9d7d36a99c77aec` used the isolated `dev.jpoindexter.openpen.packageqa20261119` identity. File > New File opened a blank canvas. A pointer drag created an editable 128 × 88 rectangle, and Home > Drafts displayed the untitled document before any project file existed. A forced termination of the verified test process followed by relaunch preserved the exact recovery records and offered recovery. Closing the offer and opening the draft from Home restored the rectangle.
+
+Canceling the native Save As panel preserved the draft and its exact recovery bytes. Reopening the panel and saving to the chosen disposable folder wrote an editable `.pen` file with one rectangle and removed the draft from Home. Duplicate, Undo and Redo yielded two, one and two visible layer entries. A write with the file and destination directory set to read-only produced the native save alert and preserved the original file and recovery bytes. Restoring permissions and retrying wrote two rectangles with distinct IDs and removed the recovery snapshot. Closing the tab and reopening the file through macOS restored both layers, with a clean tab and identical saved bytes. The regular installed Open Pen executable hash, process ID and recovery digests matched before and after the trial.
+
+Installed Pen 1.2.23 also opened a blank canvas through File > New File and created a 128 × 88 rectangle with the same pointer drag. Its Home > Drafts showed the new untitled entry along with pre-existing drafts despite a separate launch profile. The test stopped before selecting any draft after relaunch. The regular Pen process stayed running and its executable hash matched. The current first-design guide also describes a blank canvas and automatic drafts. [Pen first-design guide](https://docs.pen.dev/getting-started/create-your-first-design)
+
+FIRST-03 stays in Verify for the fully isolated Pen restart and Save As comparison, the remaining applicable state comparisons, and the same workflow on the default installed Open Pen identity. BETA-01 still requires the exact distributable candidate and its integrated core journey. Raw captures and file, process and recovery receipts remain private.
