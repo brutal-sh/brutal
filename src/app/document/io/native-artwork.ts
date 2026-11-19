@@ -35,9 +35,26 @@ export async function openNativeArtwork(
       'This Illustrator file has no PDF artwork. Save with Create PDF Compatible File enabled, or export a PDF.'
     )
   }
-  const command =
-    format === 'psd' || format === 'psb' ? 'render_photoshop_image' : 'render_pdf_pages'
-  const rendered = await invoke<ArrayBuffer>(command, bytes)
+  if (format === 'psd' || format === 'psb') {
+    const { openPhotoshopLayers, photoshopLayersToScene } =
+      await import('@open-pencil/core/io/formats/photoshop')
+    const result = await openPhotoshopLayers(bytes, signal)
+    signal.throwIfAborted()
+    if ('artwork' in result) {
+      const name = file.name.replace(/\.(psd|psb)$/i, '')
+      return {
+        graph: photoshopLayersToScene(result.artwork, name),
+        photoshop: { mode: 'layers' as const }
+      }
+    }
+    const rendered = await invoke<ArrayBuffer>('render_photoshop_image', bytes)
+    signal.throwIfAborted()
+    return {
+      graph: readRasterPageImages(new Uint8Array(rendered)),
+      photoshop: { mode: 'composite' as const, reason: result.reason }
+    }
+  }
+  const rendered = await invoke<ArrayBuffer>('render_pdf_pages', bytes)
   signal.throwIfAborted()
-  return readRasterPageImages(new Uint8Array(rendered))
+  return { graph: readRasterPageImages(new Uint8Array(rendered)), photoshop: undefined }
 }

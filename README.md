@@ -33,7 +33,7 @@ On desktop, **File → Open** imports supported FigJam layers from a local `.jam
 
 On macOS, **File → Open** places each page of a PDF or a PDF-compatible Illustrator (`.ai`) file as an image on its own canvas page. Save the artwork in a separate `.fig` copy. PDF text and Illustrator vectors are flattened. This importer accepts up to 32 pages and 32 MB, with bitmap size limits for larger pages or documents.
 
-On macOS, **File → Open** can also place the saved composite of a Photoshop `.psd` or `.psb` as one image at the original canvas size. Save a separate `.fig` copy to keep edits. Photoshop layers stay flattened. Files up to 32 MB and 24 megapixels are accepted subject to the decoded size limit. The placed bitmap is up to 2048 pixels on its longest side.
+On macOS, **File → Open** imports supported 8-bit RGB Photoshop `.psd` and `.psb` files as editable image layers. It preserves groups, order, positions, visibility, and opacity. Files with features such as Photoshop text, masks, smart objects, artboards, or unsupported embedded color profiles open using the saved composite. Save a separate `.fig` copy to keep edits. The input limit is 32 MB, and individual layers can be up to 4096 pixels per side within the 24-megapixel total layer budget. The composite preview is up to 2048 pixels per side.
 
 The [PRD](docs/PRD.md) defines the product and acceptance gates. The [task index](docs/TASKS.md) links the complete execution backlog; the [modularity audit](docs/MODULARITY.md) records the oversized-module review queue. See [tracking rules](docs/TRACKING.md) for the current work limit.
 

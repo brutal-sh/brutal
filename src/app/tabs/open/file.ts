@@ -81,16 +81,19 @@ async function readFileGraph(file: File, path: string | undefined, load: Documen
       imported: await readFigForTab(file, load.signal),
       sourceFormat: isFig ? 'fig' : 'jam',
       importWarnings: undefined,
+      photoshop: undefined,
       isFig
     }
   }
   const artwork = nativeArtworkFormat(file.name)
   if (artwork) {
     load.update({ phase: 'decoding', detail: file.name })
+    const { graph, photoshop } = await openNativeArtwork(file, artwork, load.signal)
     return {
-      imported: await openNativeArtwork(file, artwork, load.signal),
+      imported: graph,
       sourceFormat: artwork,
       importWarnings: undefined,
+      photoshop,
       isFig
     }
   }
@@ -110,6 +113,7 @@ async function readFileGraph(file: File, path: string | undefined, load: Documen
     imported: result.graph,
     sourceFormat: result.sourceFormat,
     importWarnings: result.importWarnings,
+    photoshop: undefined,
     isFig
   }
 }
@@ -124,7 +128,11 @@ async function loadFileOpening({ file, handle, path }: FileOpeningInput, owner: 
       succeeded = true
       return store
     }
-    const { imported, sourceFormat, importWarnings, isFig } = await readFileGraph(file, path, load)
+    const { imported, sourceFormat, importWarnings, photoshop, isFig } = await readFileGraph(
+      file,
+      path,
+      load
+    )
     await showImportedGraph(
       store,
       imported,
@@ -138,8 +146,10 @@ async function loadFileOpening({ file, handle, path }: FileOpeningInput, owner: 
     if (sourceFormat === 'pdf' || sourceFormat === 'ai') {
       toast.info(notificationMessages.get().pdfArtworkImported)
     }
-    if (sourceFormat === 'psd' || sourceFormat === 'psb') {
-      toast.info(notificationMessages.get().photoshopArtworkImported)
+    if (photoshop) {
+      const messages = notificationMessages.get()
+      if (photoshop.mode === 'layers') toast.info(messages.photoshopLayersImported)
+      else toast.info(messages.photoshopArtworkImported({ reason: photoshop.reason }))
     }
     if (sourceFormat === 'svg') toast.info(notificationMessages.get().svgImported)
     if (sourceFormat === 'sketch') {

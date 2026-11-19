@@ -134,6 +134,11 @@
       "import": "./dist/io/formats/raster/index.js",
       "default": "./dist/io/formats/raster/index.js"
     },
+    "./io/formats/photoshop": {
+      "types": "./dist/io/formats/photoshop/index.d.ts",
+      "import": "./dist/io/formats/photoshop/index.js",
+      "default": "./dist/io/formats/photoshop/index.js"
+    },
     "./io/formats/design-tokens": {
       "types": "./dist/io/formats/design-tokens/index.d.ts",
       "import": "./dist/io/formats/design-tokens/index.js",
@@ -226,6 +231,7 @@
     "@valibot/to-json-schema": "^1.8.0",
     "@xmldom/xmldom": "^0.9.12",
     "acorn": "^8.18.0",
+    "ag-psd": "34.2.2",
     "canvaskit-wasm": "^0.41.1",
     "culori": "^4.0.2",
     "destr": "^2.0.5",
@@ -233,6 +239,7 @@
     "elkjs": "^0.12.0",
     "entities": "^8.0.0",
     "es-toolkit": "^1.52.0",
+    "fast-png": "6.4.0",
     "fflate": "^0.8.3",
     "fontoxpath": "^3.34.0",
     "happy-dom": "^20.14.6",
