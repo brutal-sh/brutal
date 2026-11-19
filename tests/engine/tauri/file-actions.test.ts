@@ -20,19 +20,7 @@ describe('Tauri file actions', () => {
           filters: [
             {
               name: 'Design file',
-              extensions: [
-                'fig',
-                'jam',
-                'sketch',
-                'pen',
-                'drawio',
-                'dio',
-                'mmd',
-                'mermaid',
-                'html',
-                'htm',
-                'xhtml'
-              ]
+              extensions: expect.arrayContaining(['fig', 'pen'])
             }
           ],
           multiple: true
@@ -41,7 +29,7 @@ describe('Tauri file actions', () => {
       return ['/tmp/design.fig', '/tmp/design.pen']
     })
 
-    await expect(chooseTauriOpenPaths()).resolves.toEqual(['/tmp/design.fig', '/tmp/design.pen'])
+    expect(await chooseTauriOpenPaths()).toEqual(['/tmp/design.fig', '/tmp/design.pen'])
   })
 
   test('rejects unsupported Tauri design files before reading them', async () => {

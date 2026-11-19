@@ -8,7 +8,6 @@ import type { Page } from '@playwright/test'
 import { parseDiscoveryInfo } from '@open-pencil/mcp/discovery'
 
 import type * as Runtime from '@/app/automation/mcp/runtime'
-import type * as AppTabs from '@/app/tabs'
 
 export async function privateDiscoveryDigest(path: string) {
   return createHash('sha256')
@@ -33,13 +32,10 @@ export async function copyOwnedDiscovery(source: string) {
   }
 }
 
-export async function setOwnedBridgeRunning(page: Page, running: boolean) {
-  return page.evaluate(async (running) => {
+export async function disconnectOwnedBridge(page: Page) {
+  return page.evaluate(async () => {
     const runtimeURL = '/src/app/automation/mcp/runtime.ts'
     const runtime: typeof Runtime = await import(runtimeURL)
-    if (!running) return runtime.stopMCPRuntime()
-    const moduleURL = '/src/app/tabs/index.ts'
-    const tabs: typeof AppTabs = await import(moduleURL)
-    return runtime.startMCPRuntime(tabs.getActiveStore)
-  }, running)
+    return runtime.stopMCPRuntime()
+  })
 }

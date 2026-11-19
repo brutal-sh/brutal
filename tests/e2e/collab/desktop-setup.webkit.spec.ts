@@ -40,6 +40,7 @@ for (const { locale, label } of LOCALES) {
           if (mode === 'waiting') {
             await page.goto(relayURLFor(roomLinkPath(), relay.url))
             surface = page.getByTestId('room-screen')
+            await expect(surface).toHaveAttribute('data-status', /^(looking|waiting)$/)
             await expect(surface).toHaveAttribute('data-status', 'waiting')
           } else {
             await page.goto(relayURLFor('/', relay.url))
