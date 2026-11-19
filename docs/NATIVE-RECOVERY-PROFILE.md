@@ -69,3 +69,42 @@ Real native OS picker/refusal/retry outcomes now have separate [panel evidence](
 The three-process runner now uses the visible Layers panel and the Duplicate shortcut on an existing-file fixture with source autosave off. The first process starts with no backup. It waits for the automatic backup without forcing a flush, verifies the file still contains the original bytes, and stops only that verified test process. The second process opens the actual Recovery dialog on the same isolated WebKit store, finds the exact backup digest, and restores both layers while the source bytes remain unchanged. After the dialog closes and the restored document receives focus, Save writes two editable 64 × 64 rectangles and removes the backup. A third distinct process reopens the saved file without a new recovery offer, then exercises Duplicate and Undo.
 
 This run used the Mac test executable built from `0610afcbe`. The earlier attempt reached Restore, but an embedded-driver Save shortcut issued before waiting for dialog dismissal and document focus left the original file and backup intact. The retained result does not establish a failure after focus returns. The successful run waits for those observable states. Private receipts are under `local-evidence/native-auto-backup-2026-11-19/`. FILE-07 remains in Verify for the normal-installed and reference recovery criteria. The old Cancel-to-Home report remains unclassified.
+
+## Normal-feature macOS recovery after process loss — 2026-11-19
+
+A separate macOS bundle built from `e9f221ef7` uses the default Cargo
+features and a fresh application identifier. The build override changes
+the product name and identifier and omits the usual file and deep-link
+registrations for this copy. The bundled executable has SHA-256
+`433347e986a05db0654d23caa16c39739f0a4b9f0ef451c3c9716654ec416d21`.
+Strict local signature verification passes. The runtime opens a new
+WebKit recovery database under its own identifier. The original app
+closes normally from Home before the test to release its local bridge.
+
+A physical Command-D duplicates the only 64 × 100 red rectangle in an
+owned existing `.pen` file. Automatic persistence adds two recovery
+records and one blob. The dirty tab and backup are verified before
+interrupting only the isolated app process. The original source
+checksum and the recovery digests match after process loss and relaunch.
+
+The real startup dialog offers Restore for the owned file. Restore
+reopens two editable layers and keeps the original source checksum.
+File → Save writes both rectangles and removes the recovery records and
+blob. A third process opens the saved file with both layers, identical
+saved bytes and an empty recovery store.
+
+The first interruption guard stopped on a File changed dialog. The
+source checksum matched the original, and the filesystem change time
+was newer than its modification time. Ignore kept the dirty edit and
+backup intact. The triggering event was unobserved. The original
+installed app relaunched normally, showed its two existing recovery
+offers, and returned to Home after dismissal. Its executable, four
+recovery records and two blobs matched the initial digests.
+
+The first build stopped on Vite configuration resolution. Retrying
+with installed Node 24 completed the same build commands. Logs, app
+hashes, state transitions and owned output are retained privately in
+`local-evidence/normal-recovery-restart-2026-11-19/`. This verifies the
+process-loss path on the isolated normal-feature bundle. Process loss on
+the installed identity and the corresponding Pen recovery-state matrix
+remain open on FILE-07.

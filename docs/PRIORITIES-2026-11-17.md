@@ -29,6 +29,8 @@ continues to require the original evidence on each card.
    now covers Cancel, separate-file write-back and reopen. The
    [current Pen comparison](RECOVERY-FILE-DECISIONS.md#pen-1223-native-decision-reference--2026-11-19)
    also verifies both Cancel paths and reopening Pen’s saved copy in both apps.
+   The [isolated normal-feature Mac run](NATIVE-RECOVERY-PROFILE.md#normal-feature-macos-recovery-after-process-loss--2026-11-19)
+   now covers interruption, Restore, Save and reopening in a third process.
 2. **Qualify the normal package and support path.**
    [ENV-01-MAC](https://trello.com/c/hzrysOeC) is Ready and unlocks the
    [distribution trust](https://trello.com/c/eAB7Tdzk) and
