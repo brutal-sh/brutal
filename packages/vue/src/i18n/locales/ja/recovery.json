@@ -1,4 +1,8 @@
 {
+  "closeDescription": "元のファイルを更新するには保存してください。変更を後で復元するにはバックアップを残してください。",
+  "keepBackup": "バックアップを残して閉じる",
+  "discardBackup": "バックアップを破棄",
+  "keepBackupFailed": "バックアップを保持できませんでした。ドキュメントは開いたままです。保存するか、もう一度お試しください。",
   "preserveUnsavedWork": "未保存の作業を自動的に保持",
   "preserveUnsavedWorkDescription": "予期しない終了後にドキュメントを復元できるよう、ローカルコピーを保存します。",
   "dialogTitle": "未保存の作業を復元",

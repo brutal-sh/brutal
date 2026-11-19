@@ -26,6 +26,9 @@ export function createMemoryRecoveryStore(): RecoveryStore {
       })
       return structuredClone(metadata)
     },
+    async retain() {
+      return false
+    },
     async remove(id: string) {
       snapshots.delete(id)
     },

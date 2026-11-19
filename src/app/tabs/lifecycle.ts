@@ -6,6 +6,7 @@ import { randomHex } from '@open-pencil/scene-graph/random'
 import { setOpenPencilStore } from '@/app/browser-bridge'
 import { confirmDocumentClose } from '@/app/document/close/controller'
 import { requestDocumentClose } from '@/app/document/close/prompt'
+import { keepDocumentBackup } from '@/app/document/close/recovery'
 import { setActiveEditorStore } from '@/app/editor/active-store'
 import { createEditorStore, type EditorStore } from '@/app/editor/session'
 
@@ -186,10 +187,16 @@ export async function closeTab(tabId: string, unsaved?: 'save' | 'discard'): Pro
     ? await confirmDocumentClose(closingTab.store, async () => unsaved)
     : await requestDocumentClose(closingTab.store, closingTab.store.state.documentName)
   if (choice === 'cancel') return
-  if (choice === 'discard') await closingTab.store.discardRecovery()
-  else await closingTab.store.persistRecoveryNow()
+  const { store } = closingTab
+  if (typeof choice === 'object') {
+    if (!(await keepDocumentBackup(store, choice.keepBackupVersion))) return
+    if (store.getRecoveryCloseVersion() !== choice.keepBackupVersion) return
+  } else if (choice === 'discard') await store.discardRecovery()
+  else {
+    await store.persistRecoveryNow()
+    if (store.hasUnsavedChanges()) return
+  }
   if (!tabsRef.value.includes(closingTab)) return
-  if (choice !== 'discard' && closingTab.store.hasUnsavedChanges()) return
   removeTab(closingTab)
 }
 

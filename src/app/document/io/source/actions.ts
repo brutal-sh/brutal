@@ -41,6 +41,8 @@ export function createDocumentSourceActions(options: DocumentSourceOptions) {
       return context.recovery.adoptRecoverySnapshot(id)
     },
     persistRecoveryNow: () => context.recovery.persistNow(),
+    getRecoveryCloseVersion: () => context.recovery.getRecoveryCloseVersion(),
+    retainRecoveryOnClose: (version: number) => context.recovery.retainOnClose(version),
     discardRecovery: () => context.recovery.discardRecovery()
   }
 }

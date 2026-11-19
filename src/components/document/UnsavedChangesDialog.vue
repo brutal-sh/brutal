@@ -3,7 +3,7 @@ import { useStore } from '@nanostores/vue'
 import { useFocus } from '@vueuse/core'
 import { useTemplateRef } from 'vue'
 
-import { commonMessages, filesMessages } from '@open-pencil/vue/i18n'
+import { commonMessages, filesMessages, recoveryMessages } from '@open-pencil/vue/i18n'
 
 import { answerClosePrompt, closePrompt } from '@/app/document/close/prompt'
 import AppButton from '@/components/ui/button/AppButton.vue'
@@ -11,10 +11,11 @@ import AppAlertDialogRoot from '@/components/ui/dialog/AppAlertDialogRoot.vue'
 import AppDialogFooter from '@/components/ui/dialog/AppDialogFooter.vue'
 import AppDialogHeader from '@/components/ui/dialog/AppDialogHeader.vue'
 import { useHeldContent } from '@/components/ui/overlay/held'
-import { documentCloseUI, documentCloseButtonUI } from '@/theme/document/close'
+import { documentCloseUI, documentCloseButtonUI, recoveryCloseUI } from '@/theme/document/close'
 
 const files = useStore(filesMessages)
 const common = useStore(commonMessages)
+const recovery = useStore(recoveryMessages)
 const saveButton = useTemplateRef('saveButton')
 const prompt = useHeldContent(closePrompt)
 
@@ -28,21 +29,35 @@ function updateOpen(open: boolean) {
 </script>
 
 <template>
-  <AppAlertDialogRoot :open="closePrompt !== null" @update:open="updateOpen">
+  <AppAlertDialogRoot
+    :open="closePrompt !== null"
+    :size="prompt?.canKeepBackup ? 'md' : 'sm'"
+    @update:open="updateOpen"
+  >
     <AppDialogHeader
       :heading="files.saveBeforeClosing({ name: prompt?.documentName ?? '' })"
-      :description="files.saveBeforeClosingDescription"
+      :description="
+        prompt?.canKeepBackup ? recovery.closeDescription : files.saveBeforeClosingDescription
+      "
       :show-close="false"
       :ui="documentCloseUI"
     />
-    <AppDialogFooter :ui="documentCloseUI">
+    <AppDialogFooter :ui="prompt?.canKeepBackup ? recoveryCloseUI : documentCloseUI">
       <AppButton
         color="neutral"
         variant="ghost"
         class="mr-auto"
         @click="answerClosePrompt('discard')"
       >
-        {{ files.discard }}
+        {{ prompt?.canKeepBackup ? recovery.discardBackup : files.discard }}
+      </AppButton>
+      <AppButton
+        v-if="prompt?.canKeepBackup"
+        color="neutral"
+        variant="outline"
+        @click="answerClosePrompt('keep-backup')"
+      >
+        {{ recovery.keepBackup }}
       </AppButton>
       <AppButton
         color="neutral"

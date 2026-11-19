@@ -59,6 +59,27 @@ describe('document recovery store', () => {
     expect(stored?.figBytes.buffer.byteLength).toBe(3)
   })
 
+  test('retention marks only the chosen file backup and keeps its bytes', async () => {
+    const store = createIdbRecoveryStore()
+    const file = {
+      fileName: 'owned.pen',
+      identity: { path: '/fixtures/owned.pen', handle: null }
+    }
+    await store.write({ id: 'owned', documentName: 'Owned', figBytes: bytes, source: file })
+    await store.write({ id: 'draft', documentName: 'Draft', figBytes: bytes })
+    const draft = await store.read('draft')
+
+    expect(await store.retain('missing')).toBe(false)
+    expect(await store.retain('draft')).toBe(false)
+    expect(await store.retain('owned')).toBe(true)
+    expect(await store.read('owned')).toMatchObject({
+      retainedOnClose: true,
+      figBytes: bytes,
+      source: file
+    })
+    expect(await store.read('draft')).toEqual(draft)
+  })
+
   test('memory store owns input and output bytes', async () => {
     const store = createMemoryRecoveryStore()
     const input = new Uint8Array(bytes)

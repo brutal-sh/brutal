@@ -15,6 +15,7 @@ export async function markRecoveryProtected(
   if (runtime.persistedVersion == null || runtime.persistedVersion <= version) {
     await runtime.store.remove(runtime.id)
     runtime.persistedVersion = null
+    runtime.adopted = false
   }
 }
 
@@ -28,6 +29,7 @@ export async function adoptRecovery(runtime: RecoveryRuntime, nextId: string): P
   runtime.requestedVersion = version
   runtime.disposed = false
   if (previousId !== nextId) await runtime.store.remove(previousId)
+  runtime.adopted = true
 }
 
 export async function discardRecovery(runtime: RecoveryRuntime): Promise<void> {
@@ -36,6 +38,7 @@ export async function discardRecovery(runtime: RecoveryRuntime): Promise<void> {
   runtime.persistedVersion = null
   runtime.requestedVersion = runtime.version()
   await runtime.store.remove(runtime.id)
+  runtime.adopted = false
 }
 
 export function disableRecovery(runtime: RecoveryRuntime): void {

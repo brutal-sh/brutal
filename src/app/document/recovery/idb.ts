@@ -63,6 +63,20 @@ export function createIdbRecoveryStore(): RecoveryStore {
 
     write: (input) => writeSnapshot(database, input),
 
+    async retain(id: string) {
+      const db = await database.open()
+      const transaction = db.transaction(['meta', 'fig'], 'readwrite')
+      const meta = transaction.objectStore('meta')
+      const [snapshot, backupKey] = await Promise.all([
+        meta.get(id),
+        transaction.objectStore('fig').getKey(id)
+      ])
+      const retained = snapshot?.source !== undefined && backupKey !== undefined
+      if (retained) await meta.put({ ...snapshot, retainedOnClose: true })
+      await transaction.done
+      return retained
+    },
+
     async remove(id: string) {
       const db = await database.open()
       const transaction = db.transaction(['meta', 'fig'], 'readwrite')

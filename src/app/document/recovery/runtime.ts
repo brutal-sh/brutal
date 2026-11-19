@@ -12,6 +12,7 @@ export type RecoveryRuntime = Omit<Required<DocumentRecoveryOptions>, 'store' | 
   writing: Promise<void> | null
   cleanup: Promise<void>
   disposed: boolean
+  adopted: boolean
 }
 
 export function createRecoveryRuntime(options: DocumentRecoveryOptions): RecoveryRuntime {
@@ -34,7 +35,8 @@ export function createRecoveryRuntime(options: DocumentRecoveryOptions): Recover
     lifecycleGeneration: 0,
     writing: null,
     cleanup: Promise.resolve(),
-    disposed: false
+    disposed: false,
+    adopted: false
   }
 }
 

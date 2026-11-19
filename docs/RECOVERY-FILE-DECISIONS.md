@@ -136,9 +136,44 @@ reopened the saved file with the same checksum and no warning indicator.
 The test observed the separate backup through reopening behavior.
 
 The Open Pen normal-feature control restores through a startup dialog.
-The current Open Pen close handler removes recovery data on its discard
-branch. [FILE-RECOVERY-KEEP](https://trello.com/c/vvn9pBkm) tracks the
-missing separate close-and-retain decision. Recovered state and startup
-presentation remain part of the FILE-07 and FILE-08 comparisons.
+At the time of this comparison, the Open Pen close handler removed recovery
+data on its discard branch. Recovered state and startup presentation remain
+part of the FILE-07 and FILE-08 comparisons.
 Private screenshots and receipts are in
 `local-evidence/pen-isolated-recovery-2026-11-19/`.
+
+## Keep an existing-file recovery backup on macOS — 2026-11-19
+
+[FILE-RECOVERY-KEEP](https://trello.com/c/vvn9pBkm) follows the observed
+Pen 1.2.23 behavior where the original can reopen the kept backup. Open Pen
+offers Save, Close and Keep Backup, Discard Backup, and Cancel in its app
+dialog for a recovered local file. Ordinary dirty files retain the existing
+system Save, Don’t Save and Cancel alert.
+
+An isolated macOS bundle with normal application features and identifier
+`dev.jpoindexter.openpen.recoverykeepqa` exercised two owned `.pen` files by
+keyboard, macOS file-open events and accessibility actions. Executable
+SHA-256 `7183e032760518cf14de9df4bcbbb2f95585a30fc1a1f95bf117bef4bfe8d3d7`.
+Its local signature verified. After two distinct backups survived process
+loss, Restore opened both tabs. Choosing Keep for the first Quit prompt and
+Cancel for the second left both tabs open and both recovery records and
+blobs byte-identical. Tab Keep saved the latest eight editable layers to
+the backup, closed only the target tab, and preserved both originals and
+the other backup. Opening the original restored the eight layers in one
+dirty tab. Save from its close dialog wrote the eight layers to the source
+and cleared only its own backup. Discard for the other file removed its
+backup and preserved that file’s original bytes. Reopening the saved file
+showed the eight editable layers without a recovery offer. An ordinary
+dirty file still opened the three-button native alert. Don’t Save closed
+that tab and preserved the original file.
+
+An earlier build showed two tabs when a launch-by-path and the startup
+Restore button targeted the same retained snapshot. The final build
+repeated that sequence and opened one tab with the expected layers and
+unchanged original file. A browser control explicitly refused just the
+retention write, checked the message and open document, then successfully
+retried and reopened the latest edits. All four existing-file recovery
+journeys and 47 focused unit tests passed. Private logs, failed runs,
+backup digests and app captures are under
+`local-evidence/recovery-keep-qualification-2026-11-19/`. The normal
+installed identity and broader FILE-07 and FILE-08 evidence remain open.

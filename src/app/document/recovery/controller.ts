@@ -7,6 +7,7 @@ import {
   discardRecovery,
   markRecoveryProtected
 } from '@/app/document/recovery/lifecycle'
+import { getRecoveryCloseVersion, retainRecoveryOnClose } from '@/app/document/recovery/retain'
 import { createRecoveryRuntime, hasManagedRecoverySource } from '@/app/document/recovery/runtime'
 import { persistRecovery } from '@/app/document/recovery/snapshot'
 import type {
@@ -44,6 +45,8 @@ export function createDocumentRecovery(
   return {
     getRecoveryId: () => runtime.id,
     adoptRecoverySnapshot: (id) => adoptRecovery(runtime, id),
+    getRecoveryCloseVersion: () => getRecoveryCloseVersion(runtime),
+    retainOnClose: (version) => retainRecoveryOnClose(runtime, version),
     persistNow: () => persistRecovery(runtime),
     markProtectedVersion: (version) => markRecoveryProtected(runtime, version),
     discardRecovery: () => discardRecovery(runtime),

@@ -1,5 +1,6 @@
 import type { DocumentSourceIdentity } from '@/app/document/io/types'
 import type { EditorStore } from '@/app/editor/session'
+import { createDeferred } from '@/app/runtime/deferred'
 import { fileIdentitiesMatch, hasFileIdentity } from '@/app/tabs/open/identity'
 
 type PendingOpen = {
@@ -34,14 +35,20 @@ export function createFileOpenCoordinator() {
     return null
   }
 
-  function add(entry: PendingOpen) {
-    pending.push(entry)
-  }
-
   function remove(entry: PendingOpen) {
     const index = pending.indexOf(entry)
     if (index !== -1) pending.splice(index, 1)
   }
 
-  return { add, decide, findPending, remove }
+  function reserve(store: EditorStore, identity: DocumentSourceIdentity) {
+    const completion = createDeferred<undefined>()
+    void completion.promise.catch(() => undefined)
+    const pendingOpen = { completion: completion.promise, identity, store }
+    pending.push(pendingOpen)
+    return { completion, pendingOpen }
+  }
+
+  return { decide, findPending, reserve, remove }
 }
+
+export const fileOpenCoordinator = createFileOpenCoordinator()

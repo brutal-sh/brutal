@@ -1,4 +1,8 @@
 {
+  "closeDescription": "Enregistrez pour mettre à jour l’original ou conservez une sauvegarde pour récupérer vos modifications plus tard.",
+  "keepBackup": "Fermer et conserver la sauvegarde",
+  "discardBackup": "Supprimer la sauvegarde",
+  "keepBackupFailed": "Impossible de conserver la sauvegarde. Le document est toujours ouvert. Enregistrez ou réessayez.",
   "preserveUnsavedWork": "Conserver automatiquement le travail non enregistré",
   "preserveUnsavedWorkDescription": "Stockez des copies locales afin de restaurer les documents après un arrêt inattendu.",
   "dialogTitle": "Récupérer le travail non enregistré",

@@ -25,6 +25,11 @@ function observeRecoveryChanges(store: RecoveryStore): RecoveryStore {
     list: () => store.list(),
     read: (id) => store.read(id),
     write: (input) => changed(() => store.write(input)),
+    async retain(id) {
+      const retained = await store.retain(id)
+      if (retained) revision.value++
+      return retained
+    },
     remove: (id) => changed(() => store.remove(id)),
     clear: () => changed(() => store.clear())
   }
@@ -103,6 +108,7 @@ function createResilientRecoveryStore(primary: RecoveryStore): RecoveryStore {
     read: (id: string): Promise<RecoverySnapshot | null> => run((store) => store.read(id)),
     write: (input: RecoverySnapshotInput): Promise<RecoverySnapshotMeta> =>
       run((store) => store.write(input)),
+    retain: (id) => serialized(() => current.retain(id)),
     remove: removeFromAll,
     clear: clearAll
   }

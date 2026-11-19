@@ -1,4 +1,8 @@
 {
+  "closeDescription": "保存以更新原始文件，或保留备份以便稍后恢复编辑。",
+  "keepBackup": "关闭并保留备份",
+  "discardBackup": "丢弃备份",
+  "keepBackupFailed": "无法保留备份。文档仍处于打开状态。请保存或重试。",
   "preserveUnsavedWork": "自动保留未保存的工作",
   "preserveUnsavedWorkDescription": "存储本地恢复副本，以便在意外关闭后恢复文档。",
   "dialogTitle": "恢复未保存的工作",

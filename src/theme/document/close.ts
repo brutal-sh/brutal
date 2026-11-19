@@ -8,3 +8,8 @@ export const documentCloseUI = {
 } satisfies DialogUI
 
 export const documentCloseButtonUI = { base: 'min-w-18 justify-center' }
+
+export const recoveryCloseUI = {
+  ...documentCloseUI,
+  footer: `${documentCloseUI.footer} flex-wrap`
+} satisfies DialogUI

@@ -11,6 +11,7 @@ export interface RecoverySnapshotMeta {
   byteLength: number
   formatVersion: 1
   source?: RecoveryFileSource
+  retainedOnClose?: true
 }
 
 export interface RecoverySnapshot extends RecoverySnapshotMeta {
@@ -28,6 +29,7 @@ export interface RecoveryStore {
   list(): Promise<RecoverySnapshotMeta[]>
   read(id: string): Promise<RecoverySnapshot | null>
   write(input: RecoverySnapshotInput): Promise<RecoverySnapshotMeta>
+  retain(id: string): Promise<boolean>
   remove(id: string): Promise<void>
   clear(): Promise<void>
 }
@@ -49,6 +51,8 @@ export interface DocumentRecoveryOptions {
 export interface DocumentRecoveryController {
   getRecoveryId(): string
   adoptRecoverySnapshot(id: string): Promise<void>
+  getRecoveryCloseVersion(): number | null
+  retainOnClose(version: number): Promise<boolean>
   persistNow(): Promise<void>
   markProtectedVersion(version: number): Promise<void>
   discardRecovery(): Promise<void>

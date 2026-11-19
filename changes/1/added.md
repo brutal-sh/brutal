@@ -44,3 +44,4 @@
 - Open PDF and PDF-compatible Illustrator files on macOS as page images and save them in an Open Pen design copy.
 - Open supported Photoshop PSD and PSB raster layers as editable images in a separate design copy on macOS, with a saved composite preview when layer import is unavailable.
 - Open SVG and compressed SVGZ files as editable vector and text layers in a separate design copy.
+- Close a recovered local design while keeping its backup, then reopen the original to restore the editable changes.

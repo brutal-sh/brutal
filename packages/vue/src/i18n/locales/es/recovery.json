@@ -1,4 +1,8 @@
 {
+  "closeDescription": "Guarda para actualizar el original o conserva una copia de seguridad para recuperar tus cambios más tarde.",
+  "keepBackup": "Cerrar y conservar la copia",
+  "discardBackup": "Descartar la copia de seguridad",
+  "keepBackupFailed": "No se pudo conservar la copia de seguridad. El documento sigue abierto. Guarda o vuelve a intentarlo.",
   "preserveUnsavedWork": "Conservar automáticamente el trabajo no guardado",
   "preserveUnsavedWorkDescription": "Guarda copias locales para restaurar documentos después de un cierre inesperado.",
   "dialogTitle": "Recuperar trabajo no guardado",

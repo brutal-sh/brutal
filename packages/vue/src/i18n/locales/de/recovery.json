@@ -1,4 +1,8 @@
 {
+  "closeDescription": "Speichere, um das Original zu aktualisieren, oder behalte eine Sicherung, um deine Änderungen später wiederherzustellen.",
+  "keepBackup": "Schließen und Sicherung behalten",
+  "discardBackup": "Sicherung verwerfen",
+  "keepBackupFailed": "Die Sicherung konnte nicht behalten werden. Das Dokument ist noch geöffnet. Speichere es oder versuche es erneut.",
   "preserveUnsavedWork": "Ungespeicherte Arbeit automatisch sichern",
   "preserveUnsavedWorkDescription": "Lokale Wiederherstellungskopien speichern, um Dokumente nach einem unerwarteten Beenden wiederherzustellen.",
   "dialogTitle": "Nicht gespeicherte Arbeit wiederherstellen",

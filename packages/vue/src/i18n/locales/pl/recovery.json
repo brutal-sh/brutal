@@ -1,4 +1,8 @@
 {
+  "closeDescription": "Zapisz, aby zaktualizować oryginał, lub zachowaj kopię zapasową, aby później odzyskać zmiany.",
+  "keepBackup": "Zamknij i zachowaj kopię",
+  "discardBackup": "Odrzuć kopię zapasową",
+  "keepBackupFailed": "Nie udało się zachować kopii zapasowej. Dokument jest nadal otwarty. Zapisz go lub spróbuj ponownie.",
   "preserveUnsavedWork": "Automatycznie zachowuj niezapisaną pracę",
   "preserveUnsavedWorkDescription": "Przechowuj lokalne kopie, aby odtworzyć dokumenty po nieoczekiwanym zamknięciu.",
   "dialogTitle": "Odzyskaj niezapisaną pracę",

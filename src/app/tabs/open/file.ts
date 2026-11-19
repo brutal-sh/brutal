@@ -10,17 +10,16 @@ import { appIcons } from '@/app/editor/icons/provider'
 import type { EditorPreparationHandle as DocumentLoadSession } from '@/app/editor/preparation/types'
 import type { EditorStore } from '@/app/editor/session'
 import { notificationMessages } from '@/app/i18n/notifications'
-import { createDeferred } from '@/app/runtime/deferred'
 import { toast } from '@/app/shell/ui'
 import { getTabForStore, switchTab, tabsRef } from '@/app/tabs/lifecycle'
-import { createFileOpenCoordinator } from '@/app/tabs/open/coordinator'
+import { fileOpenCoordinator } from '@/app/tabs/open/coordinator'
 import { cacheOpenedFigCover, watchOpenedFigCover } from '@/app/tabs/open/cover'
 import { findTabByFileIdentity } from '@/app/tabs/open/identity'
 import { readFigForTab, showImportedGraph } from '@/app/tabs/open/imported'
+import { findRetainedRecovery, showRecoverySnapshot } from '@/app/tabs/open/recovery'
 import { failPreparation, reusableTabStore, releaseOpeningTab } from '@/app/tabs/open/session'
 
 const io = new IORegistry(BUILTIN_IO_FORMATS)
-const fileOpenCoordinator = createFileOpenCoordinator()
 
 type FileOpeningInput = { file: File; handle?: FileSystemFileHandle; path?: string }
 
@@ -42,11 +41,13 @@ function createFileOpening(file: File, identity: DocumentSourceIdentity) {
     kind: isDOMImportFile(file) ? 'dom-import' : 'document-open',
     subject: file.name
   })
-  const completion = createDeferred<undefined>()
-  void completion.promise.catch(() => undefined)
-  const pendingOpen = { completion: completion.promise, identity, store }
-  fileOpenCoordinator.add(pendingOpen)
-  return { kind: 'owner' as const, completion, pendingOpen, store, opening, load }
+  return {
+    kind: 'owner' as const,
+    ...fileOpenCoordinator.reserve(store, identity),
+    store,
+    opening,
+    load
+  }
 }
 
 type FileOpening = ReturnType<typeof createFileOpening>
@@ -121,12 +122,23 @@ async function readFileGraph(file: File, path: string | undefined, load: Documen
 async function loadFileOpening({ file, handle, path }: FileOpeningInput, owner: FileOpening) {
   const { completion, pendingOpen, store, opening, load } = owner
   let succeeded = false
+  let restoresBackup = false
   try {
     if (isDOMImportFile(file)) {
       await store.openDOMFile(file, { handle, path, preparation: load })
       completion.resolve(undefined)
       succeeded = true
       return store
+    }
+    if (/\.(fig|pen)$/i.test(file.name)) {
+      const backup = await findRetainedRecovery(pendingOpen.identity)
+      if (backup) {
+        restoresBackup = true
+        await showRecoverySnapshot(store, load, backup)
+        completion.resolve(undefined)
+        succeeded = true
+        return store
+      }
     }
     const { imported, sourceFormat, importWarnings, photoshop, isFig } = await readFileGraph(
       file,
@@ -164,7 +176,7 @@ async function loadFileOpening({ file, handle, path }: FileOpeningInput, owner: 
   } catch (error) {
     failPreparation(load, 'decode-failed', error)
     completion.reject(error)
-    await releaseOpeningTab(opening)
+    await releaseOpeningTab(opening, { keepRecovery: restoresBackup })
     throw error
   } finally {
     if (succeeded) load.complete()

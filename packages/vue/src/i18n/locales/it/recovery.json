@@ -1,4 +1,8 @@
 {
+  "closeDescription": "Salva per aggiornare l’originale o conserva una copia di recupero per ripristinare le modifiche in seguito.",
+  "keepBackup": "Chiudi e conserva la copia",
+  "discardBackup": "Elimina la copia di recupero",
+  "keepBackupFailed": "Impossibile conservare la copia di recupero. Il documento è ancora aperto. Salva o riprova.",
   "preserveUnsavedWork": "Conserva automaticamente il lavoro non salvato",
   "preserveUnsavedWorkDescription": "Salva copie locali per ripristinare i documenti dopo una chiusura imprevista.",
   "dialogTitle": "Recupera il lavoro non salvato",

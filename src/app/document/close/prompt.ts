@@ -4,7 +4,7 @@ import { IS_TAURI } from '@/constants'
 
 import { confirmDocumentClose, type ClosableDocument, type CloseChoice } from './controller'
 
-export const closePrompt = shallowRef<{ documentName: string } | null>(null)
+export const closePrompt = shallowRef<{ documentName: string; canKeepBackup: boolean } | null>(null)
 let resolvePrompt: ((choice: CloseChoice) => void) | null = null
 let pending = Promise.resolve()
 
@@ -17,14 +17,14 @@ export function answerClosePrompt(choice: CloseChoice): void {
 
 export function requestDocumentClose(document: ClosableDocument, documentName: string) {
   const result = pending.then(() =>
-    confirmDocumentClose(document, async () => {
-      if (IS_TAURI) {
+    confirmDocumentClose(document, async (canKeepBackup) => {
+      if (IS_TAURI && !canKeepBackup) {
         const { chooseNativeDocumentClose } = await import('./native')
         return chooseNativeDocumentClose(documentName)
       }
       return new Promise<CloseChoice>((resolve) => {
         resolvePrompt = resolve
-        closePrompt.value = { documentName }
+        closePrompt.value = { documentName, canKeepBackup }
       })
     })
   )
