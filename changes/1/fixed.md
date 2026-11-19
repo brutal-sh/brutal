@@ -68,6 +68,7 @@
 - Preserve Note text and rounded corners in raster exports across save and reopen.
 - macOS window controls have more room at the leading edge of the tab bar.
 - Describe gives agents a way to find the required node ID, and stock photo calls without a provider guide agents to finish the design with placeholders.
+- Removing a stock-photo key switches to an available provider. If no keys remain, stock-photo calls preserve editable placeholders.
 - Cloud Sessions waits for its first response before displaying the session list.
 - Open and save local documents without waiting for a scan of nearby files.
 - Restart an unreachable app-managed canvas bridge when checking an agent connection or starting an agent chat.

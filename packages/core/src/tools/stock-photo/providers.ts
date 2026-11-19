@@ -28,6 +28,14 @@ export function registerStockPhotoProvider(provider: StockPhotoProvider): void {
   if (!activeProviderId) activeProviderId = provider.name
 }
 
+function unregisterStockPhotoProvider(provider: StockPhotoProvider): void {
+  if (providers.get(provider.name) !== provider) return
+  providers.delete(provider.name)
+  if (activeProviderId === provider.name) {
+    setActiveStockPhotoProvider(providers.keys().next().value ?? null)
+  }
+}
+
 export function setActiveStockPhotoProvider(name: string | null): void {
   activeProviderId = name
 }
@@ -77,6 +85,8 @@ export function setPexelsAPIKey(key: CredentialSource): void {
   if (key) {
     registerStockPhotoProvider(pexelsProvider)
     setActiveStockPhotoProvider('pexels')
+  } else {
+    unregisterStockPhotoProvider(pexelsProvider)
   }
 }
 
@@ -112,6 +122,8 @@ export function setUnsplashAccessKey(key: CredentialSource): void {
   unsplashAccessKey = key
   if (key) {
     registerStockPhotoProvider(unsplashProvider)
+  } else {
+    unregisterStockPhotoProvider(unsplashProvider)
   }
 }
 

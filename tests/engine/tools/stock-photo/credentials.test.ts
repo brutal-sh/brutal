@@ -38,6 +38,30 @@ test.each(['pexels', 'unsplash'])('%s resolves credentials only when searching',
   }
 })
 
+test('clearing stock credentials keeps only available providers active', () => {
+  const previous = getActiveProvider()?.name ?? null
+  const getTestKey = async () => null
+
+  try {
+    setUnsplashAccessKey(getTestKey)
+    setPexelsAPIKey(getTestKey)
+    expect(getActiveProvider()?.name).toBe('pexels')
+
+    setPexelsAPIKey(null)
+    expect(getActiveProvider()?.name).toBe('unsplash')
+
+    setUnsplashAccessKey(null)
+    expect(getActiveProvider()).toBeNull()
+
+    setPexelsAPIKey(getTestKey)
+    expect(getActiveProvider()?.name).toBe('pexels')
+  } finally {
+    setPexelsAPIKey(null)
+    setUnsplashAccessKey(null)
+    setActiveStockPhotoProvider(previous)
+  }
+})
+
 test('stock photo leaves the placeholder editable when no provider is configured', async () => {
   const previous = getActiveProvider()?.name ?? null
   try {
