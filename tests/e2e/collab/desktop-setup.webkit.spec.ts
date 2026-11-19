@@ -38,7 +38,11 @@ for (const { locale, label } of LOCALES) {
           const canvas = new CanvasHelper(page)
           let surface: Locator
           if (mode === 'waiting') {
+            const connected = page.waitForEvent('websocket', (socket) =>
+              socket.url().startsWith(relay.url)
+            )
             await page.goto(relayURLFor(roomLinkPath(), relay.url))
+            await connected
             surface = page.getByTestId('room-screen')
             await expect(surface).toHaveAttribute('data-status', /^(looking|waiting)$/)
             await expect(surface).toHaveAttribute('data-status', 'waiting')
