@@ -70,3 +70,32 @@ The disposable document closed with its source checksum intact and the previousl
 In the regular installed build from `7b72a75ba`, a pointer drag from the empty padding 7 points below the minimize button moved the foreground window from (116, 71) to (172, 115). The test restored the exact 1280 × 800 starting frame. AppKit reported all three centers at x29/52/75, y28, with 16-point bounds after restoration. The point was outside each native button and the probe confirmed the installed app owned the topmost window under the pointer before pressing.
 
 The November 18 screenshot still has no exact build attribution. The installed build's matched reference capture and red-window-close/relaunch remain open. The private measurements are in `local-evidence/pen-reference-2026-11-18/left-header-drag-2026-11-19/`.
+
+## Regular Mac close and relaunch — 2026-11-19
+
+The regular app from `7b72a75ba` had one disposable document tab open. The
+test closed that tab, verified its saved bytes, and confirmed Home was the
+only remaining tab before pressing the physical red button. The click at
+(29, 28) in the foreground window closed the last window and the process
+exited. A normal launch from `/Applications/Open Pen.app` started a new
+process. The 1280 × 800 frame at (116, 71) and all three AppKit control
+centers and bounds matched before and after. Strict local signature
+verification passed.
+
+The launch offered both existing recovery entries. Closing the prompt
+returned to Home. All four recovery records and both blobs retained their
+exact digests across close, relaunch and dismissal.
+
+The [foreground Light captures](NOTE-REFERENCE-CONTROL.md#matched-foreground-note-appearance--2026-11-19)
+also show the new spacing in an editor window at the same 1496 × 933
+viewport and 2× scale as Pen 1.2.23. The isolated capture uses the same tab
+bar and traffic-light configuration as the installed revision. The
+regular installed close/relaunch used its existing Dark appearance.
+Current AppKit measurements reported (27, 29), (50, 29), and (73, 29)
+in Pen and (29, 28), (52, 28), and (75, 28) in the regular Open Pen app.
+Both sets of buttons have 16-point bounds and 23-point spacing.
+
+The reported screenshot's executable remains unknown. The revised spacing
+awaits visual sign-off on UI-MAC-WINDOW-CONTROLS. Distribution trust stays
+with REL-MAC-TRUST. Private receipts are under
+`local-evidence/pen-reference-2026-11-18/regular-red-close-2026-11-19/`.
