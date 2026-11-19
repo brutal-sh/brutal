@@ -177,11 +177,11 @@ export function createAgentAccounts(options: {
 const chatTools: ToolsProbe = {
   cwd: async () => (await import('@/app/ai/agents/setup/native')).agentWorkspace(),
   link: async () => {
-    const [{ getAutomationAuthToken }, { linkOwnTools }] = await Promise.all([
-      import('@/app/automation/mcp/spawn'),
+    const [{ getAgentMCPAuthToken }, { linkOwnTools }] = await Promise.all([
+      import('@/app/automation/mcp/runtime'),
       import('@/app/ai/agents/acp/tools')
     ])
-    return linkOwnTools(await getAutomationAuthToken())
+    return linkOwnTools(await getAgentMCPAuthToken())
   }
 }
 

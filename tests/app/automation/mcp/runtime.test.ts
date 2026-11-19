@@ -51,3 +51,63 @@ test('connects the editor socket to the route resolved while the MCP server star
   expect(await runtime.start(getStore)).toEqual({ ok: true })
   expect(connect).toHaveBeenCalledWith(getStore, 'test-only-token', 'ws://127.0.0.1:49123')
 })
+
+test('concurrent agent checks recover one unreachable managed bridge', async () => {
+  let reachable = true
+  let starts = 0
+  const disconnect = mock(() => undefined)
+  const connect = mock((_store: unknown, _token: string | null, _url: string) => () => undefined)
+  const runtime = createMCPRuntimeService({
+    canConnect: () => true,
+    getBrowserURL: () => 'ws://127.0.0.1:49123',
+    spawn: async () => {
+      reachable = true
+      return { managed: true, authToken: `test-token-${++starts}`, disconnect }
+    },
+    readHealth: async () => (reachable ? { status: 'no_app', agentSessionEvents: true } : null),
+    connect,
+    setToolDescriptors: () => undefined,
+    getStartupFailure: () => null,
+    getHealthFailure: () => ({ code: 'unreachable' })
+  })
+  const getStore = () => {
+    throw new Error('No document is needed to check the bridge')
+  }
+  expect(await runtime.start(getStore)).toEqual({ ok: true })
+  reachable = false
+  await Promise.all([runtime.recoverManagedBridge(), runtime.recoverManagedBridge()])
+  expect(starts).toBe(2)
+  expect(disconnect).toHaveBeenCalledTimes(1)
+  expect(connect).toHaveBeenLastCalledWith(getStore, 'test-token-2', 'ws://127.0.0.1:49123')
+  expect(runtime.state).toMatchObject({ status: 'running', agentSessionEvents: true })
+})
+
+test.each([false, true])(
+  'avoids resetting an external or rejected bridge (managed = %s)',
+  async (managed) => {
+    let reachable = true
+    const disconnect = mock(() => undefined)
+    const spawn = mock(async () => ({ authToken: 'test-token', managed, disconnect }))
+    const runtime = createMCPRuntimeService({
+      canConnect: () => true,
+      getBrowserURL: () => 'ws://127.0.0.1:49123',
+      spawn,
+      readHealth: async () => (reachable ? { status: 'no_app' } : null),
+      connect: () => () => undefined,
+      setToolDescriptors: () => undefined,
+      getStartupFailure: () => null,
+      getHealthFailure: () => ({ code: 'rejected', detail: 'HTTP 401' })
+    })
+    expect(
+      await runtime.start(() => {
+        throw new Error('No document is needed')
+      })
+    ).toEqual({ ok: true })
+    reachable = false
+    const check = runtime.recoverManagedBridge()
+    if (managed) await expect(check).rejects.toThrow('HTTP 401')
+    else await expect(check).resolves.toBeUndefined()
+    expect(spawn).toHaveBeenCalledTimes(1)
+    expect(disconnect).not.toHaveBeenCalled()
+  }
+)

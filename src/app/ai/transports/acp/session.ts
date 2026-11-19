@@ -95,8 +95,8 @@ async function createToolSession(options: {
   wait: ReturnType<typeof untilAgentStops>
 }) {
   const { connection, cwd, agentName, events, wait } = options
-  const { getAutomationAuthToken } = await import('@/app/automation/mcp/spawn')
-  const token = await getAutomationAuthToken()
+  const { getAgentMCPAuthToken } = await import('@/app/automation/mcp/runtime')
+  const token = await getAgentMCPAuthToken()
   await wait(connection.initialize({ protocolVersion: PROTOCOL_VERSION, clientCapabilities: {} }))
   const tools: OwnToolsLink = await linkOwnTools(token)
   events.onUpdate = ({ update }) => tools.noteUpdate(update)

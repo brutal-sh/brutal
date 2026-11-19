@@ -9,6 +9,7 @@ import type { AutomationHealth } from './health'
 import { setMCPToolDescriptors } from './preferences'
 import {
   type AutomationServerHandle,
+  getAutomationAuthToken,
   readAutomationHealth,
   getAutomationHealthFailure,
   getAutomationStartupFailure,
@@ -198,6 +199,28 @@ export function createMCPRuntimeService(dependencies: MCPRuntimeDependencies) {
     return disconnectError ? { ok: false, error: disconnectError } : { ok: true }
   }
 
+  async function restartOperation(): Promise<MCPRuntimeResult> {
+    const stopResult = await stopOperation(false)
+    if (!stopResult.ok) return stopResult
+    if (!activeStore) {
+      const error = new Error('Editor is not ready')
+      state.status = 'error'
+      state.failure = null
+      return { ok: false, error }
+    }
+    return startOperation()
+  }
+
+  async function recoverManagedBridge(): Promise<void> {
+    if (!server?.managed || !dependencies.canConnect()) return
+    if (await dependencies.readHealth(server.authToken)) return
+    const failure = dependencies.getHealthFailure()
+    if (failure?.code === 'rejected' || failure?.code === 'malformed')
+      throw new Error(`Open Pen MCP health check failed (${failureDetail(failure)}).`)
+    const result = await restartOperation()
+    if (!result.ok) throw result.error
+  }
+
   return {
     state,
     refresh: () => enqueue(refreshOperation),
@@ -206,18 +229,8 @@ export function createMCPRuntimeService(dependencies: MCPRuntimeDependencies) {
       return enqueue(startOperation)
     },
     stop: () => enqueue(() => stopOperation(true)),
-    restart: () =>
-      enqueue(async () => {
-        const stopResult = await stopOperation(false)
-        if (!stopResult.ok) return stopResult
-        if (!activeStore) {
-          const error = new Error('Editor is not ready')
-          state.status = 'error'
-          state.failure = null
-          return { ok: false, error }
-        }
-        return startOperation()
-      })
+    restart: () => enqueue(restartOperation),
+    recoverManagedBridge: () => enqueue(recoverManagedBridge)
   }
 }
 
@@ -243,3 +256,9 @@ export const refreshMCPRuntime = appMCPRuntime.refresh
 export const restartMCPRuntime = () => appMCPRuntime.restart()
 export const startMCPRuntime = (getStore: () => EditorStore) => appMCPRuntime.start(getStore)
 export const stopMCPRuntime = () => appMCPRuntime.stop()
+
+/** Recheck reachability before an ACP session uses an already managed bridge. */
+export async function getAgentMCPAuthToken(): Promise<string | null> {
+  await appMCPRuntime.recoverManagedBridge()
+  return getAutomationAuthToken()
+}

@@ -25,3 +25,5 @@ openpen-mcp-http --version
 The fork uses `openpen-mcp-http` exclusively. Installing the upstream `@open-pencil/mcp` package is not a substitute, and the app no longer offers that installation. Preserve the upstream executable if it is already installed for another application.
 
 After setup, restart Open Pen, select Codex in AI settings, and verify its account and canvas connection. On October 30, 2026, the normal installed app completed the real Home prompt → Codex → editable red rectangle → Undo workflow using the existing login and this standalone bridge. This establishes that bounded workflow; it does not qualify every agent, tool, or platform. A successful version or health command alone is insufficient evidence.
+
+If the model reports that its canvas tools are unreachable, use **Check again**. The app checks its bridge before connecting the agent and restarts an unresponsive bridge it started. In earlier builds, go to **Settings → MCP → Restart MCP server**, then open the model settings and check again.
