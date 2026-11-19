@@ -1,8 +1,8 @@
 # Current Open Pen priorities
 
-Jason owns product and release decisions. The replacement controller goal is active
-after he cleared the previous goal on 17 November. Open Pen is a desktop product;
-local browser runners are engineering tools, and the website is information/help.
+Jason owns product and release decisions. The active goal is a public beta for
+supported Apple-silicon Macs. Open Pen is a desktop product. Local browser runners
+are engineering tools, and the website serves information, downloads and help.
 The desktop Browser View/import feature remains in scope.
 
 ## Now, next and later
@@ -86,9 +86,14 @@ continues to require the original evidence on each card.
    [BETA-01](https://trello.com/c/sYpWJdvu) requires its six remaining direct
    gates: brand verification, both recovery owners, the draft journey,
    WebKit reliability, and inspector controls. The
-   [public beta decision](https://trello.com/c/8HWMW9GE) additionally requires
-   [PARITY-ALL](https://trello.com/c/cr0YPLzZ) and all three release artifacts
-   on the exact build. Jason decides whether to publish.
+   [public beta milestone](https://trello.com/c/8HWMW9GE) also requires all three
+   release gates on the exact build. Test trust, installation and rollback on a
+   clean supported Mac, then obtain Jason's approval to publish. After approval,
+   download from the public URL without GitHub access, verify the checksum, and
+   install and launch with standard macOS security. Confirm the public support
+   intake works without repository access. The current Help bug-report link
+   returned HTTP 404 to an anonymous request on 19 November.
+   [PARITY-ALL](https://trello.com/c/cr0YPLzZ) continues on the full-parity roadmap.
 
 The connection check reached a terminal timeout, cleaned up the stalled child and succeeded on retry. Settings > MCP > Restart restored the connection after a controlled loss of the test bridge. The trigger of the original live incident remains unknown. A live request recovered from the unsupported inherited model, made one canvas edit and verified Undo. A separate native stand-in verified specific error copy, one-edit Retry and no-edit Stop. The installed window passed pointer drags below the plus and minimize buttons. The [regular Mac close and relaunch](NATIVE-WINDOW-CONTROLS.md#regular-mac-close-and-relaunch--2026-11-19) restored the exact frame, controls, and recovery offers. The card stays in Verify for visual sign-off. The original screenshot’s build remains unknown.
 Ready/Building describe scheduling, not acceptance. No more than three Ready cards
@@ -122,10 +127,10 @@ card can bypass its bounded children or replace an original exit criterion.
 - **Stable native editing and files:** window transitions, Save refusal/retry and
   backup/restore decisions pass their original native/reference criteria while
   preserving originals, recovery data, editable content and exact target identity.
-- **One reviewable beta candidate:** all required tasks and 18 original milestone
-  exits, PARITY-ALL's full closure and its own combined acceptance, normal installed
-  core journey, and exact-candidate trust/package/rollback/support evidence accepted.
-  Jason then decides release. BETA-01 alone is insufficient.
+- **One verified public beta:** the exact candidate passes the normal installed
+  core journey, trust, installation, rollback and support checks. After Jason
+  approves publication, a tester can download, verify, install and use that
+  candidate and reach support without private GitHub access.
 
 These are evidence checkpoints, not release dates. A new demonstrated data-loss,
 credential or startup failure interrupts the queue. A fresh source/build, actual
