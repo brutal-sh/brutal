@@ -37,8 +37,8 @@ continues to require the original evidence on each card.
    now covers interruption, Restore, Save and reopening in a third process.
    The [Pen recovery comparison](RECOVERY-FILE-DECISIONS.md#pen-1223-recovery-after-process-loss--2026-11-19)
    verified direct recovered-tab reopening and the close-and-retain choice.
-   [FILE-RECOVERY-KEEP](https://trello.com/c/vvn9pBkm) owns that missing decision
-   and is first in Ready.
+   [FILE-RECOVERY-KEEP](https://trello.com/c/vvn9pBkm) is Executed on the
+   [isolated normal-feature Mac build](RECOVERY-FILE-DECISIONS.md#keep-an-existing-file-recovery-backup-on-macos--2026-11-19).
 2. **Qualify the normal package and support path.**
    [ENV-01-MAC](https://trello.com/c/hzrysOeC) is Ready and unlocks the
    [distribution trust](https://trello.com/c/eAB7Tdzk) and
@@ -128,7 +128,7 @@ disabled Actions remain required.
 ## Canonical inventory and review
 
 Current scheduling inventory: 570 cards, 551 required tasks, one deferred task and 18 milestones.
-The board contains 397 Backlog, 2 Ready, 1 Building, 55 Verify and 97 Executed cards.
+The board contains 397 Backlog, 1 Ready, 1 Building, 55 Verify and 98 Executed cards.
 PARITY-ALL explicitly expands all 550 other required execution tasks. Each task has exactly
 one primary milestone owner. Independent live-board comparison verifies unique IDs,
 no unknown prerequisites/cycles, and no Ready/Executed card blocked by an open
