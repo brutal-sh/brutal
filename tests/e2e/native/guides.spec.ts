@@ -62,20 +62,20 @@ it('delivers the native guide UI and this fork’s CLI setup link without changi
 it('routes native Help events from Home without creating a document', async () => {
   await $('[role="tab"][aria-label="Home"]').click()
   const before = await $$('[data-slot="tab-bar"] [role="tab"]').length
-  for (const [id, path] of [
-    ['help-documentation', '/blob/HEAD/README.md'],
-    ['help-prompts', '/blob/HEAD/docs/PROMPTS.md'],
-    ['help-website', ''],
-    ['help-cursor', '/blob/HEAD/docs/EDITOR-INTEGRATIONS.md#cursor'],
-    ['help-vscode', '/blob/HEAD/docs/EDITOR-INTEGRATIONS.md#vs-code'],
-    ['help-support', '/issues']
+  const website = 'https://open-pen.vercel.app/'
+  const repository = 'https://github.com/jpoindexter/open-pen'
+  for (const [id, url] of [
+    ['help-documentation', `${website}help/#docs`],
+    ['help-prompts', `${repository}/blob/HEAD/docs/PROMPTS.md`],
+    ['help-website', website],
+    ['help-cursor', `${repository}/blob/HEAD/docs/EDITOR-INTEGRATIONS.md#cursor`],
+    ['help-vscode', `${repository}/blob/HEAD/docs/EDITOR-INTEGRATIONS.md#vs-code`],
+    ['help-support', `${website}help/#support`]
   ]) {
     await invokeNative('take_native_test_opened_urls')
     await emitNativeMenuAction(id)
     await browser.waitUntil(async () =>
-      (await invokeNative<string[]>('take_native_test_opened_urls')).includes(
-        `https://github.com/jpoindexter/open-pen${path}`
-      )
+      (await invokeNative<string[]>('take_native_test_opened_urls')).includes(url)
     )
     assert.equal(await $('[role="tab"][aria-label="Home"]').getAttribute('aria-selected'), 'true')
     assert.equal(await $$('[data-slot="tab-bar"] [role="tab"]').length, before)

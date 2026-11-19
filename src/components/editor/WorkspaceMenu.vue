@@ -23,7 +23,13 @@ import WorkspaceCommandItems from '@/components/editor/WorkspaceCommandItems.vue
 import ExternalLink from '@/components/links/ExternalLink.vue'
 import AppShortcutText from '@/components/ui/menu/AppShortcutText.vue'
 import { useMenuUI } from '@/components/ui/menu/menu'
-import { IS_TAURI, OPEN_PEN_CLI_GUIDE_URL, OPEN_PEN_REPOSITORY_URL } from '@/constants'
+import {
+  IS_TAURI,
+  OPEN_PEN_CLI_GUIDE_URL,
+  OPEN_PEN_HELP_URL,
+  OPEN_PEN_REPOSITORY_URL,
+  OPEN_PEN_SUPPORT_URL
+} from '@/constants'
 
 const store = useEditorStore()
 const open = ref(false)
@@ -40,10 +46,10 @@ const actions = createSharedEditorMenuActions(setTheme)
 const repository = OPEN_PEN_REPOSITORY_URL
 const links = [
   { label: 'Open Pen on GitHub', href: repository, icon: IconGithub },
-  { label: 'Get support on GitHub', href: `${repository}/issues`, icon: IconLifeBuoy },
+  { label: 'Open Pen support', href: OPEN_PEN_SUPPORT_URL, icon: IconLifeBuoy },
   {
     label: 'Open Pen documentation',
-    href: `${repository}/blob/HEAD/README.md`,
+    href: OPEN_PEN_HELP_URL,
     icon: IconBookOpen
   }
 ]
