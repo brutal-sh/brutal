@@ -26,7 +26,9 @@ continues to require the original evidence on each card.
    [STAB-WEBKIT-MIXED](https://trello.com/c/ech6H0Xm), and
    [VERIFY-INSPECTOR-CONTROLS](https://trello.com/c/ngc2tr1y) lead Verify in that
    order. The [installed Save As check](RECOVERY-FILE-DECISIONS.md#installed-macos-save-as-cancel-and-write-back--2026-11-19)
-   now covers Cancel, separate-file write-back and reopen.
+   now covers Cancel, separate-file write-back and reopen. The
+   [current Pen comparison](RECOVERY-FILE-DECISIONS.md#pen-1223-native-decision-reference--2026-11-19)
+   also verifies both Cancel paths and reopening Pen’s saved copy in both apps.
 2. **Qualify the normal package and support path.**
    [ENV-01-MAC](https://trello.com/c/hzrysOeC) is Ready and unlocks the
    [distribution trust](https://trello.com/c/eAB7Tdzk) and

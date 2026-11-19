@@ -81,3 +81,30 @@ unclassified. The Pen reference tab was opened and closed without edits
 when the work moved to the beta board audit. The current reference
 decision matrix remains open. Private evidence is under
 `local-evidence/regular-save-as-2026-11-19/`.
+
+## Pen 1.2.23 native decision reference — 2026-11-19
+
+The installed Pen reference opened a byte-identical copy of the normal Open
+Pen Save As fixture. Native Duplicate and a right nudge created a second red
+64 × 100 rectangle while preserving the source checksum. File → Close Tab
+showed the owned filename and Save, Don't Save and Cancel. The verified
+Cancel kept the same tab available and the original bytes intact. File →
+Save As opened the native `save .pen file as…` sheet. Cancelling the sheet
+kept the original bytes and left the destination directory empty.
+
+The retry wrote a separate copy. Its two unique rectangle IDs, red fills and
+64 × 100 dimensions were verified on disk. Pen wrote its fills as hex strings. Open Pen’s own Save As file uses an array of paints.
+Pen reopened its saved copy and rendered a solid red area measuring
+148 × 200 pixels on the 2× display. The regular installed Open Pen build
+from `7b72a75ba` opened byte-identical Pen output, showed both layers, and
+rendered a 147 × 200 solid red area at its own viewport. The file was
+unchanged after closing, as were the four existing Open Pen recovery
+records and two blobs. Pen returned to the original tab and frame.
+
+An earlier attempt observed the native dirty-close prompt. The prompt
+disappeared before the guarded Cancel action and the reopened disposable
+file contained both rectangles. The exact input that caused the write
+was unobserved. That file and the refused foreground actions are retained
+separately. The controlled repeat verifies the explicit Cancel paths.
+These checks leave process interruption and recovery-state comparison open.
+Private native receipts are in `local-evidence/pen-save-decisions-2026-11-19/`.
