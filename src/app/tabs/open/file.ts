@@ -4,6 +4,7 @@ import { BUILTIN_IO_FORMATS, IORegistry } from '@open-pencil/core/io'
 
 import { documentAssetReader } from '@/app/document/io/assets'
 import { yieldToUI } from '@/app/document/io/browser'
+import { nativePDFFormat, openNativePDF } from '@/app/document/io/pdf'
 import type { DocumentSourceIdentity } from '@/app/document/io/types'
 import { appIcons } from '@/app/editor/icons/provider'
 import type { EditorPreparationHandle as DocumentLoadSession } from '@/app/editor/preparation/types'
@@ -83,6 +84,16 @@ async function readFileGraph(file: File, path: string | undefined, load: Documen
       isFig
     }
   }
+  const pdf = nativePDFFormat(file.name)
+  if (pdf) {
+    load.update({ phase: 'decoding', detail: file.name })
+    return {
+      imported: await openNativePDF(file, pdf, load.signal),
+      sourceFormat: pdf,
+      importWarnings: undefined,
+      isFig
+    }
+  }
   const maxBytes = io.findReader(file.name, file.type)?.maxReadBytes
   if (maxBytes !== undefined && file.size > maxBytes)
     throw new Error('File exceeds its size limit.')
@@ -124,6 +135,9 @@ async function loadFileOpening({ file, handle, path }: FileOpeningInput, owner: 
       load
     )
     if (isFig && path) cacheFigCover(path, store)
+    if (sourceFormat === 'pdf' || sourceFormat === 'ai') {
+      toast.info(notificationMessages.get().pdfArtworkImported)
+    }
     if (sourceFormat === 'sketch') {
       const messages = notificationMessages.get()
       if (importWarnings?.length)

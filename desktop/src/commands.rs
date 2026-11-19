@@ -26,6 +26,8 @@ macro_rules! app_commands {
             crate::agents::codex::codex_acp_config,
             crate::agents::lookup::agent_workspace,
             crate::files::fig::build_fig_file,
+            #[cfg(target_os = "macos")]
+            crate::files::pdf::render_pdf_pages,
             crate::network::oauth::chatgpt_oauth_listen,
             crate::network::oauth::chatgpt_oauth_wait,
             crate::network::oauth::chatgpt_oauth_cancel,

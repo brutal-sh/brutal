@@ -29,6 +29,8 @@ On desktop, **File → Open** imports supported FigJam layers from a local `.jam
 
 **File → Open** also imports modern `.sketch` archives as editable copies. The first importer covers pages, artboards, groups, rectangles, ovals, basic text, solid fills and borders, and common embedded images. Some layers and styles are omitted. Review the import notice and save edits to a separate `.fig` design copy.
 
+On macOS, **File → Open** places each page of a PDF or a PDF-compatible Illustrator (`.ai`) file as an image on its own canvas page. Save the artwork in a separate `.fig` copy. PDF text and Illustrator vectors are flattened. This importer accepts up to 32 pages and 32 MB, with bitmap size limits for larger pages or documents.
+
 The [PRD](docs/PRD.md) defines the product and acceptance gates. The [task index](docs/TASKS.md) links the complete execution backlog; the [modularity audit](docs/MODULARITY.md) records the oversized-module review queue. See [tracking rules](docs/TRACKING.md) for the current work limit.
 
 Start with the [prompt gallery](docs/PROMPTS.md), [Cursor/VS Code setup](docs/EDITOR-INTEGRATIONS.md), or [local Codex runtime guide](docs/LOCAL-RUNTIME.md). These guides state their verification limits; visual IDE extensions remain open.

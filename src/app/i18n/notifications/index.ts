@@ -24,6 +24,8 @@ export const notificationMessageDefaults = {
   pngClipboardUnavailable: 'PNG clipboard export is not available in this browser.',
   openFileFailed: params('Could not open “{name}”: {error}'),
   viewDiagnostics: 'View diagnostics',
+  pdfArtworkImported:
+    'Opened each PDF page as an image. Save a separate .fig copy to keep your changes.',
   sketchImported: 'Imported Sketch as an editable copy. Review it before saving.',
   sketchImportPartial: params(
     'Imported an editable Sketch copy. Some content was simplified or omitted ({features}).'
