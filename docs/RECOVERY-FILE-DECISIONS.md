@@ -108,3 +108,37 @@ was unobserved. That file and the refused foreground actions are retained
 separately. The controlled repeat verifies the explicit Cancel paths.
 These checks leave process interruption and recovery-state comparison open.
 Private native receipts are in `local-evidence/pen-save-decisions-2026-11-19/`.
+
+## Pen 1.2.23 recovery after process loss — 2026-11-19
+
+A second instance of the installed Pen executable used a fresh, disposable
+Electron data directory. The separate process held 61 files open under
+that directory and none under the regular Application Support directory
+at the interruption guard. The regular Pen process, active document and
+window geometry remained in place. The test used the normal Open dialog
+and did not connect an agent or copy credentials.
+
+The disposable file began with one 64 × 100 red rectangle. A native click,
+Duplicate and nudges placed a second rectangle at x90. The original stayed
+byte-identical. Only the process running with the disposable profile was
+interrupted. A new process using that same profile opened the recovered
+tab with a warning indicator. The canvas still showed both shapes and the
+original file still had its initial checksum.
+
+The recovered tab’s native close alert offered Save, Don’t Save,
+Don’t Save and Discard Backup, and Cancel. Cancel kept the tab open.
+Don’t Save closed it while preserving the original source. Opening the
+original through the native picker restored both shapes again. At the
+same viewport and scale, the recovered canvas, post-Cancel canvas and
+post-reopen canvas each showed a 248 × 200 solid red area. Explicit Save
+wrote both unique rectangle IDs at x30 and x90. A clean third process
+reopened the saved file with the same checksum and no warning indicator.
+The test observed the separate backup through reopening behavior.
+
+The Open Pen normal-feature control restores through a startup dialog.
+The current Open Pen close handler removes recovery data on its discard
+branch. [FILE-RECOVERY-KEEP](https://trello.com/c/vvn9pBkm) tracks the
+missing separate close-and-retain decision. Recovered state and startup
+presentation remain part of the FILE-07 and FILE-08 comparisons.
+Private screenshots and receipts are in
+`local-evidence/pen-isolated-recovery-2026-11-19/`.

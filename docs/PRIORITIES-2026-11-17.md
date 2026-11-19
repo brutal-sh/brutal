@@ -13,9 +13,9 @@ cover its wider native, actual-Pen or parent acceptance. The bounded Codex tool 
 
 ## Public beta qualification order
 
-The live board and task index agree on 550 required execution tasks, one
+The live board and task index agree on 551 required execution tasks, one
 deferred Photoshop follow-up and 18 milestone cards. The live board also
-retains three archived cards. The required dependency graph has no cycles. All 549 other required
+retains three archived cards. The required dependency graph has no cycles. All 550 other required
 tasks remain inputs to PARITY-ALL. Board positions express sequence. Acceptance
 continues to require the original evidence on each card.
 
@@ -31,6 +31,9 @@ continues to require the original evidence on each card.
    also verifies both Cancel paths and reopening Pen’s saved copy in both apps.
    The [isolated normal-feature Mac run](NATIVE-RECOVERY-PROFILE.md#normal-feature-macos-recovery-after-process-loss--2026-11-19)
    now covers interruption, Restore, Save and reopening in a third process.
+   The [Pen recovery comparison](RECOVERY-FILE-DECISIONS.md#pen-1223-recovery-after-process-loss--2026-11-19)
+   verified direct recovered-tab reopening and the close-and-retain choice.
+   [FILE-RECOVERY-KEEP](https://trello.com/c/vvn9pBkm) owns that missing decision.
 2. **Qualify the normal package and support path.**
    [ENV-01-MAC](https://trello.com/c/hzrysOeC) is Ready and unlocks the
    [distribution trust](https://trello.com/c/eAB7Tdzk) and
@@ -115,8 +118,8 @@ disabled Actions remain required.
 
 ## Canonical inventory and review
 
-Current scheduling inventory: 569 cards, 550 required tasks, one deferred task and 18 milestones.
-PARITY-ALL explicitly expands all 549 other required execution tasks. Each task has exactly
+Current scheduling inventory: 570 cards, 551 required tasks, one deferred task and 18 milestones.
+PARITY-ALL explicitly expands all 550 other required execution tasks. Each task has exactly
 one primary milestone owner. Independent live-board comparison verifies unique IDs,
 no unknown prerequisites/cycles, and no Ready/Executed card blocked by an open
 prerequisite. All 18 original milestone exit blocks are byte-identical.
