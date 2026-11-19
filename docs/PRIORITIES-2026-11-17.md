@@ -13,7 +13,7 @@ cover its wider native, actual-Pen or parent acceptance. The bounded Codex tool 
 
 The current order follows observed user impact and dependencies:
 
-1. Complete the remaining matched Note appearance and native input gates. The current Pen reference and isolated Open Pen both rendered the saved text and custom color after reopening, and DRAW-16-AUTHOR is in Verify.
+1. Complete the matched Note appearance and normal installed text-entry checks. Isolated native keycodes preserved every space through Save and process reopen. Both installed apps rendered that same saved Note. DRAW-16-AUTHOR remains in Verify.
 2. Compare the remaining provider runtime states with actual Pen. The normal installed Codex edit, Undo, Redo, Save and reopen journey executed on November 19. Continue the remaining window checks on the delivered candidate.
 3. Continue the broader Save and recovery criteria, including evidence of the first failing transition if the old Cancel/Home behavior recurs.
 

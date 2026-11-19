@@ -266,3 +266,13 @@ foreground focus. Fourteen current Chromium and WebKit authoring controls
 passed, including picker cancel and read-only workflows. The current captures
 use different zoom and theme settings. DRAW-16-AUTHOR remains in Verify for the
 remaining native input and matched appearance evidence.
+
+## Native Note keystrokes and installed reopen — 2026-11-19
+
+The isolated macOS build from `300eaa0a3` created a 250 × 219 Note through the editor's N shortcut and canvas click. The input probe verified the owned process and active text editor, then sent 18 individual macOS keycodes. All three Space keys produced trusted keydown and beforeinput events. The saved .pen contained the exact text `open pen note text`. A second process reopened it with the same text, geometry and file bytes.
+
+The embedded-driver controls used the same executable and entered each key separately. Both the named Space and literal space variants delivered synthetic keydown events without beforeinput. Their saved text omitted the three spaces. The earlier regular-app input attempt did not reach Note text editing. These results qualify physical typing on the isolated native build and locate the missing-space result to the driver path tested here.
+
+Installed Pen 1.2.23 and regular Open Pen both reopened byte-identical copies of that .pen and visibly rendered the text at a displayed 100% zoom on the same 2× display. The solid `#FEE484` bounding extents measured 499 × 438 physical pixels in both captures. Pen had 214,245 exact-color pixels and Open Pen had 213,814. Viewports and themes differed. The visible Note name above the body also differed. The copies retained their exact bytes, and Pen returned to its previous tab and frame.
+
+DRAW-16-AUTHOR remains in Verify for the matched appearance and regular-app text-entry checks. The Note export raster criterion remains separately tracked. Private traces, saved files and captures are under `local-evidence/note-key-input-2026-11-19/`.
