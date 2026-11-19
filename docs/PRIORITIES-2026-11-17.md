@@ -14,7 +14,7 @@ cover its wider native, actual-Pen or parent acceptance. The bounded Codex tool 
 The current order follows observed user impact and dependencies:
 
 1. Complete the remaining matched Note appearance and native input gates. The current Pen reference and isolated Open Pen both rendered the saved text and custom color after reopening, and DRAW-16-AUTHOR is in Verify.
-2. Run the normal installed Codex edit, Undo, Save and reopen journey. Retain the actual Pen provider runtime gates and check native window controls on the delivered candidate.
+2. Compare the remaining provider runtime states with actual Pen. The normal installed Codex edit, Undo, Redo, Save and reopen journey executed on November 19. Continue the remaining window checks on the delivered candidate.
 3. Continue the broader Save and recovery criteria, including evidence of the first failing transition if the old Cancel/Home behavior recurs.
 
 The connection check reached a terminal timeout, cleaned up the stalled child and succeeded on retry. Settings > MCP > Restart restored the connection after a controlled loss of the test bridge. The trigger of the original live incident remains unknown. A live request recovered from the unsupported inherited model, made one canvas edit and verified Undo. A separate native stand-in verified specific error copy, one-edit Retry and no-edit Stop. The installed window controls passed the native lifecycle and the drag below the + button. The card is in Verify while the original screenshot’s build and the left-side drag limit remain unresolved.
@@ -32,7 +32,7 @@ combined criteria. The old untraced
 Do not repeat green controls indefinitely or call them a repair. Capture an actual
 recurrence and its first failing transition before assigning a cause.
 
-The [agent-created .pen Save fix](https://trello.com/c/8ZY96bsg) is Executed on the isolated native candidate after real Codex creation and saved reopen. Pen 1.2.23 renders the saved file with the expected pixels. The [Codex acceptance parent](https://trello.com/c/3NQFXUXH) remains in Verify for the normal installed journey and Pen provider runtime criteria.
+The [agent-created .pen Save fix](https://trello.com/c/8ZY96bsg) is Executed on the isolated native candidate after real Codex creation and saved reopen. Pen 1.2.23 renders the saved file with the expected pixels. The [Codex acceptance parent](https://trello.com/c/3NQFXUXH) remains in Verify for the remaining Pen provider runtime criteria.
 
 After the current user blockers, continue file preservation and native delivery,
 core editing/portable-file compatibility and M05 agent/welcome workflows, then the
