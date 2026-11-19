@@ -317,3 +317,34 @@ The original overwrites and subsequent checks are retained under
 `local-evidence/recovery-offline-source-2026-11-19/`. This case belongs to
 [FILE-07](https://trello.com/c/pLxRX3u0) and
 [FILE-09](https://trello.com/c/xw31qkJ3).
+
+## Recover after the original is moved on macOS
+
+The isolated normal-feature Mac build from `4926f5f36` created an automatic
+backup after duplicating a 128 × 88 rectangle in an existing `.pen` file.
+While the verified test process was stopped, its original file moved to a
+different owned filename. Relaunch showed the recovery offer with the exact
+backup, and Restore reopened both editable layers. Explicit Save showed Save As
+guidance, left the old path empty and kept the recovery records and blob intact.
+
+While the native Save As panel was open, a different design appeared at the
+old path. Cancel and a second explicit Save preserved that design and the exact
+backup. Save As to the original path reached the native Replace confirmation.
+Confirming Replace for the disposable fixture still triggered the app's source
+check and preserved the replacement. Save As to a different filename wrote two
+editable rectangles with distinct IDs and retired the recovery snapshot. The
+moved original and the independent replacement matched their initial hashes.
+
+A fresh process reopened the copy with both layers and no recovery offer. One
+initial observation expired while the tab was still preparing. A later cold-open
+attempt spent about 112 seconds before the ready observation and displayed
+Preparing canvas immediately before a focus request. It subsequently showed both
+layers. A separate background open was ready by its first sample, about four
+seconds from launch. The slow launch remains a retained observation with an
+unconfirmed trigger. The existing paused-presentation check passes in Chromium
+and WebKit. It verifies that the loading indicator stays visible until the first
+frame can be presented. The saved copy, regular installation and regular recovery
+files retained their hashes. Private receipts are in
+`local-evidence/native-recovery-moved-file-2026-11-19/`. The moved-source trial
+used a separate app identity. The regular-identity interruption and matched Pen
+case remain open.
