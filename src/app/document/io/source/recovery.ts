@@ -3,7 +3,10 @@ import { parseRecoveryFileSource } from '@/app/document/recovery/metadata'
 import type { RecoveryFileSource } from '@/app/document/recovery/types'
 import { isTauri } from '@/app/tauri/env'
 
-export function getRecoveryFileSource(options: DocumentSourceOptions): RecoveryFileSource | null {
+export function getRecoveryFileSource(
+  options: DocumentSourceOptions,
+  getNativeHash?: (path: string) => string | undefined
+): RecoveryFileSource | null {
   if (options.getStorageBinding()) return null
   const identity = options.getSourceIdentity()
   const handle = options.getFileHandle()
@@ -13,7 +16,8 @@ export function getRecoveryFileSource(options: DocumentSourceOptions): RecoveryF
   if (!confirmedHandle && !confirmedPath) return null
   const fileName = options.getDownloadName()
   if (fileName === null) return null
-  return { fileName, identity }
+  const nativeHash = confirmedPath ? getNativeHash?.(path) : undefined
+  return { fileName, identity, ...(nativeHash === undefined ? {} : { nativeHash }) }
 }
 
 export function validateRecoveryFileSource(input: unknown): RecoveryFileSource {

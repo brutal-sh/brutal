@@ -17,6 +17,7 @@ import {
   NATIVE_ARTWORK_EXTENSIONS,
   nativeArtworkFormat
 } from '@/app/document/io/native-artwork'
+import { hashNativeSource } from '@/app/document/io/source/native'
 import { notificationMessages } from '@/app/i18n/notifications'
 import { rememberRecentFile } from '@/app/recent-files'
 import { toast } from '@/app/shell/ui'
@@ -129,7 +130,10 @@ export async function openDesignFileBatch<T>(
   }
 }
 
-export async function readTauriDesignFile(path: string): Promise<File> {
+export async function readTauriDesignFile(
+  path: string,
+  capture?: (bytes: Uint8Array) => Promise<void>
+): Promise<File> {
   assertSupportedDesignFile(path)
   const maxBytes = nativeArtworkFormat(path)
     ? MAX_NATIVE_ARTWORK_BYTES
@@ -138,6 +142,7 @@ export async function readTauriDesignFile(path: string): Promise<File> {
     maxBytes === undefined
       ? await (await import('@tauri-apps/plugin-fs')).readFile(path)
       : await readBoundedFile(path, maxBytes)
+  if (capture) await capture(bytes)
   return new File([bytes], basename(path) || 'file.fig')
 }
 
@@ -156,8 +161,11 @@ export async function chooseTauriOpenPaths(): Promise<string[]> {
 
 export async function openFileFromPath(path: string) {
   if (!isTauri()) return
-  const file = await readTauriDesignFile(path)
-  await openFileInNewTab(file, undefined, path)
+  let nativeHash: string | undefined
+  const file = await readTauriDesignFile(path, async (bytes) => {
+    if (/\.(fig|pen)$/i.test(path)) nativeHash = await hashNativeSource(bytes)
+  })
+  await openFileInNewTab(file, undefined, path, nativeHash)
   rememberRecentFile(path)
 }
 

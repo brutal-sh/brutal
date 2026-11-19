@@ -7,6 +7,7 @@ import { isTauri } from '@/app/tauri/env'
 export function createSourceFileSaves(context: SourceContext) {
   return createSaveActions({
     ...context.options,
+    nativeSource: context.nativeSource,
     version: context.changes.capture,
     buildFigFile: context.builders.buildFigFile,
     buildPenFile: context.builders.buildPenFile,

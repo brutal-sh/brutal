@@ -264,3 +264,56 @@ reference receipt. Private receipts are in
 targeted discard and preservation of the other recovered file. The
 regular-identity interruption, remaining recovery states and matched
 visual criteria are open.
+
+
+## Recover after the original changes while the app is closed
+
+On 19 November, the Open Pen normal-feature package from `a30883a18`
+and actual Pen 1.2.23 both silently replaced an independent disk version
+when saving a recovered document. Both runs used disposable profiles
+and owned fixtures. The starting document had one 64 × 100 red rectangle.
+A real edit added a second red rectangle. The source stayed byte-identical
+through process loss. With the application stopped, an atomic replacement
+installed a single 105 × 100 green rectangle at the same path. The
+recovered canvas still showed both red layers, and the green replacement
+still matched its recorded bytes. Explicit Save replaced the green
+file with the two red layers. The Open Pen backup cleared. Both input
+versions and outputs are retained separately in the private receipts.
+
+Open Pen now records a SHA-256 digest of the bytes a desktop file was
+opened from, reloaded from, or last saved with. A recovery backup
+includes that digest when available. The desktop save path checks the
+actual source immediately before writing recovered work over it. When
+the bytes differ, the source is inaccessible, or an older backup has
+no digest, the app retains the recovered work and directs the user to
+save a separate copy. Older backups remain readable. This pre-write
+check does not make two independent file writers transactional.
+
+The corrected normal-feature arm64 executable has SHA-256
+`4ec01ea6593faf73d81926eba96327f1299be15810a67f0e78c5a79bfcd9b9c9`.
+Both test files carried their original digests in recovery after process
+interruption. For the replaced file, explicit Save displayed Save As
+guidance and kept both files’ recovery records and blobs byte-identical. The
+native Save As panel Cancel changed neither file nor backup. Saving the
+alternate path wrote two editable red rectangles, retired only their
+backup, and left the independent green source byte-identical. The other
+file’s original was unchanged, so direct Save wrote its recovered layers
+and cleared its own backup. The separate copy reopened clean. Both normal
+installed app processes and executable hashes were preserved, and the
+regular Open Pen recovery store kept its four records and two blobs.
+
+An additional test created a native backup with the earlier package,
+then restored it with the corrected build. The earlier backup had no
+source digest. Direct Save left its original bytes and exact backup
+intact. The native Save As panel wrote the two recovered layers to a
+new file and cleared the backup.
+
+The 65 focused IO, recovery and native-file tests pass. The native build,
+source and test types, architecture, documentation and changelog checks
+pass. The test uses a separate app identity. Delivery to the regular
+installation and the remaining FILE-07 and FILE-09 cases are open.
+
+The original overwrites and subsequent checks are retained under
+`local-evidence/recovery-offline-source-2026-11-19/`. This case belongs to
+[FILE-07](https://trello.com/c/pLxRX3u0) and
+[FILE-09](https://trello.com/c/xw31qkJ3).

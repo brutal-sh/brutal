@@ -1,6 +1,7 @@
 import type { createAutosave } from '@/app/document/autosave'
 import { createDocumentChanges } from '@/app/document/io/changes'
 import { createSourceBuilders } from '@/app/document/io/source/builders'
+import { createNativeSource } from '@/app/document/io/source/native'
 import { getRecoveryFileSource } from '@/app/document/io/source/recovery'
 import { createSourceSaveQueue } from '@/app/document/io/source/save/queue'
 import type { DocumentSourceOptions, SourceContext } from '@/app/document/io/source/types'
@@ -35,6 +36,7 @@ export function createSourceContext(input: DocumentSourceOptions): SourceContext
   const builders = createSourceBuilders(options)
   const fileWatch = createSourceFileWatch(options, changes.hasUnsavedChanges)
   const queue = createSourceSaveQueue(changes, fileWatch.afterSave)
+  const nativeSource = createNativeSource()
   const recovery = createDocumentRecovery({
     state: options.state,
     version: changes.capture,
@@ -42,9 +44,9 @@ export function createSourceContext(input: DocumentSourceOptions): SourceContext
     isEnabled: () => recoveryEnabled.value,
     buildFigFile: builders.buildRecoveryFigFile,
     hasWritableSource: options.hasWritableSource,
-    getSource: () => getRecoveryFileSource(options)
+    getSource: () => getRecoveryFileSource(options, nativeSource.getHash)
   })
-  return { options, changes, builders, queue, recovery, fileWatch }
+  return { options, changes, builders, queue, nativeSource, recovery, fileWatch }
 }
 
 export function disposeSource(context: SourceContext, autosave: ReturnType<typeof createAutosave>) {

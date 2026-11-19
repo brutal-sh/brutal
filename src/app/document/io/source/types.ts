@@ -4,6 +4,7 @@ import type { IORegistry } from '@open-pencil/core/io'
 import type { createDocumentChanges } from '@/app/document/io/changes'
 import type { createSaveActions } from '@/app/document/io/save/actions'
 import type { createSourceBuilders } from '@/app/document/io/source/builders'
+import type { createNativeSource } from '@/app/document/io/source/native'
 import type { createSourceSaveQueue } from '@/app/document/io/source/save/queue'
 import type { createSourceFileWatch } from '@/app/document/io/source/watch'
 import type { DocumentSourceAccess, DocumentSourceIdentity } from '@/app/document/io/types'
@@ -29,6 +30,7 @@ export interface SourceContext {
   changes: ReturnType<typeof createDocumentChanges>
   builders: ReturnType<typeof createSourceBuilders>
   queue: ReturnType<typeof createSourceSaveQueue>
+  nativeSource: ReturnType<typeof createNativeSource>
   recovery: DocumentRecoveryController
   fileWatch: ReturnType<typeof createSourceFileWatch>
 }

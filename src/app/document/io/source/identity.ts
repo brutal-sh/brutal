@@ -45,6 +45,7 @@ function setDocumentSource(
     setDownloadName,
     setSourceIdentity
   } = context.options
+  context.nativeSource.clear()
   context.fileWatch.reset()
   stopWatchingFile()
   setStorageBinding(null)
@@ -73,6 +74,7 @@ function setStorageDocumentSource(
     setStorageBinding,
     state
   } = context.options
+  context.nativeSource.clear()
   context.fileWatch.reset()
   stopWatchingFile()
   setFileHandle(null)
@@ -113,6 +115,7 @@ export function restoreRecoverySource(context: SourceContext, input: unknown) {
   options.setFilePath(source.identity.path)
   options.setDownloadName(source.fileName)
   options.setSourceIdentity(source.identity)
+  context.nativeSource.restore(source.identity.path, source.nativeHash)
   // Restoring unsaved edits must not write them back before an explicit save.
   options.state.autosaveEnabled = false
 }
@@ -130,6 +133,7 @@ export function createSourceIdentityActions(context: SourceContext) {
       setStorageDocumentSource(context, binding, documentName),
     setPlannedFilePath: (path: string) => setPlannedFilePath(context, path),
     markDocumentSaved: () => markDocumentSaved(context),
+    setNativeSourceVersion: context.nativeSource.associate,
     startWatchingCurrentFile: () => {
       void context.fileWatch.start()
     }

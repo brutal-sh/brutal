@@ -19,7 +19,8 @@ export function createDocumentSourceConnection(options: DocumentSourceConnection
     getFileHandle: sourceState.getFileHandle,
     hasUnsavedChanges: () => sourceActions.hasUnsavedChanges(),
     captureVersion: () => captureVersion(),
-    markDocumentSaved: () => sourceActions.markDocumentSaved()
+    markDocumentSaved: () => sourceActions.markDocumentSaved(),
+    setNativeSourceVersion: (path, hash) => sourceActions.setNativeSourceVersion(path, hash)
   })
   const watching = createFileWatcher({
     getFilePath: sourceState.getFilePath,

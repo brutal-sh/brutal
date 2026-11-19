@@ -47,6 +47,8 @@ export const notificationMessageDefaults = {
   operationFailed: params('Operation failed: {error}'),
   nativeSaveTitle: params('Save {extension} file as…'),
   nativeSaveFailed: params('Could not save “{name}”'),
+  recoveredSourceChanged:
+    'Open Pen could not verify that the original file is unchanged. Use File → Save As to keep a separate copy of the recovered work.',
   nativeSavePermissionDenied:
     'Open Pen cannot save this file because you don’t have permission. Use File → Save As to save a copy in a folder you can write to.',
   storageConnected: 'Connected. Storage namespace is ready.',

@@ -4,6 +4,7 @@ import { createEditor } from '@open-pencil/core'
 import { SceneGraph } from '@open-pencil/scene-graph'
 
 import { createDocumentChanges } from '@/app/document/io/changes'
+import { createNativeSource, hashNativeSource } from '@/app/document/io/source/native'
 import { createSourceSaveQueue } from '@/app/document/io/source/save/queue'
 import { createDocumentWriter } from '@/app/document/io/write'
 import { createInitialAppEditorState } from '@/app/editor/session/types'
@@ -21,7 +22,8 @@ afterEach(async () => {
 
 function owner(
   path: string | null = '/private/owned/attempted.pen',
-  fileHandle: FileSystemFileHandle | null = null
+  fileHandle: FileSystemFileHandle | null = null,
+  nativeSource?: ReturnType<typeof createNativeSource>
 ) {
   const graph = new SceneGraph()
   const state = createInitialAppEditorState(graph.getPages()[0].id)
@@ -36,6 +38,7 @@ function owner(
     state,
     getFilePath: () => path,
     getFileHandle: () => fileHandle,
+    nativeSource,
     getStorageBinding: () => null,
     setSavedVersion: (version) => savedVersions.push(version),
     setLastWriteTime: () => undefined
@@ -141,4 +144,29 @@ test('a browser file-handle refusal keeps its existing feedback and dirty edits'
   expect(errorToast).toHaveBeenCalledWith('Operation failed: Permission denied (os error 13)')
   expect(session.changes.hasUnsavedChanges()).toBe(true)
   expect(session.savedVersions).toEqual([])
+})
+
+test('saving a recovered native document does not open the changed source for writing', async () => {
+  const writes: unknown[] = []
+  await mockTauriIPC((cmd, args) => {
+    if (cmd === 'plugin:fs|write_file') writes.push(args)
+    return null
+  })
+  const originalPath = '/private/owned/attempted.pen'
+  const originalHash = await hashNativeSource(Uint8Array.of(7))
+  let diskHash = await hashNativeSource(Uint8Array.of(8))
+  const source = createNativeSource(async () => diskHash)
+  source.restore(originalPath, originalHash)
+  const session = owner(originalPath, null, source)
+  expect(await session.queue.userSave(session.save)).toBe(false)
+  expect(writes).toHaveLength(0)
+  expect(session.savedVersions).toEqual([])
+  expect(session.changes.hasUnsavedChanges()).toBe(true)
+  expect(source.getHash(originalPath)).toBe(originalHash)
+
+  diskHash = originalHash
+  expect(await session.queue.userSave(session.save)).toBe(true)
+  expect(writes).toHaveLength(1)
+  expect(session.changes.hasUnsavedChanges()).toBe(false)
+  expect(session.savedVersions).toEqual([17])
 })

@@ -4,6 +4,7 @@ import { BUILTIN_IO_FORMATS, IORegistry } from '@open-pencil/core/io'
 import { readFigFile } from '@open-pencil/core/io/formats/fig'
 
 import { documentAssetReader } from '@/app/document/io/assets'
+import { hashNativeSource } from '@/app/document/io/source/native'
 import { appIcons } from '@/app/editor/icons/provider'
 import { isTauri } from '@/app/tauri/env'
 
@@ -12,14 +13,21 @@ export type ReloadSourceOptions = {
   filePath: string | null
   fileHandle: FileSystemFileHandle | null
   signal?: AbortSignal
+  onNativeRead?: (hash: string) => void
 }
 
-export async function readReloadSource({ filePath, fileHandle, signal }: ReloadSourceOptions) {
+export async function readReloadSource({
+  filePath,
+  fileHandle,
+  signal,
+  onNativeRead
+}: ReloadSourceOptions) {
   signal?.throwIfAborted()
   if (filePath && isTauri()) {
     const { readFile: tauriRead } = await import('@tauri-apps/plugin-fs')
     const bytes = await tauriRead(filePath)
     signal?.throwIfAborted()
+    if (onNativeRead) onNativeRead(await hashNativeSource(bytes))
     const blob = new Blob([bytes])
     const file = new File([blob], basename(filePath))
     return readLocalDocument(file, filePath, signal)

@@ -15,6 +15,7 @@ type ReloadActionsOptions = Pick<
   hasUnsavedChanges: () => boolean
   captureVersion: () => number
   markDocumentSaved: () => void
+  setNativeSourceVersion?: (path: string, hash: string) => void
   preparationController: EditorPreparationController
 }
 
@@ -31,17 +32,23 @@ async function readAndApplyReload(
   try {
     const snapshot = captureReloadState(options.state)
     load.update({ phase: 'reading', detail: options.state.documentName })
+    const filePath = options.getFilePath()
+    let nativeHash: string | undefined
     const imported = await readReloadSource({
       documentName: options.state.documentName,
-      filePath: options.getFilePath(),
+      filePath,
       fileHandle: options.getFileHandle(),
-      signal: load.signal
+      signal: load.signal,
+      onNativeRead: (hash) => {
+        nativeHash = hash
+      }
     })
     assertCurrent()
     if (imported) {
       await applyImportedDocument(options.editor, imported, load, assertCurrent)
       restoreReloadState(options.editor, options.state, snapshot)
       options.editor.requestRender()
+      if (filePath && nativeHash) options.setNativeSourceVersion?.(filePath, nativeHash)
       options.markDocumentSaved()
     }
     load.complete()

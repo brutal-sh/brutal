@@ -21,7 +21,12 @@ import { failPreparation, reusableTabStore, releaseOpeningTab } from '@/app/tabs
 
 const io = new IORegistry(BUILTIN_IO_FORMATS)
 
-type FileOpeningInput = { file: File; handle?: FileSystemFileHandle; path?: string }
+type FileOpeningInput = {
+  file: File
+  handle?: FileSystemFileHandle
+  path?: string
+  nativeHash?: string
+}
 
 function isDOMImportFile(file: File): boolean {
   return /\.(html?|xhtml)$/i.test(file.name)
@@ -119,7 +124,10 @@ async function readFileGraph(file: File, path: string | undefined, load: Documen
   }
 }
 
-async function loadFileOpening({ file, handle, path }: FileOpeningInput, owner: FileOpening) {
+async function loadFileOpening(
+  { file, handle, path, nativeHash }: FileOpeningInput,
+  owner: FileOpening
+) {
   const { completion, pendingOpen, store, opening, load } = owner
   let succeeded = false
   let restoresBackup = false
@@ -150,6 +158,7 @@ async function loadFileOpening({ file, handle, path }: FileOpeningInput, owner: 
       imported,
       () => {
         store.setDocumentSource(file.name, sourceFormat, handle, path)
+        if (nativeHash && path) store.setNativeSourceVersion(path, nativeHash)
         if (isFig && path) watchOpenedFigCover(path, store)
       },
       load
@@ -187,10 +196,11 @@ async function loadFileOpening({ file, handle, path }: FileOpeningInput, owner: 
 export async function openFileInNewTab(
   file: File,
   handle?: FileSystemFileHandle,
-  path?: string
+  path?: string,
+  nativeHash?: string
 ): Promise<EditorStore> {
   const identity: DocumentSourceIdentity = { handle: handle ?? null, path: path ?? null }
-  const input = { file, handle, path }
+  const input = { file, handle, path, nativeHash }
   const decision = await fileOpenCoordinator.decide(() => decideFileOpening(input, identity))
   if (decision.kind === 'existing') return decision.store
   if (decision.kind === 'pending') {

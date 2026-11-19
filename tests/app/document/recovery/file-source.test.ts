@@ -30,12 +30,28 @@ for (const [name, createStore] of Object.entries({
   memory: createMemoryRecoveryStore,
   indexedDB: createIdbRecoveryStore
 })) {
-  test(`${name} retains file identity and keeps legacy drafts separate`, async () => {
+  test(`${name} retains a native source digest and reads earlier backups without it`, async () => {
     const store = createStore()
-    const file = { id: 'file', documentName: 'Original', source, figBytes: new Uint8Array([1, 2]) }
-    await store.write(file)
+    const legacy = {
+      id: 'file',
+      documentName: 'Original',
+      source,
+      figBytes: new Uint8Array([1, 2])
+    }
+    const current = {
+      ...legacy,
+      id: 'current',
+      source: {
+        ...source,
+        nativeHash: 'ee9040f65c341855e070ff438eb0ea9d5b831b2a2c270fb7ef592d750408e3b3'
+      }
+    }
+    await store.write(legacy)
+    await store.write(current)
     await store.write({ id: 'draft', documentName: 'Draft', figBytes: new Uint8Array([3]) })
-    expect(await store.read('file')).toMatchObject(file)
+    expect(await store.read('file')).toMatchObject(legacy)
+    expect((await store.read('file'))?.source?.nativeHash).toBeUndefined()
+    expect(await store.read('current')).toMatchObject(current)
     expect((await store.read('draft'))?.source).toBeUndefined()
     expect((await store.list()).filter((snapshot) => snapshot.source === undefined)).toHaveLength(1)
   })
