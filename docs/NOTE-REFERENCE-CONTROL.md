@@ -284,3 +284,32 @@ The normal installed Open Pen executable from `7b72a75ba` opened an owned copy o
 A separate empty owned document exercised the installed app's N shortcut and a canvas click. The native control reported the Note tool selected, and placing the Note focused its text editor. Escape followed by Save produced exactly one Note with the default `#FEE484` fill.
 
 At startup the app displayed its existing recovery offer. Closing the offer left all four recovery records and both blobs unchanged. They retained their hashes through both disposable Note checks. The installed executable remained unchanged. The verified input and history paths complete the regular-app Note typing check. Matched appearance and the separate Note export criteria remain open. Private receipts are under `local-evidence/note-installed-keys-2026-11-19/`.
+
+## Matched foreground Note appearance — 2026-11-19
+
+Installed Pen 1.2.23 and the isolated Mac build from `300eaa0a3` opened
+byte-identical copies of the owned Note. Both foreground windows measured
+1496 × 933 points at the same screen origin on the 2× display. Both showed
+Light appearance, a light canvas, and 100% zoom. The isolated app retained the
+dark page background when Light was selected after the initial load. Closing
+the owned tab and reopening it from Recents in Light assigned the light
+background to this file, which has no authored page paint.
+
+Both captures rendered `save this note` and showed 250 × 219 on selection.
+Both inspectors displayed eight presets and `FEE484`. On the unselected
+capture, the exact solid yellow pixels covered 499 × 438 in Pen and
+500 × 438 in Open Pen, with 214,844 and 215,265 pixels respectively. The
+top edges aligned. The solid fill began 53 screen pixels farther left in
+Open Pen, with the same X/Y document coordinates in both inspectors.
+
+Pen displayed a Send to Agent affordance above the selection. Open Pen
+displayed the Note label, a rotation handle, and an inner text outline.
+The Send action remains tracked by [DRAW-16-SEND](https://trello.com/c/NFU4Am1a);
+this comparison did not invoke it. DRAW-16-AUTHOR remains in Verify.
+The separate [strict Note export check](https://trello.com/c/iFB7pBKU)
+was not exercised by the window captures.
+
+The two file checksums matched before and after the comparison. Pen returned
+to its previous tab and frame. The Open Pen test window used its own profile
+and exited after capture. Private screenshots, pixel counts, and launch
+receipts are in `local-evidence/note-matched-appearance-2026-11-19/`.

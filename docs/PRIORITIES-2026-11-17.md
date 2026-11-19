@@ -13,7 +13,7 @@ cover its wider native, actual-Pen or parent acceptance. The bounded Codex tool 
 
 The current order follows observed user impact and dependencies:
 
-1. Complete the matched Note appearance checks. Regular installed Open Pen verified the N shortcut, text entry with spaces, Undo, Redo, Save and Recents reopen. Both installed apps rendered the earlier saved Note. DRAW-16-AUTHOR remains in Verify.
+1. Follow up on the differences in the [matched Note appearance check](NOTE-REFERENCE-CONTROL.md#matched-foreground-note-appearance--2026-11-19). Regular installed Open Pen verified the N shortcut, text entry with spaces, Undo, Redo, Save and Recents reopen. The foreground comparison confirmed the saved text, default fill, dimensions and eight presets. DRAW-16-AUTHOR remains in Verify for remaining appearance differences.
 2. Compare the remaining provider runtime states with actual Pen. The normal installed Codex edit, Undo, Redo, Save and reopen journey executed on November 19. Continue the remaining window checks on the delivered candidate.
 3. Continue the broader Save and recovery criteria, including evidence of the first failing transition if the old Cancel/Home behavior recurs.
 
