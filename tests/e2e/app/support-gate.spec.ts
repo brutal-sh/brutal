@@ -18,15 +18,14 @@ test.describe('browser support gate', () => {
     await expect(notice).toContainText('String.prototype.isWellFormed')
     await expect(notice.getByRole('link', { name: 'System requirements' })).toHaveAttribute(
       'href',
-      'https://github.com/jpoindexter/open-pen/blob/HEAD/README.md#open-pen-system-requirements'
+      'https://open-pen.vercel.app/help/getting-started/#desktop-requirements'
     )
 
     const report = notice.getByRole('link', { name: 'Report a problem' })
     const href = new URL((await report.getAttribute('href')) ?? '')
-    expect(href.pathname).toBe('/jpoindexter/open-pen/issues/new')
-    expect(href.searchParams.get('template')).toBe('bug_report.yml')
-    expect(href.searchParams.get('platform')).toBe('Web (Open Pen)')
-    expect(href.searchParams.get('logs')).toContain('Missing: String.prototype.isWellFormed')
+    expect(href.pathname).toBe('/jpoindexter/open-pen-feedback/issues/new')
+    expect(href.searchParams.get('template')).toBe('bug.yml')
+    expect([...href.searchParams.keys()].sort()).toEqual(['template', 'title', 'version'])
 
     await notice.getByText('Details', { exact: true }).click()
     await expect(notice.locator('pre')).toContainText('User agent:')

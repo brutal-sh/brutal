@@ -113,17 +113,21 @@ sign-in or credentials and may charge for usage. The normal installed core
 journey and broader file, agent and visual acceptance remain open.
 [Desktop file and provider limits](../README.md)
 
-The [Help support section](https://open-pen.vercel.app/help/#support) resolves and
-links to the private fork's issue forms. The bug-report form returned HTTP 404
-without GitHub authentication on 19 November. The website owner proposes a
-monitored support inbox linked from `/help/troubleshooting/#report` and
-`/help/#support`, and a signed installer and SHA-256 at
-`/help/getting-started/#download`. Both routes remain proposals pending Jason's
-approval of the inbox, artifact host and public launch. Report guidance should
-include the app version, macOS version and reproduction steps. Review exports
-and fixtures before sharing. Verify the download, installer and report intake
-without private repository access. [BRAND-LINKS](https://trello.com/c/Nyoko3k5)
-retains the normal-app destination walkthrough.
+The public [Open Pen feedback tracker](https://github.com/jpoindexter/open-pen-feedback)
+has issue forms for bugs and feature requests, Discussions for questions and
+general feedback, and private vulnerability reporting. Anyone can read its public
+pages. GitHub sign-in is required to submit. Bug reports ask for the app version,
+macOS version and what happened. Add reproduction steps when available. Review
+exports and fixtures before sharing them. Maintainers triage confirmed reports
+in Trello and keep private diagnostics out of public threads.
+
+Signed-out Issues, Discussions and Security pages returned HTTP 200 on
+19 November 2026. Submission links routed to GitHub sign-in, and the public
+Security page displayed the private reporting action. The signed-in form flow,
+live [Help links](https://open-pen.vercel.app/help/#support) and exact installed
+candidate still need verification. The public installer and SHA-256 await the
+approved artifact and launch. [BRAND-LINKS](https://trello.com/c/Nyoko3k5) retains
+the earlier normal-app destination walkthrough.
 
 Jason owns distribution, rollout and rollback decisions. Hold new invites on a
 reproduced startup failure, loss of design or recovery data, exposed credentials,

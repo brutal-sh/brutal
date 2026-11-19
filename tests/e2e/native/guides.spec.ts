@@ -70,7 +70,7 @@ it('routes native Help events from Home without creating a document', async () =
     ['help-website', website],
     ['help-cursor', `${repository}/blob/HEAD/docs/EDITOR-INTEGRATIONS.md#cursor`],
     ['help-vscode', `${repository}/blob/HEAD/docs/EDITOR-INTEGRATIONS.md#vs-code`],
-    ['help-support', `${website}help/#support`]
+    ['help-support', 'https://github.com/jpoindexter/open-pen-feedback']
   ]) {
     await invokeNative('take_native_test_opened_urls')
     await emitNativeMenuAction(id)

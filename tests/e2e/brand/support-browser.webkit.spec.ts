@@ -22,13 +22,16 @@ for (const [name, userAgent] of BROWSERS) {
         const errors: string[] = []
         const requests: string[] = []
         page.on('pageerror', (error) => errors.push(error.message))
-        await context.route('https://github.com/jpoindexter/open-pen/**', async (route) => {
-          requests.push(route.request().url())
-          await route.fulfill({
-            contentType: 'text/html',
-            body: '<title>Open Pen support fixture</title>'
-          })
-        })
+        await context.route(
+          /^https:\/\/(github\.com\/jpoindexter\/open-pen-feedback\/|open-pen\.vercel\.app\/help\/getting-started\/)/,
+          async (route) => {
+            requests.push(route.request().url())
+            await route.fulfill({
+              contentType: 'text/html',
+              body: '<title>Open Pen support fixture</title>'
+            })
+          }
+        )
         await page.emulateMedia({ colorScheme: theme })
         await page.addInitScript(() => {
           Reflect.deleteProperty(String.prototype, 'isWellFormed')
@@ -49,16 +52,15 @@ for (const [name, userAgent] of BROWSERS) {
         const requirements = notice.getByRole('link', { name: 'System requirements' })
         await expect(requirements).toHaveAttribute(
           'href',
-          'https://github.com/jpoindexter/open-pen/blob/HEAD/README.md#open-pen-system-requirements'
+          'https://open-pen.vercel.app/help/getting-started/#desktop-requirements'
         )
         const report = notice.getByRole('link', { name: 'Report a problem' })
         const href = new URL((await report.getAttribute('href')) ?? '')
         expect(href.origin + href.pathname).toBe(
-          'https://github.com/jpoindexter/open-pen/issues/new'
+          'https://github.com/jpoindexter/open-pen-feedback/issues/new'
         )
-        expect(href.searchParams.get('platform')).toBe('Web (Open Pen)')
-        expect(href.searchParams.get('logs')).toContain(userAgent)
-        expect(href.searchParams.get('logs')).toContain('String.prototype.isWellFormed')
+        expect(href.searchParams.get('template')).toBe('bug.yml')
+        expect([...href.searchParams.keys()].sort()).toEqual(['template', 'title', 'version'])
         await notice.getByText('Details', { exact: true }).click()
         await expect(notice.locator('pre')).toBeVisible()
         await expect(notice.locator('pre')).toContainText(userAgent)

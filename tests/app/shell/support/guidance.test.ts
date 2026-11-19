@@ -35,7 +35,7 @@ describe('unsupported engine guidance', () => {
     expect(notice.heading).toBe('Update macOS to run Open Pen')
     expect(notice.paragraphs[0]).toContain('macOS 13.7.8')
     expect(notice.paragraphs[1]).toContain('Software Update')
-    expect(reportLink(notice).searchParams.get('platform')).toBe('macOS (Tauri)')
+    expect(notice.details).toContain('Host: desktop app')
   })
 
   test('tells a desktop Mac below the minimum macOS to upgrade the OS', () => {
@@ -136,18 +136,19 @@ describe('unsupported engine guidance', () => {
     )
   })
 
-  test('prefills the bug report with the missing features and environment', () => {
+  test('opens the public bug form and keeps diagnostic details in the notice', () => {
     const notice = unsupportedNotice(
       environment({ os: 'linux', browser: 'firefox', browserVersion: 115 }),
       MISSING
     )
     const url = reportLink(notice)
-    expect(url.origin + url.pathname).toBe('https://github.com/jpoindexter/open-pen/issues/new')
-    expect(url.searchParams.get('template')).toBe('bug_report.yml')
-    expect(url.searchParams.get('platform')).toBe('Web (Open Pen)')
-    expect(url.searchParams.get('browser')).toBe('test-agent')
-    expect(url.searchParams.get('logs')).toContain('Missing: String.prototype.isWellFormed')
-    expect(url.searchParams.get('logs')).toContain('Browser: Firefox 115')
+    expect(url.origin + url.pathname).toBe(
+      'https://github.com/jpoindexter/open-pen-feedback/issues/new'
+    )
+    expect(url.searchParams.get('template')).toBe('bug.yml')
+    expect([...url.searchParams.keys()].sort()).toEqual(['template', 'title', 'version'])
+    expect(notice.details).toContain('Missing: String.prototype.isWellFormed')
+    expect(notice.details).toContain('Browser: Firefox 115')
     expect(notice.links.map((link) => link.url)).toContain(SYSTEM_REQUIREMENTS_URL)
   })
 })
@@ -162,7 +163,12 @@ describe('boot failure guidance', () => {
     expect(notice.heading).toBe("Open Pen couldn't start")
     expect(notice.paragraphs[1]).toContain('Safari updates')
     expect(notice.details[0]).toBe('TypeError: Promise.withResolvers is not a function')
-    expect(reportLink(notice).searchParams.get('logs')).toContain('OS: macos 13.7.8')
+    expect(notice.details).toContain('OS: macos 13.7.8')
+    expect([...reportLink(notice).searchParams.keys()].sort()).toEqual([
+      'template',
+      'title',
+      'version'
+    ])
   })
 
   test('states the browser requirements for a web boot failure', () => {

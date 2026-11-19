@@ -8,7 +8,7 @@ import { baselineBrowserFor, type SupportEnvironment } from './detect'
 export interface SupportNotice {
   readonly heading: string
   readonly paragraphs: readonly string[]
-  /** Technical facts shown behind a disclosure and prefilled into a bug report. */
+  /** Technical facts shown behind a disclosure for review before sharing. */
   readonly details: readonly string[]
   readonly links: readonly SupportLink[]
 }
@@ -19,10 +19,10 @@ export interface SupportLink {
 }
 
 // Pre-boot guidance stays self-contained so links work without loading the app.
-const SUPPORT_REPOSITORY_URL = 'https://github.com/jpoindexter/open-pen'
-export const SYSTEM_REQUIREMENTS_URL = `${SUPPORT_REPOSITORY_URL}/blob/HEAD/README.md#open-pen-system-requirements`
+export const SYSTEM_REQUIREMENTS_URL =
+  'https://open-pen.vercel.app/help/getting-started/#desktop-requirements'
 export const WEBVIEW2_DOWNLOAD_URL = 'https://developer.microsoft.com/microsoft-edge/webview2/'
-const ISSUE_URL = `${SUPPORT_REPOSITORY_URL}/issues/new`
+const ISSUE_URL = 'https://github.com/jpoindexter/open-pen-feedback/issues/new'
 
 export const MINIMUM_MACOS_VERSION = 13
 export const MINIMUM_WEBKITGTK_VERSION = '2.40'
@@ -62,31 +62,11 @@ function environmentDetails(env: SupportEnvironment): string[] {
   return details
 }
 
-/** Option labels of the bug report form's Platform dropdown. */
-const DESKTOP_ISSUE_PLATFORMS: Partial<Record<SupportEnvironment['os'], string>> = {
-  macos: 'macOS (Tauri)',
-  windows: 'Windows (Tauri)',
-  linux: 'Linux (Tauri)'
-}
-
-function issuePlatform(env: SupportEnvironment): string {
-  if (env.host === 'browser') return 'Web (Open Pen)'
-  return DESKTOP_ISSUE_PLATFORMS[env.os] ?? 'Not sure'
-}
-
-function issueLink(
-  env: SupportEnvironment,
-  title: string,
-  details: readonly string[]
-): SupportLink {
+function issueLink(title: string): SupportLink {
   const params = new URLSearchParams({
-    template: 'bug_report.yml',
+    template: 'bug.yml',
     title,
-    platform: issuePlatform(env),
-    'affected-area': 'App UI',
-    version: typeof __OPENPENCIL_APP_VERSION__ === 'string' ? __OPENPENCIL_APP_VERSION__ : '',
-    browser: env.userAgent,
-    logs: details.join('\n')
+    version: typeof __OPENPENCIL_APP_VERSION__ === 'string' ? __OPENPENCIL_APP_VERSION__ : ''
   })
   return { label: 'Report a problem', url: `${ISSUE_URL}?${params.toString()}` }
 }
@@ -214,7 +194,7 @@ export function unsupportedNotice(
   missing: readonly string[]
 ): SupportNotice {
   const details = [`Missing: ${missing.join(', ')}`, ...environmentDetails(env)]
-  const report = issueLink(env, 'bug: unsupported browser notice shown', details)
+  const report = issueLink('Bug: compatibility notice shown')
 
   if (env.host === 'browser' && claimsSupportedVersion(env)) {
     return {
@@ -264,9 +244,9 @@ export function bootFailureNotice(env: SupportEnvironment, error: unknown): Supp
     paragraphs: [
       'Something failed while the app was loading, so nothing could be shown.',
       bootFailureHint(env),
-      'If it keeps happening, report the problem and include the details below.'
+      'If it keeps happening, report the problem. Review the details before sharing them.'
     ],
     details,
-    links: [requirementsLink(), issueLink(env, 'bug: app fails to start', details)]
+    links: [requirementsLink(), issueLink('Bug: app fails to start')]
   }
 }
