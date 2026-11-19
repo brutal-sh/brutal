@@ -3,7 +3,7 @@ import { expect, test } from 'bun:test'
 import { toUint8Array } from 'js-base64'
 
 import { BUILTIN_IO_FORMATS, IORegistry } from '#core/io'
-import { readPDFPageImages } from '#core/io/formats/pdf'
+import { readRasterPageImages } from '#core/io/formats/raster'
 
 const png = toUint8Array(
   'iVBORw0KGgoAAAANSUhEUgAAAAIAAAABCAIAAAB7QOjdAAAADElEQVR4nGP8zwACAAYIAQFazwZIAAAAAElFTkSuQmCC'
@@ -28,7 +28,7 @@ function renderedPages() {
 }
 
 test('places page images at the original size and preserves them in a separate FIG', async () => {
-  const graph = readPDFPageImages(renderedPages())
+  const graph = readRasterPageImages(renderedPages())
   const [first, second] = graph.getPages()
   expect(graph.getChildren(first.id)[0]).toMatchObject({
     name: 'Page 1 artwork',
@@ -56,7 +56,7 @@ test('places page images at the original size and preserves them in a separate F
 
 test('rejects truncated packets and invalid page bounds', () => {
   const bytes = renderedPages()
-  expect(() => readPDFPageImages(bytes.subarray(0, -1))).toThrow('invalid page data')
+  expect(() => readRasterPageImages(bytes.subarray(0, -1))).toThrow('invalid page data')
   new DataView(bytes.buffer).setFloat64(4, Infinity, true)
-  expect(() => readPDFPageImages(bytes)).toThrow('invalid page data')
+  expect(() => readRasterPageImages(bytes)).toThrow('invalid page data')
 })

@@ -4,7 +4,7 @@ import { BUILTIN_IO_FORMATS, IORegistry } from '@open-pencil/core/io'
 
 import { documentAssetReader } from '@/app/document/io/assets'
 import { yieldToUI } from '@/app/document/io/browser'
-import { nativePDFFormat, openNativePDF } from '@/app/document/io/pdf'
+import { nativeArtworkFormat, openNativeArtwork } from '@/app/document/io/native-artwork'
 import type { DocumentSourceIdentity } from '@/app/document/io/types'
 import { appIcons } from '@/app/editor/icons/provider'
 import type { EditorPreparationHandle as DocumentLoadSession } from '@/app/editor/preparation/types'
@@ -84,12 +84,12 @@ async function readFileGraph(file: File, path: string | undefined, load: Documen
       isFig
     }
   }
-  const pdf = nativePDFFormat(file.name)
-  if (pdf) {
+  const artwork = nativeArtworkFormat(file.name)
+  if (artwork) {
     load.update({ phase: 'decoding', detail: file.name })
     return {
-      imported: await openNativePDF(file, pdf, load.signal),
-      sourceFormat: pdf,
+      imported: await openNativeArtwork(file, artwork, load.signal),
+      sourceFormat: artwork,
       importWarnings: undefined,
       isFig
     }
@@ -137,6 +137,9 @@ async function loadFileOpening({ file, handle, path }: FileOpeningInput, owner: 
     if (isFig && path) cacheFigCover(path, store)
     if (sourceFormat === 'pdf' || sourceFormat === 'ai') {
       toast.info(notificationMessages.get().pdfArtworkImported)
+    }
+    if (sourceFormat === 'psd' || sourceFormat === 'psb') {
+      toast.info(notificationMessages.get().photoshopArtworkImported)
     }
     if (sourceFormat === 'sketch') {
       const messages = notificationMessages.get()

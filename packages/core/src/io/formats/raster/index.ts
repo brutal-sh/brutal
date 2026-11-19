@@ -12,3 +12,4 @@ export { createCanvasKitRasterCodec, type RasterCodec, type RGBAImage } from './
 export { comparePNGs, type PixelComparison, type PixelComparisonOptions } from './compare'
 export { renderRegionToImage, type RegionRenderOptions } from './region'
 export { encodeRasterImage } from './encode'
+export { readRasterPageImages } from './import'

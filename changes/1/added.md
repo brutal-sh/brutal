@@ -42,3 +42,4 @@
 - Open local FigJam `.jam` files and save supported layers to a separate `.fig` design copy.
 - Open local Sketch files and save supported layers to a separate editable `.fig` copy.
 - Open PDF and PDF-compatible Illustrator files on macOS as page images and save them in an Open Pen design copy.
+- Open the saved composite of a Photoshop PSD or PSB file on macOS as an image in an Open Pen design copy.

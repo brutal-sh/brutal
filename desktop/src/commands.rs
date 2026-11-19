@@ -28,6 +28,8 @@ macro_rules! app_commands {
             crate::files::fig::build_fig_file,
             #[cfg(target_os = "macos")]
             crate::files::pdf::render_pdf_pages,
+            #[cfg(target_os = "macos")]
+            crate::files::photoshop::render_photoshop_image,
             crate::network::oauth::chatgpt_oauth_listen,
             crate::network::oauth::chatgpt_oauth_wait,
             crate::network::oauth::chatgpt_oauth_cancel,

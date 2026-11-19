@@ -10,8 +10,8 @@ const MAX_PAGE_SIDE = 100_000
 const MAX_RENDER_BYTES = 48 * 1024 * 1024
 const PAGE_HEADER_BYTES = 20
 
-/** Reads the bounded page images produced by the platform PDF renderer. */
-export function readPDFPageImages(bytes: Uint8Array): SceneGraph {
+/** Reads the bounded page images produced by the native artwork decoder. */
+export function readRasterPageImages(bytes: Uint8Array): SceneGraph {
   if (bytes.byteLength < 4 || bytes.byteLength > MAX_RENDER_BYTES) throw invalidPageImages()
   const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength)
   const pages = view.getUint32(0, true)
@@ -28,7 +28,7 @@ export function readPDFPageImages(bytes: Uint8Array): SceneGraph {
 }
 
 function invalidPageImages(): Error {
-  return new Error('The PDF renderer returned invalid page data.')
+  return new Error('The artwork decoder returned invalid page data.')
 }
 
 function pageSide(value: number): boolean {

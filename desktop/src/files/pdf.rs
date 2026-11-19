@@ -1,3 +1,4 @@
+use super::artwork::{append_artwork_page, MAX_ARTWORK_OUTPUT_BYTES, MAX_ARTWORK_SIDE};
 use crate::network::browser::policy::require_editor;
 use image::{codecs::png::PngEncoder, ExtendedColorType, ImageEncoder};
 use objc2_core_foundation::{CFData, CFRetained, CGPoint, CGRect, CGSize};
@@ -8,10 +9,8 @@ use objc2_core_graphics::{
 use tauri::ipc::{InvokeBody, Request, Response};
 
 const MAX_INPUT_BYTES: usize = 32 * 1024 * 1024;
-const MAX_OUTPUT_BYTES: usize = 48 * 1024 * 1024;
 const MAX_PAGES: usize = 32;
 const MAX_RENDER_PIXELS: usize = 40_000_000;
-const MAX_IMAGE_SIDE: f64 = 2048.0;
 const MAX_PAGE_SIDE: f64 = 100_000.0;
 static PDF_RENDERER: tokio::sync::Semaphore = tokio::sync::Semaphore::const_new(1);
 
@@ -136,21 +135,20 @@ fn render_document(bytes: &[u8]) -> Result<Vec<u8>, String> {
     for number in 1..=count {
         let page = CGPDFDocument::page(Some(&pdf), number).ok_or("Could not read a PDF page.")?;
         let size = page_size(&page)?;
-        let scale = (MAX_IMAGE_SIDE / size.width.max(size.height)).min(2.0);
-        let width = (size.width * scale).ceil().min(MAX_IMAGE_SIDE) as usize;
-        let height = (size.height * scale).ceil().min(MAX_IMAGE_SIDE) as usize;
+        let scale = (f64::from(MAX_ARTWORK_SIDE) / size.width.max(size.height)).min(2.0);
+        let width = (size.width * scale).ceil().min(f64::from(MAX_ARTWORK_SIDE)) as usize;
+        let height = (size.height * scale)
+            .ceil()
+            .min(f64::from(MAX_ARTWORK_SIDE)) as usize;
         total_pixels += width * height;
         if total_pixels > MAX_RENDER_PIXELS {
             return Err("The PDF exceeds the total page image size limit.".into());
         }
         let png = render_page(&page, size, width, height)?;
-        if result.len() + 20 + png.len() > MAX_OUTPUT_BYTES {
+        if result.len() + 20 + png.len() > MAX_ARTWORK_OUTPUT_BYTES {
             return Err("The PDF exceeds the total preview size limit.".into());
         }
-        result.extend_from_slice(&size.width.to_le_bytes());
-        result.extend_from_slice(&size.height.to_le_bytes());
-        result.extend_from_slice(&(png.len() as u32).to_le_bytes());
-        result.extend_from_slice(&png);
+        append_artwork_page(&mut result, size.width, size.height, &png);
     }
     Ok(result)
 }

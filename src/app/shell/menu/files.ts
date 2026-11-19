@@ -12,11 +12,11 @@ import {
   readBoundedBody
 } from '@/app/document/io/browser'
 import {
-  canOpenNativePDF,
-  MAX_NATIVE_PDF_BYTES,
-  NATIVE_PDF_EXTENSIONS,
-  nativePDFFormat
-} from '@/app/document/io/pdf'
+  canOpenNativeArtwork,
+  MAX_NATIVE_ARTWORK_BYTES,
+  NATIVE_ARTWORK_EXTENSIONS,
+  nativeArtworkFormat
+} from '@/app/document/io/native-artwork'
 import { notificationMessages } from '@/app/i18n/notifications'
 import { rememberRecentFile } from '@/app/recent-files'
 import { toast } from '@/app/shell/ui'
@@ -100,7 +100,7 @@ export async function openBrowserFileFromURL(url: URL, init?: RequestInit): Prom
 function isSupportedDesignFile(fileName: string): boolean {
   const lowerName = fileName.toLowerCase()
   return (
-    nativePDFFormat(fileName) !== undefined ||
+    nativeArtworkFormat(fileName) !== undefined ||
     io.findReader(fileName) !== null ||
     DOM_DOCUMENT_EXTENSIONS.some((extension) => lowerName.endsWith(`.${extension}`))
   )
@@ -131,7 +131,9 @@ export async function openDesignFileBatch<T>(
 
 export async function readTauriDesignFile(path: string): Promise<File> {
   assertSupportedDesignFile(path)
-  const maxBytes = nativePDFFormat(path) ? MAX_NATIVE_PDF_BYTES : io.findReader(path)?.maxReadBytes
+  const maxBytes = nativeArtworkFormat(path)
+    ? MAX_NATIVE_ARTWORK_BYTES
+    : io.findReader(path)?.maxReadBytes
   const bytes =
     maxBytes === undefined
       ? await (await import('@tauri-apps/plugin-fs')).readFile(path)
@@ -141,8 +143,8 @@ export async function readTauriDesignFile(path: string): Promise<File> {
 
 export async function chooseTauriOpenPaths(): Promise<string[]> {
   const { open } = await import('@tauri-apps/plugin-dialog')
-  const extensions = canOpenNativePDF()
-    ? [...READABLE_DOCUMENT_EXTENSIONS, ...NATIVE_PDF_EXTENSIONS]
+  const extensions = canOpenNativeArtwork()
+    ? [...READABLE_DOCUMENT_EXTENSIONS, ...NATIVE_ARTWORK_EXTENSIONS]
     : READABLE_DOCUMENT_EXTENSIONS
   const paths = await open({
     filters: [{ name: 'Design file', extensions }],
