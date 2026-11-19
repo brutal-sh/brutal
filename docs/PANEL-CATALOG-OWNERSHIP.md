@@ -49,3 +49,36 @@ Runtime source, locale values, public types and image baselines are unchanged. G
 missing-baseline output remains untracked and unaccepted. The next re-entry is the same
 fixture/viewport/state in actual installed Pen, then correction of only proven source or
 stale-test ownership, followed by the failed and previously unrun controls.
+
+## November 18 inspector follow-up
+
+The same byte-identical 120 × 80 rectangle was opened and selected in the installed
+Pen 1.2.23 and Open Pen from `7b72a75ba`. Both captures use a 1280 × 800 window at 100%
+zoom. With each app's existing theme, the Position heading begins at approximately
+(1066, 260) and Layout at (1064, 366) in both windows. Both show X 100, Y 100 and rotation
+0° in Position, with W 120 and H 80 in Layout. REA records those named incrementors under
+the corresponding Open Pen accessibility regions. The reference values and grouping come
+from the Pen raster. That Pen accessibility capture leaves the inspector roles unresolved.
+
+The browser checks now choose a Drop Shadow from the compact Effects menu, exercise its
+named popover and Escape, check the compact export controls in view, and use Advanced
+properties for layer blend and mask controls. The multi-layer blend check uses three
+rectangles with mixed starting modes and verifies every mode after one Undo and Redo.
+The browser snapshots were reviewed as Open Pen output. The original eight artifact
+hashes and the failed browser runs are retained alongside the native captures under
+`local-evidence/mod08-2026-11-07/inherited-inspector-attempt/` and
+`local-evidence/inspector-position-2026-11-18/`.
+
+On November 19, the isolated Tauri candidate built for the FigJam import repeated the
+rectangle selection with its inspector set to Light. The Light capture confirms the same
+Position and Layout heading coordinates and accessibility values. Pen's inspector uses
+the same grouping, with small spacing differences inside Layout. A separate canvas-color
+difference is visible on this background-free file when the isolated candidate switches
+to Light. Reopening the file in Light displays the light canvas and preserves the source bytes.
+The remaining comparison is how Pen treats an already open document on a theme switch.
+See the [portable document task](https://trello.com/c/JsFIbu7p).
+
+The final inspector run passed all 58 cases across Chromium and WebKit at the original
+timeouts and snapshot thresholds, with snapshot updates disabled and zero retries. The
+separate compact-inspector and fractional-position suites passed all 26 cases in the two
+engines. The target card is in Verify pending review of the native reference limits.

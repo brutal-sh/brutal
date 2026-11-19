@@ -3,6 +3,7 @@ import { expectDefined } from '#tests/helpers/assert'
 import { openAdvancedProperties, propertyItems, propertySection } from '#tests/helpers/properties'
 
 const editor = useEditorSetup()
+let styledRectangleId: string
 
 function designPanel() {
   return editor.page.getByTestId('design-panel-single')
@@ -64,6 +65,24 @@ function getSelectedIds() {
   })
 }
 
+function getBlendModes(ids: string[]) {
+  return editor.page.evaluate((nodeIds) => {
+    const store = window.openPencil?.getStore?.()
+    if (!store) throw new Error('OpenPencil store not initialized')
+    return nodeIds.map((id) => store.graph.getNode(id)?.blendMode)
+  }, ids)
+}
+
+function stageRectangles(xCoordinates: number[]) {
+  return editor.page.evaluate((xs) => {
+    const store = window.openPencil?.getStore?.()
+    if (!store) throw new Error('OpenPencil store not initialized')
+    const ids = xs.map((x) => store.createShape('RECTANGLE', x, 100, 60, 60))
+    store.select(ids)
+    return ids
+  }, xCoordinates)
+}
+
 test('selecting a rectangle shows design panel with type and name', async () => {
   await editor.canvas.drawRect(100, 100, 120, 80)
   await editor.canvas.waitForRender()
@@ -75,11 +94,23 @@ test('selecting a rectangle shows design panel with type and name', async () => 
 })
 
 test('position section shows X, Y, rotation inputs', async () => {
-  await expect(positionSection()).toBeVisible()
-
-  const inputs = propertySection(editor.page, 'Position').getByRole('spinbutton')
-  const count = await inputs.count()
-  expect(count).toBeGreaterThanOrEqual(3)
+  const position = positionSection()
+  await expect(position.getByRole('spinbutton', { name: 'X Axis', exact: true })).toBeVisible()
+  await expect(position.getByRole('spinbutton', { name: 'Y Axis', exact: true })).toBeVisible()
+  await expect(position.getByRole('spinbutton', { name: 'Rotation', exact: true })).toHaveAttribute(
+    'aria-valuenow',
+    '0'
+  )
+  const layout = propertySection(editor.page, 'Layout')
+  for (const [name, value] of [
+    ['Width', '120'],
+    ['Height', '80']
+  ]) {
+    await expect(layout.getByRole('spinbutton', { name, exact: true })).toHaveAttribute(
+      'aria-valuenow',
+      value
+    )
+  }
 })
 
 test('fill section appears with default fill', async () => {
@@ -149,25 +180,33 @@ test('adding a stroke creates stroke section item', async () => {
 })
 
 test('adding an effect creates effect item', async () => {
-  const addBtn = effectsSection().getByRole('button', { name: 'Add effect' })
-  await addBtn.click()
+  await effectsSection().getByRole('combobox', { name: 'Add effect', exact: true }).click()
+  await editor.page.getByRole('option', { name: 'Drop Shadow', exact: true }).click()
   await editor.canvas.waitForRender()
 
   const effectItems = propertyItems(editor.page, 'effects')
   await expect(effectItems.first()).toBeVisible()
 
-  const id = await getSelectedId()
-  const node = await getNode(expectDefined(id, 'selected id'))
-  expect(expectDefined(node, 'node node').effects.length).toBe(1)
+  styledRectangleId = expectDefined(await getSelectedId(), 'selected id')
+  const node = await getNode(styledRectangleId)
+  expect(expectDefined(node, 'node node').effects.map((effect) => effect.type)).toEqual([
+    'DROP_SHADOW'
+  ])
 })
 
 test('effect settings expand semantically and row remove stays visible', async () => {
   const effectItem = propertyItems(editor.page, 'effects').first()
-  const expand = effectItem.locator('[data-property="effect-expand"]')
+  const expand = effectItem.getByRole('button', { name: 'Drop Shadow', exact: true })
+  const settings = editor.page.getByRole('dialog', { name: 'Drop Shadow', exact: true })
+  await expect(expand).toHaveAttribute('aria-expanded', 'true')
+  await expect(settings.getByRole('spinbutton', { name: 'Blur', exact: true })).toBeVisible()
+  await editor.page.keyboard.press('Escape')
   await expect(expand).toHaveAttribute('aria-expanded', 'false')
   await expand.click()
   await expect(expand).toHaveAttribute('aria-expanded', 'true')
-  await expect(editor.page.locator('[data-slot="effect-settings"]')).toBeVisible()
+  await expect(settings).toBeVisible()
+  await editor.page.keyboard.press('Escape')
+  await expect(settings).toHaveCount(0)
 
   const remove = effectItem.getByRole('button', { name: 'Remove effect' })
   await expect(remove).toHaveCSS('opacity', '1')
@@ -178,7 +217,11 @@ test('effect settings expand semantically and row remove stays visible', async (
 
 test('paint effect and export rows share compact visual anatomy', async () => {
   const exportSection = propertySection(editor.page, 'Export')
-  await exportSection.getByRole('button', { name: 'Add export' }).click()
+  await expect(exportSection.getByRole('combobox', { name: 'Export scale' })).toHaveText('1x')
+  await expect(exportSection.getByRole('combobox', { name: 'Export format' })).toHaveText('PNG')
+  const exportLayer = exportSection.getByRole('button', { name: 'Export layer' })
+  await exportLayer.scrollIntoViewIfNeeded()
+  await expect(exportLayer).toBeInViewport({ ratio: 1 })
   await editor.canvas.waitForRender()
   await editor.page.mouse.move(0, 0)
 
@@ -198,6 +241,13 @@ test('adding a second fill shows two fill items', async () => {
   expect(expectDefined(node, 'node node').fills.length).toBe(2)
 })
 
+test('Advanced properties exposes the layer blend control', async () => {
+  const appearance = propertySection(editor.page, 'Appearance')
+  await expect(appearance.getByRole('combobox', { name: 'Blend mode' })).toHaveCount(0)
+  await openAdvancedProperties(editor.page)
+  await expect(appearance.getByRole('combobox', { name: 'Blend mode' })).toBeVisible()
+})
+
 test('blend mode select updates the selected layer', async () => {
   const id = await getSelectedId()
   const blendModeSelect = propertySection(editor.page, 'Appearance').getByRole('combobox', {
@@ -214,16 +264,15 @@ test('blend mode select updates the selected layer', async () => {
 })
 
 test('multi-select blend mode change is one undo step', async () => {
-  await editor.canvas.drawRect(300, 100, 60, 60)
-  await editor.canvas.drawRect(400, 100, 60, 60)
+  await stageRectangles([300, 400])
   await editor.canvas.selectAll()
   await editor.canvas.waitForRender()
 
   const ids = await getSelectedIds()
-  expect(ids.length).toBeGreaterThanOrEqual(2)
-  const previousBlendModes = await Promise.all(
-    ids.map(async (id) => expectDefined(await getNode(id), 'selected node').blendMode)
-  )
+  expect(ids).toHaveLength(3)
+  const previousBlendModes = await getBlendModes(ids)
+  expect(previousBlendModes).toContain('PASS_THROUGH')
+  expect(previousBlendModes).toContain('MULTIPLY')
 
   const blendModeSelect = propertySection(editor.page, 'Appearance').getByRole('combobox', {
     name: 'Blend mode'
@@ -232,53 +281,40 @@ test('multi-select blend mode change is one undo step', async () => {
   await editor.page.getByRole('option', { name: 'Multiply' }).click()
   await editor.canvas.waitForRender()
 
-  for (const id of ids) {
-    expect(expectDefined(await getNode(id), 'selected node').blendMode).toBe('MULTIPLY')
-  }
+  const expected = ids.map(() => 'MULTIPLY')
+  expect(await getBlendModes(ids)).toEqual(expected)
 
   await editor.canvas.undo()
-  const afterUndo = await Promise.all(
-    ids.map(async (id) => expectDefined(await getNode(id), 'selected node').blendMode)
-  )
-  expect(afterUndo).toEqual(previousBlendModes)
+  expect(await getBlendModes(ids)).toEqual(previousBlendModes)
 
   await editor.canvas.redo()
-  const afterRedo = await Promise.all(
-    ids.map(async (id) => expectDefined(await getNode(id), 'selected node').blendMode)
-  )
-  expect(afterRedo).toEqual(ids.map(() => 'MULTIPLY'))
+  expect(await getBlendModes(ids)).toEqual(expected)
 })
 
-test('mask action toggles mask section and mask type control', async () => {
-  await openAdvancedProperties(editor.page)
-  await editor.canvas.drawRect(500, 100, 60, 60)
+test('mask action opens the Mask section and changes its type', async () => {
+  const [id] = await stageRectangles([500])
   await editor.canvas.waitForRender()
-  const id = await getSelectedId()
   const maskAction = editor.page.getByTestId('selection-toggle-mask')
   await expect(maskAction).toBeVisible()
 
   await expect(propertySection(editor.page, 'Mask')).toHaveCount(0)
   await maskAction.click()
-  await editor.canvas.waitForRender()
-
-  let node = await getNode(expectDefined(id, 'selected id'))
-  expect(expectDefined(node, 'node').isMask).toBe(true)
   const maskSection = propertySection(editor.page, 'Mask')
   await expect(maskSection).toBeVisible()
+  expect(expectDefined(await getNode(id), 'node').isMask).toBe(true)
 
   const maskTypeSelect = maskSection.getByRole('combobox', { name: 'Mask type' })
   await maskTypeSelect.click()
   await editor.page.getByRole('option', { name: 'Luminance' }).click()
-  await editor.canvas.waitForRender()
+  await expect(maskTypeSelect).toHaveText('Luminance')
+  expect(expectDefined(await getNode(id), 'node').maskType).toBe('LUMINANCE')
+})
 
-  node = await getNode(expectDefined(id, 'selected id'))
-  expect(expectDefined(node, 'node').maskType).toBe('LUMINANCE')
-
-  await maskAction.click()
-  await editor.canvas.waitForRender()
-  node = await getNode(expectDefined(id, 'selected id'))
-  expect(expectDefined(node, 'node').isMask).toBe(false)
+test('removing the mask clears its section and layer flag', async () => {
+  const id = expectDefined(await getSelectedId(), 'selected id')
+  await editor.page.getByTestId('selection-toggle-mask').click()
   await expect(propertySection(editor.page, 'Mask')).toHaveCount(0)
+  expect(expectDefined(await getNode(id), 'node').isMask).toBe(false)
 })
 
 test('visibility toggle in appearance section works', async () => {
@@ -304,124 +340,47 @@ test('visibility toggle in appearance section works', async () => {
   expect(expectDefined(restored, 'restored node').visible).toBe(true)
 })
 
-test('fill stroke and effect visibility toggles update on repeated clicks and support undo redo', async () => {
-  const id = await getSelectedId()
-  expect(id).toBeTruthy()
+const visibilityCases = [
+  { property: 'fills', section: 'Fill' },
+  { property: 'strokes', section: 'Stroke' },
+  { property: 'effects', section: 'Effects' }
+] as const
 
-  const fillButton = propertyItems(editor.page, 'fills')
-    .first()
-    .getByRole('button', { name: 'Toggle visibility' })
-  await expect(fillButton).toBeVisible()
+visibilityCases.forEach((entry) => {
+  const isVisible = async () =>
+    expectDefined(await getNode(styledRectangleId), 'selected node')[entry.property][0]?.visible
 
-  const initial = await getNode(expectDefined(id, 'selected id'))
-  expect(expectDefined(initial, 'initial node').fills[0]?.visible).toBe(true)
+  const toggle = () =>
+    propertyItems(editor.page, entry.property)
+      .first()
+      .getByRole('button', { name: 'Toggle visibility' })
 
-  await fillButton.click()
-  await editor.canvas.waitForRender()
-  await expect(fillButton).toHaveAttribute('aria-pressed', 'false')
-  expect(
-    expectDefined(await getNode(expectDefined(id, 'selected id')), 'selected node').fills[0]
-      ?.visible
-  ).toBe(false)
+  test(`hiding ${entry.section} updates the control and layer`, async () => {
+    // The earlier compact controls already create all three rows on this rectangle.
+    await editor.page.evaluate((id) => {
+      const store = window.openPencil?.getStore?.()
+      if (!store) throw new Error('OpenPencil store not initialized')
+      store.select([id])
+    }, styledRectangleId)
 
-  await fillButton.click()
-  await editor.canvas.waitForRender()
-  await expect(fillButton).toHaveAttribute('aria-pressed', 'true')
-  expect(
-    expectDefined(await getNode(expectDefined(id, 'selected id')), 'selected node').fills[0]
-      ?.visible
-  ).toBe(true)
+    expect(await isVisible()).toBe(true)
+    await toggle().click()
+    await expect(toggle()).toHaveAttribute('aria-pressed', 'false')
+    expect(await isVisible()).toBe(false)
+  })
 
-  await editor.canvas.undo()
-  expect(
-    expectDefined(await getNode(expectDefined(id, 'selected id')), 'selected node').fills[0]
-      ?.visible
-  ).toBe(false)
-  await editor.canvas.redo()
-  expect(
-    expectDefined(await getNode(expectDefined(id, 'selected id')), 'selected node').fills[0]
-      ?.visible
-  ).toBe(true)
+  test(`a second click shows ${entry.section} again`, async () => {
+    await toggle().click()
+    await expect(toggle()).toHaveAttribute('aria-pressed', 'true')
+    expect(await isVisible()).toBe(true)
+  })
 
-  const strokeAddButton = strokeSection().getByRole('button', { name: 'Add stroke' })
-  await strokeAddButton.click()
-  await editor.canvas.waitForRender()
-
-  const strokeButton = propertyItems(editor.page, 'strokes')
-    .first()
-    .getByRole('button', { name: 'Toggle visibility' })
-  await expect(strokeButton).toBeVisible()
-  expect(
-    expectDefined(await getNode(expectDefined(id, 'selected id')), 'selected node').strokes[0]
-      ?.visible
-  ).toBe(true)
-
-  await strokeButton.click()
-  await editor.canvas.waitForRender()
-  await expect(strokeButton).toHaveAttribute('aria-pressed', 'false')
-  expect(
-    expectDefined(await getNode(expectDefined(id, 'selected id')), 'selected node').strokes[0]
-      ?.visible
-  ).toBe(false)
-
-  await strokeButton.click()
-  await editor.canvas.waitForRender()
-  await expect(strokeButton).toHaveAttribute('aria-pressed', 'true')
-  expect(
-    expectDefined(await getNode(expectDefined(id, 'selected id')), 'selected node').strokes[0]
-      ?.visible
-  ).toBe(true)
-
-  await editor.canvas.undo()
-  expect(
-    expectDefined(await getNode(expectDefined(id, 'selected id')), 'selected node').strokes[0]
-      ?.visible
-  ).toBe(false)
-  await editor.canvas.redo()
-  expect(
-    expectDefined(await getNode(expectDefined(id, 'selected id')), 'selected node').strokes[0]
-      ?.visible
-  ).toBe(true)
-
-  const effectAddButton = effectsSection().getByRole('button', { name: 'Add effect' })
-  await effectAddButton.click()
-  await editor.canvas.waitForRender()
-
-  const effectButton = propertyItems(editor.page, 'effects')
-    .first()
-    .getByRole('button', { name: 'Toggle visibility' })
-  await expect(effectButton).toBeVisible()
-  expect(
-    expectDefined(await getNode(expectDefined(id, 'selected id')), 'selected node').effects[0]
-      ?.visible
-  ).toBe(true)
-
-  await effectButton.click()
-  await editor.canvas.waitForRender()
-  await expect(effectButton).toHaveAttribute('aria-pressed', 'false')
-  expect(
-    expectDefined(await getNode(expectDefined(id, 'selected id')), 'selected node').effects[0]
-      ?.visible
-  ).toBe(false)
-
-  await effectButton.click()
-  await editor.canvas.waitForRender()
-  await expect(effectButton).toHaveAttribute('aria-pressed', 'true')
-  expect(
-    expectDefined(await getNode(expectDefined(id, 'selected id')), 'selected node').effects[0]
-      ?.visible
-  ).toBe(true)
-
-  await editor.canvas.undo()
-  expect(
-    expectDefined(await getNode(expectDefined(id, 'selected id')), 'selected node').effects[0]
-      ?.visible
-  ).toBe(false)
-  await editor.canvas.redo()
-  expect(
-    expectDefined(await getNode(expectDefined(id, 'selected id')), 'selected node').effects[0]
-      ?.visible
-  ).toBe(true)
+  test(`${entry.section} visibility restores through Undo and Redo`, async () => {
+    await editor.canvas.undo()
+    expect(await isVisible()).toBe(false)
+    await editor.canvas.redo()
+    expect(await isVisible()).toBe(true)
+  })
 })
 
 test('deselecting shows empty design panel', async () => {
@@ -431,9 +390,8 @@ test('deselecting shows empty design panel', async () => {
   await expect(editor.page.getByTestId('design-panel-empty')).toBeVisible()
 })
 
-test('multi-select shows mixed header and boolean operations', async () => {
-  await editor.canvas.drawRect(300, 100, 60, 60)
-  await editor.canvas.drawRect(400, 100, 60, 60)
+test('multi-select shows a mixed header and the boolean tooltip', async () => {
+  await stageRectangles([300, 400])
   await editor.canvas.selectAll()
   await editor.canvas.waitForRender()
 
@@ -447,14 +405,19 @@ test('multi-select shows mixed header and boolean operations', async () => {
   await expect(
     editor.page.locator('[role=tooltip]').filter({ hasText: 'Boolean operations' })
   ).toBeVisible()
+})
 
-  await booleanOperations.click()
+test('opening boolean operations dismisses the tooltip and puts Union in view', async () => {
+  await editor.page.getByTestId('boolean-operations-trigger').click()
   await expect(
     editor.page.locator('[role=tooltip]').filter({ hasText: 'Boolean operations' })
   ).toHaveCount(0)
   const booleanUnion = editor.page.getByTestId('boolean-operation-booleanUnion')
   await expect(booleanUnion).toBeVisible()
   await expectInViewport(editor.page, booleanUnion)
+})
+
+test('the boolean menu offers the remaining operations', async () => {
   await expect(editor.page.getByTestId('boolean-operation-booleanSubtract')).toBeVisible()
   await expect(editor.page.getByTestId('boolean-operation-booleanIntersect')).toBeVisible()
   await expect(editor.page.getByTestId('boolean-operation-booleanExclude')).toBeVisible()
