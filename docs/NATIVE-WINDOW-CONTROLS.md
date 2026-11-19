@@ -64,3 +64,9 @@ The same installed build moved 56 points right and 44 points down when dragged f
 The native yellow control minimized the window, and restore returned its exact frame. The green control entered fullscreen. The View menu's Toggle Full Screen action restored the original 1280 × 800 frame and control geometry. A separate Control-Command-F attempt left fullscreen active. AppKit exposed the menu's F command with AX modifier mask 24, which omits Control and Command. The first drag probe declined to send input when the window lost focus.
 
 The disposable document closed with its source checksum intact and the previously open tab still available. Strict signature verification passed for the installed bundle. The native app process remained running. Close and relaunch on this executable, a matched visual comparison of this spacing revision, and distribution trust remain open. The private receipt is `local-evidence/pen-reference-2026-11-18/normal-installed-lifecycle/qualification.json`.
+
+## Leading header drag — 2026-11-19
+
+In the regular installed build from `7b72a75ba`, a pointer drag from the empty padding 7 points below the minimize button moved the foreground window from (116, 71) to (172, 115). The test restored the exact 1280 × 800 starting frame. AppKit reported all three centers at x29/52/75, y28, with 16-point bounds after restoration. The point was outside each native button and the probe confirmed the installed app owned the topmost window under the pointer before pressing.
+
+The November 18 screenshot still has no exact build attribution. The installed build's matched reference capture and red-window-close/relaunch remain open. The private measurements are in `local-evidence/pen-reference-2026-11-18/left-header-drag-2026-11-19/`.
