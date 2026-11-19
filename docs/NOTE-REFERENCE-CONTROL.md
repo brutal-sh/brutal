@@ -276,3 +276,11 @@ The embedded-driver controls used the same executable and entered each key separ
 Installed Pen 1.2.23 and regular Open Pen both reopened byte-identical copies of that .pen and visibly rendered the text at a displayed 100% zoom on the same 2× display. The solid `#FEE484` bounding extents measured 499 × 438 physical pixels in both captures. Pen had 214,245 exact-color pixels and Open Pen had 213,814. Viewports and themes differed. The visible Note name above the body also differed. The copies retained their exact bytes, and Pen returned to its previous tab and frame.
 
 DRAW-16-AUTHOR remains in Verify for the matched appearance and regular-app text-entry checks. The Note export raster criterion remains separately tracked. Private traces, saved files and captures are under `local-evidence/note-key-input-2026-11-19/`.
+
+## Note authoring in the regular installed app — 2026-11-19
+
+The normal installed Open Pen executable from `7b72a75ba` opened an owned copy of the saved Note. A double-click inside its body focused the canvas text editor. Individual macOS keycodes replaced `open pen note text` with `save this note`, including both spaces. Escape left text editing. The saved file preserved the Note ID, geometry and color. Native Undo and Redo restored the original and edited text respectively, and a Save after each action verified the strings on disk. Closing and reopening from Recents restored the edited text on the canvas with the same saved bytes.
+
+A separate empty owned document exercised the installed app's N shortcut and a canvas click. The native control reported the Note tool selected, and placing the Note focused its text editor. Escape followed by Save produced exactly one Note with the default `#FEE484` fill.
+
+At startup the app displayed its existing recovery offer. Closing the offer left all four recovery records and both blobs unchanged. They retained their hashes through both disposable Note checks. The installed executable remained unchanged. The verified input and history paths complete the regular-app Note typing check. Matched appearance and the separate Note export criteria remain open. Private receipts are under `local-evidence/note-installed-keys-2026-11-19/`.
