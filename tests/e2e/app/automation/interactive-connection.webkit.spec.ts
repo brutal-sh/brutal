@@ -55,7 +55,7 @@ test('a disconnected real bridge refuses a session command without editing eithe
     cli.send('exit()')
     cli.finish()
     expect(await cli.completed).toBe(1)
-    expect(cli.errors().length).toBeGreaterThan(0)
+    expect(cli.errors()).toContain('Open Pen app is not connected')
     expect(await Promise.all(ids.map((id) => documentSnapshot(editor.page, id)))).toEqual(before)
     editor.canvas.assertNoErrors()
   } finally {
