@@ -8,7 +8,9 @@ import type { DocumentSourceIdentity } from '@/app/document/io/types'
 import { appIcons } from '@/app/editor/icons/provider'
 import type { EditorPreparationHandle as DocumentLoadSession } from '@/app/editor/preparation/types'
 import type { EditorStore } from '@/app/editor/session'
+import { notificationMessages } from '@/app/i18n/notifications'
 import { createDeferred } from '@/app/runtime/deferred'
+import { toast } from '@/app/shell/ui'
 import { getTabForStore, switchTab, tabsRef } from '@/app/tabs/lifecycle'
 import { createFileOpenCoordinator } from '@/app/tabs/open/coordinator'
 import { cacheOpenedFigCover, watchOpenedFigCover } from '@/app/tabs/open/cover'
@@ -77,9 +79,13 @@ async function readFileGraph(file: File, path: string | undefined, load: Documen
     return {
       imported: await readFigForTab(file, load.signal),
       sourceFormat: isFig ? 'fig' : 'jam',
+      importWarnings: undefined,
       isFig
     }
   }
+  const maxBytes = io.findReader(file.name, file.type)?.maxReadBytes
+  if (maxBytes !== undefined && file.size > maxBytes)
+    throw new Error('File exceeds its size limit.')
   const result = await io.readDocument(
     {
       name: file.name,
@@ -89,7 +95,12 @@ async function readFileGraph(file: File, path: string | undefined, load: Documen
     },
     { icons: appIcons }
   )
-  return { imported: result.graph, sourceFormat: result.sourceFormat, isFig }
+  return {
+    imported: result.graph,
+    sourceFormat: result.sourceFormat,
+    importWarnings: result.importWarnings,
+    isFig
+  }
 }
 
 async function loadFileOpening({ file, handle, path }: FileOpeningInput, owner: FileOpening) {
@@ -102,7 +113,7 @@ async function loadFileOpening({ file, handle, path }: FileOpeningInput, owner: 
       succeeded = true
       return store
     }
-    const { imported, sourceFormat, isFig } = await readFileGraph(file, path, load)
+    const { imported, sourceFormat, importWarnings, isFig } = await readFileGraph(file, path, load)
     await showImportedGraph(
       store,
       imported,
@@ -113,6 +124,12 @@ async function loadFileOpening({ file, handle, path }: FileOpeningInput, owner: 
       load
     )
     if (isFig && path) cacheFigCover(path, store)
+    if (sourceFormat === 'sketch') {
+      const messages = notificationMessages.get()
+      if (importWarnings?.length)
+        toast.warning(messages.sketchImportPartial({ features: importWarnings.join(', ') }))
+      else toast.info(messages.sketchImported)
+    }
     completion.resolve(undefined)
     succeeded = true
     return store

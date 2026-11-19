@@ -59,6 +59,40 @@ test('a dropped FigJam board opens as an editable document tab', async ({ page }
   canvas.assertNoErrors()
 })
 
+test('a dropped Sketch design opens as editable layers and reports omitted content', async ({
+  page
+}) => {
+  await page.goto('/?test')
+  const canvas = new CanvasHelper(page)
+  await canvas.waitForInit()
+  const frame = { x: 12, y: 18, width: 80, height: 60 }
+  const sketch = {
+    _class: 'page',
+    name: 'Sketch page',
+    layers: [
+      { _class: 'rectangle', name: 'Sketch rectangle', frame },
+      { _class: 'symbolInstance', name: 'Unsupported symbol', frame }
+    ]
+  }
+  const encode = (value: object) => new TextEncoder().encode(JSON.stringify(value))
+  const bytes = zipSync({
+    'document.json': encode({ pages: [{ _ref: 'pages/first' }] }),
+    'pages/first.json': encode(sketch)
+  })
+  await dropOnCanvas(page, [{ name: 'Drawing.sketch', bytes: [...bytes] }])
+
+  await expect(page.getByRole('tab', { name: 'Drawing' })).toHaveAttribute('aria-selected', 'true')
+  const notifications = page.getByRole('region', { name: /Notifications/ })
+  await expect(
+    notifications.getByText('Some content was simplified or omitted', { exact: false })
+  ).toBeVisible()
+  await showLayers(page)
+  const layer = page.getByTestId('layers-item').filter({ hasText: 'Sketch rectangle' })
+  await layer.click()
+  await expect(layer).toHaveAttribute('data-selected', 'true')
+  canvas.assertNoErrors()
+})
+
 test('a dropped file that is neither a document nor an image reports that it cannot open', async ({
   page
 }) => {

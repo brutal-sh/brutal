@@ -27,6 +27,8 @@ Follow [the full feature catalog](docs/pen-feature-reference/README.md), [the pa
 
 On desktop, **File → Open** imports supported FigJam layers from a local `.jam` archive. Save an imported board to a separate `.fig` design copy.
 
+**File → Open** also imports modern `.sketch` archives as editable copies. The first importer covers pages, artboards, groups, rectangles, ovals, basic text, solid fills and borders, and common embedded images. Some layers and styles are omitted. Review the import notice and save edits to a separate `.fig` design copy.
+
 The [PRD](docs/PRD.md) defines the product and acceptance gates. The [task index](docs/TASKS.md) links the complete execution backlog; the [modularity audit](docs/MODULARITY.md) records the oversized-module review queue. See [tracking rules](docs/TRACKING.md) for the current work limit.
 
 Start with the [prompt gallery](docs/PROMPTS.md), [Cursor/VS Code setup](docs/EDITOR-INTEGRATIONS.md), or [local Codex runtime guide](docs/LOCAL-RUNTIME.md). These guides state their verification limits; visual IDE extensions remain open.

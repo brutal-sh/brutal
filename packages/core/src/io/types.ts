@@ -32,6 +32,7 @@ export interface ReadDocumentInput {
 export interface ReadDocumentResult {
   graph: SceneGraph
   sourceFormat: string
+  importWarnings?: readonly string[]
 }
 
 export interface ExportTargetDocument {
@@ -145,6 +146,7 @@ export interface IOFormatAdapter<Id extends string = string> {
   extensions: string[]
   mimeTypes: string[]
   support: IOFormatSupport
+  maxReadBytes?: number
   exportOptions?: IOFormatExportOptions
   /**
    * The format stores layout intent rather than the sizes it implies, so reading lays the layers

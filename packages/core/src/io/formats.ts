@@ -11,6 +11,7 @@ import { penFormat } from './formats/pen/adapter'
 import type { PPTXExportOptions } from './formats/pptx'
 import { jpgFormat, pngFormat, webpFormat } from './formats/raster/adapter'
 import { EXPORT_EVERY_TARGET, FIXED_SIZE_EXPORT, lowerExt } from './formats/shared'
+import { sketchFormat } from './formats/sketch/adapter'
 import { ensureSingleNode, resolveExportNodes } from './formats/targets'
 import type {
   ExportRequest,
@@ -286,6 +287,7 @@ export const tailwindJSXFormat: IOFormatAdapter<'tailwind-jsx'> = {
 export const BUILTIN_IO_FORMATS = [
   figFormat,
   jamFormat,
+  sketchFormat,
   penFormat,
   drawioFormat,
   mermaidFormat,

@@ -17,6 +17,7 @@ import { toast } from '@/app/shell/ui'
 import { getTabsSnapshot, openFileInNewTab, switchTab } from '@/app/tabs'
 import { findTabByFileIdentity } from '@/app/tabs/open/identity'
 import { isTauri } from '@/app/tauri/env'
+import { readBoundedFile } from '@/app/tauri/files'
 import { IS_BROWSER } from '@/constants'
 
 const io = new IORegistry(BUILTIN_IO_FORMATS)
@@ -123,8 +124,11 @@ export async function openDesignFileBatch<T>(
 
 export async function readTauriDesignFile(path: string): Promise<File> {
   assertSupportedDesignFile(path)
-  const { readFile } = await import('@tauri-apps/plugin-fs')
-  const bytes = await readFile(path)
+  const maxBytes = io.findReader(path)?.maxReadBytes
+  const bytes =
+    maxBytes === undefined
+      ? await (await import('@tauri-apps/plugin-fs')).readFile(path)
+      : await readBoundedFile(path, maxBytes)
   return new File([bytes], basename(path) || 'file.fig')
 }
 
@@ -174,7 +178,7 @@ export async function openFileDialog() {
           {
             description: 'Design file',
             accept: {
-              'application/octet-stream': ['.fig', '.jam'],
+              'application/octet-stream': ['.fig', '.jam', '.sketch'],
               'application/json': ['.pen'],
               'text/html': ['.html', '.htm'],
               'application/xhtml+xml': ['.xhtml'],

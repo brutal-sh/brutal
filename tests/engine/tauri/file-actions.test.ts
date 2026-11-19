@@ -23,6 +23,7 @@ describe('Tauri file actions', () => {
               extensions: [
                 'fig',
                 'jam',
+                'sketch',
                 'pen',
                 'drawio',
                 'dio',
@@ -44,8 +45,8 @@ describe('Tauri file actions', () => {
   })
 
   test('rejects unsupported Tauri design files before reading them', async () => {
-    await expect(readTauriDesignFile('/tmp/design.sketch')).rejects.toThrow(
-      'Unsupported document format: /tmp/design.sketch'
+    await expect(readTauriDesignFile('/tmp/design.unsupported')).rejects.toThrow(
+      'Unsupported document format: /tmp/design.unsupported'
     )
   })
 
