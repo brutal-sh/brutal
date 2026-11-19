@@ -72,3 +72,4 @@
 - Cloud Sessions waits for its first response before displaying the session list.
 - Open and save local documents without waiting for a scan of nearby files.
 - Restart an unreachable app-managed canvas bridge when checking an agent connection or starting an agent chat.
+- Keep edits uninterrupted when an open design file’s permissions or other metadata change without a content edit.

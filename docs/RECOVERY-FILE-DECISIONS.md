@@ -177,3 +177,44 @@ journeys and 47 focused unit tests passed. Private logs, failed runs,
 backup digests and app captures are under
 `local-evidence/recovery-keep-qualification-2026-11-19/`. The normal
 installed identity and broader FILE-07 and FILE-08 evidence remain open.
+
+## Installed file history and metadata-only changes — 2026-11-19
+
+The regular `/Applications/Open Pen.app` v0.16.0 executable
+`f911038709287031c11e0d25d177a6315f6cec2d8e62951734f767a86b72ae73`
+opened an owned `.pen` file with one 86 × 58 rectangle. Duplicate created two
+editable layers and a recovery copy while the source bytes stayed exact.
+Undo returned to one layer and removed that copy. Redo recreated it.
+Cancel on Close Tab preserved the source and both edited layers. Explicit
+Save wrote both rectangles, removed the owned backup, and reopened the
+saved design. The two older recovery copies retained their original
+metadata, records and blobs. The regular process remained live.
+
+Before the history check, the regular app displayed File changed with no
+change in the fixture’s bytes. A controlled change of its permissions
+from 0600 to 0400 reproduced the warning with unchanged source bytes,
+size and modification time. The pinned macOS Notify watcher recorded a
+metadata event. Ignore preserved the edits and backup. An access-time
+control produced no watcher event. This isolated permission experiment
+does not identify the trigger of the earlier unobserved File changed
+alert.
+
+[FILE-WATCH-METADATA](https://trello.com/c/HPooh1BH) ignores explicit
+metadata-only events for open design files. The isolated normal-feature
+Mac package `920c480050767c8be7a54d8ec40f4035fb0b964b975d330b5574c031adf4411a`
+ran the same permission control, and the watcher probe emitted the
+matching metadata event. The dialog stayed absent across 25 samples, the original and backup stayed exact, and further keyboard
+edits succeeded while the file was read-only. A genuine in-place external
+write raised File changed. Ignore preserved all four local rectangles and
+the exact backup. A subsequent atomic replacement raised the warning
+again. Reload opened the replacement’s 137 × 81 rectangle and cleared the
+old backup.
+
+The isolated app reported version 0.16.0 and showed the unavailable-update
+message through the macOS app menu. On the regular installation, the
+original executable and older recovery records were independently
+compared after the run. The watcher repair has no regular-install
+delivery receipt yet. The normal installed-identity interruption and
+broader Pen recovery state checks remain open. All 48 focused tests
+passed. Private files and captures are under
+`local-evidence/normal-installed-recovery-2026-11-19/`.

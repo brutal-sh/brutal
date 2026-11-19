@@ -36,3 +36,16 @@ test('watch aliases require the same directory with available, precise filesyste
   const imprecise = { ...directory, ino: Number.MAX_SAFE_INTEGER + 1 }
   expect(sameWatchDirectory(imprecise, imprecise)).toBe(false)
 })
+
+test('document watchers ignore metadata-only changes and still report external writes', () => {
+  const path = '/design/owned.pen'
+  const check = (type: WatchEventKind) =>
+    shouldReloadFile({ type, paths: [path], attrs: null }, path, 0, { ignoreMetadata: true })
+  const permissions = { modify: { kind: 'metadata', mode: 'ownership' } } as const
+  expect(check(permissions)).toBe(false)
+  expect(check({ modify: { kind: 'metadata', mode: 'any' } })).toBe(false)
+  expect(check({ modify: { kind: 'data', mode: 'content' } })).toBe(true)
+  expect(check({ modify: { kind: 'rename', mode: 'any' } })).toBe(true)
+  expect(check({ create: { kind: 'file' } })).toBe(true)
+  expect(shouldReloadFile({ type: permissions, paths: [path], attrs: null }, path, 0)).toBe(true)
+})

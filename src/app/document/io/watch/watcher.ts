@@ -39,7 +39,7 @@ export function createFileWatcher({
 
     let release: (() => void) | null = null
     if (filePath && IS_TAURI) {
-      release = await watchTauriFile(filePath, getLastWriteTime, reload)
+      release = await watchTauriFile(filePath, getLastWriteTime, reload, { ignoreMetadata: true })
     } else if (fileHandle) {
       release = await watchBrowserFile(fileHandle, getFileHandle, getLastWriteTime, reload, stop)
     }

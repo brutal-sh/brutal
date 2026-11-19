@@ -5,15 +5,31 @@ const RECENT_WRITE_MS = 1000
 const BROWSER_POLL_MS = 2000
 const TAURI_WATCH_DELAY_MS = 500
 
-/** Atomic saves create/rename a replacement; access events and sibling files aren't edits. */
-function canReloadFile(event: WatchEvent, lastWriteTime: number) {
-  if (event.type === 'other' || (typeof event.type === 'object' && 'access' in event.type))
-    return false
+type TauriFileWatchOptions = {
+  ignoreMetadata?: boolean
+}
+
+/** Atomic saves create or rename a replacement. A metadata event can be a permissions change. */
+function canReloadFile(
+  { type }: WatchEvent,
+  lastWriteTime: number,
+  { ignoreMetadata }: TauriFileWatchOptions
+) {
+  if (type === 'other') return false
+  if (typeof type === 'object') {
+    if ('access' in type) return false
+    if (ignoreMetadata && 'modify' in type && type.modify.kind === 'metadata') return false
+  }
   return Date.now() - lastWriteTime >= RECENT_WRITE_MS
 }
 
-export function shouldReloadFile(event: WatchEvent, path: string, lastWriteTime: number) {
-  return event.paths.includes(path) && canReloadFile(event, lastWriteTime)
+export function shouldReloadFile(
+  event: WatchEvent,
+  path: string,
+  lastWriteTime: number,
+  options: TauriFileWatchOptions = {}
+) {
+  return event.paths.includes(path) && canReloadFile(event, lastWriteTime, options)
 }
 
 export function sameWatchDirectory(
@@ -34,7 +50,8 @@ export function sameWatchDirectory(
 export async function watchTauriFile(
   filePath: string,
   getLastWriteTime: () => number,
-  reloadFromDisk: () => void
+  reloadFromDisk: () => void,
+  options: TauriFileWatchOptions = {}
 ) {
   const [{ watchImmediate, stat }, { basename, dirname, resolve }] = await Promise.all([
     import('@tauri-apps/plugin-fs'),
@@ -55,8 +72,8 @@ export async function watchTauriFile(
   )
   async function onEvent(event: WatchEvent) {
     const lastWrite = getLastWriteTime()
-    if (!isActive() || !canReloadFile(event, lastWrite)) return
-    let matches = shouldReloadFile(event, path, lastWrite)
+    if (!isActive() || !canReloadFile(event, lastWrite, options)) return
+    let matches = shouldReloadFile(event, path, lastWrite, options)
     // Native events can spell a watched parent through a different alias, such as /private/var.
     if (!matches && identity)
       for (const changed of event.paths) {
@@ -70,7 +87,7 @@ export async function watchTauriFile(
           break
         }
       }
-    if (isActive() && matches && canReloadFile(event, getLastWriteTime())) reload.start()
+    if (isActive() && matches && canReloadFile(event, getLastWriteTime(), options)) reload.start()
   }
   // The plugin's debounced watcher synchronously walks the folder to seed its rename cache.
   const unwatch = await watchImmediate(folder, (event) => void onEvent(event))
