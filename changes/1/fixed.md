@@ -73,4 +73,4 @@
 - Open and save local documents without waiting for a scan of nearby files.
 - Restart an unreachable app-managed canvas bridge when checking an agent connection or starting an agent chat.
 - Keep edits uninterrupted when an open design file’s permissions or other metadata change without a content edit.
-- On desktop, saving recovered work checks the original file and offers Save As guidance when the saved version cannot be verified.
+- On desktop, saving recovered work checks the original file and offers Save As guidance when the saved version cannot be verified. On macOS and Linux, this check also recognizes a second name for the same file.

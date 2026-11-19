@@ -1,3 +1,5 @@
+import type { FileInfo } from '@tauri-apps/plugin-fs'
+
 import { notificationMessages } from '@/app/i18n/notifications'
 
 type SourceVersion = {
@@ -27,8 +29,31 @@ async function readHash(path: string): Promise<string | undefined> {
   }
 }
 
-export function createNativeSource(read = readHash) {
+type FileIdentity = Pick<FileInfo, 'dev' | 'ino'>
+
+async function readIdentity(path: string): Promise<FileIdentity | null> {
+  const { stat } = await import('@tauri-apps/plugin-fs')
+  return stat(path).catch(() => null)
+}
+
+export function createNativeSource(read = readHash, identify = readIdentity) {
   let version: SourceVersion | null = null
+
+  async function sameSource(first: string, second: string) {
+    if (first === second) return true
+    const [left, right] = await Promise.all([identify(first), identify(second)])
+    // shortcut: Windows stat omits file IDs, use native file IDs when Windows recovery is qualified.
+    return (
+      left !== null &&
+      right !== null &&
+      Number.isSafeInteger(left.dev) &&
+      Number.isSafeInteger(left.ino) &&
+      (left.ino ?? 0) > 0 &&
+      left.dev === right.dev &&
+      left.ino === right.ino
+    )
+  }
+
   return {
     clear: () => {
       version = null
@@ -43,10 +68,10 @@ export function createNativeSource(read = readHash) {
     async prepareWrite(path: string, data: Uint8Array) {
       const nextHash = await hashNativeSource(data)
       const original = version
-      if (original?.recovered && original.path === path) {
+      if (original?.recovered) {
+        const same = await sameSource(original.path, path)
         if (
-          original.hash === undefined ||
-          original.hash !== (await read(path)) ||
+          (same && (original.hash === undefined || original.hash !== (await read(path)))) ||
           original !== version
         )
           throw new Error(notificationMessages.get().recoveredSourceChanged)

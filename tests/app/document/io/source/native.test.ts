@@ -34,4 +34,20 @@ describe('native recovery write protection', () => {
     await expect(source.prepareWrite(originalPath, recoveredBytes)).rejects.toThrow()
     expect(await source.prepareWrite(copyPath, recoveredBytes)).toBe(recoveredHash)
   })
+
+  test('guards a second name for the source while allowing a separate copy', async () => {
+    const linkedPath = '/fixtures/linked source.pen'
+    const originalHash = await hashNativeSource(originalBytes)
+    let diskHash = recoveredHash
+    const source = createNativeSource(
+      async () => diskHash,
+      async (path) => ({ dev: 5, ino: path === copyPath ? 25 : 24 })
+    )
+    source.restore(originalPath, originalHash)
+    await expect(source.prepareWrite(linkedPath, recoveredBytes)).rejects.toThrow()
+    expect(await source.prepareWrite(copyPath, recoveredBytes)).toBe(recoveredHash)
+
+    diskHash = originalHash
+    expect(await source.prepareWrite(linkedPath, recoveredBytes)).toBe(recoveredHash)
+  })
 })

@@ -348,3 +348,30 @@ files retained their hashes. Private receipts are in
 `local-evidence/native-recovery-moved-file-2026-11-19/`. The moved-source trial
 used a separate app identity. The regular-identity interruption and matched Pen
 case remain open.
+
+## Protect recovered saves through another filename on macOS
+
+An owned Mac trial used two filenames for the same on-disk file. On the
+baseline build from `4926f5f36`, Save As through the second name replaced the
+independent green rectangle at both names with the two recovered magenta
+layers. The unchanged reference copy retained the green design. The prior
+guard only compared path strings.
+
+The candidate also compares filesystem device and inode when available,
+through the existing scoped native stat call. The rebuilt isolated Mac app
+had executable SHA-256
+`74a78adb15fc12c83a85f46e7fd1472ce4ce442b26df6662f6448b845e44a8c9`. It
+restored the two recovered layers after process loss. Save As through the
+second name reached the native Replace confirmation, then showed the existing
+Save As guidance. Both names, the moved original and the exact recovery
+snapshot retained their checksums. Saving to a new name wrote both editable
+layers with distinct IDs, retired its recovery snapshot and reopened cleanly.
+The regular installed executable and recovery store matched their preflight.
+The 15 focused native-source, save and recovery tests passed.
+
+Raw red and green receipts are private under
+`local-evidence/native-recovery-file-alias-2026-11-19/`. The Mac build used a
+separate app identity. Windows stat lacks device and inode IDs and still uses
+literal path matching. The identity comparison and write remain separate
+operations. Regular-identity interruption and distribution trust remain
+release gates.
