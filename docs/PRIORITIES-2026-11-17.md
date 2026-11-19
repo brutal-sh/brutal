@@ -70,6 +70,12 @@ continues to require the original evidence on each card.
    rollback and recovery. The regular installation and its recovery data
    matched their original checksums. Clean-machine first launch and
    signed updater delivery remain open for the exact release package.
+
+   The [exact regular-identity trial](NATIVE-SAVE-DELIVERY.md#exact-regular-identity-package-trial-on-macos)
+   launches the package from `4926f5f36`, checks About and update
+   availability, and executes native Duplicate, Undo, Redo, Cancel,
+   permission refusal, Save retry and clean reopen. The prior installed
+   bundle and its exact recovery records and blobs are preserved.
 3. **Qualify one exact release candidate.**
    [BETA-01](https://trello.com/c/sYpWJdvu) requires its six remaining direct
    gates: brand verification, both recovery owners, the draft journey,
