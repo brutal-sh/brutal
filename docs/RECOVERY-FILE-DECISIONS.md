@@ -218,3 +218,49 @@ delivery receipt yet. The normal installed-identity interruption and
 broader Pen recovery state checks remain open. All 48 focused tests
 passed. Private files and captures are under
 `local-evidence/normal-installed-recovery-2026-11-19/`.
+
+
+## Discard one recovered file with another still open on macOS
+
+On 19 November, actual installed Pen 1.2.23 and the normal-feature Open Pen
+arm64 package from `a30883a18` exercised the same two-file workflow. Pen
+ran with a fresh Electron data directory. Open Pen used the disposable
+package QA identifier and the
+[verified candidate executable](NATIVE-RECOVERY-PROFILE.md#macos-bundle-replacement-and-rollback--2026-11-19).
+Both opened synthetic `.pen` sources A and B on macOS 27.3. The fixtures
+used 64 × 100 rectangles with different names and colors. The original
+checksums stayed intact through physical edits, process interruption,
+relaunch and the discard decision.
+
+- Pen brought both recovered tabs back with recovery indicators. A’s real
+  native close alert offered **Don’t Save and Discard Backup**. It closed A.
+  Reopening A via the native picker showed only its original red rectangle.
+  The saved source retained its original bytes. The green canvas region for
+  B had the same dimensions, position and filled-pixel count before and
+  after discarding A and after saving and reopening B. B closed without
+  a recovery alert after reopening.
+- Open Pen offered the two files in **Recover unsaved work**. Restoring
+  each reopened its own dirty tab. A’s **Discard Backup** closed A and
+  removed both A recovery records and its blob. B’s records and blob
+  digests were unchanged. Reopening A showed its original clean
+  one-layer document and original bytes. Explicit Save on B cleared its
+  backup, and reopening B showed a clean tab with three editable layers.
+
+The two saved B files each contain three unique rectangle IDs at
+(30,100), (30,100) and (90,100), with matching dimensions, names and
+solid green paint. The comparison normalizes the hex string and the
+paint array to the same color. The first faster Pen interruption
+returned an earlier visible position for B. A further edit and a later
+interruption produced the comparison above. The fast interruption
+capture stays with the receipts and does not establish a timing threshold.
+
+Both regular app processes, executable checksums and window-server
+geometry matched before and after. The regular Open Pen recovery store
+retained all four original records and both blobs. The initial regular
+accessibility inspection only returned application containers. The
+final regular Pen document title and frame also matched the earlier
+reference receipt. Private receipts are in
+`local-evidence/recovery-discard-pair-2026-11-19/`. This verifies
+targeted discard and preservation of the other recovered file. The
+regular-identity interruption, remaining recovery states and matched
+visual criteria are open.
