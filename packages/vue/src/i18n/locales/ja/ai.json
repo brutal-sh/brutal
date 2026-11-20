@@ -153,7 +153,7 @@
   "chatPlanForbidden": "ご利用のプランでは選択したモデルを使用できません。設定で別のモデルを選んでください。",
   "chatForbidden": "このAPIキーでは選択したモデルを使用できません。モデルへのアクセス権を確認してください。",
   "chatModelNotFound": "選択したモデルは利用できません。設定で別のモデルを選択してください。",
-  "chatNetworkFailed": "Open Penからプロバイダーに接続できませんでした。接続とエンドポイントを確認してください。",
+  "chatNetworkFailed": "Brutalからプロバイダーに接続できませんでした。接続とエンドポイントを確認してください。",
   "chatRateLimited": "プロバイダーのリクエスト制限に達しました。少し待ってから再試行してください。",
   "openProviderSettingsAction": "設定を開く",
   "cloudWorkspace": "ワークスペース",
