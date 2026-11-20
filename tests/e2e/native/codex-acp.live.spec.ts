@@ -2,6 +2,7 @@ import { strict as assert } from 'node:assert'
 import { realpath, writeFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 
+import { ensureNativeEditorReady } from '#tests/helpers/tauri/editor-snapshot'
 import { invokeNative } from '#tests/helpers/tauri/invoke'
 
 // Explicitly opt in: this sends one real prompt through the already signed-in Codex CLI.
@@ -34,7 +35,9 @@ async function preflight() {
   const agents = await invokeNative<AgentLookup>('agent_lookup')
   const mcp = await invokeNative<{ available: boolean; path: string | null }>('mcp_lookup')
   assert.equal(mcp.available, true)
-  await expectExecutable(mcp.path, resolve('packages/mcp/dist/index.mjs'))
+  const expectedBridge =
+    process.env.OPENPENCIL_LIVE_MCP_EXECUTABLE ?? resolve('packages/mcp/dist/index.mjs')
+  await expectExecutable(mcp.path, expectedBridge)
   await expectExecutable(
     agents.executables['codex-acp'],
     resolve('local-evidence/ai-runtime/node_modules/.bin/codex-acp')
@@ -143,16 +146,8 @@ describeLive('live native Codex ACP canvas acceptance', () => {
 
   it('uses existing login through native chat and MCP, creates one rectangle, and undoes it', async function () {
     this.timeout(150_000)
-    const mainHandle = await browser.getWindowHandle()
-    await browser.switchToWindow(mainHandle)
-    await browser.waitUntil(
-      async () => browser.execute(() => Boolean(window.openPencil?.getStore?.())),
-      { timeout: 30_000, timeoutMsg: 'Native editor did not initialize' }
-    )
     await preflight()
-    const newDesign = await $('button=New design')
-    if (await newDesign.isExisting()) await newDesign.click()
-    await $('canvas').waitForDisplayed()
+    await ensureNativeEditorReady()
     assert.deepEqual(
       await children(),
       [],
