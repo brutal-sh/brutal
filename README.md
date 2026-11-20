@@ -4,6 +4,8 @@ Open Pen is a local-first desktop design editor built on the MIT-licensed OpenPe
 
 [Open Pen website](https://open-pen.vercel.app/) · [Help docs](https://open-pen.vercel.app/help/#docs) · [Desktop setup](https://open-pen.vercel.app/help/getting-started/)
 
+![Open Pen desktop editor showing the Field Notes sample](packages/docs/public/screenshot.png)
+
 The implementation baseline is OpenPencil `24461adec7073312d460d76f08f069de18e4fb78`. Its attribution and MIT license remain intact. Pen's proprietary code and assets are not part of this repository.
 
 The Script Gallery bundles eleven MIT examples from [High Agency's public pencil-scripts repository](https://github.com/highagency/pencil-scripts), with its [license notice](public/licenses/pencil-scripts.txt). Gallery previews are rendered by Open Pen; bundled example fonts retain their OFL notices.
@@ -68,8 +70,6 @@ Open-source design editor. Opens `.fig` and `.pen` design files, includes built-
 > **Status:** Active development. Usable today, with some rough edges as features evolve.
 
 **[Try it online →](https://app.openpencil.dev/demo)** · [Download](https://github.com/open-pencil/open-pencil/releases/latest) · [Documentation](https://openpencil.dev) · [Roadmap](https://openpencil.dev/development/roadmap) · [llms.txt](https://openpencil.dev/llms.txt)
-
-![OpenPencil](packages/docs/public/screenshot.png)
 
 ## Installation
 

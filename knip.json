@@ -6,8 +6,7 @@
     "**/node_modules/**"
   ],
   "ignoreWorkspaces": [
-    "packages/acp",
-    "packages/demos"
+    "packages/acp"
   ],
   "ignoreUnresolved": [
     "~icons/*",
