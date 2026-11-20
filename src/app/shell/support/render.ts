@@ -19,7 +19,7 @@ function openExternally(event: MouseEvent, href: string): void {
 function createLink(doc: Document, label: string, href: string): HTMLAnchorElement {
   const anchor = doc.createElement('a')
   anchor.href = href
-  anchor.target = '_blank'
+  if (!IS_TAURI) anchor.target = '_blank'
   anchor.rel = 'noreferrer'
   anchor.textContent = label
   anchor.addEventListener('click', (event) => openExternally(event, href))

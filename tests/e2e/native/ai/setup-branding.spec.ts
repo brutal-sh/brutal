@@ -4,6 +4,7 @@ import { join } from 'node:path'
 
 import { AI_SETUP_LABELS } from '#tests/helpers/settings/ai-setup'
 import { ensureNativeEditorReady } from '#tests/helpers/tauri/editor-snapshot'
+import { invokeNative } from '#tests/helpers/tauri/invoke'
 import { chooseLocale, closeOwnedDialogs } from '#tests/helpers/tauri/settings'
 
 const OUTPUT = join(process.cwd(), 'local-evidence', 'brand-copy-ai-2026-11-06')
@@ -65,6 +66,22 @@ describe('native translated agent setup identity', () => {
         { timeoutMsg: `Native Open Pen MCP label did not render in ${labels.locale}` }
       )
       assert.equal((await connection.getText()).includes('OpenPencil'), false)
+      const guide = await connection.$('a[href]')
+      const guideURL = await guide.getAttribute('href')
+      assert.ok(guideURL)
+      // Tauri's shell plugin also opens bubbling clicks on blank-target anchors.
+      assert.notEqual(await guide.getAttribute('target'), '_blank')
+      await invokeNative('take_native_test_opened_urls')
+      await guide.click()
+      await browser.waitUntil(
+        async () => {
+          const urls = await invokeNative<string[]>('take_native_test_opened_urls')
+          if (urls.length === 0) return false
+          assert.deepEqual(urls, [guideURL])
+          return true
+        },
+        { timeoutMsg: 'The native setup guide did not reach the app’s browser opener' }
+      )
       await browser.saveScreenshot(join(OUTPUT, `${labels.locale}-native-codex.png`))
       await browser.keys('Escape')
       await setup.waitForExist({ reverse: true })
