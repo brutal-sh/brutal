@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'bun:test'
 
 import { BUILTIN_IO_FORMATS, IORegistry } from '@open-pencil/core/io'
+import { exportFigFile } from '@open-pencil/core/io/formats/fig'
 import { PenExportError, parsePenDocument } from '@open-pencil/pen'
 import { SceneGraph } from '@open-pencil/scene-graph'
 import { isExportFormatId } from '@open-pencil/scene-graph/export-format'
@@ -74,6 +75,34 @@ describe('.pen shared I/O export', () => {
     expect(reopened.graph.getNode('shape')).toMatchObject({ cornerRadius: 8, height: 76 })
     expect(reopened.graph.getNode('text')?.text).toBe('Edited')
     expect(reopened.graph.getNode('text')?.x).toBe(graph.getNode('text')?.x)
+  })
+
+  test('saves editable Pen text after restoring a FIG recovery snapshot', async () => {
+    const original = new SceneGraph()
+    original.createNode('TEXT', original.getPages()[0].id, {
+      text: 'Office layout',
+      width: 120,
+      height: 24
+    })
+    const backup = await exportFigFile(original)
+    const { graph } = await io.readDocument({ name: 'recovery.fig', data: backup })
+    const [text] = graph.getChildren(graph.getPages()[0].id)
+    expect(text.fontFeatures).toEqual([
+      { tag: 'LIGA', enabled: true },
+      { tag: 'CALT', enabled: true }
+    ])
+
+    const saved = await io.writeDocument('pen', graph)
+    const { graph: reopened } = await io.readDocument({
+      name: 'recovered.pen',
+      data: bytes(saved.data)
+    })
+    expect(reopened.getChildren(reopened.getPages()[0].id)[0]?.text).toBe('Office layout')
+
+    graph.updateNode(text.id, { fontFeatures: [{ tag: 'LIGA', enabled: false }] })
+    await expect(io.writeDocument('pen', graph)).rejects.toThrow('/fontFeatures')
+    graph.updateNode(text.id, { fontFeatures: [{ tag: 'DLIG', enabled: true }] })
+    await expect(io.writeDocument('pen', graph)).rejects.toThrow('/fontFeatures')
   })
 
   test('multi-page document refuses flattening, while exporting one page works', async () => {

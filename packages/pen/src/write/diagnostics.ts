@@ -129,6 +129,16 @@ export function nodeDiagnostics(
   for (const field of Object.keys(defaults) as (keyof SceneNode)[]) {
     if (copy && (field === 'componentId' || field === 'instanceOverrides')) continue
     if (field === 'componentId' && node.componentId === '') continue
+    // FIG recovery writes these default shaping features explicitly.
+    if (
+      field === 'fontFeatures' &&
+      node.type === 'TEXT' &&
+      node.fontFeatures.every(({ tag, enabled }) => {
+        const feature = tag.toUpperCase()
+        return enabled && (feature === 'LIGA' || feature === 'CALT')
+      })
+    )
+      continue
     if (
       !handled?.has(field) &&
       !WRITTEN.has(field) &&
