@@ -61,7 +61,7 @@ export const diagnosticsMessageDefaults = {
   retentionRange: params('Enter a whole number from {min} to {max}.'),
   retentionDescription: 'Keep up to this many recent events locally.',
   description:
-    'Store technical events locally to troubleshoot Open Pen. Review error details before sharing a report.',
+    'Store technical events locally to troubleshoot Brutal. Review error details before sharing a report.',
   localDiagnostics: 'Local diagnostics',
   localDiagnosticsDescription: 'Keep recent technical events on this device.',
   usageHistory: 'Usage history',

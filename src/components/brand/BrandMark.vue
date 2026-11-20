@@ -22,7 +22,7 @@ const sources = {
   'app-icon': 'app-icon'
 } as const
 const source = computed(() => {
-  if (variant === 'app-icon') return '/brand/open-pen-app.png'
+  if (variant === 'app-icon') return '/brand/brutal-app.png'
   const suffix = appearance === 'dark' ? '-dark' : ''
   return `/brand/${sources[variant]}${suffix}.svg`
 })
@@ -32,7 +32,7 @@ const source = computed(() => {
   <img
     :src="source"
     :class="brandMark({ class: className })"
-    :alt="decorative ? '' : 'Open Pen'"
+    :alt="decorative ? '' : 'Brutal'"
     width="16"
     height="16"
   />

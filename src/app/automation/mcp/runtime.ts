@@ -216,7 +216,7 @@ export function createMCPRuntimeService(dependencies: MCPRuntimeDependencies) {
     if (await dependencies.readHealth(server.authToken)) return
     const failure = dependencies.getHealthFailure()
     if (failure?.code === 'rejected' || failure?.code === 'malformed')
-      throw new Error(`Open Pen MCP health check failed (${failureDetail(failure)}).`)
+      throw new Error(`Brutal MCP health check failed (${failureDetail(failure)}).`)
     const result = await restartOperation()
     if (!result.ok) throw result.error
   }

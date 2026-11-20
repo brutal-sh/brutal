@@ -9,7 +9,7 @@ five-root measurement below is retained with its exact scope; it is not the whol
 Measured 2026-11-06 from the current source after the graph ownership candidate.
 This includes canvas, font and graph candidates whose native acceptance is pending; counts do not qualify behavior.
 This is a size/ownership review, not proof that all architecture or behavior is accepted.
-The implementation uses OpenPencil's existing package boundaries; Open Pen-specific behavior is added to the owning domain.
+The implementation uses OpenPencil's existing package boundaries; Brutal-specific behavior is added to the owning domain.
 
 The subsequent [Note Fill ownership follow-up](NOTE-FILL.md) reduces the layout
 coordinator from 622 physical lines to 128 (102 code lines), with flex construction,

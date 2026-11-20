@@ -95,7 +95,7 @@ export interface PenAssets {
   icons: PenIconRequest[]
   /** Images to load: files relative to the document, and data URLs. */
   images: string[]
-  /** Local GLSL files; a missing file retains its URL and any Open Pen snapshot. */
+  /** Local GLSL files; a missing file retains its URL and any Brutal snapshot. */
   shaders: string[]
 }
 

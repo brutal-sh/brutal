@@ -11,7 +11,7 @@ const release: ReleaseInfo = {
   currentVersion: '0.16.0',
   notes: `### Example release notes
 
-- Recover unsaved designs in Open Pen.
+- Recover unsaved designs in Brutal.
 - Keep local document editing available without an editor subscription.
 - Read this fork’s change history from the update window.`
 }

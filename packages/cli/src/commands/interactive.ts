@@ -29,7 +29,7 @@ async function runShell(
 ): Promise<void> {
   const terminal = !!process.stdin.isTTY && !!process.stdout.isTTY
   const lines = createInterface({ input: process.stdin, output: process.stdout, terminal })
-  lines.setPrompt('Open Pen > ')
+  lines.setPrompt('Brutal > ')
   if (terminal) {
     console.log(
       dim(

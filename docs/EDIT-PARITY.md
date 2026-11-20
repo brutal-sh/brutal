@@ -1,6 +1,6 @@
 # Native Edit parity
 
-Target: installed `/Applications/Pen.app`1.2.21. Open Pen’s independent command and text-input implementation must reproduce the observed focus behavior without changing unrelated layers, clipboard contents or credentials.
+Target: installed `/Applications/Pen.app`1.2.21. Brutal’s independent command and text-input implementation must reproduce the observed focus behavior without changing unrelated layers, clipboard contents or credentials.
 
 ## Actual reference
 
@@ -14,7 +14,7 @@ Entering canvas text editing, selecting `text` and choosing native Delete left `
 
 The initial browser regressions reproduced an ignored field deletion and canvas dispatch of a whole-layer deletion command. Routing ordinary fields through the browser’s native editing command preserves their own Undo history. The canvas uses an empty input buffer, so the browser deletion command alone does not update its text model. The focused menu action now routes a scoped input request to the existing canvas deletion routine, which preserves style-run/paragraph updates and text-edit history. The existing composition guard is retained.
 
-Real Done criterion: actual Open Pen native Edit menu deletes the selected field/canvas text range, the node and unrelated state survive, leaving the field commits correctly, and Undo restores the original value/content. Browser tests, source tracing and native event emission alone do not close that criterion. Native Edit inventory, OS services, composition, disabled/read-only and all remaining focus states stay open until executed and compared.
+Real Done criterion: actual Brutal native Edit menu deletes the selected field/canvas text range, the node and unrelated state survive, leaving the field commits correctly, and Undo restores the original value/content. Browser tests, source tracing and native event emission alone do not close that criterion. Native Edit inventory, OS services, composition, disabled/read-only and all remaining focus states stay open until executed and compared.
 
 Interim verification:12 Chromium/WebKit focused-command workflows pass, including native field Undo, composition-guard simulation, selected canvas text deletion, unchanged layer identity and browser Edit→Undo. The first canvas Delete correction exposed that Undo grouped the menu action with preceding typing; the existing text-step checkpoint now separates them. Browser keyboard Undo while the hidden canvas input has focus remains a separate observed gap; the native OS accelerator has not yet been checked.
 

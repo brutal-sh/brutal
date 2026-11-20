@@ -27,11 +27,11 @@ export async function generateWeb(root: string): Promise<BrandFiles> {
     adapter
   )
   const files: BrandFiles = new Map()
-  const appPNG = await sharp(join(root, 'assets/brand/open-pen-app.png'))
+  const appPNG = await sharp(join(root, 'assets/brand/brutal-app.png'))
     .resize(1024, 1024)
     .png()
     .toBuffer()
-  files.set('brand/open-pen-app.png', appPNG)
+  files.set('brand/brutal-app.png', appPNG)
   for (const [name, content] of Object.entries(generated)) {
     // VitePWA owns the application's manifest; the docs are not an installable app.
     if (name === 'site.webmanifest' || name === 'web-app-manifest-192x192.png') continue

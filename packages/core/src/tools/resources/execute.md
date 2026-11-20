@@ -1,4 +1,4 @@
-# Execute design work in Open Pen
+# Execute design work in Brutal
 
 Use the installed MCP tool list or CLI tool help as the argument contract. The
 current independent tool set includes `get_current_page`, `get_selection`,

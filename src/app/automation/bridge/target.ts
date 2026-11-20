@@ -83,7 +83,7 @@ export function resolveAutomationTarget(
     throw new Error(
       requestedDocumentId
         ? `Document "${requestedDocumentId}" not found`
-        : 'No active Open Pen document'
+        : 'No active Brutal document'
     )
   }
 

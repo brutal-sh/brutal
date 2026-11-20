@@ -24,7 +24,7 @@
   "mcpFailed": "Połączenie MCP nie powiodło się",
   "retention": "Retencja diagnostyki",
   "retentionDescription": "Zachowuj lokalnie do tej liczby ostatnich zdarzeń.",
-  "description": "Zapisuj zdarzenia techniczne lokalnie, aby diagnozować problemy z Open Pen. Przed udostępnieniem raportu sprawdź szczegóły błędów.",
+  "description": "Zapisuj zdarzenia techniczne lokalnie, aby diagnozować problemy z Brutal. Przed udostępnieniem raportu sprawdź szczegóły błędów.",
   "eventCount": "{count} zdarzeń · {size} KB",
   "copy": "Kopiuj diagnostykę",
   "save": "Zapisz diagnostykę…",

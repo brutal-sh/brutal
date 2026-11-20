@@ -53,7 +53,7 @@ openpencil interactive -a desktop -i designs/landing.pen -o designs/copy.pen
 ```
 
 Without an input path or document ID, the session selects the one active document.
-Use a matching updated Open Pen app: a bridge that does not advertise unique
+Use a matching updated Brutal app: a bridge that does not advertise unique
 document identities is refused before opening a file or applying an edit.
 An input path opens that file; it cannot be combined with a document ID. The first
 JSON response identifies the connected document and page. Later tab or page

@@ -10,7 +10,7 @@ export const aiFailureDefaults = {
   chatOutputLimit:
     'The model ran out of output tokens while reasoning. Raise Max output tokens or lower reasoning effort.',
   chatModelNotFound: 'The selected model is unavailable. Choose another model in Settings.',
-  chatNetworkFailed: 'Open Pen could not reach the provider. Check your connection and endpoint.',
+  chatNetworkFailed: 'Brutal could not reach the provider. Check your connection and endpoint.',
   chatRateLimited: 'The provider rate limit was reached. Wait a moment and try again.',
   chatRequestFailed: 'The model request failed. Check the provider settings and try again.',
   openProviderSettingsAction: 'Open settings',
@@ -37,9 +37,9 @@ export const aiFailureDefaults = {
   visionModelUnavailable: 'Choose a Vision model in Settings before attaching images.',
   chatPiCompanionMissing: 'Pi needs the Harness companion. Run guided setup to install it.',
   chatPiCompanionOutdated:
-    'The Harness companion doesn’t match this version of Open Pen. Run guided setup to update it.',
+    'The Harness companion doesn’t match this version of Brutal. Run guided setup to update it.',
   chatMCPOutdated:
-    'Open Pen’s MCP server doesn’t match this version of Open Pen. Run guided setup to update it.',
+    'Brutal’s MCP server doesn’t match this version of Brutal. Run guided setup to update it.',
   chatPiSignIn:
     'Pi isn’t signed in to a provider. Run pi in a terminal and type /login, or add an AI Gateway key.',
   chatPiModel:

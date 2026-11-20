@@ -19,8 +19,8 @@ tool-connection watcher rejected.
 Every case rejects before a prompt is delivered. Each spawned stand-in is killed before
 explicit transport destruction. The missing-executable case never creates a child.
 
-The no-install-command branch says to restart Open Pen. The tools-unreachable branches
-name Open Pen while preserving Codex and the agent-reported reason. The captured session
+The no-install-command branch says to restart Brutal. The tools-unreachable branches
+name Brutal while preserving Codex and the agent-reported reason. The captured session
 configuration retains `open-pencil`, `mcp__open-pencil`, the server arguments and the
 test-owned working directory. These are protocol identities, not product labels.
 Formatter controls retain vendor installation guidance, missing-server and timeout advice,

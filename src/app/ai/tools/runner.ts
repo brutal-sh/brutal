@@ -29,7 +29,7 @@ export interface ReplyCall {
   toolCallId: string
 }
 
-/** One call of an Open Pen tool, from the built-in chat, a coding agent, or another client. */
+/** One call of an Brutal tool, from the built-in chat, a coding agent, or another client. */
 export interface EditorToolCall {
   store: EditorStore
   figma: FigmaAPI
@@ -157,7 +157,7 @@ async function applyTool(call: EditorToolCall, reply: ReplyCall | null): Promise
 }
 
 /**
- * Runs one call of an Open Pen tool. An edit runs alone in its document, is recorded as one
+ * Runs one call of an Brutal tool. An edit runs alone in its document, is recorded as one
  * undo entry, and, for a call that belongs to a chat reply, joins the reply's run so the reply
  * can revert it and the transcript shows what it changed.
  */

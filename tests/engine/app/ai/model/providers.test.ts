@@ -76,7 +76,7 @@ describe('resolveLanguageModelID', () => {
 })
 
 describe('model provider registry', () => {
-  test('identifies Open Pen to the OpenRouter chat endpoint', async () => {
+  test('identifies Brutal to the OpenRouter chat endpoint', async () => {
     const requests: Request[] = []
     const config: ModelConfig = {
       providerID: 'openrouter',
@@ -102,7 +102,7 @@ describe('model provider registry', () => {
 
     expect(requests).toHaveLength(1)
     expect(requests[0]?.url).toBe('https://openrouter.ai/api/v1/chat/completions')
-    expect(requests[0]?.headers.get('X-OpenRouter-Title')).toBe('Open Pen')
+    expect(requests[0]?.headers.get('X-OpenRouter-Title')).toBe('Brutal')
     expect(requests[0]?.headers.get('HTTP-Referer')).toBe('https://open-pen.vercel.app/')
   })
 

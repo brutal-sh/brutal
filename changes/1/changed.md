@@ -4,8 +4,8 @@
 - Suggests `.pen` for the first local Save and accepts JSON comments while preserving strict malformed-file rejection.
 - Keeps document-tab keyboard focus while the browser dock spans the full editor height.
 - Uses measured Pen toolbar dimensions, inset borders, menu typography and dark surfaces.
-- Uses the original violet Open Pen nib across native, web, favicon, PWA and monochrome artwork.
-- Names owned diagnostics, MCP messages, JSX warnings and profiler exports for Open Pen while retaining compatibility identifiers.
+- Uses the original violet Brutal nib across native, web, favicon, PWA and monochrome artwork.
+- Names owned diagnostics, MCP messages, JSX warnings and profiler exports for Brutal while retaining compatibility identifiers.
 - Replaces the storage sidebar on Home with a centered creation composer, import actions, document tabs and larger preview cards; keeps search and storage in compact controls, refreshes recovery drafts as snapshots change and exposes component libraries, and sends Home prompts and images through the new document’s Agent.
 - Removes a document’s recovery snapshot when Undo returns it to a clean state, while preserving unrelated drafts and edits arriving during cleanup.
 
@@ -37,10 +37,11 @@
 
 - Wrap sibling selections with inferred flow, retained average spacing, numbered frames and matching cross-axis Fill sizing through inspector, menu and keyboard actions.
 - Primitives starts keyboard focus on Rectangle while retaining the checked tool, and compact named icons place their controls below Fill without frame-only Flow, clipping or Stroke controls; Advanced retains those controls.
-- Use Open Pen product labels across supported translations, setup, notifications, startup guidance, document-format labels, CLI help and export errors while preserving third-party service names.
+- Use Brutal product labels across supported translations, setup, notifications, startup guidance, document-format labels, CLI help and export errors while preserving third-party service names.
 
-- Software Update links to Open Pen’s change history and shows translated availability guidance with readable release-note placeholders, including manual checks when updates are not configured.
+- Software Update links to Brutal’s change history and shows translated availability guidance with readable release-note placeholders, including manual checks when updates are not configured.
 - Startup support notices link to the public Help site and bug form and keep diagnostics visible for review before sharing.
 - The Apple-silicon macOS beta bundles its matching canvas bridge for coding agents.
 - CLI subcommand help shows the full command path instead of the local entry script path.
 - Codex chats use explicitly invoked skills without injecting the full installed skill catalog into every turn.
+- The desktop design editor is now Brutal, with a new app icon.

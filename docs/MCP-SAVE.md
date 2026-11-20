@@ -80,4 +80,4 @@ MCP quota refusal remains binding; no retry or extracted helper execution is use
 Current catalog reference is Pen 1.2.23, ASAR SHA256
 `d0c5c23a3a86ec1802c8754b59e82600d815f0e2b6a383f655319535e6e07925`.
 Exact reference outputs, remaining native delivery, standalone packaging and full
-parity remain unaccepted. No normal Open Pen installation or user profile is changed.
+parity remain unaccepted. No normal Brutal installation or user profile is changed.

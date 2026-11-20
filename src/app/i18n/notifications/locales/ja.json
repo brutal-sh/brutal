@@ -28,11 +28,11 @@
   "deepLinkPickerDismissed": "リンクをキャンセルしました。ファイルが選択されていません。",
   "deepLinkCancelled": "リンクをキャンセルしました。「{file}」で終わるファイルが必要です。",
   "deepLinkNodeNotFound": "「{file}」にレイヤー「{node}」が見つかりませんでした。",
-  "openQueuedFilesFailed": "Open Pen に渡されたファイルを開けませんでした: {error}",
+  "openQueuedFilesFailed": "Brutal に渡されたファイルを開けませんでした: {error}",
   "tokensLeftOut": "スタイルシートに含まれていません: {names}",
   "designTokensLeftOut": "デザイントークンに含まれていません: {names}",
   "designTokensImported": "{count} 個のデザイントークンを読み込みました。",
-  "unsupportedVariableExpressions": "Open Pen はまだこれらの変数を評価できないため、レイヤーはファイルに保存された値を保ちます: {names}",
+  "unsupportedVariableExpressions": "Brutal はまだこれらの変数を評価できないため、レイヤーはファイルに保存された値を保ちます: {names}",
   "nativeSaveTitle": "{extension}ファイルを別名で保存…",
   "nativeSaveFailed": "「{name}」を保存できませんでした",
   "nativeSavePermissionDenied": "権限がないため、Open Penはこのファイルを保存できません。「ファイル」→「別名で保存」で、書き込み可能なフォルダにコピーを保存してください。"

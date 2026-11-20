@@ -1,6 +1,6 @@
 # Parity reference and implementation base
 
-The product reference is the installed `/Applications/Pen.app` **1.2.23**, bundle identifier `dev.pencil.desktop`. Its internal Pencil naming is unrelated to the MIT OpenPencil codebase used as Open Pen's implementation base.
+The product reference is the installed `/Applications/Pen.app` **1.2.23**, bundle identifier `dev.pencil.desktop`. Its internal Pencil naming is unrelated to the MIT OpenPencil codebase used as Brutal's implementation base.
 
 The independent build is `/Applications/Open Pen.app`, bundle identifier `dev.jpoindexter.openpen`. Existing `open-pencil` package names and the `openpencil` Playwright project name refer to implementation/test infrastructure; they do not make OpenPencil the parity target.
 
@@ -10,7 +10,7 @@ Current versioned update: [Pen1.2.23 catalog](pen-feature-reference/update-1.2.2
 
 ## Private shipped-reference archive
 
-`local-evidence/pen-reference-1.2.21/` contains a complete REA regular-file extraction of Pen's ASAR plus application/framework resources. It is ignored by Git; proprietary bytes are reference-only and are not distributed with Open Pen.
+`local-evidence/pen-reference-1.2.21/` contains a complete REA regular-file extraction of Pen's ASAR plus application/framework resources. It is ignored by Git; proprietary bytes are reference-only and are not distributed with Brutal.
 
 The extraction contains20,800 ASAR files, verified individually against REA's observed-byte hashes;20,981 regular files including native resources;471 raster image measurements;5 SVG measurements;1 bundled font's metrics;99 CSS files; and22 native catalog renditions plus the catalog record. Its README documents the native catalog coverage limit, integrity metadata contradictions and distinction between intrinsic asset size and live layout.
 

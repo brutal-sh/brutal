@@ -30,7 +30,7 @@ ships in every bundle. Build tools and documentation-site packages are separate.
 | Shared document/runtime libraries | Core's dependencies include FIG, Kiwi, Pen, draw.io, Mermaid, DOM/CSS, design JSX and Scene Graph; DOM/CSS and design JSX depend on Emit. | Neutral libraries retain their own package/public-export boundaries; Vue SDK is the headless UI owner. |
 | Node companion targets | CLI, MCP and Harness manifests declare commands; their `tsdown.config.ts` entries select Node. | These are not browser-shipped code; include their three small `bin/*.js` launchers. |
 | Optional Cloud targets | Cloud's build separates contract/server, browser client, email and Node entries; standalone/server and Cloudflare deployment adapters are explicit. | Optional service code is inventoried separately from the editor and Cloud portal entry. No deployment is performed. |
-| Optional feedback/metrics targets | Feedback's Wrangler entry is `src/index.ts`; root metrics build is its own HTML/Vue entry. | Include four feedback SQL migrations and both Cloud deployment worker adapters; never imply these inherited services are deployed for Open Pen. |
+| Optional feedback/metrics targets | Feedback's Wrangler entry is `src/index.ts`; root metrics build is its own HTML/Vue entry. | Include four feedback SQL migrations and both Cloud deployment worker adapters; never imply these inherited services are deployed for Brutal. |
 
 | Owner | Code files | Physical lines | Largest file | Above 600 |
 | --- | ---: | ---: | ---: | ---: |

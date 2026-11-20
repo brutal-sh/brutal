@@ -149,7 +149,7 @@ fn escape_html(text: &str) -> String {
 fn respond(stream: &mut TcpStream, status: &str, message: &str) {
     let message = escape_html(message);
     let body = format!(
-        "<!doctype html><meta charset=\"utf-8\"><title>Open Pen</title>\
+        "<!doctype html><meta charset=\"utf-8\"><title>Brutal</title>\
          <p style=\"font:16px system-ui;margin:48px auto;max-width:480px\">{message}</p>"
     );
     let response = format!(
@@ -326,7 +326,7 @@ mod tests {
                 listener,
                 state: "openrouter-state".into(),
                 pages: CallbackPages {
-                    signed_in: "Return to Open Pen".into(),
+                    signed_in: "Return to Brutal".into(),
                     cancelled: "Cancelled".into(),
                     stale: "Stale".into(),
                 },

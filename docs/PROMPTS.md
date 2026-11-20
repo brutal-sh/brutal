@@ -1,6 +1,6 @@
 # Prompt Gallery & Tips
 
-These prompts are written for Open Pen’s chat and local canvas tools. Connect an AI provider or an existing coding-agent login in Settings first. The provider supplies inference; Open Pen supplies the document tools. Review the result on the canvas and save the document yourself.
+These prompts are written for Brutal’s chat and local canvas tools. Connect an AI provider or an existing coding-agent login in Settings first. The provider supplies inference; Brutal supplies the document tools. Review the result on the canvas and save the document yourself.
 
 ## Create an editable screen
 
@@ -18,7 +18,7 @@ Give the intended scope explicitly. Inspect the layer tree and properties after 
 
 > Inspect the selected frame. Describe its layout, typography, colors and reusable components, then propose a React implementation. Preserve the visible content and identify any asset or behavior you cannot infer.
 
-For a file export, use Open Pen’s code-export controls and inspect the generated output. For an external agent, use File → Guide: How to Export Design to Code and check the local MCP server status. Code generation depends on the connected client and model; a running bridge alone does not generate a working application.
+For a file export, use Brutal’s code-export controls and inspect the generated output. For an external agent, use File → Guide: How to Export Design to Code and check the local MCP server status. Code generation depends on the connected client and model; a running bridge alone does not generate a working application.
 
 ## Check the result
 

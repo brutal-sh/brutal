@@ -1,6 +1,6 @@
 {
   "about": {
-    "label": "About Open Pen"
+    "label": "About Brutal"
   },
   "check-updates": {
     "label": "Check for Updates…"
@@ -10,7 +10,7 @@
     "accelerator": "CmdOrCtrl+,"
   },
   "quit": {
-    "label": "Quit Open Pen",
+    "label": "Quit Brutal",
     "accelerator": "CmdOrCtrl+Q"
   }
 }

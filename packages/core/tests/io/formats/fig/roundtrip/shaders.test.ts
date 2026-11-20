@@ -22,7 +22,7 @@ const PRESET: ShaderPreset = { components: [{ type: 'Aurora', props: { colorA: '
 
 /**
  * A shader paint is an image paint of its frame with the preset in plugin data, so a `.fig`
- * archive keeps both: Figma draws content-addressed frames; Open Pen restores a mutable frame
+ * archive keeps both: Figma draws content-addressed frames; Brutal restores a mutable frame
  * identity per paint slot, keeping distinct presets even when their PNG pixels are identical.
  */
 test.each([

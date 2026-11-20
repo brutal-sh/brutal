@@ -6,7 +6,7 @@ Reference: actual Pen 1.2.22, observed 2026-11-09.
 
 The earlier owned native reference exports one selected frame directly as a 240 × 160
 SVG. Two selected frames produce `export.zip`, containing their separately named
-240 × 160 and 120 × 80 SVGs. Open Pen instead exports one combined 440 × 160 SVG.
+240 × 160 and 120 × 80 SVGs. Brutal instead exports one combined 440 × 160 SVG.
 The original native outputs and browser capture are retained under
 `local-evidence/svg-parity-2026-11-09/`.
 

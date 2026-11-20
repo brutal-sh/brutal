@@ -8,17 +8,17 @@ full layout, menu or native acceptance.
 
 Two independently authored 80 × 60 rectangles have rotation 90° and raw x positions
 0 and 120. Identical input bytes are opened separately in actual Pen and normal
-Open Pen. Native child positions are 0, −80 before wrapping; stored coordinates
+Brutal. Native child positions are 0, −80 before wrapping; stored coordinates
 and inspector positions are different representations.
 
-| Phase | Actual Pen 1.2.23 | Installed Open Pen `db4e528c` |
+| Phase | Actual Pen 1.2.23 | Installed Brutal `db4e528c` |
 | --- | --- | --- |
 | Add flex, gap 60 | 180 × 80, horizontal, Hug Width, fixed height | 220 × 80, same sizing modes |
 | Explicit Save As, before closing | 180 × 80 | 220 × 80 |
 | Clean close and native reopen | 60 × 80 | 220 × 80 |
 
 Pen saves the wrapper width omitted and child heights as bare `fill_container`.
-Open Pen saves `fit_content(220)` and `fill_container(80)`. Its reader currently
+Brutal saves `fit_content(220)` and `fill_container(80)`. Its reader currently
 reconstructs the reference file at 220 × 80. This import discrepancy is open.
 A separate fresh-identity reference control starts at 60 × 80, becomes 221 × 80
 when Gap changes from 60 to 61, saves at 221 × 80 and reopens at 61 × 80. The

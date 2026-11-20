@@ -8,7 +8,7 @@ import { CODING_AGENTS_GUIDE_URL } from '@/constants'
 const SIGN_IN: Record<ACPAgentID, string> = {
   'claude-code':
     'Make sure I am signed in to Claude Code: run `claude` and use `/login` if it asks me to sign in.',
-  codex: 'If I am not signed in to Codex, have me use Sign in in Open Pen’s Codex setup.',
+  codex: 'If I am not signed in to Codex, have me use Sign in in Brutal’s Codex setup.',
   'gemini-cli': 'Make sure I am signed in to Gemini CLI: run `gemini` and choose a sign-in method.'
 }
 
@@ -19,21 +19,21 @@ export function codingAgentGuideURL(agentID: ACPAgentID): string {
 
 /**
  * Markdown to paste into a coding agent the person already uses, asking it to install what
- * Open Pen needs to start it. Written for the agent, so it stays in English.
+ * Brutal needs to start it. Written for the agent, so it stays in English.
  */
 export function codingAgentSetupPrompt(agentID: ACPAgentID, bridgeReady: boolean): string {
   const agent = ACP_AGENTS.find((candidate) => candidate.id === agentID)
   if (!agent) return ''
   const install = agent.installCommand ?? `Install ${agent.name}`
   const bridgeStep = bridgeReady
-    ? 'Open Pen has already detected its compatible canvas bridge.'
+    ? 'Brutal has already detected its compatible canvas bridge.'
     : dedent`
         If the canvas bridge is missing from a developer build, run \`${MCP_INSTALL_COMMAND}\`
-        from the built Open Pen checkout. For the packaged Mac beta, reinstall the
-        app if it cannot find its bundled bridge. Use Open Pen's bridge with either build.
+        from the built Brutal checkout. For the packaged Mac beta, reinstall the
+        app if it cannot find its bundled bridge. Use Brutal's bridge with either build.
       `
   return dedent`
-    Help me connect ${agent.name} to Open Pen, a desktop design editor. Open Pen starts ${agent.name} through the Agent Client Protocol and provides canvas tools through its local MCP bridge.
+    Help me connect ${agent.name} to Brutal, a desktop design editor. Brutal starts ${agent.name} through the Agent Client Protocol and provides canvas tools through its local MCP bridge.
 
     Please do this for me:
 
@@ -44,7 +44,7 @@ export function codingAgentSetupPrompt(agentID: ACPAgentID, bridgeReady: boolean
 
     ${bridgeStep}
 
-    Then tell me what you installed and anything I still need to do myself. I will press "Check again" in Open Pen's AI setup afterwards.
+    Then tell me what you installed and anything I still need to do myself. I will press "Check again" in Brutal's AI setup afterwards.
 
     Setup guide: ${codingAgentGuideURL(agentID)}
   `

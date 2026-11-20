@@ -24,7 +24,7 @@ Codex ACP inherits the user's installed skills. The local catalog contains 1,263
 about 444,658 name/description characters. A real read-only turn through ACP 2.5.0 and its
 bundled Codex 0.165.0 reproduces the overflow warning with 814 entries omitted.
 
-Open Pen's Codex child receives `CODEX_CONFIG` with `skills.include_instructions=false`.
+Brutal's Codex child receives `CODEX_CONFIG` with `skills.include_instructions=false`.
 The native command retains all other inherited JSON keys, including skill overrides; invalid
 objects fail without echoing their content. Other ACP agents retain their environment.
 Global configuration, login, installed skills, permissions and the user's instructions are
@@ -33,7 +33,7 @@ document the process-local configuration mechanism.
 
 This suppresses **all automatic skill-catalog injection for that child**, including repository
 and plugin catalogs. It does not preserve automatic global skill selection. Explicit skill
-invocation remains supported, and Open Pen already inlines a skill the user runs in its prompt.
+invocation remains supported, and Brutal already inlines a skill the user runs in its prompt.
 Codex's [version-pinned extension](https://github.com/openai/codex/blob/rust-v0.165.0/codex-rs/ext/skills/src/extension.rs)
 handles explicit skill mentions separately from automatic catalog instructions.
 
@@ -46,7 +46,7 @@ retention, safe refusal, Windows dispatch, other agents, streams and close/error
 
 A guarded native-test turn through the existing CLI login creates exactly one 160×100 red
 rectangle at (100,100), verifies it, then document Undo removes it. Its transcript contains no
-skill-budget warning. A separate real turn follows instructions composed by Open Pen's actual
+skill-budget warning. A separate real turn follows instructions composed by Brutal's actual
 `appendSkillContext` helper and returns the synthetic skill marker with zero tool calls.
 The native WebView renders the long title with a 233px clipped label, 493px natural text width,
 a visible chevron and the original 13px font.

@@ -82,7 +82,7 @@ for (const locale of LOCALES) {
             notesRequests.push(route.request().url())
             await route.fulfill({
               contentType: 'text/html',
-              body: '<title>Open Pen change history fixture</title>'
+              body: '<title>Brutal change history fixture</title>'
             })
           })
           for (const [story, status] of states) {

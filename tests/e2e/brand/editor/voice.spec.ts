@@ -13,61 +13,61 @@ const LOCALES = [
     locale: 'en',
     start: 'Start voice call',
     description:
-      'Allow Open Pen to use the microphone in your browser or system settings, then try again.'
+      'Allow Brutal to use the microphone in your browser or system settings, then try again.'
   },
   {
     locale: 'de',
     start: 'Sprachanruf starten',
     description:
-      'Erlaube Open Pen in den Browser- oder Systemeinstellungen, das Mikrofon zu verwenden, und versuche es erneut.'
+      'Erlaube Brutal in den Browser- oder Systemeinstellungen, das Mikrofon zu verwenden, und versuche es erneut.'
   },
   {
     locale: 'es',
     start: 'Iniciar llamada de voz',
     description:
-      'Permite que Open Pen use el micrófono en la configuración del navegador o del sistema y vuelve a intentarlo.'
+      'Permite que Brutal use el micrófono en la configuración del navegador o del sistema y vuelve a intentarlo.'
   },
   {
     locale: 'fr',
     start: 'Démarrer un appel vocal',
     description:
-      'Autorisez Open Pen à utiliser le microphone dans les réglages du navigateur ou du système, puis réessayez.'
+      'Autorisez Brutal à utiliser le microphone dans les réglages du navigateur ou du système, puis réessayez.'
   },
   {
     locale: 'it',
     start: 'Avvia chiamata vocale',
     description:
-      'Consenti a Open Pen di usare il microfono nelle impostazioni del browser o del sistema, poi riprova.'
+      'Consenti a Brutal di usare il microfono nelle impostazioni del browser o del sistema, poi riprova.'
   },
   {
     locale: 'ja',
     start: '音声通話を開始',
     description:
-      'ブラウザまたはシステムの設定で Open Pen にマイクの使用を許可してから、もう一度お試しください。'
+      'ブラウザまたはシステムの設定で Brutal にマイクの使用を許可してから、もう一度お試しください。'
   },
   {
     locale: 'pl',
     start: 'Rozpocznij rozmowę głosową',
     description:
-      'Zezwól Open Pen na używanie mikrofonu w ustawieniach przeglądarki lub systemu, a następnie spróbuj ponownie.'
+      'Zezwól Brutal na używanie mikrofonu w ustawieniach przeglądarki lub systemu, a następnie spróbuj ponownie.'
   },
   {
     locale: 'ru',
     start: 'Начать голосовой звонок',
     description:
-      'Разрешите Open Pen использовать микрофон в настройках браузера или системы и попробуйте снова.'
+      'Разрешите Brutal использовать микрофон в настройках браузера или системы и попробуйте снова.'
   },
   {
     locale: 'zh-CN',
     start: '开始语音通话',
-    description: '请在浏览器或系统设置中允许 Open Pen 使用麦克风，然后重试。'
+    description: '请在浏览器或系统设置中允许 Brutal 使用麦克风，然后重试。'
   }
 ] as const
 
 for (const { locale, start, description } of LOCALES) {
   test.describe(locale, () => {
     test.use({ locale })
-    test(`blocked microphone guidance identifies Open Pen in ${locale}`, async ({
+    test(`blocked microphone guidance identifies Brutal in ${locale}`, async ({
       page
     }, testInfo) => {
       const relay = await startRelay()

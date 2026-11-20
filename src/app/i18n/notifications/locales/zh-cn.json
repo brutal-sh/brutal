@@ -28,11 +28,11 @@
   "deepLinkPickerDismissed": "已取消链接：未选择任何文件。",
   "deepLinkCancelled": "已取消链接：需要以“{file}”结尾的文件。",
   "deepLinkNodeNotFound": "在“{file}”中未找到图层“{node}”。",
-  "openQueuedFilesFailed": "无法打开传递给 Open Pen 的文件：{error}",
+  "openQueuedFilesFailed": "无法打开传递给 Brutal 的文件：{error}",
   "tokensLeftOut": "未写入样式表：{names}",
   "designTokensLeftOut": "未写入设计令牌：{names}",
   "designTokensImported": "已导入 {count} 个设计令牌。",
-  "unsupportedVariableExpressions": "Open Pen 暂不能计算这些变量，图层保留文件中保存的值：{names}",
+  "unsupportedVariableExpressions": "Brutal 暂不能计算这些变量，图层保留文件中保存的值：{names}",
   "nativeSaveTitle": "将{extension}文件另存为…",
   "nativeSaveFailed": "无法保存“{name}”",
   "nativeSavePermissionDenied": "你没有相应权限，Open Pen无法保存此文件。请使用“文件”→“另存为”，将副本保存到可写入的文件夹中。"

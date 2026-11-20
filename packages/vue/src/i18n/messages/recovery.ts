@@ -2,7 +2,7 @@ import { i18n } from '#vue/i18n/create'
 
 export const recoveryMessageDefaults = {
   dialogTitle: 'Recover unsaved work',
-  dialogDescription: 'Open Pen found documents from a previous session.',
+  dialogDescription: 'Brutal found documents from a previous session.',
   restoreFailed: 'Could not restore this document.',
   discardFailed: 'Could not discard this recovery copy. Try again.',
   closeDescription: 'Save to update the original, or keep a backup to recover your edits later.',

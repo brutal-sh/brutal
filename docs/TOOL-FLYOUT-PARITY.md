@@ -10,7 +10,7 @@ The privately extracted shipped bundle/CSS establish these desktop measurements 
 
 ## Independent correction
 
-Open Pen used8px side offset,14px check, an indicator column4px farther right, smaller corners and no shortcut inset. Those desktop values now follow the measurements. The extra desktop separator and Import Figma ellipsis are removed. The existing mobile offset/check/separator are retained. Initial desktop focus now targets the checked radio in the opening menu; it neither changes the active tool nor edits the document. The hook uses the existing menu focus event and searches only that menu.
+Brutal used8px side offset,14px check, an indicator column4px farther right, smaller corners and no shortcut inset. Those desktop values now follow the measurements. The extra desktop separator and Import Figma ellipsis are removed. The existing mobile offset/check/separator are retained. Initial desktop focus now targets the checked radio in the opening menu; it neither changes the active tool nor edits the document. The hook uses the existing menu focus event and searches only that menu.
 
 The new focused-Move assertion reproduced a real mismatch before the hook (`tool-flyout-focus-before.log`). Final16 browser workflows pass in26.1s (`tool-flyout-focus-browser-final.log`), including Move/Scale focus, remembered Star focus while another tool is active, Escape/trigger focus return, one-step Scale geometry/text/stroke Undo, cancellation, Icon/image/Figma insertion, direct Frame creation, vertical toolbar keyboard navigation and two mobile modes.
 
@@ -27,7 +27,7 @@ The screenshot of the reference's48×48 selected box at2x is centered on the del
 start(950,220), establishing the anchor separately from size. An independent legacy `icon`
 document also opens in Pen with editable heart/lucide,24×24 and white Fill controls.
 
-Open Pen reuses icon loading, paths, selection and subtree history for this placement tool.
+Brutal reuses icon loading, paths, selection and subtree history for this placement tool.
 Default Primitives hides Line/Star; Customize toolbar and stored explicit choices retain them.
 Object → Insert Icon retains the picker, browsing, recent icons and chosen-glyph insertion.
 Explicit placement keeps fractional parent-local coordinates and rejects stale graph, parent
@@ -56,7 +56,7 @@ native-placement-last.png. This does not qualify editable-icon Save/reopen.
 
 ## Editable named-icon saving, 2026-11-04
 
-Open Pen independently writes unedited24px Lucide artwork as an editable legacy `icon`
+Brutal independently writes unedited24px Lucide artwork as an editable legacy `icon`
 with its library, glyph name and uniform color. Derived paths are omitted only after checking
 the recorded drawing, every path's default fields, its supported paints and tint metadata.
 Frame properties still pass through the ordinary writer and diagnostics. Unsupported content
@@ -99,7 +99,7 @@ existing handling. Remembered customized Star still stays checked while Rectangl
 Opening or navigating the menu does not select a different tool or edit the document.
 
 A fresh REA observation of the running Pen window confirms Icon below Fill and no Stroke,
-Flow segmented row or Clip content checkbox for the selected named icon. Compact Open Pen
+Flow segmented row or Clip content checkbox for the selected named icon. Compact Brutal
 now follows that section/control structure. Advanced retains its original controls and order;
 ordinary and mixed frame controls keep their existing behavior. This does not yet match the
 Fill row, separate glyph/family selectors, tool/header glyphs or all inspector pixels.
@@ -125,7 +125,7 @@ nothing for an omitted or empty fill. A wider icon samples the gradient in its p
 bounds while its square glyph remains centered. Independent owned probe documents and
 Pen's exported images are private in icon-paints-2026-11-04; no vendor artwork is added.
 
-Open Pen applies those paint stacks to the glyph's tinted fills and strokes, retaining
+Brutal applies those paint stacks to the glyph's tinted fills and strokes, retaining
 intrinsic opacity and stroke geometry. Nested reusable instances resolve the original
 glyph before applying replacement paints. The regression first produces two green paints
 instead of one, then passes with the expected opacity and retained instance override after

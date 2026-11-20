@@ -11,7 +11,7 @@ File → SVG path saves a single file; selecting both frames saves `export.zip` 
 named SVG per frame. Native single-file bytes equal the tool export. Tool exports at
 scale one/four are byte-identical, and text is represented by paths.
 
-Open Pen's actual browser FileOpen initially rejects that source at `/version`, explaining
+Brutal's actual browser FileOpen initially rejects that source at `/version`, explaining
 that the reader targets 2.21. This preserves the original source. The current-reference
 update therefore establishes an import prerequisite, rather than merely a new label.
 
@@ -37,7 +37,7 @@ All browser controls retain the normal 15-second limit and real error reporting.
 
 The exported artifacts show concrete remaining SVG differences:
 
-| Selection   | Pen 1.2.22                   | Current Open Pen               |
+| Selection   | Pen 1.2.22                   | Current Brutal               |
 | ----------- | ---------------------------- | ------------------------------ |
 | First frame | 240 × 160 SVG, text paths    | 240 × 160 SVG, live text/tspan |
 | Both frames | ZIP with two named SVG files | One combined 440 × 160 SVG     |
@@ -58,13 +58,13 @@ The subsequent [text round-trip repair](PEN-TEXT-ROUNDTRIP.md) executes a bounde
 cold/warm text control and actual Pen reopen. It catches and repairs both font-metric
 instability and numeric weight serialization; the native saved-copy SVG/fixture pixels
 then exactly equal the originals. This supersedes the unexecuted persistence statement
-only for that owned fixture. General format/Note/native Open Pen qualification remains open.
+only for that owned fixture. General format/Note/native Brutal qualification remains open.
 
 The [Note reference control](NOTE-REFERENCE-CONTROL.md) records actual default/custom
 colors, authored-versus-rendered sizing, content growth and raster SVG output. Its initial
 phase retains a placement disagreement and unsaved service state. The later actual Pen
 native edit/history and Save As/Close/FileOpen follow-up retains identical frame pixels
-and reports Y24 bounds after reopen. Open Pen Note input/interchange, legacy Prompt/Context
+and reports Y24 bounds after reopen. Brutal Note input/interchange, legacy Prompt/Context
 migration and remaining native states stay open.
 
 The [SVG selection control](SVG-SELECTION-CONTROL.md) repairs the combined-selection

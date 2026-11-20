@@ -5,10 +5,10 @@ import { i18n } from '#vue/i18n/create'
 export const filesMessageDefaults = {
   codeGuideTitle: 'Export Design to Code',
   codeGuideDescription:
-    'Connect a coding agent to Open Pen’s local MCP server to turn your designs into code in your own project.',
+    'Connect a coding agent to Brutal’s local MCP server to turn your designs into code in your own project.',
   codeGuideServer: 'Local MCP server',
   codeGuideSteps: 'How to export your design to code',
-  codeGuideLaunch: 'Open your design in Open Pen and keep the app running.',
+  codeGuideLaunch: 'Open your design in Brutal and keep the app running.',
   codeGuideConnect:
     'Open MCP settings to check the server and connect your coding client. Confirm that its MCP tools are available in the client before continuing.',
   codeGuideGenerate:
@@ -19,9 +19,9 @@ export const filesMessageDefaults = {
   codeGuideComponentPrompt: 'Turn the selected frame into a reusable component.',
   codeGuideSettings: 'Open MCP settings',
   figmaGuideTitle: 'How to import from Figma',
-  figmaGuideClipboard: 'Copy a layer or frame in Figma, then paste it onto the Open Pen canvas.',
+  figmaGuideClipboard: 'Copy a layer or frame in Figma, then paste it onto the Brutal canvas.',
   figmaGuideFile:
-    'For embedded images, save a local .fig copy from Figma, then open or drop it into Open Pen.',
+    'For embedded images, save a local .fig copy from Figma, then open or drop it into Brutal.',
   figmaGuideLimits:
     'Check advanced graphics after importing. Open preserves multiple pages; Import to canvas accepts a single-page file.',
   snapshotTitle: 'Export snapshot',
@@ -49,7 +49,7 @@ export const filesMessageDefaults = {
   externalCopyFailedDescription:
     'Your unsaved changes are still open. Try again or choose Ignore to keep editing.',
   fileChangedDescription: params(
-    '“{name}” changed outside Open Pen. Reload discards your unsaved changes. Ignore to keep editing, or save a separate copy.'
+    '“{name}” changed outside Brutal. Reload discards your unsaved changes. Ignore to keep editing, or save a separate copy.'
   ),
   ignoreExternalChange: 'Ignore',
   reloadExternalChange: 'Reload',

@@ -29,7 +29,7 @@ test-owned intercepted destinations; the app notice stays present. All cases rep
 errors and no canvas. This is browser link intent, not Tauri's OS opener.
 
 The parent inspects all 24 final captures across six contact sheets. Captured text names
-Open Pen, preserves third-party engine/package names and contains no inherited app label.
+Brutal, preserves third-party engine/package names and contains no inherited app label.
 The own requirements URL and report query fields (template, platform, browser and diagnostic
 details) are checked independently in the captured records. Only Windows includes the
 existing Microsoft WebView2 URL. Existing native OS/version detection is covered separately

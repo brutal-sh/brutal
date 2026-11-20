@@ -178,7 +178,7 @@ export default defineCommand({
     },
     'document-id': {
       type: 'string',
-      description: 'Target Open Pen document/tab ID when connected to the running app',
+      description: 'Target Brutal document/tab ID when connected to the running app',
       required: false
     },
     type: {

@@ -24,7 +24,7 @@
   "mcpFailed": "MCP-Verbindung fehlgeschlagen",
   "retention": "Aufbewahrungsdauer der Diagnose",
   "retentionDescription": "Bis zu dieser Anzahl aktueller Ereignisse lokal speichern.",
-  "description": "Technische Ereignisse lokal speichern, um Probleme mit Open Pen zu untersuchen. Vor dem Teilen eines Berichts die Fehlerdetails prüfen.",
+  "description": "Technische Ereignisse lokal speichern, um Probleme mit Brutal zu untersuchen. Vor dem Teilen eines Berichts die Fehlerdetails prüfen.",
   "eventCount": "{count} Ereignisse · {size} KB",
   "copy": "Diagnosedaten kopieren",
   "save": "Diagnosedaten speichern…",

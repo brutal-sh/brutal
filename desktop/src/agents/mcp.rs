@@ -1,8 +1,8 @@
-//! Finding the Open Pen MCP server that agents connect to.
+//! Finding the Brutal MCP server that agents connect to.
 
 use super::path::search_dirs;
 
-/// Name of the Open Pen canvas bridge.
+/// Name of the Brutal canvas bridge.
 pub(super) const MCP_EXECUTABLE: &str = "openpen-mcp-http";
 /// Bound on the directories reported back to the settings diagnostics.
 const MAX_REPORTED_SEARCH_DIRS: usize = 12;

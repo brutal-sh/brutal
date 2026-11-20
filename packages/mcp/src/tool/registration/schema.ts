@@ -2,7 +2,7 @@ import * as v from 'valibot'
 
 export const automationTargetEntries = {
   document_id: v.optional(
-    v.pipe(v.string(), v.description('Optional Open Pen document/tab ID to target'))
+    v.pipe(v.string(), v.description('Optional Brutal document/tab ID to target'))
   ),
   page_id: v.optional(
     v.pipe(v.string(), v.description('Optional page ID to target within the document'))

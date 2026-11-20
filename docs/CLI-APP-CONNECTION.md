@@ -1,6 +1,6 @@
 # Connected interactive CLI
 
-CLI-06 owns a persistent tool session connected to an Open Pen document and page.
+CLI-06 owns a persistent tool session connected to an Brutal document and page.
 Actual Pen1.2.23 remains the reference. This candidate does not establish native,
 standalone, Pen tool-name or whole-product acceptance.
 

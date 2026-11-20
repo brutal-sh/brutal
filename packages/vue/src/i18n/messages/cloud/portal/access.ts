@@ -7,7 +7,7 @@ export const cloudAccessDefaults = {
   unavailableTitle: 'This server isn’t answering',
   unavailableDescription: 'Check the address, or try again in a moment.',
   tryAgain: 'Try again',
-  welcomeTitle: 'Design together in Open Pen',
+  welcomeTitle: 'Design together in Brutal',
   welcomeDescription: 'Keep your files on this server, share them, and edit them with others live.',
   useWithoutAccount: 'Use without an account',
   withoutAccountNote: 'Without an account, files stay on this device.',
@@ -15,7 +15,7 @@ export const cloudAccessDefaults = {
   signInTitle: 'Sign in to Cloud',
   signUpTitle: 'Create your account',
   returnsTo: params('Then you go back to {destination}.'),
-  returnsToDesktop: 'the Open Pen app',
+  returnsToDesktop: 'the Brutal app',
   returnsToEditor: 'the editor',
   continueWithGoogle: 'Continue with Google',
   continueWithApple: 'Continue with Apple',
@@ -34,7 +34,7 @@ export const cloudAccessDefaults = {
   errorPasswordTooShort: params('Use at least {count} characters.'),
   errorPasswordsDiffer: 'The passwords don’t match.',
   verifiedTitle: 'Email verified',
-  verifiedDescription: 'Go back to Open Pen to finish signing in. You can close this tab.',
+  verifiedDescription: 'Go back to Brutal to finish signing in. You can close this tab.',
   signIn: 'Sign in',
   createAccount: 'Create account',
   haveAccount: 'Already have an account?',
@@ -90,20 +90,20 @@ export const cloudAccessDefaults = {
   backToSignIn: 'Back to sign in',
   resetSentTitle: 'Check your email',
   resetSentDescription: params('If {email} has an account here, a reset link is on its way.'),
-  deviceTitle: 'Sign in to the Open Pen app?',
-  deviceDescription: params('The Open Pen app asks to use your account, {email}.'),
+  deviceTitle: 'Sign in to the Brutal app?',
+  deviceDescription: params('The Brutal app asks to use your account, {email}.'),
   deviceCheckCode: 'Check that the app shows this code',
   deviceWarningTitle: 'Only approve a sign-in you started',
   deviceWarningDescription:
-    'If you didn’t just sign in to Open Pen on a computer, deny this request.',
+    'If you didn’t just sign in to Brutal on a computer, deny this request.',
   approve: 'Approve',
   deny: 'Deny',
   deviceApprovedTitle: 'You’re signed in',
   deviceApprovedDescription:
-    'Go back to the Open Pen app; it has already picked this up. You can close this tab.',
+    'Go back to the Brutal app; it has already picked this up. You can close this tab.',
   deviceDeniedTitle: 'Sign-in denied',
   deviceDeniedDescription:
     'The app wasn’t signed in. If you didn’t start this, someone may know your password; change it in your account settings.',
   deviceExpiredTitle: 'This code has expired',
-  deviceExpiredDescription: 'Start signing in from the Open Pen app again to get a new code.'
+  deviceExpiredDescription: 'Start signing in from the Brutal app again to get a new code.'
 } as const

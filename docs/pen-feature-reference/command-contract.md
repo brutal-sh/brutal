@@ -1,6 +1,6 @@
 # CLI and MCP contract requirements
 
-Reference: [official CLI](https://docs.pen.dev/for-developers/pen-cli) and [AI integration](https://docs.pen.dev/getting-started/ai-integration), retrieved 2026-10-30. These are reference contracts; the inherited `openpencil` CLI and current local bridge have different public surfaces. **Contract parity is open.** Independent binary/server names must identify Open Pen truthfully.
+Reference: [official CLI](https://docs.pen.dev/for-developers/pen-cli) and [AI integration](https://docs.pen.dev/getting-started/ai-integration), retrieved 2026-10-30. These are reference contracts; the inherited `openpencil` CLI and current local bridge have different public surfaces. **Contract parity is open.** Independent binary/server names must identify Brutal truthfully.
 
 ## CLI commands
 
@@ -47,6 +47,6 @@ Reference environment names: `PEN_CLI_KEY`, `PEN_AGENT_API_KEY`, `ANTHROPIC_API_
 | `browser` | Browser automation/capture/import | Desktop target |
 | `spawn_agents` | Agent dispatch contract and failure handling | Explicit server enablement only |
 
-`execute` includes screenshot/export operations; compare actual live argument/result schemas rather than inventing a matching name around a different API. Inspect error shape, cancellation, document targeting and partial changes too. Reference transport is stdio to a local host connection, using Unix socket or Windows named pipe. The current Open Pen loopback bridge is not evidence of equivalent public contracts.
+`execute` includes screenshot/export operations; compare actual live argument/result schemas rather than inventing a matching name around a different API. Inspect error shape, cancellation, document targeting and partial changes too. Reference transport is stdio to a local host connection, using Unix socket or Windows named pipe. The current Brutal loopback bridge is not evidence of equivalent public contracts.
 
 Native execution remains required: connect a real external client, confirm the intended document, create/edit through the public interface, render/export/save, then reopen and inspect. Use synthetic documents and preserve the user's existing MCP entries and credentials.

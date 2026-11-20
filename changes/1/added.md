@@ -13,9 +13,9 @@
 
 - Add persistent Small, Medium and Large agent transcript text sizes through View and chat settings.
 - Adds snapshot ZIP export for supported editable designs with relocated image, GLSL and JavaScript dependencies, dependency preview and cancellation-safe delivery.
-- Open native File guides for design-to-code and Figma import, check the local MCP server, and reach Open Pen’s CLI setup documentation.
+- Open native File guides for design-to-code and Figma import, check the local MCP server, and reach Brutal’s CLI setup documentation.
 - Add the macOS Window menu, document-only tab navigation and reordering, and numbered desktop document shortcuts while preserving Shift zoom.
-- Add Help links for Open Pen documentation, prompt examples, editor setup and support.
+- Add Help links for Brutal documentation, prompt examples, editor setup and support.
 
 - Add independently implemented Script primitives with isolated synchronous QuickJS workers, bounded CPU and memory, deterministic random, typed scalar inputs, local source watches, authored `.pen` round trips and editable-layer conversion with Undo. Show recoverable missing-source and runtime diagnostics on canvas and in exports, with authored source locations and excerpts when available. Refuse stale/unrendered exports and snapshots with missing JavaScript sources. Support component references, variable/theme inputs and eleven bundled MIT Script Gallery examples with editable inputs; retain explicit refusals for unsupported dependencies.
 - Per-layer Context retains text through save/reopen and returns to its first line when editing ends.
@@ -36,12 +36,12 @@
 
 - Attach UTF-8 text and source files to agent requests and inspect their escaped content in conversation history.
 - Keep a headless document open or pin a running app document and page in an interactive tool session, use live Undo and Redo, save explicitly, and retry refused saves without losing live edits.
-- Read bundled Open Pen authoring guides through MCP and interactive CLI sessions without loading user-installed skills or local files.
+- Read bundled Brutal authoring guides through MCP and interactive CLI sessions without loading user-installed skills or local files.
 - Inspect the current document graph, page and selected layers through a shared read-only app-state tool in MCP and interactive CLI sessions.
 - MCP agents save an open document by file URI, with both Save interfaces controlled by the same access setting and disable-save flag.
 - Open local FigJam `.jam` files and save supported layers to a separate `.fig` design copy.
 - Open local Sketch files and save supported layers to a separate editable `.fig` copy.
-- Open PDF and PDF-compatible Illustrator files on macOS as page images and save them in an Open Pen design copy.
+- Open PDF and PDF-compatible Illustrator files on macOS as page images and save them in an Brutal design copy.
 - Open supported Photoshop PSD and PSB raster layers as editable images in a separate design copy on macOS, with a saved composite preview when layer import is unavailable.
 - Open SVG and compressed SVGZ files as editable vector and text layers in a separate design copy.
 - Close a recovered local design while keeping its backup, then reopen the original to restore the editable changes.

@@ -35,7 +35,7 @@ export function registerWebMCPTools(
         await context.registerTool(
           {
             name: def.name,
-            description: `${def.description} Targets the active Open Pen document.`,
+            description: `${def.description} Targets the active Brutal document.`,
             inputSchema: toJSONSchema(schema, { typeMode: 'input' }),
             annotations: { readOnlyHint: !def.mutates, untrustedContentHint: true },
             execute: async (input, options?: WebMCP.ToolExecuteCallbackOptions) => {

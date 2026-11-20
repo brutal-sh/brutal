@@ -25,12 +25,12 @@ describe('brand generation', () => {
     expect(icoSizes(file('favicon.ico')).sort((a, b) => a - b)).toEqual([16, 32, 48])
   })
 
-  test('derives main and micro artwork from the original Open Pen master', async () => {
+  test('derives main and micro artwork from the original Brutal master', async () => {
     for (const [name, size] of [
       ['mark', 256],
       ['mark-micro', 16]
     ] as const) {
-      const scaled = await sharp(join(repositoryRoot, 'assets/brand/open-pen-app.png'))
+      const scaled = await sharp(join(repositoryRoot, 'assets/brand/brutal-app.png'))
         .resize(size, size)
         .png()
         .toBuffer()
@@ -71,7 +71,7 @@ describe('brand generation', () => {
   })
 
   test('shares the original transparent violet tile across profile and PWA assets', async () => {
-    const source = file('brand/open-pen-app.png')
+    const source = file('brand/brutal-app.png')
     for (const [name, size] of [
       ['brand/app-icon-1024.png', 1024],
       ['brand/pwa-192.png', 192],

@@ -73,7 +73,7 @@ export const siteHead: [string, Record<string, string>][] = [
   ['meta', { property: 'og:image:height', content: '1260' }],
   [
     'meta',
-    { property: 'og:image:alt', content: 'Open Pen desktop editor showing the Field Notes sample' }
+    { property: 'og:image:alt', content: 'Brutal desktop editor showing the Field Notes sample' }
   ],
   ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
   ['meta', { name: 'twitter:site', content: '@openpencildev' }],

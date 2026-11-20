@@ -5,13 +5,13 @@ import { CanvasHelper } from '#tests/helpers/canvas'
 for (const deviceScaleFactor of [1, 2]) {
   test.describe(`brand at ${deviceScaleFactor}x`, () => {
     test.use({ deviceScaleFactor })
-    test('the canvas return control shows the Open Pen icon in both app themes', async ({
+    test('the canvas return control shows the Brutal icon in both app themes', async ({
       page
     }) => {
       await page.goto('/?test')
       await new CanvasHelper(page).waitForInit()
       await page.keyboard.press('ControlOrMeta+\\')
-      const logo = page.getByRole('img', { name: 'Open Pen', exact: true })
+      const logo = page.getByRole('img', { name: 'Brutal', exact: true })
       await expect(logo).toBeVisible()
       for (const appearance of ['light', 'dark'] as const) {
         if ((await page.locator('html').getAttribute('data-theme')) !== appearance) {
@@ -19,7 +19,7 @@ for (const deviceScaleFactor of [1, 2]) {
           await page.getByRole('menuitem', { name: 'Toggle Light/Dark mode' }).click()
         }
         await expect(page.locator('html')).toHaveAttribute('data-theme', appearance)
-        await expect(logo).toHaveAttribute('src', '/brand/open-pen-app.png')
+        await expect(logo).toHaveAttribute('src', '/brand/brutal-app.png')
         await expect(logo).toHaveCSS('width', '24px')
         await expect(logo).toHaveCSS('height', '24px')
         await expect(logo).toHaveScreenshot(
@@ -33,13 +33,13 @@ for (const deviceScaleFactor of [1, 2]) {
       }
     })
 
-    test('the 16px favicon shows the Open Pen icon in both browser themes', async ({
+    test('the 16px favicon shows the Brutal icon in both browser themes', async ({
       page,
       baseURL
     }) => {
       const src = new URL('/brand/favicon.svg', baseURL).href
-      await page.setContent(`<img src="${src}" alt="Open Pen favicon" width="16" height="16">`)
-      const icon = page.getByRole('img', { name: 'Open Pen favicon' })
+      await page.setContent(`<img src="${src}" alt="Brutal favicon" width="16" height="16">`)
+      const icon = page.getByRole('img', { name: 'Brutal favicon' })
       await icon.evaluate((image: HTMLImageElement) => image.decode())
       for (const colorScheme of ['light', 'dark'] as const) {
         await page.emulateMedia({ colorScheme })
@@ -65,7 +65,7 @@ test('the main SVG retains its approved appearance', async ({ page }) => {
   await expect(page.locator('svg')).toHaveScreenshot('brand-mark.png')
 })
 
-test('the larger dark SVG retains the Open Pen icon', async ({ page }) => {
+test('the larger dark SVG retains the Brutal icon', async ({ page }) => {
   await page.goto('/brand/mark-dark.svg')
   const mark = page.locator('svg')
   await mark.evaluate((svg) => {
@@ -74,7 +74,7 @@ test('the larger dark SVG retains the Open Pen icon', async ({ page }) => {
   await expect(mark).toHaveScreenshot('brand-mark-dark.png')
 })
 
-test('the Open Pen app tile works on light and dark surfaces', async ({ page }) => {
+test('the Brutal app tile works on light and dark surfaces', async ({ page }) => {
   await page.goto('/brand/app-icon.svg')
   const icon = page.locator('svg').first()
   for (const appearance of ['light', 'dark'] as const) {

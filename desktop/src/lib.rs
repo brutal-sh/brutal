@@ -25,7 +25,7 @@ pub fn run() {
         cfg!(feature = "native-test"),
         std::env::args_os().skip(1),
     ) {
-        eprintln!("Recovery profile arguments require an isolated Open Pen native-test build.");
+        eprintln!("Recovery profile arguments require an isolated Brutal native-test build.");
         return;
     }
     // Native acceptance launches pin their own executable search order.
@@ -61,7 +61,7 @@ pub fn run() {
     let context = app_context();
     #[cfg(feature = "native-test")]
     let context = agents::native_test::profile_startup::configure_context(context)
-        .expect("error while configuring isolated Open Pen native tests");
+        .expect("error while configuring isolated Brutal native tests");
     builder
         .build(context)
         .expect("error while building tauri application")

@@ -3,35 +3,35 @@ import { expect, test } from '@playwright/test'
 import { CanvasHelper } from '#tests/helpers/canvas'
 
 const LOCALES = [
-  { locale: 'en', welcome: 'Welcome to Open Pen', privacyHeading: 'Anonymous usage sharing' },
+  { locale: 'en', welcome: 'Welcome to Brutal', privacyHeading: 'Anonymous usage sharing' },
   {
     locale: 'de',
-    welcome: 'Willkommen bei Open Pen',
+    welcome: 'Willkommen bei Brutal',
     privacyHeading: 'Anonyme Nutzungsdaten teilen'
   },
   {
     locale: 'es',
-    welcome: 'Te damos la bienvenida a Open Pen',
+    welcome: 'Te damos la bienvenida a Brutal',
     privacyHeading: 'Compartir uso anónimo'
   },
   {
     locale: 'fr',
-    welcome: 'Bienvenue dans Open Pen',
+    welcome: 'Bienvenue dans Brutal',
     privacyHeading: 'Partage anonyme des usages'
   },
   {
     locale: 'it',
-    welcome: 'Benvenuto in Open Pen',
+    welcome: 'Benvenuto in Brutal',
     privacyHeading: 'Condivisione anonima dell’utilizzo'
   },
-  { locale: 'ja', welcome: 'Open Pen へようこそ', privacyHeading: '匿名の使用状況の共有' },
-  { locale: 'pl', welcome: 'Witamy w Open Pen', privacyHeading: 'Anonimowe udostępnianie użycia' },
+  { locale: 'ja', welcome: 'Brutal へようこそ', privacyHeading: '匿名の使用状況の共有' },
+  { locale: 'pl', welcome: 'Witamy w Brutal', privacyHeading: 'Anonimowe udostępnianie użycia' },
   {
     locale: 'ru',
-    welcome: 'Добро пожаловать в Open Pen',
+    welcome: 'Добро пожаловать в Brutal',
     privacyHeading: 'Анонимная статистика использования'
   },
-  { locale: 'zh-CN', welcome: '欢迎使用 Open Pen', privacyHeading: '匿名使用情况共享' }
+  { locale: 'zh-CN', welcome: '欢迎使用 Brutal', privacyHeading: '匿名使用情况共享' }
 ]
 
 for (const { locale, welcome, privacyHeading } of LOCALES) {
@@ -50,7 +50,7 @@ for (const { locale, welcome, privacyHeading } of LOCALES) {
         })
       }
     })
-    test(`Open Pen welcome and privacy explain the app and upstream recipient in ${locale}`, async ({
+    test(`Brutal welcome and privacy explain the app and upstream recipient in ${locale}`, async ({
       page
     }, testInfo) => {
       const reports: string[] = []
@@ -91,18 +91,18 @@ for (const { locale, welcome, privacyHeading } of LOCALES) {
       await privacy.screenshot({ path: testInfo.outputPath('privacy.png') })
       await page.getByTestId('settings-section-diagnostics').click()
       const diagnostics = page.getByTestId('settings-diagnostics-panel')
-      await expect(diagnostics).toContainText('Open Pen')
+      await expect(diagnostics).toContainText('Brutal')
       await expect(diagnostics).not.toContainText('OpenPencil')
       await diagnostics.screenshot({ path: testInfo.outputPath('diagnostics.png') })
       await page.getByTestId('settings-section-editor').click()
       const editor = page.getByTestId('settings-editor-panel')
-      await expect(editor).toContainText('Open Pen')
+      await expect(editor).toContainText('Brutal')
       await expect(editor).not.toContainText('OpenPencil')
       const rendering = editor.locator('section').filter({
         has: page.getByTestId('settings-progressive-tiled-rendering')
       })
       await rendering.scrollIntoViewIfNeeded()
-      await expect(rendering.getByText(/Open Pen/)).toBeVisible()
+      await expect(rendering.getByText(/Brutal/)).toBeVisible()
       await rendering.screenshot({ path: testInfo.outputPath('rendering.png') })
       expect(reports).toEqual([])
     })

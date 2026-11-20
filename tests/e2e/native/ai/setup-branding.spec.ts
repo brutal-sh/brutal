@@ -34,7 +34,7 @@ describe('native translated agent setup identity', () => {
   })
 
   for (const labels of AI_SETUP_LABELS) {
-    it(`shows Open Pen agent and MCP labels in ${labels.locale} without signing in or installing`, async () => {
+    it(`shows Brutal agent and MCP labels in ${labels.locale} without signing in or installing`, async () => {
       await browser.keys([process.platform === 'darwin' ? 'Meta' : 'Control', ','])
       const settings = await $('[data-test-id="app-settings-dialog"]')
       await settings.waitForDisplayed()
@@ -63,7 +63,7 @@ describe('native translated agent setup identity', () => {
       await connection.waitForDisplayed()
       await browser.waitUntil(
         async () => (await connection.getText()).includes(labels.aiSetupAgentMCP),
-        { timeoutMsg: `Native Open Pen MCP label did not render in ${labels.locale}` }
+        { timeoutMsg: `Native Brutal MCP label did not render in ${labels.locale}` }
       )
       assert.equal((await connection.getText()).includes('OpenPencil'), false)
       const guide = await connection.$('a[href]')

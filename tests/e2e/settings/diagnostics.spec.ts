@@ -65,7 +65,7 @@ test('Settings saves the diagnostics report as a file', async ({ configuredChat:
     page.getByRole('button', { name: 'Save diagnostics…', exact: true }).click()
   ])
 
-  expect(download.suggestedFilename()).toBe('Open Pen diagnostics.json')
+  expect(download.suggestedFilename()).toBe('Brutal diagnostics.json')
   const { environment, events } = v.parse(
     reportSchema,
     await readFile(await download.path(), 'utf8')
@@ -194,7 +194,7 @@ const profileSchema = v.pipe(
   })
 )
 
-test('the renderer downloads its diagnostic file with the Open Pen profile filename', async ({
+test('the renderer downloads its diagnostic file with the Brutal profile filename', async ({
   page
 }) => {
   await page.goto('/?test')

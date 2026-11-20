@@ -82,9 +82,9 @@ export const APP_MENU_SCHEMA = [
   {
     label: 'Help',
     items: [
-      { id: 'help-documentation', label: 'Open Pen Documentation', handler: 'shell' },
+      { id: 'help-documentation', label: 'Brutal Documentation', handler: 'shell' },
       { id: 'help-prompts', label: 'Prompt Gallery & Tips', handler: 'shell' },
-      { id: 'help-website', label: 'Open Pen Website', handler: 'shell' },
+      { id: 'help-website', label: 'Brutal Website', handler: 'shell' },
       { id: 'help-cursor', label: 'Cursor Setup…', handler: 'shell' },
       { id: 'help-vscode', label: 'VS Code Setup…', handler: 'shell' },
       { id: 'help-support', label: 'Support & Feedback', handler: 'shell' }
@@ -99,8 +99,8 @@ export const APP_MENU_SCHEMA = [
  * sit between them. Only the labels and accelerators are shared here.
  */
 export const APP_MENU_APP_ITEMS = [
-  { id: 'about', label: 'About Open Pen' },
+  { id: 'about', label: 'About Brutal' },
   { id: 'check-updates', label: 'Check for Updates…' },
   SETTINGS_MENU_ITEM,
-  { id: 'quit', label: 'Quit Open Pen', shortcut: 'MOD+Q' }
+  { id: 'quit', label: 'Quit Brutal', shortcut: 'MOD+Q' }
 ] satisfies AppMenuActionItem[]

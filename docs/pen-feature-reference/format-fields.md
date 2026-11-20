@@ -1,6 +1,6 @@
 # Serialized feature checklist
 
-Source: [official .pen schema](https://docs.pen.dev/for-developers/the-pen-format), retrieved 2026-10-30. Published `Document.version` is `2.21`; the installed acceptance target remains Pen 1.2.21. This is a field-family checklist, not a copied schema or a claim of supported Open Pen input. Current support/rejection rules live in [the parser documentation](../../packages/pen/README.md).
+Source: [official .pen schema](https://docs.pen.dev/for-developers/the-pen-format), retrieved 2026-10-30. Published `Document.version` is `2.21`; the installed acceptance target remains Pen 1.2.21. This is a field-family checklist, not a copied schema or a claim of supported Brutal input. Current support/rejection rules live in [the parser documentation](../../packages/pen/README.md).
 
 For every applicable field: compare default, explicit value, variable binding, edit/Undo, save/reopen and rendered export. Unsupported input must be rejected before lossy conversion or writing. A parser accepting a field does not establish editor/rendering parity.
 

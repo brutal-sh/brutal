@@ -10,7 +10,7 @@ import { brand } from './config.ts'
 
 export async function loadArtwork(root: string) {
   const adapter = await getNodeImageAdapter()
-  const source = sharp(join(root, 'assets/brand/open-pen-app.png'))
+  const source = sharp(join(root, 'assets/brand/brutal-app.png'))
   async function image(size: number) {
     const png = await source.clone().resize(size, size).png().toBuffer()
     return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}"><image width="${size}" height="${size}" href="data:image/png;base64,${fromUint8Array(png)}"/></svg>`

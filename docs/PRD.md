@@ -1,4 +1,4 @@
-# Open Pen product requirements
+# Brutal product requirements
 
 Decision owner: Jason Poindexter. Implementation/evidence owner: Codex.
 Updated 2026-11-19. The active release goal is a **public beta for supported Apple-silicon Macs**. Full design and functionality parity remains a product roadmap outcome.
@@ -7,7 +7,7 @@ Current reference is actual Pen **1.2.23**, ASAR `d0c5c23a3a86ec1802c8754b59e826
 
 The live board and [task index](TASKS.md) reconcile **569 cards / 550 required tasks / 1 deferred task / 18 milestones**, with 549 other terminal prerequisites. All original catalog/native rows, welcome/newsletter leaves and milestone exit criteria remain binding. [Current priorities](PRIORITIES-2026-11-17.md) distinguish scheduling from acceptance.
 
-Current candidate handoff: source `2ec06fd18` is published on the private draft. The strict Core Note raster owner is Executed and native raster delivery matched in an isolated profile. Note authoring is in Verify after both apps saved and reopened matching text, geometry and custom color. The bounded Codex connection and request recovery executed on isolated native candidates. Native window recurrence is in Verify. Pen 1.2.23 opened the saved Codex file with the expected raster. The regular installed app completed the Codex edit, Undo, Redo, Save and reopen journey. The Pen provider runtime comparison remains open. Save/recovery, broader Note acceptance, primitives, modularity, and native/Figma acceptance retain their required exits. The website and help work is in its own checkout. Open Pen is a desktop product.
+Current candidate handoff: source `2ec06fd18` is published on the private draft. The strict Core Note raster owner is Executed and native raster delivery matched in an isolated profile. Note authoring is in Verify after both apps saved and reopened matching text, geometry and custom color. The bounded Codex connection and request recovery executed on isolated native candidates. Native window recurrence is in Verify. Pen 1.2.23 opened the saved Codex file with the expected raster. The regular installed app completed the Codex edit, Undo, Redo, Save and reopen journey. The Pen provider runtime comparison remains open. Save/recovery, broader Note acceptance, primitives, modularity, and native/Figma acceptance retain their required exits. The website and help work is in its own checkout. Brutal is a desktop product.
 
 ## Public beta
 
@@ -20,14 +20,14 @@ compatibility and verified feature limits. [Beta qualification order](PRIORITIES
 
 ## Product outcome
 
-Open Pen is an independent local design app built on the MIT OpenPencil foundation.
+Brutal is an independent local design app built on the MIT OpenPencil foundation.
 Jason should be able to use the workflows available in installed Pen 1.2.23 with the same
 interaction and visual behavior, without editor subscriptions or license activation.
-Open Pen uses its own name and visual identity. Required engine and third-party attribution
+Brutal uses its own name and visual identity. Required engine and third-party attribution
 remain accessible. This identity difference is intentional; it does not waive layout or behavior parity.
 
 The full parity target remains intact. This PRD adds explicit requirements for maintainable
-modules, complete Open Pen branding and an executable Trello backlog.
+modules, complete Brutal branding and an executable Trello backlog.
 
 ## Problem and evidence
 
@@ -82,7 +82,7 @@ modules, complete Open Pen branding and an executable Trello backlog.
   declaration exception with full parser/binary/table checks and 43 Kiwi tests; runtime
   code counts and schema bytes remain unchanged.
 - Initially observed: inherited web marks, localized product names, diagnostics labels and a native
-  microphone explanation still identify the app as OpenPencil. The original violet Open Pen
+  microphone explanation still identify the app as OpenPencil. The original violet Brutal
   app-icon master already exists.
 - Executed afterward: [own-brand asset and diagnostics checks](BRANDING.md) qualify generated
   artwork and selected real support/error paths. Localized copy, native identity and full
@@ -108,7 +108,7 @@ vendor account. Hosted inference and other external services retain their own co
 | ID     | Required outcome      | Acceptance                                                                                                                                                                                                                                                                                                                                                                                                  |
 | ------ | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | PRD-01 | Complete traceability | Every catalog requirement, native surface/menu row, known residual bug, branding task and oversized-module review maps to a specific Trello task. No orphan requirement or unverified completed task.                                                                                                                                                                                                       |
-| PRD-02 | Own product identity  | Boot, Home, editor, settings, dialogs, menus, app icons, favicon/PWA assets and app-owned log/support exports identify Open Pen. Explicit license credits, compatible APIs, package IDs and truthful external-provider names are exceptions, documented by purpose.                                                                                                                                         |
+| PRD-02 | Own product identity  | Boot, Home, editor, settings, dialogs, menus, app icons, favicon/PWA assets and app-owned log/support exports identify Brutal. Explicit license credits, compatible APIs, package IDs and truthful external-provider names are exceptions, documented by purpose.                                                                                                                                         |
 | PRD-03 | Maintainable modules  | Preserve existing package ownership and public exports. Separate responsibilities when touching large feature modules; keep typical controls/helpers focused around 50–200 lines and feature modules around 200–300 where useful. Review every runtime file above 600 lines; extract cohesive domains or record a specific declaration/catalog exception. Line counts alone do not prove good architecture. |
 | PRD-04 | Behavioral parity     | Every applicable catalog requirement and undocumented native action executes through the real app. Verify history, persistence, cancellation, failure and read-only/mixed states where relevant. A build or unit test alone does not close a user workflow.                                                                                                                                                 |
 | PRD-05 | Visual parity         | Compare the same fixture, viewport, scale, theme and control state against actual Pen. Check geometry, borders, radii, type, glyphs and interaction states. Record raw image differences and remaining gaps; do not bless a mismatch by updating a baseline.                                                                                                                                                |
@@ -130,13 +130,13 @@ is retained as a starting point; its scope must be checked before reuse.
 Use actual `/Applications/Pen.app`, measurements and official documentation as the reference.
 Use OpenPencil as the implementation foundation. Do not include proprietary Pen code/assets,
 copy credentials, bypass vendor activation or route requests through a paid vendor backend.
-Preserve the Open Pen installation and user data during isolated tests. GitHub remains private,
+Preserve the Brutal installation and user data during isolated tests. GitHub remains private,
 the PR stays draft and Actions stays disabled. [Current fixture delivery](CHECKOUT.md) uses
 the private fork endpoint with verified downloads; upstream attribution remains. No public
 deployment, release or merge is authorized.
 
 Do not rename compatibility protocols or package imports merely to remove a spelling from
-source. Do not rename an external provider as if Open Pen operates it. Do not split cohesive
+source. Do not rename an external provider as if Brutal operates it. Do not split cohesive
 types/catalogs into arbitrary microfiles or weaken validation to reduce line counts.
 
 ## Historical delivery sequence — superseded
@@ -299,7 +299,7 @@ Existing-file backup creation, browser process-loss/decision controls and the pe
 
 MOD-05 publishes at `c199e42e5`: nine strict renderer owners preserve public exports, 110 sorted descriptors, twenty recorded-oracle PNGs and actual native twelve-document/P3/resize behavior. [The renderer report](RENDERER-OWNERS.md) retains the original resource/P3 failures and links the subsequent bounded resource-fixture qualification; strict P3 remains open.
 
-TEST-RECOVERY-NATIVE-PROFILE publishes at `1a15b7763`: a fresh final host completes interruption, Restore, explicit Save, clean third-process reopening and Duplicate/Undo on one owned persistent profile. Actual Pen 1.2.22 opens the recovered file, measures both 64 × 64 layers and saves a separate copy whose names/geometry/fills Open Pen's public reader preserves. This does not accept normal installed-app recovery, native chooser/permission/read-only paths, automatic debounce, trusted physical input or matched Pen recovery states.
+TEST-RECOVERY-NATIVE-PROFILE publishes at `1a15b7763`: a fresh final host completes interruption, Restore, explicit Save, clean third-process reopening and Duplicate/Undo on one owned persistent profile. Actual Pen 1.2.22 opens the recovered file, measures both 64 × 64 layers and saves a separate copy whose names/geometry/fills Brutal's public reader preserves. This does not accept normal installed-app recovery, native chooser/permission/read-only paths, automatic debounce, trusted physical input or matched Pen recovery states.
 
 TEST-RECOVERY-FIXTURE-LIFECYCLE publishes at `9a676814d`: twenty Cancel repetitions and the complete twenty-case recovery cohort pass with unchanged assertions and separate existing setup/test budgets. This test-lifetime qualification does not classify or repair the older Home-state observation; its investigation resumes below. TEST-GPU-DARK-FIXTURE publishes at `46a7e4f73`, with 24 resource/helper/theme controls and byte-identical original snapshots. TEST-P3-EXACT publishes at `2debd3365`: historical WebKit reproduces original PNGs exactly, while current/historical versioned controls pass 12/six cases with snapshot writing disabled. TEST-FIG-PAGE-PANEL is bounded Executed at d646976ce for the independently reproduced fixture failure. FILE-EXTERNAL-DIRTY is bounded Executed at ae1736779 after 34 affected browser cases, nine post-move stable cases, strict 21 owners, full static zero clones and rebuilt isolated-native three-process recovery. FILE-RECOVERY-CANCEL is the sole Building card for the original unclassified Home-state timeout; passing repeats are not repair.
 

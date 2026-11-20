@@ -17,7 +17,7 @@ for (const surface of ['guided setup', 'provider chooser', 'MCP settings'] as co
       destinations.push(route.request().url())
       await route.fulfill({
         contentType: 'text/html',
-        body: '<title>Open Pen desktop setup</title>'
+        body: '<title>Brutal desktop setup</title>'
       })
     })
     await page.goto('/?test')

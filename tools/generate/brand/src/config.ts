@@ -18,7 +18,7 @@ export const webFiles = [
   'apple-touch-icon.png',
   'brand/app-icon.svg',
   'brand/app-icon-1024.png',
-  'brand/open-pen-app.png',
+  'brand/brutal-app.png',
   'brand/mark.svg',
   'brand/mark-dark.svg',
   'brand/mark-micro.svg',

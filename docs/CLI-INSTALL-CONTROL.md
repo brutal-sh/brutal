@@ -1,6 +1,6 @@
 # Independent CLI installation control
 
-ENV-03 remains **Verify** for actual-reference and wider platform criteria. Open Pen's own macOS arm64 CLI installs and executes outside the checkout on Node 24.18.0 and the documented minimum Node 22.19.0. These are independent local artifacts, not a public package release or vendor CLI qualification.
+ENV-03 remains **Verify** for actual-reference and wider platform criteria. Brutal's own macOS arm64 CLI installs and executes outside the checkout on Node 24.18.0 and the documented minimum Node 22.19.0. These are independent local artifacts, not a public package release or vendor CLI qualification.
 
 The existing release-preparation command stages package contents and preserves their notices. Twelve actual npm tarballs cover the CLI's complete first-party runtime closure. All twelve pass the existing public tarball inspector, and their packaged LICENSE bytes equal the preserved root license. Two separate disposable consumers install those same hashed artifacts with lifecycle scripts disabled and separate empty npm configuration files. No global installation or repository dependency changes occur.
 

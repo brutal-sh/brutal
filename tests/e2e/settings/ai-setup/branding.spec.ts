@@ -20,7 +20,7 @@ for (const labels of AI_SETUP_LABELS) {
       }
     })
 
-    test('translated guided setup names Open Pen and discards an unsaved connection', async ({
+    test('translated guided setup names Brutal and discards an unsaved connection', async ({
       page
     }, testInfo) => {
       const requests: string[] = []

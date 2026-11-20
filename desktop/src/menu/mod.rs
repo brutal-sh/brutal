@@ -344,7 +344,7 @@ pub fn install_app_menu<R: tauri::Runtime>(
         if let Some(accelerator) = &items.quit.accelerator {
             quit = quit.accelerator(accelerator);
         }
-        let builder = SubmenuBuilder::new(app, "Open Pen")
+        let builder = SubmenuBuilder::new(app, "Brutal")
             .item(&PredefinedMenuItem::about(
                 app,
                 Some(&items.about.label),

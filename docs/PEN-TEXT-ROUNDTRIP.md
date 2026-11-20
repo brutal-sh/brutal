@@ -9,7 +9,7 @@ FMT-09-DRIFT and the broader typography/format requirements are not accepted her
 
 An owned fixture created in actual Pen 1.2.22 contains two frames, rounded inside stroke,
 clipped translucent ellipse, triangle and Inter 24/600 text. Native `Get` measures its
-text as **85 × 29**. The older Open Pen import measures **101 × 34**, then **84 × 30**
+text as **85 × 29**. The older Brutal import measures **101 × 34**, then **84 × 30**
 after saving and reopening. The first dimensions equal the layout fallback estimate.
 Font preparation alone still depends on whichever canvas measurer is installed.
 
@@ -20,7 +20,7 @@ and restored before any asynchronous continuation. Other FIG/PDF shaping callbac
 the same first argument; FIG import geometry is not relaid out by this change.
 
 A separate native comparison catches a wire-type defect: the writer emits numeric weight
-600, and actual Pen reopens it as normal weight, measuring 83 × 29. Open Pen's permissive
+600, and actual Pen reopens it as normal weight, measuring 83 × 29. Brutal's permissive
 reader accepts the number, masking that loss in its own round-trip check. The shared writer
 now serializes weight as a string, matching the public contract. A real existing writer
 regression asserts that wire value, rather than relying only on our reader.
@@ -67,12 +67,12 @@ dependency, renderer cache or document metadata flag is introduced.
 ## Limits and re-entry
 
 The native image comparison renders the original and our saved copy in **Pen**. It proves
-this fixture's interchange output, not full native Open Pen screen/menu pixel parity.
+this fixture's interchange output, not full native Brutal screen/menu pixel parity.
 The browser snapshot proves cold/warm rendering consistency for this owned plain-text case.
 Missing fonts, complex scripts, variable/rich text, Note/Prompt/Context migration, native
-Open Pen file-panel/clipboard/install delivery and complete typography remain separate gates.
+Brutal file-panel/clipboard/install delivery and complete typography remain separate gates.
 
-The SVG output differences remain: Open Pen still emits live text and one combined SVG
+The SVG output differences remain: Brutal still emits live text and one combined SVG
 for multiple selected frames, whereas Pen emits paths and a ZIP. Those belong to
 IO-13-EXPORT and are not waived by this text round trip.
 

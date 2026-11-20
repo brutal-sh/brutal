@@ -13,7 +13,7 @@ export function registerListDocuments(context: RegistrationContext): void {
     'list_documents',
     {
       description:
-        'List open Open Pen documents/tabs with their IDs, file paths, current pages, and pages.',
+        'List open Brutal documents/tabs with their IDs, file paths, current pages, and pages.',
       inputSchema: v.strictObject({})
     },
     async () => {

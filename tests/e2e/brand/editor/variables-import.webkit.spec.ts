@@ -41,46 +41,46 @@ const LOCALES = [
   {
     locale: 'en',
     description:
-      'Open Pen can’t evaluate these variables yet, so layers keep the values saved in the file: Brand width.'
+      'Brutal can’t evaluate these variables yet, so layers keep the values saved in the file: Brand width.'
   },
   {
     locale: 'de',
     description:
-      'Open Pen kann diese Variablen noch nicht auswerten, daher behalten Ebenen die in der Datei gespeicherten Werte: Brand width.'
+      'Brutal kann diese Variablen noch nicht auswerten, daher behalten Ebenen die in der Datei gespeicherten Werte: Brand width.'
   },
   {
     locale: 'es',
     description:
-      'Open Pen aún no puede evaluar estas variables, así que las capas conservan los valores guardados en el archivo: Brand width.'
+      'Brutal aún no puede evaluar estas variables, así que las capas conservan los valores guardados en el archivo: Brand width.'
   },
   {
     locale: 'fr',
     description:
-      'Open Pen ne sait pas encore évaluer ces variables ; les calques gardent les valeurs enregistrées dans le fichier : Brand width.'
+      'Brutal ne sait pas encore évaluer ces variables ; les calques gardent les valeurs enregistrées dans le fichier : Brand width.'
   },
   {
     locale: 'it',
     description:
-      'Open Pen non sa ancora valutare queste variabili, quindi i livelli mantengono i valori salvati nel file: Brand width.'
+      'Brutal non sa ancora valutare queste variabili, quindi i livelli mantengono i valori salvati nel file: Brand width.'
   },
   {
     locale: 'ja',
     description:
-      'Open Pen はまだこれらの変数を評価できないため、レイヤーはファイルに保存された値を保ちます: Brand width'
+      'Brutal はまだこれらの変数を評価できないため、レイヤーはファイルに保存された値を保ちます: Brand width'
   },
   {
     locale: 'pl',
     description:
-      'Open Pen nie potrafi jeszcze obliczyć tych zmiennych, więc warstwy zachowują wartości zapisane w pliku: Brand width.'
+      'Brutal nie potrafi jeszcze obliczyć tych zmiennych, więc warstwy zachowują wartości zapisane w pliku: Brand width.'
   },
   {
     locale: 'ru',
     description:
-      'Open Pen пока не умеет вычислять эти переменные, поэтому слои сохраняют значения из файла: Brand width.'
+      'Brutal пока не умеет вычислять эти переменные, поэтому слои сохраняют значения из файла: Brand width.'
   },
   {
     locale: 'zh-CN',
-    description: 'Open Pen 暂不能计算这些变量，图层保留文件中保存的值：Brand width'
+    description: 'Brutal 暂不能计算这些变量，图层保留文件中保存的值：Brand width'
   }
 ] as const
 

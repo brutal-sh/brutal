@@ -17,14 +17,14 @@ const resources: ReadonlyMap<string, string> = new Map([
 /** Bundled first-party guidance; resource names never reach the filesystem. */
 export function readSkillResource(path = 'SKILL.md'): string {
   const text = resources.get(path)
-  if (text === undefined) throw new Error(`Unknown Open Pen skill resource: ${path}`)
+  if (text === undefined) throw new Error(`Unknown Brutal skill resource: ${path}`)
   return text
 }
 
 export const readSkill = defineTool({
   name: 'read_skill',
   description:
-    'Read bundled Open Pen design guidance. Omit path for the index, or use a relative resource name linked from it.',
+    'Read bundled Brutal design guidance. Omit path for the index, or use a relative resource name linked from it.',
   execution: { kind: 'sync', mutation: 'none' },
   capabilities: [],
   input: v.strictObject({

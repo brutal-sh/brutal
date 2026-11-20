@@ -1,6 +1,6 @@
-# Open Pen document format
+# Brutal document format
 
-Open Pen reads supported `.pen` JSON through its validated document reader and
+Brutal reads supported `.pen` JSON through its validated document reader and
 writes `.pen` or native `.fig` documents through the shared document service.
 Preserve the original when an unsupported version or feature is refused.
 

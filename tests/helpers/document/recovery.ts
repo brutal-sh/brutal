@@ -54,7 +54,7 @@ export function recoveryBytes(page: Page, corrupt = false) {
 export async function seedRecovery(page: Page) {
   await page.evaluate(async () => {
     const store = window.openPencil?.getStore?.()
-    if (!store) throw new Error('Open Pen editor unavailable')
+    if (!store) throw new Error('Brutal editor unavailable')
     const id = store.createShape('RECTANGLE', 120, 120, 240, 140)
     store.updateNode(id, { name: 'Recovery retention fixture' })
     await store.persistRecoveryNow()

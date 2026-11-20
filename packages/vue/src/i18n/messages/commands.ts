@@ -69,7 +69,7 @@ export const commandMessageDefaults = {
   paletteSearchPlaceholder: 'Type a command or search…',
   paletteAriaLabel: 'Command palette',
   paletteSearchAriaLabel: 'Search commands',
-  paletteDescription: 'Search and run Open Pen commands.',
+  paletteDescription: 'Search and run Brutal commands.',
   paletteNoCommands: 'No commands found.',
   paletteBack: 'Back'
 } as const

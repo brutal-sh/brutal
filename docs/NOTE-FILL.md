@@ -21,7 +21,7 @@ functional acceptance and the parent Note-reference task remain open.
 
 The reference tool initially reports an extra 50 on child Y positions in unsaved
 state. Exported body pixels and newly reopened copies report the positions above.
-The cause remains unknown; no compensating offset is added to Open Pen.
+The cause remains unknown; no compensating offset is added to Brutal.
 
 ## Hug-parent candidate, 2026-11-11
 

@@ -23,7 +23,7 @@ body:
     id: proposal
     attributes:
       label: Proposed solution
-      description: What behavior would you like Open Pen to support?
+      description: What behavior would you like Brutal to support?
       placeholder: |
         Add support for …
         It should work by …

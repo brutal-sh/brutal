@@ -107,7 +107,7 @@ async function createToolSession(options: {
     const outcome = await wait(tools.outcome())
     if (outcome.connected === false) {
       throw new ACPToolsUnreachableError(
-        `${agentName} couldn't reach Open Pen's tools, so your message wasn't sent.` +
+        `${agentName} couldn't reach Brutal's tools, so your message wasn't sent.` +
           (outcome.reason ? ` ${agentName} reported: ${outcome.reason}` : '')
       )
     }

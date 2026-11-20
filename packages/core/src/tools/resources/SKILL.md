@@ -1,12 +1,12 @@
-# Open Pen design guidance
+# Brutal design guidance
 
-Open Pen is a local design editor. Use the installed tool manifest to discover
+Brutal is a local design editor. Use the installed tool manifest to discover
 available operations and their validated arguments before editing a document.
 
 Read the relevant bundled guide:
 
 - [Execution and document safety](execute.md).
-- [Open Pen document format](pen-schema.md).
+- [Brutal document format](pen-schema.md).
 - [Web layout workflow](guide/web-app.md).
 
 These are first-party resources bundled with the installed version. Reading them

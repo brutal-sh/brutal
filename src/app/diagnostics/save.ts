@@ -8,7 +8,7 @@ import { diagnostics } from './recorder'
 export async function saveDiagnosticsReport(): Promise<boolean> {
   return saveExportedFile(
     getExportBytes(await diagnostics.export(diagnosticsEnvironment())),
-    'Open Pen diagnostics.json',
+    'Brutal diagnostics.json',
     'JSON',
     '.json',
     'application/json',

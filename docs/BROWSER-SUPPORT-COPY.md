@@ -8,8 +8,8 @@ native delivery, exact Pen geometry and full branding remain unaccepted.
 ## Resulting behavior
 
 The pre-boot support notice links to this fork's own README requirements section and issue
-form. Browser diagnostic prefill uses `Web (Open Pen)`, matching the issue template's option;
-the template's reproduction example also names Open Pen. Report links preserve version,
+form. Browser diagnostic prefill uses `Web (Brutal)`, matching the issue template's option;
+the template's reproduction example also names Brutal. Report links preserve version,
 browser, missing-feature and error details. Opening a link does not submit an issue.
 
 Support guidance keeps its existing self-contained imports: it renders before Vue, app
@@ -26,7 +26,7 @@ remain under their existing explicit heading.
 ## Executed checks
 
 The unchanged three-case baseline passes one case and fails two because old tests still
-expect `OpenPencil couldn't start`; the source already renders Open Pen. Correcting those
+expect `OpenPencil couldn't start`; the source already renders Brutal. Correcting those
 expectations preserves both actual failure triggers: a module-loading history failure and
 a first-route component setup failure. No production startup handling changes to satisfy them.
 
@@ -67,7 +67,7 @@ run the actual four live owners without changing the archive or test discovery p
   receipts and the explicitly retained invocation failure.
 
 Fresh authenticated GitHub readbacks after publication return exact local README and
-issue-template bytes, including the new requirements heading and matching `Web (Open Pen)`
+issue-template bytes, including the new requirements heading and matching `Web (Brutal)`
 option. The repository's remote `HEAD` resolves to the published source commit; the private
 draft head and disabled Actions state also match. The proof retains both Git blob and
 SHA-256 identifiers in `scratch/support-browser-live-content-proof-2026-11-07.json`.

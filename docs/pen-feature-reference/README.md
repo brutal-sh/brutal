@@ -14,7 +14,7 @@ Machine-readable requirements: [features.json](features.json). Source/heading in
 
 ## Acceptance rules
 
-A row closes only after the actual Open Pen user path runs, its saved/exported output is inspected, and the same state is compared with real Pen. Visual acceptance includes size, position, spacing, borders, radii, glyphs, typography, menus, focus, hover/selected/disabled/mixed/loading/error states and dismissal. Functional acceptance includes Undo/Redo, persistence, errors, cancellation and resource handling where applicable. Automated regressions alone do not establish Pen parity.
+A row closes only after the actual Brutal user path runs, its saved/exported output is inspected, and the same state is compared with real Pen. Visual acceptance includes size, position, spacing, borders, radii, glyphs, typography, menus, focus, hover/selected/disabled/mixed/loading/error states and dismissal. Functional acceptance includes Undo/Redo, persistence, errors, cancellation and resource handling where applicable. Automated regressions alone do not establish Pen parity.
 
 Every original chapter below owns its documented subheadings in sources.json. The current
 [refresh inventory](refresh-2026-11-06.json) maps every current chapter/heading to its requirements. Those mappings establish documentation coverage, not executed coverage. Undocumented native menus remain in the separate screen/menu ledger.

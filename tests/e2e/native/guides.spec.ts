@@ -43,7 +43,7 @@ it('delivers the native guide UI and this fork’s CLI setup link without changi
   await guide.$('button=Close').click()
   await guide.waitForExist({ reverse: true })
   await invokeNative('take_native_test_opened_urls')
-  await chooseCommand('Install Open Pen CLI')
+  await chooseCommand('Install Brutal CLI')
   await browser.waitUntil(async () =>
     (await invokeNative<string[]>('take_native_test_opened_urls')).includes(
       'https://github.com/jpoindexter/open-pen#cli'

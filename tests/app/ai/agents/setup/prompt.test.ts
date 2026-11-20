@@ -5,7 +5,7 @@ import { codingAgentSetupPrompt } from '@/app/ai/agents/setup/prompt'
 test('sets up Codex with a working bridge without asking for a checkout', () => {
   const prompt = codingAgentSetupPrompt('codex', true)
   expect(prompt).toContain('@agentclientprotocol/codex-acp')
-  expect(prompt).toContain('Sign in in Open Pen')
+  expect(prompt).toContain('Sign in in Brutal')
   expect(prompt).not.toContain('setup:local-runtime')
   expect(prompt).not.toContain('openpen-mcp-http')
 })

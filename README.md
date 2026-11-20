@@ -1,14 +1,16 @@
-# Open Pen
+# Brutal
 
-Open Pen is a local-first desktop design editor built on the MIT-licensed OpenPencil engine. The public Mac beta is in preparation. Full functional parity with Pen without an editor subscription or license activation remains on the roadmap. [OpenPencil engine](https://github.com/open-pencil/open-pencil)
+Brutal is a local-first desktop design editor built on the MIT-licensed OpenPencil engine. The public Mac beta is in preparation. Full functional parity with Pen without an editor subscription or license activation remains on the roadmap. [OpenPencil engine](https://github.com/open-pencil/open-pencil)
 
-[Open Pen website](https://open-pen.vercel.app/) · [Help docs](https://open-pen.vercel.app/help/#docs) · [Desktop setup](https://open-pen.vercel.app/help/getting-started/)
+[Brutal website](https://open-pen.vercel.app/) · [Help docs](https://open-pen.vercel.app/help/#docs) · [Desktop setup](https://open-pen.vercel.app/help/getting-started/)
 
-![Open Pen desktop editor showing the Field Notes sample](packages/docs/public/screenshot.png)
+![Brutal desktop editor showing the Field Notes sample](packages/docs/public/screenshot.png)
+
+Brutal is the new name for Open Pen. Existing design files and local installations use the same compatibility identifiers.
 
 The implementation baseline is OpenPencil `24461adec7073312d460d76f08f069de18e4fb78`. Its attribution and MIT license remain intact. Pen's proprietary code and assets are not part of this repository.
 
-The Script Gallery bundles eleven MIT examples from [High Agency's public pencil-scripts repository](https://github.com/highagency/pencil-scripts), with its [license notice](public/licenses/pencil-scripts.txt). Gallery previews are rendered by Open Pen; bundled example fonts retain their OFL notices.
+The Script Gallery bundles eleven MIT examples from [High Agency's public pencil-scripts repository](https://github.com/highagency/pencil-scripts), with its [license notice](public/licenses/pencil-scripts.txt). Gallery previews are rendered by Brutal; bundled example fonts retain their OFL notices.
 
 Export Snapshot packages available Script sources beside the design using relative JavaScript paths, including gallery examples. Keep the ZIP's extracted files together when opening the design in Pen. Missing sources refuse export; ordinary saves retain their authored source references.
 
@@ -24,7 +26,7 @@ bun run build:packages
 
 Launch the desktop app with `bun run tauri dev`. This requires Tauri 2’s Rust and platform development tools. Use `bun run dev` for browser development and `bun run storybook` for component checks. Both are contributor tools.
 
-Open Pen has its own bundle identity, credential service, deep links and local MCP endpoint. See [desktop configuration](docs/DESKTOP.md). The upstream updater is disabled. This fork has no release feed yet.
+Brutal has its own bundle identity, credential service, deep links and local MCP endpoint. See [desktop configuration](docs/DESKTOP.md). The upstream updater is disabled. This fork has no release feed yet.
 
 Cloud and feedback are off in the supplied environment example. Core editing requires no account. Optional external AI and image providers retain their own authentication and costs; local model support does not make hosted inference free.
 
@@ -44,7 +46,7 @@ The [PRD](docs/PRD.md) defines the product and acceptance gates. The [task index
 
 Start with the [prompt gallery](docs/PROMPTS.md), [Cursor/VS Code setup](docs/EDITOR-INTEGRATIONS.md), or [local Codex runtime guide](docs/LOCAL-RUNTIME.md). These guides state their verification limits; visual IDE extensions remain open.
 
-## Open Pen system requirements
+## Brutal system requirements
 
 The contributor browser build targets Chrome 111+, Edge 111+, Firefox 128+, Safari 16.4+ and iOS 16.4+.
 Startup also checks WebAssembly, WebGL 2 and required JavaScript/CSS features; a browser
@@ -53,8 +55,8 @@ These are configured support thresholds, not evidence that every platform is qua
 
 The desktop notice requires macOS 13+ with current Safari updates, Linux WebKitGTK 2.40+,
 or a current Windows WebView2 runtime. Build from [this fork's instructions](#run-this-fork);
-this private fork has no published installer or update feed. [Report an Open Pen problem](https://github.com/jpoindexter/open-pen-feedback/issues/new?template=bug.yml)
-after reviewing any diagnostic details you include. Find help, feedback, and private security reporting in [Open Pen support](https://open-pen.vercel.app/help/#support).
+this private fork has no published installer or update feed. [Report an Brutal problem](https://github.com/jpoindexter/open-pen-feedback/issues/new?template=bug.yml)
+after reviewing any diagnostic details you include. Find help, feedback, and private security reporting in [Brutal support](https://open-pen.vercel.app/help/#support).
 
 ## CLI
 

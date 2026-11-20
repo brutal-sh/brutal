@@ -71,7 +71,7 @@ describe('text case ranges', () => {
       `in setRangeTextCase: Property "value" failed validation: Invalid enum value. Expected 'ORIGINAL' | 'UPPER' | 'LOWER' | 'TITLE' | 'SMALL_CAPS' | 'SMALL_CAPS_FORCED', received 'SHOUT'`
     )
     expect(() => text.setRangeTextCase(0, 5, 'SMALL_CAPS' as 'UPPER')).toThrow(
-      'in setRangeTextCase: Open Pen does not support the SMALL_CAPS text case'
+      'in setRangeTextCase: Brutal does not support the SMALL_CAPS text case'
     )
     expect(() => text.setRangeTextCase(3, 3, 'UPPER')).toThrow(
       "in setRangeTextCase: Empty range selected. 'end' must be greater than 'start'"

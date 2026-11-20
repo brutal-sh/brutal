@@ -64,7 +64,7 @@ for (const platform of PLATFORMS) {
       const environment: SupportEnvironment = {
         ...platform,
         host: 'desktop',
-        userAgent: `Open Pen test-owned ${platform.name} environment`
+        userAgent: `Brutal test-owned ${platform.name} environment`
       }
       await page.evaluate(async (environment) => {
         const guidancePath = '/src/app/shell/support/guidance.ts'

@@ -53,18 +53,18 @@ stale-test ownership, followed by the failed and previously unrun controls.
 ## November 18 inspector follow-up
 
 The same byte-identical 120 × 80 rectangle was opened and selected in the installed
-Pen 1.2.23 and Open Pen from `7b72a75ba`. Both captures use a 1280 × 800 window at 100%
+Pen 1.2.23 and Brutal from `7b72a75ba`. Both captures use a 1280 × 800 window at 100%
 zoom. With each app's existing theme, the Position heading begins at approximately
 (1066, 260) and Layout at (1064, 366) in both windows. Both show X 100, Y 100 and rotation
 0° in Position, with W 120 and H 80 in Layout. REA records those named incrementors under
-the corresponding Open Pen accessibility regions. The reference values and grouping come
+the corresponding Brutal accessibility regions. The reference values and grouping come
 from the Pen raster. That Pen accessibility capture leaves the inspector roles unresolved.
 
 The browser checks now choose a Drop Shadow from the compact Effects menu, exercise its
 named popover and Escape, check the compact export controls in view, and use Advanced
 properties for layer blend and mask controls. The multi-layer blend check uses three
 rectangles with mixed starting modes and verifies every mode after one Undo and Redo.
-The browser snapshots were reviewed as Open Pen output. The original eight artifact
+The browser snapshots were reviewed as Brutal output. The original eight artifact
 hashes and the failed browser runs are retained alongside the native captures under
 `local-evidence/mod08-2026-11-07/inherited-inspector-attempt/` and
 `local-evidence/inspector-position-2026-11-18/`.

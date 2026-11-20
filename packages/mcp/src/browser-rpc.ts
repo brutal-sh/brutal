@@ -17,7 +17,7 @@ const RPC_TIMEOUT = 20_000
 const APP_WAIT_TIMEOUT = 10_000
 
 const APP_NOT_CONNECTED_MESSAGE =
-  'Open Pen app is not connected. STOP and tell the user: "The Open Pen desktop app is not running, no document is open, or the desktop app is connected to a different MCP server. Please start Open Pen, open a document, and try again." Do NOT attempt to start the app yourself or retry automatically.'
+  'Brutal app is not connected. STOP and tell the user: "The Brutal desktop app is not running, no document is open, or the desktop app is connected to a different MCP server. Please start Brutal, open a document, and try again." Do NOT attempt to start the app yourself or retry automatically.'
 
 type BrowserRPCBridgeOptions = {
   authToken: string | null

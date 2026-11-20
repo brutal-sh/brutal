@@ -4,7 +4,7 @@ export const menuMessageDefaults = {
   exportSnapshot: 'Export Snapshot…',
   guideExportCode: 'Guide: How to Export Design to Code…',
   guideImportFigma: 'Guide: How to Import from Figma…',
-  installCLI: 'Install Open Pen CLI…',
+  installCLI: 'Install Brutal CLI…',
   file: 'File',
   edit: 'Edit',
   view: 'View',

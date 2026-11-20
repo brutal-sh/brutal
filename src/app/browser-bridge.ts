@@ -43,7 +43,7 @@ let activeStore: EditorStore | null = null
 function windowAPI(): OpenPencilWindowAPI {
   window.openPencil ??= {}
   window.openPencil.getStore ??= () => {
-    if (!activeStore) throw new Error('Open Pen store not initialized')
+    if (!activeStore) throw new Error('Brutal store not initialized')
     return activeStore
   }
   return window.openPencil
@@ -96,7 +96,7 @@ export function exposeAutomationRequests(
   const testHooks = (windowAPI().test ??= {})
   testHooks.automation = async (command, args) => {
     const store = windowAPI().getStore?.()
-    if (!store) throw new Error('Open Pen store not initialized')
+    if (!store) throw new Error('Brutal store not initialized')
     return handleRequest(store, command, args)
   }
 }

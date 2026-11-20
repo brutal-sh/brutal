@@ -1,12 +1,12 @@
-# Open Pen brand sources
+# Brutal brand sources
 
-`open-pen-app.png` is the original Open Pen artwork master: an ivory pen nib on a violet tile, generated for this project. All shipped app, browser, PWA and documentation marks derive from this source. Edit the master, then regenerate; generated output is ignored by Git.
+`brutal-app.png` is the Brutal artwork master: an ivory geometric B on a violet tile, generated for this project. All shipped app, browser, PWA and documentation marks derive from this source. Edit the master, then regenerate; generated output is ignored by Git.
 
 - Native PNG, ICO and ICNS assets retain the existing Tauri generation path.
 - Web main and optical micro placements embed the master at 256px and 16px respectively. Both themes retain the same recognizable violet/ivory palette.
-- Monochrome placements use neutral shades of the same tile and nib. They do not reuse the inherited pencil-P artwork.
+- Monochrome placements use neutral shades of the same tile and letterform. They do not reuse the inherited pencil-P artwork.
 - App/profile and any-purpose PWA icons preserve the master's transparency. Apple Touch is opaque so the platform controls rounding; maskable artwork is opaque with the mark inside the central 80%-diameter safe circle.
-- `BrandMark` with `variant="app-icon"` uses the original Open Pen PNG. The editor header keeps its 24px tile.
+- `BrandMark` with `variant="app-icon"` uses the original Brutal PNG. The editor header keeps its 24px tile.
 - Historical `mark.svg` and `mark-micro.svg` sources retain their provenance and are not inputs to shipped artwork. Required upstream licenses and credit remain intact.
 
 ## Generation

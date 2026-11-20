@@ -8,41 +8,41 @@ import { CanvasHelper } from '#tests/helpers/canvas'
 const LOCALES = [
   {
     locale: 'en',
-    description: 'Open Pen can’t evaluate KEYFRAME yet. Saving keeps it as it is.'
+    description: 'Brutal can’t evaluate KEYFRAME yet. Saving keeps it as it is.'
   },
   {
     locale: 'de',
     description:
-      'Open Pen kann KEYFRAME noch nicht auswerten. Beim Speichern bleibt es unverändert.'
+      'Brutal kann KEYFRAME noch nicht auswerten. Beim Speichern bleibt es unverändert.'
   },
   {
     locale: 'es',
-    description: 'Open Pen aún no puede evaluar KEYFRAME. Al guardar se conserva tal cual.'
+    description: 'Brutal aún no puede evaluar KEYFRAME. Al guardar se conserva tal cual.'
   },
   {
     locale: 'fr',
     description:
-      'Open Pen ne sait pas encore évaluer KEYFRAME. L’enregistrement le conserve tel quel.'
+      'Brutal ne sait pas encore évaluer KEYFRAME. L’enregistrement le conserve tel quel.'
   },
   {
     locale: 'it',
-    description: 'Open Pen non sa ancora valutare KEYFRAME. Il salvataggio lo mantiene invariato.'
+    description: 'Brutal non sa ancora valutare KEYFRAME. Il salvataggio lo mantiene invariato.'
   },
   {
     locale: 'ja',
-    description: 'Open Pen はまだ KEYFRAME を評価できません。保存してもそのまま残ります。'
+    description: 'Brutal はまだ KEYFRAME を評価できません。保存してもそのまま残ります。'
   },
   {
     locale: 'pl',
-    description: 'Open Pen nie potrafi jeszcze obliczyć KEYFRAME. Zapis zachowuje je bez zmian.'
+    description: 'Brutal nie potrafi jeszcze obliczyć KEYFRAME. Zapis zachowuje je bez zmian.'
   },
   {
     locale: 'ru',
-    description: 'Open Pen пока не умеет вычислять KEYFRAME. При сохранении оно остаётся как есть.'
+    description: 'Brutal пока не умеет вычислять KEYFRAME. При сохранении оно остаётся как есть.'
   },
   {
     locale: 'zh-CN',
-    description: 'Open Pen 暂不能计算 KEYFRAME。保存时会原样保留。'
+    description: 'Brutal 暂不能计算 KEYFRAME。保存时会原样保留。'
   }
 ] as const
 

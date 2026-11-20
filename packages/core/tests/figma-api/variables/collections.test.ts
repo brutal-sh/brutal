@@ -304,7 +304,7 @@ describe('node variable bindings', () => {
     expect(text.boundVariables).toEqual({ fontSize: [{ type: 'VARIABLE_ALIAS', id: size.id }] })
     expect(text.fontSize).toBe(4.5)
     expect(() => api.createText().setBoundVariable('fontWeight', size)).toThrow(
-      'in setBoundVariable: Open Pen binds fontWeight only on text that has characters'
+      'in setBoundVariable: Brutal binds fontWeight only on text that has characters'
     )
   })
 

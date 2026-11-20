@@ -49,4 +49,4 @@ The `/demo` document is a tour of eight chapters on one page, each a section sta
 
 ## Brand assets
 
-Canonical artwork is `assets/brand/open-pen-app.png`; historical SVG masters are not shipped inputs (see `assets/brand/README.md`). `tools/generate/brand/` derives web, docs, and native icons with RealFaviconGenerator and Tauri; generated assets are ignored, not committed. Vite and VitePress configs prepare their own targets, and Tauri dev/build hooks prepare native icons.
+Canonical artwork is `assets/brand/brutal-app.png`; historical SVG masters are not shipped inputs (see `assets/brand/README.md`). `tools/generate/brand/` derives web, docs, and native icons with RealFaviconGenerator and Tauri; generated assets are ignored, not committed. Vite and VitePress configs prepare their own targets, and Tauri dev/build hooks prepare native icons.

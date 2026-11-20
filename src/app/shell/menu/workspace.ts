@@ -50,7 +50,7 @@ export async function popupWorkspaceMenu(
         }),
         { item: 'Separator' },
         await item({
-          text: 'Open Pen CLI docs',
+          text: 'Brutal CLI docs',
           action: () => void openExternalLink(OPEN_PEN_CLI_GUIDE_URL)
         })
       ]

@@ -8,7 +8,7 @@ complete format support or product parity. Runtime source and public APIs are un
 
 `@open-pencil/kiwi` owns `src/fig/schema/fig.kiwi`, its parser/validator, binary-schema
 codec and compiled runtime tables. FIG owns complete archives and source metadata;
-Core owns export orchestration. Codex records and verifies this Open Pen disposition;
+Core owns export orchestration. Codex records and verifies this Brutal disposition;
 changes to the product target remain Jason's decision.
 
 The declaration has 5,628 physical lines. Its SHA-256 is

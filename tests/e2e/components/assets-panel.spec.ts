@@ -7,7 +7,7 @@ import { waitForDemo } from '#tests/helpers/demo'
 async function selectedNodeSnapshot(page: Page) {
   return page.evaluate(() => {
     const store = window.openPencil?.getStore?.()
-    if (!store) throw new Error('Open Pen store not initialized')
+    if (!store) throw new Error('Brutal store not initialized')
     const selectedId = [...store.state.selectedIds][0]
     const selected = selectedId ? store.graph.getNode(selectedId) : null
     return selected
@@ -48,7 +48,7 @@ test('components workspace shows set details and inserts the default variant', a
 
   const ids = await page.evaluate(() => {
     const store = window.openPencil?.getStore?.()
-    if (!store) throw new Error('Open Pen store not initialized')
+    if (!store) throw new Error('Brutal store not initialized')
 
     const pageNode = store.graph.getNode(store.state.currentPageId)
     if (!pageNode) throw new Error('Current page not found')
@@ -218,7 +218,7 @@ test('components workspace supports main-component navigation and canvas drag', 
 
   const setup = await page.evaluate(() => {
     const store = window.openPencil?.getStore?.()
-    if (!store) throw new Error('Open Pen store not initialized')
+    if (!store) throw new Error('Brutal store not initialized')
     store.state.panX = 0
     store.state.panY = 0
     store.state.zoom = 1
@@ -248,7 +248,7 @@ test('components workspace supports main-component navigation and canvas drag', 
     .poll(() =>
       page.evaluate(() => {
         const store = window.openPencil?.getStore?.()
-        if (!store) throw new Error('Open Pen store not initialized')
+        if (!store) throw new Error('Brutal store not initialized')
         return {
           pageId: store.state.currentPageId,
           selectedId: [...store.state.selectedIds][0]
@@ -277,7 +277,7 @@ test('assets insertion accounts for entered container coordinates', async ({ pag
 
   const setup = await page.evaluate(() => {
     const store = window.openPencil?.getStore?.()
-    if (!store) throw new Error('Open Pen store not initialized')
+    if (!store) throw new Error('Brutal store not initialized')
     store.state.panX = 0
     store.state.panY = 0
     store.state.zoom = 1
@@ -309,7 +309,7 @@ test('assets insertion accounts for entered container coordinates', async ({ pag
 
   const inserted = await page.evaluate(() => {
     const store = window.openPencil?.getStore?.()
-    if (!store) throw new Error('Open Pen store not initialized')
+    if (!store) throw new Error('Brutal store not initialized')
     const selectedId = [...store.state.selectedIds][0]
     const selected = selectedId ? store.graph.getNode(selectedId) : null
     if (!selected) return null

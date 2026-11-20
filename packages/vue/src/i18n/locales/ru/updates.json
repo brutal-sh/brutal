@@ -1,8 +1,8 @@
 {
-  "upToDate": "Open Pen обновлён до последней версии",
+  "upToDate": "Brutal обновлён до последней версии",
   "windowTitle": "Обновление ПО",
   "checking": "Проверка обновлений…",
-  "available": "Доступен Open Pen {version}",
+  "available": "Доступен Brutal {version}",
   "currentVersion": "У вас версия {version}.",
   "whatsNew": "Что нового",
   "noNotes": "У этого выпуска нет примечаний.",
@@ -14,12 +14,12 @@
   "downloadProgress": "{percent}% · {downloaded} из {total}",
   "downloadProgressUnknown": "Загружено {downloaded}",
   "installing": "Установка…",
-  "installed": "Open Pen {version} установлен",
-  "restartToFinish": "Перезапустите Open Pen, чтобы начать пользоваться новой версией.",
+  "installed": "Brutal {version} установлен",
+  "restartToFinish": "Перезапустите Brutal, чтобы начать пользоваться новой версией.",
   "restartNow": "Перезапустить",
   "downloadFailed": "Не удалось загрузить обновление: {error}",
   "installFailed": "Не удалось установить обновление: {error}",
-  "restartFailed": "Не удалось перезапустить Open Pen: {error}",
-  "unavailable": "Обновления сейчас недоступны. Вы можете продолжать использовать эту версию Open Pen.",
+  "restartFailed": "Не удалось перезапустить Brutal: {error}",
+  "unavailable": "Обновления сейчас недоступны. Вы можете продолжать использовать эту версию Brutal.",
   "checkFailed": "Не удалось проверить обновления: {error}"
 }

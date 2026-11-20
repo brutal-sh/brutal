@@ -15,7 +15,7 @@ export const notificationMessageDefaults = {
   designTokensLeftOut: params('Left out of the design tokens: {names}.'),
   designTokensImported: params('Imported {count} design tokens.'),
   unsupportedVariableExpressions: params(
-    'Open Pen can’t evaluate these variables yet, so layers keep the values saved in the file: {names}.'
+    'Brutal can’t evaluate these variables yet, so layers keep the values saved in the file: {names}.'
   ),
   nodeID: 'node ID',
   nodeIDs: 'node IDs',
@@ -48,16 +48,16 @@ export const notificationMessageDefaults = {
   nativeSaveTitle: params('Save {extension} file as…'),
   nativeSaveFailed: params('Could not save “{name}”'),
   recoveredSourceChanged:
-    'Open Pen could not verify that the original file is unchanged. Use File → Save As to keep a separate copy of the recovered work.',
+    'Brutal could not verify that the original file is unchanged. Use File → Save As to keep a separate copy of the recovered work.',
   nativeSavePermissionDenied:
-    'Open Pen cannot save this file because you don’t have permission. Use File → Save As to save a copy in a folder you can write to.',
+    'Brutal cannot save this file because you don’t have permission. Use File → Save As to save a copy in a folder you can write to.',
   storageConnected: 'Connected. Storage namespace is ready.',
   storageConnectionFailed: params('Could not connect to storage: {error}'),
   deepLinkLocateFile: params('Locate “{file}” to follow this link.'),
   deepLinkPickerDismissed: 'Link cancelled: no file was chosen.',
   deepLinkCancelled: params('Link cancelled: expected a file ending in “{file}”.'),
   deepLinkNodeNotFound: params('Node “{node}” was not found in “{file}”.'),
-  openQueuedFilesFailed: params('Could not open the files handed to Open Pen: {error}')
+  openQueuedFilesFailed: params('Could not open the files handed to Brutal: {error}')
 } as const
 
 const localeLoaders = {

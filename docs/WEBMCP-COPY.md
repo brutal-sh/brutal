@@ -12,7 +12,7 @@ Off, registers Inspect and Edit, returns to Inspect, switches Off and stops. The
 snapshots contain 24 Inspect and 47 Edit payloads, covering 47 unique tool names. Repeated
 Inspect registration emits identical metadata after the mode change.
 
-Every description keeps its Core tool description and names the active Open Pen document.
+Every description keeps its Core tool description and names the active Brutal document.
 Tool names, complete JSON input schemas and annotations are captured. Read-only hints match
 the declared Core mutation flags; Inspect advertises no mutating tool. These are metadata
 checks, not proof that every advertised callback performs its intended operation.

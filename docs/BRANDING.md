@@ -1,4 +1,10 @@
-# Open Pen identity acceptance
+# Brutal brand
+
+Brutal is the public name of the desktop design editor. Use Brutal in the app, Help, website, and new release materials. The [icon master](../assets/brand/brutal-app.png) feeds Mac, web, and documentation assets.
+
+The macOS bundle identifier, URL scheme, canvas bridge executable, discovery directory, and package identifiers are compatibility contracts. See [desktop configuration](DESKTOP.md). Historical acceptance records retain the name displayed by the tested build.
+
+## Earlier Open Pen brand verification
 
 Updated: 2026-11-11. Own-brand assets have executed output and browser checks.
 Owned diagnostics/log names also have bounded executed checks below. Product copy, native

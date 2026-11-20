@@ -1,8 +1,8 @@
 {
-  "upToDate": "Open Pen ist auf dem neuesten Stand",
+  "upToDate": "Brutal ist auf dem neuesten Stand",
   "windowTitle": "Softwareaktualisierung",
   "checking": "Suche nach Updates …",
-  "available": "Open Pen {version} ist verfügbar",
+  "available": "Brutal {version} ist verfügbar",
   "currentVersion": "Du hast Version {version}.",
   "whatsNew": "Neuerungen",
   "noNotes": "Für dieses Release gibt es keine Versionshinweise.",
@@ -14,12 +14,12 @@
   "downloadProgress": "{percent} % · {downloaded} von {total}",
   "downloadProgressUnknown": "{downloaded} heruntergeladen",
   "installing": "Wird installiert …",
-  "installed": "Open Pen {version} ist installiert",
-  "restartToFinish": "Starte Open Pen neu, um die neue Version zu verwenden.",
+  "installed": "Brutal {version} ist installiert",
+  "restartToFinish": "Starte Brutal neu, um die neue Version zu verwenden.",
   "restartNow": "Jetzt neu starten",
   "downloadFailed": "Das Update konnte nicht heruntergeladen werden: {error}",
   "installFailed": "Das Update konnte nicht installiert werden: {error}",
-  "restartFailed": "Open Pen konnte nicht neu gestartet werden: {error}",
-  "unavailable": "Updates sind derzeit nicht verfügbar. Du kannst diese Version von Open Pen weiterverwenden.",
+  "restartFailed": "Brutal konnte nicht neu gestartet werden: {error}",
+  "unavailable": "Updates sind derzeit nicht verfügbar. Du kannst diese Version von Brutal weiterverwenden.",
   "checkFailed": "Updates konnten nicht geprüft werden: {error}"
 }

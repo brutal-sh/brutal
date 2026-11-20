@@ -1,16 +1,16 @@
 # Local desktop AI runtime
 
 The Apple-silicon macOS beta build bundles the standalone MCP canvas bridge in
-`Open Pen.app`. Build it locally with `bun run build:macos-beta`. The build checks
+`Brutal.app`. Build it locally with `bun run build:macos-beta`. The build checks
 the exact bridge version and authenticated startup before putting it in the
-app bundle. Install the Codex adapter separately through Open Pen, then sign in
-to Codex. Open Pen detects the bundled bridge at launch.
+app bundle. Install the Codex adapter separately through Brutal, then sign in
+to Codex. Brutal detects the bundled bridge at launch.
 
 For development, the macOS/Linux installer can still build a standalone MCP
 canvas bridge under `~/.local/share/openpen/runtime`. It requires the checkout
 and its dependencies at setup. Bun 1.4.2 is the tested build runtime.
 
-With Node.js, npm, and Bun available, run these commands from the Open Pen checkout:
+With Node.js, npm, and Bun available, run these commands from the Brutal checkout:
 
 ```sh
 bun run build:packages
@@ -21,7 +21,7 @@ The installer pins the official `@agentclientprotocol/codex-acp` adapter to vers
 
 Before activation, the candidate must report the package version and pass an authenticated health check in a disposable directory. The installer verifies its copied SHA256, then atomically switches only the exact legacy checkout link or a hash-verified previously installed bridge. Old binaries remain available. Existing foreign files, links, modified binaries, or unowned runtime directories cause refusal. Package install scripts are disabled.
 
-The former checkout link failed when launched from Finder: macOS attributed the child process's protected-file access to Open Pen, and Node blocked before opening its listener. The standalone build embeds schema text and uses CSS Tree's supported static distribution to include its JSON data. It requires no broader filesystem permission.
+The former checkout link failed when launched from Finder: macOS attributed the child process's protected-file access to Brutal, and Node blocked before opening its listener. The standalone build embeds schema text and uses CSS Tree's supported static distribution to include its JSON data. It requires no broader filesystem permission.
 
 The desktop app already searches `~/.local/bin`, including normal Finder launches. No shell profile change or test-only PATH override is required. The adapter uses the user's ordinary Codex configuration; the installer does not access or copy login credentials.
 
@@ -32,7 +32,7 @@ openpen-mcp-http --version
 
 The fork uses `openpen-mcp-http` exclusively. Installing the upstream `@open-pencil/mcp` package is not a substitute, and the app no longer offers that installation. Preserve the upstream executable if it is already installed for another application.
 
-After setup, restart Open Pen, select Codex in AI settings, and verify its account and canvas connection. On October 30, 2026, the normal installed app completed the real Home prompt → Codex → editable red rectangle → Undo workflow using the existing login and this standalone bridge. This establishes that bounded workflow; it does not qualify every agent, tool, or platform. A successful version or health command alone is insufficient evidence.
+After setup, restart Brutal, select Codex in AI settings, and verify its account and canvas connection. On October 30, 2026, the normal installed app completed the real Home prompt → Codex → editable red rectangle → Undo workflow using the existing login and this standalone bridge. This establishes that bounded workflow; it does not qualify every agent, tool, or platform. A successful version or health command alone is insufficient evidence.
 
 On November 19, 2026, the regular installed build from `7b72a75ba` reported connected after **Check again**. The existing Codex login created one editable red rectangle in a disposable document. With canvas focus, the native keyboard shortcuts removed and restored the layer through Undo and Redo. Save wrote a single 96 × 64 rectangle at (100, 100) with fill `#FF0000`. Closing and reopening the file restored the layer and preserved the saved checksum. The installed build ran with a healthy bridge. Recovery from an unavailable bridge was verified separately with an isolated Mac build from `0610afcbe`.
 

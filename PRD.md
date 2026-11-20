@@ -1,4 +1,4 @@
-# Open Pen
+# Brutal
 
 Owner: Jason. Started 2026-10-29. Target: independent local-first alternative to Pen, with feature parity except subscription/licensing machinery. User explicitly requires continued work until parity, not a starter-editor completion claim.
 

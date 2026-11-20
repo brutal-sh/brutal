@@ -7,7 +7,7 @@ Native update delivery, restart feedback and full branding remain open.
 
 ## Resulting behavior
 
-Unavailable-update guidance tells the user they can keep using this version of Open Pen.
+Unavailable-update guidance tells the user they can keep using this version of Brutal.
 It uses the existing message key in English and all eight translated catalogs. It no
 longer asks the app user to publish a signed release or create `latest.json`.
 
@@ -91,6 +91,6 @@ The actual installed menu establishes the original defect only. At that publicat
 
 ## Manual empty-endpoint native acceptance — 2026-11-11
 
-Native access becomes available later in the same day. The exact isolated candidate binary `38d9b24e96c9956aced91896432670463faf903e83cd18c1e3b9de332e68ba82` is revalidated and launched with fresh runner-owned routing, incognito WebView and memory credentials. Computer Use binds the unique test bundle, raises it, opens its actual macOS menu and clicks Check for Updates. The native WebView shows “Updates are currently unavailable. You can keep using this version of Open Pen.” The owned process is terminated and its exit observed; the normal installation stays at binary `79dd048532dbe97ae74c904b226a840371827cd3e2f393b7fa872c53e9287aa0`.
+Native access becomes available later in the same day. The exact isolated candidate binary `38d9b24e96c9956aced91896432670463faf903e83cd18c1e3b9de332e68ba82` is revalidated and launched with fresh runner-owned routing, incognito WebView and memory credentials. Computer Use binds the unique test bundle, raises it, opens its actual macOS menu and clicks Check for Updates. The native WebView shows “Updates are currently unavailable. You can keep using this version of Brutal.” The owned process is terminated and its exit observed; the normal installation stays at binary `79dd048532dbe97ae74c904b226a840371827cd3e2f393b7fa872c53e9287aa0`.
 
 BRAND-UPDATER-EMPTY meets its bounded criterion and is Executed, combining this native delivery observation with the unchanged published `f606d6de9` controller/control hashes, 25 owner cases/52 assertions, independent review and complete static qualification. Plugin avoidance, silent mode and enabled behavior are controller-test evidence; this is not a runtime network trace, configured update delivery or normal-app installation acceptance. Earlier lock/driver failures remain retained. BRAND-MAC-MENU and wider release gates stay open. Private receipts: `unique-updater-retry-launch.json` and `unique-updater-native-observed.json`.

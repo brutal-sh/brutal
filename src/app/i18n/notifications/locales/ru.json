@@ -28,12 +28,12 @@
   "deepLinkPickerDismissed": "Ссылка отменена: файл не выбран.",
   "deepLinkCancelled": "Ссылка отменена: ожидался файл с окончанием «{file}».",
   "deepLinkNodeNotFound": "Слой «{node}» не найден в «{file}».",
-  "openQueuedFilesFailed": "Не удалось открыть файлы, переданные Open Pen: {error}",
+  "openQueuedFilesFailed": "Не удалось открыть файлы, переданные Brutal: {error}",
   "tokensLeftOut": "Не вошли в таблицу стилей: {names}.",
   "designTokensLeftOut": "Не вошли в дизайн-токены: {names}.",
   "designTokensImported": "Импортировано дизайн-токенов: {count}.",
-  "unsupportedVariableExpressions": "Open Pen пока не умеет вычислять эти переменные, поэтому слои сохраняют значения из файла: {names}.",
+  "unsupportedVariableExpressions": "Brutal пока не умеет вычислять эти переменные, поэтому слои сохраняют значения из файла: {names}.",
   "nativeSaveTitle": "Сохранить файл {extension} как…",
   "nativeSaveFailed": "Не удалось сохранить «{name}»",
-  "nativeSavePermissionDenied": "Open Pen не может сохранить этот файл: у вас нет разрешения. Выберите Файл → Сохранить как, чтобы сохранить копию в папке, доступной для записи."
+  "nativeSavePermissionDenied": "Brutal не может сохранить этот файл: у вас нет разрешения. Выберите Файл → Сохранить как, чтобы сохранить копию в папке, доступной для записи."
 }

@@ -4,7 +4,7 @@
 
 Please do not report security vulnerabilities through public GitHub issues or pull requests.
 
-If you believe you have found a security issue in Open Pen, report it privately using GitHub Security Advisories:
+If you believe you have found a security issue in Brutal, report it privately using GitHub Security Advisories:
 
 https://github.com/jpoindexter/open-pen-feedback/security/advisories/new
 
@@ -24,4 +24,4 @@ Please give us a reasonable opportunity to investigate and release a fix before 
 
 ## MCP server
 
-Open Pen uses the local `openpen-mcp-http` canvas bridge. See the [local runtime guide](docs/LOCAL-RUNTIME.md) for the bundled and development bridge, authentication, and configuration.
+Brutal uses the local `openpen-mcp-http` canvas bridge. See the [local runtime guide](docs/LOCAL-RUNTIME.md) for the bundled and development bridge, authentication, and configuration.

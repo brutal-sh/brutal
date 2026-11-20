@@ -45,7 +45,7 @@ export class PhaseTimer {
         devtools: {
           dataType: 'track-entry',
           track: 'Renderer',
-          trackGroup: 'Open Pen',
+          trackGroup: 'Brutal',
           color: colorForPhase(name)
         }
       }

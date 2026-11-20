@@ -21,7 +21,7 @@ const MODEL_PROVIDER_ADAPTERS = {
         apiKey: config.apiKey,
         fetch: runtime.fetch,
         headers: {
-          'X-OpenRouter-Title': 'Open Pen',
+          'X-OpenRouter-Title': 'Brutal',
           'HTTP-Referer': OPEN_PEN_WEBSITE_URL
         }
       })

@@ -32,7 +32,7 @@ describe('unsupported engine guidance', () => {
       environment({ host: 'desktop', os: 'macos', browser: 'safari', osVersion: '13.7.8' }),
       MISSING
     )
-    expect(notice.heading).toBe('Update macOS to run Open Pen')
+    expect(notice.heading).toBe('Update macOS to run Brutal')
     expect(notice.paragraphs[0]).toContain('macOS 13.7.8')
     expect(notice.paragraphs[1]).toContain('Software Update')
     expect(notice.details).toContain('Host: desktop app')
@@ -43,7 +43,7 @@ describe('unsupported engine guidance', () => {
       environment({ host: 'desktop', os: 'macos', browser: 'safari', osVersion: '12.6.4' }),
       MISSING
     )
-    expect(notice.heading).toBe('Open Pen needs macOS 13 or later')
+    expect(notice.heading).toBe('Brutal needs macOS 13 or later')
   })
 
   test('names the WebKitGTK package on Linux desktops', () => {
@@ -51,7 +51,7 @@ describe('unsupported engine guidance', () => {
       environment({ host: 'desktop', os: 'linux', browser: 'safari', webviewVersion: '2.38.6' }),
       MISSING
     )
-    expect(notice.heading).toBe('Update WebKitGTK to run Open Pen')
+    expect(notice.heading).toBe('Update WebKitGTK to run Brutal')
     expect(notice.paragraphs[0]).toContain('2.38.6')
     expect(notice.paragraphs[1]).toContain('webkit2gtk-4.1')
   })
@@ -61,7 +61,7 @@ describe('unsupported engine guidance', () => {
       environment({ host: 'desktop', os: 'windows', browser: 'edge', browserVersion: 100 }),
       MISSING
     )
-    expect(notice.heading).toBe('Update WebView2 to run Open Pen')
+    expect(notice.heading).toBe('Update WebView2 to run Brutal')
     expect(notice.links.map((link) => link.url)).toContain(WEBVIEW2_DOWNLOAD_URL)
   })
 
@@ -69,32 +69,32 @@ describe('unsupported engine guidance', () => {
     [
       'chrome',
       105,
-      'Update Chrome to run Open Pen',
-      'Chrome 105 detected. Open Pen needs Chrome 111 or later.'
+      'Update Chrome to run Brutal',
+      'Chrome 105 detected. Brutal needs Chrome 111 or later.'
     ],
     [
       'edge',
       109,
-      'Update Edge to run Open Pen',
-      'Edge 109 detected. Open Pen needs Edge 111 or later.'
+      'Update Edge to run Brutal',
+      'Edge 109 detected. Brutal needs Edge 111 or later.'
     ],
     [
       'firefox',
       115,
-      'Update Firefox to run Open Pen',
-      'Firefox 115 detected. Open Pen needs Firefox 128 or later.'
+      'Update Firefox to run Brutal',
+      'Firefox 115 detected. Brutal needs Firefox 128 or later.'
     ],
     [
       'safari',
       16.2,
-      'Update Safari to run Open Pen',
-      'Safari 16.2 detected. Open Pen needs Safari 16.4 or later.'
+      'Update Safari to run Brutal',
+      'Safari 16.2 detected. Brutal needs Safari 16.4 or later.'
     ],
     [
       'opera',
       108,
-      'Update Opera to run Open Pen',
-      'Opera 108 detected. Open Pen needs Opera built on Chrome 111 or later.'
+      'Update Opera to run Brutal',
+      'Opera 108 detected. Brutal needs Opera built on Chrome 111 or later.'
     ]
   ] as const)(
     'names the outdated %s version and the minimum',
@@ -114,7 +114,7 @@ describe('unsupported engine guidance', () => {
       environment({ os: 'ios', browser: 'safari', browserVersion: 16.1 }),
       MISSING
     )
-    expect(notice.heading).toBe('Update iOS to run Open Pen')
+    expect(notice.heading).toBe('Update iOS to run Brutal')
     expect(notice.paragraphs[0]).toContain('iOS 16.4')
   })
 
@@ -130,9 +130,9 @@ describe('unsupported engine guidance', () => {
 
   test('falls back to the full requirements for an unknown browser', () => {
     const notice = unsupportedNotice(environment({}), MISSING)
-    expect(notice.heading).toBe("Open Pen can't run in this browser")
+    expect(notice.heading).toBe("Brutal can't run in this browser")
     expect(notice.paragraphs[0]).toBe(
-      'Open Pen needs Chrome 111, Edge 111, Firefox 128, or Safari 16.4 or later.'
+      'Brutal needs Chrome 111, Edge 111, Firefox 128, or Safari 16.4 or later.'
     )
   })
 
@@ -160,7 +160,7 @@ describe('boot failure guidance', () => {
       environment({ host: 'desktop', os: 'macos', browser: 'safari', osVersion: '13.7.8' }),
       error
     )
-    expect(notice.heading).toBe("Open Pen couldn't start")
+    expect(notice.heading).toBe("Brutal couldn't start")
     expect(notice.paragraphs[1]).toContain('Safari updates')
     expect(notice.details[0]).toBe('TypeError: Promise.withResolvers is not a function')
     expect(notice.details).toContain('OS: macos 13.7.8')

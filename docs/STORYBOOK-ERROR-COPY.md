@@ -3,14 +3,14 @@
 Updated: 2026-11-07. Status: bounded parser/writer criterion executed and published at
 [`881d0b7e5`](https://github.com/jpoindexter/open-pen/commit/881d0b7e5a65a74588daa2d105ba9a74dba908e6) for [BRAND-STORYBOOK-ERROR](https://trello.com/c/0FF3JZ3g).
 
-The invalid-manifest error names Open Pen. Its remaining sentence, path context, validation
+The invalid-manifest error names Brutal. Its remaining sentence, path context, validation
 and error handling are unchanged. `.openpencil-stories.json` and generated `openpencil/*`
 paths remain compatibility identities so existing exports are recognized and unrelated
 files stay outside generated-file ownership. Only the inherited product name in prose changes.
 
 The actual `readManifest`/`writeManifest` path runs before and after the change in disposable
 directories. Malformed JSON, a traversal file entry and an unsupported manifest version each
-throw the same error with only `OpenPencil` replaced by `Open Pen`. All three invalid files
+throw the same error with only `OpenPencil` replaced by `Brutal`. All three invalid files
 retain exactly their original bytes. A valid manifest reads and writes with identical bytes;
 its compatibility filename and generated font/story paths are retained. Absolute/traversal
 paths are refused, and a synthetic unrelated file retains its hash.

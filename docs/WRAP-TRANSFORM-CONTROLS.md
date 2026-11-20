@@ -30,7 +30,7 @@ width and retains child width80, rotation90 and Fill Height. These are separate,
 dated observations; neither is silently promoted to the current1.2.22 reference.
 
 A new read-only controlled diagnostic independently authors that input through public Core
-IO and executes Open Pen's actual Add flex command. Current Open Pen resolves220×80/gap60,
+IO and executes Brutal's actual Add flex command. Current Brutal resolves220×80/gap60,
 returns to the original80×60children on Undo, and returns to220×80on Redo and `.pen` reread.
 Reading the untouched dated vendor save also resolves220×80here. This quantifies the open
 difference; it does not establish which current Pen state is authoritative or justify a global
@@ -40,7 +40,7 @@ Actual Pen is still1.2.22 with its previously verified unchanged archive. Native
 and its MCP account limit is not retried or bypassed. Required re-entry is to observe the same
 owned rotated input before wrapping, after settled wrapping, after Save As and after reopening
 in current Pen, keeping inspector values, saved model, child bounds and rendered state distinct.
-Then repeat the matching Open Pen native menu/keyboard/Undo/Redo/save/reopen path. The original
+Then repeat the matching Brutal native menu/keyboard/Undo/Redo/save/reopen path. The original
 LAYOUT-WRAP criteria remain binding; Group/Frame controls do not close the flex or native gates.
 
 Private evidence: `local-evidence/wrap-transforms-2026-11-12/`, including first/final owner logs,

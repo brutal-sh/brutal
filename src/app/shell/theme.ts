@@ -63,7 +63,7 @@ function applyTheme(value: 'dark' | 'light', setting: AppTheme): void {
   document.documentElement.style.colorScheme = value
   if (IS_TAURI && getCurrentWindow().label === 'main') {
     void setNativeTheme(setting === 'auto' ? null : value).catch((error: unknown) => {
-      console.error('[Open Pen] Could not synchronize native appearance:', error)
+      console.error('[Brutal] Could not synchronize native appearance:', error)
     })
   }
   applyAccent(accentPalette.value)

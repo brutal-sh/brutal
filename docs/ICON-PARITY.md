@@ -4,7 +4,7 @@ Reference: `/Applications/Pen.app` 1.2.21. Full icon and product parity remain o
 Vendor captures and resource measurements stay in ignored `local-evidence/`;
 the implementation uses the existing independent editor and public icon providers.
 
-| Contract | Reference evidence | Open Pen status |
+| Contract | Reference evidence | Brutal status |
 | --- | --- | --- |
 | Glyph and family | Native Lucide inspector has separate 24px rows, 6px apart, below Fill | Separate compact selectors; ordinary Fill owns authored icon paint. Advanced retains detach and legacy controls. |
 | Families | Shipped controls list Material Symbols Outlined, Rounded, Sharp, feather, lucide and phosphor | Same choices and ordering; existing custom families remain available for their selected icons. |
@@ -90,7 +90,7 @@ Executed evidence:
 - Actual Pen opens the independently exported 64px `home` at weight 700. Its node fields,
   screenshot and PNG export are observed; REA/Hopper captures the matching native window with
   7,811 untruncated accessibility nodes and the unchanged reference executable hash.
-  The standalone PNG bounds differ: Open Pen's full icon box is 128×128 at 2x, while Pen exports
+  The standalone PNG bounds differ: Brutal's full icon box is 128×128 at 2x, while Pen exports
   a trimmed 95×103 glyph. This is an open export-design discrepancy, not a pixel match.
 - Source/Vue/test types, full repository lint with existing warnings, architecture, docs and
   changelog checks pass. The separate native-driver type gate retains older failures outside
@@ -159,9 +159,9 @@ Source/Vue/test types, lint with existing warnings, architecture, docs/changelog
 bundle checks retain their stated scope. The separate native-driver type gate retains 67
 errors outside the touched icon spec.
 
-Actual Pen opens Open Pen's independently exported fixture. Its native window is observed with
+Actual Pen opens Brutal's independently exported fixture. Its native window is observed with
 REA/Hopper and 8,003 untruncated accessibility nodes, with the unchanged executable hash. The
-reference and Open Pen frame exports are both 560×240 at 2x; 731 of 134,400 pixels differ, with a
+reference and Brutal frame exports are both 560×240 at 2x; 731 of 134,400 pixels differ, with a
 maximum channel difference of 73. No exact raster match is claimed.
 
 Private receipts: `local-evidence/icon-rectangles-2026-11-04/`.
@@ -175,7 +175,7 @@ remain owned by the frame. The obsolete stretch helper is removed.
 
 Actual Pen's controlled document API keeps 96×40 and 40×96 boxes while changing `home` to
 `dark_mode`; its screenshot shows proportionally centered crescents. This establishes document
-behavior, not native picker delivery. Open Pen's equivalent 560×240 frame export differs in
+behavior, not native picker delivery. Brutal's equivalent 560×240 frame export differs in
 721 of 134,400 pixels, with maximum channel difference 82. Exact raster parity remains open.
 
 The actual-font command checks cover reset and swap, centered path boxes, exact outlines,

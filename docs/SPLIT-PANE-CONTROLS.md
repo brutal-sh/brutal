@@ -1,6 +1,6 @@
 # Split-pane control access
 
-UI-SPLIT-HEADER repairs the independently reproduced pointer obstruction in Open Pen's
+UI-SPLIT-HEADER repairs the independently reproduced pointer obstruction in Brutal's
 desktop workspace. Native delivery, actual Pen visual comparison and the narrower native
 split-browser layout remain unaccepted. The installed normal app is not replaced here.
 

@@ -4,13 +4,13 @@ Reference: actual `/Applications/Pen.app`1.2.21, inspected2026-10-31. This unit 
 
 ## Observed reference
 
-File shows the code-export guide, Figma-import guide and CLI-install link between Snapshot and Save. The code guide is an approximately896 CSS-pixel wide dialog, limited to80vh, with dark surface/border, icon heading, client-status badges, three terminal steps, three black example blocks and a right-hand terminal illustration. Seven green badges appeared in the inspected reference. They are observations of that application, not evidence that Open Pen has seven working client integrations.
+File shows the code-export guide, Figma-import guide and CLI-install link between Snapshot and Save. The code guide is an approximately896 CSS-pixel wide dialog, limited to80vh, with dark surface/border, icon heading, client-status badges, three terminal steps, three black example blocks and a right-hand terminal illustration. Seven green badges appeared in the inspected reference. They are observations of that application, not evidence that Brutal has seven working client integrations.
 
 The Figma action shows a nonmodal informational toast, rather than a dialog. The earlier accessibility-only check missed it; a later screenshot confirmed it. It describes clipboard paste, local `.fig` import and compatibility limits. The CLI action’s extracted menu metadata points to the official CLI documentation; no vendor installer was executed. The current official CLI page was reread and confirms that the vendor agent CLI is a separate product contract.
 
 ## Independent implementation
 
-Open Pen adds the three native, browser File and command-palette actions through the existing catalog and shell dispatch. Guides also work from native Home. The code guide uses the shared dialog, the measured width/height/surface treatment, semantic steps/examples, an independent terminal card and the existing local MCP server’s reported state. Opening it refreshes health; the green state means the local server reports running, not that an external coding client is configured or authenticated. The Settings action opens the existing MCP page. It installs nothing and writes no client configuration or credentials.
+Brutal adds the three native, browser File and command-palette actions through the existing catalog and shell dispatch. Guides also work from native Home. The code guide uses the shared dialog, the measured width/height/surface treatment, semantic steps/examples, an independent terminal card and the existing local MCP server’s reported state. Opening it refreshes health; the green state means the local server reports running, not that an external coding client is configured or authenticated. The Settings action opens the existing MCP page. It installs nothing and writes no client configuration or credentials.
 
 The Figma toast uses the shared toast component and a neutral information treatment, existing import paths, a Close action and F9 keyboard access. It does not change the canvas selection. The CLI action opens this fork’s README setup section. The documented checkout command `bun open-pencil --help` was executed; the inherited CLI still identifies its executable as `openpencil`. A vendor CLI replacement is not delivered by a documentation link.
 
@@ -18,7 +18,7 @@ All new copy has matching files/menu entries in eight locales. The22 reviewed Ja
 
 ## Evidence and corrections
 
-Four browser workflows execute dialog close/reopen/Escape, accessible description, MCP-settings navigation, repeatable nonmodal Figma delivery, F9→toast→Close→Enter, the intended CLI URL, selected-node preservation and light-theme/narrow-window scroll/action access. Private captures retain the dark/light/narrow dialog and information toast. Exact Pen/Open Pen pixel typography and toast placement are not accepted.
+Four browser workflows execute dialog close/reopen/Escape, accessible description, MCP-settings navigation, repeatable nonmodal Figma delivery, F9→toast→Close→Enter, the intended CLI URL, selected-node preservation and light-theme/narrow-window scroll/action access. Private captures retain the dark/light/narrow dialog and information toast. Exact Pen/Brutal pixel typography and toast placement are not accepted.
 
 The isolated native Tauri workflow executes the command-palette routes, Settings navigation, selected IDs/dirty-state preservation and the captured CLI URL. A separate bundled operator test physically activated the actual macOS File actions from Home, observed the guide/toast, and verified that the CLI command delivered this fork’s URL. Its screenshot revealed an existing runtime-status defect: after test-route startup, the displayed endpoint remained port0. The shared health application now updates the endpoint after resolution; native automation checks the displayed address against the real test-owned configured port.
 

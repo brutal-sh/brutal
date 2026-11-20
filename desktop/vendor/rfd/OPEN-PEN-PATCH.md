@@ -1,4 +1,4 @@
-# Open Pen patch to rfd 0.16.0
+# Brutal patch to rfd 0.16.0
 
 Source: https://crates.io/crates/rfd/0.16.0 (MIT; upstream LICENSE retained).
 Registry archive SHA-256: a15ad77d9e70a92437d8f74c35d99b4e4691128df018833e99f90bcd36152672.

@@ -24,7 +24,7 @@ export const jamFormat: IOFormatAdapter<'jam'> = {
 
 export const figFormat: IOFormatAdapter<'fig'> = {
   id: 'fig',
-  label: 'Open Pen Document',
+  label: 'Brutal Document',
   role: 'native-document',
   category: 'document',
   extensions: ['fig'],

@@ -1,6 +1,6 @@
 # Private fork fixture delivery
 
-The current Open Pen checkout uses Git LFS for twelve test fixtures and font subsets.
+The current Brutal checkout uses Git LFS for twelve test fixtures and font subsets.
 The tracked `.lfsconfig` points to this private repository's GitHub LFS endpoint.
 The fixtures retain their upstream licenses, names and attribution; this changes delivery only.
 It does not rename compatible packages, protocols or serialized files.

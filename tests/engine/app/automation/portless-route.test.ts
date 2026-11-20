@@ -47,7 +47,7 @@ describe('Portless MCP routing', () => {
 
   test('rejects unrelated Portless hostnames', () => {
     expect(() => devAutomationRoute('https://other.localhost', 7600)).toThrow(
-      'Unexpected Open Pen Portless URL'
+      'Unexpected Brutal Portless URL'
     )
   })
 })

@@ -20,10 +20,10 @@ if (process.argv.includes('--version')) {
 if (process.argv.includes('--help') || process.argv.includes('-h')) {
   process.stdout.write(
     `openpencil-mcp\n\n` +
-      `Start the Open Pen MCP stdio bridge.\n\n` +
+      `Start the Brutal MCP stdio bridge.\n\n` +
       `Connects to the MCP server via Unix domain socket on macOS/Linux ` +
       `(with TCP fallback) or via TCP on Windows.\n` +
-      `The MCP server is started by Open Pen\n` +
+      `The MCP server is started by Brutal\n` +
       `desktop app; this bridge only forwards stdio JSON-RPC to it.\n\n` +
       `Options:\n` +
       `  --help, -h    Show this help message\n` +
@@ -84,12 +84,12 @@ const bridge = createStdioRPCBridge({
   authToken,
   onReady: () => {
     process.stderr.write(
-      'Connected to Open Pen MCP server; document availability is checked per tool call\n'
+      'Connected to Brutal MCP server; document availability is checked per tool call\n'
     )
   },
   onReconnect: () => {
     process.stderr.write(
-      'Reconnected to Open Pen MCP server; document availability is checked per tool call\n'
+      'Reconnected to Brutal MCP server; document availability is checked per tool call\n'
     )
   }
 })

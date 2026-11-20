@@ -40,7 +40,7 @@ const { updates, locale } = useI18n()
 const router = useRouter()
 
 useHead({
-  titleTemplate: (title) => (title ? `${title} — Open Pen` : 'Open Pen'),
+  titleTemplate: (title) => (title ? `${title} — Brutal` : 'Brutal'),
   htmlAttrs: {
     lang: locale,
     'data-motion': computed(() => (animationsEnabled.value ? 'full' : 'off'))

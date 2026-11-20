@@ -128,7 +128,7 @@ function toError(error: unknown): Error {
 
 function missingMCPError(searched: string[] = []): Error {
   return new MCPStartupError(
-    `MCP automation is not installed. From the Open Pen checkout, run ${MCP_INSTALL_COMMAND}, then restart Open Pen.`,
+    `MCP automation is not installed. From the Brutal checkout, run ${MCP_INSTALL_COMMAND}, then restart Brutal.`,
     searched.length > 0
       ? mcpFailure('not-installed', searched.join(', '))
       : mcpFailure('not-installed')

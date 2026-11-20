@@ -57,7 +57,7 @@ test('built connected CLI reads guidance and recovers from refusal without chang
     contentType: 'application/json'
   })
   expect(result.exitCode).toBe(1)
-  expect(result.stderr).toContain('Unknown Open Pen skill resource')
+  expect(result.stderr).toContain('Unknown Brutal skill resource')
   assertResourceOutput(result.stdout, first)
   expect(await documentSnapshot(editor.page, first)).toBe(before)
   expect(await documentSnapshot(editor.page, second)).toBe(other)

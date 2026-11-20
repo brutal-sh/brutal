@@ -100,7 +100,7 @@ export const penShaderPaintSchema = v.looseObject({
   opacity: v.optional(numSchema),
   url: v.pipe(v.string(), v.maxLength(16384)),
   uniforms: v.optional(v.record(v.string(), shaderUniformValueSchema)),
-  /** Open Pen source snapshot; Pen uses the ordinary URL beside it. */
+  /** Brutal source snapshot; Pen uses the ordinary URL beside it. */
   openPenSource: v.optional(v.pipe(v.string(), v.maxLength(MAX_FRAGMENT_SOURCE_LENGTH))),
   openPenShaderError: v.optional(
     v.pipe(v.string(), v.nonEmpty(), v.maxLength(MAX_FRAGMENT_ERROR_LENGTH))

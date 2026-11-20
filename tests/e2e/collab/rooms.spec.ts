@@ -64,7 +64,7 @@ test('a share link opens the room in its own tab, waiting until someone with it 
     await guest.page
       .context()
       .route(setupURL, (route) =>
-        route.fulfill({ contentType: 'text/html', body: '<title>Open Pen desktop setup</title>' })
+        route.fulfill({ contentType: 'text/html', body: '<title>Brutal desktop setup</title>' })
       )
     const opening = guest.page.waitForEvent('popup')
     await guest.page.getByRole('link', { name: 'Desktop setup', exact: true }).focus()

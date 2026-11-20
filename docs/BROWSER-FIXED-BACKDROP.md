@@ -76,11 +76,11 @@ Stable menu captures wait for the actual opening animation to finish; captures
 made during that animation are not accepted as final visual states.
 
 This comparison identifies remaining differences rather than accepting visual
-parity. Fixed-device surroundings use the editor canvas color in Open Pen while
+parity. Fixed-device surroundings use the editor canvas color in Brutal while
 Pen uses its panel background. The source switches that one theme slot to the
 existing panel token. Pen also has a 16 CSS-pixel footer with an import-height
 handle: an actual drag reduces the visible region and reveals hatching below;
-dragging down restores the full region. Open Pen lacks that control. This is the
+dragging down restores the full region. Brutal lacks that control. This is the
 existing [BROWSER-CLIP](https://trello.com/c/Ou2ZtFCB) gap. Double-click full-page
 import is a static tooltip contract and is not executed in the reference.
 
@@ -181,7 +181,7 @@ fixture, reduced fixed-device preview height does not truncate the editable impo
 Double-clicking the grip restores the full browser height and removes hatching;
 the layer tree retains two roots, with no additional import observed. This exposes
 remaining minimum, fixed-device import and double-click differences in the current
-Open Pen candidate; those behavior gates stay open.
+Brutal candidate; those behavior gates stay open.
 
 Only the newly created reference document is closed. Pen returns to its original
 Home view with Tablet preference retained; the owned local server is stopped.

@@ -34,7 +34,7 @@ const SERVER_TOOLS: ToolDescriptor[] = [
   {
     name: 'list_documents',
     description:
-      'List open Open Pen documents/tabs with their IDs, file paths, current pages, and pages.',
+      'List open Brutal documents/tabs with their IDs, file paths, current pages, and pages.',
     effect: 'read',
     availability: 'default',
     capabilities: ['document:read'],
@@ -42,7 +42,7 @@ const SERVER_TOOLS: ToolDescriptor[] = [
   },
   {
     name: 'save',
-    description: 'Save an already-open Open Pen document identified by its file URI.',
+    description: 'Save an already-open Brutal document identified by its file URI.',
     effect: 'write',
     availability: 'default',
     capabilities: ['document:read', 'filesystem:write'],

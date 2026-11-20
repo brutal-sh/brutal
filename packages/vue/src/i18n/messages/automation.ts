@@ -12,17 +12,17 @@ export const automationMessageDefaults = {
     'Changes apply to your next message. Tool switches are not a sandbox: enabled script tools can still perform other design operations.',
   mcpFailureNotInstalled: 'MCP server is not installed',
   mcpFailureNotInstalledHint:
-    'To keep the Open Pen download small, the MCP server is installed separately.',
-  mcpFailureOutdated: 'MCP server does not match this version of Open Pen',
+    'To keep the Brutal download small, the MCP server is installed separately.',
+  mcpFailureOutdated: 'MCP server does not match this version of Brutal',
   mcpFailureOutdatedHint: params(
-    'The installed MCP server is {running}, and this version of Open Pen needs {version}. The server is installed separately to keep the download small, so it does not update with the app.'
+    'The installed MCP server is {running}, and this version of Brutal needs {version}. The server is installed separately to keep the download small, so it does not update with the app.'
   ),
   mcpInstallByHand: 'Install it from a terminal, or copy a prompt that asks your agent to do it.',
   mcpCopyAgentPrompt: 'Copy prompt for your agent',
   mcpUpdating: 'Updating…',
-  mcpFailurePermission: 'Open Pen cannot start the MCP server',
+  mcpFailurePermission: 'Brutal cannot start the MCP server',
   mcpFailurePermissionHint:
-    'The system denied the command. Reinstall Open Pen with its shell permissions, or start the server manually.',
+    'The system denied the command. Reinstall Brutal with its shell permissions, or start the server manually.',
   mcpFailureExited: 'MCP server stopped during startup',
   mcpFailureExitedHint: 'The process exited before it became ready.',
   mcpFailureTimeout: 'MCP server did not respond in time',
@@ -42,7 +42,7 @@ export const automationMessageDefaults = {
   mcpFailureCopy: 'Copy details',
   localServer: 'Local server',
   localServerDesktopOnly:
-    'The local MCP server runs with the Open Pen desktop app. In the browser, use WebMCP below.',
+    'The local MCP server runs with the Brutal desktop app. In the browser, use WebMCP below.',
   webmcpDescription:
     'Let browser agents use this document directly, without a local MCP server or bearer token. Local server settings do not apply here.',
   browserAccess: 'Browser agent access',

@@ -180,7 +180,7 @@ const cases: Array<{
 ]
 
 for (const control of cases) {
-  test(`Note Hug ${control.name} matches Pen 1.2.22 through Open Pen reopens`, async () => {
+  test(`Note Hug ${control.name} matches Pen 1.2.22 through Brutal reopens`, async () => {
     let document: PenDocument = {
       version: '2.22',
       children: [

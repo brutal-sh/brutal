@@ -23,7 +23,7 @@ const calls = reactive({
 const update: PendingUpdate = {
   version: '0.16.1',
   currentVersion: '0.16.0',
-  body: 'Example Open Pen release notes.',
+  body: 'Example Brutal release notes.',
   async download() {
     calls.download++
   },

@@ -75,7 +75,7 @@ test('the CLI setup action opens this fork’s documentation', async () => {
   await (
     await openAppMenu(page, 'File')
   )
-    .getByRole('menuitem', { name: 'Install Open Pen CLI…', exact: true })
+    .getByRole('menuitem', { name: 'Install Brutal CLI…', exact: true })
     .click()
   const popup = await opening
   try {
@@ -94,12 +94,12 @@ test('Help reaches this fork’s documentation, setup and support without editin
   await page
     .context()
     .route(`${repository}/blob/HEAD/**`, (route) =>
-      route.fulfill({ contentType: 'text/html', body: '<title>Open Pen repository guide</title>' })
+      route.fulfill({ contentType: 'text/html', body: '<title>Brutal repository guide</title>' })
     )
   for (const [label, url] of [
-    ['Open Pen Documentation', `${website}help/#docs`],
+    ['Brutal Documentation', `${website}help/#docs`],
     ['Prompt Gallery & Tips', `${repository}/blob/HEAD/docs/PROMPTS.md`],
-    ['Open Pen Website', website],
+    ['Brutal Website', website],
     ['Cursor Setup…', `${repository}/blob/HEAD/docs/EDITOR-INTEGRATIONS.md#cursor`],
     ['VS Code Setup…', `${repository}/blob/HEAD/docs/EDITOR-INTEGRATIONS.md#vs-code`],
     ['Support & Feedback', `${website}help/#support`]

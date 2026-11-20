@@ -63,7 +63,7 @@ export const cloudAccountDefaults = {
   signOutOtherSessionsDescription:
     'Every browser and app signed in to your account, except this one, has to sign in again.',
   thisSession: 'This session',
-  desktopApp: 'Open Pen app',
+  desktopApp: 'Brutal app',
   unknownBrowser: 'Unknown browser',
   browserOn: params('{browser} on {system}'),
   lastActive: params('Active {when}'),
@@ -81,7 +81,7 @@ export const cloudAccountDefaults = {
   methodPasskey: 'a passkey',
   methodTwoStep: 'two-step sign-in',
   methodEmailLink: 'an email link',
-  methodDesktop: 'the Open Pen app',
+  methodDesktop: 'the Brutal app',
   methodOther: 'another provider',
   waysToSignIn: 'Ways to sign in',
   waysToSignInDescription: 'Keep at least one, so you can always get back in.',

@@ -20,7 +20,7 @@ function readDocuments(value: unknown) {
   const result = v.safeParse(documentsSchema, value)
   if (!result.success)
     throw new Error(
-      'The app did not provide safe document identities. Update Open Pen before starting a session.'
+      'The app did not provide safe document identities. Update Brutal before starting a session.'
     )
   return result.output
 }

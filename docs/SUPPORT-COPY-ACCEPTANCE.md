@@ -19,11 +19,11 @@ counts are different evidence types; they are not added into a product acceptanc
 The browser and native-advice records repeat the same support-owner suite, so those 65
 owner tests are not two distinct sets of tests.
 
-The source-owned presentation paths name Open Pen. Real provider/engine/package names,
+The source-owned presentation paths name Brutal. Real provider/engine/package names,
 the `openpencil` executable/package identities, `open-pencil` MCP server and `mcp__open-pencil`
 permission identity remain compatible. The two WebMCP scan hits are the real configuration
 identifier `OPENPENCIL_MCP_ROOT`, not an inherited app label.
-The native display format says Open Pen Document while retaining its `fig` identifier.
+The native display format says Brutal Document while retaining its `fig` identifier.
 The separate [Storybook error correction](STORYBOOK-ERROR-COPY.md) changes only app prose;
 `.openpencil-stories.json` and generated `openpencil/*` paths remain data/compatibility names.
 

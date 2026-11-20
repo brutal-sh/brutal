@@ -18,7 +18,7 @@ Restart buttons. The fictitious update is `0.16.1`, with current version `0.16.0
 
 - Denied approval leaves the installed view and retained release intact. The backend
   receives one approval call and zero relaunch calls.
-- Rejected relaunch retains the release and displays the localized Open Pen restart-error
+- Rejected relaunch retains the release and displays the localized Brutal restart-error
   wrapper with the original test-owned error detail. Retry invokes approval and relaunch
   a second time and returns to the installed view. Check, download and install each remain
   at one call; Retry does not repeat them.

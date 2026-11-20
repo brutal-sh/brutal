@@ -9,46 +9,46 @@ import { trackFontModuleResources } from '#tests/helpers/fonts/runtime'
 const LOCALES = [
   {
     locale: 'en',
-    description: 'Installed, but in a format Open Pen can’t draw yet'
+    description: 'Installed, but in a format Brutal can’t draw yet'
   },
   {
     locale: 'de',
-    description: 'Installiert, aber in einem Format, das Open Pen noch nicht darstellen kann'
+    description: 'Installiert, aber in einem Format, das Brutal noch nicht darstellen kann'
   },
   {
     locale: 'es',
-    description: 'Instalada, pero en un formato que Open Pen aún no puede dibujar'
+    description: 'Instalada, pero en un formato que Brutal aún no puede dibujar'
   },
   {
     locale: 'fr',
-    description: 'Installée, mais dans un format qu’Open Pen ne peut pas encore afficher'
+    description: 'Installée, mais dans un format qu’Brutal ne peut pas encore afficher'
   },
   {
     locale: 'it',
-    description: 'Installato, ma in un formato che Open Pen non può ancora disegnare'
+    description: 'Installato, ma in un formato che Brutal non può ancora disegnare'
   },
   {
     locale: 'ja',
-    description: 'インストール済みですが、Open Pen がまだ描画できない形式です'
+    description: 'インストール済みですが、Brutal がまだ描画できない形式です'
   },
   {
     locale: 'pl',
-    description: 'Zainstalowany, ale w formacie, którego Open Pen jeszcze nie obsługuje'
+    description: 'Zainstalowany, ale w formacie, którego Brutal jeszcze nie obsługuje'
   },
   {
     locale: 'ru',
-    description: 'Установлен, но в формате, который Open Pen пока не умеет отображать'
+    description: 'Установлен, но в формате, который Brutal пока не умеет отображать'
   },
   {
     locale: 'zh-CN',
-    description: '已安装，但 Open Pen 暂时无法绘制这种字体格式'
+    description: '已安装，但 Brutal 暂时无法绘制这种字体格式'
   }
 ] as const
 
 for (const { locale, description } of LOCALES) {
   test.describe(locale, () => {
     test.use({ locale })
-    test(`unsupported font guidance identifies Open Pen in ${locale}`, async ({
+    test(`unsupported font guidance identifies Brutal in ${locale}`, async ({
       page
     }, testInfo) => {
       await page.addInitScript(() => {

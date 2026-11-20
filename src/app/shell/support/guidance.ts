@@ -38,7 +38,7 @@ const BROWSER_LABELS = {
 
 export function requirementsSentence(): string {
   const { chrome, edge, firefox, safari } = BROWSER_BASELINE
-  return `Open Pen needs Chrome ${chrome}, Edge ${edge}, Firefox ${firefox}, or Safari ${safari} or later.`
+  return `Brutal needs Chrome ${chrome}, Edge ${edge}, Firefox ${firefox}, or Safari ${safari} or later.`
 }
 
 function majorVersion(version: string | undefined): number | undefined {
@@ -88,42 +88,42 @@ function desktopAdvice(env: SupportEnvironment): Advice {
       const running = env.osVersion ? `This Mac is running macOS ${env.osVersion}. ` : ''
       if (major !== undefined && major < MINIMUM_MACOS_VERSION) {
         return {
-          heading: `Open Pen needs macOS ${MINIMUM_MACOS_VERSION} or later`,
+          heading: `Brutal needs macOS ${MINIMUM_MACOS_VERSION} or later`,
           paragraphs: [
-            `${running}Open Pen renders with the WebKit engine that ships with macOS, and this version is too old to run it. Upgrade to macOS ${MINIMUM_MACOS_VERSION} or later to use Open Pen.`
+            `${running}Brutal renders with the WebKit engine that ships with macOS, and this version is too old to run it. Upgrade to macOS ${MINIMUM_MACOS_VERSION} or later to use Brutal.`
           ]
         }
       }
       return {
-        heading: 'Update macOS to run Open Pen',
+        heading: 'Update macOS to run Brutal',
         paragraphs: [
-          `${running}Open Pen renders with the WebKit engine that ships with macOS, and this Mac's copy is older than Safari ${BROWSER_BASELINE.safari}.`,
-          'Open System Settings → General → Software Update, install the available macOS and Safari updates, then reopen Open Pen.'
+          `${running}Brutal renders with the WebKit engine that ships with macOS, and this Mac's copy is older than Safari ${BROWSER_BASELINE.safari}.`,
+          'Open System Settings → General → Software Update, install the available macOS and Safari updates, then reopen Brutal.'
         ]
       }
     }
     case 'linux':
       return {
-        heading: 'Update WebKitGTK to run Open Pen',
+        heading: 'Update WebKitGTK to run Brutal',
         paragraphs: [
-          `Open Pen renders with WebKitGTK${env.webviewVersion ? ` ${env.webviewVersion}` : ''}, which is too old.`,
-          `Update the webkit2gtk-4.1 package to ${MINIMUM_WEBKITGTK_VERSION} or later with your distribution's package manager, then reopen Open Pen.`
+          `Brutal renders with WebKitGTK${env.webviewVersion ? ` ${env.webviewVersion}` : ''}, which is too old.`,
+          `Update the webkit2gtk-4.1 package to ${MINIMUM_WEBKITGTK_VERSION} or later with your distribution's package manager, then reopen Brutal.`
         ]
       }
     case 'windows':
       return {
-        heading: 'Update WebView2 to run Open Pen',
+        heading: 'Update WebView2 to run Brutal',
         paragraphs: [
-          `Open Pen renders with the Microsoft Edge WebView2 Runtime${env.webviewVersion ? ` ${env.webviewVersion}` : ''}, which is too old.`,
-          'Install the latest Evergreen runtime from Microsoft, then reopen Open Pen.'
+          `Brutal renders with the Microsoft Edge WebView2 Runtime${env.webviewVersion ? ` ${env.webviewVersion}` : ''}, which is too old.`,
+          'Install the latest Evergreen runtime from Microsoft, then reopen Brutal.'
         ],
         extraLinks: [{ label: 'Download WebView2', url: WEBVIEW2_DOWNLOAD_URL }]
       }
     default:
       return {
-        heading: 'Open Pen needs a newer WebView',
+        heading: 'Brutal needs a newer WebView',
         paragraphs: [
-          'The system WebView engine is too old to run Open Pen. Install your operating system updates, then reopen Open Pen.'
+          'The system WebView engine is too old to run Brutal. Install your operating system updates, then reopen Brutal.'
         ]
       }
   }
@@ -140,7 +140,7 @@ function browserUpdateSteps(env: SupportEnvironment): string {
     case 'firefox':
       return 'Open the Firefox menu → Help → About Firefox to install the update.'
     case 'safari':
-      return 'Update it through System Settings → General → Software Update, or open Open Pen in a current Chrome, Edge, or Firefox.'
+      return 'Update it through System Settings → General → Software Update, or open Brutal in a current Chrome, Edge, or Firefox.'
     default:
       return requirementsSentence()
   }
@@ -149,16 +149,16 @@ function browserUpdateSteps(env: SupportEnvironment): string {
 function browserAdvice(env: SupportEnvironment): Advice {
   if (env.os === 'ios') {
     return {
-      heading: 'Update iOS to run Open Pen',
+      heading: 'Update iOS to run Brutal',
       paragraphs: [
-        `Open Pen needs iOS ${BROWSER_BASELINE.ios} or later. Every browser on iPhone and iPad uses the system WebKit engine, so update in Settings → General → Software Update.`
+        `Brutal needs iOS ${BROWSER_BASELINE.ios} or later. Every browser on iPhone and iPad uses the system WebKit engine, so update in Settings → General → Software Update.`
       ]
     }
   }
   const baseline = baselineBrowserFor(env)
   if (baseline === undefined) {
     return {
-      heading: "Open Pen can't run in this browser",
+      heading: "Brutal can't run in this browser",
       paragraphs: [requirementsSentence()]
     }
   }
@@ -170,10 +170,10 @@ function browserAdvice(env: SupportEnvironment): Advice {
       : `${label} ${versionLabel(env.browserVersion)} detected. `
   const needs =
     env.browser === 'opera'
-      ? `Open Pen needs Opera built on Chrome ${minimum} or later.`
-      : `Open Pen needs ${label} ${minimum} or later.`
+      ? `Brutal needs Opera built on Chrome ${minimum} or later.`
+      : `Brutal needs ${label} ${minimum} or later.`
   return {
-    heading: `Update ${label} to run Open Pen`,
+    heading: `Update ${label} to run Brutal`,
     paragraphs: [`${detected}${needs}`, browserUpdateSteps(env)]
   }
 }
@@ -200,7 +200,7 @@ export function unsupportedNotice(
     return {
       heading: 'A required browser feature is unavailable',
       paragraphs: [
-        `Your browser reports ${BROWSER_LABELS[env.browser]} ${versionLabel(env.browserVersion ?? 0)}, which should run Open Pen, but it is missing ${missing.join(', ')}.`,
+        `Your browser reports ${BROWSER_LABELS[env.browser]} ${versionLabel(env.browserVersion ?? 0)}, which should run Brutal, but it is missing ${missing.join(', ')}.`,
         'A browser policy, an extension, or a preview build may have disabled it. Try a current release of Chrome, Edge, Firefox, or Safari.'
       ],
       details,
@@ -231,16 +231,16 @@ function errorDetails(error: unknown): string[] {
 function bootFailureHint(env: SupportEnvironment): string {
   if (env.host === 'browser') return requirementsSentence()
   if (env.os === 'macos') {
-    return 'Open Pen renders with the WebKit engine that ships with macOS. If this Mac has pending macOS or Safari updates, install them first.'
+    return 'Brutal renders with the WebKit engine that ships with macOS. If this Mac has pending macOS or Safari updates, install them first.'
   }
-  return 'Open Pen renders with the system WebView engine. If your operating system has pending updates, install them first.'
+  return 'Brutal renders with the system WebView engine. If your operating system has pending updates, install them first.'
 }
 
 /** Notice for an app that failed while loading and left the window blank. */
 export function bootFailureNotice(env: SupportEnvironment, error: unknown): SupportNotice {
   const details = [...errorDetails(error), ...environmentDetails(env)]
   return {
-    heading: "Open Pen couldn't start",
+    heading: "Brutal couldn't start",
     paragraphs: [
       'Something failed while the app was loading, so nothing could be shown.',
       bootFailureHint(env),

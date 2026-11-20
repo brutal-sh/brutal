@@ -94,7 +94,7 @@ function configure() {
           class="flex items-center gap-2 border-b border-dialog-border bg-panel-secondary px-3 py-2.5"
         >
           <icon-lucide-terminal class="size-4 text-muted" aria-hidden="true" />
-          <span class="text-xs font-semibold">Open Pen MCP</span>
+          <span class="text-xs font-semibold">Brutal MCP</span>
         </div>
         <div class="space-y-6 p-4 font-mono text-xs leading-6">
           <div class="space-y-2">

@@ -1,6 +1,6 @@
 # Pen.app design extraction
 
-The installed `/Applications/Pen.app` 1.2.21 is the reference. This records design measurements for Open Pen's independent implementation. Full visual and functional parity remains the acceptance condition.
+The installed `/Applications/Pen.app` 1.2.21 is the reference. This records design measurements for Brutal's independent implementation. Full visual and functional parity remains the acceptance condition.
 
 The existing REA artifact inventory identified the packaged editor stylesheet. The selected stylesheet and literal component style declarations were read from that exact ASAR. Private reference material stays under ignored `local-evidence/pen-design-extraction/`; implementation consumes the measured values in [pen-design-tokens.json](pen-design-tokens.json).
 
@@ -31,7 +31,7 @@ The retained reference contains 2,561 literal component class sets, 51 root them
 
 The running Pen app was inspected through its accessibility tree and screenshot while its Move/Scale menu was open. REA's separate passive native-window capture hit its 45-second provider deadline; it is not counted as live proof. The REA ASAR inventory also reports integrity contradictions, so extracted bytes are observations rather than publisher-integrity verification.
 
-Open Pen's immutable browser build 8 was rendered and inspected. Eight browser tests passed, including measured 28px tool controls, 36px rail, 1px selected-tool border, exact dark rim/panel colors, 12px menu labels, functional layer search, drawing, selection, menus, tabs and `.pen` save/reopen. The real Scale gesture separately passed scaling, one-step Undo and Escape cancellation. These establish the named states only, not whole-app parity.
+Brutal's immutable browser build 8 was rendered and inspected. Eight browser tests passed, including measured 28px tool controls, 36px rail, 1px selected-tool border, exact dark rim/panel colors, 12px menu labels, functional layer search, drawing, selection, menus, tabs and `.pen` save/reopen. The real Scale gesture separately passed scaling, one-step Undo and Escape cancellation. These establish the named states only, not whole-app parity.
 
 ## Still open
 
@@ -39,4 +39,4 @@ Exact glyph shapes, remaining menus/dialogs, sidebar spacing and content, native
 
 ## Native window chrome
 
-Selected static observations from `out/app-window.js` show macOS `frame: false`, `titleBarStyle: hiddenInset`, and window controls positioned inside the document-bar inset. The running Pen screenshot also has no separate title strip. Open Pen now uses Tauri's macOS overlay title bar, hides the text title, reserves native control space in the document pill, and marks its background draggable. Native close/minimize/full-screen controls remain system controls. Exact hover/agent-badge behavior is still open. Placement and dragging require the new packaged build's runtime check.
+Selected static observations from `out/app-window.js` show macOS `frame: false`, `titleBarStyle: hiddenInset`, and window controls positioned inside the document-bar inset. The running Pen screenshot also has no separate title strip. Brutal now uses Tauri's macOS overlay title bar, hides the text title, reserves native control space in the document pill, and marks its background draggable. Native close/minimize/full-screen controls remain system controls. Exact hover/agent-badge behavior is still open. Placement and dragging require the new packaged build's runtime check.

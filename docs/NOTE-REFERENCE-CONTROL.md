@@ -51,7 +51,7 @@ tool receipts; native Save/reopen of this Note document is **not executed**. The
 qualify removed Prompt/Context node types. Common entity Context metadata and those older
 special-node types remain distinct requirements.
 
-Open Pen's existing `STICKY` model is a FigJam contract with an author line, different
+Brutal's existing `STICKY` model is a FigJam contract with an author line, different
 palette/layout/shadows and sizing rules. Its presence does not establish Pen Note parity.
 No Note adapter, silent conversion or compatibility bypass is added by this control;
 unsupported special nodes still refuse before graph creation.
@@ -89,7 +89,7 @@ the initial Y74 receipt remains, with its cause unknown. No cold process restart
 Pen returns to Home/Recents after closing the owned saved document. Send to Agent is
 visible above the selected Note and is not invoked. Raw observations, text/history
 receipts and `native-reopen-comparison.json` remain in the same private evidence folder.
-Open Pen Note creation/interchange, native editing states and full parity remain open.
+Brutal Note creation/interchange, native editing states and full parity remain open.
 
 ## Native authoring and inspector follow-up
 
@@ -122,7 +122,7 @@ save/reopen. A reproduced undo defect initially overwrites authored dimensions;
 restoring captured geometry in layout scope then preserves complete saved JSON for
 both omitted dimensions and an authored 240 × 30 Note through wrap/undo/redo/undo.
 An independent bounded re-review confirms those cases. These results are separate
-from physical native Open Pen delivery and exact rendering acceptance.
+from physical native Brutal delivery and exact rendering acceptance.
 
 Fill sizing/interchange, reusable Notes and their instances, Send to Agent, and the
 strict Note raster comparison remain open. Existing data-loss refusal guards remain
@@ -184,7 +184,7 @@ Raw native observations, earlier failed probes and owner logs stay private in
 saved and closed after action probes, and Pen returns to Home/Recents. The owned
 alias fixture remains edited in a background tab; the unrelated edited font
 reference is preserved. Fill interchange, reusable-ref promotion, Send to Agent,
-the existing strict raster mismatch and native Open Pen acceptance remain open.
+the existing strict raster mismatch and native Brutal acceptance remain open.
 
 ## Independent candidate checkout
 
@@ -252,15 +252,15 @@ a correction for that decomposition; it does not isolate Skia's internal algorit
 Neither variant enters production. `note-line-three-replay-summary.json` retains
 those results, with the earlier two-arm trial kept separately.
 
-## Current Note authoring in Pen 1.2.23 and Open Pen
+## Current Note authoring in Pen 1.2.23 and Brutal
 
 Both apps created a 250 × 219 Note, preserved the typed text through Undo and
 Redo, applied the Purple preset and reopened the custom #ABCDEF Note with the
-same text and visible color. Pen recorded explicit dimensions. Open Pen
+same text and visible color. Pen recorded explicit dimensions. Brutal
 reconstructed the default geometry when the fields were omitted. Both owned
 files were retained and the previous Pen tab was restored.
 
-The isolated native Open Pen run used a guarded Unicode text event. Embedded
+The isolated native Brutal run used a guarded Unicode text event. Embedded
 individual key input dropped spaces, and a separate hardware-key attempt lost
 foreground focus. Fourteen current Chromium and WebKit authoring controls
 passed, including picker cancel and read-only workflows. The current captures
@@ -273,13 +273,13 @@ The isolated macOS build from `300eaa0a3` created a 250 × 219 Note through the 
 
 The embedded-driver controls used the same executable and entered each key separately. Both the named Space and literal space variants delivered synthetic keydown events without beforeinput. Their saved text omitted the three spaces. The earlier regular-app input attempt did not reach Note text editing. These results qualify physical typing on the isolated native build and locate the missing-space result to the driver path tested here.
 
-Installed Pen 1.2.23 and regular Open Pen both reopened byte-identical copies of that .pen and visibly rendered the text at a displayed 100% zoom on the same 2× display. The solid `#FEE484` bounding extents measured 499 × 438 physical pixels in both captures. Pen had 214,245 exact-color pixels and Open Pen had 213,814. Viewports and themes differed. The visible Note name above the body also differed. The copies retained their exact bytes, and Pen returned to its previous tab and frame.
+Installed Pen 1.2.23 and regular Brutal both reopened byte-identical copies of that .pen and visibly rendered the text at a displayed 100% zoom on the same 2× display. The solid `#FEE484` bounding extents measured 499 × 438 physical pixels in both captures. Pen had 214,245 exact-color pixels and Brutal had 213,814. Viewports and themes differed. The visible Note name above the body also differed. The copies retained their exact bytes, and Pen returned to its previous tab and frame.
 
 DRAW-16-AUTHOR remains in Verify for the matched appearance and regular-app text-entry checks. The Note export raster criterion remains separately tracked. Private traces, saved files and captures are under `local-evidence/note-key-input-2026-11-19/`.
 
 ## Note authoring in the regular installed app — 2026-11-19
 
-The normal installed Open Pen executable from `7b72a75ba` opened an owned copy of the saved Note. A double-click inside its body focused the canvas text editor. Individual macOS keycodes replaced `open pen note text` with `save this note`, including both spaces. Escape left text editing. The saved file preserved the Note ID, geometry and color. Native Undo and Redo restored the original and edited text respectively, and a Save after each action verified the strings on disk. Closing and reopening from Recents restored the edited text on the canvas with the same saved bytes.
+The normal installed Brutal executable from `7b72a75ba` opened an owned copy of the saved Note. A double-click inside its body focused the canvas text editor. Individual macOS keycodes replaced `open pen note text` with `save this note`, including both spaces. Escape left text editing. The saved file preserved the Note ID, geometry and color. Native Undo and Redo restored the original and edited text respectively, and a Save after each action verified the strings on disk. Closing and reopening from Recents restored the edited text on the canvas with the same saved bytes.
 
 A separate empty owned document exercised the installed app's N shortcut and a canvas click. The native control reported the Note tool selected, and placing the Note focused its text editor. Escape followed by Save produced exactly one Note with the default `#FEE484` fill.
 
@@ -298,11 +298,11 @@ background to this file, which has no authored page paint.
 Both captures rendered `save this note` and showed 250 × 219 on selection.
 Both inspectors displayed eight presets and `FEE484`. On the unselected
 capture, the exact solid yellow pixels covered 499 × 438 in Pen and
-500 × 438 in Open Pen, with 214,844 and 215,265 pixels respectively. The
+500 × 438 in Brutal, with 214,844 and 215,265 pixels respectively. The
 top edges aligned. The solid fill began 53 screen pixels farther left in
-Open Pen, with the same X/Y document coordinates in both inspectors.
+Brutal, with the same X/Y document coordinates in both inspectors.
 
-Pen displayed a Send to Agent affordance above the selection. Open Pen
+Pen displayed a Send to Agent affordance above the selection. Brutal
 displayed the Note label, a rotation handle, and an inner text outline.
 The Send action remains tracked by [DRAW-16-SEND](https://trello.com/c/NFU4Am1a);
 this comparison did not invoke it. DRAW-16-AUTHOR remains in Verify.
@@ -310,6 +310,6 @@ The separate [strict Note export check](https://trello.com/c/iFB7pBKU)
 was not exercised by the window captures.
 
 The two file checksums matched before and after the comparison. Pen returned
-to its previous tab and frame. The Open Pen test window used its own profile
+to its previous tab and frame. The Brutal test window used its own profile
 and exited after capture. Private screenshots, pixel counts, and launch
 receipts are in `local-evidence/note-matched-appearance-2026-11-19/`.

@@ -24,8 +24,8 @@ export function openPencilPwaPlugin() {
       navigateFallbackDenylist: NOT_EDITOR_PAGES
     },
     manifest: {
-      name: 'Open Pen',
-      short_name: 'Open Pen',
+      name: 'Brutal',
+      short_name: 'Brutal',
       description: 'Open-source design editor',
       display: 'standalone',
       orientation: 'any',

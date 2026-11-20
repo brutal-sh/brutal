@@ -76,7 +76,7 @@ try {
   await rm(staging, { recursive: true, force: true })
 }
 console.log(
-  'Installed Codex ACP 2.5.0 and the standalone Open Pen bridge. Launch no longer reads the checkout.'
+  'Installed Codex ACP 2.5.0 and the standalone Brutal bridge. Launch no longer reads the checkout.'
 )
 console.log(
   'No credentials or shell profiles were read or changed. Agent login must be verified in the app.'

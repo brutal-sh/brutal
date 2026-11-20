@@ -5,7 +5,7 @@ the branding milestone remain open. Actual Pen 1.2.21 remains the parity referen
 
 ## Destination and ownership
 
-The shared desktop setup URL points to the private Open Pen repository's existing
+The shared desktop setup URL points to the private Brutal repository's existing
 `Run this fork` instructions. Authorized GitHub readback confirms the repository is
 private, its default branch is `feat/open-pen`, and its README includes the actual
 Tauri development command and explicitly states there is no published installer.
@@ -18,7 +18,7 @@ links. Their shared constant changes once; the room story uses the same constant
 The English and eight translated catalogs retain their keys and interpolation
 contracts, with labels describing desktop setup rather than an unavailable download.
 Provider endpoints, package/protocol/storage IDs and license attribution retain their
-existing owners. The installed Open Pen app and user data are untouched.
+existing owners. The installed Brutal app and user data are untouched.
 
 ## Observed failures and smallest repairs
 

@@ -1,11 +1,11 @@
 blank_issues_enabled: false
 contact_links:
-  - name: Open Pen Help
+  - name: Brutal Help
     url: https://open-pen.vercel.app/help/#docs
     about: Browse the desktop setup, file, export, and troubleshooting guides.
   - name: Ask a question
     url: https://github.com/jpoindexter/open-pen-feedback/discussions/categories/q-a
-    about: Ask an Open Pen usage or setup question in GitHub Discussions.
+    about: Ask an Brutal usage or setup question in GitHub Discussions.
   - name: Report a security vulnerability
     url: https://github.com/jpoindexter/open-pen-feedback/security/advisories/new
     about: Please report security vulnerabilities privately instead of opening a public issue.

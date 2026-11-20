@@ -66,7 +66,7 @@ async function downloadReport(page: Page, info: TestInfo, name: string) {
   const downloading = page.waitForEvent('download')
   await panel.getByRole('button', { name: 'Save diagnostics…', exact: true }).click()
   const download = await downloading
-  expect(download.suggestedFilename()).toBe('Open Pen diagnostics.json')
+  expect(download.suggestedFilename()).toBe('Brutal diagnostics.json')
   const path = info.outputPath(`${name}.json`)
   await download.saveAs(path)
   const text = await readFile(path, 'utf8')

@@ -290,7 +290,7 @@ describe('BrowserRpcBridge reconnection', () => {
     })
 
     // No browser registered — sendRPC rejects with APP_NOT_CONNECTED.
-    await expect(bridge.sendRPC(RPC_BODY)).rejects.toThrow('Open Pen app is not connected')
+    await expect(bridge.sendRPC(RPC_BODY)).rejects.toThrow('Brutal app is not connected')
   })
 
   test('response from non-browser WebSocket is ignored (ws guard)', async () => {

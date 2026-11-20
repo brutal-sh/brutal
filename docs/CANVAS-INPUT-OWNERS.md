@@ -22,4 +22,4 @@ The traced candidate recovery/history cohort records 22 passes and two total 15-
 
 The distance image and the two fractional-movement assertions remain unaccepted. Equal before/after failures establish preservation only; they do not establish actual Pen correctness or their original cause. The whole-product unit suite also retains its independent strict Note raster failure. Normal installed-app, physical native input and matched actual Pen design/functionality acceptance remain open; smaller source files do not close MOD-12 or M16.
 
-Private source freezes, reports, original failures, exact restoration controls, REA inventory and installed-reference hashes are retained in `local-evidence/canvas-input-2026-11-12/`. Pen is rechecked as 1.2.22 with the same full ASAR hash. The normal Open Pen binary and protected work remain unchanged.
+Private source freezes, reports, original failures, exact restoration controls, REA inventory and installed-reference hashes are retained in `local-evidence/canvas-input-2026-11-12/`. Pen is rechecked as 1.2.22 with the same full ASAR hash. The normal Brutal binary and protected work remain unchanged.

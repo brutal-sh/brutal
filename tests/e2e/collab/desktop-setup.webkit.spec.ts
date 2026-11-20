@@ -32,7 +32,7 @@ for (const { locale, label } of LOCALES) {
           await context.route(SETUP_URL, (route) =>
             route.fulfill({
               contentType: 'text/html',
-              body: '<title>Open Pen desktop setup</title>'
+              body: '<title>Brutal desktop setup</title>'
             })
           )
           const canvas = new CanvasHelper(page)

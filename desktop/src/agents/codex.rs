@@ -13,7 +13,7 @@ fn chat_config(existing: Option<&str>) -> Result<String, String> {
         .or_insert_with(|| Value::Object(Map::new()))
         .as_object_mut()
         .ok_or_else(|| INVALID_CONFIG.to_owned())?;
-    // Open Pen passes explicitly invoked skills in the prompt; the global catalog can overflow.
+    // Brutal passes explicitly invoked skills in the prompt; the global catalog can overflow.
     skills.insert("include_instructions".to_owned(), Value::Bool(false));
     serde_json::to_string(&config).map_err(|_| INVALID_CONFIG.to_owned())
 }

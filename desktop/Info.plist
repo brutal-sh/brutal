@@ -8,6 +8,6 @@
             <true/>
         </dict>
         <key>NSMicrophoneUsageDescription</key>
-        <string>Open Pen uses the microphone for voice calls with people in a shared room.</string>
+        <string>Brutal uses the microphone for voice calls with people in a shared room.</string>
     </dict>
 </plist>

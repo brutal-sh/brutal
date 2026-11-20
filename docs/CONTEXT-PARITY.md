@@ -8,7 +8,7 @@ Actual Pen shows Context between Create Component and Alignment. It starts close
 
 The privately extracted styles specify16px/14px left/right insets,8px vertical closed padding, a22px trigger,6px content gap and15px open bottom padding. The textarea uses11px type/16px leading,3px/8px padding,4px corners,56px minimum/80px maximum height and30% input-background opacity. Dark panel text is#C8C8C8; the corresponding light token is#020202. Light rendered states are not accepted by reading that token. Content-based field sizing reuses [Tailwind's existing utility](https://tailwindcss.com/docs/field-sizing); no dependency or shared-textarea behavior is added.
 
-Open Pen uses the existing collapsible and textarea with scoped overrides and one semantic panel-foreground token. Existing commit, ownership and Undo paths remain intact. A blur handler resets only the textarea viewport. Without that handler, the independent twenty-line regression reports scrollTop248 in both Chromium and WebKit; with it, the unchanged text returns to scrollTop0. The existing Context workflow suite now runs in both engines.
+Brutal uses the existing collapsible and textarea with scoped overrides and one semantic panel-foreground token. Existing commit, ownership and Undo paths remain intact. A blur handler resets only the textarea viewport. Without that handler, the independent twenty-line regression reports scrollTop248 in both Chromium and WebKit; with it, the unchanged text returns to scrollTop0. The existing Context workflow suite now runs in both engines.
 
 ## Executed evidence
 

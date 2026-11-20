@@ -11,7 +11,7 @@ const main = defineCommand({
   meta: {
     name,
     description:
-      'Open Pen CLI — inspect, export, and lint design documents, and drive the running app',
+      'Brutal CLI — inspect, export, and lint design documents, and drive the running app',
     version
   },
   subCommands: commandHelp(COMMANDS, name, version)

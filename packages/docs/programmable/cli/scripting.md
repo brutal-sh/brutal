@@ -7,7 +7,7 @@ description: Execute JavaScript with a Figma-compatible Plugin API to query, bat
 
 ## Bundled guidance
 
-In an interactive session, `read_skill()` returns Open Pen's bundled guide index.
+In an interactive session, `read_skill()` returns Brutal's bundled guide index.
 Follow its linked resource names with `read_skill({path:"execute.md"})`. These
 resources come from the application package; paths never read local files or
 installed user skills. Reading guidance does not save the document. The MCP tool

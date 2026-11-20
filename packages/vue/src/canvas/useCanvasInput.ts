@@ -15,7 +15,7 @@ type CanvasInputArguments = [
 ]
 
 /**
- * Wires selection, drawing, transforms, text editing and scoped pointer input to an Open Pen canvas.
+ * Wires selection, drawing, transforms, text editing and scoped pointer input to an Brutal canvas.
  * Intended for editor shell components that own the canvas.
  */
 export function useCanvasInput(

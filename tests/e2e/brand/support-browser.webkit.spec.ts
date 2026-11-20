@@ -7,7 +7,7 @@ const BROWSERS = [
   ['safari', 'Mozilla/5.0 (Macintosh) AppleWebKit/605.1.15 Version/16.2 Safari/605.1.15'],
   ['opera', 'Mozilla/5.0 (Windows NT 10.0) Chrome/108.0.0.0 Safari/537.36 OPR/94.0'],
   ['ios', 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_1 like Mac OS X) Version/16.1 Safari/604.1'],
-  ['unknown', 'Open Pen support fixture'],
+  ['unknown', 'Brutal support fixture'],
   ['supported-version', 'Mozilla/5.0 (Windows NT 10.0) Chrome/120.0.0.0 Safari/537.36']
 ] as const
 
@@ -28,7 +28,7 @@ for (const [name, userAgent] of BROWSERS) {
             requests.push(route.request().url())
             await route.fulfill({
               contentType: 'text/html',
-              body: '<title>Open Pen support fixture</title>'
+              body: '<title>Brutal support fixture</title>'
             })
           }
         )

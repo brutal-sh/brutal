@@ -24,7 +24,7 @@
   "mcpFailed": "MCP 连接失败",
   "retention": "诊断数据保留量",
   "retentionDescription": "在本地保留不超过此数量的最新事件。",
-  "description": "在本地保存技术事件，以排查 Open Pen 问题。分享报告前，请检查错误详情。",
+  "description": "在本地保存技术事件，以排查 Brutal 问题。分享报告前，请检查错误详情。",
   "eventCount": "{count} 个事件 · {size} KB",
   "copy": "复制诊断数据",
   "save": "保存诊断数据…",

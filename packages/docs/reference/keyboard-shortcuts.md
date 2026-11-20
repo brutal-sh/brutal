@@ -1,6 +1,6 @@
 ---
 title: Keyboard Shortcuts
-description: Keyboard shortcut reference for Open Pen tools, editing commands, view controls, and layer actions.
+description: Keyboard shortcut reference for Brutal tools, editing commands, view controls, and layer actions.
 ---
 
 # Keyboard Shortcuts

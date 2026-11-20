@@ -39,7 +39,7 @@ export async function installAgentAdapter(agent: ACPAgentDef, searchPath: string
 
 /** Fork companions are installed from the checkout, never from the upstream npm package. */
 export function installCanvasBridge(): Promise<void> {
-  return Promise.reject(new Error(`From the Open Pen checkout, run ${MCP_INSTALL_COMMAND}.`))
+  return Promise.reject(new Error(`From the Brutal checkout, run ${MCP_INSTALL_COMMAND}.`))
 }
 
 export async function installHarnessCompanion(

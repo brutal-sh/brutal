@@ -41,7 +41,7 @@ Owned Pen Save As output establishes the sizing distinction: matching cross-axis
 become Fill children and the wrapper fixes that axis. Unequal widths or cross-axis offsets
 keep their dimensions while the wrapper hugs both axes. Unequal child frames that already
 hug their contents retain their own Hug sizing. Undo restores the original siblings and
-clears selection. Open Pen routes its inspector, keyboard and menus through the shared
+clears selection. Brutal routes its inspector, keyboard and menus through the shared
 spacing-aware wrapper, while internal Slot authoring and the portable SDK keep their
 existing default. Undo captures sizing before reparenting as well as affected geometry;
 a nested Redo regression catches stale Fill inherited from the former parent.
@@ -80,13 +80,13 @@ proves gap12.5 on both stacks and vertical padding20.5 on only the selected stac
 
 A separate actual-Pen fixture has a160×100 vertical frame, padding12, retained gap12.5,
 Space Around and two40×20 children. Native child-position fields show(12,21) and(12,59).
-Open Pen initially places them at(12,17.875) and(12,62.125): its canvas incorrectly adds the
+Brutal initially places them at(12,17.875) and(12,62.125): its canvas incorrectly adds the
 retained numeric gap to distributed spacing. The shared layout correction excludes that gap
 from Yoga, saved-size fitting and intrinsic sizing; generated-frame minimum spacing keeps its
 existing exception. The installed Pen exporter still emits the gap alongside space-around:
 that source observation does not establish equal canvas and HTML pixels.
 
-Open Pen's compact multi-selection composes the alignment grid, variable-aware fields and
+Brutal's compact multi-selection composes the alignment grid, variable-aware fields and
 distribution choices for its applicable frames. Padding collapse shares the existing binding
 and scale preservation logic. Screen-coordinate alignment respects each frame's direction
 and retains its distributed mode. A reproduced cancellation defect removes an imported side
@@ -135,7 +135,7 @@ current measured box and saves fixed-width-height growth. Flex frames resize to 
 Owned reference Save As files establish these distinctions. An Open Pen64×54 Hug export is
 also opened in actual Pen and displays both Hug axes correctly.
 
-Open Pen's compact multi-selection now shows those Hug controls, mixed states and frame-subset
+Brutal's compact multi-selection now shows those Hug controls, mixed states and frame-subset
 flow controls. A selection's Flex Layout label follows its applicable containers. Authored
 sizing retains deferred Hug in existing metadata without relaxing the portable Figma sizing
 setter; import and supported Pen output preserve that intent. Fill and Hug remain mutually
@@ -173,7 +173,7 @@ spacing/name/sizing, exact visual variants and whole-product parity remain OPEN.
 
 Actual Pen's two-layer header has an overlapping-outline-square icon, regular11px count,
 24px icon slot,40px height and12px left/14px right insets. Collapse is its only inline action.
-Open Pen's compact header uses those measured values and the installed Copy glyph; its previous
+Brutal's compact header uses those measured values and the installed Copy glyph; its previous
 stacked-layer glyph and mask/Boolean header actions remain only in Advanced properties.
 
 Twenty-six Chromium/WebKit compact inspector/corner workflows pass. The physical native
@@ -190,14 +190,14 @@ Remaining observed multi-layout differences: reference selected stacks show Flex
 alignment, gap distribution, padding and Hug Width/Height. Reference add-layout creates
 Frame1 with the existing gap (40 for two80×60 shapes at y0/100;20 for two160×80 frames at
 y0/100), zero padding, fixed width and Hug height. Undo restores original nodes and is observed
-with empty selection. Open Pen's current wrapper uses zero gap and both axes Hug. These are
+with empty selection. Brutal's current wrapper uses zero gap and both axes Hug. These are
 recorded gaps, not behavior established by this header unit; full parity remains OPEN.
 
 ## Local HTML history —2026-11-03
 
 Actual Pen's history contains the owned exported HTML beside web pages. Selecting its file
 entry restores the visible address and Open Folder control; unrelated history is neither copied
-nor cleared. Open Pen records completed registered file pages through the same bounded history
+nor cleared. Brutal records completed registered file pages through the same bounded history
 and deletion-generation barriers as web pages. Persisted file addresses are locators, not
 navigation grants: selecting one calls the editor-only export authorization again, canonicalizes
 and validates its visible regular HTML path, and checks existing filesystem deny rules. Query
@@ -251,7 +251,7 @@ file history/restart, exact menus and full parity remain OPEN.
 ## HTML preview file actions —2026-11-03
 
 Actual Pen's Open Folder reveals the exported HTML selected in Finder; Open in System Browser
-opens that file in Brave. Open Pen provides the same actions for explicitly authorized exports.
+opens that file in Brave. Brutal provides the same actions for explicitly authorized exports.
 An editor-only command rechecks the registered regular HTML path, canonical location and
 existing filesystem deny rules. The shared external-link command remains web/mail only;
 file pages gain no application IPC or broader filesystem scope.
@@ -301,7 +301,7 @@ referring to the original `images/checker.png` or its canonical file URL. It cre
 copied asset directory. A chosen destination in another folder still retains the repo-relative
 path; the reference does not rebase or copy that image. Its preferences are restored afterward.
 
-Open Pen's desktop Code menu offers those two path modes and embedded assets. Browser downloads
+Brutal's desktop Code menu offers those two path modes and embedded assets. Browser downloads
 retain their ZIP option. Retained source/hash pairs belong to each image paint, so same-byte
 fill/stroke paths and paint removal/reordering keep their own identity. Replaced image bytes or
 unavailable/nonlocal source identities fall back to embedding. Absolute paths encode literal
@@ -411,7 +411,7 @@ qualify complete HTML export or whole-product parity.
 Actual Pen exposes Code for a two-frame selection. An owned native HTML export contains
 both named roots in a260.25×80.75 relative wrapper, with positions0/180 and individual
 sizes120.5×80.75/80.25×45.5. Reference export preferences are restored after measurement.
-Open Pen now passes a snapshot of all selected IDs to its existing HTML renderer and
+Brutal now passes a snapshot of all selected IDs to its existing HTML renderer and
 selection exporter. Single-layer callers use the same component. Compact selection colors
 remain in Advanced properties, matching their absence from the observed compact reference.
 
@@ -429,7 +429,7 @@ barrier after a context continuation; that failed result is retained. The repeat
 that unnecessary barrier and captures the native WebView screenshot before process exit.
 An additional owned actual-Pen fixture selects children under different parents in reverse
 order. Its exported roots retain selection order and their local coordinates, omitting
-ancestor translation and rotation. Open Pen's existing renderer shares those limitations;
+ancestor translation and rotation. Brutal's existing renderer shares those limitations;
 the new browser checks assert the measured behavior. Initial canvas-fidelity expectations
 and a speculative shared-exporter correction are rejected after this native comparison;
 no Core or DOM/CSS exporter change ships in this unit.
@@ -437,7 +437,7 @@ no Core or DOM/CSS exporter change ships in this unit.
 With Ask user where to export file off, actual Pen writes beside the source design using
 `<document-base>-export.html`. Open in Browser after Export opens its internal Browser View
 at that file URL. No reference preferences change during this observation, and closing
-Browser View returns to the owned canvas. Open Pen's corresponding preferences, default
+Browser View returns to the owned canvas. Brutal's corresponding preferences, default
 destination/filename, actual OS clipboard delivery and exact settings/panel pixels remain
 OPEN. No inert settings are added and full parity is not established.
 
@@ -453,13 +453,13 @@ The first native sizing probe fails to find a desktop inspector because the driv
 
 The measured reference section pattern uses16px/14px horizontal insets,8px top padding,22px headings,6px content gaps and15px bottom padding when content exists; empty sections use8px bottom padding. Titles use11px medium type and the dark panel foreground#C8C8C8. Its Dimensions sublabel uses9px/12px typography with4px bottom margin. Before the shared-row continuation below, the independent shared section uses12px insets,32px headings and12px bottom padding. The container-only correction does not close those gaps.
 
-Before the shared-row continuation, the calibrated native rectangle inspector records Alignment y175/h69, Position y244/h99, Layout y343/h121, Appearance y464/h69, Fill y533/h73, Stroke y606/h45, Effects y651/h45, Code y696/h105 and Export y801/h101. These are observed Open Pen values, not accepted Pen matches. Full type/selection/mixed/disabled/light/hover/menu and adaptive states remain open. Context's separately executed control behavior is recorded in [Context parity](CONTEXT-PARITY.md).
+Before the shared-row continuation, the calibrated native rectangle inspector records Alignment y175/h69, Position y244/h99, Layout y343/h121, Appearance y464/h69, Fill y533/h73, Stroke y606/h45, Effects y651/h45, Code y696/h105 and Export y801/h101. These are observed Brutal values, not accepted Pen matches. Full type/selection/mixed/disabled/light/hover/menu and adaptive states remain open. Context's separately executed control behavior is recorded in [Context parity](CONTEXT-PARITY.md).
 
 ## Inspector web-import entry
 
 Actual Pen's Code section includes Import Web via Browser. On the owned synthetic selection with the saved Coding Mode preference enabled, the native action opens the browser's import landing screen and Coding Mode, with address entry, element/full-page reproduction, screenshot and exit/close controls. No URL is chosen and no page is imported. Closing Browser View restores the reference canvas; the owned rectangle is removed, original runtime/missing-source nodes are verified, and native File→Save returns the fixture to clean state. Existing browsing-history content is not copied into product data or documentation.
 
-Before the inspector-entry continuation below, Open Pen's Code section lacks this action. Its existing Browser preview controller and DOM importer are partial implementation building blocks; opening an ordinary split preview does not qualify the reference Coding Mode/landing workflow. This remains an explicit functionality and design gap. No inert button is added.
+Before the inspector-entry continuation below, Brutal's Code section lacks this action. Its existing Browser preview controller and DOM importer are partial implementation building blocks; opening an ordinary split preview does not qualify the reference Coding Mode/landing workflow. This remains an explicit functionality and design gap. No inert button is added.
 
 
 Final container qualification:16 browser Context/HTML/rename/history/fractional-layout/zoom-center workflows pass after the overlay fix, exercising clicks beneath the decorative layer. Source/Vue/test types, lint(existing warnings), architecture, docs/changelog and rebuilt normal/native-test packages pass. Strict normal signature and test-hook exclusion pass. Source-only review identifies the covered-ring defect before correction and finds no further concrete defect afterward; it is not independent runtime proof. The main installed app/profile/recovery remain preserved. No new CSS-only tests or snapshot baselines are added.
@@ -480,7 +480,7 @@ Code now begins at the reference-derived y695. It remains106px high and Export b
 
 Actual Pen's header button hides every section below the title and restores them on a second click. Native single- and multi-selection checks execute this action. Collapse survives changing the selected layer and clearing/reselecting it; the inspector disappears with no selection. The resource facts identify the standard panel-right/panel-right-open glyphs. The reference fixture's original nodes and expanded single selection are restored without document edits.
 
-Open Pen now exposes a named, keyboard-accessible header toggle in the floating compact inspector. It retains the existing property subtree and disclosure state while hidden. Workspace-owned collapse state follows selection changes, and comments, history, Frame presets and Advanced views keep their full-height surfaces. The collapsed dock is40px tall and no longer displaces the bottom zoom controls. Existing expanded multi-selection actions are preserved after source review flags an unintended removal; their exact reference arrangement remains open.
+Brutal now exposes a named, keyboard-accessible header toggle in the floating compact inspector. It retains the existing property subtree and disclosure state while hidden. Workspace-owned collapse state follows selection changes, and comments, history, Frame presets and Advanced views keep their full-height surfaces. The collapsed dock is40px tall and no longer displaces the bottom zoom controls. Existing expanded multi-selection actions are preserved after source review flags an unintended removal; their exact reference arrangement remains open.
 
 The new single-selection browser regression first fails in both engines because the toggle is absent. The implementation then exercises collapse, retained Context, clear/reselect, keyboard restoration and document Undo; a second workflow exercises multi-selection. An initial retention assertion incorrectly reads Context from a helper that does not project it; it is corrected to observe the rendered field. One22-check run records21 passes and a WebKit blend-menu failure, selecting Color Burn instead of Multiply. Three focused WebKit repeats pass; that does not erase the failed run or prove the intermittent menu issue absent. The final26-workflow Chromium/WebKit run passes, including the viewport zoom-center checks and preserved expanded multi-selection actions; the earlier failed run retains its status.
 
@@ -491,7 +491,7 @@ Source/Vue types, the canonical test-type check, lint(existing warnings) and arc
 
 ## Inspector browser entry — 2026-11-02
 
-Import Web via Browser now toggles the existing native desktop browser from Code. Calibrated native measurement asserts Code y695/h136, adding the reference30px action; physical open/close preserves document version and selection. Three native preview checks and one editable-import journey pass through this entry, including real capture/Undo, editable text/image import, rejection without mutation and FIG disk reopen. Actual Pen remembers its browser page and mode; the first observed Coding Mode state is not a forced entry behavior. Open Pen's Coding Mode, remembered page, landing/toolbar design, responsive import layout and exact whole-panel pixels remain open. The14-workflow browser regression, source/Vue/canonical test types, lint(existing warnings), architecture, normal79.34MiB package/signature/hook checks pass; see BROWSER.md.
+Import Web via Browser now toggles the existing native desktop browser from Code. Calibrated native measurement asserts Code y695/h136, adding the reference30px action; physical open/close preserves document version and selection. Three native preview checks and one editable-import journey pass through this entry, including real capture/Undo, editable text/image import, rejection without mutation and FIG disk reopen. Actual Pen remembers its browser page and mode; the first observed Coding Mode state is not a forced entry behavior. Brutal's Coding Mode, remembered page, landing/toolbar design, responsive import layout and exact whole-panel pixels remain open. The14-workflow browser regression, source/Vue/canonical test types, lint(existing warnings), architecture, normal79.34MiB package/signature/hook checks pass; see BROWSER.md.
 
 
 Coding Mode continuation2026-11-02: the inspector browser entry now participates in qualified split/expanded transitions, retained mode choice and real loaded-page history across Mode changes. Six native preview/import checks, physical mode geometry and39 browser regressions execute; see BROWSER.md for the corrected sidebar quantization/inset evidence and limits. Remembered page after closing, landing/toolbar design and other states remain open.
@@ -500,9 +500,9 @@ Remembered-browser continuation2026-11-02: the inspector entry now reloads its l
 
 ## Compact transform and opacity glyphs —2026-11-03
 
-The REA-verified private Pen1.2.21 editor bundle identifies Lucide Angle for rotation, Scan for uniform/independent radius and the two Triangles Centerline glyphs for flip controls. Its horizontal action uses the horizontal-centerline stock name, and its vertical action uses the vertical-centerline name; those reference mappings are retained. The numeric icon slot is16×16px; reference CSS uses one-pixel strokes independent of scaling. Open Pen uses its installed ISC Lucide assets and independently reconstructed square/arrow rotation and square/diagonal/30%-shade opacity geometry through its existing mask helper. Reference files stay private; installed stock assets and new geometric masks comprise the implementation.
+The REA-verified private Pen1.2.21 editor bundle identifies Lucide Angle for rotation, Scan for uniform/independent radius and the two Triangles Centerline glyphs for flip controls. Its horizontal action uses the horizontal-centerline stock name, and its vertical action uses the vertical-centerline name; those reference mappings are retained. The numeric icon slot is16×16px; reference CSS uses one-pixel strokes independent of scaling. Brutal uses its installed ISC Lucide assets and independently reconstructed square/arrow rotation and square/diagonal/30%-shade opacity geometry through its existing mask helper. Reference files stay private; installed stock assets and new geometric masks comprise the implementation.
 
-Actual Pen's opacity-glyph click selects100 without opening a menu, and its layer opacity field omits a percent suffix. The compact row now follows that pattern; layer-blend controls remain in Advanced. The reference clockwise quarter-turn displays-90°, then Undo/Save restores the owned mixed fixture's original positions and zero rotation. Private facts: pen-compact-inspector-icon-reference-2026-11-03.json. Other Pen documents and the main Open Pen profile remain untouched.
+Actual Pen's opacity-glyph click selects100 without opening a menu, and its layer opacity field omits a percent suffix. The compact row now follows that pattern; layer-blend controls remain in Advanced. The reference clockwise quarter-turn displays-90°, then Undo/Save restores the owned mixed fixture's original positions and zero rotation. Private facts: pen-compact-inspector-icon-reference-2026-11-03.json. Other Pen documents and the main Brutal profile remain untouched.
 
 Twelve compact Chromium/WebKit journeys pass, including opacity50/Undo, Advanced Multiply/Undo, return through Design properties, radius12/Undo and clipping. The preceding22-check run has20passes/two failures because its second Advanced command did not return to Design; the corrected test uses the observed menu contract. All ten fractional position/size journeys in that run pass. The isolated physical native journey executes opacity100→50→Undo, radius3.5→7.25→Undo, clockwise rotation0→-90→Undo and both flip flags/Undo, restoring exact original geometry and the saved state. The final native screenshot is visually inspected. This qualifies those controls, not pixel identity for the whole inspector.
 
@@ -520,7 +520,7 @@ editing the document. Four Undo actions and Save restore the reference's origina
 zero radii and original geometry. A later disclosure-only native check leaves it collapsed again.
 Private receipt:pen-expanded-corners-reference-2026-11-03.json.
 
-Compact Open Pen now uses SDK-owned manual disclosure, effective single/multi corner values and
+Compact Brutal now uses SDK-owned manual disclosure, effective single/multi corner values and
 the four curve glyphs. The default SDK/Advanced policy remains selection-derived. Disclosure
 does not convert geometry or bindings; actual literal edits use the shared corner conversion and
 owned node-preview transaction. A uniform literal unifies all corners and clears only corner
@@ -544,7 +544,7 @@ reselection and disclosure with exact saved values. Its final screenshot is visu
 Private receipt:compact-corners-native-physical.log. Degree suffix placement is also inspected
 after changing the rotation field's value flex behavior. This does not establish exact whole-panel
 pixels or every selection/type/binding configuration. The observed multi-selection Layout still
-differs: Open Pen shows Spacing where Pen offers Fill Width/Height, and multi-selection Code
+differs: Brutal shows Spacing where Pen offers Fill Width/Height, and multi-selection Code
 actions/header arrangement remain open. Full design and functionality parity remains OPEN.
 
 Eighteen existing corner/smoothing/polygon/stroke-toggle and retained-panel behavior journeys

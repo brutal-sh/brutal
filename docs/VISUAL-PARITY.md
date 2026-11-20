@@ -1,6 +1,6 @@
 # Pen.app parity acceptance
 
-The target is `/Applications/Pen.app` 1.2.21. The user explicitly requires 1:1 **functionality and design**, excluding subscription/licensing gates. Functional substitutes and a similar-looking editor do not satisfy that criterion. Independent implementation and Open Pen identification remain; no proprietary implementation or artwork is copied into this repository.
+The target is `/Applications/Pen.app` 1.2.21. The user explicitly requires 1:1 **functionality and design**, excluding subscription/licensing gates. Functional substitutes and a similar-looking editor do not satisfy that criterion. Independent implementation and Brutal identification remain; no proprietary implementation or artwork is copied into this repository.
 
 Reference: the user-supplied screenshot dated 2026-10-29 23:59:28, retained privately in ignored `local-evidence/pen-reference-user.png`, and passive inspection of the installed app. The user's open Pen document is active; inspection must preserve it.
 

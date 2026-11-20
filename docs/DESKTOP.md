@@ -1,4 +1,6 @@
-# Open Pen desktop isolation and acceptance
+# Brutal desktop isolation and acceptance
+
+Brutal uses the same local app identity and bridge discovery as the earlier Open Pen builds, so the installed app can access existing preferences, recovery data and credentials. The macOS beta runs as `Brutal.app`.
 
 2026-10-29. This records the independent fork configuration and focused checks. It does not establish native launch, authenticated provider login, or full Pen feature parity.
 
@@ -6,7 +8,7 @@
 
 | Surface                              | Fork setting                                         |
 | ------------------------------------ | ---------------------------------------------------- |
-| Product/window/PWA name              | Open Pen                                             |
+| Product/window/PWA name              | Brutal                                             |
 | Tauri bundle identifier              | `dev.jpoindexter.openpen`                            |
 | Native test bundle identifier        | `dev.jpoindexter.openpen.native-test`                |
 | macOS signing                        | Local ad hoc (`signingIdentity: "-"`)                |
@@ -19,7 +21,7 @@
 
 The app passes its computed discovery and socket paths explicitly to the MCP process. On Linux, app-managed MCP uses the home-directory fallback. `OPENPENCIL_MCP_DISCOVERY_PATH`, `OPENPENCIL_MCP_SOCKET`, and `PORT` remain supported overrides. A separately installed upstream MCP client must receive the fork discovery path to connect to this fork. Installing the fork globally under upstream executable names can replace those executables; use a local build/path when co-installing.
 
-Internal `@open-pencil/*` package imports, Rust crate/binary names and document-chat `openpencil://node/...` reference syntax remain compatible. Chat references do not register an OS protocol. Cloud, collaboration and generated Storybook links use the fork OS scheme. Existing MIT licensing, upstream authorship and attribution are retained.
+Internal `@open-pencil/*` package imports, Rust crate and development binary names and document-chat `openpencil://node/...` reference syntax remain compatible. Chat references do not register an OS protocol. Cloud, collaboration and generated Storybook links use the fork OS scheme. Existing MIT licensing, upstream authorship and attribution are retained.
 
 No original app files or keychain entries were migrated or modified. The native capability file retains existing sensitive-file deny rules, adds the fork discovery files to those denies, and permits read access only to the fork discovery locations.
 
@@ -47,7 +49,7 @@ Formatting checks passed for the changed OAuth, MCP spawning and Vite configurat
 ## Remaining runtime proof
 
 - Generate native icons and build the fork. Run `cargo test --manifest-path desktop/Cargo.toml network::oauth::tests`, which includes a real local TCP callback/response/closure test with synthetic code and state.
-- Launch the built Open Pen beside the original app; verify separate app storage/keychain namespace, `openpen://` routing, MCP discovery/auth and document opening. Do not overwrite the original installation.
+- Launch the built Brutal beside the original app; verify separate app storage/keychain namespace, `openpen://` routing, MCP discovery/auth and document opening. Do not overwrite the original installation.
 - Exercise OpenRouter sign-in with an explicitly chosen account and verify cancellation, retry, returned identity and authorized editor request. No live provider login or credential access was performed for these changes.
 - Verify manual update failure wording in the native app and that startup performs no upstream update request.
 

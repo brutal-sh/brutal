@@ -13,7 +13,7 @@ export const fontsMessageDefaults = {
   collapseIssues: 'Hide font issues',
   noSubstitute: 'no substitute available',
   unsupportedFormatShort: 'unsupported format',
-  unsupportedFormat: 'Installed, but in a format Open Pen can’t draw yet',
+  unsupportedFormat: 'Installed, but in a format Brutal can’t draw yet',
   affectedLayer: '1 affected layer',
   affectedLayerCount: params('{count} affected layers'),
   settingsDesktopDescription:

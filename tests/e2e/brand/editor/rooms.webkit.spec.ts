@@ -8,53 +8,53 @@ const LOCALES = [
   {
     locale: 'en',
     description:
-      'Check your internet connection. Open Pen keeps trying and opens the file once it connects.'
+      'Check your internet connection. Brutal keeps trying and opens the file once it connects.'
   },
   {
     locale: 'de',
     description:
-      'Prüfe deine Internetverbindung. Open Pen versucht es weiter und öffnet die Datei, sobald die Verbindung steht.'
+      'Prüfe deine Internetverbindung. Brutal versucht es weiter und öffnet die Datei, sobald die Verbindung steht.'
   },
   {
     locale: 'es',
     description:
-      'Comprueba tu conexión a internet. Open Pen sigue intentándolo y abrirá el archivo en cuanto se conecte.'
+      'Comprueba tu conexión a internet. Brutal sigue intentándolo y abrirá el archivo en cuanto se conecte.'
   },
   {
     locale: 'fr',
     description:
-      'Vérifiez votre connexion internet. Open Pen continue d’essayer et ouvrira le fichier dès la connexion établie.'
+      'Vérifiez votre connexion internet. Brutal continue d’essayer et ouvrira le fichier dès la connexion établie.'
   },
   {
     locale: 'it',
     description:
-      'Controlla la connessione a internet. Open Pen continua a provare e aprirà il file appena si connette.'
+      'Controlla la connessione a internet. Brutal continua a provare e aprirà il file appena si connette.'
   },
   {
     locale: 'ja',
     description:
-      'インターネット接続を確認してください。Open Pen は接続を試み続け、接続できしだいファイルを開きます。'
+      'インターネット接続を確認してください。Brutal は接続を試み続け、接続できしだいファイルを開きます。'
   },
   {
     locale: 'pl',
     description:
-      'Sprawdź połączenie z internetem. Open Pen próbuje dalej i otworzy plik, gdy tylko się połączy.'
+      'Sprawdź połączenie z internetem. Brutal próbuje dalej i otworzy plik, gdy tylko się połączy.'
   },
   {
     locale: 'ru',
     description:
-      'Проверьте подключение к интернету. Open Pen продолжает попытки и откроет файл, как только подключится.'
+      'Проверьте подключение к интернету. Brutal продолжает попытки и откроет файл, как только подключится.'
   },
   {
     locale: 'zh-CN',
-    description: '请检查网络连接。Open Pen 会继续尝试，连接后即打开文件。'
+    description: '请检查网络连接。Brutal 会继续尝试，连接后即打开文件。'
   }
 ] as const
 
 for (const { locale, description } of LOCALES) {
   test.describe(locale, () => {
     test.use({ locale })
-    test(`unreachable room guidance identifies Open Pen in ${locale}`, async ({
+    test(`unreachable room guidance identifies Brutal in ${locale}`, async ({
       page
     }, testInfo) => {
       const relay = await startRelay()

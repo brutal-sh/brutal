@@ -6,8 +6,8 @@ BRAND-SUPPORT-CLI. Full CLI workflows, native delivery and full branding remain 
 
 ## Resulting behavior
 
-Actual root help identifies Open Pen CLI. The executable remains `openpencil`, package/API
-names stay compatible, and the format list names its native display format Open Pen Document
+Actual root help identifies Brutal CLI. The executable remains `openpencil`, package/API
+names stay compatible, and the format list names its native display format Brutal Document
 while retaining the `fig` identifier. Pencil, Figma API and other external format names remain
 truthful interoperability labels.
 

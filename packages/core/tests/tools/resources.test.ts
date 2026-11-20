@@ -44,7 +44,7 @@ test.each([
   'unknown.md'
 ])('unknown resource %s cannot escape the bundle', (path) => {
   const figma = new FigmaAPI(new SceneGraph())
-  expect(() => resourceTool().execute(figma, { path })).toThrow(/Unknown Open Pen skill resource/)
+  expect(() => resourceTool().execute(figma, { path })).toThrow(/Unknown Brutal skill resource/)
 })
 
 test.each([{ path: '' }, { path: 'x'.repeat(201) }, { path: 3 }, { unexpected: true }])(

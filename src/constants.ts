@@ -115,7 +115,7 @@ export const MCP_CONNECTIONS_DOCS_URL = `${DOCS_ORIGIN}/programmable/ai-chat#ext
 export const CODING_AGENTS_GUIDE_URL = `${DOCS_ORIGIN}/programmable/coding-agents`
 export const PI_GUIDE_URL = `${CODING_AGENTS_GUIDE_URL}#pi`
 
-// shortcut: no signed Open Pen releases, use the fork changelog until release publishing is configured.
+// shortcut: no signed Brutal releases, use the fork changelog until release publishing is configured.
 export const OPEN_PEN_RELEASE_NOTES_URL = `${OPEN_PEN_REPOSITORY_URL}/blob/HEAD/CHANGELOG.md`
 
 export function getShareURL(roomId: string): string {

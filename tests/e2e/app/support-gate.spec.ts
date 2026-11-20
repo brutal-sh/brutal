@@ -49,7 +49,7 @@ test.describe('browser support gate', () => {
     await page.goto('/')
 
     const notice = page.getByRole('alert')
-    await expect(notice.getByRole('heading', { level: 1 })).toHaveText("Open Pen couldn't start")
+    await expect(notice.getByRole('heading', { level: 1 })).toHaveText("Brutal couldn't start")
     await expect(notice).toContainText('Chrome 111')
     await notice.getByText('Details', { exact: true }).click()
     await expect(notice.locator('pre')).toContainText('history is unavailable')
@@ -72,7 +72,7 @@ test.describe('browser support gate', () => {
     await page.goto('/')
 
     const notice = page.getByRole('alert')
-    await expect(notice.getByRole('heading', { level: 1 })).toHaveText("Open Pen couldn't start")
+    await expect(notice.getByRole('heading', { level: 1 })).toHaveText("Brutal couldn't start")
     await notice.getByText('Details', { exact: true }).click()
     await expect(notice.locator('pre')).toContainText('getRandomValues is unavailable')
     await notice.screenshot({ path: testInfo.outputPath('component-failure.png') })

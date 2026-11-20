@@ -24,7 +24,7 @@
   "mcpFailed": "Connessione MCP non riuscita",
   "retention": "Conservazione diagnostica",
   "retentionDescription": "Conserva localmente fino a questo numero di eventi recenti.",
-  "description": "Conserva gli eventi tecnici in locale per risolvere i problemi di Open Pen. Controlla i dettagli degli errori prima di condividere un report.",
+  "description": "Conserva gli eventi tecnici in locale per risolvere i problemi di Brutal. Controlla i dettagli degli errori prima di condividere un report.",
   "eventCount": "{count} eventi · {size} KB",
   "copy": "Copia diagnostica",
   "save": "Salva diagnostica…",

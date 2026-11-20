@@ -1,6 +1,6 @@
 # Contributing
 
-Use [Open Pen support](https://open-pen.vercel.app/help/#support) for questions, bugs, and feedback. Follow the [security policy](SECURITY.md) to report a vulnerability privately.
+Use [Brutal support](https://open-pen.vercel.app/help/#support) for questions, bugs, and feedback. Follow the [security policy](SECURITY.md) to report a vulnerability privately.
 
 ## Where the rules live
 

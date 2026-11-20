@@ -13,7 +13,7 @@ test('keeps recovery independent from cancelling an unsaved-document close', asy
 
   await page.evaluate(async () => {
     const store = window.openPencil?.getStore?.()
-    if (!store) throw new Error('Open Pen store not initialized')
+    if (!store) throw new Error('Brutal store not initialized')
     const id = store.createShape('RECTANGLE', 120, 120, 240, 140)
     await store.persistRecoveryNow()
     store.updateNode(id, { name: 'Retained recovery rectangle' })

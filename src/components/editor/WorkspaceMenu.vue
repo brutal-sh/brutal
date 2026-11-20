@@ -19,6 +19,7 @@ import { appMenuShortcutLabel } from '@/app/shell/menu/shortcut'
 import { popupWorkspaceMenu } from '@/app/shell/menu/workspace'
 import { useAppTheme } from '@/app/shell/theme'
 import { toast } from '@/app/shell/ui'
+import BrandMark from '@/components/brand/BrandMark.vue'
 import WorkspaceCommandItems from '@/components/editor/WorkspaceCommandItems.vue'
 import ExternalLink from '@/components/links/ExternalLink.vue'
 import AppShortcutText from '@/components/ui/menu/AppShortcutText.vue'
@@ -45,10 +46,10 @@ const { toggleTheme, setTheme } = useAppTheme()
 const actions = createSharedEditorMenuActions(setTheme)
 const repository = OPEN_PEN_REPOSITORY_URL
 const links = [
-  { label: 'Open Pen on GitHub', href: repository, icon: IconGithub },
-  { label: 'Open Pen support', href: OPEN_PEN_SUPPORT_URL, icon: IconLifeBuoy },
+  { label: 'Brutal on GitHub', href: repository, icon: IconGithub },
+  { label: 'Brutal support', href: OPEN_PEN_SUPPORT_URL, icon: IconLifeBuoy },
   {
-    label: 'Open Pen documentation',
+    label: 'Brutal documentation',
     href: OPEN_PEN_HELP_URL,
     icon: IconBookOpen
   }
@@ -91,21 +92,21 @@ async function openNativeMenu(event: MouseEvent | KeyboardEvent) {
       @click="openNativeMenu"
       @keydown.down.prevent="openNativeMenu"
     >
-      <icon-lucide-pen-line class="size-4" />
-      Open Pen
+      <BrandMark decorative class="size-4" />
+      Brutal
     </button>
     <DropdownMenuTrigger v-else as-child>
       <button
         aria-label="Main menu"
         class="flex h-8 shrink-0 items-center gap-2 rounded-full px-3 text-sm font-semibold text-surface hover:bg-hover focus-visible:outline-panel-focus"
       >
-        <icon-lucide-pen-line class="size-4" />
-        Open Pen
+        <BrandMark decorative class="size-4" />
+        Brutal
       </button>
     </DropdownMenuTrigger>
     <DropdownMenuPortal v-if="!IS_TAURI">
       <DropdownMenuContent
-        aria-label="Open Pen menu"
+        aria-label="Brutal menu"
         side="bottom"
         align="start"
         :side-offset="8"
@@ -136,7 +137,7 @@ async function openNativeMenu(event: MouseEvent | KeyboardEvent) {
         <DropdownMenuItem as-child>
           <ExternalLink :href="OPEN_PEN_CLI_GUIDE_URL" :ui="{ base: styles.item, icon: 'hidden' }">
             <icon-lucide-terminal class="size-3.5 shrink-0 text-muted" aria-hidden="true" />
-            Open Pen CLI docs
+            Brutal CLI docs
           </ExternalLink>
         </DropdownMenuItem>
         <template v-if="!IS_TAURI">

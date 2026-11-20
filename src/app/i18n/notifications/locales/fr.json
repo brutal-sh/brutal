@@ -28,12 +28,12 @@
   "deepLinkPickerDismissed": "Lien annulé : aucun fichier n’a été choisi.",
   "deepLinkCancelled": "Lien annulé : un fichier se terminant par « {file} » était attendu.",
   "deepLinkNodeNotFound": "Le calque « {node} » est introuvable dans « {file} ».",
-  "openQueuedFilesFailed": "Impossible d’ouvrir les fichiers transmis à Open Pen : {error}",
+  "openQueuedFilesFailed": "Impossible d’ouvrir les fichiers transmis à Brutal : {error}",
   "tokensLeftOut": "Non inclus dans la feuille de style : {names}.",
   "designTokensLeftOut": "Exclus des design tokens : {names}.",
   "designTokensImported": "{count} design tokens importés.",
-  "unsupportedVariableExpressions": "Open Pen ne sait pas encore évaluer ces variables ; les calques gardent les valeurs enregistrées dans le fichier : {names}.",
+  "unsupportedVariableExpressions": "Brutal ne sait pas encore évaluer ces variables ; les calques gardent les valeurs enregistrées dans le fichier : {names}.",
   "nativeSaveTitle": "Enregistrer le fichier {extension} sous…",
   "nativeSaveFailed": "Impossible d’enregistrer « {name} »",
-  "nativeSavePermissionDenied": "Open Pen ne peut pas enregistrer ce fichier, car vous n’avez pas l’autorisation. Utilisez Fichier → Enregistrer sous pour enregistrer une copie dans un dossier accessible en écriture."
+  "nativeSavePermissionDenied": "Brutal ne peut pas enregistrer ce fichier, car vous n’avez pas l’autorisation. Utilisez Fichier → Enregistrer sous pour enregistrer une copie dans un dossier accessible en écriture."
 }

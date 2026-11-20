@@ -14,7 +14,7 @@ export async function generateDesktop(root: string): Promise<BrandFiles> {
     const source = join(directory, 'app.png')
     await writeFile(
       source,
-      await sharp(join(root, 'assets/brand/open-pen-app.png')).resize(1024, 1024).png().toBuffer()
+      await sharp(join(root, 'assets/brand/brutal-app.png')).resize(1024, 1024).png().toBuffer()
     )
     // Direct native CLI API: no shell, package download, recursive npm script, or Rust build.
     const { run } = await import('@tauri-apps/cli')

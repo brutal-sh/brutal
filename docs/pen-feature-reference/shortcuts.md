@@ -1,6 +1,6 @@
 # Keyboard acceptance matrix
 
-Source: [Pen keyboard shortcuts](https://docs.pen.dev/core-concepts/keyboard-shortcuts), retrieved 2026-10-30. These are Pen requirements, not a claim that Open Pen matches them. Use Command/Option on macOS and Control/Alt on Windows/Linux. Test canvas, text, inspector and chat focus separately. All rows await complete native comparison.
+Source: [Pen keyboard shortcuts](https://docs.pen.dev/core-concepts/keyboard-shortcuts), retrieved 2026-10-30. These are Pen requirements, not a claim that Brutal matches them. Use Command/Option on macOS and Control/Alt on Windows/Linux. Test canvas, text, inspector and chat focus separately. All rows await complete native comparison.
 
 ## Current documentation additions
 

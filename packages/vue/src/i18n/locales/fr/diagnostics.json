@@ -24,7 +24,7 @@
   "mcpFailed": "Échec de la connexion MCP",
   "retention": "Rétention des diagnostics",
   "retentionDescription": "Conservez localement jusqu’à ce nombre d’événements récents.",
-  "description": "Conservez les événements techniques en local pour diagnostiquer les problèmes d’Open Pen. Vérifiez les détails des erreurs avant de partager un rapport.",
+  "description": "Conservez les événements techniques en local pour diagnostiquer les problèmes d’Brutal. Vérifiez les détails des erreurs avant de partager un rapport.",
   "eventCount": "{count} événements · {size} Ko",
   "copy": "Copier les diagnostics",
   "save": "Enregistrer les diagnostics…",

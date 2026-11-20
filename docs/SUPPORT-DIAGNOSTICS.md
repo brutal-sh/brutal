@@ -56,9 +56,9 @@ On 2026-11-19, the isolated normal-feature macOS candidate built from
 `4926f5f36bb3be9c131efa4fc9d7d36a99c77aec` opened an owned project containing a
 unique layer-name marker. Opening a separate malformed `.pen` showed the file-open
 error. Settings > Diagnostics > Save diagnostics opened the native Save panel and
-wrote `Open Pen diagnostics.json` to the selected temporary folder.
+wrote `Brutal diagnostics.json` to the selected temporary folder.
 
-The JSON reported Open Pen 0.16.0, `shell: desktop` and a typed document-open
+The JSON reported Brutal 0.16.0, `shell: desktop` and a typed document-open
 failure with `decode-failed`. It omitted both fixture filenames, the temporary
 path, the open layer name and the malformed file's content marker. Canceling a
 second Save panel preserved the report checksum. The project remained open and
@@ -85,7 +85,7 @@ Native and native-speaker review of the copy remain separate gates.
 
 ## Reporting a reproducible problem
 
-Record the actual Open Pen version and candidate/source identity, operating-system
+Record the actual Brutal version and candidate/source identity, operating-system
 version, browser if applicable, expected/observed behavior and numbered reproduction
 steps. For AI issues add provider/model/authentication method without credentials.
 The exported user-agent string is compatibility data; do not infer the actual OS
@@ -99,7 +99,7 @@ universal content redaction, all native dialogs or full Pen parity.
 
 ## Beta support packet draft
 
-The candidate is Open Pen 0.16.0 for Apple silicon. The package declares macOS
+The candidate is Brutal 0.16.0 for Apple silicon. The package declares macOS
 13.0 as its minimum. The recorded native trial ran on macOS 27.3. The current
 local archive uses an ad hoc signature and fails Gatekeeper assessment. Public
 distribution, first launch on a clean Mac and signed updates remain open. Windows,
@@ -113,7 +113,7 @@ sign-in or credentials and may charge for usage. The normal installed core
 journey and broader file, agent and visual acceptance remain open.
 [Desktop file and provider limits](../README.md)
 
-The public [Open Pen feedback tracker](https://github.com/jpoindexter/open-pen-feedback)
+The public [Brutal feedback tracker](https://github.com/jpoindexter/open-pen-feedback)
 has issue forms for bugs and feature requests, Discussions for questions and
 general feedback, and private vulnerability reporting. Anyone can read its public
 pages. GitHub sign-in is required to submit. Bug reports ask for the app version,

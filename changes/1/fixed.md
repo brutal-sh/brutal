@@ -29,7 +29,7 @@
 - Warning toasts use an opaque surface over drawings, and translated messages remain readable when recovery actions need another row.
 
 - Reuse canvas contexts across document switches without retaining retired document renderers, and cancel initialization when its view closes.
-- Desktop setup links open this Open Pen fork’s build instructions with translated setup labels.
+- Desktop setup links open this Brutal fork’s build instructions with translated setup labels.
 - Failed recovery uses translated document-recovery feedback while retaining parser details in the local diagnostic warning.
 - ACP connection failures retain structured agent messages and textual error details, and stop the starting agent when its tool-connection check fails.
 - Open supported designs saved by Pen 1.2.22 while retaining explicit errors for unsupported content.
@@ -37,7 +37,7 @@
 - Saved .pen text retains its font weight when opened in Pen.
 - Export multiple selected objects as separate SVG files in one ZIP, and offer SVG in the desktop File export menu.
 - Keep sign-in Cancel and Change actions readable on their status background in both themes.
-- Use Open Pen names in the workspace menu, assistant, microphone permission prompt and recovery-code download, and neutral Cloud labels in service controls.
+- Use Brutal names in the workspace menu, assistant, microphone permission prompt and recovery-code download, and neutral Cloud labels in service controls.
 - Keep the browser panel background around fixed-device previews consistent with its toolbar.
 - Long agent command titles truncate inside tool cards while retaining the full tooltip and inspectable command details.
 - Open FIG documents from byte views without reading padding outside the supplied file data.
@@ -76,4 +76,4 @@
 - On desktop, saving recovered work checks the original file and offers Save As guidance when the saved version cannot be verified. On macOS and Linux, this check also recognizes a second name for the same file.
 - Open desktop setup and help links once, without a shell permission error.
 - Save recovered Pen documents with ordinary text as editable .pen files.
-- OpenRouter requests identify Open Pen and its website.
+- OpenRouter requests identify Brutal and its website.

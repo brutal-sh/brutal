@@ -108,7 +108,7 @@ for (const labels of AI_SETUP_LABELS) {
           await expect(toast).toHaveCount(0)
         }
       })
-      test(`translated setup failure states name Open Pen in ${theme}`, async ({
+      test(`translated setup failure states name Brutal in ${theme}`, async ({
         page
       }, testInfo) => {
         await page.goto(

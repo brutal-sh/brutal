@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
 const ENTRY = Bun.resolveSync('#mcp/index', import.meta.dir)
-const READY = 'Open Pen MCP server'
+const READY = 'Brutal MCP server'
 
 const cleanups: Array<() => void> = []
 

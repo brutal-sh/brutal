@@ -4,21 +4,21 @@ import { mockEditorCopyServices } from '#tests/helpers/brand/editor-services'
 import { CanvasHelper } from '#tests/helpers/canvas'
 
 const LOCALES = [
-  { locale: 'en', description: 'Search and run Open Pen commands.' },
-  { locale: 'de', description: 'Open Pen-Befehle suchen und ausführen.' },
-  { locale: 'es', description: 'Busca y ejecuta comandos de Open Pen.' },
-  { locale: 'fr', description: 'Rechercher et exécuter des commandes Open Pen.' },
-  { locale: 'it', description: 'Cerca ed esegui i comandi di Open Pen.' },
-  { locale: 'ja', description: 'Open Pen のコマンドを検索して実行します。' },
-  { locale: 'pl', description: 'Wyszukuj i uruchamiaj polecenia Open Pen.' },
-  { locale: 'ru', description: 'Поиск и выполнение команд Open Pen.' },
-  { locale: 'zh-CN', description: '搜索并运行 Open Pen 命令。' }
+  { locale: 'en', description: 'Search and run Brutal commands.' },
+  { locale: 'de', description: 'Brutal-Befehle suchen und ausführen.' },
+  { locale: 'es', description: 'Busca y ejecuta comandos de Brutal.' },
+  { locale: 'fr', description: 'Rechercher et exécuter des commandes Brutal.' },
+  { locale: 'it', description: 'Cerca ed esegui i comandi di Brutal.' },
+  { locale: 'ja', description: 'Brutal のコマンドを検索して実行します。' },
+  { locale: 'pl', description: 'Wyszukuj i uruchamiaj polecenia Brutal.' },
+  { locale: 'ru', description: 'Поиск и выполнение команд Brutal.' },
+  { locale: 'zh-CN', description: '搜索并运行 Brutal 命令。' }
 ] as const
 
 for (const { locale, description } of LOCALES) {
   test.describe(locale, () => {
     test.use({ locale })
-    test(`command search identifies Open Pen in ${locale}`, async ({ page }, testInfo) => {
+    test(`command search identifies Brutal in ${locale}`, async ({ page }, testInfo) => {
       const interceptedURLs = await mockEditorCopyServices(page)
       await page.goto('/?test')
       const canvas = new CanvasHelper(page)
