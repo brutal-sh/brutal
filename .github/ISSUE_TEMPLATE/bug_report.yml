@@ -23,7 +23,7 @@ body:
     attributes:
       label: Platform
       options:
-        - Web (Open Pen)
+        - Browser development build
         - macOS (Tauri)
         - Windows (Tauri)
         - Linux (Tauri)

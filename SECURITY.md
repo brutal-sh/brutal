@@ -4,9 +4,9 @@
 
 Please do not report security vulnerabilities through public GitHub issues or pull requests.
 
-If you believe you have found a security issue in OpenPencil, report it privately using GitHub Security Advisories:
+If you believe you have found a security issue in Open Pen, report it privately using GitHub Security Advisories:
 
-https://github.com/open-pencil/open-pencil/security/advisories/new
+https://github.com/jpoindexter/open-pen-feedback/security/advisories/new
 
 Please include as much detail as possible:
 
@@ -24,6 +24,4 @@ Please give us a reasonable opportunity to investigate and release a fix before 
 
 ## MCP server
 
-The MCP HTTP transport (`openpencil-mcp-http`) binds to `127.0.0.1` by default with `eval` disabled, CORS disabled, and file access restricted to the working directory. See [MCP docs](https://openpencil.dev/reference/mcp-tools) for configuration.
-
-The stdio transport (`openpencil-mcp`) is intended for local use only and does not apply these restrictions.
+Open Pen uses the local `openpen-mcp-http` canvas bridge. See the [local runtime guide](docs/LOCAL-RUNTIME.md) for the bundled and development bridge, authentication, and configuration.

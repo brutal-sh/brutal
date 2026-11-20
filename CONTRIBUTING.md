@@ -1,6 +1,6 @@
 # Contributing
 
-Questions and ideas go to [GitHub Discussions](https://github.com/open-pencil/open-pencil/discussions) or [Discord](https://discord.gg/4wXc9fuZfm); open an issue for a reproducible bug. Report security problems through a [private advisory](https://github.com/open-pencil/open-pencil/security/advisories/new), not a public issue or PR.
+Use [Open Pen support](https://open-pen.vercel.app/help/#support) for questions, bugs, and feedback. Follow the [security policy](SECURITY.md) to report a vulnerability privately.
 
 ## Where the rules live
 
@@ -11,10 +11,11 @@ Questions and ideas go to [GitHub Discussions](https://github.com/open-pencil/op
 ## Setup
 
 ```sh
-git clone https://github.com/open-pencil/open-pencil.git
-cd open-pencil
+git clone https://github.com/jpoindexter/open-pen.git
+cd open-pen
 bun install
-bun run dev:portless  # Web editor at https://open-pencil.localhost
+bun run build:packages
+bun run dev:portless  # Local browser development at https://open-pencil.localhost
 bun run dev           # Fixed http://localhost:1420 for Playwright, Tauri, and Dev Containers
 bun run tauri dev     # Desktop app (requires Rust)
 ```
