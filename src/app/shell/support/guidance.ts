@@ -20,7 +20,7 @@ export interface SupportLink {
 
 // Pre-boot guidance stays self-contained so links work without loading the app.
 export const SYSTEM_REQUIREMENTS_URL =
-  'https://open-pen.vercel.app/help/getting-started/#desktop-requirements'
+  'https://brutal.sh/help/getting-started/#desktop-requirements'
 export const WEBVIEW2_DOWNLOAD_URL = 'https://developer.microsoft.com/microsoft-edge/webview2/'
 const ISSUE_URL = 'https://github.com/jpoindexter/open-pen-feedback/issues/new'
 

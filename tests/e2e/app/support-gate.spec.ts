@@ -18,7 +18,7 @@ test.describe('browser support gate', () => {
     await expect(notice).toContainText('String.prototype.isWellFormed')
     await expect(notice.getByRole('link', { name: 'System requirements' })).toHaveAttribute(
       'href',
-      'https://open-pen.vercel.app/help/getting-started/#desktop-requirements'
+      'https://brutal.sh/help/getting-started/#desktop-requirements'
     )
 
     const report = notice.getByRole('link', { name: 'Report a problem' })

@@ -124,7 +124,7 @@ in Trello and keep private diagnostics out of public threads.
 Signed-out Issues, Discussions and Security pages returned HTTP 200 on
 19 November 2026. Submission links routed to GitHub sign-in, and the public
 Security page displayed the private reporting action. The signed-in form flow,
-live [Help links](https://open-pen.vercel.app/help/#support) and exact installed
+live [Help links](https://brutal.sh/help/#support) and exact installed
 candidate still need verification. The public installer and SHA-256 await the
 approved artifact and launch. [BRAND-LINKS](https://trello.com/c/Nyoko3k5) retains
 the earlier normal-app destination walkthrough.

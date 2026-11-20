@@ -62,7 +62,7 @@ it('delivers the native guide UI and this fork’s CLI setup link without changi
 it('routes native Help events from Home without creating a document', async () => {
   await $('[role="tab"][aria-label="Home"]').click()
   const before = await $$('[data-slot="tab-bar"] [role="tab"]').length
-  const website = 'https://open-pen.vercel.app/'
+  const website = 'https://brutal.sh/'
   const repository = 'https://github.com/jpoindexter/open-pen'
   for (const [id, url] of [
     ['help-documentation', `${website}help/#docs`],

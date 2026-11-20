@@ -5,7 +5,7 @@ import { CanvasHelper } from '#tests/helpers/canvas'
 import { relayURLFor, roomLinkPath, startRelay } from '#tests/helpers/collab/room'
 import { getSelectedNode } from '#tests/helpers/store'
 
-const SETUP_URL = 'https://open-pen.vercel.app/help/getting-started/'
+const SETUP_URL = 'https://brutal.sh/help/getting-started/'
 const LOCALES = [
   { locale: 'en', label: 'Desktop setup' },
   { locale: 'de', label: 'Desktop-Einrichtung' },

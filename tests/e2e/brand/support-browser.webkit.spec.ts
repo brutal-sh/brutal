@@ -52,7 +52,7 @@ for (const [name, userAgent] of BROWSERS) {
         const requirements = notice.getByRole('link', { name: 'System requirements' })
         await expect(requirements).toHaveAttribute(
           'href',
-          'https://open-pen.vercel.app/help/getting-started/#desktop-requirements'
+          'https://brutal.sh/help/getting-started/#desktop-requirements'
         )
         const report = notice.getByRole('link', { name: 'Report a problem' })
         const href = new URL((await report.getAttribute('href')) ?? '')

@@ -4,7 +4,7 @@ import { mockEditorCopyServices } from '#tests/helpers/brand/editor-services'
 import { CanvasHelper } from '#tests/helpers/canvas'
 import { getSelectedNode } from '#tests/helpers/store'
 
-const SETUP_URL = 'https://open-pen.vercel.app/help/getting-started/'
+const SETUP_URL = 'https://brutal.sh/help/getting-started/'
 
 for (const surface of ['guided setup', 'provider chooser', 'MCP settings'] as const) {
   test(`${surface} offers desktop setup only when needed and preserves the design`, async ({

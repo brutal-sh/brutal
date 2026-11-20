@@ -103,7 +103,7 @@ describe('model provider registry', () => {
     expect(requests).toHaveLength(1)
     expect(requests[0]?.url).toBe('https://openrouter.ai/api/v1/chat/completions')
     expect(requests[0]?.headers.get('X-OpenRouter-Title')).toBe('Brutal')
-    expect(requests[0]?.headers.get('HTTP-Referer')).toBe('https://open-pen.vercel.app/')
+    expect(requests[0]?.headers.get('HTTP-Referer')).toBe('https://brutal.sh/')
   })
 
   test('offers Flash first and M3 as the MiniMax fallback', () => {

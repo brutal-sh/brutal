@@ -89,7 +89,7 @@ test('Help reaches this fork’s documentation, setup and support without editin
   const { page, canvas } = editor
   await canvas.drawRect(350, 300, 160, 100)
   const before = await getSelectedNode(page)
-  const website = 'https://open-pen.vercel.app/'
+  const website = 'https://brutal.sh/'
   const repository = 'https://github.com/jpoindexter/open-pen'
   await page
     .context()

@@ -92,7 +92,7 @@ export const OFFICIAL_CLOUD_URL =
 /** Whether this is the editor a Cloud server serves on its own address (`bun run build:cloud`). */
 export const IS_CLOUD_SITE =
   typeof __OPENPENCIL_CLOUD_SITE__ === 'boolean' && __OPENPENCIL_CLOUD_SITE__
-export const OPEN_PEN_WEBSITE_URL = 'https://open-pen.vercel.app/'
+export const OPEN_PEN_WEBSITE_URL = 'https://brutal.sh/'
 const OPEN_PEN_HELP_PAGE_URL = `${OPEN_PEN_WEBSITE_URL}help/`
 export const OPEN_PEN_HELP_URL = `${OPEN_PEN_HELP_PAGE_URL}#docs`
 export const OPEN_PEN_SUPPORT_URL = 'https://github.com/jpoindexter/open-pen-feedback'

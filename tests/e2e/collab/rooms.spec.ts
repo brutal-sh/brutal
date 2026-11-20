@@ -57,10 +57,10 @@ test('a share link opens the room in its own tab, waiting until someone with it 
     )
     await expect(guest.page.getByRole('link', { name: 'Desktop setup' })).toHaveAttribute(
       'href',
-      'https://open-pen.vercel.app/help/getting-started/'
+      'https://brutal.sh/help/getting-started/'
     )
 
-    const setupURL = 'https://open-pen.vercel.app/help/getting-started/'
+    const setupURL = 'https://brutal.sh/help/getting-started/'
     await guest.page
       .context()
       .route(setupURL, (route) =>

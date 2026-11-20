@@ -2,7 +2,7 @@
 
 Brutal is a local-first desktop design editor built on the MIT-licensed OpenPencil engine. The public Mac beta is in preparation. Full functional parity with Pen without an editor subscription or license activation remains on the roadmap. [OpenPencil engine](https://github.com/open-pencil/open-pencil)
 
-[Brutal website](https://open-pen.vercel.app/) · [Help docs](https://open-pen.vercel.app/help/#docs) · [Desktop setup](https://open-pen.vercel.app/help/getting-started/)
+[Brutal website](https://brutal.sh/) · [Help docs](https://brutal.sh/help/#docs) · [Desktop setup](https://brutal.sh/help/getting-started/)
 
 ![Brutal desktop editor showing the Field Notes sample](packages/docs/public/screenshot.png)
 
@@ -56,7 +56,7 @@ These are configured support thresholds, not evidence that every platform is qua
 The desktop notice requires macOS 13+ with current Safari updates, Linux WebKitGTK 2.40+,
 or a current Windows WebView2 runtime. Build from [this fork's instructions](#run-this-fork);
 this private fork has no published installer or update feed. [Report an Brutal problem](https://github.com/jpoindexter/open-pen-feedback/issues/new?template=bug.yml)
-after reviewing any diagnostic details you include. Find help, feedback, and private security reporting in [Brutal support](https://open-pen.vercel.app/help/#support).
+after reviewing any diagnostic details you include. Find help, feedback, and private security reporting in [Brutal support](https://brutal.sh/help/#support).
 
 ## CLI
 
