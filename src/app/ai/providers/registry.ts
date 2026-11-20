@@ -10,6 +10,7 @@ import {
   createOpenAICompatibleAdapter
 } from '@/app/ai/providers/compatible'
 import type { ModelProviderAdapter } from '@/app/ai/providers/types'
+import { OPEN_PEN_WEBSITE_URL } from '@/constants'
 
 type DirectProviderID = Exclude<AIProviderID, `acp:${string}` | `harness:${string}`>
 
@@ -21,7 +22,7 @@ const MODEL_PROVIDER_ADAPTERS = {
         fetch: runtime.fetch,
         headers: {
           'X-OpenRouter-Title': 'Open Pen',
-          'HTTP-Referer': 'https://github.com/open-pencil/open-pencil'
+          'HTTP-Referer': OPEN_PEN_WEBSITE_URL
         }
       })
       return provider(config.customModelID.trim() || config.modelID)

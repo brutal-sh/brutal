@@ -76,6 +76,36 @@ describe('resolveLanguageModelID', () => {
 })
 
 describe('model provider registry', () => {
+  test('identifies Open Pen to the OpenRouter chat endpoint', async () => {
+    const requests: Request[] = []
+    const config: ModelConfig = {
+      providerID: 'openrouter',
+      apiKey: 'synthetic-test-key',
+      modelID: 'example/model',
+      customModelID: '',
+      customBaseURL: '',
+      customAPIType: 'completions'
+    }
+    const fetchSpy: FetchFunction = async (input, init) => {
+      requests.push(new Request(input, init))
+      throw new Error('Request intercepted')
+    }
+    const model = languageModelInstance(
+      modelProviderAdapter('openrouter').create(config, { fetch: fetchSpy })
+    )
+
+    await expect(
+      Promise.resolve(
+        model.doGenerate({ prompt: [{ role: 'user', content: [{ type: 'text', text: 'hi' }] }] })
+      )
+    ).rejects.toThrow('Request intercepted')
+
+    expect(requests).toHaveLength(1)
+    expect(requests[0]?.url).toBe('https://openrouter.ai/api/v1/chat/completions')
+    expect(requests[0]?.headers.get('X-OpenRouter-Title')).toBe('Open Pen')
+    expect(requests[0]?.headers.get('HTTP-Referer')).toBe('https://open-pen.vercel.app/')
+  })
+
   test('offers Flash first and M3 as the MiniMax fallback', () => {
     const provider = AI_PROVIDERS.find(({ id }) => id === 'minimax')
     expect(provider?.defaultModel).toBe('MiniMax-M3.1-Flash')

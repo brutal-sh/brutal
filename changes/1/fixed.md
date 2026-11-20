@@ -76,3 +76,4 @@
 - On desktop, saving recovered work checks the original file and offers Save As guidance when the saved version cannot be verified. On macOS and Linux, this check also recognizes a second name for the same file.
 - Open desktop setup and help links once, without a shell permission error.
 - Save recovered Pen documents with ordinary text as editable .pen files.
+- OpenRouter requests identify Open Pen and its website.
