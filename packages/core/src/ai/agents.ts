@@ -9,6 +9,8 @@ export interface ACPAgentDef {
   args: string[]
   /** The agent's own CLI, when the ACP program is a separate adapter for it. */
   cliCommand?: string
+  /** The adapter is known to continue saved sessions through ACP session/resume. */
+  resumesSessions?: boolean
   /** npm package that provides `command` when it is an adapter. */
   adapterPackage?: string
   /** The vendor's installation guide for the agent itself. */
@@ -36,7 +38,8 @@ export const ACP_AGENTS: ACPAgentDef[] = [
       via: 'terminal',
       method: 'claude-ai-login',
       args: ['--cli', 'auth', 'login', '--claudeai']
-    }
+    },
+    resumesSessions: true
   },
   {
     id: 'codex',
@@ -47,7 +50,8 @@ export const ACP_AGENTS: ACPAgentDef[] = [
     adapterPackage: '@agentclientprotocol/codex-acp',
     setupURL: 'https://developers.openai.com/codex/cli',
     installCommand: 'npm i -g @agentclientprotocol/codex-acp',
-    signIn: { via: 'acp', method: 'chat-gpt' }
+    signIn: { via: 'acp', method: 'chat-gpt' },
+    resumesSessions: true
   },
   {
     id: 'gemini-cli',

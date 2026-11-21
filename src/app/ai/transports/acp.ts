@@ -1,4 +1,4 @@
-import type { Usage } from '@agentclientprotocol/sdk'
+import type { SessionUpdate, Usage } from '@agentclientprotocol/sdk'
 import type { ChatTransport, UIMessage, UIMessageChunk } from 'ai'
 
 import type { ACPAgentDef } from '@open-pencil/core/constants'
@@ -6,6 +6,7 @@ import type { ACPAgentDef } from '@open-pencil/core/constants'
 import { formatConnectionError } from '@/app/ai/agents/acp/errors'
 import { createUpdateMapper } from '@/app/ai/agents/acp/events'
 import type { TauriChild } from '@/app/ai/agents/acp/process'
+import { AgentSessionResumeError } from '@/app/ai/agents/acp/session'
 import SYSTEM_PROMPT from '@/app/ai/chat/system-prompt'
 import { endRun, forgetAgentChat, startAgentRun } from '@/app/ai/reply/run'
 import { describeDiagnosticError, recordACPTransportFailure } from '@/app/diagnostics'
@@ -55,11 +56,23 @@ export function buildCrashChunks(
   return { chunks, shouldNullSession: true }
 }
 
+// Startup also emits updates. Only updates from a real turn mean the adapter has a session to save.
+const TURN_UPDATES: ReadonlySet<SessionUpdate['sessionUpdate']> = new Set([
+  'user_message_chunk',
+  'agent_message_chunk',
+  'agent_thought_chunk',
+  'tool_call',
+  'tool_call_update',
+  'plan'
+])
+
 export class ACPChatTransport implements ChatTransport<UIMessage> {
   private session: ACPSession | null = null
   private agentDef: ACPAgentDef
   private cwd: string
   private sentContext = false
+  private resume: string | null
+  private onSession: ((id: string | null) => void) | undefined
   private destroying = false
   /** The agent while it starts, before it becomes the session, so destroying can stop it. */
   private starting: TauriChild | null = null
@@ -74,11 +87,15 @@ export class ACPChatTransport implements ChatTransport<UIMessage> {
     store?: EditorStore
     /** Told each turn's tokens, which the Usage settings count with the chat's other models. */
     onUsage?: (usage: AgentTurnUsage) => void
+    resume?: string | null
+    onSession?: (id: string | null) => void
   }) {
     this.agentDef = options.agentDef
     this.cwd = options.cwd ?? '.'
     this.store = options.store ?? null
     this.onUsage = options.onUsage ?? null
+    this.resume = options.resume ?? null
+    this.onSession = options.onSession
   }
 
   async sendMessages({
@@ -99,7 +116,7 @@ export class ACPChatTransport implements ChatTransport<UIMessage> {
     }
 
     if (!this.session) {
-      const started = await this.spawnAgent()
+      const started = await this.spawnAgent(abortSignal)
       // Destroyed between startup and here: the agent is still `starting`, so stop it.
       if (this.destroying) {
         await started.child.kill().catch(() => undefined)
@@ -111,7 +128,7 @@ export class ACPChatTransport implements ChatTransport<UIMessage> {
       }
       this.session = started
       this.starting = null
-      this.sentContext = false
+      this.sentContext = started.resumed
     }
 
     const carriesContext = !this.sentContext
@@ -143,6 +160,7 @@ export class ACPChatTransport implements ChatTransport<UIMessage> {
 
         session.onUpdate = (params) => {
           if (closed) return
+          if (TURN_UPDATES.has(params.update.sessionUpdate)) this.recordSession(sessionId)
           for (const chunk of mapper.map(params.update)) controller.enqueue(chunk)
         }
 
@@ -169,6 +187,7 @@ export class ACPChatTransport implements ChatTransport<UIMessage> {
           })
           // The prompt answers once the agent's turn is over; nothing else ends the reply.
           .then((result) => {
+            this.recordSession(sessionId)
             if (result.usage) this.onUsage?.(agentTurnUsage(result.usage, session.model))
             finish(result.stopReason === 'end_turn' ? 'stop' : 'other')
             return undefined
@@ -200,10 +219,18 @@ export class ACPChatTransport implements ChatTransport<UIMessage> {
     }
   }
 
-  private spawnAgent(): Promise<ACPSession> {
+  private recordSession(id: string): void {
+    if (!this.agentDef.resumesSessions || this.resume === id) return
+    this.resume = id
+    this.onSession?.(id)
+  }
+
+  private spawnAgent(signal?: AbortSignal): Promise<ACPSession> {
     return openACPChatSession({
       agentDef: this.agentDef,
       cwd: this.cwd,
+      resume: this.resume,
+      signal,
       destroying: () => this.destroying,
       onUnexpectedClose: (closed) => {
         if (this.session === closed) this.session = null
@@ -214,6 +241,10 @@ export class ACPChatTransport implements ChatTransport<UIMessage> {
       onStartFailed: (child) => {
         if (this.starting === child) this.starting = null
       }
+    }).catch((error: unknown) => {
+      if (error instanceof AgentSessionResumeError && !this.destroying && !signal?.aborted)
+        this.onSession?.(null)
+      throw error
     })
   }
 }

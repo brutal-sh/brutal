@@ -51,7 +51,7 @@ export function formatConnectionError(e: unknown, agentDef?: ACPAgentDef): strin
   return msg
 }
 
-/** ACP's `auth_required` error, which an agent returns for a new session before sign-in. */
-function isAuthRequiredError(e: unknown): boolean {
+/** ACP's `auth_required` error, which an agent returns for a session before sign-in. */
+export function isAuthRequiredError(e: unknown): boolean {
   return typeof e === 'object' && e !== null && 'code' in e && e.code === -32000
 }

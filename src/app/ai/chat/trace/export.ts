@@ -41,7 +41,7 @@ export async function chatTrace(
       format: CHAT_TRACE_FORMAT,
       version: CHAT_TRACE_VERSION,
       environment: diagnosticsEnvironment(),
-      conversation: omit(conversation, ['messages']),
+      conversation: omit(conversation, ['messages', 'agentSession']),
       messages: snapshotMessages(messages),
       runs,
       assets,

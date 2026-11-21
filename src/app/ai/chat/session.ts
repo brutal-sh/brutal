@@ -32,6 +32,7 @@ import type { getActiveEditorStore } from '@/app/editor/active-store'
 import { trackUsage } from '@/app/telemetry'
 
 import { createTraceStore } from './history/idb'
+import type { AgentSessionLink } from './history/types'
 import { updateMessage } from './metadata'
 import { createRunRecorder } from './trace/recorder'
 
@@ -49,16 +50,29 @@ type ChatSessionOptions = {
 export async function createACPTransport(
   providerID: AIProviderID,
   store?: EditorStore,
-  onUsage?: (usage: AgentTurnUsage) => void
+  onUsage?: (usage: AgentTurnUsage) => void,
+  agentSession?: AgentSessionLink
 ) {
   const agentId = providerID.replace('acp:', '') as ACPAgentID
   const agentDef = ACP_AGENTS.find((a) => a.id === agentId)
   if (!agentDef) throw new Error(`Unknown ACP agent: ${agentId}`)
+  const resume = agentSession?.resume
+  if (resume && resume.agent !== agentDef.id) {
+    throw new Error('The coding agent changed while the conversation was opening. Try again.')
+  }
 
   const { ACPChatTransport } = await import('@/app/ai/transports/acp')
   const { agentWorkspace } = await import('@/app/ai/agents/setup/native')
   // A folder of its own, not the home folder, whose project settings the agent would read.
-  return new ACPChatTransport({ agentDef, cwd: await agentWorkspace(), store, onUsage })
+  return new ACPChatTransport({
+    agentDef,
+    cwd: await agentWorkspace(),
+    store,
+    onUsage,
+    resume: resume?.id,
+    onSession:
+      agentSession && ((id) => agentSession.record(id === null ? null : { agent: agentDef.id, id }))
+  })
 }
 
 /**
@@ -143,13 +157,21 @@ export function createChatSessionManager({
     if (errors.length) throw new AggregateError(errors, 'Agent transport teardown failed')
   }
 
-  async function createActiveACPTransport(store: EditorStore, context: AIDiagnosticContext) {
+  async function createActiveACPTransport(
+    store: EditorStore,
+    context: AIDiagnosticContext,
+    provider: AIProviderID,
+    agentSession?: AgentSessionLink
+  ) {
     await destroyAgentTransports()
     await assertAgentReady('acp')
-    const provider = providerID.value
     // An agent's turn counts as one step of the model it names, or of the agent itself.
-    const transport = await createACPTransport(provider, store, ({ model, ...tokens }) =>
-      recordModelStepCompleted({ provider, model: model ?? provider, ...tokens }, context)
+    const transport = await createACPTransport(
+      provider,
+      store,
+      ({ model, ...tokens }) =>
+        recordModelStepCompleted({ provider, model: model ?? provider, ...tokens }, context),
+      agentSession
     )
     acpTransportInstance = transport
     return transport as ChatTransport<UIMessage>
@@ -233,7 +255,8 @@ export function createChatSessionManager({
 
   async function ensureChat(
     initialMessages?: UIMessage[],
-    sessionId = crypto.randomUUID()
+    sessionId = crypto.randomUUID(),
+    agentSession?: AgentSessionLink
   ): Promise<Chat<UIMessage> | null> {
     await credentialsReady
     if (!isConfigured.value) return null
@@ -253,7 +276,12 @@ export function createChatSessionManager({
       let agentKind: 'acp' | 'harness' | null = null
       if (isACPProvider.value) {
         agentKind = 'acp'
-        transport = await createActiveACPTransport(store, diagnosticContext)
+        transport = await createActiveACPTransport(
+          store,
+          diagnosticContext,
+          chatProviderID,
+          agentSession
+        )
       } else if (isHarnessProvider.value) {
         agentKind = 'harness'
         transport = await createActiveHarnessTransport(sessionId, diagnosticContext)

@@ -5,12 +5,16 @@ import { resolve } from 'node:path'
 import { ensureNativeEditorReady } from '#tests/helpers/tauri/editor-snapshot'
 import { invokeNative } from '#tests/helpers/tauri/invoke'
 
-// Explicitly opt in: this sends one real prompt through the already signed-in Codex CLI.
-// Run this spec alone in the disposable native-test app; never install or sign in here.
+// Explicitly opt in: this sends real prompts through the already signed-in Codex CLI.
+// Run this spec alone in the disposable native-test app with --mochaOpts.timeout 330000.
+// Use the existing login and runtime.
 const live = process.env.OPENPENCIL_LIVE_CODEX_ACP === '1'
 const describeLive = live ? describe : describe.skip
 const rectangleName = 'ACP acceptance rectangle'
 const modelName = 'Native Codex acceptance'
+const historyTrigger = 'button[aria-label="Conversation history"]'
+const activeTab = '[data-test-id="tabbar-tab"][aria-selected="true"]'
+const assistant = '[data-test-id="chat-message-assistant"]'
 
 interface NativeRouting {
   root: string
@@ -112,6 +116,38 @@ async function children() {
   })
 }
 
+async function followUp(prompt: string, expectedReply: string) {
+  const input = await $('[data-test-id="chat-input"]')
+  await input.waitForDisplayed()
+  const replies = await browser.execute(
+    (selector) => document.querySelectorAll(selector).length,
+    assistant
+  )
+  await input.click()
+  await input.addValue(prompt)
+  await $('[data-test-id="chat-send-button"]').click()
+  await browser.waitUntil(
+    () =>
+      browser.execute(
+        (selector, count, expected) => {
+          const messages = document.querySelectorAll(selector)
+          return (
+            messages.length === count + 1 &&
+            messages.item(count)?.textContent?.includes(expected) === true &&
+            document.querySelector('[data-test-id="chat-stop-button"]') === null
+          )
+        },
+        assistant,
+        replies,
+        expectedReply
+      ),
+    {
+      timeout: 90_000,
+      timeoutMsg: 'Codex did not complete the resumed turn with the prior context'
+    }
+  )
+}
+
 async function stopAgent() {
   if (await $('[data-test-id="acp-permission-dialog"]').isExisting()) {
     // Never approve a filesystem, shell, network, or unknown permission on behalf of this test.
@@ -144,8 +180,8 @@ describeLive('live native Codex ACP canvas acceptance', () => {
     await stopAgent()
   })
 
-  it('uses existing login through native chat and MCP, creates one rectangle, and undoes it', async function () {
-    this.timeout(150_000)
+  it('continues Codex after switching tabs and reopening history, with edits in the original document', async function () {
+    this.timeout(330_000)
     await preflight()
     await ensureNativeEditorReady()
     assert.deepEqual(
@@ -162,7 +198,8 @@ describeLive('live native Codex ACP canvas acceptance', () => {
         'browse the web, install anything, or change settings. On the current empty page create ' +
         'exactly one RECTANGLE named "ACP acceptance rectangle", positioned at x=100 y=100, ' +
         'width=160 height=100 with a solid red fill. Do not create a frame or any other nodes. ' +
-        'Make this as one undoable canvas edit, then stop and briefly confirm.'
+        'As a single undoable edit, then stop and briefly confirm. Remember the phrase ' +
+        '"opal-river-432" for my next message, but do not repeat it in your reply.'
     )
     await browser.waitUntil(async () => (await input.getText()).includes(rectangleName), {
       timeout: 5_000,
@@ -207,8 +244,49 @@ describeLive('live native Codex ACP canvas acceptance', () => {
       assert.equal(nodes[0]?.height, 100)
       assert.ok((await $('[data-test-id="chat-messages"]').getText()).length > 0)
       await browser.saveScreenshot('local-evidence/native-codex-acp-before-undo.png')
+      await $('button[aria-label="Conversation actions"]').waitForDisplayed()
+      const title = (await $(historyTrigger).getText()).trim()
+      assert.notEqual(title, 'New chat')
+      const originalTab = await $(activeTab).getAttribute('id')
+      assert.ok(originalTab)
+
+      await $('[data-test-id="tabbar-new"]').click()
+      await browser.waitUntil(async () => (await $(activeTab).getAttribute('id')) !== originalTab)
+      const secondTab = await $(activeTab).getAttribute('id')
+      assert.ok(secondTab)
+      await $('[data-test-id="chat-empty-state"]').waitForDisplayed()
+      assert.deepEqual(await children(), [])
+      await $(`[id="${originalTab}"]`).click()
+      await browser.waitUntil(async () => (await $(activeTab).getAttribute('id')) === originalTab)
+      await browser.waitUntil(async () => (await $(historyTrigger).getText()).trim() === title)
+      await followUp(
+        'Reply with just the phrase I asked you to remember. Do not edit the canvas.',
+        'opal-river-432'
+      )
+      assert.deepEqual(await children(), nodes)
+
+      await $('button[aria-label="New chat"]').click()
+      await $('[data-test-id="chat-empty-state"]').waitForDisplayed()
+      await $(historyTrigger).click()
+      const savedConversation = await $(`button=${title}`)
+      await savedConversation.waitForDisplayed()
+      await savedConversation.click()
+      await browser.waitUntil(async () => (await $(historyTrigger).getText()).trim() === title)
+      await followUp(
+        'Use only the MCP canvas tools to rename the same rectangle by appending the exact phrase I asked you to remember. Do not make any other changes. Reply with that phrase when done.',
+        'opal-river-432'
+      )
+      assert.deepEqual(await children(), [{ ...nodes[0], name: rectangleName + ' opal-river-432' }])
+      await browser.saveScreenshot('local-evidence/native-codex-acp-resumed.png')
+      await $(`[id="${secondTab}"]`).click()
+      await browser.waitUntil(async () => (await $(activeTab).getAttribute('id')) === secondTab)
+      assert.deepEqual(await children(), [])
+      await $(`[id="${originalTab}"]`).click()
+      await browser.waitUntil(async () => (await $(activeTab).getAttribute('id')) === originalTab)
       // Leave the contenteditable before invoking document Undo rather than text Undo.
       await $('canvas').click({ x: 15, y: 15 })
+      await browser.keys([process.platform === 'darwin' ? 'Meta' : 'Control', 'z'])
+      await browser.waitUntil(async () => (await children())[0]?.name === rectangleName)
       await browser.keys([process.platform === 'darwin' ? 'Meta' : 'Control', 'z'])
       await browser.waitUntil(async () => (await children()).length === 0, {
         timeout: 5_000,

@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 
-import { IS_BROWSER } from '@open-pencil/core/constants'
+import { ACP_AGENTS, IS_BROWSER } from '@open-pencil/core/constants'
 
 import { createConversationHistory } from '@/app/ai/chat/history/controller'
 import { createChatSessionManager } from '@/app/ai/chat/session'
@@ -55,7 +55,10 @@ const history = createConversationHistory({
   backend: () => {
     if (isACPProvider.value) return 'acp'
     return isHarnessProvider.value ? 'harness' : 'direct'
-  }
+  },
+  resumingAgent: () =>
+    ACP_AGENTS.find((agent) => agent.resumesSessions && providerID.value === `acp:${agent.id}`)
+      ?.id ?? null
 })
 
 registerAIChatEffects(chatSession.markTransportDirty)
