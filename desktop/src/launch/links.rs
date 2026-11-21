@@ -193,7 +193,10 @@ pub fn parse_open_url(url: &Url) -> Result<DeepLinkOpen, DeepLinkError> {
         return Err(DeepLinkError::ParentSegment);
     }
     let lower = file.to_ascii_lowercase();
-    if !(lower.ends_with(".pen") || lower.ends_with(".fig")) {
+    if ![".brut", ".pen", ".fig"]
+        .iter()
+        .any(|ext| lower.ends_with(ext))
+    {
         return Err(DeepLinkError::BadExtension);
     }
     Ok(DeepLinkOpen {
@@ -304,7 +307,7 @@ mod tests {
 
     #[test]
     fn node_is_optional() {
-        assert_eq!(parse("openpen://open?file=a.pen").unwrap().node, None);
+        assert_eq!(parse("openpen://open?file=a.BRUT").unwrap().node, None);
     }
 
     const ROOM: &str = "abcdefghijklmnopqrstuvwxyz012345";

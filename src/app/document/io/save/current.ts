@@ -1,4 +1,5 @@
 import { downloadBlob } from '@/app/document/io/browser'
+import { DEFAULT_DOCUMENT_EXTENSION } from '@/app/document/io/names'
 import { IS_TAURI } from '@/constants'
 
 import { saveDocumentAs } from './destination'
@@ -12,7 +13,7 @@ function currentFormat(context: SaveContext): DocumentSaveFormat {
     context.getFileHandle()?.name ??
       context.getDownloadName() ??
       context.getFilePath() ??
-      'Untitled.pen'
+      `Untitled${DEFAULT_DOCUMENT_EXTENSION}`
   )
 }
 

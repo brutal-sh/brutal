@@ -1,11 +1,12 @@
 import { basename } from 'pathe'
 import * as v from 'valibot'
 
+import { WRITABLE_DOCUMENT_NAME } from '@/app/document/io/names'
 import { documentSourceIdentitySchema } from '@/app/document/io/schema'
 
 export const recoveryFileSourceSchema = v.pipe(
   v.object({
-    fileName: v.pipe(v.string(), v.regex(/\.(fig|pen)$/i)),
+    fileName: v.pipe(v.string(), v.regex(WRITABLE_DOCUMENT_NAME)),
     identity: documentSourceIdentitySchema,
     nativeHash: v.optional(v.pipe(v.string(), v.regex(/^[a-f0-9]{64}$/)))
   }),

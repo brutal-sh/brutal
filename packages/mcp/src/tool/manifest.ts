@@ -60,7 +60,7 @@ const SERVER_TOOLS: ToolDescriptor[] = [
 
   {
     name: 'open_file',
-    description: 'Open a .fig or .pen file from inside the configured MCP root.',
+    description: 'Open a supported design file from inside the configured MCP root.',
     effect: 'read',
     availability: 'filesystem',
     capabilities: ['filesystem:read', 'document:read'],

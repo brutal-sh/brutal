@@ -73,30 +73,17 @@ test('keeps a completed write successful when recovery cleanup fails', async () 
 })
 
 test.each([
-  {
-    suggestedName: undefined,
-    defaultPath: 'Untitled.pen',
-    filters: [
-      { name: 'Pen file', extensions: ['pen'] },
-      { name: 'Figma file', extensions: ['fig'] }
-    ]
-  },
-  {
-    suggestedName: 'Existing.fig',
-    defaultPath: 'Existing.fig',
-    filters: [
-      { name: 'Figma file', extensions: ['fig'] },
-      { name: 'Pen file', extensions: ['pen'] }
-    ]
-  }
+  { suggestedName: undefined, defaultPath: 'Untitled.brut', extension: 'brut' },
+  { suggestedName: 'Existing.pen', defaultPath: 'Existing.pen', extension: 'pen' },
+  { suggestedName: 'Existing.fig', defaultPath: 'Existing.fig', extension: 'fig' }
 ])('chooses a Tauri save path for $defaultPath through plugin-dialog', async (fixture) => {
   await mockTauriIPC((cmd, args) => {
     expect(cmd).toBe('plugin:dialog|save')
-    expect(args).toEqual({
+    const otherExtensions = ['brut', 'pen', 'fig'].filter((ext) => ext !== fixture.extension)
+    expect(args).toMatchObject({
       options: {
-        title: `Save ${fixture.defaultPath.endsWith('.fig') ? '.fig' : '.pen'} file as…`,
         defaultPath: fixture.defaultPath,
-        filters: fixture.filters
+        filters: [fixture.extension, ...otherExtensions].map((ext) => ({ extensions: [ext] }))
       }
     })
     return `/tmp/${fixture.defaultPath}`

@@ -22,7 +22,7 @@ function registerSaveFileTool(context: RegistrationContext): void {
                 v.string(),
                 v.minLength(1),
                 v.description(
-                  'Path for the .fig or .pen file, absolute or relative to the MCP root'
+                  'Path for the .brut, .pen, or .fig file, absolute or relative to the MCP root'
                 )
               )
             ),
@@ -59,7 +59,7 @@ function registerOpenFileTool(context: RegistrationContext, resolvedRoot: string
   register(
     'open_file',
     {
-      description: 'Open a .fig or .pen file from inside the configured MCP root.',
+      description: 'Open a supported design file from inside the configured MCP root.',
       inputSchema: v.strictObject({
         path: v.pipe(
           v.string(),

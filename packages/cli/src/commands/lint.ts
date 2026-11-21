@@ -42,7 +42,7 @@ export default defineCommand({
     file: {
       type: 'positional',
       required: true,
-      description: 'Design document to lint (.fig, .pen)'
+      description: 'Design document to lint (.brut, .pen, .fig)'
     },
     preset: {
       type: 'string',

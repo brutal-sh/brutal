@@ -45,3 +45,5 @@
 - CLI subcommand help shows the full command path instead of the local entry script path.
 - Codex chats use explicitly invoked skills without injecting the full installed skill catalog into every turn.
 - The desktop design editor is now Brutal, with a new app icon.
+- Save new local designs as `.brut` documents while opening and saving compatible `.pen` and `.fig` files under their existing names.
+- Open supported Sketch and FigJam files from Finder as imported copies.

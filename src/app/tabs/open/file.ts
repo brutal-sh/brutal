@@ -4,6 +4,7 @@ import { BUILTIN_IO_FORMATS, IORegistry } from '@open-pencil/core/io'
 
 import { documentAssetReader } from '@/app/document/io/assets'
 import { yieldToUI } from '@/app/document/io/browser'
+import { WRITABLE_DOCUMENT_NAME } from '@/app/document/io/names'
 import { nativeArtworkFormat, openNativeArtwork } from '@/app/document/io/native-artwork'
 import type { DocumentSourceIdentity } from '@/app/document/io/types'
 import { appIcons } from '@/app/editor/icons/provider'
@@ -138,7 +139,7 @@ async function loadFileOpening(
       succeeded = true
       return store
     }
-    if (/\.(fig|pen)$/i.test(file.name)) {
+    if (WRITABLE_DOCUMENT_NAME.test(file.name)) {
       const backup = await findRetainedRecovery(pendingOpen.identity)
       if (backup) {
         restoresBackup = true

@@ -81,10 +81,10 @@ test('Save writes an imported .pen in place with the real Core writer and readab
   }
 })
 
-test('a new document defaults to .pen and writes editable geometry on its first Save', async () => {
+test('a new document defaults to .brut and writes editable geometry on its first Save', async () => {
   const store = createEditorStore()
   const written: Uint8Array[] = []
-  const handle = fileHandle('Untitled.pen', written)
+  const handle = fileHandle('Untitled.brut', written)
   const picker = spyOn(targets, 'chooseBrowserDocumentSaveHandle').mockResolvedValue(handle)
   restores.push(() => picker.mockRestore())
   try {
@@ -94,7 +94,7 @@ test('a new document defaults to .pen and writes editable geometry on its first 
       height: 80
     })
     expect(await store.saveFigFile()).toBe(true)
-    expect(picker).toHaveBeenCalledWith('Untitled.pen')
+    expect(picker).toHaveBeenCalledWith('Untitled.brut')
     expect(written).toHaveLength(1)
     const reopened = await io.readDocument({
       name: handle.name,
@@ -214,10 +214,11 @@ test('reload reads the actual .pen format from a browser file handle', async () 
 })
 
 test('local format selection rejects unrelated extensions and accepts case-insensitive PEN', () => {
+  expect(documentSaveFormat('drawing.BRUT')).toBe('pen')
   expect(documentSaveFormat('drawing.PEN')).toBe('pen')
   expect(documentSaveFormat('drawing.fig')).toBe('fig')
   expect(documentSaveFormat('Untitled')).toBe('fig')
-  expect(() => documentSaveFormat('drawing.png')).toThrow('.fig or .pen')
+  expect(() => documentSaveFormat('drawing.png')).toThrow('.brut, .pen, or .fig')
 })
 
 test('autosave writes .pen bytes after a real document edit', async () => {

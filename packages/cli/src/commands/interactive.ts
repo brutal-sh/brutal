@@ -58,7 +58,7 @@ export default defineCommand({
     out: {
       type: 'string',
       alias: 'o',
-      description: 'Output .pen or .fig path for save() (required for headless mode)'
+      description: 'Output .brut, .pen, or .fig path for save() (required for headless mode)'
     },
     app: { type: 'string', alias: 'a', description: 'Connect to the running desktop app' },
     ...appTargetOptions

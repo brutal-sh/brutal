@@ -11,6 +11,7 @@ import {
   MAX_REMOTE_DOCUMENT_BYTES,
   readBoundedBody
 } from '@/app/document/io/browser'
+import { WRITABLE_DOCUMENT_NAME } from '@/app/document/io/names'
 import {
   canOpenNativeArtwork,
   MAX_NATIVE_ARTWORK_BYTES,
@@ -163,7 +164,7 @@ export async function openFileFromPath(path: string) {
   if (!isTauri()) return
   let nativeHash: string | undefined
   const file = await readTauriDesignFile(path, async (bytes) => {
-    if (/\.(fig|pen)$/i.test(path)) nativeHash = await hashNativeSource(bytes)
+    if (WRITABLE_DOCUMENT_NAME.test(path)) nativeHash = await hashNativeSource(bytes)
   })
   await openFileInNewTab(file, undefined, path, nativeHash)
   rememberRecentFile(path)
@@ -199,7 +200,7 @@ export async function openFileDialog() {
             description: 'Design file',
             accept: {
               'application/octet-stream': ['.fig', '.jam', '.sketch'],
-              'application/json': ['.pen'],
+              'application/json': ['.brut', '.pen'],
               'image/svg+xml': ['.svg', '.svgz'],
               'text/html': ['.html', '.htm'],
               'application/xhtml+xml': ['.xhtml'],

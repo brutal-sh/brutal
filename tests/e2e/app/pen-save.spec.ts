@@ -19,7 +19,7 @@ const design = JSON.stringify({
   ]
 })
 
-test('a fresh drawing saves as .pen by default and reopens with editable layers', async ({
+test('a fresh drawing saves as .brut by default and reopens with editable layers', async ({
   page
 }) => {
   await page.goto('/?test')
@@ -31,7 +31,7 @@ test('a fresh drawing saves as .pen by default and reopens with editable layers'
   })
   await canvas.drawRect(220, 220, 160, 80)
   page.once('dialog', async (dialog) => {
-    expect(dialog.defaultValue()).toBe('Untitled.pen')
+    expect(dialog.defaultValue()).toBe('Untitled.brut')
     await dialog.accept(dialog.defaultValue())
   })
   const download = page.waitForEvent('download')
@@ -42,7 +42,7 @@ test('a fresh drawing saves as .pen by default and reopens with editable layers'
     .first()
     .click()
   const saved = await download
-  expect(saved.suggestedFilename()).toBe('Untitled.pen')
+  expect(saved.suggestedFilename()).toBe('Untitled.brut')
   const bytes = await readFile(await saved.path())
   const imported = await new IORegistry(BUILTIN_IO_FORMATS).readDocument({
     name: saved.suggestedFilename(),
@@ -59,8 +59,8 @@ test('a fresh drawing saves as .pen by default and reopens with editable layers'
   await (
     await chooser
   ).setFiles({
-    name: 'reopened.pen',
-    mimeType: 'application/json',
+    name: 'reopened.brut',
+    mimeType: 'application/octet-stream',
     buffer: bytes
   })
   await expect(page.getByRole('tab', { name: /reopened/ })).toBeVisible()

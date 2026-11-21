@@ -38,6 +38,18 @@
     ],
     "fileAssociations": [
       {
+        "ext": ["brut"],
+        "name": "Brutal Document",
+        "description": "Brutal design document",
+        "role": "Editor",
+        "mimeType": "application/vnd.brutal.design+json",
+        "rank": "Owner",
+        "exportedType": {
+          "identifier": "sh.brutal.document",
+          "conformsTo": ["public.json", "public.content"]
+        }
+      },
+      {
         "ext": ["pen"],
         "name": "Pencil Design File",
         "description": "Pencil design file",
@@ -51,6 +63,20 @@
         "description": "Figma design file",
         "role": "Editor",
         "mimeType": "application/x-figma",
+        "rank": "Alternate"
+      },
+      {
+        "ext": ["jam"],
+        "name": "FigJam Board",
+        "description": "FigJam board",
+        "role": "Viewer",
+        "rank": "Alternate"
+      },
+      {
+        "ext": ["sketch"],
+        "name": "Sketch Document",
+        "description": "Sketch design document",
+        "role": "Viewer",
         "rank": "Alternate"
       },
       {

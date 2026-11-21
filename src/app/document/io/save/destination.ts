@@ -2,7 +2,11 @@ import { filesMessages } from '@open-pencil/vue/i18n'
 
 import { downloadBlob } from '@/app/document/io/browser'
 import { isFileWriteRefused } from '@/app/document/io/capability'
-import { documentNameFromFigPath, downloadNameFromPath } from '@/app/document/io/names'
+import {
+  DEFAULT_DOCUMENT_EXTENSION,
+  documentNameFromFigPath,
+  downloadNameFromPath
+} from '@/app/document/io/names'
 import { IS_TAURI } from '@/constants'
 
 import { buildVersionedFile } from './encode'
@@ -42,11 +46,15 @@ export async function saveDocumentAs(context: SaveContext) {
 
 async function saveAs(context: SaveContext) {
   const suggestedName =
-    context.getDownloadName() ?? `${context.state.documentName || 'Untitled'}.pen`
+    context.getDownloadName() ??
+    `${context.state.documentName || 'Untitled'}${DEFAULT_DOCUMENT_EXTENSION}`
   if (IS_TAURI) return saveNativeAs(context, suggestedName)
   const handle = await chooseBrowserDocumentSaveHandle(suggestedName)
   if (handle) return saveBrowserAs(context, handle)
-  const filename = prompt(`${filesMessages.get().saveAsPrompt} (.fig or .pen)`, suggestedName)
+  const filename = prompt(
+    `${filesMessages.get().saveAsPrompt} (.brut, .pen, or .fig)`,
+    suggestedName
+  )
   if (!filename) return false
   return downloadAs(
     context,

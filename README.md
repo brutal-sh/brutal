@@ -30,7 +30,7 @@ Brutal has its own bundle identity, credential service, deep links and local MCP
 
 Cloud and feedback are off in the supplied environment example. Core editing requires no account. Optional external AI and image providers retain their own authentication and costs; local model support does not make hosted inference free.
 
-Follow [the full feature catalog](docs/pen-feature-reference/README.md), [the parity matrix](docs/PARITY.md), [execution evidence](docs/ACCEPTANCE.md), and [the private tracking board](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor). Supported `.pen` files can be edited and saved; unsupported content is rejected before conversion or writing. New local documents suggest `.pen` on first Save; existing `.fig` documents and remote storage retain `.fig`. See [format limits](packages/pen/README.md).
+Follow [the full feature catalog](docs/pen-feature-reference/README.md), [the parity matrix](docs/PARITY.md), [execution evidence](docs/ACCEPTANCE.md), and [the private tracking board](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor). New local documents save as **Brutal documents (`.brut`)**. They use the same encoding as `.pen`. Supported `.pen` and `.fig` files can still be opened, edited and saved under their original extensions. Remote storage uses `.fig`. Unsupported content is reported before writing. See [format limits](packages/pen/README.md).
 
 On desktop, **File → Open** imports supported FigJam layers from a local `.jam` archive. Save an imported board to a separate `.fig` design copy.
 

@@ -14,7 +14,7 @@ function absolutePath(path: string | undefined): { path?: string } {
 }
 
 export const open = defineCommand({
-  meta: { description: 'Open a .fig or .pen file in a new tab of the running app' },
+  meta: { description: 'Open a supported design file in a new tab of the running app' },
   args: {
     file: { type: 'positional', description: 'Design file to open', required: true },
     json

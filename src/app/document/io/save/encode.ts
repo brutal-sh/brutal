@@ -7,6 +7,7 @@ export async function buildVersionedFile(
 ): Promise<VersionedFile> {
   const version = context.version()
   const build = format === 'pen' ? context.buildPenFile : context.buildFigFile
-  if (!build) throw new Error('This document cannot be saved as .pen. Choose .fig instead.')
+  if (!build)
+    throw new Error('This document cannot be saved as .brut or .pen. Choose .fig instead.')
   return { data: await build(), version, format }
 }

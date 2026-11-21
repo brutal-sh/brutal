@@ -69,12 +69,14 @@ async function loadPenShaders(urls: readonly string[], input: ReadDocumentInput)
   return sources
 }
 
+const penExtensions = ['pen', 'brut']
+
 export const penFormat: IOFormatAdapter<'pen'> = {
   id: 'pen',
   label: 'Pencil Document',
   role: 'interchange-document',
   category: 'document',
-  extensions: ['pen'],
+  extensions: penExtensions,
   mimeTypes: ['application/json', 'text/plain'],
   support: {
     readDocument: true,
@@ -94,7 +96,7 @@ export const penFormat: IOFormatAdapter<'pen'> = {
   },
   laysOutOnRead: true,
   matchesFile(fileName, mimeType) {
-    return lowerExt(fileName) === 'pen' || mimeType === 'application/json'
+    return penExtensions.includes(lowerExt(fileName)) || mimeType === 'application/json'
   },
   async readDocument(input, context) {
     const doc = parsePenDocument(new TextDecoder().decode(input.data))

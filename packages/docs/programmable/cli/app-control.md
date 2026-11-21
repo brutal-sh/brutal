@@ -16,7 +16,7 @@ openpencil interactive -o design.pen
 openpencil interactive -i existing.pen -o edited.fig
 ```
 
-The output path is required and must end in `.pen` or `.fig`. Enter one call per line:
+The output path is required and must end in `.brut`, `.pen`, or `.fig`. Enter one call per line:
 
 ```js
 create_shape({ type: 'RECTANGLE', name: 'Square', x: 12, y: 34, width: 64, height: 64 })

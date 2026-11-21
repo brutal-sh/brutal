@@ -6,6 +6,7 @@
 import { omit } from 'es-toolkit'
 
 import { clamp, searchLinkedNode } from '@/app/document/io/deep-link'
+import { WRITABLE_DOCUMENT_NAME } from '@/app/document/io/names'
 import { notificationMessages } from '@/app/i18n/notifications'
 import { openBrowserFileFromURL } from '@/app/shell/menu/files'
 
@@ -37,8 +38,11 @@ export function parseWebOpenParams(search: string): WebOpenParams | null {
     console.warn('[Web link] refused a file that is not a URL:', clamp(file))
     return null
   }
-  if (url.protocol !== 'https:' || !/\.(?:pen|fig)$/i.test(url.pathname)) {
-    console.warn('[Web link] refused file, expected https and .pen or .fig:', clamp(file))
+  if (url.protocol !== 'https:' || !WRITABLE_DOCUMENT_NAME.test(url.pathname)) {
+    console.warn(
+      '[Web link] refused file, expected HTTPS and a .brut, .pen, or .fig file:',
+      clamp(file)
+    )
     return null
   }
   // The fragment never reaches the server, so two links that differ only in it name

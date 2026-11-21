@@ -9,9 +9,9 @@ const io = new IORegistry(BUILTIN_IO_FORMATS)
 
 export function interactiveOutput(path: string): { path: string; format: 'pen' | 'fig' } {
   const extension = extname(path).toLowerCase()
-  if (extension !== '.pen' && extension !== '.fig')
-    throw new Error('Interactive output must end in .pen or .fig.')
-  return { path: resolve(path), format: extension === '.pen' ? 'pen' : 'fig' }
+  if (extension !== '.brut' && extension !== '.pen' && extension !== '.fig')
+    throw new Error('Interactive output must end in .brut, .pen, or .fig.')
+  return { path: resolve(path), format: extension === '.fig' ? 'fig' : 'pen' }
 }
 
 export async function saveInteractiveDocument(graph: SceneGraph, path: string): Promise<void> {
