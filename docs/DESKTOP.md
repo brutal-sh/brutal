@@ -2,7 +2,7 @@
 
 Brutal uses the same local app identity and bridge discovery as the earlier Open Pen builds, so the installed app can access existing preferences, recovery data and credentials. The macOS beta runs as `Brutal.app`.
 
-2026-10-29. This records the independent fork configuration and focused checks. It does not establish native launch, authenticated provider login, or full Pen feature parity.
+The identity table describes the current app. The executed checks below record the October 29, 2026 configuration and provider-callback work.
 
 ## Identity
 
@@ -11,7 +11,6 @@ Brutal uses the same local app identity and bridge discovery as the earlier Open
 | Product/window/PWA name              | Brutal                                             |
 | Tauri bundle identifier              | `dev.jpoindexter.openpen`                            |
 | Native test bundle identifier        | `dev.jpoindexter.openpen.native-test`                |
-| macOS signing                        | Local ad hoc (`signingIdentity: "-"`)                |
 | OS link scheme                       | `openpen://`                                         |
 | Keychain service                     | `dev.jpoindexter.openpen.credentials`                |
 | MCP default HTTP port                | `7610`                                               |
@@ -25,11 +24,19 @@ Internal `@open-pencil/*` package imports, Rust crate and development binary nam
 
 No original app files or keychain entries were migrated or modified. The native capability file retains existing sensitive-file deny rules, adds the fork discovery files to those denies, and permits read access only to the fork discovery locations.
 
+## macOS beta
+
+Build the Apple-silicon candidate with `bun run build:macos-beta`. The local Tauri configuration uses ad hoc signing. A distribution candidate uses Developer ID signing and Apple notarization, with the ticket stapled to `Brutal.app`. The beta ZIP includes the app and its license notices. See [Tauri macOS signing](https://v2.tauri.app/distribute/sign/macos/).
+
+Verify the ZIP checksum and Gatekeeper assessment after extraction. Use a clean macOS login for launch, editing, Save and reopen, recovery, and the bundled MCP bridge. Keep the previous trusted app available for rollback. The shared bundle identity carries preferences and credentials forward, so close the previous app before opening Brutal.
+
+The approved public download will be linked from [Brutal Help](https://brutal.sh/help/). Beta testers can use the [public feedback repository](https://github.com/jpoindexter/open-pen-feedback/issues).
+
 ## Updates
 
 The fork has no update-feed endpoints and does not generate upstream update artifacts. Vite derives the startup-update flag from the endpoint configuration, including embedded app builds. Startup checks are disabled; manually requesting an update follows the existing failure-reporting path because no feed is configured. Signed-update validation remains enabled; the retained upstream public key is inert without an endpoint. Configuring a fork release channel later requires its own signing key and explicit endpoints.
 
-Ad hoc signing is suitable for local execution and is not Apple notarization or distribution approval. See [Tauri macOS signing](https://v2.tauri.app/distribute/sign/macos/) and [signed updater requirements](https://v2.tauri.app/plugin/updater/).
+See the [signed updater requirements](https://v2.tauri.app/plugin/updater/) when setting up a release channel.
 
 ## Provider callbacks
 
@@ -49,7 +56,7 @@ Formatting checks passed for the changed OAuth, MCP spawning and Vite configurat
 ## Remaining runtime proof
 
 - Generate native icons and build the fork. Run `cargo test --manifest-path desktop/Cargo.toml network::oauth::tests`, which includes a real local TCP callback/response/closure test with synthetic code and state.
-- Launch the built Brutal beside the original app; verify separate app storage/keychain namespace, `openpen://` routing, MCP discovery/auth and document opening. Do not overwrite the original installation.
+- Use a separate macOS login for the signed candidate. Verify `openpen://` routing, MCP discovery and authentication, and document opening.
 - Exercise OpenRouter sign-in with an explicitly chosen account and verify cancellation, retry, returned identity and authorized editor request. No live provider login or credential access was performed for these changes.
 - Verify manual update failure wording in the native app and that startup performs no upstream update request.
 
