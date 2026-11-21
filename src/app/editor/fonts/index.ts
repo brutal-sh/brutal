@@ -21,7 +21,7 @@ import {
   downloadedFontCacheSummary as tauriDownloadedFontCacheSummary
 } from '@/app/editor/fonts/cache'
 import { isTauri } from '@/app/tauri/env'
-import { tauriFetch } from '@/app/tauri/http'
+import { createTauriFetch } from '@/app/tauri/http'
 import { IS_TAURI } from '@/constants'
 
 if (typeof navigator !== 'undefined') {
@@ -53,13 +53,16 @@ watch(
   { deep: true, immediate: true }
 )
 
+// A stalled font provider should give way to the document's local fallback.
+const DESKTOP_FONT_REQUEST_TIMEOUT_MS = 5_000
+
 let tauriFontCacheConfigured = false
 
 function configureTauriFontCache() {
   if (tauriFontCacheConfigured || !isTauri()) return
   tauriFontCacheConfigured = true
   fontManager.setDownloadedFontCache(createTauriDownloadedFontCache())
-  fontManager.setWebFontFetch(tauriFetch)
+  fontManager.setWebFontFetch(createTauriFetch({ timeoutMs: DESKTOP_FONT_REQUEST_TIMEOUT_MS }))
   fontManager.setHostFontLoader(loadSystemFont)
 }
 

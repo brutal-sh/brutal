@@ -77,3 +77,4 @@
 - Open desktop setup and help links once, without a shell permission error.
 - Save recovered Pen documents with ordinary text as editable .pen files.
 - OpenRouter requests identify Brutal and its website.
+- Limit how long a stalled font provider can delay opening a document on desktop.

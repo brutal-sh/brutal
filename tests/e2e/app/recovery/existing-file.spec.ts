@@ -81,7 +81,9 @@ test.describe('recovered backup kept on close', () => {
     try {
       await page.getByTestId('tabbar-close').click()
       await keep.click()
-      await expect(page.getByText(/Could not keep the backup/)).toBeVisible()
+      await expect(
+        page.getByRole('region', { name: /Notifications/ }).getByText(/^Could not keep the backup/)
+      ).toBeVisible()
       await expect(editedLayer).toHaveCount(1)
       expect(await readOwnedFile(page)).toEqual(original)
     } finally {
@@ -125,13 +127,13 @@ test.describe('recovered Save As outcomes', () => {
       await cancelled.evaluate((restore) => restore())
       await cancelled.dispose()
     }
-    const copy = await savePicker(page, 'copy.pen')
+    const copy = await savePicker(page, 'copy.brut')
     try {
       await (await openAppMenu(page, 'File')).getByRole('menuitem', { name: /^Save as…/ }).click()
       await expect(page.getByRole('img', { name: 'Unsaved changes' })).not.toBeVisible()
       await expect.poll(async () => (await recoveryBytes(page)).length).toBe(0)
       expect(await readOwnedFile(page)).toEqual(original)
-      await expectRectangles(await readOwnedFile(page, 'copy.pen'), 2)
+      await expectRectangles(await readOwnedFile(page, 'copy.brut'), 2)
     } finally {
       await copy.evaluate((restore) => restore())
       await copy.dispose()
