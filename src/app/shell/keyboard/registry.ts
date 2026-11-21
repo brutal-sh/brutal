@@ -11,6 +11,8 @@ import {
   copySelectionProperties,
   pasteClipboardProperties
 } from '@/app/editor/clipboard/properties'
+import { canSampleScreenColor } from '@/app/editor/color-sampling'
+import { createCopyScreenColor } from '@/app/editor/color-sampling/copy'
 import { requestRenameSelection } from '@/app/editor/selection/rename-dialog'
 import { TOOL_SHORTCUTS } from '@/app/editor/session'
 import { openSettingsDialog } from '@/app/settings/dialog'
@@ -145,6 +147,7 @@ function bindToolShortcuts(bindings: KeyBindingMap, options: KeyboardShortcutRun
 
 export function registerKeyboardShortcuts(options: KeyboardShortcutOptions) {
   const spaceTool = bindSpaceHandTool(options.inputFocused, options.store)
+  const copyScreenColor = createCopyScreenColor()
   const runOptions = (event: KeyboardEvent): KeyboardShortcutRunOptions => ({
     ...options,
     keyEvent: event,
@@ -169,6 +172,15 @@ export function registerKeyboardShortcuts(options: KeyboardShortcutOptions) {
       id: 'copy-properties',
       keys: '$mod+Alt+KeyC',
       run: ({ store }) => void copySelectionProperties(store)
+    },
+    {
+      id: 'copy-screen-color',
+      keys: 'KeyI',
+      run: ({ keyEvent, store }) => {
+        if (!keyEvent.repeat && store.state.selectedIds.size === 0 && canSampleScreenColor()) {
+          void copyScreenColor()
+        }
+      }
     },
     {
       id: 'paste-properties',

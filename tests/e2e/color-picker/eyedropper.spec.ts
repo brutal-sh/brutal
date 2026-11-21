@@ -12,6 +12,28 @@ async function openColor() {
   return editor.page.locator('[data-picker-content]')
 }
 
+test('I copies uppercase sampled hex when no layer is selected', async () => {
+  await editor.page.context().grantPermissions(['clipboard-read', 'clipboard-write'])
+  await editor.page.evaluate(() => {
+    window.EyeDropper = class {
+      async open() {
+        return { sRGBHex: '#a45bce' }
+      }
+    }
+  })
+  await editor.canvas.drawRect(300, 300, 120, 80)
+  await editor.page.keyboard.press('Escape')
+  await editor.page.keyboard.press('i')
+
+  await expect
+    .poll(() => editor.page.evaluate(() => navigator.clipboard.readText()))
+    .toBe('#A45BCE')
+  await expect
+    .poll(() => readScenePixels(editor.page, [{ x: 330, y: 330 }]))
+    .toEqual([[217, 217, 217, 255]])
+  editor.canvas.assertNoErrors()
+})
+
 test('screen sample changes the paint, renders, and undoes once', async () => {
   await editor.page.evaluate(() => {
     window.EyeDropper = class {
