@@ -31,20 +31,23 @@ import { openExternalLink, toast } from '@/app/shell/ui'
 import { activeTab } from '@/app/tabs'
 import ChatFollowAgentsToggle from '@/components/chat/ChatFollowAgentsToggle.vue'
 import ChatHistory from '@/components/chat/ChatHistory.vue'
+import ChatHistoryList from '@/components/chat/ChatHistoryList.vue'
 import ChatInput from '@/components/chat/ChatInput.vue'
 import ChatPermissionDialog from '@/components/chat/ChatPermissionDialog.vue'
 import ChatProviderSetup from '@/components/chat/ChatProviderSetup.vue'
 import ChatRunLocation from '@/components/chat/ChatRunLocation.vue'
 import ChatTranscript from '@/components/chat/ChatTranscript.vue'
 import { useImageDrop } from '@/components/chat/input/useImageDrop'
+import AppButton from '@/components/ui/button/AppButton.vue'
 
-const { docked = false, activePanel = 'agent' } = defineProps<{
+const { docked = false, activePanel = 'chat' } = defineProps<{
   docked?: boolean
   activePanel?: string
 }>()
 
 const { isConfigured, ensureChat, history, chatFailure, clearChatFailure, providerID } = useAIChat()
-const { ai } = useI18n()
+const emit = defineEmits<{ showChat: [] }>()
+const { ai, menu } = useI18n()
 const dates = useDateFormat()
 const runLocation = useChatRunLocation()
 
@@ -79,6 +82,7 @@ const chatInput = useTemplateRef<{
   dropFiles: (files: File[]) => void
 }>('chatInput')
 const panel = useTemplateRef<HTMLElement>('panel')
+const chatContent = useTemplateRef<InstanceType<typeof TabsContent>>('chatContent')
 // Images dropped anywhere on the chat go to the composer, when there is one to take them.
 const { dragging: draggingImages } = useImageDrop(panel, {
   enabled: () => chatInput.value !== null,
@@ -99,21 +103,27 @@ void history.initialize().catch(() => {
 })
 
 const messages = computed(() => chat.value?.messages ?? history.messages.value)
+const savedChats = computed(() => {
+  const documentId = chatDocumentId(getActiveEditorStore())
+  return history.conversations.value.map((conversation) => ({
+    ...conversation,
+    available: conversation.documentId === documentId
+  }))
+})
 const historyOptions = computed(() => {
   const current = history.current.value
-  const rows = [...history.conversations.value]
-  if (current && !rows.some((row) => row.id === current.id)) rows.unshift(current)
-  return rows.map((conversation) => ({
-    ...conversation,
-    available: conversation.documentId === chatDocumentId(getActiveEditorStore())
-  }))
+  if (!current || savedChats.value.some((row) => row.id === current.id)) return savedChats.value
+  return [
+    { ...current, available: current.documentId === chatDocumentId(getActiveEditorStore()) },
+    ...savedChats.value
+  ]
 })
 const agentHistoryReadOnly = computed(
   () => history.agentReadOnly.value && (!chat.value || history.chatEnded.value)
 )
 /** Set while the conversation changes, so stopping its reply does not send what waits. */
 let queueHeld = false
-async function historyAction(action: () => Promise<unknown>) {
+async function historyAction(action: () => Promise<unknown>, revealChat = false) {
   const generation = ++viewGeneration
   const left = history.current.value?.id
   let switched = false
@@ -133,6 +143,7 @@ async function historyAction(action: () => Promise<unknown>) {
       if (switched || history.current.value?.id !== left) {
         chat.value = null
         clearQueuedMessages()
+        if (switched && revealChat && activePanel === 'chat-history') void revealConversation()
       } else if (status.value === 'ready') {
         // The stopped reply may have ended while the switch held the queue, which then waits
         // for no reply to end.
@@ -140,6 +151,21 @@ async function historyAction(action: () => Promise<unknown>) {
       }
     }
   }
+}
+
+async function revealConversation() {
+  emit('showChat')
+  await nextTick()
+  const content: unknown = chatContent.value?.$el
+  if (activePanel === 'chat' && content instanceof HTMLElement) content.focus()
+}
+
+function openConversation(id: string, revealChat = false) {
+  if (id === history.current.value?.id) {
+    if (revealChat) void revealConversation()
+    return
+  }
+  void historyAction(() => history.open(id), revealChat)
 }
 
 async function renameConversation(id: string, title: string) {
@@ -324,9 +350,10 @@ function handleStop() {
       <slot name="navigation" />
       <component
         :is="docked ? TabsContent : 'div'"
-        :value="docked ? 'agent' : undefined"
+        ref="chatContent"
+        :value="docked ? 'chat' : undefined"
         :force-mount="docked || undefined"
-        v-show="!docked || activePanel === 'agent'"
+        v-show="!docked || activePanel === 'chat'"
         class="flex min-h-0 flex-1 flex-col"
       >
         <ChatHistory
@@ -336,7 +363,7 @@ function handleStop() {
           :selected-id="history.current.value?.id"
           :disabled="history.busy.value"
           @create="historyAction(history.newChat)"
-          @select="historyAction(() => history.open($event))"
+          @select="openConversation($event)"
           @rename="renameConversation"
           @save-trace="saveTrace"
           @delete="historyAction(() => history.remove($event))"
@@ -393,6 +420,36 @@ function handleStop() {
           />
         </template>
       </component>
+      <TabsContent
+        v-if="docked"
+        value="chat-history"
+        :force-mount="true"
+        :hidden="activePanel !== 'chat-history'"
+        class="flex min-h-0 flex-1 flex-col"
+      >
+        <div
+          class="flex items-center justify-between gap-2 border-b border-border/50 px-3 pt-2.5 pb-3.5"
+        >
+          <h2 class="text-[13px] font-medium text-surface">{{ ai.chatHistory }}</h2>
+          <AppButton
+            size="md"
+            variant="outline"
+            :aria-label="ai.newChat"
+            :disabled="history.busy.value"
+            @click="historyAction(history.newChat, true)"
+          >
+            <template #leading><icon-lucide-plus /></template>
+            {{ menu.new }}
+          </AppButton>
+        </div>
+        <ChatHistoryList
+          inline
+          :conversations="savedChats"
+          :selected-id="history.current.value?.id"
+          :disabled="history.busy.value"
+          @select="openConversation($event, true)"
+        />
+      </TabsContent>
       <slot name="panel" />
     </div>
     <ChatProviderSetup

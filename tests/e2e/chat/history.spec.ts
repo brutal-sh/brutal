@@ -13,12 +13,15 @@ test('multiple conversations preserve messages and manual titles', async ({
   await expect(page.getByRole('checkbox', { name: 'All chats' })).toHaveCount(0)
   await chat.submit('Create the second dashboard')
   await expect(chat.assistantMessage()).toBeVisible()
-  await page.getByRole('button', { name: 'Conversation history', exact: true }).click()
-  await page.getByRole('textbox', { name: 'Search conversations…' }).fill('first dashboard')
-  await expect(
-    page.getByRole('button', { name: 'Create the second dashboard', exact: true })
-  ).toHaveCount(0)
-  await page.getByRole('button', { name: 'Create the first dashboard', exact: true }).click()
+  await page.getByRole('tab', { name: 'Chat history', exact: true }).click()
+  const history = page.getByRole('tabpanel', { name: 'Chat history', exact: true })
+  const first = history.getByRole('button', { name: 'Create the first dashboard', exact: true })
+  const second = history.getByRole('button', { name: 'Create the second dashboard', exact: true })
+  await expect(second).toHaveAttribute('aria-current', 'true')
+  await history.getByRole('textbox', { name: 'Search conversations…' }).fill('first dashboard')
+  await expect(second).toHaveCount(0)
+  await first.press('Enter')
+  await expect(page.getByRole('tabpanel', { name: 'Chat', exact: true })).toBeFocused()
   await expect(chat.userMessage()).toContainText('Create the first dashboard')
   const actions = page.getByRole('button', { name: 'Conversation actions' })
   const triggerBox = await actions.boundingBox()
@@ -37,9 +40,9 @@ test('multiple conversations preserve messages and manual titles', async ({
   await page.getByRole('menuitem', { name: 'Rename', exact: true }).click()
   await page.getByRole('textbox', { name: 'Conversation title' }).fill('First design')
   await page.getByRole('button', { name: 'Save', exact: true }).click()
-  await expect(
-    page.getByRole('button', { name: 'Conversation history', exact: true })
-  ).toContainText('First design')
+  await expect(page.getByRole('button', { name: 'Chat history', exact: true })).toContainText(
+    'First design'
+  )
 })
 
 test('saved transcripts remain readable after reload without provider setup', async ({
@@ -51,7 +54,7 @@ test('saved transcripts remain readable after reload without provider setup', as
   await page.getByRole('button', { name: 'New chat', exact: true }).first().click()
   await page.reload()
   await chat.chatTab.click()
-  await page.getByRole('button', { name: 'Conversation history', exact: true }).click()
+  await page.getByRole('button', { name: 'Chat history', exact: true }).click()
   await page.getByRole('button', { name: 'All documents', exact: true }).click()
   await page.getByRole('button', { name: /A durable conversation/ }).click()
   await expect(chat.userMessage()).toContainText('A durable conversation')

@@ -1,0 +1,1 @@
+- Open the current chat and browse saved conversations from separate sidebar tabs.

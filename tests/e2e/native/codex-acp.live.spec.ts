@@ -12,7 +12,9 @@ const live = process.env.OPENPENCIL_LIVE_CODEX_ACP === '1'
 const describeLive = live ? describe : describe.skip
 const rectangleName = 'ACP acceptance rectangle'
 const modelName = 'Native Codex acceptance'
-const historyTrigger = 'button[aria-label="Conversation history"]'
+const historyTrigger = 'button[aria-label="Chat history"]:not([role="tab"])'
+const chatTab = '[role="tab"][aria-label="Chat"]'
+const historyTab = '[role="tab"][aria-label="Chat history"]'
 const activeTab = '[data-test-id="tabbar-tab"][aria-selected="true"]'
 const assistant = '[data-test-id="chat-message-assistant"]'
 
@@ -148,6 +150,16 @@ async function followUp(prompt: string, expectedReply: string) {
   )
 }
 
+async function showHistory() {
+  const tab = await $(historyTab)
+  await tab.click()
+  const panelId = await tab.getAttribute('aria-controls')
+  assert.ok(panelId, 'Chat history must label its own tab panel')
+  const panel = await $(`[id="${panelId}"]`)
+  await panel.waitForDisplayed()
+  return panel
+}
+
 async function stopAgent() {
   if (await $('[data-test-id="acp-permission-dialog"]').isExisting()) {
     // Never approve a filesystem, shell, network, or unknown permission on behalf of this test.
@@ -207,6 +219,9 @@ describeLive('live native Codex ACP canvas acceptance', () => {
     })
     await $('[data-test-id="chat-send-button"]').click()
     await $('[data-test-id="chat-stop-button"]').waitForDisplayed({ timeout: 5_000 })
+    await showHistory()
+    assert.equal(await $(historyTab).getAttribute('aria-selected'), 'true')
+    assert.equal(await $('[data-test-id="chat-stop-button"]').isDisplayed(), true)
     let stoppedReason: string | null = null
     try {
       await browser.waitUntil(
@@ -242,11 +257,13 @@ describeLive('live native Codex ACP canvas acceptance', () => {
       assert.equal(nodes[0]?.type, 'RECTANGLE')
       assert.equal(nodes[0]?.width, 160)
       assert.equal(nodes[0]?.height, 100)
+      await $(chatTab).click()
+      assert.equal(await $(chatTab).getAttribute('aria-selected'), 'true')
       assert.ok((await $('[data-test-id="chat-messages"]').getText()).length > 0)
       await browser.saveScreenshot('local-evidence/native-codex-acp-before-undo.png')
       await $('button[aria-label="Conversation actions"]').waitForDisplayed()
       const title = (await $(historyTrigger).getText()).trim()
-      assert.notEqual(title, 'New chat')
+      assert.ok(title && title !== 'New chat', 'The completed conversation must have a title')
       const originalTab = await $(activeTab).getAttribute('id')
       assert.ok(originalTab)
 
@@ -265,12 +282,17 @@ describeLive('live native Codex ACP canvas acceptance', () => {
       )
       assert.deepEqual(await children(), nodes)
 
-      await $('button[aria-label="New chat"]').click()
+      const history = await showHistory()
+      await browser.saveScreenshot('local-evidence/native-codex-chat-history.png')
+      await history.$('button[aria-label="New chat"]').click()
       await $('[data-test-id="chat-empty-state"]').waitForDisplayed()
-      await $(historyTrigger).click()
-      const savedConversation = await $(`button=${title}`)
+      const savedHistory = await showHistory()
+      const savedConversation = await savedHistory.$(`button=${title}`)
       await savedConversation.waitForDisplayed()
       await savedConversation.click()
+      await browser.waitUntil(
+        async () => (await $(chatTab).getAttribute('aria-selected')) === 'true'
+      )
       await browser.waitUntil(async () => (await $(historyTrigger).getText()).trim() === title)
       await followUp(
         'Use only the MCP canvas tools to rename the same rectangle by appending the exact phrase I asked you to remember. Do not make any other changes. Reply with that phrase when done.',

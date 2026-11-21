@@ -16,6 +16,7 @@ import { computed, nextTick, ref, watch } from 'vue'
 
 import { useI18n } from '@open-pencil/vue/i18n'
 
+import ChatHistoryList from '@/components/chat/ChatHistoryList.vue'
 import AppButton from '@/components/ui/button/AppButton.vue'
 import IconButton from '@/components/ui/button/IconButton.vue'
 import { AppConfirmationDialog } from '@/components/ui/dialog'
@@ -61,15 +62,6 @@ const title = ref('')
 const titleInput = ref<HTMLInputElement>()
 const { focused } = useFocus(titleInput)
 const selected = computed(() => conversations.find((chat) => chat.id === selectedId))
-const results = computed(() =>
-  conversations.filter(
-    (chat) =>
-      (all.value || chat.available) &&
-      `${chat.title} ${chat.documentName}`
-        .toLocaleLowerCase()
-        .includes(query.value.trim().toLocaleLowerCase())
-  )
-)
 watch(
   () => selectedId,
   () => {
@@ -121,48 +113,14 @@ function closeMenu(event: Event) {
             :class="styles.content()"
             :aria-label="ai.chatHistory"
           >
-            <input
-              v-model="query"
-              :aria-label="ai.searchChats"
-              :placeholder="ai.searchChats"
-              :class="styles.input()"
+            <ChatHistoryList
+              v-model:all="all"
+              v-model:query="query"
+              :conversations="conversations"
+              :selected-id="selectedId"
+              :disabled="disabled"
+              @select="choose"
             />
-            <div :class="styles.scope()" role="group" :aria-label="ai.chatScope">
-              <button
-                :class="styles.scopeButton()"
-                :data-active="!all"
-                :aria-pressed="!all"
-                @click="all = false"
-              >
-                {{ ai.thisDocument }}
-              </button>
-              <button
-                :class="styles.scopeButton()"
-                :data-active="all"
-                :aria-pressed="all"
-                @click="all = true"
-              >
-                {{ ai.allDocuments }}
-              </button>
-            </div>
-            <div :class="styles.list()">
-              <button
-                v-for="chat in results"
-                :key="chat.id"
-                :class="styles.row()"
-                :data-selected="chat.id === selectedId"
-                :aria-current="chat.id === selectedId ? 'true' : undefined"
-                :disabled="disabled"
-                @click="choose(chat.id)"
-              >
-                <span :class="styles.title()"
-                  ><span :class="styles.label()">{{ chat.title || ai.newChat }}</span
-                  ><span v-if="all" :class="styles.detail()">{{ chat.documentName }}</span></span
-                >
-                <icon-lucide-check v-if="chat.id === selectedId" :class="styles.icon()" />
-              </button>
-              <p v-if="!results.length" :class="styles.empty()">{{ ai.noChatsFound }}</p>
-            </div>
           </PopoverContent>
         </PopoverPortal>
       </PopoverRoot>

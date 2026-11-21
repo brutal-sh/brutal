@@ -14,7 +14,7 @@ test('recovering an unsaved document restores its selected conversation automati
   await expect(chat.assistantMessage()).toBeVisible()
   // Switching conversations forces a durable flush; choose the original before reload.
   await page.getByRole('button', { name: 'New chat', exact: true }).click()
-  await page.getByRole('button', { name: 'Conversation history', exact: true }).click()
+  await page.getByRole('button', { name: 'Chat history', exact: true }).click()
   await page
     .getByRole('button', { name: 'Conversation belonging to recovered document', exact: true })
     .click()
@@ -24,7 +24,7 @@ test('recovering an unsaved document restores its selected conversation automati
   await chat.chatTab.click()
   await expect(chat.userMessage()).toContainText('Conversation belonging to recovered document')
   await expect(chat.assistantMessage()).toBeVisible()
-  await expect(
-    page.getByRole('button', { name: 'Conversation history', exact: true })
-  ).toContainText('Conversation belonging to recovered document')
+  await expect(page.getByRole('button', { name: 'Chat history', exact: true })).toContainText(
+    'Conversation belonging to recovered document'
+  )
 })

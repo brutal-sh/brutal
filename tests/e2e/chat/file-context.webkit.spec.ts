@@ -119,7 +119,7 @@ test('a saved file preview survives reloading and reopening its conversation', a
   await expect(chat.page.getByTestId('chat-message-user')).toHaveCount(0)
   await chat.page.reload()
   await chat.chatTab.click()
-  await chat.page.getByRole('button', { name: 'Conversation history', exact: true }).click()
+  await chat.page.getByRole('button', { name: 'Chat history', exact: true }).click()
   await chat.page.getByRole('button', { name: 'All documents', exact: true }).click()
   await chat.page.getByRole('button', { name: /Durable file context/ }).click()
   await chat

@@ -55,11 +55,11 @@ test('workspace panels switch exclusively and document tabs open and close', asy
 
     await navigation.getByRole('tab', { name: 'Layers', exact: true }).click()
     await expect(page.getByTestId('layers-panel')).toBeVisible()
-    await expect(page.getByRole('tabpanel', { name: 'Agent', exact: true })).toBeHidden()
+    await expect(page.getByRole('tabpanel', { name: 'Chat', exact: true })).toBeHidden()
     await navigation.getByRole('tab', { name: 'Components', exact: true }).click()
     await expect(page.getByTestId('assets-panel')).toBeVisible()
     await expect(page.getByTestId('layers-panel')).toBeHidden()
-    await expect(page.getByRole('tabpanel', { name: 'Agent', exact: true })).toBeHidden()
+    await expect(page.getByRole('tabpanel', { name: 'Chat', exact: true })).toBeHidden()
     const expandedCanvas = expectDefined(
       await canvas.canvas.boundingBox(),
       'expanded sidebar canvas'
@@ -77,7 +77,7 @@ test('workspace panels switch exclusively and document tabs open and close', asy
       'true'
     )
     await expect.poll(() => canvas.canvas.boundingBox()).toEqual(expandedCanvas)
-    await navigation.getByRole('tab', { name: 'Agent', exact: true }).click()
+    await navigation.getByRole('tab', { name: 'Chat', exact: true }).click()
     await expect(page.getByTestId('chat-panel')).toBeVisible()
     await expect(page.getByTestId('assets-panel')).toBeHidden()
 

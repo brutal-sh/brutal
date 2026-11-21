@@ -12,7 +12,7 @@ import LibrarySidebar from '@/components/libraries/LibrarySidebar.vue'
 
 import WorkspaceSidebarNavigation from './WorkspaceSidebarNavigation.vue'
 
-const panel = ref('agent')
+const panel = ref('chat')
 const { activeTab } = useAIChat()
 const store = useEditorStore()
 watch(
@@ -22,12 +22,13 @@ watch(
   },
   { flush: 'sync' }
 )
-// Existing Ask AI actions still reveal the agent, now on the left.
+// Existing Ask AI actions still reveal the chat, now on the left.
 watch(panel, (value) => {
-  if (value !== 'agent' && activeTab.value === 'ai') activeTab.value = 'design'
+  if (value !== 'chat' && value !== 'chat-history' && activeTab.value === 'ai')
+    activeTab.value = 'design'
 })
 watch(activeTab, (tab, previous) => {
-  if (tab === 'ai') panel.value = 'agent'
+  if (tab === 'ai') panel.value = 'chat'
   else if (tab === 'design' && previous === 'ai') panel.value = 'layers'
 })
 </script>
@@ -38,7 +39,7 @@ watch(activeTab, (tab, previous) => {
     class="flex min-h-0 min-w-0 flex-1 flex-col"
     aria-label="Workspace sidebar"
   >
-    <ChatPanel docked :active-panel="panel">
+    <ChatPanel docked :active-panel="panel" @show-chat="panel = 'chat'">
       <template #navigation>
         <WorkspaceSidebarNavigation />
       </template>

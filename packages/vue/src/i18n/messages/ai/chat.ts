@@ -19,7 +19,7 @@ export const aiChatDefaults = {
   allDocuments: 'All documents',
   noChatsFound: 'No conversations found.',
   chatActions: 'Conversation actions',
-  chatHistory: 'Conversation history',
+  chatHistory: 'Chat history',
   newChat: 'New chat',
   followAgents: 'Follow agents as they work',
   stopFollowingAgents: 'Stop following agents as they work',

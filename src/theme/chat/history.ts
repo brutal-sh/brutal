@@ -11,6 +11,7 @@ export default {
     create: 'h-8 gap-1 pl-2 pr-2.5 text-[13px]',
     icon: 'size-3.5 shrink-0',
     content: ['z-50 w-80 max-w-[calc(100vw-1rem)] p-2', floatingSurface, motionStyles.floating],
+    browser: 'min-h-0',
     input:
       'w-full rounded border border-border bg-input px-2 py-1.5 text-xs outline-none focus:border-panel-focus',
     scope: 'my-2 flex gap-1',
@@ -25,6 +26,12 @@ export default {
     actions: 'flex justify-end gap-1'
   },
   variants: {
+    inline: {
+      true: {
+        browser: 'flex min-h-0 flex-1 flex-col px-3 pt-3 pb-2',
+        list: 'max-h-none flex-1'
+      }
+    },
     docked: {
       true: {
         root: 'border-border/50',

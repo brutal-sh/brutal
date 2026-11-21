@@ -9,7 +9,7 @@ test('a long restored conversation scrolls to its latest message on mount', asyn
   await expect(chat.assistantMessage()).toBeVisible()
   await page.reload()
   await chat.chatTab.click()
-  await page.getByRole('button', { name: 'Conversation history', exact: true }).click()
+  await page.getByRole('button', { name: 'Chat history', exact: true }).click()
   await page.getByRole('button', { name: 'All documents', exact: true }).click()
   await page.getByRole('button', { name: /Restored line 0/ }).click()
   await page.getByRole('tab', { name: 'Layers', exact: true }).click()

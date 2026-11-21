@@ -159,7 +159,7 @@ test('Libraries stays inline and opens the local publication and manager flows',
   await publish.getByLabel('Library name').fill('Inline library')
   await publish.getByRole('button', { name: 'Publish library', exact: true }).click()
   await expect(publish).toBeHidden()
-  await page.getByRole('tab', { name: 'Agent', exact: true }).click()
+  await page.getByRole('tab', { name: 'Chat', exact: true }).click()
   await page.getByRole('tab', { name: 'Libraries', exact: true }).click()
   await expect(panel.getByRole('heading', { name: 'Inline library', exact: true })).toBeVisible()
   await panel.getByRole('button', { name: 'Add library', exact: true }).click()

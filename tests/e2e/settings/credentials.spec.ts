@@ -198,7 +198,7 @@ test('remembered browser credentials survive reload and clear centrally', async 
   const canvas = new CanvasHelper(page)
   await canvas.waitForInit()
 
-  await page.getByRole('tab', { name: 'Agent', exact: true }).click()
+  await page.getByRole('tab', { name: 'Chat', exact: true }).click()
   await page.getByTestId('provider-setup-open-settings').click()
 
   await page.getByTestId('settings-section-general').click()
@@ -217,7 +217,7 @@ test('remembered browser credentials survive reload and clear centrally', async 
 
   await page.reload()
   await canvas.waitForInit()
-  await page.getByRole('tab', { name: 'Agent', exact: true }).click()
+  await page.getByRole('tab', { name: 'Chat', exact: true }).click()
   await expect(page.getByTestId('chat-input')).toBeVisible()
 
   await page.keyboard.press('ControlOrMeta+,')
@@ -234,7 +234,7 @@ test('remembered browser credentials survive reload and clear centrally', async 
 
   await page.reload()
   await canvas.waitForInit()
-  await page.getByRole('tab', { name: 'Agent', exact: true }).click()
+  await page.getByRole('tab', { name: 'Chat', exact: true }).click()
   await expect(page.getByTestId('provider-setup-open-settings')).toBeVisible()
 })
 

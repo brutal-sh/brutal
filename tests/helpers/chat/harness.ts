@@ -1,4 +1,4 @@
-import type { Page } from '@playwright/test'
+import { expect, type Page } from '@playwright/test'
 
 export class ChatHarness {
   constructor(readonly page: Page) {}
@@ -8,7 +8,7 @@ export class ChatHarness {
   }
 
   get chatTab() {
-    return this.page.getByRole('tab', { name: 'Agent', exact: true })
+    return this.page.getByRole('tab', { name: 'Chat', exact: true })
   }
 
   get apiKeyInput() {
@@ -47,8 +47,10 @@ export class ChatHarness {
     await this.chatTab.click()
     await this.page.getByTestId('provider-setup-open-settings').click()
     await this.page.locator('[data-model-id]').first().click()
-    await this.page.getByTestId('settings-model-provider').click()
-    await this.page.getByRole('option', { name: 'OpenRouter' }).click()
+    const provider = this.page.getByTestId('settings-model-provider')
+    await provider.click()
+    await this.page.getByRole('option', { name: 'OpenRouter', exact: true }).press('Enter')
+    await expect(provider).toContainText('OpenRouter')
     await this.page.getByLabel('Name').fill('Claude Sonnet')
     await this.apiKeyInput.fill(apiKey)
     await this.page.getByRole('button', { name: 'Save model' }).click()
