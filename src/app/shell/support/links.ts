@@ -1,4 +1,4 @@
-export const BRUTAL_SUPPORT_URL = 'https://github.com/brutal-sh/open-pen-feedback'
+export const BRUTAL_SUPPORT_URL = 'https://github.com/brutal-sh/brutal-feedback'
 export const BRUTAL_RELEASES_URL = `${BRUTAL_SUPPORT_URL}/releases`
 
 export function brutalBugReportURL(title?: string): string {

@@ -55,7 +55,7 @@ These are configured support thresholds, not evidence that every platform is qua
 
 The desktop notice requires macOS 13+ with current Safari updates, Linux WebKitGTK 2.40+,
 or a current Windows WebView2 runtime. Find signed Apple-silicon beta downloads in
-[Brutal Releases](https://github.com/brutal-sh/open-pen-feedback/releases). In the app, choose
+[Brutal Releases](https://github.com/brutal-sh/brutal-feedback/releases). In the app, choose
 **Help → Report an Issue** to open the public bug form. Review any diagnostic details before
 sharing them. Find usage guides and private security reporting in [Brutal Help](https://brutal.sh/help/#support).
 

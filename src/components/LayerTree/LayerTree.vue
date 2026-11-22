@@ -139,7 +139,7 @@ function isLayerNode(value: unknown): value is LayerNode {
 
 function toLayerNode(value: unknown): LayerNode {
   if (isLayerNode(value)) return value
-  throw new Error('[open-pen] Invalid layer tree item')
+  throw new Error('[Brutal] Invalid layer tree item')
 }
 
 function layerTextContent(value: unknown): string {

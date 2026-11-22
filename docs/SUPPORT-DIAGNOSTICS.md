@@ -113,7 +113,7 @@ sign-in or credentials and may charge for usage. The normal installed core
 journey and broader file, agent and visual acceptance remain open.
 [Desktop file and provider limits](../README.md)
 
-The public [Brutal feedback tracker](https://github.com/brutal-sh/open-pen-feedback)
+The public [Brutal feedback tracker](https://github.com/brutal-sh/brutal-feedback)
 has issue forms for bugs and feature requests, Discussions for questions and
 general feedback, and private vulnerability reporting. Anyone can read its public
 pages. GitHub sign-in is required to submit. Bug reports ask for the app version,

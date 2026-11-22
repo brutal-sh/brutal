@@ -46,7 +46,7 @@ it('delivers the native guide UI and this fork’s CLI setup link without changi
   await chooseCommand('Install Brutal CLI')
   await browser.waitUntil(async () =>
     (await invokeNative<string[]>('take_native_test_opened_urls')).includes(
-      'https://github.com/jpoindexter/open-pen#cli'
+      'https://brutal.sh/help/#cli'
     )
   )
   assert.deepEqual(
@@ -63,14 +63,13 @@ it('routes native Help events from Home without creating a document', async () =
   await $('[role="tab"][aria-label="Home"]').click()
   const before = await $$('[data-slot="tab-bar"] [role="tab"]').length
   const website = 'https://brutal.sh/'
-  const repository = 'https://github.com/jpoindexter/open-pen'
-  const support = 'https://github.com/brutal-sh/open-pen-feedback'
+  const support = 'https://github.com/brutal-sh/brutal-feedback'
   for (const [id, url] of [
     ['help-documentation', `${website}help/#docs`],
-    ['help-prompts', `${repository}/blob/HEAD/docs/PROMPTS.md`],
+    ['help-prompts', `${website}automation/#choose-tool`],
     ['help-website', website],
-    ['help-cursor', `${repository}/blob/HEAD/docs/EDITOR-INTEGRATIONS.md#cursor`],
-    ['help-vscode', `${repository}/blob/HEAD/docs/EDITOR-INTEGRATIONS.md#vs-code`],
+    ['help-cursor', `${website}help/#mcp`],
+    ['help-vscode', `${website}help/#mcp`],
     ['help-release-notes', `${support}/releases`],
     ['help-report-issue', `${support}/issues/new?template=bug.yml&version=0.16.0`],
     ['help-support', support]

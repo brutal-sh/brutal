@@ -79,7 +79,7 @@ test('the CLI setup action opens this fork’s documentation', async () => {
     .click()
   const popup = await opening
   try {
-    await expect(popup).toHaveURL('https://github.com/jpoindexter/open-pen#cli')
+    await expect(popup).toHaveURL('https://brutal.sh/help/#cli')
   } finally {
     await popup.close()
   }
@@ -90,18 +90,17 @@ test('Help reaches this fork’s documentation, setup and support without editin
   await canvas.drawRect(350, 300, 160, 100)
   const before = await getSelectedNode(page)
   const website = 'https://brutal.sh/'
-  const repository = 'https://github.com/jpoindexter/open-pen'
-  const support = 'https://github.com/brutal-sh/open-pen-feedback'
+  const support = 'https://github.com/brutal-sh/brutal-feedback'
   await page.context().route(
-    (url) => url.href.startsWith(repository + '/blob/HEAD/') || url.href.startsWith(support),
+    (url) => url.href.startsWith(website) || url.href.startsWith(support),
     (route) => route.fulfill({ contentType: 'text/html', body: '<title>Brutal support</title>' })
   )
   for (const [label, url] of [
     ['Brutal Documentation', `${website}help/#docs`],
-    ['Prompt Gallery & Tips', `${repository}/blob/HEAD/docs/PROMPTS.md`],
+    ['Prompt Gallery & Tips', `${website}automation/#choose-tool`],
     ['Brutal Website', website],
-    ['Cursor Setup…', `${repository}/blob/HEAD/docs/EDITOR-INTEGRATIONS.md#cursor`],
-    ['VS Code Setup…', `${repository}/blob/HEAD/docs/EDITOR-INTEGRATIONS.md#vs-code`],
+    ['Cursor Setup…', `${website}help/#mcp`],
+    ['VS Code Setup…', `${website}help/#mcp`],
     ['Release Notes', `${support}/releases`],
     ['Report an Issue', `${support}/issues/new?template=bug.yml&version=0.16.0`],
     ['Support & Feedback', support]

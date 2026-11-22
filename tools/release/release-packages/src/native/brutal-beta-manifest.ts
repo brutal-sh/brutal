@@ -43,7 +43,7 @@ await writeFile(
       platforms: {
         'darwin-aarch64': {
           signature,
-          url: `https://github.com/brutal-sh/open-pen-feedback/releases/download/v${version}/${archive}`
+          url: `https://github.com/brutal-sh/brutal-feedback/releases/download/v${version}/${archive}`
         }
       }
     },

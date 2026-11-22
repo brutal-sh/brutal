@@ -78,8 +78,6 @@ export const ROOM_UNREACHABLE_MS = 20_000
 export const ROOM_STATUS_TICK_MS = 500
 
 export const WEB_APP_ORIGIN = 'https://app.openpencil.dev'
-/** The privacy page: every request the app makes, and every usage event and field. */
-export const PRIVACY_URL = 'https://openpencil.dev/overview/privacy'
 /** The OpenPencil Cloud section of the website, with its waitlist form. */
 export const CLOUD_WAITLIST_URL = 'https://openpencil.dev/#cloud'
 /**
@@ -95,8 +93,9 @@ export const IS_CLOUD_SITE =
 export const OPEN_PEN_WEBSITE_URL = 'https://brutal.sh/'
 const OPEN_PEN_HELP_PAGE_URL = `${OPEN_PEN_WEBSITE_URL}help/`
 export const OPEN_PEN_HELP_URL = `${OPEN_PEN_HELP_PAGE_URL}#docs`
-export const OPEN_PEN_REPOSITORY_URL = 'https://github.com/jpoindexter/open-pen'
-/** Desktop setup instructions while this fork has no published installer. */
+export const PRIVACY_URL = `${OPEN_PEN_HELP_PAGE_URL}privacy/`
+export const BRUTAL_AUTOMATION_GUIDE_URL = `${OPEN_PEN_WEBSITE_URL}automation/`
+export const BRUTAL_MCP_GUIDE_URL = `${OPEN_PEN_HELP_PAGE_URL}#mcp`
 export const DESKTOP_DOWNLOAD_URL = `${OPEN_PEN_HELP_PAGE_URL}getting-started/`
 export const NODE_DOWNLOAD_URL = 'https://nodejs.org/en/download'
 
@@ -105,16 +104,14 @@ export const NODE_DOWNLOAD_URL = 'https://nodejs.org/en/download'
  * at the end of the section description; alerts link only to the fix, never to docs.
  */
 const DOCS_ORIGIN = 'https://openpencil.dev'
-export const OPEN_PEN_CLI_GUIDE_URL = `${OPEN_PEN_REPOSITORY_URL}#cli`
-export const MCP_SERVER_DOCS_URL = `${DOCS_ORIGIN}/programmable/mcp-server`
+export const OPEN_PEN_CLI_GUIDE_URL = `${OPEN_PEN_HELP_PAGE_URL}#cli`
+export const MCP_SERVER_DOCS_URL = BRUTAL_MCP_GUIDE_URL
 /** The guide to OpenPencil Cloud, linked from the Cloud server's own pages. */
 export const CLOUD_DOCS_URL = `${DOCS_ORIGIN}/user-guide/openpencil-cloud`
-export const WEBMCP_DOCS_URL = `${MCP_SERVER_DOCS_URL}#webmcp`
+export const WEBMCP_DOCS_URL = `${DOCS_ORIGIN}/programmable/mcp-server#webmcp`
 export const MCP_CONNECTIONS_DOCS_URL = `${DOCS_ORIGIN}/programmable/ai-chat#external-mcp-connections`
 export const CODING_AGENTS_GUIDE_URL = `${DOCS_ORIGIN}/programmable/coding-agents`
 export const PI_GUIDE_URL = `${CODING_AGENTS_GUIDE_URL}#pi`
-
-// shortcut: no signed Brutal releases, use the fork changelog until release publishing is configured.
 
 export function getShareURL(roomId: string): string {
   const base = IS_TAURI || !IS_BROWSER ? WEB_APP_ORIGIN : window.location.origin

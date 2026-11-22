@@ -17,7 +17,7 @@ const { dailyPing, usageStats, unofficialBuild, disabledByEnvironment } = useSha
 <template>
   <SettingsSection data-test-id="settings-privacy-panel">
     <template #title>{{ diagnostics.sharingTitle }}</template>
-    <template #description>{{ diagnostics.sharingDescription }}</template>
+    <template v-if="!unofficialBuild" #description>{{ diagnostics.sharingDescription }}</template>
     <template #actions>
       <SettingsLink :href="PRIVACY_URL">{{ diagnostics.sharingDetails }}</SettingsLink>
     </template>
