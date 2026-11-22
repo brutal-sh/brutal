@@ -57,7 +57,8 @@ test("a guest's agent shows on their avatar and can be followed until Escape", a
       .poll(() => host?.page.evaluate(() => window.openPencil?.getStore?.().state.currentPageId))
       .toBe(agent.pageId)
     const frame = host.page.getByTestId('follow-frame')
-    await expect(frame).toContainText(`Following ${agent.name}`)
+    await expect(frame.getByRole('status')).toContainText(`Following ${agent.name}`)
+    expect((await frame.boundingBox())?.height).toBeLessThan(40)
 
     await host.page.keyboard.press('Escape')
     await expect(frame).toHaveCount(0)

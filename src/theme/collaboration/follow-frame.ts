@@ -1,10 +1,10 @@
-/** Marks a canvas that follows someone: a border in their color and a bar to stop. */
+/** Shows who the canvas is following and lets the user stop. */
 export default {
   slots: {
-    root: 'pointer-events-none absolute inset-0 border-2',
-    bar: 'pointer-events-auto absolute top-0 left-1/2 z-30 flex max-w-[calc(100%-1rem)] -translate-x-1/2 items-center gap-1.5 rounded-b-md py-1 pr-1 pl-2.5 text-[11px] font-medium text-white shadow-md',
+    root: 'absolute top-2 left-1/2 z-30 flex max-w-[calc(100%-1rem)] -translate-x-1/2 items-center gap-1 rounded-full border border-island-border bg-panel py-0.5 pr-0.5 pl-2.5 text-[11px] font-medium text-surface shadow-sm',
+    status: 'flex min-w-0 items-center gap-1.5',
     icon: 'size-3 shrink-0',
     label: 'min-w-0 truncate',
-    stop: 'ml-1.5 shrink-0 cursor-pointer rounded bg-black/15 px-1.5 py-0.5 text-[11px] font-medium outline-none hover:bg-black/25 focus-visible:ring-1 focus-visible:ring-current'
+    stop: 'flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-full text-panel-foreground outline-none hover:bg-hover hover:text-surface focus-visible:ring-1 focus-visible:ring-panel-focus'
   }
 } as const
