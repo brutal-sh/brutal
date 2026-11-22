@@ -24,7 +24,8 @@ const ctx = useColorPickerPanelContext()
             : ctx.panels.sampleScreenColorUnavailable
         "
         class="rounded-md bg-input"
-        :disabled="ctx.sampling || !ctx.canSampleScreenColor"
+        :disabled="!ctx.canSampleScreenColor"
+        :aria-disabled="ctx.sampling || undefined"
         :active="ctx.sampling"
         :aria-busy="ctx.sampling || undefined"
         @click="ctx.pickScreenColor"

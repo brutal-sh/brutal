@@ -70,8 +70,10 @@ for (const outcome of ['cancel', 'failure', 'invalid'] as const) {
       }
     }, outcome)
     const popup = await openColor()
-    await popup.getByRole('button', { name: 'Pick color from screen' }).click()
-    await expect(popup.getByRole('button', { name: 'Pick color from screen' })).toBeEnabled()
+    const sampler = popup.getByRole('button', { name: 'Pick color from screen' })
+    await sampler.press('Space')
+    await expect(sampler).toBeEnabled()
+    await expect(sampler).toBeFocused()
     await expect(
       propertySection(editor.page, 'Fill').getByRole('textbox', { name: 'Fill', exact: true })
     ).toHaveValue('D9D9D9')
@@ -98,8 +100,10 @@ test('a dismissed sampler cannot recolor a later selection', async () => {
   })
   try {
     const popup = await openColor()
-    await popup.getByRole('button', { name: 'Pick color from screen' }).click()
-    await expect(popup.getByRole('button', { name: 'Pick color from screen' })).toBeDisabled()
+    const sampler = popup.getByRole('button', { name: 'Pick color from screen' })
+    await sampler.press('Space')
+    await expect(sampler).toBeDisabled()
+    await expect(sampler).toBeFocused()
     await editor.page.keyboard.press('Escape')
     await expect(popup).toHaveCount(0)
     await editor.canvas.drawRect(500, 300, 120, 80)
