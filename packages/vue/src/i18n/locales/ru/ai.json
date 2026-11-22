@@ -205,7 +205,7 @@
   "chatAgentReadOnly": "Переписка с агентом сохранена, но восстановление его сессии пока недоступно. Начните новый чат.",
   "chatStorageFailed": "Не удалось сохранить историю чата. Не закрывайте окно и попробуйте ещё раз.",
   "chatHistoryFailed": "Не удалось обновить историю чатов. Попробуйте ещё раз.",
-  "parallelDesignToggle": "Две версии с Codex",
+  "parallelDesignToggle": "Две версии с {provider}",
   "parallelDesignVersion": "Версия {count}",
   "parallelDesignWorking": "В работе",
   "parallelDesignFinished": "Готово",

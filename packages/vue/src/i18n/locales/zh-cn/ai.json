@@ -205,7 +205,7 @@
   "chatAgentReadOnly": "与代理的对话已保存，但暂时无法在此恢复会话。请新建聊天。",
   "chatStorageFailed": "无法保存聊天记录。请保持此窗口打开并重试。",
   "chatHistoryFailed": "无法更新聊天记录。请重试。",
-  "parallelDesignToggle": "使用 Codex 生成两个版本",
+  "parallelDesignToggle": "使用 {provider} 生成两个版本",
   "parallelDesignVersion": "版本 {count}",
   "parallelDesignWorking": "处理中",
   "parallelDesignFinished": "已完成",

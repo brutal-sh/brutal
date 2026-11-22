@@ -1,13 +1,14 @@
 import type { Canvas } from 'canvaskit-wasm'
 
 import type { SceneGraph } from '@open-pencil/scene-graph'
-import { darkenForContrast } from '@open-pencil/scene-graph/color'
+import { readableForeground } from '@open-pencil/scene-graph/color'
 import { getWorldMatrix } from '@open-pencil/scene-graph/coordinate'
 import Matrix from '@open-pencil/scene-graph/matrix'
 
 import type { PresenceCursor, SkiaRenderer } from '#core/canvas/renderer'
 
 const CURSOR_SIZE = 9
+const AGENT_POINTER_RADIUS = 8
 const LABEL_PADDING_X = 4
 const LABEL_PADDING_Y = 2
 const LABEL_FONT_SIZE = 10
@@ -15,9 +16,6 @@ const LABEL_OFFSET_X = 12
 const LABEL_OFFSET_Y = 20
 /** Longer names end with an ellipsis. */
 const LABEL_MAX_WIDTH = 160
-/** The sparkle that marks an agent's name. */
-const LABEL_SPARKLE_RADIUS = 4
-const LABEL_SPARKLE_GAP = 3
 
 function drawSelection(r: SkiaRenderer, canvas: Canvas, graph: SceneGraph, cursor: PresenceCursor) {
   if (!cursor.selection?.length && !cursor.outline?.length) return
@@ -95,8 +93,15 @@ function sparklePath(r: SkiaRenderer, cx: number, cy: number, R: number) {
 }
 
 /** The pointer uses its own color and a white outline. */
-function drawArrow(r: SkiaRenderer, canvas: Canvas, x: number, y: number, cursor: PresenceCursor) {
-  const path = arrowPath(r, x, y)
+function drawPointer(
+  r: SkiaRenderer,
+  canvas: Canvas,
+  x: number,
+  y: number,
+  cursor: PresenceCursor
+) {
+  const path =
+    cursor.kind === 'agent' ? sparklePath(r, x, y, AGENT_POINTER_RADIUS) : arrowPath(r, x, y)
   r.auxStroke.setColor(r.ck.WHITE)
   r.auxStroke.setStrokeWidth(2)
   r.auxStroke.setPathEffect(null)
@@ -107,9 +112,7 @@ function drawArrow(r: SkiaRenderer, canvas: Canvas, x: number, y: number, cursor
   path.delete()
 }
 
-/**
- * A filled name pill for people and an outlined name-and-model pill for agents.
- */
+/** A solid identity label, including the agent's model when known. */
 function drawLabel(r: SkiaRenderer, canvas: Canvas, x: number, y: number, cursor: PresenceCursor) {
   const provider = r.fontProvider
   if (!cursor.name || !provider) return
@@ -117,9 +120,8 @@ function drawLabel(r: SkiaRenderer, canvas: Canvas, x: number, y: number, cursor
   const color = r.ck.Color4f(red, g, b, 1)
   const agent = cursor.kind === 'agent'
   const title = agent && cursor.model ? `${cursor.name} · ${cursor.model}` : cursor.name
-  const ink = agent ? darkenForContrast(cursor.color) : cursor.color
+  const ink = readableForeground(cursor.color)
   const labelInk = r.ck.Color4f(ink.r, ink.g, ink.b, 1)
-  const badge = agent ? LABEL_SPARKLE_RADIUS * 2 + LABEL_SPARKLE_GAP : 0
   const pillX = x + LABEL_OFFSET_X - LABEL_PADDING_X
   const pillY = y + LABEL_OFFSET_Y - LABEL_FONT_SIZE - LABEL_PADDING_Y + 2
   const pillHeight = LABEL_FONT_SIZE + LABEL_PADDING_Y * 2
@@ -133,31 +135,17 @@ function drawLabel(r: SkiaRenderer, canvas: Canvas, x: number, y: number, cursor
     agent ? labelInk : r.ck.WHITE,
     r.fontGeneration,
     ({ paragraph, metrics }) => {
+      const radius = agent ? pillHeight / 2 : 4
       const pill = r.ck.RRectXY(
-        r.ck.XYWHRect(pillX, pillY, badge + metrics.width + LABEL_PADDING_X * 2, pillHeight),
-        4,
-        4
+        r.ck.XYWHRect(pillX, pillY, metrics.width + LABEL_PADDING_X * 2, pillHeight),
+        radius,
+        radius
       )
-      r.auxFill.setColor(agent ? r.ck.WHITE : color)
+      r.auxFill.setColor(color)
       canvas.drawRRect(pill, r.auxFill)
-      if (agent) {
-        r.auxStroke.setColor(color)
-        r.auxStroke.setStrokeWidth(1)
-        r.auxStroke.setPathEffect(null)
-        canvas.drawRRect(pill, r.auxStroke)
-        const sparkle = sparklePath(
-          r,
-          pillX + LABEL_PADDING_X + LABEL_SPARKLE_RADIUS,
-          pillY + pillHeight / 2,
-          LABEL_SPARKLE_RADIUS
-        )
-        r.auxFill.setColor(color)
-        canvas.drawPath(sparkle, r.auxFill)
-        sparkle.delete()
-      }
       canvas.drawParagraph(
         paragraph,
-        pillX + LABEL_PADDING_X + badge,
+        pillX + LABEL_PADDING_X,
         pillY + (pillHeight - metrics.height) / 2
       )
     }
@@ -175,7 +163,7 @@ export function drawPresenceCursors(
     const x = cursor.x * r.zoom + r.panX
     const y = cursor.y * r.zoom + r.panY
     drawSelection(r, canvas, graph, cursor)
-    drawArrow(r, canvas, x, y, cursor)
+    drawPointer(r, canvas, x, y, cursor)
     drawLabel(r, canvas, x, y, cursor)
   }
 }

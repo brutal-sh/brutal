@@ -1,4 +1,4 @@
 - See a sweep across the layers an agent edits, with a stationary highlight when reduced motion is enabled.
 - See a layer highlight while agents generate a draft, before the design is committed to the canvas.
 - See who you are following in a compact canvas label.
-- Identify agents on the canvas by their own cursor color, name and model when available.
+- Identify agents on the canvas by their four-point cursors and solid color tags with the agent name and model when available.

@@ -1,7 +1,7 @@
 import { params } from '@nanostores/i18n'
 
 export const aiChatDefaults = {
-  parallelDesignToggle: 'Two Codex versions',
+  parallelDesignToggle: params('Two {provider} versions'),
   parallelDesignVersion: params('Version {count}'),
   parallelDesignWorking: 'Working',
   parallelDesignFinished: 'Finished',

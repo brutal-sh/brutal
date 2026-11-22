@@ -205,7 +205,7 @@
   "chatAgentReadOnly": "La conversazione con l’agente è salvata, ma non è ancora possibile riprendere la sessione qui. Avvia una nuova chat.",
   "chatStorageFailed": "Impossibile salvare la cronologia. Tieni aperta questa finestra e riprova.",
   "chatHistoryFailed": "Impossibile aggiornare la cronologia. Riprova.",
-  "parallelDesignToggle": "Due versioni con Codex",
+  "parallelDesignToggle": "Due versioni con {provider}",
   "parallelDesignVersion": "Versione {count}",
   "parallelDesignWorking": "In corso",
   "parallelDesignFinished": "Completata",

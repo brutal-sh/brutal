@@ -205,7 +205,7 @@
   "chatAgentReadOnly": "Rozmowa z agentem została zapisana, ale nie można tu jeszcze wznowić jego sesji. Rozpocznij nowy czat.",
   "chatStorageFailed": "Nie udało się zapisać historii. Nie zamykaj tego okna i spróbuj ponownie.",
   "chatHistoryFailed": "Nie udało się zaktualizować historii. Spróbuj ponownie.",
-  "parallelDesignToggle": "Dwie wersje z Codex",
+  "parallelDesignToggle": "Dwie wersje z {provider}",
   "parallelDesignVersion": "Wersja {count}",
   "parallelDesignWorking": "W toku",
   "parallelDesignFinished": "Gotowa",

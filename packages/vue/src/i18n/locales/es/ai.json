@@ -205,7 +205,7 @@
   "chatAgentReadOnly": "La conversación del agente está guardada, pero todavía no se puede reanudar su sesión aquí. Inicia un nuevo chat.",
   "chatStorageFailed": "No se pudo guardar el historial. Mantén esta ventana abierta e inténtalo de nuevo.",
   "chatHistoryFailed": "No se pudo actualizar el historial. Inténtalo de nuevo.",
-  "parallelDesignToggle": "Dos versiones con Codex",
+  "parallelDesignToggle": "Dos versiones con {provider}",
   "parallelDesignVersion": "Versión {count}",
   "parallelDesignWorking": "En curso",
   "parallelDesignFinished": "Terminada",

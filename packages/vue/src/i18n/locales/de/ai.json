@@ -205,7 +205,7 @@
   "chatAgentReadOnly": "Der Agentenverlauf wurde gespeichert, aber die Sitzung kann hier noch nicht fortgesetzt werden. Starte einen neuen Chat.",
   "chatStorageFailed": "Der Chatverlauf konnte nicht gespeichert werden. Lass dieses Fenster geöffnet und versuche es erneut.",
   "chatHistoryFailed": "Der Chatverlauf konnte nicht aktualisiert werden. Versuche es erneut.",
-  "parallelDesignToggle": "Zwei Codex-Varianten",
+  "parallelDesignToggle": "Zwei {provider}-Varianten",
   "parallelDesignVersion": "Variante {count}",
   "parallelDesignWorking": "In Arbeit",
   "parallelDesignFinished": "Fertig",

@@ -598,7 +598,7 @@ function handleStop() {
         @click="twoVersions = !twoVersions"
       >
         <template #leading><icon-lucide-columns-2 /></template>
-        {{ ai.parallelDesignToggle }}
+        {{ ai.parallelDesignToggle({ provider: 'Codex' }) }}
       </AppButton>
     </div>
     <ChatInput
