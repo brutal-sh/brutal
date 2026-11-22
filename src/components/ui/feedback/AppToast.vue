@@ -31,6 +31,7 @@ const styles = computed(() => {
   const theme = toastTheme({ tone: variant, progress: state.value })
   return {
     root: theme.root({ class: ui?.root }),
+    body: theme.body({ class: ui?.body }),
     icon: theme.icon({ class: ui?.icon }),
     content: theme.content({ class: ui?.content }),
     message: theme.message({ class: ui?.message }),
@@ -59,23 +60,29 @@ const styles = computed(() => {
       }
     "
   >
-    <icon-lucide-loader-2 v-if="state !== 'none'" :class="styles.icon" aria-hidden="true" />
-    <icon-lucide-check v-else-if="variant === 'default'" :class="styles.icon" aria-hidden="true" />
-    <icon-lucide-info v-else-if="variant === 'info'" :class="styles.icon" aria-hidden="true" />
-    <icon-lucide-triangle-alert v-else :class="styles.icon" aria-hidden="true" />
-    <div :class="styles.content" data-slot="toast-content">
-      <ToastDescription :class="styles.message">
-        {{ message }}<span v-if="count > 1" :class="styles.count">×{{ count }}</span>
-      </ToastDescription>
-      <AppProgress
-        v-if="progress"
-        :amount="progress"
-        :label="progressLabel"
-        :aria-label="progressLabel ?? message"
-        tone="current"
-        :class="styles.progress"
+    <div :class="styles.body">
+      <icon-lucide-loader-2 v-if="state !== 'none'" :class="styles.icon" aria-hidden="true" />
+      <icon-lucide-check
+        v-else-if="variant === 'default'"
+        :class="styles.icon"
+        aria-hidden="true"
       />
-      <slot />
+      <icon-lucide-info v-else-if="variant === 'info'" :class="styles.icon" aria-hidden="true" />
+      <icon-lucide-triangle-alert v-else :class="styles.icon" aria-hidden="true" />
+      <div :class="styles.content" data-slot="toast-content">
+        <ToastDescription :class="styles.message">
+          {{ message }}<span v-if="count > 1" :class="styles.count">×{{ count }}</span>
+        </ToastDescription>
+        <AppProgress
+          v-if="progress"
+          :amount="progress"
+          :label="progressLabel"
+          :aria-label="progressLabel ?? message"
+          tone="current"
+          :class="styles.progress"
+        />
+        <slot />
+      </div>
     </div>
     <div v-if="actionLabel || copyable" :class="styles.controls">
       <button v-if="actionLabel" type="button" :class="styles.action" @click="emit('action')">

@@ -2,4 +2,5 @@
 - Include the exact Brutal beta version in exported diagnostics and chat traces.
 - Open Brutal guides from coding-agent and MCP settings and keep the upstream Cloud waitlist out of the Mac beta.
 - Copy Brutal room links that open the shared design in a browser on brutal.sh.
-- Use rounded pointers for selection and presence, with right-handed, left-handed, and system options in Appearance.
+- Use a compact arrow for the mouse and a rounded arrow for agents and collaborators, with handedness and system pointer options in Appearance.
+- Keep the update confirmation on one row with its checkmark and match the rounded notification style.

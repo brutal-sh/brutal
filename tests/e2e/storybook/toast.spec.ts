@@ -83,3 +83,30 @@ test('an action toast renders its action', async ({ page }) => {
   await expect(toast).toContainText('Design file moved to Trash.')
   await expect(toast.getByRole('button', { name: 'Undo' })).toBeVisible()
 })
+
+test('a short confirmation keeps its status icon beside the message', async ({
+  page
+}, testInfo) => {
+  await page.goto(
+    '/iframe.html?id=design-system-feedback-toast--default&viewMode=story&globals=theme:dark&args=message:Brutal%20is%20up%20to%20date'
+  )
+
+  const toast = page.locator('[data-slot="toast"]')
+  const text = toast.getByText('Brutal is up to date', { exact: true })
+  await expect(text).toBeVisible()
+  await expect(toast).toHaveCSS('border-top-left-radius', '12px')
+  for (const width of [800, 290]) {
+    await page.setViewportSize({ width, height: 600 })
+    const icon = await toast.locator('svg').boundingBox()
+    const message = await text.boundingBox()
+    if (!icon || !message) throw new Error('The notification did not render')
+    expect(icon.y).toBeLessThan(message.y + message.height)
+    expect(icon.y + icon.height).toBeGreaterThan(message.y)
+    expect(icon.x + icon.width).toBeLessThanOrEqual(message.x)
+    const lineHeight = await text.evaluate((element) =>
+      Number.parseFloat(getComputedStyle(element).lineHeight)
+    )
+    expect(message.height).toBeLessThanOrEqual(lineHeight + 1)
+  }
+  await toast.screenshot({ path: testInfo.outputPath('update-confirmation.png') })
+})

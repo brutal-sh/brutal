@@ -20,7 +20,7 @@ const meta = {
       template: `
         <ToastProvider swipe-direction="up">
           <story />
-          <ToastViewport class="fixed top-2 left-1/2 z-50 flex -translate-x-1/2 flex-col items-center gap-1.5" />
+          <ToastViewport class="fixed top-2 left-1/2 z-50 flex w-max max-w-[calc(100%-1rem)] -translate-x-1/2 flex-col items-center gap-1.5" />
         </ToastProvider>
       `
     })

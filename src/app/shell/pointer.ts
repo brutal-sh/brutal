@@ -1,11 +1,11 @@
 import { watchEffect } from 'vue'
 
-import { POINTER_ARROW } from '@open-pencil/core/constants'
+import { MOUSE_POINTER } from '@open-pencil/core/constants'
 
 import { appPreferences } from '@/app/settings/preferences/store'
 
 function arrowImage(mirrored: boolean): string {
-  const { size, tipX, tipY, path } = POINTER_ARROW
+  const { size, tipX, tipY, path } = MOUSE_POINTER
   const transform = mirrored ? ` transform="translate(${size} 0) scale(-1 1)"` : ''
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}"><path d="${path}"${transform} fill="#151515" stroke="white" stroke-width="1.6" stroke-linejoin="round"/></svg>`
   return `url("data:image/svg+xml,${encodeURIComponent(svg)}") ${mirrored ? size - tipX : tipX} ${tipY}`
