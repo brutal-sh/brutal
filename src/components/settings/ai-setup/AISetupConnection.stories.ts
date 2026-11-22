@@ -107,7 +107,7 @@ export const CodingAgentNeedsAdapter: Story = {
     await expect(canvas.getByRole('button', { name: 'Install MCP server' })).toBeVisible()
     await expect(canvas.getByRole('link', { name: 'Learn more' })).toHaveAttribute(
       'href',
-      'https://openpencil.dev/programmable/coding-agents#codex'
+      'https://brutal.sh/help/#codex'
     )
   }
 }

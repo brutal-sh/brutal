@@ -17,6 +17,7 @@ import {
 import { cloudConnection, forgetCloudConnection } from '@/app/cloud/sessions/connection'
 import { signOutOfCloud } from '@/app/cloud/sessions/sign-out'
 import { clearCloudSessionToken } from '@/app/cloud/sessions/token'
+import { IS_BRUTAL_MACOS_BETA } from '@/app/runtime/version'
 import { openExternalLink, toast } from '@/app/shell/ui'
 import AppConfirmationDialog from '@/components/ui/dialog/AppConfirmationDialog.vue'
 import { useHeldContent } from '@/components/ui/overlay/held'
@@ -103,7 +104,7 @@ async function remove() {
       @sign-out="signOut"
       @remove="askToRemove"
     >
-      <template #hosted><CloudWaitlist /></template>
+      <template #hosted><CloudWaitlist v-if="!IS_BRUTAL_MACOS_BETA" /></template>
     </CloudSettingsPanel>
     <AppConfirmationDialog
       :open="removing !== null"

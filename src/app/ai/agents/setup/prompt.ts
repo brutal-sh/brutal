@@ -13,7 +13,6 @@ const SIGN_IN: Record<ACPAgentID, string> = {
 }
 
 export function codingAgentGuideURL(agentID: ACPAgentID): string {
-  if (agentID === 'codex') return 'https://github.com/agentclientprotocol/codex-acp#installation'
   return `${CODING_AGENTS_GUIDE_URL}#${agentID}`
 }
 

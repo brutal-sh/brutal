@@ -11,7 +11,7 @@ const meta = {
   title: 'App/Settings/Layout/Link',
   component: SettingsLink,
   args: {
-    href: 'https://openpencil.dev/programmable/mcp-server#webmcp',
+    href: 'https://brutal.sh/automation/#webmcp',
     label: 'WebMCP setup guide'
   },
   render: (args) => ({

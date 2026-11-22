@@ -108,9 +108,9 @@ export const OPEN_PEN_CLI_GUIDE_URL = `${OPEN_PEN_HELP_PAGE_URL}#cli`
 export const MCP_SERVER_DOCS_URL = BRUTAL_MCP_GUIDE_URL
 /** The guide to OpenPencil Cloud, linked from the Cloud server's own pages. */
 export const CLOUD_DOCS_URL = `${DOCS_ORIGIN}/user-guide/openpencil-cloud`
-export const WEBMCP_DOCS_URL = `${DOCS_ORIGIN}/programmable/mcp-server#webmcp`
-export const MCP_CONNECTIONS_DOCS_URL = `${DOCS_ORIGIN}/programmable/ai-chat#external-mcp-connections`
-export const CODING_AGENTS_GUIDE_URL = `${DOCS_ORIGIN}/programmable/coding-agents`
+export const WEBMCP_DOCS_URL = `${BRUTAL_AUTOMATION_GUIDE_URL}#webmcp`
+export const MCP_CONNECTIONS_DOCS_URL = `${BRUTAL_AUTOMATION_GUIDE_URL}#external-mcp-connections`
+export const CODING_AGENTS_GUIDE_URL = OPEN_PEN_HELP_PAGE_URL
 export const PI_GUIDE_URL = `${CODING_AGENTS_GUIDE_URL}#pi`
 
 export function getShareURL(roomId: string): string {
