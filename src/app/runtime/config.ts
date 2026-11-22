@@ -1,5 +1,5 @@
 import { appPreferences, type CanvasRenderingMode } from '@/app/settings/preferences/store'
-import { IS_BROWSER } from '@/constants'
+import { IS_BROWSER, IS_ROOM_BROWSER } from '@/constants'
 
 export type SceneRendererMode = CanvasRenderingMode
 export type CollaborationTransportMode = 'default' | 'test'
@@ -38,6 +38,6 @@ export function parseAppRuntimeConfig(
 }
 
 export const appRuntimeConfig = parseAppRuntimeConfig(
-  IS_BROWSER ? window.location.search : '',
+  IS_BROWSER && !IS_ROOM_BROWSER ? window.location.search : '',
   appPreferences.value.rendering.canvasMode
 )

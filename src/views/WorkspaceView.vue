@@ -57,7 +57,7 @@ import HomeWorkspace from '@/components/home/HomeWorkspace.vue'
 import RenameSelectionDialog from '@/components/selection/RenameSelectionDialog.vue'
 import LoadingScreen from '@/components/shell/LoadingScreen.vue'
 import TabBar from '@/components/TabBar.vue'
-import { IS_BROWSER, IS_CLOUD_SITE } from '@/constants'
+import { IS_BROWSER, IS_ROOM_BROWSER, IS_CLOUD_SITE } from '@/constants'
 
 const commandPaletteOpen = ref(false)
 const headerWidth = ref(100)
@@ -292,7 +292,7 @@ onMounted(async () => {
 
   // The browser twin of the deep link: the desktop build takes its links through the
   // deep-link plugin above, so only a real browser reads them off the address bar.
-  if (IS_BROWSER && !isTauri()) {
+  if (IS_BROWSER && !IS_ROOM_BROWSER && !isTauri()) {
     try {
       await openWebLinkFromLocation(window.location.search, stripWebLinkParams, {
         selectByName: selectNodeByName,

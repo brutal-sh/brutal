@@ -1,14 +1,21 @@
 import { describe, expect, test } from 'bun:test'
 
 import { parseRoomInput } from '@/app/collab/room/id'
+import { getShareURL } from '@/constants'
 
 const ROOM = 'abcdefghijklmnopqrstuvwxyz012345'
 
 describe('room links and IDs', () => {
+  test('uses the Brutal website when generating a link outside a browser', () => {
+    expect(getShareURL(ROOM)).toBe(`https://brutal.sh/rooms/${ROOM}`)
+  })
+
   test('reads the room ID from a bare ID or a room link, whatever surrounds it', () => {
     for (const input of [
       ROOM,
       `  ${ROOM}  `,
+      `https://brutal.sh/rooms/${ROOM}`,
+      `https://brutal.sh/rooms/${ROOM}/`,
       `https://app.openpencil.dev/rooms/${ROOM}`,
       `https://app.openpencil.dev/rooms/${ROOM}/`,
       `https://app.openpencil.dev/rooms/${ROOM}?test#layers`,

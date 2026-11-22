@@ -11,7 +11,7 @@ import { preloadFonts } from '@/app/editor/fonts'
 import { installBundledFonts } from '@/app/editor/fonts/bundled'
 import { observeBootErrors } from '@/app/shell/support/boot'
 import { reportBootFailure } from '@/app/shell/support/gate'
-import { IS_TAURI } from '@/constants'
+import { IS_ROOM_BROWSER, IS_TAURI } from '@/constants'
 
 import App from './App.vue'
 import router from './router'
@@ -46,7 +46,7 @@ export async function boot(): Promise<void> {
     console.error(error)
   }
 
-  if (!IS_TAURI) {
+  if (!IS_TAURI && !IS_ROOM_BROWSER) {
     void import('virtual:pwa-register').then(({ registerSW }) => {
       registerSW({ immediate: true })
       return undefined

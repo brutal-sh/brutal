@@ -90,6 +90,7 @@ export const OFFICIAL_CLOUD_URL =
 /** Whether this is the editor a Cloud server serves on its own address (`bun run build:cloud`). */
 export const IS_CLOUD_SITE =
   typeof __OPENPENCIL_CLOUD_SITE__ === 'boolean' && __OPENPENCIL_CLOUD_SITE__
+export const IS_ROOM_BROWSER = import.meta.env.MODE === 'rooms'
 export const OPEN_PEN_WEBSITE_URL = 'https://brutal.sh/'
 const OPEN_PEN_HELP_PAGE_URL = `${OPEN_PEN_WEBSITE_URL}help/`
 export const OPEN_PEN_HELP_URL = `${OPEN_PEN_HELP_PAGE_URL}#docs`
@@ -114,8 +115,8 @@ export const CODING_AGENTS_GUIDE_URL = OPEN_PEN_HELP_PAGE_URL
 export const PI_GUIDE_URL = `${CODING_AGENTS_GUIDE_URL}#pi`
 
 export function getShareURL(roomId: string): string {
-  const base = IS_TAURI || !IS_BROWSER ? WEB_APP_ORIGIN : window.location.origin
-  return `${base}/rooms/${roomId}`
+  const origin = IS_TAURI || !IS_BROWSER ? OPEN_PEN_WEBSITE_URL : window.location.origin
+  return new URL(`/rooms/${roomId}`, origin).href
 }
 
 export const PEER_COLORS: Color[] = [

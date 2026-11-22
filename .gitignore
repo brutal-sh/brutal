@@ -99,6 +99,7 @@ packages/feedback/.dev.vars
 packages/cloud/deploy/generated/
 packages/cloud/dist-standalone/
 dist-cloud/
+dist-rooms/
 dist-metrics/
 
 # SwiftPM output of desktop Swift packages built by hand

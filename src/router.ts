@@ -1,13 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import { homeLocation } from '@/app/home/location'
+import { ROOM_HOME_PATH } from '@/app/tabs/address'
 
 import WorkspaceView from './views/WorkspaceView.vue'
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    { path: '/', component: WorkspaceView },
+    { path: ROOM_HOME_PATH, component: WorkspaceView },
     {
       // Links to the storage workspace open Home on it.
       path: '/storage',

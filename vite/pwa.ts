@@ -13,8 +13,9 @@ export const NOT_EDITOR_PAGES = [
   /^\/(?:welcome|auth|account|admin)(?:[/?]|$)/
 ]
 
-export function openPencilPwaPlugin() {
+export function openPencilPwaPlugin(disable = false) {
   return VitePWA({
+    disable,
     registerType: 'autoUpdate',
     devOptions: { enabled: false },
     workbox: {

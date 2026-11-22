@@ -7,7 +7,7 @@
   "bundle": {
     "externalBin": ["binaries/openpen-mcp-http"]
   },
-  "version": "0.16.0-beta.12",
+  "version": "0.16.0-beta.13",
   "plugins": {
     "updater": {
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDFCRTAyOEQ1NERGNkJFM0MKUldROHZ2Wk4xU2pnRzY0UkY3TXh0eUU1dVN3MkxXYy8vWnFnN3lPOFhrZXhVaU12eVFjQTlPT2gK",

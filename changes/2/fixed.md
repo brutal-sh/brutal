@@ -1,3 +1,4 @@
 - Brutal opens its live website and desktop guides, and Help jumps directly to the documentation.
 - Include the exact Brutal beta version in exported diagnostics and chat traces.
 - Open Brutal guides from coding-agent and MCP settings and keep the upstream Cloud waitlist out of the Mac beta.
+- Copy Brutal room links that open the shared design in a browser on brutal.sh.

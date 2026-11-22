@@ -43,9 +43,10 @@ export default defineConfig(async ({ command, mode }) => {
   const metrics = mode === 'metrics'
   const env = loadEnv(mode, __dirname, 'VITE_')
   // `VITE_OPENPENCIL_CLOUD=off` builds the editor without OpenPencil Cloud.
-  const cloud = env.VITE_OPENPENCIL_CLOUD !== 'off'
+  const roomBrowser = mode === 'rooms'
+  const cloud = !roomBrowser && env.VITE_OPENPENCIL_CLOUD !== 'off'
   // Agents automate the editor's own development server; a Cloud site, built or served, has none.
-  const automation = !metrics && !cloudSite
+  const automation = !metrics && !cloudSite && !roomBrowser
   const macOSBeta = process.env.BRUTAL_MACOS_BETA_BUILD === '1'
   const updater = macOSBeta ? macOSBetaConfig.plugins.updater : desktopConfig.plugins.updater
   await Promise.all([ensureBrandAssets(['web']), metrics ? undefined : ensureDemoDocument()])
@@ -84,7 +85,9 @@ export default defineConfig(async ({ command, mode }) => {
       Components({ resolvers: [IconsResolver({ prefix: 'icon', customCollections: ['ai'] })] }),
       automation ? openPencilAutomationPlugin(command, host) : undefined,
       vue(),
-      metrics ? metricsBrandPlugin((outDir) => resolve(outDir, '..')) : openPencilPwaPlugin(),
+      metrics
+        ? metricsBrandPlugin((outDir) => resolve(outDir, '..'))
+        : openPencilPwaPlugin(roomBrowser),
       cloudSite ? cloudSitePlugin() : undefined
     ],
     clearScreen: false,
@@ -99,7 +102,14 @@ export default defineConfig(async ({ command, mode }) => {
       // Syntax is lowered to the supported browser baseline; APIs are not polyfilled.
       target: viteBuildTarget(),
       chunkSizeWarningLimit: 2500,
-      outDir: metrics ? 'dist-metrics/admin' : cloudSite ? 'dist-cloud' : 'dist',
+      outDir: metrics
+        ? 'dist-metrics/admin'
+        : cloudSite
+          ? 'dist-cloud'
+          : roomBrowser
+            ? 'dist-rooms'
+            : 'dist',
+      assetsDir: roomBrowser ? 'room-assets' : 'assets',
       rolldownOptions: {
         // The desktop Software Update window is its own page; a Cloud server adds its own
         // pages beside the editor, and the metrics dashboard builds alone.
@@ -107,10 +117,12 @@ export default defineConfig(async ({ command, mode }) => {
           ? { metrics: resolve(__dirname, 'metrics.html') }
           : cloudSite
             ? { main: resolve(__dirname, 'index.html'), cloud: resolve(__dirname, 'cloud.html') }
-            : {
-                main: resolve(__dirname, 'index.html'),
-                updater: resolve(__dirname, 'updater.html')
-              }
+            : roomBrowser
+              ? { main: resolve(__dirname, 'index.html') }
+              : {
+                  main: resolve(__dirname, 'index.html'),
+                  updater: resolve(__dirname, 'updater.html')
+                }
       }
     },
     server: createDevServerOptions(
