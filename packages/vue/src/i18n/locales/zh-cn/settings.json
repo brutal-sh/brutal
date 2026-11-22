@@ -49,6 +49,8 @@
   "animations": "动画",
   "animationsSystem": "跟随系统",
   "animationsOff": "关闭",
+  "showUpdateWindow": "显示更新窗口",
+  "showUpdateWindowDescription": "关闭后，更新将以简洁通知的形式显示。",
   "accentColor": "强调色",
   "accentBlue": "蓝色",
   "accentPurple": "紫色",

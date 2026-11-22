@@ -88,6 +88,7 @@ export interface AppPreferences {
     followAgents: boolean
   }
   files: { recentLimit: number }
+  updates: { showWindow: boolean }
   version: 1
   recovery: {
     enabled: boolean
@@ -120,6 +121,7 @@ export const DEFAULT_APP_PREFERENCES: Readonly<AppPreferences> = {
     followAgents: true
   },
   files: { recentLimit: DEFAULT_RECENT_FILES_LIMIT },
+  updates: { showWindow: true },
   version: 1,
   recovery: { enabled: true },
   editing: {
@@ -173,6 +175,9 @@ const appPreferencesSchema = section({
   }),
   files: section({
     recentLimit: v.fallback(recentFilesLimitSchema, defaults.files.recentLimit)
+  }),
+  updates: section({
+    showWindow: v.fallback(v.boolean(), defaults.updates.showWindow)
   }),
   version: v.fallback(v.literal(1), 1),
   recovery: section({ enabled: v.fallback(v.boolean(), defaults.recovery.enabled) }),
@@ -251,6 +256,10 @@ export function updatePointerStyle(pointer: PointerStyle): void {
     ...appPreferences.value,
     appearance: { ...appPreferences.value.appearance, pointer }
   }
+}
+
+export function setShowUpdateWindow(showWindow: boolean): void {
+  appPreferences.value = { ...appPreferences.value, updates: { showWindow } }
 }
 
 export function updateAccentPreference(accent: AccentPreference): void {

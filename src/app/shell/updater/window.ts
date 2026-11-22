@@ -4,9 +4,17 @@ export const UPDATER_WINDOW_URL = 'updater.html'
 
 const UPDATER_WINDOW_WIDTH = 560
 const UPDATER_WINDOW_HEIGHT = 520
+let opening: Promise<void> | null = null
 
 /** Shows the Software Update window, focusing it when it is already open. */
-export async function openUpdaterWindow(title: string): Promise<void> {
+export function openUpdaterWindow(title: string): Promise<void> {
+  opening ??= showUpdaterWindow(title).finally(() => {
+    opening = null
+  })
+  return opening
+}
+
+async function showUpdaterWindow(title: string): Promise<void> {
   const { WebviewWindow } = await import('@tauri-apps/api/webviewWindow')
   const existing = await WebviewWindow.getByLabel(UPDATER_WINDOW_LABEL)
   if (existing) {
@@ -28,7 +36,12 @@ export async function openUpdaterWindow(title: string): Promise<void> {
     dragDropEnabled: false,
     focus: true
   })
-  await window.once<unknown>('tauri://error', (event) => {
-    console.error('Could not open the Software Update window', event.payload)
+  await new Promise<void>((resolve, reject) => {
+    void window.once('tauri://created', () => resolve()).catch(reject)
+    void window
+      .once('tauri://error', ({ payload }) => {
+        reject(payload instanceof Error ? payload : new Error(String(payload)))
+      })
+      .catch(reject)
   })
 }

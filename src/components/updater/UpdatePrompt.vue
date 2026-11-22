@@ -5,7 +5,7 @@ import { computed } from 'vue'
 
 import { useI18n } from '@open-pencil/vue/i18n'
 
-import { BRUTAL_RELEASES_URL } from '@/app/shell/support/links'
+import { brutalReleaseNotesURL } from '@/app/shell/support/links'
 import { openExternalLink } from '@/app/shell/ui'
 import { updateFailureText } from '@/app/shell/updater/messages'
 import { downloadProgressLabel } from '@/app/shell/updater/progress'
@@ -97,10 +97,7 @@ function openNotesLink(event: MouseEvent) {
 
         <div :class="ui.notesHeader">
           <h2 :class="ui.notesLabel">{{ t.whatsNew }}</h2>
-          <ExternalLink
-            :href="`${BRUTAL_RELEASES_URL}/tag/v${encodeURIComponent(release.version)}`"
-            class="text-[11px]"
-          >
+          <ExternalLink :href="brutalReleaseNotesURL(release.version)" class="text-[11px]">
             {{ t.fullReleaseNotes }}
           </ExternalLink>
         </div>
@@ -131,6 +128,12 @@ function openNotesLink(event: MouseEvent) {
     </AppPlaceholder>
 
     <footer :class="ui.footer">
+      <ExternalLink
+        v-if="state.status === 'up-to-date'"
+        :href="brutalReleaseNotesURL(currentVersion)"
+      >
+        {{ t.fullReleaseNotes }}
+      </ExternalLink>
       <AppProgress
         v-if="progress"
         :amount="progress.amount"

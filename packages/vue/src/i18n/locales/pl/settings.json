@@ -49,6 +49,8 @@
   "animations": "Animacje",
   "animationsSystem": "Zgodnie z systemem",
   "animationsOff": "Wyłączone",
+  "showUpdateWindow": "Pokaż okno aktualizacji",
+  "showUpdateWindowDescription": "Wyłącz tę opcję, aby wyświetlać kompaktowe powiadomienie o aktualizacji.",
   "accentColor": "Kolor akcentu",
   "accentBlue": "Niebieski",
   "accentPurple": "Fioletowy",

@@ -110,3 +110,48 @@ test('a short confirmation keeps its status icon beside the message', async ({
   }
   await toast.screenshot({ path: testInfo.outputPath('update-confirmation.png') })
 })
+
+test('the update notice opens the installed release notes and keeps the status on one row', async ({
+  page
+}, testInfo) => {
+  const release = 'https://github.com/brutal-sh/brutal-feedback/releases/tag/v0.16.0-beta.14'
+  await page.context().route(release, (route) =>
+    route.fulfill({
+      contentType: 'text/html',
+      body: '<title>Brutal Beta 14 release notes</title>'
+    })
+  )
+  await page.goto(
+    '/iframe.html?id=app-shell-notifications--up-to-date-with-release-notes&viewMode=story&globals=theme:dark'
+  )
+  await page.getByRole('button', { name: 'Show update notice' }).click()
+  const toast = page.locator('[data-slot="toast"]')
+  const message = toast.getByText('Brutal is up to date', { exact: true })
+  const link = toast.getByRole('link', { name: 'Full release notes', exact: true })
+  await expect(link).toHaveAttribute('href', release)
+  await expect(toast).toHaveCSS('border-top-left-radius', '12px')
+
+  for (const width of [800, 290]) {
+    await page.setViewportSize({ width, height: 600 })
+    const icon = await toast.locator('svg').first().boundingBox()
+    const text = await message.boundingBox()
+    if (!icon || !text) throw new Error('The update confirmation did not render')
+    expect(icon.y + icon.height).toBeGreaterThan(text.y)
+    expect(icon.x + icon.width).toBeLessThanOrEqual(text.x)
+    const lineHeight = await message.evaluate((element) =>
+      Number.parseFloat(getComputedStyle(element).lineHeight)
+    )
+    expect(text.height).toBeLessThanOrEqual(lineHeight + 1)
+    await expect(link).toBeInViewport()
+  }
+
+  await page.setViewportSize({ width: 800, height: 600 })
+  await toast.screenshot({ path: testInfo.outputPath('up-to-date-with-release-notes.png') })
+  await link.focus()
+  const opened = page.waitForEvent('popup')
+  await page.keyboard.press('Enter')
+  const releasePage = await opened
+  await expect(releasePage).toHaveURL(release)
+  await expect(releasePage).toHaveTitle('Brutal Beta 14 release notes')
+  await releasePage.close()
+})

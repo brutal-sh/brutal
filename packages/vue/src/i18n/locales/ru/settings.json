@@ -49,6 +49,8 @@
   "animations": "Анимации",
   "animationsSystem": "Как в системе",
   "animationsOff": "Выключены",
+  "showUpdateWindow": "Показывать окно обновления",
+  "showUpdateWindowDescription": "Отключите этот параметр, чтобы видеть компактное уведомление об обновлении.",
   "accentColor": "Акцентный цвет",
   "accentBlue": "Синий",
   "accentPurple": "Фиолетовый",

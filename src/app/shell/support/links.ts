@@ -3,6 +3,10 @@ import { APP_RELEASE_VERSION } from '@/app/runtime/version'
 export const BRUTAL_SUPPORT_URL = 'https://github.com/brutal-sh/brutal-feedback'
 export const BRUTAL_RELEASES_URL = `${BRUTAL_SUPPORT_URL}/releases`
 
+export function brutalReleaseNotesURL(version: string): string {
+  return `${BRUTAL_RELEASES_URL}/tag/v${encodeURIComponent(version)}`
+}
+
 export function brutalBugReportURL(title?: string): string {
   const url = new URL(`${BRUTAL_SUPPORT_URL}/issues/new`)
   url.searchParams.set('template', 'bug.yml')

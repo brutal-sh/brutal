@@ -49,6 +49,8 @@
   "animations": "Animationen",
   "animationsSystem": "Systemeinstellung",
   "animationsOff": "Aus",
+  "showUpdateWindow": "Update-Fenster anzeigen",
+  "showUpdateWindowDescription": "Deaktivieren, um eine kompakte Update-Benachrichtigung anzuzeigen.",
   "accentColor": "Akzentfarbe",
   "accentBlue": "Blau",
   "accentPurple": "Lila",

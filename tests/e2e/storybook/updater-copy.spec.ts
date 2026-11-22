@@ -4,6 +4,7 @@ import { mockEditorCopyServices } from '#tests/helpers/brand/editor-services'
 import { storyOutcome } from '#tests/helpers/storybook/outcome'
 
 const NOTES_URL = 'https://github.com/brutal-sh/brutal-feedback/releases/tag/v0.16.1'
+const INSTALLED_NOTES_URL = 'https://github.com/brutal-sh/brutal-feedback/releases/tag/v0.16.0'
 const LOCALES = ['en', 'de', 'es', 'fr', 'it', 'ja', 'pl', 'ru', 'zh-CN'] as const
 const STATES = {
   release: [
@@ -78,13 +79,16 @@ for (const locale of LOCALES) {
           const notesRequests: string[] = []
           const errors: string[] = []
           page.on('pageerror', (error) => errors.push(error.message))
-          await context.route(NOTES_URL, async (route) => {
-            notesRequests.push(route.request().url())
-            await route.fulfill({
-              contentType: 'text/html',
-              body: '<title>Brutal change history fixture</title>'
-            })
-          })
+          await context.route(
+            (url) => [NOTES_URL, INSTALLED_NOTES_URL].includes(url.href),
+            async (route) => {
+              notesRequests.push(route.request().url())
+              await route.fulfill({
+                contentType: 'text/html',
+                body: '<title>Brutal change history fixture</title>'
+              })
+            }
+          )
           for (const [story, status] of states) {
             await page.goto(
               `/iframe.html?id=app-shell-update-prompt--${story}&viewMode=story&globals=theme:${theme}`
@@ -94,22 +98,23 @@ for (const locale of LOCALES) {
             await expect(prompt).toHaveAttribute('data-status', status)
             await capture(prompt, testInfo, story)
             expect(outcome, `${story} (${locale}, ${theme})`).toBe('ok')
-            if (story === 'available') {
+            if (story === 'available' || story === 'up-to-date') {
+              const url = story === 'available' ? NOTES_URL : INSTALLED_NOTES_URL
               const notes = prompt.getByRole('link')
-              await expect(notes).toHaveAttribute('href', NOTES_URL)
+              await expect(notes).toHaveAttribute('href', url)
               const opening = page.waitForEvent('popup')
               await notes.focus()
               await page.keyboard.press('Enter')
               const history = await opening
               try {
-                await expect(history).toHaveURL(NOTES_URL)
+                await expect(history).toHaveURL(url)
               } finally {
                 await history.close()
               }
               await expect(prompt).toHaveAttribute('data-status', status)
             }
           }
-          expect(notesRequests).toEqual(group === 'release' ? [NOTES_URL] : [])
+          expect(notesRequests).toEqual([group === 'release' ? NOTES_URL : INSTALLED_NOTES_URL])
           expect(interceptedURLs).toEqual([])
           expect(errors).toEqual([])
         })

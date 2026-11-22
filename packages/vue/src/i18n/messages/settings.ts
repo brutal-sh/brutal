@@ -11,6 +11,8 @@ export const settingsMessageDefaults = {
   animations: 'Animations',
   animationsSystem: 'Follow system',
   animationsOff: 'Off',
+  showUpdateWindow: 'Show update window',
+  showUpdateWindowDescription: 'Turn off to see a compact update notification.',
   accentColor: 'Accent color',
   accentBlue: 'Blue',
   accentPurple: 'Purple',

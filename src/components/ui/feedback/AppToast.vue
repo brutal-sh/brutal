@@ -84,10 +84,12 @@ const styles = computed(() => {
         <slot />
       </div>
     </div>
-    <div v-if="actionLabel || copyable" :class="styles.controls">
-      <button v-if="actionLabel" type="button" :class="styles.action" @click="emit('action')">
-        {{ actionLabel }}
-      </button>
+    <div v-if="actionLabel || $slots.action || copyable" :class="styles.controls">
+      <slot name="action" :class="styles.action">
+        <button v-if="actionLabel" type="button" :class="styles.action" @click="emit('action')">
+          {{ actionLabel }}
+        </button>
+      </slot>
       <template v-if="copyable">
         <Tip :label="copied ? copiedLabel : copyLabel">
           <button

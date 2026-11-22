@@ -11,6 +11,7 @@ import { RECENT_FILES_LIMIT_MIN, RECENT_FILES_LIMIT_MAX } from '@/app/recent-fil
 import {
   appPreferences,
   DEFAULT_APP_PREFERENCES,
+  setShowUpdateWindow,
   updateAccentPreference,
   updatePointerStyle,
   type PointerStyle
@@ -19,6 +20,7 @@ import { DEFAULT_THEME } from '@/app/settings/theme'
 import { DEFAULT_ACCENT } from '@/app/shell/accent/palette'
 import { animationPreference } from '@/app/shell/motion'
 import { useAppTheme } from '@/app/shell/theme'
+import { appUpdatesAvailable } from '@/app/shell/updater/check'
 import CredentialSettingsSection from '@/components/settings/credentials/CredentialSettingsSection.vue'
 import AccentColorPicker from '@/components/settings/general/AccentColorPicker.vue'
 import CollaborationNameSection from '@/components/settings/general/CollaborationNameSection.vue'
@@ -30,9 +32,11 @@ import PresetNumberField from '@/components/ui/input/PresetNumberField.vue'
 import AppSelect from '@/components/ui/select/AppSelect.vue'
 import AppSwitch from '@/components/ui/toggle/AppSwitch.vue'
 
-const { availableLocales, locale, localeLabels, menu, recovery, setLocale, settings } = useI18n()
+const { availableLocales, locale, localeLabels, menu, recovery, setLocale, settings, updates } =
+  useI18n()
 
 const showRecentFiles = recentFilesAvailable()
+const showSoftwareUpdateSettings = appUpdatesAvailable()
 const recentFilesPresets = [10, 25, 50, 100]
 const recentFilesRangeMessage = computed(() =>
   settings.value.recentFilesLimitRange({ min: RECENT_FILES_LIMIT_MIN, max: RECENT_FILES_LIMIT_MAX })
@@ -59,6 +63,11 @@ const pointer = computed<PointerStyle>({
 
 const defaultAnimations = DEFAULT_APP_PREFERENCES.appearance.animations
 const defaultRecovery = DEFAULT_APP_PREFERENCES.recovery.enabled
+const defaultShowUpdateWindow = DEFAULT_APP_PREFERENCES.updates.showWindow
+const showUpdateWindow = computed({
+  get: () => appPreferences.value.updates.showWindow,
+  set: setShowUpdateWindow
+})
 const accentModified = computed(
   () => !isEqual(appPreferences.value.appearance.accent, DEFAULT_ACCENT)
 )
@@ -154,6 +163,21 @@ const preserveUnsavedWork = computed({
     </SettingsSection>
 
     <CollaborationNameSection />
+
+    <SettingsSection v-if="showSoftwareUpdateSettings">
+      <template #title>{{ updates.windowTitle }}</template>
+      <SettingsGroup>
+        <SettingsRow
+          as="label"
+          :label="settings.showUpdateWindow"
+          :description="settings.showUpdateWindowDescription"
+          :modified="showUpdateWindow !== defaultShowUpdateWindow"
+          @reset="showUpdateWindow = defaultShowUpdateWindow"
+        >
+          <AppSwitch v-model="showUpdateWindow" :label="settings.showUpdateWindow" />
+        </SettingsRow>
+      </SettingsGroup>
+    </SettingsSection>
 
     <SettingsSection>
       <template #title>{{ recovery.settingsTitle }}</template>

@@ -15,13 +15,18 @@ export interface ToastAction {
   run: () => void
 }
 
+interface ToastLink {
+  label: string
+  href: string
+}
+
 export interface Toast {
   id: number
   message: string
   variant: ToastVariant
   /** Number of times this message has been raised since it appeared. */
   count: number
-  action?: ToastAction
+  action?: ToastAction | ToastLink
   /** Present while a long-running operation behind this toast reports progress. */
   progress?: ProgressAmount
   /** Measurement text beside the progress bar, formatted by the producing domain. */
@@ -55,7 +60,7 @@ let nextId = 0
 let errorHandlersInitialized = false
 
 /** Returns the toast's ID, which `remove` takes, also when it merged into a visible one. */
-function push(message: string, variant: ToastVariant, action?: ToastAction): number {
+function push(message: string, variant: ToastVariant, action?: Toast['action']): number {
   // Dedupe: if the same message+variant is already visible, increment
   // its repeat count instead of stacking a duplicate. Prevents the
   // cascade-on-every-frame failure mode where a single unhealthy
@@ -118,7 +123,7 @@ function startProgress(
   }
 }
 
-function info(message: string, action?: ToastAction) {
+function info(message: string, action?: Toast['action']) {
   push(message, 'default', action)
 }
 

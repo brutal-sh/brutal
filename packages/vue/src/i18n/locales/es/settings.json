@@ -49,6 +49,8 @@
   "animations": "Animaciones",
   "animationsSystem": "Seguir al sistema",
   "animationsOff": "Desactivadas",
+  "showUpdateWindow": "Mostrar la ventana de actualización",
+  "showUpdateWindowDescription": "Desactiva esta opción para ver una notificación de actualización compacta.",
   "accentColor": "Color de acento",
   "accentBlue": "Azul",
   "accentPurple": "Morado",

@@ -49,6 +49,8 @@
   "animations": "アニメーション",
   "animationsSystem": "システム設定に従う",
   "animationsOff": "オフ",
+  "showUpdateWindow": "アップデートウィンドウを表示",
+  "showUpdateWindowDescription": "オフにすると、アップデートがコンパクトな通知で表示されます。",
   "accentColor": "アクセントカラー",
   "accentBlue": "ブルー",
   "accentPurple": "パープル",
