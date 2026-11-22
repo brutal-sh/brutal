@@ -111,7 +111,7 @@ export interface AppPreferences {
 }
 
 export const DEFAULT_APP_PREFERENCES: Readonly<AppPreferences> = {
-  appearance: { animations: 'system', accent: { ...DEFAULT_ACCENT }, pointer: 'right' },
+  appearance: { animations: 'system', accent: { ...DEFAULT_ACCENT }, pointer: 'system' },
   chat: {
     textSize: 'small',
     reasoningDisplay: 'collapsed',

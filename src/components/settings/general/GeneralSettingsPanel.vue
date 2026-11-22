@@ -127,9 +127,9 @@ const preserveUnsavedWork = computed({
             v-model="pointer"
             :label="settings.pointer"
             :options="[
+              { value: 'system', label: settings.pointerSystem },
               { value: 'right', label: settings.pointerRight },
-              { value: 'left', label: settings.pointerLeft },
-              { value: 'system', label: settings.pointerSystem }
+              { value: 'left', label: settings.pointerLeft }
             ]"
             :ui="selectUI"
           />
