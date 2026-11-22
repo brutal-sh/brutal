@@ -1,1 +1,2 @@
 - Brutal opens its live website and desktop guides, and Help jumps directly to the documentation.
+- Include the exact Brutal beta version in exported diagnostics and chat traces.
