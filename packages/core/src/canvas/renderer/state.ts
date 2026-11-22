@@ -2,6 +2,7 @@ import type { SceneNode } from '@open-pencil/scene-graph'
 
 import type { SkiaRenderer } from '#core/canvas/renderer'
 import { changesShaping } from '#core/canvas/text/paragraph/inputs'
+import { AI_DONE_DURATION_MS } from '#core/constants'
 
 export function invalidateScenePicture(r: SkiaRenderer): void {
   r.scenePicture?.delete()
@@ -60,23 +61,32 @@ export function flashNode(r: SkiaRenderer, nodeId: string): void {
   r._flashes.push({ nodeId, startTime: performance.now() })
 }
 
+const MAX_AI_EDIT_CUES = 12
+
 export function aiMarkActive(r: SkiaRenderer, nodeIds: string[]): void {
-  for (const id of nodeIds) r._aiActiveNodes.add(id)
+  const now = performance.now()
+  for (const id of nodeIds.slice(-MAX_AI_EDIT_CUES)) {
+    r._aiDoneFlashes.delete(id)
+    r._aiActiveNodes.set(id, now)
+  }
 }
 
 export function aiMarkDone(r: SkiaRenderer, nodeIds: string[]): void {
-  const now = performance.now()
-  for (const id of nodeIds) {
-    if (r._aiActiveNodes.delete(id)) {
-      r._aiDoneFlashes.push({ nodeId: id, startTime: now })
-    }
-  }
+  aiFlashDone(
+    r,
+    nodeIds.filter((id) => r._aiActiveNodes.delete(id))
+  )
 }
 
 export function aiFlashDone(r: SkiaRenderer, nodeIds: string[]): void {
   const now = performance.now()
-  for (const id of nodeIds) {
-    r._aiDoneFlashes.push({ nodeId: id, startTime: now })
+  for (const id of nodeIds.slice(-MAX_AI_EDIT_CUES)) {
+    r._aiDoneFlashes.delete(id)
+    r._aiDoneFlashes.set(id, now)
+  }
+  for (const id of r._aiDoneFlashes.keys()) {
+    if (r._aiDoneFlashes.size <= MAX_AI_EDIT_CUES) break
+    r._aiDoneFlashes.delete(id)
   }
 }
 
@@ -86,9 +96,14 @@ export function aiClearActive(r: SkiaRenderer): void {
 
 export function aiClearAll(r: SkiaRenderer): void {
   r._aiActiveNodes.clear()
-  r._aiDoneFlashes = []
+  r._aiDoneFlashes.clear()
 }
 
 export function hasActiveFlashes(r: SkiaRenderer): boolean {
-  return r._flashes.length > 0 || r._aiActiveNodes.size > 0 || r._aiDoneFlashes.length > 0
+  if (r._flashes.length > 0 || r._aiActiveNodes.size > 0) return true
+  const now = performance.now()
+  for (const start of r._aiDoneFlashes.values()) {
+    if (now - start < AI_DONE_DURATION_MS) return true
+  }
+  return false
 }

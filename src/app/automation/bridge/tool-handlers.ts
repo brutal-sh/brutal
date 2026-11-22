@@ -1,6 +1,5 @@
 import type { FigmaAPI } from '@open-pencil/core/figma-api'
 import { ALL_TOOLS, registerComponentCatalog, isToolExposed } from '@open-pencil/core/tools'
-import type { JSONObject } from '@open-pencil/scene-graph/primitives'
 
 import { agentReplyRun } from '@/app/ai/reply/run'
 import { runEditorTool, type ReplyCall } from '@/app/ai/tools/runner'
@@ -93,24 +92,6 @@ async function runTool(
     isLive:
       def.name === 'select_nodes' ? () => getTabById(target.documentId)?.store === store : undefined
   })
-  if (def.mutates) {
-    store.requestRender()
-    store.flashNodes(extractNodeIds(result))
-  }
+  if (def.mutates) store.requestRender()
   return { result, edited: def.mutates }
-}
-
-function extractNodeIds(result: unknown): string[] {
-  if (!result || typeof result !== 'object') return []
-  const obj = result as JSONObject
-  if (typeof obj.deleted === 'string') return []
-  const ids: string[] = []
-  if (typeof obj.id === 'string') ids.push(obj.id)
-  if (Array.isArray(obj.results)) {
-    for (const item of obj.results) {
-      if (item && typeof item === 'object' && typeof (item as JSONObject).id === 'string')
-        ids.push((item as JSONObject).id as string)
-    }
-  }
-  return ids
 }

@@ -5,6 +5,7 @@ import type { SceneGraph } from '@open-pencil/scene-graph'
 import { drawGuides } from '#core/canvas/guides/draw'
 import { drawIssueHighlight, drawIssueMarkers } from '#core/canvas/issues/draw'
 import { layoutIssueMarkers } from '#core/canvas/issues/layout'
+import { drawAIOverlays } from '#core/canvas/overlays/ai'
 import { drawComponentSetBorders } from '#core/canvas/overlays/component-sets'
 import { drawConnectorTarget } from '#core/canvas/overlays/connectors'
 import { drawDropTarget, drawEditingText } from '#core/canvas/overlays/feedback'
@@ -124,6 +125,7 @@ export function drawOverlayPass(
       : overlays.hoveredNodeId
   // Over the design and under every editing outline, as in Figma.
   if (overlays.showPixelGrid) drawPixelGrid(r, canvas)
+  drawAIOverlays(r, canvas, graph, overlays.rotationPreview)
   drawComponentSetBorders(r, canvas, graph, overlays.rotationPreview)
   drawCodeFocus(r, canvas, graph, overlays.codeFocusNodeId, overlays.rotationPreview)
   if (!measuring)

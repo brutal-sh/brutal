@@ -5,6 +5,7 @@ import type { UndoEntry } from '@open-pencil/scene-graph/undo'
 import { describeUndoneCalls, type CallRef } from '@/app/ai/chat/context'
 import type { PreviewFocus } from '@/app/ai/preview/canvas'
 import { DEFAULT_AGENT_STEPS, resolveAgentStepLimit } from '@/app/ai/reply/step-limit'
+import { changedLayerIds } from '@/app/ai/tools/changes/layers'
 import { getActiveEditorStore } from '@/app/editor/active-store'
 import type { EditorStore } from '@/app/editor/active-store'
 import { addAgent, agentPlacement, type AgentHandle } from '@/app/presence/registry'
@@ -192,18 +193,7 @@ export function markRunWork(store: EditorStore, nodeIds: string[]): void {
  * as `eval` whose result names none. Only the outermost of them are outlined.
  */
 export function markRunChange(store: EditorStore, change: DocumentChange): void {
-  const { graph } = store
-  const layers = new Set(
-    [...change.created.map((node) => node.id), ...change.updated.map((update) => update.id)].filter(
-      // Pages and the document root are where the agent works, not what it works on.
-      (id) => id !== graph.rootId && graph.getNode(id)?.type !== 'CANVAS'
-    )
-  )
-  const outermost = [...layers].filter((id) => {
-    const parentId = graph.getNode(id)?.parentId
-    return !parentId || !layers.has(parentId)
-  })
-  markRunWork(store, outermost)
+  markRunWork(store, changedLayerIds(store.graph, change))
 }
 
 export function recordStep(store?: EditorStore): void {

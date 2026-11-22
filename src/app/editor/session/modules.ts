@@ -58,7 +58,7 @@ export function createEditorComputedRefs(editor: Editor, state: AppEditorState) 
 }
 
 function createEditingModules(editor: Editor, state: AppEditorState) {
-  const flash = createFlashActions(editor, state)
+  const flash = createFlashActions(editor)
   const pen = createPenActions(editor, state)
   const vectorEdit = createVectorEditActions(editor, state)
   return {
@@ -109,7 +109,7 @@ export function createEditorStoreModules(
   const designCheck = createDesignCheck(editor, state)
 
   return {
-    ...editing,
+    ...omit(editing, ['disposeFlashes']),
     attachScriptSource: scriptRuntime.attachScriptSource,
     reloadScript: scriptRuntime.reloadScript,
     scriptRuntimeStates: scriptRuntime.scriptRuntimeStates,
@@ -123,6 +123,7 @@ export function createEditorStoreModules(
       scriptRuntime.dispose()
       shaderSources.dispose()
       designCheck.dispose()
+      editing.disposeFlashes()
       editor.releaseGraphResources()
       editor.dispose()
       editor.clearPageViewports()

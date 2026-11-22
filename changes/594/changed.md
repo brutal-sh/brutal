@@ -1,0 +1,1 @@
+- See a sweep across the layers an agent edits, with a stationary highlight when reduced motion is enabled.

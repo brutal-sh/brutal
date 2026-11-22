@@ -58,6 +58,7 @@ Every call of an OpenPencil tool, from the chat, a coding agent through MCP, or 
 - Calls that change a document take its lock in turn, since whole-page snapshots must not interleave. A reply's call that gets the lock after the reply ended changes nothing and returns an error.
 - The document change is captured and pushed as one undo step. A reply's call labels it `aiUndoLabel(tool)` and records it on the call's own run, the one it started in, even if a later reply has begun; another client's call is labelled by its source, such as `Agent` or `WebMCP`.
 - The change is recorded for the chat's change review, and the agent points at it.
+- During a document edit, the canvas highlights existing targets named by the tool. On success it briefly sweeps across the outermost changed layers from the recorded edit. The cue is drawn in the overlay pass, follows each layer's transform, and stays stationary with reduced motion.
 - A call's result reaches the model as JSON. `eval` converts what a script returns, as MCP and the CLI print it.
 - If you undid or redid the run's own edits since the model last heard, the result carries an `undoNote` saying so.
 

@@ -191,8 +191,9 @@ export class SkiaRenderer {
   _culledCount = 0
   _flashes: Array<{ nodeId: string; startTime: number }> = []
   _flashPaint: Skia.Paint | null = null
-  _aiActiveNodes: Set<string> = new Set()
-  _aiDoneFlashes: Array<{ nodeId: string; startTime: number }> = []
+  aiMotionEnabled = true
+  _aiActiveNodes = new Map<string, number>()
+  _aiDoneFlashes = new Map<string, number>()
 
   readonly DEFAULT_FONT_SIZE = Defaults.DEFAULT_FONT_SIZE
   readonly COMPONENT_SET_BORDER_WIDTH = Defaults.COMPONENT_SET_BORDER_WIDTH

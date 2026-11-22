@@ -9,7 +9,6 @@ import * as Fills from '#core/canvas/fills'
 import * as Labels from '#core/canvas/labels/draw'
 import * as NodeEditOverlay from '#core/canvas/node-edit-overlay'
 import * as Overlays from '#core/canvas/overlays'
-import * as AIOverlays from '#core/canvas/overlays/ai'
 import * as PenOverlay from '#core/canvas/pen-overlay'
 import type { SkiaRenderer } from '#core/canvas/renderer'
 import type { PresenceCursor, RenderOverlays } from '#core/canvas/renderer/types'
@@ -127,7 +126,6 @@ const rendererMethods = {
 
   drawFlashes(canvas: Canvas, graph: SceneGraph): void {
     Overlays.drawFlashes(this, canvas, graph)
-    AIOverlays.drawAIOverlays(this, canvas, graph)
   },
 
   drawLayoutInsertIndicator(

@@ -1,3 +1,5 @@
+import { isPlainObject } from 'es-toolkit'
+
 import { executeAtomicTool, isEmptyDocumentChange, type DocumentChange } from '@open-pencil/core'
 import type { FigmaAPI } from '@open-pencil/core/figma-api'
 import {
@@ -15,11 +17,13 @@ import {
   recordRunUndoEntry,
   type Run
 } from '@/app/ai/reply/run'
+import { touchedNodeIds } from '@/app/automation/agents'
 import { AUTOMATION_UNDO_LABEL, loadAtomicToolFonts } from '@/app/automation/execution/editor'
 import type { EditorStore } from '@/app/editor/active-store'
 import { ensureGraphFonts } from '@/app/editor/fonts'
 
 import { recordToolChange } from './changes/capture'
+import { changedLayerIds } from './changes/layers'
 import { createMutex } from './mutex'
 import { selectInEditor } from './selection'
 
@@ -115,19 +119,30 @@ async function recordReplyCall(
   if (figma.currentPageId !== viewPageId) await moveRunToPage(store, run, figma.currentPageId)
 }
 
+function canShowCommittedEdit(
+  call: EditorToolCall,
+  graph: EditorStore['graph'],
+  reply: ReplyCall | null
+): boolean {
+  return call.store.graph === graph && !call.signal?.aborted && reply?.run.active !== false
+}
+
 /** Applies the tool while its document's lock is held; document edits record history. */
 async function applyTool(call: EditorToolCall, reply: ReplyCall | null): Promise<unknown> {
   if (call.def.name === 'select_nodes') return selectInEditor(call)
   const { store, figma, def, args } = call
   const viewPageId = figma.currentPageId
   const pageId = writtenPageId(figma, args)
+  const editing = toolChangesDocument(def)
   // A reply's first edit to a page keeps the whole page, which `changeBaseline` diffs.
-  if (reply && toolChangesDocument(def) && !reply.run.baselines.has(pageId)) {
+  if (reply && editing && !reply.run.baselines.has(pageId)) {
     recordRunBaseline(reply.run, store.snapshotPage(pageId))
   }
   const prefix = reply ? AI_UNDO_PREFIX : (call.source ?? AUTOMATION_UNDO_LABEL)
   const undoBefore = store.undo.peekUndo()
   const recorded: { change?: DocumentChange } = {}
+  const targetGraph = store.graph
+  const targets = editing ? touchedNodeIds(store, args, undefined) : []
   const options = {
     label: `${prefix}: ${def.name}`,
     pageId,
@@ -135,10 +150,13 @@ async function applyTool(call: EditorToolCall, reply: ReplyCall | null): Promise
       recorded.change = change
     }
   }
+  let succeeded = false
+  if (targets.length > 0) store.aiMarkActive(targets)
   try {
+    let result: unknown
     if (isAtomicTool(def)) {
       // An atomic tool commits its own step at once; loading its fonts after is not part of it.
-      const result = store.recordEdit({ ...options, push: false }, () =>
+      result = store.recordEdit({ ...options, push: false }, () =>
         executeAtomicTool(store, figma, def, args, {
           label: prefix,
           signal: call.signal,
@@ -146,10 +164,16 @@ async function applyTool(call: EditorToolCall, reply: ReplyCall | null): Promise
         })
       )
       await loadAtomicToolFonts(store, figma, args, { isLive: call.isLive })
-      return result
+    } else {
+      result = await store.recordEditAsync(options, () => execute(call, pageId))
     }
-    return await store.recordEditAsync(options, () => execute(call, pageId))
+    succeeded = !(isPlainObject(result) && typeof result.error === 'string')
+    return result
   } finally {
+    if (targets.length > 0) store.aiClearActive()
+    if (editing && succeeded && recorded.change && canShowCommittedEdit(call, targetGraph, reply)) {
+      store.aiFlashDone(changedLayerIds(store.graph, recorded.change))
+    }
     if (reply && recorded.change) {
       await recordReplyCall(call, reply, { change: recorded.change, undoBefore, viewPageId })
     }

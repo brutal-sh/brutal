@@ -72,13 +72,7 @@ export function createAITools(store: EditorStore, diagnosticContext?: AIDiagnost
       onAfterExecute: (def) => {
         if (def.mutates && !isAtomicTool(def)) store.requestRender()
       },
-      onFlashNodes: (nodeIds) => {
-        markRunWork(store, nodeIds)
-        store.renderer?.aiClearActive()
-        if (nodeIds.length > 0) {
-          store.aiFlashDone(nodeIds)
-        }
-      },
+      onFlashNodes: (nodeIds) => markRunWork(store, nodeIds),
       onToolLog: (entry) => {
         recordToolCompleted(
           {

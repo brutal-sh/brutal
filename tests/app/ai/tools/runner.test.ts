@@ -1,5 +1,5 @@
 import 'fake-indexeddb/auto'
-import { afterEach, beforeEach, expect, test } from 'bun:test'
+import { afterEach, beforeEach, expect, spyOn, test } from 'bun:test'
 
 import { ALL_TOOLS } from '@open-pencil/core/tools'
 import { SceneGraph } from '@open-pencil/scene-graph'
@@ -78,4 +78,57 @@ test('undoing an asynchronous tool call returns the document to saved', async ()
   store.undo.undo()
   await Promise.resolve()
   expect(store.hasUnsavedChanges()).toBe(false)
+})
+
+test('a known layer stays highlighted through a slow edit and only commits a cue on success', async () => {
+  const rename = expectDefined(
+    ALL_TOOLS.find((tool) => tool.name === 'rename_node'),
+    'rename_node'
+  )
+  const pageId = store.state.currentPageId
+  const figma = makeFigmaFromStore(store, pageId)
+  const { id } = store.graph.createNode('ELLIPSE', pageId, { name: 'Before' })
+  const began = createDeferred<undefined>()
+  const finish = createDeferred<undefined>()
+  const active = spyOn(store, 'aiMarkActive')
+  const clear = spyOn(store, 'aiClearActive')
+  const done = spyOn(store, 'aiFlashDone')
+  const args = { id, name: 'After' }
+  try {
+    const pending = runEditorTool({
+      store,
+      figma,
+      args,
+      def: {
+        ...rename,
+        execute: async () => {
+          began.resolve(undefined)
+          await finish.promise
+          return rename.execute(figma, args)
+        }
+      }
+    })
+    await began.promise
+    expect(active).toHaveBeenCalledWith([id])
+    expect(clear).not.toHaveBeenCalled()
+    expect(done).not.toHaveBeenCalled()
+    finish.resolve(undefined)
+    await pending
+    expect(clear).toHaveBeenCalledTimes(1)
+    expect(done).toHaveBeenCalledWith([id])
+
+    await runEditorTool({
+      store,
+      figma,
+      args,
+      def: { ...rename, execute: () => ({ error: 'Edit failed' }) }
+    })
+    expect(clear).toHaveBeenCalledTimes(2)
+    expect(done).toHaveBeenCalledTimes(1)
+  } finally {
+    finish.resolve(undefined)
+    active.mockRestore()
+    clear.mockRestore()
+    done.mockRestore()
+  }
 })

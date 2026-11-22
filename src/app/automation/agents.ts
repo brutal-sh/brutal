@@ -12,7 +12,16 @@ export const MCP_AGENT_IDLE_MS = 20_000
 export const MCP_AGENT_GONE_MS = 10 * 60_000
 const MAX_SESSION_ID = 128
 /** Argument and result fields that name the layers a tool works on. */
-const NODE_ID_FIELDS = ['id', 'ids', 'node_id', 'node_ids', 'parent_id', 'root_id', 'target_id']
+const NODE_ID_FIELDS = [
+  'id',
+  'ids',
+  'node_id',
+  'node_ids',
+  'parent_id',
+  'root_id',
+  'target_id',
+  'replace_id'
+]
 const NODE_LIST_FIELDS = ['results', 'selection', 'nodes']
 
 const agentSessionSchema = v.object({

@@ -1,51 +1,78 @@
-import type { Editor, EditorState } from '@open-pencil/core'
+import { useTimeoutFn } from '@vueuse/core'
 
-export function createFlashActions(editor: Editor, state: EditorState) {
-  let flashRafId = 0
+import type { Editor } from '@open-pencil/core'
+import { AI_DONE_DURATION_MS } from '@open-pencil/core/constants'
 
-  function pumpFlashes() {
-    if (!editor.renderer?.hasActiveFlashes) {
-      flashRafId = 0
-      return
+import { animationsEnabled } from '@/app/shell/motion'
+
+export function createFlashActions(editor: Editor) {
+  let frame: number | null = null
+
+  function repaint() {
+    for (const renderer of editor.canvasRenderers)
+      renderer.aiMotionEnabled = animationsEnabled.value
+    editor.requestRepaint()
+  }
+
+  const expiry = useTimeoutFn(repaint, AI_DONE_DURATION_MS, { immediate: false })
+
+  function schedule() {
+    if (
+      frame === null &&
+      editor.canvasRenderers.some((renderer) =>
+        animationsEnabled.value ? renderer.hasActiveFlashes : renderer._flashes.length > 0
+      )
+    ) {
+      frame = requestAnimationFrame(() => {
+        frame = null
+        repaint()
+        schedule()
+      })
     }
-    state.renderVersion++
-    flashRafId = requestAnimationFrame(pumpFlashes)
   }
 
   function flashNodes(nodeIds: string[]) {
-    const renderer = editor.renderer
-    if (!renderer) return
-    for (const id of nodeIds) renderer.flashNode(id)
-    if (!flashRafId) pumpFlashes()
+    if (!editor.renderer) return
+    for (const id of nodeIds) editor.renderer.flashNode(id)
+    repaint()
+    schedule()
   }
 
   function aiMarkActive(nodeIds: string[]) {
-    if (!editor.renderer) return
-    editor.renderer.aiMarkActive(nodeIds)
-    if (!flashRafId) pumpFlashes()
+    if (!nodeIds.length || !editor.canvasRenderers.length) return
+    for (const renderer of editor.canvasRenderers) renderer.aiMarkActive(nodeIds)
+    repaint()
+    schedule()
   }
 
-  function aiMarkDone(nodeIds: string[]) {
-    if (!editor.renderer) return
-    editor.renderer.aiMarkDone(nodeIds)
-    if (!flashRafId) pumpFlashes()
+  function aiClearActive() {
+    for (const renderer of editor.canvasRenderers) renderer.aiClearActive()
+    repaint()
   }
 
   function aiFlashDone(nodeIds: string[]) {
-    if (!editor.renderer) return
-    editor.renderer.aiFlashDone(nodeIds)
-    if (!flashRafId) pumpFlashes()
+    if (!nodeIds.length || !editor.canvasRenderers.length) return
+    for (const renderer of editor.canvasRenderers) renderer.aiFlashDone(nodeIds)
+    repaint()
+    schedule()
+    // Reduced motion keeps a stationary outline until this repaint clears it.
+    expiry.start()
   }
 
-  function aiClearAll() {
-    editor.renderer?.aiClearAll()
+  function clearEditCues() {
+    expiry.stop()
+    for (const renderer of editor.canvasRenderers) renderer.aiClearAll()
+  }
+  const stopGraphListener = editor.onEditorEvent('graph:replaced', () => {
+    clearEditCues()
+    repaint()
+  })
+
+  function disposeFlashes() {
+    stopGraphListener()
+    if (frame !== null) cancelAnimationFrame(frame)
+    clearEditCues()
   }
 
-  return {
-    flashNodes,
-    aiMarkActive,
-    aiMarkDone,
-    aiFlashDone,
-    aiClearAll
-  }
+  return { flashNodes, aiMarkActive, aiClearActive, aiFlashDone, disposeFlashes }
 }
