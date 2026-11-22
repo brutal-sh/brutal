@@ -1,4 +1,4 @@
-import type { Canvas } from 'canvaskit-wasm'
+import type { Canvas, Path } from 'canvaskit-wasm'
 
 import type { SceneGraph } from '@open-pencil/scene-graph'
 import { readableForeground } from '@open-pencil/scene-graph/color'
@@ -6,14 +6,13 @@ import { getWorldMatrix } from '@open-pencil/scene-graph/coordinate'
 import Matrix from '@open-pencil/scene-graph/matrix'
 
 import type { PresenceCursor, SkiaRenderer } from '#core/canvas/renderer'
+import { POINTER_ARROW } from '#core/constants'
 
-const CURSOR_SIZE = 9
-const AGENT_POINTER_RADIUS = 8
 const LABEL_PADDING_X = 4
 const LABEL_PADDING_Y = 2
 const LABEL_FONT_SIZE = 10
-const LABEL_OFFSET_X = 12
-const LABEL_OFFSET_Y = 20
+const LABEL_OFFSET_X = 15
+const LABEL_OFFSET_Y = 12
 /** Longer names end with an ellipsis. */
 const LABEL_MAX_WIDTH = 160
 
@@ -62,46 +61,21 @@ function drawSelection(r: SkiaRenderer, canvas: Canvas, graph: SceneGraph, curso
   }
 }
 
-function arrowPath(r: SkiaRenderer, x: number, y: number) {
-  const S = CURSOR_SIZE
-  const builder = new r.ck.PathBuilder()
-  builder.moveTo(x, y)
-  builder.lineTo(x, y + S * 1.35)
-  builder.lineTo(x + S * 0.38, y + S * 1.0)
-  builder.lineTo(x + S * 0.72, y + S * 1.5)
-  builder.lineTo(x + S * 0.92, y + S * 1.38)
-  builder.lineTo(x + S * 0.58, y + S * 0.88)
-  builder.lineTo(x + S * 1.0, y + S * 0.82)
-  builder.close()
-  return builder.detachAndDelete()
-}
-
-/** A four-point sparkle of radius `R` centered on `cx`, `cy`. */
-function sparklePath(r: SkiaRenderer, cx: number, cy: number, R: number) {
-  const inner = R * 0.32
-  const builder = new r.ck.PathBuilder()
-  builder.moveTo(cx, cy - R)
-  builder.lineTo(cx + inner, cy - inner)
-  builder.lineTo(cx + R, cy)
-  builder.lineTo(cx + inner, cy + inner)
-  builder.lineTo(cx, cy + R)
-  builder.lineTo(cx - inner, cy + inner)
-  builder.lineTo(cx - R, cy)
-  builder.lineTo(cx - inner, cy - inner)
-  builder.close()
-  return builder.detachAndDelete()
-}
-
-/** The pointer uses its own color and a white outline. */
+/** Color identifies the person or agent and the rim keeps the pointer visible on the canvas. */
 function drawPointer(
   r: SkiaRenderer,
   canvas: Canvas,
+  path: Path,
   x: number,
   y: number,
-  cursor: PresenceCursor
+  cursor: PresenceCursor,
+  mirrored: boolean
 ) {
-  const path =
-    cursor.kind === 'agent' ? sparklePath(r, x, y, AGENT_POINTER_RADIUS) : arrowPath(r, x, y)
+  canvas.save()
+  canvas.translate(x, y)
+  canvas.scale(mirrored ? -1 : 1, 1)
+  canvas.translate(-POINTER_ARROW.tipX, -POINTER_ARROW.tipY)
+
   r.auxStroke.setColor(r.ck.WHITE)
   r.auxStroke.setStrokeWidth(2)
   r.auxStroke.setPathEffect(null)
@@ -109,21 +83,27 @@ function drawPointer(
   const { r: red, g, b } = cursor.color
   r.auxFill.setColor(r.ck.Color4f(red, g, b, 1))
   canvas.drawPath(path, r.auxFill)
-  path.delete()
+  canvas.restore()
 }
 
 /** A solid identity label, including the agent's model when known. */
-function drawLabel(r: SkiaRenderer, canvas: Canvas, x: number, y: number, cursor: PresenceCursor) {
+function drawLabel(
+  r: SkiaRenderer,
+  canvas: Canvas,
+  x: number,
+  y: number,
+  cursor: PresenceCursor,
+  mirrored: boolean
+) {
   const provider = r.fontProvider
-  if (!cursor.name || !provider) return
+  if (!cursor.name || !provider || x < 0 || x >= r.viewportWidth) return
   const { r: red, g, b } = cursor.color
   const color = r.ck.Color4f(red, g, b, 1)
   const agent = cursor.kind === 'agent'
   const title = agent && cursor.model ? `${cursor.name} · ${cursor.model}` : cursor.name
   const ink = readableForeground(cursor.color)
   const labelInk = r.ck.Color4f(ink.r, ink.g, ink.b, 1)
-  const pillX = x + LABEL_OFFSET_X - LABEL_PADDING_X
-  const pillY = y + LABEL_OFFSET_Y - LABEL_FONT_SIZE - LABEL_PADDING_Y + 2
+  const pillY = y + LABEL_OFFSET_Y
   const pillHeight = LABEL_FONT_SIZE + LABEL_PADDING_Y * 2
   // Shaped like other canvas labels: kerning, fallback fonts, and RTL names.
   r.labelParagraphCache.use(
@@ -132,15 +112,14 @@ function drawLabel(r: SkiaRenderer, canvas: Canvas, x: number, y: number, cursor
     title,
     LABEL_FONT_SIZE,
     LABEL_MAX_WIDTH,
-    agent ? labelInk : r.ck.WHITE,
+    labelInk,
     r.fontGeneration,
     ({ paragraph, metrics }) => {
       const radius = agent ? pillHeight / 2 : 4
-      const pill = r.ck.RRectXY(
-        r.ck.XYWHRect(pillX, pillY, metrics.width + LABEL_PADDING_X * 2, pillHeight),
-        radius,
-        radius
-      )
+      const width = metrics.width + LABEL_PADDING_X * 2
+      const targetX = mirrored ? x - LABEL_OFFSET_X - width : x + LABEL_OFFSET_X
+      const pillX = Math.max(0, Math.min(targetX, r.viewportWidth - width))
+      const pill = r.ck.RRectXY(r.ck.XYWHRect(pillX, pillY, width, pillHeight), radius, radius)
       r.auxFill.setColor(color)
       canvas.drawRRect(pill, r.auxFill)
       canvas.drawParagraph(
@@ -157,13 +136,20 @@ export function drawPresenceCursors(
   r: SkiaRenderer,
   canvas: Canvas,
   graph: SceneGraph,
-  cursors?: PresenceCursor[]
+  cursors?: PresenceCursor[],
+  mirrored = false
 ): void {
-  for (const cursor of cursors ?? []) {
-    const x = cursor.x * r.zoom + r.panX
-    const y = cursor.y * r.zoom + r.panY
-    drawSelection(r, canvas, graph, cursor)
-    drawPointer(r, canvas, x, y, cursor)
-    drawLabel(r, canvas, x, y, cursor)
+  if (!cursors?.length) return
+  const path = r.ck.Path.MakeFromSVGString(POINTER_ARROW.path)
+  try {
+    for (const cursor of cursors) {
+      const x = cursor.x * r.zoom + r.panX
+      const y = cursor.y * r.zoom + r.panY
+      drawSelection(r, canvas, graph, cursor)
+      if (path) drawPointer(r, canvas, path, x, y, cursor, mirrored)
+      drawLabel(r, canvas, x, y, cursor, mirrored)
+    }
+  } finally {
+    path?.delete()
   }
 }

@@ -31,3 +31,47 @@ input[type='number']::-webkit-inner-spin-button,
 input[type='number']::-webkit-outer-spin-button {
   display: none;
 }
+
+:root {
+  --app-pointer: var(--custom-app-pointer, default);
+  --app-link-pointer: var(--custom-app-link-pointer, pointer);
+  cursor: var(--app-pointer);
+}
+
+@media (forced-colors: active) {
+  :root {
+    --app-pointer: default;
+    --app-link-pointer: pointer;
+  }
+}
+
+@layer base {
+  :where(a[href], button:not(:disabled), summary) {
+    cursor: var(--app-link-pointer);
+  }
+
+  :where(
+    textarea,
+    input:not([type]),
+    input:is(
+      [type='text'],
+      [type='number'],
+      [type='search'],
+      [type='email'],
+      [type='url'],
+      [type='tel'],
+      [type='password']
+    ),
+    [contenteditable='true']
+  ) {
+    cursor: text;
+  }
+}
+
+@utility cursor-default {
+  cursor: var(--app-pointer, default);
+}
+
+@utility cursor-pointer {
+  cursor: var(--app-link-pointer, pointer);
+}

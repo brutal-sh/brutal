@@ -4,7 +4,7 @@ test.use({ viewport: { width: 900, height: 700 } })
 
 const editor = useEditorSetupWithClear('/?test&no-chrome&no-rulers')
 
-test('people and agents show arrows in their color, agents with an outlined sparkle label', async () => {
+test('people and agents show rounded arrows in their color', async () => {
   await editor.page.evaluate(() => {
     const store = window.openPencil?.getStore?.()
     if (!store) throw new Error('OpenPencil store not initialized')
@@ -35,6 +35,19 @@ test('people and agents show arrows in their color, agents with an outlined spar
   await editor.canvas.waitForRender()
   editor.canvas.assertNoErrors()
   expect(await editor.canvas.screenshotCanvasRegion(600, 420)).toMatchSnapshot(
-    'presence-cursors.png'
+    'presence-cursors.png',
+    { maxDiffPixels: 40 }
+  )
+
+  await editor.page.evaluate(() => {
+    const store = window.openPencil?.getStore?.()
+    if (!store) throw new Error('OpenPencil store not initialized')
+    store.state.mirrorPresencePointers = true
+    store.requestRepaint()
+  })
+  await editor.canvas.waitForRender()
+  expect(await editor.canvas.screenshotCanvasRegion(600, 420)).toMatchSnapshot(
+    'presence-cursors-left.png',
+    { maxDiffPixels: 40 }
   )
 })

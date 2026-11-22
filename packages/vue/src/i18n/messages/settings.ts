@@ -4,6 +4,10 @@ import { i18n } from '#vue/i18n/create'
 
 export const settingsMessageDefaults = {
   appearance: 'Appearance',
+  pointer: 'Pointer',
+  pointerRight: 'Right-handed',
+  pointerLeft: 'Left-handed',
+  pointerSystem: 'System pointer',
   animations: 'Animations',
   animationsSystem: 'Follow system',
   animationsOff: 'Off',

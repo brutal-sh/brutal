@@ -23,7 +23,7 @@ import {
 } from './vite/automation'
 import { bootSplashPlugin } from './vite/boot-splash'
 import { cloudSitePlugin } from './vite/cloud-site'
-import { aiIconCollection } from './vite/icons'
+import { aiIconCollection, brutalIconCollection } from './vite/icons'
 import { inlineScriptPlugin } from './vite/inline-script'
 import { metricsBrandPlugin } from './vite/metrics'
 import { nativeTestPlugin } from './vite/native-test'
@@ -81,7 +81,10 @@ export default defineConfig(async ({ command, mode }) => {
         pages: ['index.html', 'cloud.html', 'metrics.html']
       }),
       tailwindcss(),
-      Icons({ compiler: 'vue3', customCollections: { ai: aiIconCollection() } }),
+      Icons({
+        compiler: 'vue3',
+        customCollections: { ai: aiIconCollection(), brutal: brutalIconCollection }
+      }),
       Components({ resolvers: [IconsResolver({ prefix: 'icon', customCollections: ['ai'] })] }),
       automation ? openPencilAutomationPlugin(command, host) : undefined,
       vue(),

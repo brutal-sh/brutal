@@ -12,7 +12,6 @@ import IconImage from '~icons/lucide/image'
 import IconSection from '~icons/lucide/layout-grid'
 import IconMessageCircle from '~icons/lucide/message-circle'
 import IconMinus from '~icons/lucide/minus'
-import IconMousePointer from '~icons/lucide/mouse-pointer'
 import IconPenTool from '~icons/lucide/pen-tool'
 import IconPencil from '~icons/lucide/pencil'
 import IconRows from '~icons/lucide/rows-3'
@@ -37,10 +36,11 @@ import { slotPropertyId } from '@open-pencil/scene-graph/slots'
 import type { LayerOutline } from '@open-pencil/vue/primitives/LayerTree'
 
 import { outlineIcon } from './outlines'
+import PointerIcon from './PointerIcon.vue'
 import { SHAPE_KIND_ICONS } from './shapes'
 
 export const toolIcons: Record<Tool, Component> = {
-  SELECT: IconMousePointer,
+  SELECT: PointerIcon,
   SCALE: IconScaling,
   FRAME: IconFrame,
   SECTION: IconSection,

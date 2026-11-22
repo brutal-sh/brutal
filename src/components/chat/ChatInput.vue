@@ -16,6 +16,7 @@ import ChatProfileSelect from '@/components/chat/ChatProfileSelect.vue'
 import ChatThinkingSelect from '@/components/chat/ChatThinkingSelect.vue'
 import { useComposerCompletions } from '@/components/chat/composer/useComposerCompletions'
 import { useAttachmentDrafts } from '@/components/chat/input/useAttachments'
+import PointerIcon from '@/components/icons/PointerIcon.vue'
 import IconButton from '@/components/ui/button/IconButton.vue'
 import AppDropOverlay from '@/components/ui/feedback/AppDropOverlay.vue'
 
@@ -184,7 +185,7 @@ const isAgentProvider = computed(
         data-slot="chat-mention-selection"
         @click="composer?.insert(selectionMentions())"
       >
-        <icon-lucide-mouse-pointer-2 class="size-4" />
+        <PointerIcon class="size-4" />
       </IconButton>
       <IconButton
         :label="ai.attachImages"

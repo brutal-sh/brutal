@@ -111,6 +111,7 @@ export function renderFromEditorState(
       pencilState: state.pencilState,
       nodeEditState: state.nodeEditState ?? null,
       presenceCursors: state.presenceCursors,
+      mirrorPresencePointers: state.mirrorPresencePointers,
       designIssues: state.designIssues,
       codeFocusNodeId: state.codeFocusNodeId,
       autoLayoutHover: state.autoLayoutHover,

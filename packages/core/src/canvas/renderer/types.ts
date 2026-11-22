@@ -115,6 +115,7 @@ export interface RenderOverlays {
     selectedRegions?: Set<number>
   } | null
   presenceCursors?: PresenceCursor[]
+  mirrorPresencePointers?: boolean
   designIssues?: DesignIssueOverlay | null
   codeFocusNodeId?: string | null
 }

@@ -9,6 +9,7 @@ import type { Alias, Plugin, PluginOption } from 'vite'
 import desktopConfig from '../desktop/tauri.conf.json' with { type: 'json' }
 import rootManifest from '../package.json' with { type: 'json' }
 import { createOpenPencilAliases } from './aliases.ts'
+import { brutalIconCollection } from './icons.ts'
 import { inlineScriptPlugin } from './inline-script.ts'
 
 const REPO_ROOT = fileURLToPath(new URL('..', import.meta.url))
@@ -78,7 +79,7 @@ export function appSourceConfig(): AppSourceConfig {
     plugins: [
       appRawText(),
       inlineScriptPlugin(),
-      Icons({ compiler: 'vue3' }),
+      Icons({ compiler: 'vue3', customCollections: { brutal: brutalIconCollection } }),
       Components({ dirs: [], dts: false, resolvers: [IconsResolver({ prefix: 'icon' })] })
     ]
   }

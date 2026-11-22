@@ -13,6 +13,7 @@ import { startCloud } from '@/app/cloud/integration'
 import { useDocumentCloseProtection } from '@/app/document/close/use'
 import { useFollowingEditorStore } from '@/app/editor/active-store'
 import { animationsEnabled } from '@/app/shell/motion'
+import { usePointerStyle } from '@/app/shell/pointer'
 import { useAppTheme } from '@/app/shell/theme'
 import { toast } from '@/app/shell/ui'
 import { useRestartApprovals } from '@/app/shell/updater/approvals'
@@ -49,6 +50,7 @@ useHead({
 
 provideEditor(useFollowingEditorStore())
 useAppTheme()
+usePointerStyle()
 useDocumentCloseProtection()
 useRestartApprovals()
 // Start the best-effort flush before pagehide tears down the worker's document.

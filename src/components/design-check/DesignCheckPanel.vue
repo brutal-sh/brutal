@@ -4,6 +4,7 @@ import { computed, useTemplateRef } from 'vue'
 import { useDesignCheckMessages } from '@open-pencil/vue/i18n'
 
 import { turnOffDesignCheckRule } from '@/app/settings/preferences/apply'
+import PointerIcon from '@/components/icons/PointerIcon.vue'
 import AppButton from '@/components/ui/button/AppButton.vue'
 import AppPlaceholder from '@/components/ui/feedback/AppPlaceholder.vue'
 import SegmentedControl from '@/components/ui/select/SegmentedControl.vue'
@@ -81,7 +82,7 @@ const scopeModel = computed({
       <template #icon>
         <icon-lucide-circle-check v-if="emptyState.kind === 'clean'" class="size-4 text-success" />
         <icon-lucide-list-filter v-else-if="emptyState.kind === 'filtered'" class="size-4" />
-        <icon-lucide-mouse-pointer-2 v-else class="size-4" />
+        <PointerIcon v-else class="size-4" />
       </template>
       <template v-if="emptyState.kind === 'filtered'" #action>
         <AppButton color="primary" size="xs" @click="clearFilters">

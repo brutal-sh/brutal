@@ -3,6 +3,15 @@ import { fileURLToPath } from 'node:url'
 
 import { FileSystemIconLoader } from 'unplugin-icons/loaders'
 
+import { POINTER_ARROW } from '@open-pencil/core/constants'
+
+export const brutalIconCollection = {
+  pointer: () => {
+    const { size, path } = POINTER_ARROW
+    return `<svg viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg"><path d="${path}" fill="currentColor"/></svg>`
+  }
+}
+
 /**
  * Monochrome provider and agent logos from LobeHub, used as `<icon-ai-openai />` or
  * `~icons/ai/openai`. They draw with `currentColor` on a 24px grid, like Lucide.

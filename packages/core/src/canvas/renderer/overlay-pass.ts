@@ -169,7 +169,7 @@ export function drawOverlayPass(
   r.drawSnapMarks(canvas, overlays.snapGuides)
   updateIssueMarkers(r, graph, overlays)
   drawIssueMarkers(r, canvas, r.issueMarkers, overlays.designIssues?.hoveredMarkerKey)
-  r.drawPresenceCursors(canvas, graph, overlays.presenceCursors)
+  r.drawPresenceCursors(canvas, graph, overlays.presenceCursors, overlays.mirrorPresencePointers)
 }
 
 export function drawChromePass(

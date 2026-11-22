@@ -11,7 +11,9 @@ import { RECENT_FILES_LIMIT_MIN, RECENT_FILES_LIMIT_MAX } from '@/app/recent-fil
 import {
   appPreferences,
   DEFAULT_APP_PREFERENCES,
-  updateAccentPreference
+  updateAccentPreference,
+  updatePointerStyle,
+  type PointerStyle
 } from '@/app/settings/preferences/store'
 import { DEFAULT_THEME } from '@/app/settings/theme'
 import { DEFAULT_ACCENT } from '@/app/shell/accent/palette'
@@ -48,6 +50,12 @@ const languageOptions = availableLocales.map((value) => ({
   value,
   label: localeLabels[value]
 }))
+
+const defaultPointer = DEFAULT_APP_PREFERENCES.appearance.pointer
+const pointer = computed<PointerStyle>({
+  get: () => appPreferences.value.appearance.pointer,
+  set: updatePointerStyle
+})
 
 const defaultAnimations = DEFAULT_APP_PREFERENCES.appearance.animations
 const defaultRecovery = DEFAULT_APP_PREFERENCES.recovery.enabled
@@ -109,6 +117,23 @@ const preserveUnsavedWork = computed({
             <AccentColorPicker />
           </span>
         </div>
+        <SettingsRow
+          as="label"
+          :label="settings.pointer"
+          :modified="pointer !== defaultPointer"
+          @reset="pointer = defaultPointer"
+        >
+          <AppSelect
+            v-model="pointer"
+            :label="settings.pointer"
+            :options="[
+              { value: 'right', label: settings.pointerRight },
+              { value: 'left', label: settings.pointerLeft },
+              { value: 'system', label: settings.pointerSystem }
+            ]"
+            :ui="selectUI"
+          />
+        </SettingsRow>
         <SettingsRow
           as="label"
           :label="settings.animations"

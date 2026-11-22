@@ -19,6 +19,9 @@ import { accentPreferenceSchema, type AccentPreference } from '@/app/shell/accen
 export const ANIMATION_PREFERENCES = ['system', 'off'] as const
 export type AnimationPreference = (typeof ANIMATION_PREFERENCES)[number]
 
+export const POINTER_STYLES = ['right', 'left', 'system'] as const
+export type PointerStyle = (typeof POINTER_STYLES)[number]
+
 export const REASONING_DISPLAYS = ['collapsed', 'while-thinking', 'expanded'] as const
 export type ReasoningDisplay = (typeof REASONING_DISPLAYS)[number]
 
@@ -75,7 +78,7 @@ export const AI_SETUP_STATES = ['pending', 'done'] as const
 export type AISetupState = (typeof AI_SETUP_STATES)[number]
 
 export interface AppPreferences {
-  appearance: { animations: AnimationPreference; accent: AccentPreference }
+  appearance: { animations: AnimationPreference; accent: AccentPreference; pointer: PointerStyle }
   chat: {
     textSize: ChatTextSize
     reasoningDisplay: ReasoningDisplay
@@ -108,7 +111,7 @@ export interface AppPreferences {
 }
 
 export const DEFAULT_APP_PREFERENCES: Readonly<AppPreferences> = {
-  appearance: { animations: 'system', accent: { ...DEFAULT_ACCENT } },
+  appearance: { animations: 'system', accent: { ...DEFAULT_ACCENT }, pointer: 'right' },
   chat: {
     textSize: 'small',
     reasoningDisplay: 'collapsed',
@@ -152,7 +155,8 @@ const snapping = defaults.editing.snapping
 const appPreferencesSchema = section({
   appearance: section({
     animations: v.fallback(v.picklist(ANIMATION_PREFERENCES), defaults.appearance.animations),
-    accent: v.fallback(accentPreferenceSchema, () => ({ ...DEFAULT_ACCENT }))
+    accent: v.fallback(accentPreferenceSchema, () => ({ ...DEFAULT_ACCENT })),
+    pointer: v.fallback(v.picklist(POINTER_STYLES), defaults.appearance.pointer)
   }),
   chat: section({
     textSize: v.fallback(v.picklist(CHAT_TEXT_SIZES), defaults.chat.textSize),
@@ -239,6 +243,13 @@ export function updateAnimationPreference(animations: AnimationPreference): void
   appPreferences.value = {
     ...appPreferences.value,
     appearance: { ...appPreferences.value.appearance, animations }
+  }
+}
+
+export function updatePointerStyle(pointer: PointerStyle): void {
+  appPreferences.value = {
+    ...appPreferences.value,
+    appearance: { ...appPreferences.value.appearance, pointer }
   }
 }
 

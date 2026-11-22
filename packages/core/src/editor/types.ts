@@ -97,6 +97,8 @@ export interface EditorSharedState {
   /** The gradient being edited, whose handles the canvas draws and drags. */
   gradientEdit?: GradientEdit | null
   presenceCursors: PresenceCursor[]
+  /** Mirrors people and agent pointers in the local canvas view. */
+  mirrorPresencePointers?: boolean
   documentName: string
   /** Design check markers and highlight, shared by every canvas pane. */
   designIssues: DesignIssueOverlay | null

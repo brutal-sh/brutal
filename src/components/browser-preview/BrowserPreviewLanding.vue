@@ -8,6 +8,7 @@ import {
   removeBrowserVisit
 } from '@/app/browser-preview/history/storage'
 import { previewAddressLabel } from '@/app/browser-preview/schema'
+import PointerIcon from '@/components/icons/PointerIcon.vue'
 import AppButton from '@/components/ui/button/AppButton.vue'
 import IconButton from '@/components/ui/button/IconButton.vue'
 import { OPEN_PEN_HELP_URL, OPEN_PEN_WEBSITE_URL } from '@/constants'
@@ -45,7 +46,7 @@ const ui = tv(theme)()
           </div>
         </div>
         <div :class="ui.feature()">
-          <div :class="ui.featureIcon()"><icon-lucide-mouse-pointer-2 class="size-5" /></div>
+          <div :class="ui.featureIcon()"><PointerIcon class="size-5" /></div>
           <div>
             <h3 :class="ui.featureTitle()">Import an element</h3>
             <p :class="ui.featureDescription()">

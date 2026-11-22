@@ -72,6 +72,47 @@ test('Appearance groups theme and animation controls and uses the persisted app 
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
 })
 
+test('Pointer preference mirrors the arrow hotspot, persists, and offers the system cursor', async ({
+  page
+}) => {
+  await page.goto('/?test')
+  const canvas = new CanvasHelper(page)
+  await canvas.waitForInit()
+  const drawingSurface = page.getByTestId('canvas-area').locator('canvas').last()
+  const cursor = () => drawingSurface.evaluate((element) => getComputedStyle(element).cursor)
+  await expect.poll(cursor).toMatch(/ 5 4, default$/)
+  const moveIcon = page.getByRole('button', { name: 'Move', exact: true }).locator('svg')
+  await expect(moveIcon).toHaveCSS('scale', 'none')
+
+  await openSettings(page)
+  const pointer = page.getByRole('combobox', { name: 'Pointer', exact: true })
+  await expect(pointer).toHaveText('Right-handed')
+  await pointer.focus()
+  await pointer.press('Space')
+  const left = page.getByRole('option', { name: 'Left-handed', exact: true })
+  await expect(left).toBeVisible()
+  await left.focus()
+  await left.press('Enter')
+  await expect(pointer).toHaveText('Left-handed')
+  await expect(pointer).toHaveCSS('cursor', / 19 4, pointer$/)
+  await expect.poll(cursor).toMatch(/ 19 4, default$/)
+
+  await page.reload()
+  await canvas.waitForInit()
+  await expect.poll(cursor).toMatch(/ 19 4, default$/)
+  await expect(moveIcon).toHaveCSS('scale', '-1 1')
+  await openSettings(page)
+  await expect(pointer).toHaveText('Left-handed')
+  await pointer.click()
+  await page.getByRole('option', { name: 'System pointer', exact: true }).click()
+  await page.getByTestId('app-settings-done').click()
+  await expect.poll(cursor).toBe('default')
+
+  await page.getByRole('button', { name: 'Text', exact: true }).click()
+  await expect.poll(cursor).toBe('text')
+  canvas.assertNoErrors()
+})
+
 test('Accent color recolors the interface, persists, and a cancelled custom pick restores it', async ({
   page
 }) => {

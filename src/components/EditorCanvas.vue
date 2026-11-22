@@ -259,12 +259,24 @@ const valueEditorIcon = computed(() => {
     : IconLucideAlignHorizontalSpaceBetween
 })
 
-const cursor = computed(() =>
-  toolCursor(
+watch(
+  () => appPreferences.value.appearance.pointer === 'left',
+  (mirrored) => {
+    store.state.mirrorPresencePointers = mirrored
+    store.requestRepaint()
+  },
+  { immediate: true }
+)
+
+const cursor = computed(() => {
+  const cursor = toolCursor(
     store.state.activeTool,
     issueMarkerCursor.value ?? statusLabelCursor.value ?? cursorOverride.value
   )
-)
+  if (cursor === 'default') return 'var(--app-pointer, default)'
+  if (cursor === 'pointer') return 'var(--app-link-pointer, pointer)'
+  return cursor
+})
 </script>
 
 <template>

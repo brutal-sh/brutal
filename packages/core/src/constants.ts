@@ -14,6 +14,14 @@ export const IS_TAURI = IS_BROWSER && '__TAURI_INTERNALS__' in window
 /** The default icon placement box, matching the glyph sets' authoring size. */
 export const DEFAULT_ICON_SIZE = 24
 
+/** The regular pointer, shared by the app chrome and the canvas presence overlay. */
+export const POINTER_ARROW = {
+  size: 24,
+  tipX: 5,
+  tipY: 4,
+  path: 'M4 4.1C3.9 2.9 5.15 2.2 6.15 2.91L20.4 12.2C21.85 13.15 21.35 15.02 19.68 15.15L13.24 15.65Q12.17 15.74 11.57 16.64L8 21.74C7.06 23.12 5.02 22.45 4.91 20.84Z'
+} as const
+
 export const BLACK: Color = { r: 0, g: 0, b: 0, a: 1 }
 export const TRANSPARENT: Color = { r: 0, g: 0, b: 0, a: 0 }
 export const DEFAULT_SHADOW_COLOR: Color = { r: 0, g: 0, b: 0, a: 0.25 }

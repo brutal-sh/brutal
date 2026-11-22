@@ -163,8 +163,13 @@ const rendererMethods = {
     PenOverlay.drawPencilOverlay(this, canvas, pencilState)
   },
 
-  drawPresenceCursors(canvas: Canvas, graph: SceneGraph, cursors?: PresenceCursor[]): void {
-    Overlays.drawPresenceCursors(this, canvas, graph, cursors)
+  drawPresenceCursors(
+    canvas: Canvas,
+    graph: SceneGraph,
+    cursors?: PresenceCursor[],
+    mirrored?: boolean
+  ): void {
+    Overlays.drawPresenceCursors(this, canvas, graph, cursors, mirrored)
   },
 
   drawRulers(
