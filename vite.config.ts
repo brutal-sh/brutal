@@ -54,9 +54,8 @@ export default defineConfig(async ({ command, mode }) => {
       alias: createOpenPencilAliases(__dirname, { cloud })
     },
     define: {
-      __OPENPENCIL_APP_VERSION__: JSON.stringify(
-        macOSBeta ? macOSBetaConfig.version : packageJson.version
-      ),
+      __OPENPENCIL_APP_VERSION__: JSON.stringify(packageJson.version),
+      __BRUTAL_MACOS_BETA_VERSION__: JSON.stringify(macOSBeta ? macOSBetaConfig.version : null),
       __OPENPENCIL_UPDATES_ENABLED__: JSON.stringify(updater.endpoints.length > 0),
       __OPENPENCIL_CLOUD_SITE__: JSON.stringify(cloudSite),
       __OPENPENCIL_OFFICIAL_CLOUD_URL__: JSON.stringify(

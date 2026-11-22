@@ -4,7 +4,7 @@ import { computed, onMounted, onScopeDispose } from 'vue'
 
 import { useI18n } from '@open-pencil/vue/i18n'
 
-import { APP_VERSION } from '@/app/runtime/version'
+import { APP_RELEASE_VERSION } from '@/app/runtime/version'
 import { animationsEnabled } from '@/app/shell/motion'
 import { useAppTheme } from '@/app/shell/theme'
 import { createTauriUpdaterBackend, createUpdaterSession } from '@/app/shell/updater/session'
@@ -45,7 +45,7 @@ onScopeDispose(() => {
 <template>
   <UpdatePrompt
     class="h-dvh"
-    :current-version="APP_VERSION"
+    :current-version="APP_RELEASE_VERSION"
     :install-quits-app="backend.installQuitsApp"
     :state="session.state.value"
     @install="session.install"

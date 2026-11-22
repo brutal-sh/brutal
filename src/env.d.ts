@@ -8,6 +8,8 @@ interface ImportMetaEnv {
 }
 
 declare const __OPENPENCIL_APP_VERSION__: string
+/** The shipped desktop beta version, independent of bundled companion package versions. */
+declare const __BRUTAL_MACOS_BETA_VERSION__: string | null
 /** Whether the desktop build config names an update endpoint; forks default to no update checks. */
 declare const __OPENPENCIL_UPDATES_ENABLED__: boolean
 /** Whether this is the editor a Cloud server serves on its own address (`bun run build:cloud`). */
