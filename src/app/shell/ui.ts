@@ -15,10 +15,7 @@ export interface ToastAction {
   run: () => void
 }
 
-interface ToastLink {
-  label: string
-  href: string
-}
+type ToastLink = Pick<ToastAction, 'label'> & { href: string }
 
 export interface Toast {
   id: number
