@@ -12,6 +12,7 @@ import { ensureBrandAssets } from '@open-pencil/brand-tools'
 import { ensureDemoDocument } from '@open-pencil/demo-tools'
 
 import desktopConfig from './desktop/tauri.conf.json'
+import macOSBetaConfig from './desktop/tauri.macos-beta.json'
 import packageJson from './package.json'
 import { viteBuildTarget } from './src/app/shell/support/baseline'
 import { createOpenPencilAliases } from './vite/aliases'
@@ -45,16 +46,18 @@ export default defineConfig(async ({ command, mode }) => {
   const cloud = env.VITE_OPENPENCIL_CLOUD !== 'off'
   // Agents automate the editor's own development server; a Cloud site, built or served, has none.
   const automation = !metrics && !cloudSite
+  const macOSBeta = process.env.BRUTAL_MACOS_BETA_BUILD === '1'
+  const updater = macOSBeta ? macOSBetaConfig.plugins.updater : desktopConfig.plugins.updater
   await Promise.all([ensureBrandAssets(['web']), metrics ? undefined : ensureDemoDocument()])
   return {
     resolve: {
       alias: createOpenPencilAliases(__dirname, { cloud })
     },
     define: {
-      __OPENPENCIL_APP_VERSION__: JSON.stringify(packageJson.version),
-      __OPENPENCIL_UPDATES_ENABLED__: JSON.stringify(
-        desktopConfig.plugins.updater.endpoints.length > 0
+      __OPENPENCIL_APP_VERSION__: JSON.stringify(
+        macOSBeta ? macOSBetaConfig.version : packageJson.version
       ),
+      __OPENPENCIL_UPDATES_ENABLED__: JSON.stringify(updater.endpoints.length > 0),
       __OPENPENCIL_CLOUD_SITE__: JSON.stringify(cloudSite),
       __OPENPENCIL_OFFICIAL_CLOUD_URL__: JSON.stringify(
         env.VITE_OPENPENCIL_OFFICIAL_CLOUD_URL ?? null

@@ -38,9 +38,24 @@ it from the public release and check the digest again. Link the approved release
 
 ## Updates
 
-The fork has no update-feed endpoints and does not generate upstream update artifacts. Vite derives the startup-update flag from the endpoint configuration, including embedded app builds. Startup checks are disabled; manually requesting an update follows the existing failure-reporting path because no feed is configured. Signed-update validation remains enabled; the retained upstream public key is inert without an endpoint. Configuring a fork release channel later requires its own signing key and explicit endpoints.
+The Apple-silicon beta build checks the [Brutal update feed](https://brutal.sh/download/mac-updater.json).
+The window shows the release summary, opens the matching GitHub release, and installs the signed app.
+Install Beta 10 manually once if you have a previous beta. Use **Brutal → Check for Updates…** for later betas.
 
-See the [signed updater requirements](https://v2.tauri.app/plugin/updater/) when setting up a release channel.
+### Release a Mac beta update
+
+1. Advance the version in `desktop/tauri.macos-beta.json` and build with `bun run build:macos-beta`.
+2. Developer ID-sign and notarize the app. Staple and validate the ticket before assembling both the manual ZIP and the updater archive.
+3. Archive the stapled `Brutal.app` with `bsdtar -czf "Brutal-$version-macOS-arm64.app.tar.gz" -C "$bundle_directory" Brutal.app`.
+4. Sign that archive with the Brutal updater key using `bun run tauri signer sign --app-version "$version" "$archive"`. Set `TAURI_SIGNING_PRIVATE_KEY_PATH` to the encrypted key and supply its password through `TAURI_SIGNING_PRIVATE_KEY_PASSWORD` only for the signing command.
+5. Put `release-notes.md`, the archive, and its `.sig` in the release directory. Run `bun tools/release/release-packages/src/native/brutal-beta-manifest.ts "$release_directory"` from the repo root to produce `latest.json`.
+6. Test checking, opening Full release notes, installing and restarting from an older updater-enabled build in a disposable location. Publish the ZIP, archive, signature, manifest, and checksums on the [feedback repository](https://github.com/brutal-sh/open-pen-feedback/releases).
+7. Verify the public archive and checksum, then deploy `latest.json` at `/download/mac-updater.json` with the website’s download links for the same release. The deployment lets the feed and download links change together.
+
+The encrypted updater key is managed outside the checkout. On the release Mac its password is stored in the
+`sh.brutal.release.updater` Keychain item. The app contains the public key and requires the signature to name
+the advertised app version. Preserve recoverable custody of the private key and password before changing release machines.
+[Tauri updater signing requirements](https://v2.tauri.app/plugin/updater/#signing-updates)
 
 ## Provider callbacks
 
