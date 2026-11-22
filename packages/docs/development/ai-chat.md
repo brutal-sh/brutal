@@ -91,6 +91,8 @@ Edit → Undo and the chat's **Revert changes** therefore end in the same state:
 
 ## Saved conversations
 
+The chat picker searches saved Design profiles by provider and updates the Design assignment. Direct models can continue one conversation across profile changes. When a saved agent cannot continue with the selected profile, the picker asks before starting a new chat. Reopen the old transcript from Chat history and choose its resumable agent to continue.
+
 A reply's metadata (`chat/metadata.ts`) keeps whether you stopped it, and its edits with those undone and what the model was last told. Conversations save messages with `structuredClone`, so metadata is written from the plain message, never from the chat's reactive copy. Reopening a conversation settles any reply saved mid-way. The undo history does not survive closing a document, so a reopened reply keeps its marks but offers no Revert or Restore.
 
 Desktop Codex and Claude Code conversations store the ACP session ID once the agent takes a turn. On the next message after reopening, the transport uses `session/resume` with the same agent and workspace, restores the current MCP connection, and sends the new message without replaying earlier turns. Older transcripts without a session ID remain readable. The session ID stays in local history and is omitted from trace exports.

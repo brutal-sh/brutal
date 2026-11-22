@@ -2,6 +2,8 @@ import type { UIMessage } from 'ai'
 import { omit } from 'es-toolkit'
 import { computed, ref, shallowRef } from 'vue'
 
+import type { ACPAgentID } from '@open-pencil/core/constants'
+
 import { chatDocumentId, resolveChatDocumentId, type ChatDocumentEditor } from './document'
 import { createConversationStore } from './idb'
 import { restoreMessages } from './messages'
@@ -135,20 +137,29 @@ export function createConversationHistory<TChat extends HistoryChat>(
   }
 
   /** The saved agent session the chat's agent continues, when it is that agent's. */
-  function resumableSession(conversation: Conversation | null): AgentSessionRef | null {
+  function resumableSession(
+    conversation: Conversation | null,
+    agent = runtime.resumingAgent()
+  ): AgentSessionRef | null {
     const saved = conversation?.agentSession
-    return saved?.id && saved.agent === runtime.resumingAgent() ? saved : null
+    return saved?.id && saved.agent === agent ? saved : null
   }
+
+  function canContinueWith(backend: ConversationMeta['backend'], agent: ACPAgentID | null) {
+    const conversation = current.value
+    return (
+      !conversation?.messages.length ||
+      resumableSession(conversation, agent) !== null ||
+      (backend === 'direct' && conversation.backend === 'direct')
+    )
+  }
+
   const continuesAgentSession = computed(() => resumableSession(current.value) !== null)
   /**
    * A saved transcript no chat can continue: it ran on an external agent, or the chat now runs on
    * one, and that agent does not continue its saved session.
    */
-  const agentReadOnly = computed(() => {
-    const conversation = current.value
-    if (!conversation?.messages.length || continuesAgentSession.value) return false
-    return runtime.backend() !== 'direct' || conversation.backend !== 'direct'
-  })
+  const agentReadOnly = computed(() => !canContinueWith(runtime.backend(), runtime.resumingAgent()))
 
   /** Saves or forgets the session a conversation's agent runs in, while it is current. */
   function recordAgentSession(conversationId: string, agentSession: AgentSessionRef | null) {
@@ -250,6 +261,7 @@ export function createConversationHistory<TChat extends HistoryChat>(
     conversations,
     readOnly,
     continuesAgentSession,
+    canContinueWith,
     agentReadOnly,
     chatEnded,
     busy,

@@ -35,6 +35,8 @@ export const aiChatDefaults = {
   deleteChatDescription: params('“{title}” and its messages are removed. This cannot be undone.'),
   chatDocumentHint: 'Open a chat’s document to continue it.',
   chatReadOnly: 'This conversation belongs to another document. Open its document to continue.',
+  chatSwitchAgent:
+    'Switching to this model starts a new chat. You can reopen this conversation from Chat history.',
   chatAgentReadOnly:
     'This agent transcript is saved, but its session cannot be resumed here yet. Start a new chat to continue working.',
   chatStorageFailed: 'Chat history could not be saved. Keep this window open and try again.',

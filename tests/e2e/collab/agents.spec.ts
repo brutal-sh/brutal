@@ -82,6 +82,18 @@ test('an MCP session shows as an agent at the layers it touches, to collaborator
     guest = await createPeer(browser, 'Guest', relay.url)
     await share(host)
     await connect(guest)
+    await host.page.getByRole('button', { name: 'Toggle inspector' }).click()
+    const inspector = host.page.getByTestId('properties-panel')
+    await expect(inspector).toBeVisible()
+    const inspectorBox = await inspector.boundingBox()
+    if (!inspectorBox) throw new Error('Inspector bounds unavailable')
+    const inspectorEdge = {
+      x: Math.floor(inspectorBox.x + inspectorBox.width) - 1,
+      y: Math.floor(inspectorBox.y + inspectorBox.height / 2),
+      width: 1,
+      height: 16
+    }
+    const beforeFollow = await host.page.screenshot({ clip: inspectorEdge })
     const nodeId = await host.page.evaluate(() => {
       const store = window.openPencil?.getStore?.()
       if (!store) throw new Error('OpenPencil store not initialized')
@@ -95,27 +107,46 @@ test('an MCP session shows as an agent at the layers it touches, to collaborator
     })
 
     // A tool call as the MCP bridge delivers it, from a session of an outside client.
-    await host.page.evaluate(
-      (id) =>
-        window.openPencil?.test?.automation?.('tool', {
-          name: 'rename_node',
-          args: { id, name: 'Checkout card' },
-          agent: { session: 'session-1', kind: 'mcp', client: 'claude-code' }
-        }),
-      nodeId
-    )
-    const agent = await host.page.evaluate(() => {
-      const cursor = window.openPencil
-        ?.getStore?.()
-        .state.presenceCursors.find((entry) => entry.kind === 'agent')
-      return cursor ? { name: cursor.name, x: cursor.x, y: cursor.y } : null
-    })
-    expect(agent).toMatchObject({ x: 240, y: 160 })
-    const name = agent?.name ?? ''
+    const trail = await host.page.evaluate(async (id) => {
+      const store = window.openPencil?.getStore?.()
+      if (!store) throw new Error('OpenPencil store not initialized')
+      await window.openPencil?.test?.automation?.('tool', {
+        name: 'rename_node',
+        args: { id, name: 'Checkout card' },
+        agent: { session: 'session-1', kind: 'mcp', client: 'claude-code' }
+      })
+      const points: Array<{ name: string; x: number; y: number }> = []
+      const end = performance.now() + 800
+      while (performance.now() < end) {
+        const cursor = store.state.presenceCursors.find((entry) => entry.kind === 'agent')
+        if (cursor) points.push({ name: cursor.name, x: cursor.x, y: cursor.y })
+        await new Promise(requestAnimationFrame)
+      }
+      return points
+    }, nodeId)
+    expect(trail.some((point) => point.y < 160)).toBe(true)
+    expect(trail.some((point) => point.x < 240 && point.y > 160)).toBe(true)
+    const name = trail[0]?.name ?? ''
 
     // With Follow agents on, as by default, its owner's view follows it as soon as it works.
     const frame = host.page.getByTestId('follow-frame')
     await expect(frame).toContainText(`Following ${name}`)
+    await expect
+      .poll(() =>
+        frame.evaluate((_, id) => {
+          const store = window.openPencil?.getStore?.()
+          const node = store?.graph.getNode(id)
+          if (!store || !node) throw new Error('Edited layer unavailable')
+          const { panX, panY, zoom } = store.state
+          const center = store.viewportCanvasCenter()
+          return Math.hypot(
+            (node.x + node.width / 2) * zoom + panX - center.x,
+            (node.y + node.height / 2) * zoom + panY - center.y
+          )
+        }, nodeId)
+      )
+      .toBeLessThan(1)
+    expect(await host.page.screenshot({ clip: inspectorEdge })).toEqual(beforeFollow)
     await frame.getByRole('button', { name: 'Stop following' }).click()
     await expect(frame).toHaveCount(0)
 

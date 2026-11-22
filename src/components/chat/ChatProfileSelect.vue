@@ -1,115 +1,106 @@
 <script setup lang="ts">
-import { compact } from 'es-toolkit/array'
-import {
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectItemIndicator,
-  SelectItemText,
-  SelectLabel,
-  SelectPortal,
-  SelectRoot,
-  SelectTrigger,
-  SelectViewport
-} from 'reka-ui'
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 
-import { AI_PROVIDERS } from '@open-pencil/core/constants'
+import { AI_PROVIDERS, IS_TAURI } from '@open-pencil/core/constants'
 import { useI18n } from '@open-pencil/vue/i18n'
 
 import {
   aiModelSettings,
+  designModelProfile,
   designModelProfiles,
+  isAgentModelProfile,
   modelConnection,
-  setModelRoleAssignment
+  modelProfile,
+  type AIModelProfileId
 } from '@/app/ai/models'
-import type { AIModelProfile, AIModelProfileId } from '@/app/ai/models'
+import { modelProviderName } from '@/app/ai/models/provider-name'
 import { openSettingsDialog } from '@/app/settings/dialog'
-import ChatProfileItem from '@/components/chat/ChatProfileItem.vue'
 import AppButton from '@/components/ui/button/AppButton.vue'
-import { useSelectUI } from '@/components/ui/select/select'
+import AppPicker from '@/components/ui/select/AppPicker.vue'
 
 import { chatProfileTheme } from './ui'
 
-const { ai } = useI18n()
-const open = ref(false)
-const profiles = computed(designModelProfiles)
+const { disabled = false } = defineProps<{ disabled?: boolean }>()
+const emit = defineEmits<{ select: [id: AIModelProfileId] }>()
+const { ai, common } = useI18n()
 const ui = chatProfileTheme()
-const selectCls = useSelectUI({
-  trigger: ui.trigger(),
-  content: ui.content(),
-  viewport: ui.viewport(),
-  item: ui.item(),
-  contentVariants: { padding: 'none' }
-})
 
-const selectedProfileId = computed({
-  get: () => aiModelSettings.value.assignments.design,
-  set: (profileId: AIModelProfileId) => setModelRoleAssignment('design', profileId)
-})
+const profiles = computed(() =>
+  designModelProfiles().map((profile) => {
+    const connection = modelConnection(profile.connectionId)
+    const provider = AI_PROVIDERS.find((candidate) => candidate.id === connection?.providerID)
+    const modelID = profile.customModelID || profile.modelID
+    const modelName = provider?.models.find((model) => model.id === modelID)?.name ?? modelID
+    return {
+      value: profile.id,
+      label: profile.name,
+      description: modelName === profile.name ? undefined : modelName,
+      group: connection ? modelProviderName(connection.providerID) : undefined,
+      disabled: !connection || (!IS_TAURI && isAgentModelProfile(profile))
+    }
+  })
+)
 
-function profileMetadata(profile: AIModelProfile): string {
-  const connection = modelConnection(profile.connectionId)
-  const provider = AI_PROVIDERS.find((candidate) => candidate.id === connection?.providerID)
-  const modelID = profile.customModelID || profile.modelID
-  const modelName = provider?.models.find((model) => model.id === modelID)?.name || modelID
-  return compact([modelName, provider?.name ?? connection?.providerID]).join(' · ')
+function select(id: string) {
+  const profile = modelProfile(id)
+  if (
+    !disabled &&
+    profile &&
+    profiles.value.some((option) => option.value === id && !option.disabled)
+  ) {
+    emit('select', profile.id)
+  }
 }
 
-function manageModels(): void {
-  open.value = false
+function manageModels(close: () => void) {
+  close()
   openSettingsDialog('ai')
 }
 </script>
 
 <template>
-  <SelectRoot v-model="selectedProfileId" v-model:open="open">
-    <SelectTrigger
-      data-test-id="chat-profile-selector"
-      :aria-label="ai.selectDesignModel"
-      :class="selectCls.trigger"
-    >
-      <icon-lucide-bot :class="ui.triggerIcon()" />
-      <span :class="ui.triggerValue()"><slot name="value" /></span>
-      <icon-lucide-chevron-down :class="ui.triggerChevron()" />
-    </SelectTrigger>
-    <SelectPortal>
-      <SelectContent
-        position="popper"
-        side="top"
-        align="start"
-        :side-offset="4"
-        :collision-padding="8"
-        :class="selectCls.content"
+  <AppPicker
+    :heading="ai.modelRoleDesign"
+    :items="profiles"
+    :selected="aiModelSettings.assignments.design"
+    :search-placeholder="ai.searchModels"
+    :empty-label="common.noResults"
+    :close-label="common.close"
+    side="top"
+    align="end"
+    @select="select"
+  >
+    <template #trigger>
+      <button
+        type="button"
+        role="combobox"
+        aria-haspopup="listbox"
+        data-slot="chat-profile-trigger"
+        data-test-id="chat-profile-selector"
+        :aria-label="ai.selectDesignModel"
+        :disabled="disabled"
+        :class="ui.trigger()"
       >
-        <SelectViewport :class="selectCls.viewport">
-          <SelectGroup>
-            <div :class="ui.header()">
-              <SelectLabel :class="ui.headerLabel()">{{ ai.modelRoleDesign }}</SelectLabel>
-              <p :class="ui.headerDescription()">{{ ai.modelRoleDesignDescription }}</p>
-            </div>
-            <SelectItem
-              v-for="profile in profiles"
-              :key="profile.id"
-              :value="profile.id"
-              :text-value="`${profile.name} ${profileMetadata(profile)}`"
-              :class="selectCls.item"
-            >
-              <SelectItemIndicator :class="ui.indicator()">
-                <icon-lucide-check :class="ui.indicatorIcon()" />
-              </SelectItemIndicator>
-              <span v-if="profile.id !== selectedProfileId" :class="ui.indicator()" />
-              <SelectItemText as-child>
-                <ChatProfileItem :profile="profile" :metadata="profileMetadata(profile)" />
-              </SelectItemText>
-            </SelectItem>
-          </SelectGroup>
-          <AppButton class="w-full justify-start" @click="manageModels">
-            <template #leading><icon-lucide-settings :class="ui.footerIcon()" /></template>
-            {{ ai.manageModelsAndRoles }}
-          </AppButton>
-        </SelectViewport>
-      </SelectContent>
-    </SelectPortal>
-  </SelectRoot>
+        <icon-lucide-bot :class="ui.triggerIcon()" aria-hidden="true" />
+        <span :class="ui.triggerValue()">{{
+          designModelProfile?.name ?? ai.selectDesignModel
+        }}</span>
+        <icon-lucide-chevron-down :class="ui.triggerChevron()" aria-hidden="true" />
+      </button>
+    </template>
+    <template #trailing="{ item }">
+      <icon-lucide-eye
+        v-if="modelProfile(item.value)?.capabilities.includes('vision')"
+        :aria-label="ai.modelCapabilityVision"
+        :class="ui.capability()"
+        role="img"
+      />
+    </template>
+    <template #footer="{ close }">
+      <AppButton class="w-full justify-start" @click="manageModels(close)">
+        <template #leading><icon-lucide-settings :class="ui.footerIcon()" /></template>
+        {{ ai.manageModelsAndRoles }}
+      </AppButton>
+    </template>
+  </AppPicker>
 </template>

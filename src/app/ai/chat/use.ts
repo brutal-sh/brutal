@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 
 import { ACP_AGENTS, IS_BROWSER } from '@open-pencil/core/constants'
+import type { AIProviderID } from '@open-pencil/core/constants'
 
 import { createConversationHistory } from '@/app/ai/chat/history/controller'
 import { createChatSessionManager } from '@/app/ai/chat/session'
@@ -47,19 +48,29 @@ const chatSession = createChatSessionManager({
   getActiveEditorStore
 })
 
+function backendForProvider(provider: AIProviderID) {
+  if (provider.startsWith('acp:')) return 'acp'
+  return provider === 'harness:pi' ? 'harness' : 'direct'
+}
+
+function resumingAgentForProvider(provider: AIProviderID) {
+  return (
+    ACP_AGENTS.find((agent) => agent.resumesSessions && provider === `acp:${agent.id}`)?.id ?? null
+  )
+}
+
 const history = createConversationHistory({
   profileId: () => designModelProfile.value?.id ?? null,
   getEditor: getActiveEditorStore,
   ensureChat: chatSession.ensureChat,
   resetChat: chatSession.resetChat,
-  backend: () => {
-    if (isACPProvider.value) return 'acp'
-    return isHarnessProvider.value ? 'harness' : 'direct'
-  },
-  resumingAgent: () =>
-    ACP_AGENTS.find((agent) => agent.resumesSessions && providerID.value === `acp:${agent.id}`)
-      ?.id ?? null
+  backend: () => backendForProvider(providerID.value),
+  resumingAgent: () => resumingAgentForProvider(providerID.value)
 })
+
+function canContinueWithProvider(provider: AIProviderID) {
+  return history.canContinueWith(backendForProvider(provider), resumingAgentForProvider(provider))
+}
 
 registerAIChatEffects(chatSession.markTransportDirty)
 
@@ -91,6 +102,7 @@ export function useAIChat() {
     advancedProperties,
     isConfigured,
     history,
+    canContinueWithProvider,
     ensureChat: history.ensureChat,
     resetChat: history.newChat,
     chatFailure: chatSession.failure,

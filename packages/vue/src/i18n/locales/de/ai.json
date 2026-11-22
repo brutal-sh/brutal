@@ -201,6 +201,7 @@
   "deleteChatDescription": "„{title}“ und die Nachrichten darin werden entfernt. Das lässt sich nicht rückgängig machen.",
   "chatDocumentHint": "Öffne das Dokument des Chats, um fortzufahren.",
   "chatReadOnly": "Dieser Chat gehört zu einem anderen Dokument. Öffne es, um fortzufahren.",
+  "chatSwitchAgent": "Beim Wechsel zu diesem Modell beginnt ein neuer Chat. Du kannst diese Unterhaltung im Chatverlauf erneut öffnen.",
   "chatAgentReadOnly": "Der Agentenverlauf wurde gespeichert, aber die Sitzung kann hier noch nicht fortgesetzt werden. Starte einen neuen Chat.",
   "chatStorageFailed": "Der Chatverlauf konnte nicht gespeichert werden. Lass dieses Fenster geöffnet und versuche es erneut.",
   "chatHistoryFailed": "Der Chatverlauf konnte nicht aktualisiert werden. Versuche es erneut.",

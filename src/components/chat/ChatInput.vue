@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, useTemplateRef } from 'vue'
 
-import { ACP_AGENTS } from '@open-pencil/core/constants'
 import { useSelectionState } from '@open-pencil/vue/editor/selection-state'
 import { useI18n } from '@open-pencil/vue/i18n'
 
@@ -10,7 +9,7 @@ import { MAX_IMAGE_ATTACHMENTS } from '@/app/ai/attachment/image/types'
 import { takeBackMessages } from '@/app/ai/chat/queue'
 import type { ChatSubmission } from '@/app/ai/chat/submission/types'
 import { useAIChat } from '@/app/ai/chat/use'
-import { designModelProfile } from '@/app/ai/models'
+import type { AIModelProfileId } from '@/app/ai/models'
 import { openSettingsDialog } from '@/app/settings/dialog'
 import ChatCreditBalance from '@/components/chat/ChatCreditBalance.vue'
 import ChatProfileSelect from '@/components/chat/ChatProfileSelect.vue'
@@ -22,7 +21,7 @@ import AppDropOverlay from '@/components/ui/feedback/AppDropOverlay.vue'
 
 import ChatComposer from './ChatComposer.vue'
 
-const { providerID, providerDef, modelID, customModelID } = useAIChat()
+const { providerID } = useAIChat()
 const { editor, selectedIds } = useSelectionState()
 const { ai } = useI18n()
 
@@ -43,6 +42,7 @@ const emit = defineEmits<{
   stop: []
   interrupt: []
   error: [message: string]
+  selectModel: [id: AIModelProfileId]
 }>()
 
 const attachments = useAttachmentDrafts({
@@ -110,29 +110,6 @@ defineExpose({ restoreDraft, dropFiles })
 
 const isAgentProvider = computed(
   () => providerID.value.startsWith('acp:') || providerID.value === 'harness:pi'
-)
-const agentName = computed(() => {
-  if (providerID.value === 'harness:pi') return 'Pi'
-  const agentId = providerID.value.replace('acp:', '')
-  return ACP_AGENTS.find((a) => a.id === agentId)?.name ?? agentId
-})
-const isCustomProvider = computed(
-  () => providerID.value === 'openai-compatible' || providerID.value === 'anthropic-compatible'
-)
-const customModelName = computed(() => customModelID.value.trim())
-const usesCustomModel = computed(
-  () => !!providerDef.value.supportsCustomModel && !!customModelName.value
-)
-
-const selectedModelName = computed(() => {
-  if (usesCustomModel.value) return customModelName.value
-  if (isCustomProvider.value) return 'No model'
-  return providerDef.value.models.find((m) => m.id === modelID.value)?.name ?? modelID.value
-})
-
-// The composer switches configured Design-role profiles; raw provider model selection lives in Settings.
-const selectedProfileName = computed(
-  () => designModelProfile.value?.name ?? selectedModelName.value
 )
 </script>
 
@@ -220,18 +197,8 @@ const selectedProfileName = computed(
     </template>
     <template #model>
       <div class="@container flex min-w-0 items-center">
-        <template v-if="isAgentProvider">
-          <div class="flex min-w-0 items-center gap-1 px-1.5 text-2xs text-muted">
-            <icon-lucide-bot class="size-3 shrink-0" />
-            <span class="truncate">{{ agentName }}</span>
-          </div>
-        </template>
-        <template v-else>
-          <ChatProfileSelect>
-            <template #value>
-              <span class="min-w-0 truncate">{{ selectedProfileName }}</span>
-            </template>
-          </ChatProfileSelect>
+        <ChatProfileSelect :disabled="disabled || replying" @select="emit('selectModel', $event)" />
+        <template v-if="!isAgentProvider">
           <ChatThinkingSelect />
           <ChatCreditBalance :replying="replying" />
         </template>

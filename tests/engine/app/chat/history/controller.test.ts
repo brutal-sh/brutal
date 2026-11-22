@@ -9,7 +9,7 @@ import type { ACPAgentID } from '@open-pencil/core/constants'
 import { createConversationHistory } from '@/app/ai/chat/history/controller'
 import type { ChatDocumentEditor } from '@/app/ai/chat/history/document'
 import { createConversationStore } from '@/app/ai/chat/history/idb'
-import type { AgentSessionLink } from '@/app/ai/chat/history/types'
+import type { AgentSessionLink, ConversationMeta } from '@/app/ai/chat/history/types'
 
 import { expectDefined } from '#tests/helpers/assert'
 
@@ -200,6 +200,10 @@ async function agentFixture(
     status: 'ready' as const,
     stop: async () => undefined
   })
+  const provider = reactive<{ backend: ConversationMeta['backend']; agent: ACPAgentID | null }>({
+    backend: 'acp',
+    agent: initialAgent
+  })
   const links: (AgentSessionLink | undefined)[] = []
   const history = createConversationHistory(
     {
@@ -211,8 +215,8 @@ async function agentFixture(
       },
       resetChat: async () => undefined,
       profileId: () => null,
-      backend: () => 'acp',
-      resumingAgent: () => initialAgent
+      backend: () => provider.backend,
+      resumingAgent: () => provider.agent
     },
     store
   )
@@ -236,6 +240,7 @@ async function agentFixture(
     store,
     chat,
     links,
+    provider,
     id: draft.id
   }
 }
@@ -261,6 +266,28 @@ test('a saved agent conversation stays read-only for an agent that cannot resume
   expect(f.history.agentReadOnly.value).toBe(true)
   expect(await f.history.ensureChat()).toBeNull()
   expect(f.links).toEqual([])
+})
+
+test('switching back to Codex lets the original chat continue its saved session', async () => {
+  const { history, provider, links, chat, id } = await agentFixture('codex', {
+    messages: [savedMessage]
+  })
+  expect(history.canContinueWith('direct', null)).toBe(false)
+  await history.newChat()
+  provider.backend = 'direct'
+  provider.agent = null
+
+  await history.open(id)
+  expect(history.agentReadOnly.value).toBe(true)
+  expect(await history.ensureChat()).toBeNull()
+  expect(history.canContinueWith('acp', 'codex')).toBe(true)
+
+  provider.backend = 'acp'
+  provider.agent = 'codex'
+  expect(await history.ensureChat()).toBe(chat)
+  expect(history.current.value?.id).toBe(id)
+  expect(links.at(-1)?.resume).toEqual({ agent: 'codex', id: 'codex-session' })
+  expect(chat.messages.map((message) => message.id)).toEqual(['saved'])
 })
 
 test('an older Codex transcript without a session ID remains readable', async () => {

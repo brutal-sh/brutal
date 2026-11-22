@@ -31,6 +31,8 @@ export interface AgentPresence {
   pageId?: string
   /** Where the agent last worked, derived from the nodes it touched. */
   cursor?: PagePoint
+  /** Increments when a new edit reaches a layer or streaming preview. */
+  editSequence?: number
   selection?: string[]
   /** Outlines, in world coordinates on the cursor's page, of what is not a layer yet. */
   outline?: Rect[]

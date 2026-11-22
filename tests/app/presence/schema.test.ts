@@ -8,6 +8,7 @@ const agent = {
   name: 'Fern',
   kind: 'chat',
   status: 'editing',
+  editSequence: 4,
   cursor: { x: 10, y: 20, pageId: '0:1' }
 }
 
@@ -19,7 +20,7 @@ describe('parsePeer', () => {
       clientId: 7,
       name: 'Ana',
       cursor: { x: 1, y: 2, pageId: '0:1' },
-      agents: [{ name: 'Fern', status: 'editing', cursor: { x: 10, y: 20 } }]
+      agents: [{ name: 'Fern', status: 'editing', editSequence: 4, cursor: { x: 10, y: 20 } }]
     })
   })
 
@@ -32,10 +33,11 @@ describe('parsePeer', () => {
       user: { name: 'Ana', color: 'red' },
       cursor: { x: Number.NaN, y: 2, pageId: '0:1' },
       selection: 'everything',
-      agents: [agent, { ...agent, id: 'a2', kind: 'unknown' }, 42]
+      agents: [{ ...agent, editSequence: -1 }, { ...agent, id: 'a2', kind: 'unknown' }, 42]
     })
     expect(peer).toMatchObject({ name: 'Ana', cursor: undefined, selection: undefined })
     expect(peer?.agents.map((entry) => entry.id)).toEqual(['a1'])
+    expect(peer?.agents[0]?.editSequence).toBeUndefined()
   })
 
   test('bounds names and agent counts', () => {

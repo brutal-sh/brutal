@@ -1,0 +1,1 @@
+- Switch configured design models from a searchable picker in chat, with confirmation before switching a saved conversation to an incompatible provider.

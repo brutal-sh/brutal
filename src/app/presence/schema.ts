@@ -50,6 +50,7 @@ const agentSchema = v.object({
   status: v.picklist(AGENT_STATUSES),
   pageId: lenient(idSchema),
   cursor: lenient(pointSchema),
+  editSequence: lenient(v.pipe(v.number(), v.safeInteger(), v.minValue(1))),
   selection: lenient(selectionSchema),
   outline: lenient(outlineSchema)
 })

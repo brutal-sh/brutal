@@ -1,0 +1,1 @@
+- See agent cursors move around the layers they edit, with a stationary cursor when reduced motion is enabled.

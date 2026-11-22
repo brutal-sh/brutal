@@ -20,6 +20,13 @@ import type { ChatSubmission } from '@/app/ai/chat/submission/types'
 import { useChatSubmission } from '@/app/ai/chat/submission/use'
 import { saveChatTrace } from '@/app/ai/chat/trace/export'
 import { useAIChat } from '@/app/ai/chat/use'
+import {
+  aiModelSettings,
+  modelConnection,
+  modelProfile,
+  setModelRoleAssignment,
+  type AIModelProfileId
+} from '@/app/ai/models'
 import { openAISetup } from '@/app/ai/models/settings/onboarding/dialog'
 import { didHitStepLimit } from '@/app/ai/tools'
 import { cloudBillingURL } from '@/app/cloud/integration'
@@ -34,20 +41,30 @@ import ChatHistory from '@/components/chat/ChatHistory.vue'
 import ChatHistoryList from '@/components/chat/ChatHistoryList.vue'
 import ChatInput from '@/components/chat/ChatInput.vue'
 import ChatPermissionDialog from '@/components/chat/ChatPermissionDialog.vue'
+import ChatProfileSelect from '@/components/chat/ChatProfileSelect.vue'
 import ChatProviderSetup from '@/components/chat/ChatProviderSetup.vue'
 import ChatRunLocation from '@/components/chat/ChatRunLocation.vue'
 import ChatTranscript from '@/components/chat/ChatTranscript.vue'
 import { useImageDrop } from '@/components/chat/input/useImageDrop'
 import AppButton from '@/components/ui/button/AppButton.vue'
+import { AppConfirmationDialog } from '@/components/ui/dialog'
 
 const { docked = false, activePanel = 'chat' } = defineProps<{
   docked?: boolean
   activePanel?: string
 }>()
 
-const { isConfigured, ensureChat, history, chatFailure, clearChatFailure, providerID } = useAIChat()
+const {
+  isConfigured,
+  ensureChat,
+  history,
+  canContinueWithProvider,
+  chatFailure,
+  clearChatFailure,
+  providerID
+} = useAIChat()
 const emit = defineEmits<{ showChat: [] }>()
-const { ai, menu } = useI18n()
+const { ai, common, menu } = useI18n()
 const dates = useDateFormat()
 const runLocation = useChatRunLocation()
 
@@ -231,6 +248,57 @@ const failureHasSettingsAction = computed(() =>
   )
 )
 const status = computed(() => chat.value?.status ?? 'ready')
+const modelSelectionDisabled = computed(
+  () =>
+    submission.busy.value ||
+    history.busy.value ||
+    status.value === 'submitted' ||
+    status.value === 'streaming'
+)
+const pendingModel = shallowRef<{ id: AIModelProfileId; conversationId: string } | null>(null)
+const confirmModelSwitch = computed({
+  get: () => pendingModel.value !== null,
+  set: (open: boolean) => {
+    if (!open) pendingModel.value = null
+  }
+})
+
+function selectModel(id: AIModelProfileId) {
+  if (modelSelectionDisabled.value || id === aiModelSettings.value.assignments.design) return
+  const profile = modelProfile(id)
+  const connection = profile && modelConnection(profile.connectionId)
+  if (!connection) return
+  if (canContinueWithProvider(connection.providerID)) {
+    setModelRoleAssignment('design', id)
+    return
+  }
+  const conversationId = history.current.value?.id
+  if (conversationId) pendingModel.value = { id, conversationId }
+}
+
+function startChatWithModel() {
+  const choice = pendingModel.value
+  if (
+    !choice ||
+    modelSelectionDisabled.value ||
+    history.current.value?.id !== choice.conversationId
+  )
+    return
+  const editor = getActiveEditorStore()
+  void historyAction(async () => {
+    await history.newChat()
+    if (getActiveEditorStore() === editor) setModelRoleAssignment('design', choice.id)
+  }, true)
+}
+
+function restoreModelFocus(event: Event) {
+  const trigger = panel.value?.querySelector<HTMLButtonElement>(
+    '[data-slot="chat-profile-trigger"]'
+  )
+  if (!trigger || trigger.disabled || trigger.getClientRects().length === 0) return
+  event.preventDefault()
+  trigger.focus({ preventScroll: true })
+}
 
 /**
  * A message written while the agent works waits for it: Enter steers, which the built-in chat
@@ -474,8 +542,21 @@ function handleStop() {
       @stop="handleStop"
       @interrupt="handleStop"
       @error="toast.error"
+      @select-model="selectModel"
     />
+    <div v-else-if="!history.readOnly.value" class="flex justify-end px-3 pb-2">
+      <ChatProfileSelect :disabled="modelSelectionDisabled" @select="selectModel" />
+    </div>
 
     <ChatPermissionDialog v-if="isConfigured || messages.length" />
+    <AppConfirmationDialog
+      v-model:open="confirmModelSwitch"
+      :heading="`${ai.newChat} · ${pendingModel ? (modelProfile(pendingModel.id)?.name ?? '') : ''}`"
+      :description="ai.chatSwitchAgent"
+      :cancel-label="common.cancel"
+      :confirm-label="ai.newChat"
+      @confirm="startChatWithModel"
+      @close-auto-focus="restoreModelFocus"
+    />
   </div>
 </template>

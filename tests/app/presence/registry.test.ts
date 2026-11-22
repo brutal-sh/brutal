@@ -4,6 +4,7 @@ import { afterEach, expect, spyOn, test } from 'bun:test'
 import { createEditorStore } from '@/app/editor/session/create'
 import {
   addAgent,
+  agentPlacement,
   follow,
   followedLabel,
   presenceByPage,
@@ -12,6 +13,7 @@ import {
   setOwnerColor,
   setPeers
 } from '@/app/presence/registry'
+import { appPreferences } from '@/app/settings/preferences/store'
 
 const stores: ReturnType<typeof createEditorStore>[] = []
 afterEach(() => {
@@ -302,4 +304,65 @@ test('without animation frames, cursors and following move at once', () => {
 
   follow(store, { kind: 'agent', agentId: agent.id })
   expect(centered(store)).toEqual({ x: 50, y: 60 })
+})
+
+test('agent edits move the cursor around the layer once and respect the animation preference', () => {
+  const { store, pageId } = setup()
+  const layer = store.graph.createNode('RECTANGLE', pageId, {
+    x: 240,
+    y: 160,
+    width: 100,
+    height: 80
+  })
+  const originalFrame = globalThis.requestAnimationFrame
+  const preference = appPreferences.value.appearance.animations
+  const followAgents = appPreferences.value.chat.followAgents
+  const clock = spyOn(performance, 'now').mockReturnValue(0)
+  let pending: FrameRequestCallback | undefined
+  globalThis.requestAnimationFrame = (callback) => {
+    pending = callback
+    return 1
+  }
+  const step = (now: number) => {
+    clock.mockReturnValue(now)
+    const callback = pending
+    pending = undefined
+    callback?.(now)
+  }
+  const cursor = () => store.state.presenceCursors[0]
+  const agent = addAgent(store, 'mcp')
+  const edit = () =>
+    agent.update({ status: 'editing', ...agentPlacement(store, [layer.id], pageId) })
+  try {
+    appPreferences.value.appearance.animations = 'system'
+    appPreferences.value.chat.followAgents = false
+    edit()
+    expect(cursor()).toMatchObject({ x: layer.x, y: layer.y })
+    step(120)
+    expect(cursor()?.y ?? Infinity).toBeLessThan(layer.y)
+    step(550)
+    expect(cursor()?.x ?? Infinity).toBeLessThan(layer.x)
+    expect(cursor()?.y ?? -Infinity).toBeGreaterThan(layer.y)
+    expect(pending).toBeUndefined()
+
+    setOwnerColor(store, red)
+    expect(pending).toBeUndefined()
+    edit()
+    expect(pending).toBeDefined()
+    appPreferences.value.appearance.animations = 'off'
+    step(650)
+    expect(cursor()).toMatchObject({ x: layer.x, y: layer.y })
+    expect(pending).toBeUndefined()
+
+    appPreferences.value.appearance.animations = 'system'
+    agent.update({ status: 'idle', cursor: undefined })
+    agent.update({ status: 'thinking', ...agentPlacement(store, [layer.id], pageId) })
+    expect(cursor()).toMatchObject({ x: layer.x, y: layer.y })
+    expect(pending).toBeUndefined()
+  } finally {
+    appPreferences.value.appearance.animations = preference
+    appPreferences.value.chat.followAgents = followAgents
+    globalThis.requestAnimationFrame = originalFrame
+    clock.mockRestore()
+  }
 })

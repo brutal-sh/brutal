@@ -10,6 +10,7 @@ import {
   designMaxOutputTokens,
   designModelConnection,
   designModelID,
+  designModelProfile,
   designProviderDefinition,
   designProviderID,
   modelConnectionCredentialRef,
@@ -114,6 +115,7 @@ export function registerAIChatEffects(markTransportDirty: () => void) {
       markTransportDirty()
     }
   )
+  watch(() => designModelProfile.value?.id, markTransportDirty)
   watch(modelID, markTransportDirty)
   watch(customModelID, markTransportDirty)
   watch(customAPIType, markTransportDirty)

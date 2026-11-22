@@ -10,7 +10,13 @@ import type { EditorStore } from '@/app/editor/active-store'
 import { appPreferences } from '@/app/settings/preferences/store'
 
 import { pickCallsign } from './callsigns'
-import { glideViewTo, showCursors, stopViewGlide, type TrackedCursor } from './cursor-motion'
+import {
+  agentWorkBounds,
+  glideViewTo,
+  showCursors,
+  stopViewGlide,
+  type TrackedCursor
+} from './cursor-motion'
 import { MAX_NAME_LENGTH } from './schema'
 import type { AgentKind, AgentPresence, FollowTarget, PersonPoint } from './types'
 
@@ -132,6 +138,7 @@ function agentCursor(agent: AgentPresence, color: Color, pageId: string): Tracke
       color,
       x,
       y,
+      editSequence: agent.editSequence,
       selection: agent.selection,
       outline: agent.outline
     }
@@ -210,8 +217,7 @@ export function followWorkingAgents(store: EditorStore): void {
 }
 
 /**
- * Where the followed person or agent is: null when they left, idle while an agent rests or a
- * person has not pointed anywhere yet.
+ * Where to center the view: null when the target left, idle when there's nothing to follow.
  */
 function followedPoint(store: EditorStore, target: FollowTarget): PersonPoint | 'idle' | null {
   const { agents, peers } = presenceOf(store)
@@ -223,7 +229,16 @@ function followedPoint(store: EditorStore, target: FollowTarget): PersonPoint | 
     (entry) => entry.id === target.agentId
   )
   if (!agent) return null
-  return agent.status === 'idle' ? 'idle' : (agent.cursor ?? 'idle')
+  const cursor = agent.cursor
+  if (!cursor || agent.status === 'idle') return 'idle'
+
+  const bounds = agentWorkBounds(store, agent, cursor.pageId)
+  if (!bounds) return cursor
+  return {
+    ...cursor,
+    x: bounds.x + bounds.width / 2,
+    y: bounds.y + bounds.height / 2
+  }
 }
 
 /** Move the view to the followed person or agent; stop when they are gone. */
@@ -357,7 +372,7 @@ export function setOwnerColor(store: EditorStore, color: Color | null): void {
 export interface AgentHandle {
   readonly id: string
   readonly name: string
-  update: (patch: Partial<Omit<AgentPresence, 'id' | 'name' | 'kind'>>) => void
+  update: (patch: Partial<Omit<AgentPresence, 'id' | 'name' | 'kind' | 'editSequence'>>) => void
   remove: () => void
 }
 
@@ -376,6 +391,7 @@ export function addAgent(store: EditorStore, kind: AgentKind, model?: string): A
     status: 'idle'
   }
   presence.agents.value = [...presence.agents.value, agent]
+  let editSequence = 0
   const current = () => presence.agents.value.find((entry) => entry.id === agent.id)
   const replace = (next: AgentPresence | null) => {
     const agents = presence.agents.value
@@ -392,7 +408,14 @@ export function addAgent(store: EditorStore, kind: AgentKind, model?: string): A
     },
     update: (patch) => {
       const entry = current()
-      if (entry) replace({ ...entry, ...patch })
+      if (!entry) return
+      const next = { ...entry, ...patch }
+      if (patch.cursor) {
+        const editing =
+          patch.status === 'editing' && (patch.selection?.length || patch.outline?.length)
+        next.editSequence = editing ? ++editSequence : undefined
+      }
+      replace(next)
     },
     remove: () => replace(null)
   }

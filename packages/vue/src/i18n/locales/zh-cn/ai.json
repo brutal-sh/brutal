@@ -201,6 +201,7 @@
   "deleteChatDescription": "“{title}”及其消息将被删除，且无法撤销。",
   "chatDocumentHint": "打开聊天所属的文档以继续。",
   "chatReadOnly": "此聊天属于另一个文档。打开该文档以继续。",
+  "chatSwitchAgent": "切换到此模型会开启新的聊天。你可以在聊天记录中重新打开此对话。",
   "chatAgentReadOnly": "与代理的对话已保存，但暂时无法在此恢复会话。请新建聊天。",
   "chatStorageFailed": "无法保存聊天记录。请保持此窗口打开并重试。",
   "chatHistoryFailed": "无法更新聊天记录。请重试。",
