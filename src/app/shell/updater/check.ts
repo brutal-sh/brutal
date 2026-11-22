@@ -1,5 +1,6 @@
 import { promiseTimeout } from '@vueuse/core'
-import type { Ref } from 'vue'
+import * as v from 'valibot'
+import { onScopeDispose, type Ref } from 'vue'
 
 import { APP_RELEASE_VERSION } from '@/app/runtime/version'
 import { appPreferences } from '@/app/settings/preferences/store'
@@ -8,7 +9,8 @@ import { toast } from '@/app/shell/ui'
 import { isTauri } from '@/app/tauri/env'
 
 import { updateFailureText, type UpdaterMessages } from './messages'
-import { openUpdaterWindow } from './window'
+import { deferredUpdateSchema } from './schema'
+import { openUpdaterWindow, UPDATE_DEFERRED_EVENT } from './window'
 
 const STARTUP_UPDATE_CHECK_DELAY_MS = 2500
 
@@ -20,6 +22,40 @@ interface UpdateCheckOptions {
 let startupCheckStarted = false
 let backgroundCheck: Promise<void> | null = null
 let reportBackgroundResult = false
+let deferredToastId: number | undefined
+
+export function useDeferredUpdateReminder(messages: Ref<UpdaterMessages>): void {
+  if (!appUpdatesAvailable()) return
+  let stop: (() => void) | undefined
+  let disposed = false
+  async function register() {
+    const { listen } = await import('@tauri-apps/api/event')
+    const unlisten = await listen<unknown>(UPDATE_DEFERRED_EVENT, ({ payload }) => {
+      const result = v.safeParse(deferredUpdateSchema, payload)
+      if (!result.success) return
+      clearDeferredReminder()
+      deferredToastId = toast.info(messages.value.available(result.output), {
+        label: messages.value.windowTitle,
+        persistent: true,
+        run: () => void showUpdateWindow(messages.value)
+      })
+    })
+    if (disposed) unlisten()
+    else stop = unlisten
+  }
+  void register()
+  onScopeDispose(() => {
+    disposed = true
+    stop?.()
+    clearDeferredReminder()
+  })
+}
+
+function clearDeferredReminder() {
+  if (deferredToastId === undefined) return
+  toast.remove(deferredToastId)
+  deferredToastId = undefined
+}
 
 export function appUpdatesAvailable(): boolean {
   return (
@@ -36,7 +72,11 @@ export async function checkForAppUpdate(options: UpdateCheckOptions) {
     if (!silent) toast.info(messages.value.unavailable)
     return
   }
-  if (!silent && appPreferences.value.updates.showWindow) {
+  if (
+    !silent &&
+    (appPreferences.value.updates.showWindow ||
+      toast.toasts.value.some((entry) => entry.id === deferredToastId))
+  ) {
     return showUpdateWindow(messages.value)
   }
 
@@ -59,6 +99,7 @@ export function scheduleStartupUpdateCheck(messages: Ref<UpdaterMessages>) {
 async function showUpdateWindow(messages: UpdaterMessages) {
   try {
     await openUpdaterWindow(messages.windowTitle)
+    clearDeferredReminder()
   } catch (error) {
     reportCheckFailure(messages, error)
   }
@@ -86,6 +127,7 @@ async function runBackgroundCheck(messages: Ref<UpdaterMessages>) {
     await update.close()
     if (appPreferences.value.updates.showWindow) {
       await openUpdaterWindow(messages.value.windowTitle)
+      clearDeferredReminder()
     } else {
       toast.info(messages.value.available({ version: update.version }), {
         label: messages.value.windowTitle,

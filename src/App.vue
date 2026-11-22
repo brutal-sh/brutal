@@ -17,7 +17,7 @@ import { usePointerStyle } from '@/app/shell/pointer'
 import { useAppTheme } from '@/app/shell/theme'
 import { toast } from '@/app/shell/ui'
 import { useRestartApprovals } from '@/app/shell/updater/approvals'
-import { scheduleStartupUpdateCheck } from '@/app/shell/updater/check'
+import { scheduleStartupUpdateCheck, useDeferredUpdateReminder } from '@/app/shell/updater/check'
 import { kickSyncEngine } from '@/app/storage/sync'
 import { prepareForReload } from '@/app/tabs'
 import { CloudHosts } from '@/components/cloud/integration'
@@ -53,6 +53,7 @@ useAppTheme()
 usePointerStyle()
 useDocumentCloseProtection()
 useRestartApprovals()
+useDeferredUpdateReminder(updates)
 // Start the best-effort flush before pagehide tears down the worker's document.
 useEventListener(window, 'beforeunload', () => {
   void prepareForReload().catch((error) => {

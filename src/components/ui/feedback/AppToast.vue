@@ -17,6 +17,7 @@ const {
   actionLabel,
   duration,
   copyable = false,
+  dismissible = false,
   copyLabel,
   copiedLabel,
   closeLabel,
@@ -84,7 +85,7 @@ const styles = computed(() => {
         <slot />
       </div>
     </div>
-    <div v-if="actionLabel || $slots.action || copyable" :class="styles.controls">
+    <div v-if="actionLabel || $slots.action || copyable || dismissible" :class="styles.controls">
       <slot name="action" :class="styles.action">
         <button v-if="actionLabel" type="button" :class="styles.action" @click="emit('action')">
           {{ actionLabel }}
@@ -103,10 +104,15 @@ const styles = computed(() => {
             <icon-lucide-copy v-else class="size-3" aria-hidden="true" />
           </button>
         </Tip>
-        <ToastClose data-slot="toast-close" :class="styles.control" :aria-label="closeLabel">
-          <icon-lucide-x class="size-3" aria-hidden="true" />
-        </ToastClose>
       </template>
+      <ToastClose
+        v-if="copyable || dismissible"
+        data-slot="toast-close"
+        :class="styles.control"
+        :aria-label="closeLabel"
+      >
+        <icon-lucide-x class="size-3" aria-hidden="true" />
+      </ToastClose>
     </div>
   </ToastRoot>
 </template>

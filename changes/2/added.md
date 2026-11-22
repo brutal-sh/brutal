@@ -2,3 +2,4 @@
 - Open Brutal release notes on GitHub from the Help menu.
 - Install signed Brutal beta updates and read release notes from the macOS update window.
 - Check for updates in the Software Update window and open the installed version’s GitHub release notes when Brutal is up to date. Turn off Show update window in Settings to see a compact notification.
+- Choose Later to tuck an available update into a notification that reopens the same update without checking again.

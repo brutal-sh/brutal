@@ -3,7 +3,7 @@ import { ToastProvider, ToastViewport } from 'reka-ui'
 
 import { useI18n } from '@open-pencil/vue/i18n'
 
-import { toast, toastDuration } from '@/app/shell/ui'
+import { persistentToastAction, toast, toastDuration } from '@/app/shell/ui'
 import ExternalLink from '@/components/links/ExternalLink.vue'
 import AppToast from '@/components/ui/feedback/AppToast.vue'
 
@@ -23,6 +23,7 @@ const { common, settings } = useI18n()
       :action-label="t.action?.label"
       :duration="toastDuration(t)"
       :copyable="t.variant !== 'default'"
+      :dismissible="persistentToastAction(t)"
       :copy-label="common.copyMessage"
       :copied-label="common.copiedExclamation"
       :close-label="common.close"

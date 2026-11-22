@@ -13,6 +13,7 @@ export type { ToastVariant } from '@/components/ui/feedback/toast'
 export interface ToastAction {
   label: string
   run: () => void
+  persistent?: boolean
 }
 
 type ToastLink = Pick<ToastAction, 'label'> & { href: string }
@@ -79,13 +80,18 @@ function push(message: string, variant: ToastVariant, action?: Toast['action']):
 
 function trim() {
   if (toasts.value.length > TOAST_STACK_LIMIT) {
-    toasts.value.splice(0, toasts.value.length - TOAST_STACK_LIMIT)
+    const index = toasts.value.findIndex((entry) => !persistentToastAction(entry))
+    toasts.value.splice(Math.max(0, index), 1)
   }
+}
+
+export function persistentToastAction(entry: Toast): boolean {
+  return !!entry.action && 'run' in entry.action && entry.action.persistent === true
 }
 
 /** Toast-driven work keeps its toast open until progress clears or the work ends. */
 export function toastDuration(entry: Toast): number {
-  if (entry.progress) return 0
+  if (entry.progress || persistentToastAction(entry)) return 0
   // A toast that offers an action stays long enough to reach it.
   return entry.variant === 'error' || entry.action ? ERROR_TOAST_DURATION : TOAST_DURATION
 }
@@ -120,8 +126,8 @@ function startProgress(
   }
 }
 
-function info(message: string, action?: Toast['action']) {
-  push(message, 'default', action)
+function info(message: string, action?: Toast['action']): number {
+  return push(message, 'default', action)
 }
 
 function warning(message: string) {

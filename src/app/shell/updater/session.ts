@@ -4,6 +4,7 @@ import { shallowRef, type ShallowRef } from 'vue'
 import type { UpdateFailureStep } from './messages'
 import type { DownloadProgress } from './progress'
 import { requestRestartApproval } from './restart'
+import { deferUpdaterWindow } from './window'
 
 export interface ReleaseInfo {
   version: string
@@ -37,6 +38,7 @@ export interface UpdaterBackend {
   /** Asks the editor to close its documents, as Quit does; true once they agreed. */
   confirmRestart(): Promise<boolean>
   relaunch(): Promise<void>
+  deferWindow?(version: string): Promise<boolean>
   closeWindow(): Promise<void>
   /** Windows installers quit the app themselves, so documents must close before installing. */
   installQuitsApp: boolean
@@ -65,6 +67,7 @@ export function createUpdaterSession(backend: UpdaterBackend): UpdaterSession {
   // Tauri cannot abort a download, so cancelling only detaches the window from it.
   let download: Download | null = null
   let attachedTo: Download | null = null
+  let dismissing = false
 
   async function release() {
     const update = pending
@@ -116,7 +119,8 @@ export function createUpdaterSession(backend: UpdaterBackend): UpdaterSession {
   async function install() {
     const update = pending
     const current = state.value
-    if (!update || (current.status !== 'available' && current.status !== 'failed')) return
+    if (dismissing || !update || (current.status !== 'available' && current.status !== 'failed'))
+      return
     const info = releaseInfo(update)
 
     download ??= startDownload(update)
@@ -218,9 +222,17 @@ export function createUpdaterSession(backend: UpdaterBackend): UpdaterSession {
   }
 
   async function dismiss() {
-    if (state.value.status === 'installing') return
-    await release()
-    await backend.closeWindow()
+    const current = state.value
+    if (current.status === 'installing' || dismissing) return
+    dismissing = true
+    try {
+      if (current.status === 'available' && (await backend.deferWindow?.(current.release.version)))
+        return
+      await release()
+      await backend.closeWindow()
+    } finally {
+      dismissing = false
+    }
   }
 
   return { state, check, install, cancel, restart, retry, dismiss }
@@ -249,6 +261,7 @@ export function createTauriUpdaterBackend(): UpdaterBackend {
       const { relaunch } = await import('@tauri-apps/plugin-process')
       await relaunch()
     },
+    deferWindow: deferUpdaterWindow,
     async closeWindow() {
       const { getCurrentWindow } = await import('@tauri-apps/api/window')
       await getCurrentWindow().close()

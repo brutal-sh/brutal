@@ -28,9 +28,10 @@ export interface ToastProps {
   progressLabel?: string
   /** Renders an inline action that emits `action` when pressed. */
   actionLabel?: string
-  /** Milliseconds before auto-dismissal; 0 keeps a reported-progress toast open. */
+  /** Milliseconds before auto-dismissal; 0 keeps the toast open. */
   duration?: number
   copyable?: boolean
+  dismissible?: boolean
   copyLabel?: string
   copiedLabel?: string
   closeLabel?: string

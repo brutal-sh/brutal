@@ -315,4 +315,32 @@ describe('createUpdaterSession', () => {
     expect(calls).toEqual(['close'])
     expect(backendCalls).toEqual(['closeWindow'])
   })
+
+  test('Later leaves an available release ready to install without another check', async () => {
+    const { update, calls, downloads } = fakeUpdate()
+    const { backend } = fakeBackend(async () => {
+      calls.push('check')
+      return update
+    })
+    const hidden = createDeferred<boolean>()
+    backend.deferWindow = (version) => {
+      calls.push(`defer:${version}`)
+      return hidden.promise
+    }
+    const session = createUpdaterSession(backend)
+    await session.check()
+
+    const later = session.dismiss()
+    await session.dismiss()
+    await session.install()
+    hidden.resolve(true)
+    await later
+    expect(session.state.value.status).toBe('available')
+
+    const installing = session.install()
+    downloads[0]?.finish()
+    await installing
+    expect(session.state.value.status).toBe('installed')
+    expect(calls).toEqual(['check', 'defer:0.16.0', 'download', 'install'])
+  })
 })
