@@ -16,7 +16,7 @@ export interface DesignVersionTarget {
   title: string
   x: number
   y: number
-  committed: boolean
+  rootId?: string
 }
 
 const targets = new Map<string, DesignVersionTarget>()
@@ -49,7 +49,7 @@ async function renderVersion(
   figma: FigmaAPI,
   jsx: unknown
 ): Promise<unknown> {
-  if (target.committed) throw new Error('This agent already committed its design version.')
+  if (target.rootId) throw new Error('This agent already committed its design version.')
   if (!designVersionIsOpen(target)) throw new Error('The design version’s document was closed.')
   const frame = figma.createFrame()
   frame.name = target.title
@@ -60,7 +60,7 @@ async function renderVersion(
   frame.fills = []
   try {
     const result = await tool.execute(figma, { jsx, parent_id: frame.id, x: 0, y: 0 })
-    target.committed = true
+    target.rootId = frame.id
     return result
   } catch (error) {
     frame.remove()
@@ -70,4 +70,17 @@ async function renderVersion(
 
 export function designVersionRender(tool: ToolDef, target: DesignVersionTarget): ToolDef {
   return { ...tool, execute: (figma, args) => renderVersion(tool, target, figma, args.jsx) }
+}
+
+/** Let a version highlight only the layers it just committed. */
+export function checkDesignVersionSelection(target: DesignVersionTarget, ids: unknown): void {
+  const root = target.rootId
+  if (
+    root === undefined ||
+    !Array.isArray(ids) ||
+    ids.length === 0 ||
+    ids.some((id: unknown) => typeof id !== 'string' || !target.graph.isDescendant(id, root))
+  ) {
+    throw new Error('A design version can select only layers inside its own result.')
+  }
 }

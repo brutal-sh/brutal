@@ -483,8 +483,7 @@ test('parallel versions keep independent replies and commit only in their assign
       pageId,
       x: 200 + index * 608,
       y: 120,
-      title: `Version ${index + 1}`,
-      committed: false
+      title: `Version ${index + 1}`
     }
     bindDesignVersion(chat, target)
     return { chat, target, run: startAgentRun(store, chat) }
@@ -526,6 +525,17 @@ test('parallel versions keep independent replies and commit only in their assign
       roots.slice(1).map((frame) => store.graph.getNode(frame?.childIds[0] ?? '')?.name)
     ).toEqual(['Version 1 design', 'Version 2 design'])
     expect(versions.map(({ run }) => run.undoCalls.length)).toEqual([1, 1])
+    const ownLayer = roots[1]?.childIds[0]
+    const siblingLayer = roots[2]?.childIds[0]
+    if (!ownLayer || !siblingLayer) throw new Error('Expected both versions to contain a layer')
+    await settle(request('activate_document', { document_id: documentId }))
+    await expect(tool(first.chat, 'select_nodes', { ids: [siblingLayer] })).rejects.toThrow(
+      'only layers inside its own result'
+    )
+    await expect(tool(first.chat, 'select_nodes', { ids: [ownLayer] })).resolves.toMatchObject({
+      result: { selected: [ownLayer] }
+    })
+
     endRun(store, first.run)
     await expect(tool(first.chat, 'render', { jsx: '<Frame />' })).rejects.toThrow(
       'no longer running'

@@ -85,8 +85,7 @@ function versionTargets(store: EditorStore, documentId: string, titles: readonly
     pageId,
     title,
     x: x + index * (VERSION_WIDTH + VERSION_GAP),
-    y,
-    committed: false
+    y
   }))
 }
 
@@ -151,7 +150,7 @@ async function executeVersion(
     version.chat = chat
     subscriptions.run(() => history.attach(chat, save))
     await chat.sendMessage({ text: prompt })
-    succeeded = chat.status === 'ready' && target.committed
+    succeeded = chat.status === 'ready' && Boolean(target.rootId)
   } finally {
     try {
       await history.detach(save)

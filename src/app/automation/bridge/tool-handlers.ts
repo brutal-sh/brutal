@@ -2,6 +2,7 @@ import type { FigmaAPI } from '@open-pencil/core/figma-api'
 import { ALL_TOOLS, registerComponentCatalog, isToolExposed } from '@open-pencil/core/tools'
 
 import {
+  checkDesignVersionSelection,
   designVersionForChat,
   designVersionIsOpen,
   designVersionRender
@@ -87,7 +88,7 @@ function designVersionArguments(
   if (!agentReplyRun(target.store, session?.chat)) {
     throw new Error('This design version is no longer running.')
   }
-  if (toolName === 'preview_render' && version.committed) {
+  if (toolName === 'preview_render' && version.rootId) {
     throw new Error('This design version already committed.')
   }
   return toolName === 'render' || toolName === 'preview_render'
@@ -137,7 +138,8 @@ async function runTool(
   const coreTool = ALL_TOOLS.find((t) => t.name === toolName && isToolExposed(t, 'mcp'))
   if (!coreTool) throw new Error(`Unknown tool: ${toolName}`)
   const version = designVersionForChat(session?.chat)
-  if (version && toolName !== 'render' && coreTool.mutates) {
+  if (version && toolName === 'select_nodes') checkDesignVersionSelection(version, toolArgs.ids)
+  if (version && toolName !== 'render' && toolName !== 'select_nodes' && coreTool.mutates) {
     throw new Error('Use render to commit this design version in its assigned frame.')
   }
   if (version && toolArgs.path !== undefined) {
