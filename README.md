@@ -54,9 +54,10 @@ policy or disabled feature can prevent startup even when its version meets the b
 These are configured support thresholds, not evidence that every platform is qualified.
 
 The desktop notice requires macOS 13+ with current Safari updates, Linux WebKitGTK 2.40+,
-or a current Windows WebView2 runtime. Build from [this fork's instructions](#run-this-fork);
-this private fork has no published installer or update feed. [Report an Brutal problem](https://github.com/jpoindexter/open-pen-feedback/issues/new?template=bug.yml)
-after reviewing any diagnostic details you include. Find help, feedback, and private security reporting in [Brutal support](https://brutal.sh/help/#support).
+or a current Windows WebView2 runtime. Find signed Apple-silicon beta downloads in
+[Brutal Releases](https://github.com/brutal-sh/open-pen-feedback/releases). In the app, choose
+**Help → Report an Issue** to open the public bug form. Review any diagnostic details before
+sharing them. Find usage guides and private security reporting in [Brutal Help](https://brutal.sh/help/#support).
 
 ## CLI
 

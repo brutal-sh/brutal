@@ -1,5 +1,6 @@
 import { BROWSER_BASELINE } from './baseline'
 import { baselineBrowserFor, type SupportEnvironment } from './detect'
+import { brutalBugReportURL } from './links'
 
 /**
  * Copy for the pre-boot notice. It renders before Vue and the i18n catalogs
@@ -22,7 +23,6 @@ export interface SupportLink {
 export const SYSTEM_REQUIREMENTS_URL =
   'https://brutal.sh/help/getting-started/#desktop-requirements'
 export const WEBVIEW2_DOWNLOAD_URL = 'https://developer.microsoft.com/microsoft-edge/webview2/'
-const ISSUE_URL = 'https://github.com/jpoindexter/open-pen-feedback/issues/new'
 
 export const MINIMUM_MACOS_VERSION = 13
 export const MINIMUM_WEBKITGTK_VERSION = '2.40'
@@ -63,12 +63,7 @@ function environmentDetails(env: SupportEnvironment): string[] {
 }
 
 function issueLink(title: string): SupportLink {
-  const params = new URLSearchParams({
-    template: 'bug.yml',
-    title,
-    version: typeof __OPENPENCIL_APP_VERSION__ === 'string' ? __OPENPENCIL_APP_VERSION__ : ''
-  })
-  return { label: 'Report a problem', url: `${ISSUE_URL}?${params.toString()}` }
+  return { label: 'Report a problem', url: brutalBugReportURL(title) }
 }
 
 function requirementsLink(): SupportLink {

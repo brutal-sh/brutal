@@ -90,6 +90,8 @@ export const NATIVE_MENU_SCHEMA: AppMenuGroupSchema[] = [
       'help-website',
       'help-cursor',
       'help-vscode',
+      'help-release-notes',
+      'help-report-issue',
       'help-support'
     ].map((id) => command(id))
   }

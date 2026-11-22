@@ -87,6 +87,8 @@ export const APP_MENU_SCHEMA = [
       { id: 'help-website', label: 'Brutal Website', handler: 'shell' },
       { id: 'help-cursor', label: 'Cursor Setup…', handler: 'shell' },
       { id: 'help-vscode', label: 'VS Code Setup…', handler: 'shell' },
+      { id: 'help-release-notes', label: 'Release Notes', handler: 'shell' },
+      { id: 'help-report-issue', label: 'Report an Issue', handler: 'shell' },
       { id: 'help-support', label: 'Support & Feedback', handler: 'shell' }
     ]
   }

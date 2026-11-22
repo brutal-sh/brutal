@@ -95,7 +95,6 @@ export const IS_CLOUD_SITE =
 export const OPEN_PEN_WEBSITE_URL = 'https://brutal.sh/'
 const OPEN_PEN_HELP_PAGE_URL = `${OPEN_PEN_WEBSITE_URL}help/`
 export const OPEN_PEN_HELP_URL = `${OPEN_PEN_HELP_PAGE_URL}#docs`
-export const OPEN_PEN_SUPPORT_URL = 'https://github.com/jpoindexter/open-pen-feedback'
 export const OPEN_PEN_REPOSITORY_URL = 'https://github.com/jpoindexter/open-pen'
 /** Desktop setup instructions while this fork has no published installer. */
 export const DESKTOP_DOWNLOAD_URL = `${OPEN_PEN_HELP_PAGE_URL}getting-started/`
@@ -116,7 +115,6 @@ export const CODING_AGENTS_GUIDE_URL = `${DOCS_ORIGIN}/programmable/coding-agent
 export const PI_GUIDE_URL = `${CODING_AGENTS_GUIDE_URL}#pi`
 
 // shortcut: no signed Brutal releases, use the fork changelog until release publishing is configured.
-export const OPEN_PEN_RELEASE_NOTES_URL = `${OPEN_PEN_REPOSITORY_URL}/blob/HEAD/CHANGELOG.md`
 
 export function getShareURL(roomId: string): string {
   const base = IS_TAURI || !IS_BROWSER ? WEB_APP_ORIGIN : window.location.origin

@@ -143,7 +143,7 @@ describe('unsupported engine guidance', () => {
     )
     const url = reportLink(notice)
     expect(url.origin + url.pathname).toBe(
-      'https://github.com/jpoindexter/open-pen-feedback/issues/new'
+      'https://github.com/brutal-sh/open-pen-feedback/issues/new'
     )
     expect(url.searchParams.get('template')).toBe('bug.yml')
     expect([...url.searchParams.keys()].sort()).toEqual(['template', 'title', 'version'])

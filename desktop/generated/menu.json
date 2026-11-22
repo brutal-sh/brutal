@@ -249,6 +249,14 @@
         "label": "VS Code Setup…"
       },
       {
+        "id": "help-release-notes",
+        "label": "Release Notes"
+      },
+      {
+        "id": "help-report-issue",
+        "label": "Report an Issue"
+      },
+      {
         "id": "help-support",
         "label": "Support & Feedback"
       }

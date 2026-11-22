@@ -5,6 +5,7 @@ import { computed } from 'vue'
 
 import { useI18n } from '@open-pencil/vue/i18n'
 
+import { BRUTAL_RELEASES_URL } from '@/app/shell/support/links'
 import { openExternalLink } from '@/app/shell/ui'
 import { updateFailureText } from '@/app/shell/updater/messages'
 import { downloadProgressLabel } from '@/app/shell/updater/progress'
@@ -16,7 +17,6 @@ import AppButton from '@/components/ui/button/AppButton.vue'
 import AppAlert from '@/components/ui/feedback/AppAlert.vue'
 import AppPlaceholder from '@/components/ui/feedback/AppPlaceholder.vue'
 import AppProgress from '@/components/ui/feedback/AppProgress.vue'
-import { OPEN_PEN_RELEASE_NOTES_URL } from '@/constants'
 import { motionStyles } from '@/theme/motion/styles'
 import updatePromptStyles, { updateStatusUI } from '@/theme/updater'
 
@@ -97,7 +97,10 @@ function openNotesLink(event: MouseEvent) {
 
         <div :class="ui.notesHeader">
           <h2 :class="ui.notesLabel">{{ t.whatsNew }}</h2>
-          <ExternalLink :href="OPEN_PEN_RELEASE_NOTES_URL" class="text-[11px]">
+          <ExternalLink
+            :href="`${BRUTAL_RELEASES_URL}/tag/v${encodeURIComponent(release.version)}`"
+            class="text-[11px]"
+          >
             {{ t.fullReleaseNotes }}
           </ExternalLink>
         </div>

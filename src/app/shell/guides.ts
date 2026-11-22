@@ -1,11 +1,15 @@
 import { ref } from 'vue'
 
+import {
+  BRUTAL_RELEASES_URL,
+  BRUTAL_SUPPORT_URL,
+  brutalBugReportURL
+} from '@/app/shell/support/links'
 import { openExternalLink } from '@/app/shell/ui'
 import {
   OPEN_PEN_CLI_GUIDE_URL,
   OPEN_PEN_HELP_URL,
   OPEN_PEN_REPOSITORY_URL,
-  OPEN_PEN_SUPPORT_URL,
   OPEN_PEN_WEBSITE_URL
 } from '@/constants'
 
@@ -33,5 +37,7 @@ export const guideMenuActions = {
     void openExternalLink(
       `${OPEN_PEN_REPOSITORY_URL}/blob/HEAD/docs/EDITOR-INTEGRATIONS.md#vs-code`
     ),
-  'help-support': () => void openExternalLink(OPEN_PEN_SUPPORT_URL)
+  'help-report-issue': () => void openExternalLink(brutalBugReportURL()),
+  'help-release-notes': () => void openExternalLink(BRUTAL_RELEASES_URL),
+  'help-support': () => void openExternalLink(BRUTAL_SUPPORT_URL)
 }

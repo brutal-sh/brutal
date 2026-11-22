@@ -91,18 +91,20 @@ test('Help reaches this fork’s documentation, setup and support without editin
   const before = await getSelectedNode(page)
   const website = 'https://brutal.sh/'
   const repository = 'https://github.com/jpoindexter/open-pen'
-  await page
-    .context()
-    .route(`${repository}/blob/HEAD/**`, (route) =>
-      route.fulfill({ contentType: 'text/html', body: '<title>Brutal repository guide</title>' })
-    )
+  const support = 'https://github.com/brutal-sh/open-pen-feedback'
+  await page.context().route(
+    (url) => url.href.startsWith(repository + '/blob/HEAD/') || url.href.startsWith(support),
+    (route) => route.fulfill({ contentType: 'text/html', body: '<title>Brutal support</title>' })
+  )
   for (const [label, url] of [
     ['Brutal Documentation', `${website}help/#docs`],
     ['Prompt Gallery & Tips', `${repository}/blob/HEAD/docs/PROMPTS.md`],
     ['Brutal Website', website],
     ['Cursor Setup…', `${repository}/blob/HEAD/docs/EDITOR-INTEGRATIONS.md#cursor`],
     ['VS Code Setup…', `${repository}/blob/HEAD/docs/EDITOR-INTEGRATIONS.md#vs-code`],
-    ['Support & Feedback', `${website}help/#support`]
+    ['Release Notes', `${support}/releases`],
+    ['Report an Issue', `${support}/issues/new?template=bug.yml&version=0.16.0`],
+    ['Support & Feedback', support]
   ]) {
     const opening = page.waitForEvent('popup')
     await (

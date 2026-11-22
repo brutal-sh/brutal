@@ -23,7 +23,7 @@ for (const [name, userAgent] of BROWSERS) {
         const requests: string[] = []
         page.on('pageerror', (error) => errors.push(error.message))
         await context.route(
-          /^https:\/\/(github\.com\/jpoindexter\/open-pen-feedback\/|open-pen\.vercel\.app\/help\/getting-started\/)/,
+          /^https:\/\/(github\.com\/brutal-sh\/open-pen-feedback\/|open-pen\.vercel\.app\/help\/getting-started\/)/,
           async (route) => {
             requests.push(route.request().url())
             await route.fulfill({
@@ -57,7 +57,7 @@ for (const [name, userAgent] of BROWSERS) {
         const report = notice.getByRole('link', { name: 'Report a problem' })
         const href = new URL((await report.getAttribute('href')) ?? '')
         expect(href.origin + href.pathname).toBe(
-          'https://github.com/jpoindexter/open-pen-feedback/issues/new'
+          'https://github.com/brutal-sh/open-pen-feedback/issues/new'
         )
         expect(href.searchParams.get('template')).toBe('bug.yml')
         expect([...href.searchParams.keys()].sort()).toEqual(['template', 'title', 'version'])

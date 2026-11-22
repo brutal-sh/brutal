@@ -23,7 +23,7 @@ test.describe('browser support gate', () => {
 
     const report = notice.getByRole('link', { name: 'Report a problem' })
     const href = new URL((await report.getAttribute('href')) ?? '')
-    expect(href.pathname).toBe('/jpoindexter/open-pen-feedback/issues/new')
+    expect(href.pathname).toBe('/brutal-sh/open-pen-feedback/issues/new')
     expect(href.searchParams.get('template')).toBe('bug.yml')
     expect([...href.searchParams.keys()].sort()).toEqual(['template', 'title', 'version'])
 

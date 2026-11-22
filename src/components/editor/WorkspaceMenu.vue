@@ -17,6 +17,7 @@ import { createSharedEditorMenuActions } from '@/app/shell/menu/actions/editor'
 import { useAppMenu } from '@/app/shell/menu/app-menu'
 import { appMenuShortcutLabel } from '@/app/shell/menu/shortcut'
 import { popupWorkspaceMenu } from '@/app/shell/menu/workspace'
+import { BRUTAL_SUPPORT_URL, brutalBugReportURL } from '@/app/shell/support/links'
 import { useAppTheme } from '@/app/shell/theme'
 import { toast } from '@/app/shell/ui'
 import BrandMark from '@/components/brand/BrandMark.vue'
@@ -24,13 +25,7 @@ import WorkspaceCommandItems from '@/components/editor/WorkspaceCommandItems.vue
 import ExternalLink from '@/components/links/ExternalLink.vue'
 import AppShortcutText from '@/components/ui/menu/AppShortcutText.vue'
 import { useMenuUI } from '@/components/ui/menu/menu'
-import {
-  IS_TAURI,
-  OPEN_PEN_CLI_GUIDE_URL,
-  OPEN_PEN_HELP_URL,
-  OPEN_PEN_REPOSITORY_URL,
-  OPEN_PEN_SUPPORT_URL
-} from '@/constants'
+import { IS_TAURI, OPEN_PEN_CLI_GUIDE_URL, OPEN_PEN_HELP_URL } from '@/constants'
 
 const store = useEditorStore()
 const open = ref(false)
@@ -44,10 +39,10 @@ const browserCommands = computed(() => [
 ])
 const { toggleTheme, setTheme } = useAppTheme()
 const actions = createSharedEditorMenuActions(setTheme)
-const repository = OPEN_PEN_REPOSITORY_URL
+const repository = BRUTAL_SUPPORT_URL
 const links = [
   { label: 'Brutal on GitHub', href: repository, icon: IconGithub },
-  { label: 'Brutal support', href: OPEN_PEN_SUPPORT_URL, icon: IconLifeBuoy },
+  { label: 'Report an Issue', href: brutalBugReportURL(), icon: IconLifeBuoy },
   {
     label: 'Brutal documentation',
     href: OPEN_PEN_HELP_URL,

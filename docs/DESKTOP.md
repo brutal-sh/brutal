@@ -30,7 +30,11 @@ Build the Apple-silicon candidate with `bun run build:macos-beta`. The local Tau
 
 Verify the ZIP checksum and Gatekeeper assessment after extraction. Use a clean macOS login for launch, editing, Save and reopen, recovery, and the bundled MCP bridge. Keep the previous trusted app available for rollback. The shared bundle identity carries preferences and credentials forward, so close the previous app before opening Brutal.
 
-The approved public download will be linked from [Brutal Help](https://brutal.sh/help/). Beta testers can use the [public feedback repository](https://github.com/jpoindexter/open-pen-feedback/issues).
+Publish the signed ZIP and `SHA256SUMS.txt` as a prerelease at
+[`brutal-sh/open-pen-feedback`](https://github.com/brutal-sh/open-pen-feedback/releases).
+Verify the uploaded ZIP's SHA-256 against the candidate before publishing, then download
+it from the public release and check the digest again. Link the approved release from
+[Brutal Help](https://brutal.sh/help/getting-started/#download).
 
 ## Updates
 

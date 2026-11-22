@@ -64,13 +64,16 @@ it('routes native Help events from Home without creating a document', async () =
   const before = await $$('[data-slot="tab-bar"] [role="tab"]').length
   const website = 'https://brutal.sh/'
   const repository = 'https://github.com/jpoindexter/open-pen'
+  const support = 'https://github.com/brutal-sh/open-pen-feedback'
   for (const [id, url] of [
     ['help-documentation', `${website}help/#docs`],
     ['help-prompts', `${repository}/blob/HEAD/docs/PROMPTS.md`],
     ['help-website', website],
     ['help-cursor', `${repository}/blob/HEAD/docs/EDITOR-INTEGRATIONS.md#cursor`],
     ['help-vscode', `${repository}/blob/HEAD/docs/EDITOR-INTEGRATIONS.md#vs-code`],
-    ['help-support', 'https://github.com/jpoindexter/open-pen-feedback']
+    ['help-release-notes', `${support}/releases`],
+    ['help-report-issue', `${support}/issues/new?template=bug.yml&version=0.16.0`],
+    ['help-support', support]
   ]) {
     await invokeNative('take_native_test_opened_urls')
     await emitNativeMenuAction(id)

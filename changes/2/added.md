@@ -1,0 +1,2 @@
+- Open the public bug form from Help → Report an Issue, with the app version filled in.
+- Open Brutal release notes on GitHub from the Help menu.
