@@ -1,0 +1,1 @@
+- Generate two independent Codex design versions from one text prompt, with separate conversations and stop controls.

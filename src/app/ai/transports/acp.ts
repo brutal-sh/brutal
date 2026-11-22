@@ -7,12 +7,30 @@ import { formatConnectionError } from '@/app/ai/agents/acp/errors'
 import { createUpdateMapper } from '@/app/ai/agents/acp/events'
 import type { TauriChild } from '@/app/ai/agents/acp/process'
 import { AgentSessionResumeError } from '@/app/ai/agents/acp/session'
+import {
+  releaseDesignVersion,
+  VERSION_HEIGHT,
+  VERSION_WIDTH,
+  type DesignVersionTarget
+} from '@/app/ai/chat/parallel/scope'
 import SYSTEM_PROMPT from '@/app/ai/chat/system-prompt'
 import { endRun, forgetAgentChat, startAgentRun } from '@/app/ai/reply/run'
+import { restAgents, setAgentChatModel } from '@/app/automation/agents'
 import { describeDiagnosticError, recordACPTransportFailure } from '@/app/diagnostics'
 import type { EditorStore } from '@/app/editor/active-store'
 
 import { openACPChatSession, type ACPSession } from './acp/session'
+
+async function closeAgentSession(session: ACPSession): Promise<void> {
+  forgetAgentChat(session.chat)
+  restAgents('acp', session.chat)
+  try {
+    await session.child.kill()
+  } finally {
+    setAgentChatModel(session.chat, null)
+    releaseDesignVersion(session.chat)
+  }
+}
 
 export { formatConnectionError } from '@/app/ai/agents/acp/errors'
 
@@ -80,11 +98,13 @@ export class ACPChatTransport implements ChatTransport<UIMessage> {
   /** The chat's document, where each reply's run records the edits the agent makes in it. */
   private store: EditorStore | null
   private onUsage: ((usage: AgentTurnUsage) => void) | null
+  private version: DesignVersionTarget | undefined
 
   constructor(options: {
     agentDef: ACPAgentDef
     cwd?: string
     store?: EditorStore
+    version?: DesignVersionTarget
     /** Told each turn's tokens, which the Usage settings count with the chat's other models. */
     onUsage?: (usage: AgentTurnUsage) => void
     resume?: string | null
@@ -93,6 +113,7 @@ export class ACPChatTransport implements ChatTransport<UIMessage> {
     this.agentDef = options.agentDef
     this.cwd = options.cwd ?? '.'
     this.store = options.store ?? null
+    this.version = options.version
     this.onUsage = options.onUsage ?? null
     this.resume = options.resume ?? null
     this.onSession = options.onSession
@@ -119,7 +140,7 @@ export class ACPChatTransport implements ChatTransport<UIMessage> {
       const started = await this.spawnAgent(abortSignal)
       // Destroyed between startup and here: the agent is still `starting`, so stop it.
       if (this.destroying) {
-        await started.child.kill().catch(() => undefined)
+        await closeAgentSession(started)
         throw new Error('The chat closed while its agent was starting.')
       }
       if (started.dead) {
@@ -132,15 +153,19 @@ export class ACPChatTransport implements ChatTransport<UIMessage> {
     }
 
     const carriesContext = !this.sentContext
-    const promptText = carriesContext ? `${SYSTEM_PROMPT}\n\n${text}` : text
+    const designAssignment = this.version
+      ? `You are creating an independent design alternative titled "${this.version.title}". Make one complete alternative for the request. Work only in the specified Brutal document and page. Your separate area is ${VERSION_WIDTH} × ${VERSION_HEIGHT} design units. Fit the design within it. Use preview_render to show a draft when useful. Use render once at the end, with JSX only, to commit your version. Brutal places it in your own frame. Use canvas tools only. Do not change other designs, files or settings.\n\n`
+      : ''
+    const promptText = carriesContext ? `${SYSTEM_PROMPT}\n\n${designAssignment}${text}` : text
     this.sentContext = true
 
     const { connection, sessionId } = this.session
     const session = this.session
+    setAgentChatModel(session.chat, session.modelLabel ?? this.agentDef.name)
 
     return new ReadableStream<UIMessageChunk>({
       start: (controller) => {
-        const mapper = createUpdateMapper(`turn-${Date.now()}`)
+        const mapper = createUpdateMapper(crypto.randomUUID())
         let closed = false
         // The reply's run collects the edits the agent's calls make in the chat's document.
         const store = this.store
@@ -150,6 +175,7 @@ export class ACPChatTransport implements ChatTransport<UIMessage> {
           if (closed) return
           closed = true
           if (store && run) endRun(store, run)
+          restAgents('acp', session.chat)
           if (errorText) controller.enqueue({ type: 'error', errorText })
           for (const chunk of mapper.end()) controller.enqueue(chunk)
           controller.enqueue({ type: 'finish-step' })
@@ -160,12 +186,14 @@ export class ACPChatTransport implements ChatTransport<UIMessage> {
 
         session.onUpdate = (params) => {
           if (closed) return
+          if (params.update.sessionUpdate === 'usage_update' && session.modelLabel)
+            setAgentChatModel(session.chat, session.modelLabel)
           if (TURN_UPDATES.has(params.update.sessionUpdate)) this.recordSession(sessionId)
           for (const chunk of mapper.map(params.update)) controller.enqueue(chunk)
         }
 
         abortSignal?.addEventListener('abort', () => {
-          void connection.cancel({ sessionId })
+          void connection.cancel({ sessionId }).catch(() => undefined)
           finish('stop')
         })
 
@@ -213,8 +241,7 @@ export class ACPChatTransport implements ChatTransport<UIMessage> {
     this.starting = null
     await starting?.kill().catch(() => undefined)
     if (this.session) {
-      forgetAgentChat(this.session.chat)
-      await this.session.child.kill()
+      await closeAgentSession(this.session)
       this.session = null
     }
   }
@@ -230,10 +257,15 @@ export class ACPChatTransport implements ChatTransport<UIMessage> {
       agentDef: this.agentDef,
       cwd: this.cwd,
       resume: this.resume,
+      version: this.version,
       signal,
       destroying: () => this.destroying,
       onUnexpectedClose: (closed) => {
         if (this.session === closed) this.session = null
+        forgetAgentChat(closed.chat)
+        restAgents('acp', closed.chat)
+        setAgentChatModel(closed.chat, null)
+        releaseDesignVersion(closed.chat)
       },
       onStarting: (child) => {
         this.starting = child

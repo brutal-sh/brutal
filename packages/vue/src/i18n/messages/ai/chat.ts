@@ -1,6 +1,17 @@
 import { params } from '@nanostores/i18n'
 
 export const aiChatDefaults = {
+  parallelDesignToggle: 'Two Codex versions',
+  parallelDesignVersion: params('Version {count}'),
+  parallelDesignWorking: 'Working',
+  parallelDesignFinished: 'Finished',
+  parallelDesignStopped: 'Stopped',
+  parallelDesignFailed: 'Failed',
+  parallelDesignStopBoth: 'Stop both',
+  parallelDesignBack: 'Back to chat',
+  parallelDesignStopVersion: 'Stop version',
+  parallelDesignOpen: 'Open conversation',
+  parallelDesignTextOnly: 'Two versions takes a text prompt. Remove attachments or turn it off.',
   jumpToLatest: 'Jump to latest',
   chatSettings: 'Chat',
   maxAgentSteps: 'Maximum steps per message',

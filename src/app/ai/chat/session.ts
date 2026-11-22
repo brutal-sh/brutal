@@ -8,6 +8,7 @@ import type { ACPAgentID, AIProviderID } from '@open-pencil/core/constants'
 
 import { AgentSetupError, assertAgentReady } from '@/app/ai/agents/setup/readiness'
 import { classifyAIChatError, type AIChatFailure } from '@/app/ai/chat/failure'
+import type { DesignVersionTarget } from '@/app/ai/chat/parallel/scope'
 import { hasSteeringMessage } from '@/app/ai/chat/queue'
 import SYSTEM_PROMPT from '@/app/ai/chat/system-prompt'
 import { chatThinkingLevel } from '@/app/ai/chat/thinking'
@@ -51,7 +52,8 @@ export async function createACPTransport(
   providerID: AIProviderID,
   store?: EditorStore,
   onUsage?: (usage: AgentTurnUsage) => void,
-  agentSession?: AgentSessionLink
+  agentSession?: AgentSessionLink,
+  version?: DesignVersionTarget
 ) {
   const agentId = providerID.replace('acp:', '') as ACPAgentID
   const agentDef = ACP_AGENTS.find((a) => a.id === agentId)
@@ -70,6 +72,7 @@ export async function createACPTransport(
     store,
     onUsage,
     resume: resume?.id,
+    version,
     onSession:
       agentSession && ((id) => agentSession.record(id === null ? null : { agent: agentDef.id, id }))
   })
@@ -319,7 +322,7 @@ export function createChatSessionManager({
         onFinish: (event) => {
           handleChatFinish(diagnosticContext, event)
           // The reply is over, however it ended; its agent rests instead of waiting it out.
-          if (agentKind) restAgents(agentKind)
+          if (agentKind === 'harness') restAgents(agentKind)
           if (event.isAbort || event.isDisconnect || event.isError) {
             void settleEndedReply(created, store, event.message.id, event.isAbort)
           }

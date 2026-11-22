@@ -267,6 +267,7 @@ export function createConversationHistory<TChat extends HistoryChat>(
     busy,
     storageError,
     initialize,
+    refresh,
     ensureChat,
     flush,
     newChat,

@@ -4,6 +4,7 @@ import { OPEN_PENCIL_MCP_SERVER } from '@open-pencil/core/constants'
 
 import { buildACPMCPServers } from '@/app/integrations/mcp'
 import { linkChatAgent } from '@/app/integrations/mcp/link'
+import { builtInMCPServer } from '@/app/integrations/mcp/runtime'
 
 import { textFromContent } from './events'
 
@@ -39,8 +40,14 @@ export interface OwnToolsLink {
  * Links a new ACP session to OpenPencil's MCP server. Codex reports a server it could not start
  * as a failed tool call before any prompt, which gives the reason when the agent never connects.
  */
-export async function linkOwnTools(authorizationToken: string | null): Promise<OwnToolsLink> {
-  const link = await linkChatAgent((chat) => buildACPMCPServers({ authorizationToken, chat }))
+export async function linkOwnTools(
+  authorizationToken: string | null,
+  canvasOnly = false
+): Promise<OwnToolsLink> {
+  const link = await linkChatAgent((chat) => {
+    const options = { authorizationToken, chat }
+    return canvasOnly ? Promise.resolve([builtInMCPServer(options)]) : buildACPMCPServers(options)
+  })
   const failures: string[] = []
   return {
     chat: link.chat,

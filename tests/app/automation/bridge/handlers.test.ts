@@ -5,6 +5,12 @@ import { toRaw } from 'vue'
 
 import * as layoutModule from '@open-pencil/core/layout'
 
+import {
+  bindDesignVersion,
+  releaseDesignVersion,
+  type DesignVersionTarget
+} from '@/app/ai/chat/parallel/scope'
+import { endRun, forgetAgentChat, startAgentRun } from '@/app/ai/reply/run'
 import { makeFigmaFromStore } from '@/app/automation/bridge/figma-factory'
 import { createAutomationCommandHandlers } from '@/app/automation/bridge/handlers'
 import { automationFiles } from '@/app/automation/bridge/server'
@@ -460,4 +466,79 @@ describe('list_recent_files', () => {
       ]
     })
   })
+})
+
+test('parallel versions keep independent replies and commit only in their assigned frames', async () => {
+  const { store, id: documentId } = createTab()
+  const pageId = store.state.currentPageId
+  const original = store.graph.createNode('RECTANGLE', pageId, { name: 'Existing layer' })
+  const outside = createTab()
+  const animations = appPreferences.value.appearance.animations
+  appPreferences.value.appearance.animations = 'off'
+  const versions = ['1'.repeat(32), '2'.repeat(32)].map((chat, index) => {
+    const target: DesignVersionTarget = {
+      store,
+      graph: store.graph,
+      documentId,
+      pageId,
+      x: 200 + index * 608,
+      y: 120,
+      title: `Version ${index + 1}`,
+      committed: false
+    }
+    bindDesignVersion(chat, target)
+    return { chat, target, run: startAgentRun(store, chat) }
+  })
+  const tool = (chat: string, name: string, args: Record<string, unknown>, extra = {}) =>
+    request('tool', {
+      app_chat: chat,
+      name,
+      args,
+      agent: { session: chat, kind: 'acp', chat, call: chat },
+      ...extra
+    })
+  const [first, second] = versions
+  try {
+    const documents = await request('list_documents', { app_chat: first.chat })
+    expect(documents.result.documents).toEqual([expect.objectContaining({ id: documentId })])
+    await expect(tool(first.chat, 'render', {}, { document_id: outside.id })).rejects.toThrow(
+      'assigned document and page'
+    )
+    await expect(
+      tool(first.chat, 'set_fill', { id: original.id, color: '#ff0000' })
+    ).rejects.toThrow('Use render')
+    await Promise.all(
+      versions.map(({ chat, target }) =>
+        tool(chat, 'render', {
+          jsx: `<Frame name="${target.title} design" w={200} h={100} />`,
+          replace_id: original.id,
+          x: -400
+        })
+      )
+    )
+    const roots = (store.graph.getNode(pageId)?.childIds ?? []).map((id) => store.graph.getNode(id))
+    expect(roots.map((root) => root?.name)).toEqual(['Existing layer', 'Version 1', 'Version 2'])
+    expect(roots.slice(1).map((frame) => [frame?.x, frame?.y, frame?.clipsContent])).toEqual([
+      [200, 120, true],
+      [808, 120, true]
+    ])
+    expect(
+      roots.slice(1).map((frame) => store.graph.getNode(frame?.childIds[0] ?? '')?.name)
+    ).toEqual(['Version 1 design', 'Version 2 design'])
+    expect(versions.map(({ run }) => run.undoCalls.length)).toEqual([1, 1])
+    endRun(store, first.run)
+    await expect(tool(first.chat, 'render', { jsx: '<Frame />' })).rejects.toThrow(
+      'no longer running'
+    )
+    expect(second.run.active).toBe(true)
+    await expect(tool(second.chat, 'render', { jsx: '<Frame />' })).rejects.toThrow(
+      'already committed'
+    )
+  } finally {
+    appPreferences.value.appearance.animations = animations
+    for (const { chat } of versions) {
+      forgetAgentChat(chat)
+      releaseDesignVersion(chat)
+    }
+  }
 })

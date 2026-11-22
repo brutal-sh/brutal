@@ -47,6 +47,9 @@ const agentSchema = v.object({
   name: nameSchema,
   kind: v.picklist(AGENT_KINDS),
   model: lenient(v.pipe(v.string(), v.maxLength(MAX_NAME_LENGTH))),
+  colorIndex: lenient(
+    v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(PEER_COLORS.length - 1))
+  ),
   status: v.picklist(AGENT_STATUSES),
   pageId: lenient(idSchema),
   cursor: lenient(pointSchema),

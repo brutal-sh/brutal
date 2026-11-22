@@ -302,7 +302,7 @@ export function openRoomSession({
     const cursor = awareness.getLocalState()?.cursor as CursorState | undefined
     if (cursor) awareness.setLocalStateField('cursor', { ...cursor, zoom: viewport.zoom })
   })
-  const stopAgentSync = publishLocalAgents(store, () => awareness, identity.color)
+  const stopAgentSync = publishLocalAgents(store, () => awareness)
   const stopAgentPreviews = shareAgentPreviews(store, connection)
   const voice = attachRoomVoice({ awareness, peers, connection })
   const variableSync = bindVariableSync({ store, ydoc, yvariables, ycollections })

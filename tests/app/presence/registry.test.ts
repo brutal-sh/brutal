@@ -10,10 +10,10 @@ import {
   presenceByPage,
   presenceOf,
   renameAgent,
-  setOwnerColor,
   setPeers
 } from '@/app/presence/registry'
 import { appPreferences } from '@/app/settings/preferences/store'
+import { PEER_COLORS } from '@/constants'
 
 const stores: ReturnType<typeof createEditorStore>[] = []
 afterEach(() => {
@@ -28,19 +28,19 @@ function setup() {
 
 const red = { r: 1, g: 0, b: 0, a: 1 }
 
-test('draws active agents on their page, in their owner color', () => {
+test('draws the active page’s agent in its own color with its model', () => {
   const { store, pageId, other } = setup()
-  const here = addAgent(store, 'chat')
+  const here = addAgent(store, 'chat', 'Codex Model')
   const there = addAgent(store, 'chat')
   here.update({ status: 'editing', cursor: { x: 5, y: 6, pageId } })
   there.update({ status: 'editing', cursor: { x: 1, y: 1, pageId: other } })
-  setOwnerColor(store, red)
   expect(store.state.presenceCursors).toEqual([
     {
       id: `agent:${here.id}`,
       kind: 'agent',
       name: here.name,
-      color: red,
+      model: 'Codex Model',
+      color: PEER_COLORS[0],
       x: 5,
       y: 6,
       selection: undefined,
@@ -49,15 +49,16 @@ test('draws active agents on their page, in their owner color', () => {
   ])
 })
 
-test('hides idle agents and gives each a different callsign', () => {
+test('hides idle agents and gives each a different callsign and color', () => {
   const { store, pageId } = setup()
   const agents = Array.from({ length: 5 }, () => addAgent(store, 'chat'))
   expect(new Set(agents.map((agent) => agent.name)).size).toBe(5)
+  expect(new Set(presenceOf(store).agents.value.map((agent) => agent.colorIndex)).size).toBe(5)
   agents[0]?.update({ status: 'idle', cursor: { x: 0, y: 0, pageId } })
   expect(store.state.presenceCursors).toEqual([])
 })
 
-test('draws people and their agents with the person color', () => {
+test('carries the advertised agent color over collaboration awareness', () => {
   const { store, pageId } = setup()
   setPeers(store, [
     {
@@ -66,7 +67,14 @@ test('draws people and their agents with the person color', () => {
       color: red,
       cursor: { x: 1, y: 2, pageId },
       agents: [
-        { id: 'a', name: 'Orbit', kind: 'mcp', status: 'thinking', cursor: { x: 3, y: 4, pageId } }
+        {
+          id: 'a',
+          name: 'Orbit',
+          kind: 'mcp',
+          colorIndex: 1,
+          status: 'thinking',
+          cursor: { x: 3, y: 4, pageId }
+        }
       ]
     }
   ])
@@ -74,7 +82,7 @@ test('draws people and their agents with the person color', () => {
     store.state.presenceCursors.map(({ kind, name, color }) => ({ kind, name, color }))
   ).toEqual([
     { kind: 'person', name: 'Ana', color: red },
-    { kind: 'agent', name: 'Orbit', color: red }
+    { kind: 'agent', name: 'Orbit', color: PEER_COLORS[1] }
   ])
 })
 
@@ -241,12 +249,23 @@ test('stopping while following heads to another page stays where you are', async
 
 test('labels a followed agent with the person who runs it', () => {
   const { store, pageId } = setup()
-  const fern = { id: 'fern', name: 'Fern', kind: 'chat' as const, status: 'editing' as const }
+  const fern = {
+    id: 'fern',
+    name: 'Fern',
+    kind: 'chat' as const,
+    status: 'editing' as const,
+    colorIndex: 2
+  }
   setPeers(store, [
     { clientId: 4, name: 'Ana', color: red, agents: [{ ...fern, cursor: { x: 1, y: 1, pageId } }] }
   ])
   follow(store, { kind: 'agent', agentId: 'fern' })
-  expect(followedLabel(store)).toEqual({ kind: 'agent', name: 'Fern', owner: 'Ana', color: red })
+  expect(followedLabel(store)).toEqual({
+    kind: 'agent',
+    name: 'Fern',
+    owner: 'Ana',
+    color: PEER_COLORS[2]
+  })
 })
 
 test('renames our agents, and their handles report the new name', () => {
@@ -345,7 +364,6 @@ test('agent edits move the cursor around the layer once and respect the animatio
     expect(cursor()?.y ?? -Infinity).toBeGreaterThan(layer.y)
     expect(pending).toBeUndefined()
 
-    setOwnerColor(store, red)
     expect(pending).toBeUndefined()
     edit()
     expect(pending).toBeDefined()

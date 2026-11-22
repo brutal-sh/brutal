@@ -32,7 +32,8 @@ export interface PresenceCursor {
   id?: string
   kind: 'person' | 'agent'
   name: string
-  /** A person's color, or the color of the person who runs the agent. */
+  model?: string
+  /** This person or agent's color. */
   color: Color
   x: number
   y: number

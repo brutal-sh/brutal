@@ -1,5 +1,6 @@
 import { expect, test } from '#tests/e2e/fixtures'
 import { CanvasHelper } from '#tests/helpers/canvas'
+import { startAgent } from '#tests/helpers/collab/agent/page'
 
 test.use({ viewport: { width: 780, height: 530 } })
 
@@ -68,3 +69,25 @@ for (const reducedMotion of ['no-preference', 'reduce'] as const) {
     canvas.assertNoErrors()
   })
 }
+
+test('simultaneous agents show distinct colors and model labels on the canvas', async ({
+  page
+}) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.goto('/?test&no-chrome&no-rulers')
+  const canvas = new CanvasHelper(page)
+  await canvas.waitForInit()
+  await canvas.clearCanvas()
+  const name = await page.evaluate(() => {
+    const store = window.openPencil?.getStore?.()
+    if (!store) throw new Error('Editor unavailable')
+    store.state.panX = 0
+    store.state.panY = 0
+    store.state.zoom = 1
+    return store.graph.getNode(store.state.currentPageId)?.name ?? ''
+  })
+  await startAgent(page, name, 80, 70, { name: 'Fern', model: 'GPT-6.2 Sol' })
+  await startAgent(page, name, 260, 70, { name: 'Orbit', model: 'GPT-6.2 Sol' })
+  await canvas.waitForRender()
+  expect(await canvas.screenshotCanvasRegion(470, 130)).toMatchSnapshot('two-agent-labels.png')
+})

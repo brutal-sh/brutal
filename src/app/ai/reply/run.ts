@@ -3,6 +3,7 @@ import type { StepBudget } from '@open-pencil/core/tools'
 import type { UndoEntry } from '@open-pencil/scene-graph/undo'
 
 import { describeUndoneCalls, type CallRef } from '@/app/ai/chat/context'
+import { designVersionForChat } from '@/app/ai/chat/parallel/scope'
 import { clearAgentDraft } from '@/app/ai/preview/agent'
 import type { PreviewFocus } from '@/app/ai/preview/canvas'
 import { DEFAULT_AGENT_STEPS, resolveAgentStepLimit } from '@/app/ai/reply/step-limit'
@@ -119,17 +120,18 @@ const agentChats = new Map<string, { store: EditorStore; run: Run }>()
  * the built-in chat, and its tool calls find the run by `chat` (`agentReplyRun`).
  */
 export function startAgentRun(store: EditorStore, chat: string): Run {
-  const state = getRunState(store)
-  state.run = new Run(DEFAULT_AGENT_STEPS, store.state.currentPageId, false)
-  agentChats.set(chat, { store, run: state.run })
-  return state.run
+  const version = designVersionForChat(chat)
+  const run = new Run(DEFAULT_AGENT_STEPS, version?.pageId ?? store.state.currentPageId, false)
+  if (!version) getRunState(store).run = run
+  agentChats.set(chat, { store, run })
+  return run
 }
 
 /** The ACP chat is gone, so a late call from its agent belongs to no reply. */
 export function forgetAgentChat(chat: string): void {
   const entry = agentChats.get(chat)
   agentChats.delete(chat)
-  if (entry) clearAgentDraft(entry.run)
+  if (entry) endRun(entry.store, entry.run)
 }
 
 /**
@@ -138,7 +140,8 @@ export function forgetAgentChat(chat: string): void {
  */
 export function agentReplyRun(store: EditorStore, chat: string | undefined): Run | null {
   const entry = chat ? agentChats.get(chat) : undefined
-  if (entry?.store !== store || currentRun(store) !== entry.run) return null
+  if (entry?.store !== store) return null
+  if (!designVersionForChat(chat) && currentRun(store) !== entry.run) return null
   return entry.run.active ? entry.run : null
 }
 

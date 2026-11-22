@@ -2,12 +2,17 @@
 import type { Chat } from '@ai-sdk/vue'
 import type { UIMessage } from 'ai'
 import { TabsContent } from 'reka-ui'
-import { computed, nextTick, shallowRef, useTemplateRef, watch } from 'vue'
+import { computed, nextTick, ref, shallowRef, useTemplateRef, watch } from 'vue'
 
 import { useI18n } from '@open-pencil/vue/i18n'
 
 import { revokeImagePreviewURL } from '@/app/ai/attachment/image/prepare'
 import { chatDocumentId } from '@/app/ai/chat/history/document'
+import {
+  dismissParallelDesign,
+  parallelDesignFor,
+  startParallelDesign
+} from '@/app/ai/chat/parallel/run'
 import {
   clearQueuedMessages,
   enqueueMessage,
@@ -40,6 +45,7 @@ import ChatFollowAgentsToggle from '@/components/chat/ChatFollowAgentsToggle.vue
 import ChatHistory from '@/components/chat/ChatHistory.vue'
 import ChatHistoryList from '@/components/chat/ChatHistoryList.vue'
 import ChatInput from '@/components/chat/ChatInput.vue'
+import ChatParallelDesign from '@/components/chat/ChatParallelDesign.vue'
 import ChatPermissionDialog from '@/components/chat/ChatPermissionDialog.vue'
 import ChatProfileSelect from '@/components/chat/ChatProfileSelect.vue'
 import ChatProviderSetup from '@/components/chat/ChatProviderSetup.vue'
@@ -248,6 +254,14 @@ const failureHasSettingsAction = computed(() =>
   )
 )
 const status = computed(() => chat.value?.status ?? 'ready')
+const twoVersions = ref(false)
+const parallel = computed(() => parallelDesignFor(getActiveEditorStore()))
+const canRunParallel = computed(
+  () => providerID.value === 'acp:codex' && (status.value === 'ready' || status.value === 'error')
+)
+watch([activeTab, canRunParallel], () => {
+  twoVersions.value = false
+})
 const modelSelectionDisabled = computed(
   () =>
     submission.busy.value ||
@@ -305,6 +319,27 @@ function restoreModelFocus(event: Event) {
  * takes in once the current tool calls finish, and Alt+Enter waits until all work is done.
  */
 function sendOrQueue(message: ChatSubmission, afterWork: boolean) {
+  if (twoVersions.value && canRunParallel.value) {
+    const unsupported = message.images.length || message.nodes.length || message.files?.length
+    if (unsupported) {
+      toast.error(ai.value.parallelDesignTextOnly)
+      chatInput.value?.restoreDraft(message)
+      return
+    }
+    const started = startParallelDesign(
+      getActiveEditorStore(),
+      message.modelText,
+      [ai.value.parallelDesignVersion({ count: 1 }), ai.value.parallelDesignVersion({ count: 2 })],
+      history.refresh
+    )
+    if (!started) {
+      toast.error(ai.value.parallelDesignFailed)
+      chatInput.value?.restoreDraft(message)
+      return
+    }
+    twoVersions.value = false
+    return
+  }
   if (status.value === 'streaming' || status.value === 'submitted') {
     enqueueMessage(message, afterWork ? 'follow-up' : 'steer')
     return
@@ -399,6 +434,11 @@ watch(
   { immediate: true, flush: 'post' }
 )
 
+function closeParallel(id?: string) {
+  dismissParallelDesign(getActiveEditorStore())
+  if (id) openConversation(id)
+}
+
 function handleStop() {
   submission.stop()
 }
@@ -424,68 +464,76 @@ function handleStop() {
         v-show="!docked || activePanel === 'chat'"
         class="flex min-h-0 flex-1 flex-col"
       >
-        <ChatHistory
-          :docked="docked"
-          :saved="history.conversations.value.some((row) => row.id === history.current.value?.id)"
-          :conversations="historyOptions"
-          :selected-id="history.current.value?.id"
-          :disabled="history.busy.value"
-          @create="historyAction(history.newChat)"
-          @select="openConversation($event)"
-          @rename="renameConversation"
-          @save-trace="saveTrace"
-          @delete="historyAction(() => history.remove($event))"
-        >
-          <template #actions><ChatFollowAgentsToggle /></template>
-        </ChatHistory>
-        <p v-if="history.storageError.value" role="alert" class="px-3 py-2 text-xs text-error">
-          {{ ai.chatStorageFailed }}
-        </p>
-        <ChatProviderSetup v-if="!docked && !isConfigured" />
-
-        <template v-if="isConfigured || messages.length">
-          <p
-            v-if="history.current.value?.interrupted && status === 'ready'"
-            role="status"
-            class="px-3 py-2 text-xs text-muted"
+        <ChatParallelDesign
+          v-if="parallel"
+          :run="parallel"
+          @close="closeParallel()"
+          @open="closeParallel($event)"
+        />
+        <template v-else>
+          <ChatHistory
+            :docked="docked"
+            :saved="history.conversations.value.some((row) => row.id === history.current.value?.id)"
+            :conversations="historyOptions"
+            :selected-id="history.current.value?.id"
+            :disabled="history.busy.value"
+            @create="historyAction(history.newChat)"
+            @select="openConversation($event)"
+            @rename="renameConversation"
+            @save-trace="saveTrace"
+            @delete="historyAction(() => history.remove($event))"
           >
-            {{ ai.chatInterrupted }}
+            <template #actions><ChatFollowAgentsToggle /></template>
+          </ChatHistory>
+          <p v-if="history.storageError.value" role="alert" class="px-3 py-2 text-xs text-error">
+            {{ ai.chatStorageFailed }}
           </p>
-          <ChatTranscript
-            :messages="messages"
-            :status="status"
-            :show-continue="showContinue"
-            :queued="queuedMessages"
-            :steers="!providerID.startsWith('acp:') && providerID !== 'harness:pi'"
-            @remove-queued="removeQueuedMessage"
-            :nodes-live="!history.readOnly.value"
-            :interactive="chat !== null && !submission.busy.value"
-            @regenerate="submission.regenerate()"
-            @revert="(messageId) => submission.revert(messageId)"
-            @restore="(messageId) => submission.restore(messageId)"
-            @edit="(messageId, text) => submission.resend(messageId, text)"
-            @continue="
-              submission.submit({
-                modelText: 'Continue where you left off',
-                displayText: 'Continue where you left off',
-                images: [],
-                nodes: []
-              })
-            "
-          />
+          <ChatProviderSetup v-if="!docked && !isConfigured" />
 
-          <p v-if="agentHistoryReadOnly" role="status" class="px-3 py-2 text-xs text-muted">
-            {{ ai.chatAgentReadOnly }}
-          </p>
-          <p v-if="history.readOnly.value" role="status" class="px-3 py-2 text-xs text-muted">
-            {{ ai.chatReadOnly }}
-          </p>
-          <ChatRunLocation
-            v-if="runLocation"
-            :agent="runLocation.agent"
-            :page="runLocation.page"
-            @open="runLocation.open"
-          />
+          <template v-if="isConfigured || messages.length">
+            <p
+              v-if="history.current.value?.interrupted && status === 'ready'"
+              role="status"
+              class="px-3 py-2 text-xs text-muted"
+            >
+              {{ ai.chatInterrupted }}
+            </p>
+            <ChatTranscript
+              :messages="messages"
+              :status="status"
+              :show-continue="showContinue"
+              :queued="queuedMessages"
+              :steers="!providerID.startsWith('acp:') && providerID !== 'harness:pi'"
+              @remove-queued="removeQueuedMessage"
+              :nodes-live="!history.readOnly.value"
+              :interactive="chat !== null && !submission.busy.value"
+              @regenerate="submission.regenerate()"
+              @revert="(messageId) => submission.revert(messageId)"
+              @restore="(messageId) => submission.restore(messageId)"
+              @edit="(messageId, text) => submission.resend(messageId, text)"
+              @continue="
+                submission.submit({
+                  modelText: 'Continue where you left off',
+                  displayText: 'Continue where you left off',
+                  images: [],
+                  nodes: []
+                })
+              "
+            />
+
+            <p v-if="agentHistoryReadOnly" role="status" class="px-3 py-2 text-xs text-muted">
+              {{ ai.chatAgentReadOnly }}
+            </p>
+            <p v-if="history.readOnly.value" role="status" class="px-3 py-2 text-xs text-muted">
+              {{ ai.chatReadOnly }}
+            </p>
+            <ChatRunLocation
+              v-if="runLocation"
+              :agent="runLocation.agent"
+              :page="runLocation.page"
+              @open="runLocation.open"
+            />
+          </template>
         </template>
       </component>
       <TabsContent
@@ -532,8 +580,29 @@ function handleStop() {
         action: 'mt-3 justify-start'
       }"
     />
+    <div
+      v-if="
+        isConfigured &&
+        canRunParallel &&
+        !parallel &&
+        !agentHistoryReadOnly &&
+        !history.readOnly.value
+      "
+      class="flex justify-end px-2"
+    >
+      <AppButton
+        size="sm"
+        :variant="twoVersions ? 'outline' : 'ghost'"
+        :aria-pressed="twoVersions"
+        :disabled="submission.busy.value || history.busy.value"
+        @click="twoVersions = !twoVersions"
+      >
+        <template #leading><icon-lucide-columns-2 /></template>
+        {{ ai.parallelDesignToggle }}
+      </AppButton>
+    </div>
     <ChatInput
-      v-if="isConfigured && !agentHistoryReadOnly && !history.readOnly.value"
+      v-if="isConfigured && !parallel && !agentHistoryReadOnly && !history.readOnly.value"
       ref="chatInput"
       :status="status"
       :dragging="draggingImages"
@@ -544,7 +613,7 @@ function handleStop() {
       @error="toast.error"
       @select-model="selectModel"
     />
-    <div v-else-if="!history.readOnly.value" class="flex justify-end px-3 pb-2">
+    <div v-else-if="!parallel && !history.readOnly.value" class="flex justify-end px-3 pb-2">
       <ChatProfileSelect :disabled="modelSelectionDisabled" @select="selectModel" />
     </div>
 

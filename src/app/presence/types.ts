@@ -26,6 +26,10 @@ export interface AgentPresence {
   name: string
   kind: AgentKind
   model?: string
+  /** Index of the agent's accent in the shared presence palette. */
+  colorIndex?: number
+  /** Parallel versions remain in view together without automatic camera following. */
+  manualFollow?: boolean
   status: AgentStatus
   /** The page the agent works on, known before its first edit. */
   pageId?: string

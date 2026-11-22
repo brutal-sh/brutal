@@ -3,6 +3,7 @@ import { createUIMessageStream, DirectChatTransport, stepCountIs, ToolLoopAgent 
 import type { ChatTransport, LanguageModel, ToolExecutionOptions, UIMessage } from 'ai'
 import { toMerged } from 'es-toolkit'
 
+import { AI_PROVIDERS } from '@open-pencil/core/constants'
 import type { AIProviderID, ReasoningEffort } from '@open-pencil/core/constants'
 
 import { resumableTransport } from '@/app/ai/chat/history/continuation'
@@ -174,7 +175,14 @@ export function createToolLoopTransport({
     reconnectToStream: (options) => transport.reconnectToStream(options),
     async sendMessages(options) {
       // The run starts as the message is sent, so a Stop before the model is reached ends it.
-      const started = startRun(store, maxAgentSteps.value, effectiveModelID)
+      const configuredModel = AI_PROVIDERS.find(
+        (provider) => provider.id === providerID
+      )?.models.find((entry) => entry.id === effectiveModelID)
+      const started = startRun(
+        store,
+        maxAgentSteps.value,
+        configuredModel?.name ?? effectiveModelID
+      )
       run = started
       await skills.refresh()
       offeredSkills = modelSkills()

@@ -11,6 +11,11 @@ import { selectACPChatModel } from '@/app/ai/agents/acp/model'
 import { spawnACPProcess, type TauriChild } from '@/app/ai/agents/acp/process'
 import { AgentSessionResumeError, openAgentSession } from '@/app/ai/agents/acp/session'
 import { linkOwnTools, type OwnToolsLink } from '@/app/ai/agents/acp/tools'
+import {
+  bindDesignVersion,
+  releaseDesignVersion,
+  type DesignVersionTarget
+} from '@/app/ai/chat/parallel/scope'
 import { describeDiagnosticError, recordACPTransportFailure } from '@/app/diagnostics'
 import { createDeferred } from '@/app/runtime/deferred'
 
@@ -25,12 +30,14 @@ export interface ACPSession {
   resumed: boolean
   /** Codex names the model when it starts, while Claude names it in usage updates. */
   model: string | null
+  modelLabel?: string | null
 }
 
 interface ACPChatStartup {
   agentDef: ACPAgentDef
   cwd: string
   resume: string | null
+  version?: DesignVersionTarget
   signal?: AbortSignal
   destroying: () => boolean
   onUnexpectedClose: (session: ACPSession) => void
@@ -56,7 +63,10 @@ function createClient(agent: ACPAgentID, events: SessionEvents): Client {
       const { update } = params
       if (update.sessionUpdate === 'usage_update' && events.session) {
         const meta = v.safeParse(usageMetaSchema, update._meta)
-        if (meta.success) events.session.model = meta.output['_claude/model']
+        if (meta.success) {
+          events.session.model = meta.output['_claude/model']
+          events.session.modelLabel = events.session.model
+        }
       }
       if (update.sessionUpdate === 'available_commands_update') {
         setAgentCommands(agent, update.availableCommands)
@@ -117,20 +127,22 @@ async function createToolSession(options: {
   cwd: string
   agentDef: ACPAgentDef
   resume: string | null
+  version?: DesignVersionTarget
   events: SessionEvents
   wait: ReturnType<typeof startupWait>
 }) {
-  const { connection, cwd, agentDef, resume, events, wait } = options
+  const { connection, cwd, agentDef, resume, events, wait, version } = options
   const { getAgentMCPAuthToken } = await import('@/app/automation/mcp/runtime')
   const token = await wait(getAgentMCPAuthToken())
   const initialized = await wait(
     connection.initialize({ protocolVersion: PROTOCOL_VERSION, clientCapabilities: {} })
   )
-  const linking = linkOwnTools(token)
+  const linking = linkOwnTools(token, Boolean(version))
   const tools: OwnToolsLink = await wait(linking).catch((error: unknown) => {
     void linking.then((late) => late.stop()).catch(() => undefined)
     throw error
   })
+  if (version) bindDesignVersion(tools.chat, version)
   events.onUpdate = ({ update }) => tools.noteUpdate(update)
   try {
     const result = await wait(
@@ -151,6 +163,7 @@ async function createToolSession(options: {
     }
     return { result, chat: tools.chat }
   } catch (error) {
+    releaseDesignVersion(tools.chat)
     tools.stop()
     throw error
   } finally {
@@ -176,11 +189,12 @@ function spawnChatProcess(options: ACPChatStartup, events: SessionEvents) {
 }
 
 export async function openACPChatSession(options: ACPChatStartup): Promise<ACPSession> {
-  const { agentDef, cwd, resume, signal, destroying, onStarting, onStartFailed } = options
+  const { agentDef, cwd, resume, signal, destroying, onStarting, onStartFailed, version } = options
   const events: SessionEvents = { onUpdate: null, session: null }
   signal?.throwIfAborted()
   const { child, input, output } = await spawnChatProcess(options, events)
   onStarting(child)
+  let linkedChat: string | undefined
   try {
     signal?.throwIfAborted()
     const connection = new ClientSideConnection(
@@ -194,8 +208,10 @@ export async function openACPChatSession(options: ACPChatStartup): Promise<ACPSe
       agentDef,
       resume,
       events,
-      wait
+      wait,
+      version
     })
+    linkedChat = chat
     if (destroying()) throw new Error('The chat closed while its agent was starting.')
     const model = await selectACPChatModel(agentDef.id, result, (request) =>
       wait(connection.setSessionConfigOption(request))
@@ -206,6 +222,8 @@ export async function openACPChatSession(options: ACPChatStartup): Promise<ACPSe
       chat,
       child,
       model,
+      modelLabel:
+        result.models?.availableModels.find((entry) => entry.modelId === model)?.name ?? model,
       dead: false,
       resumed: resume !== null,
       get onUpdate() {
@@ -219,6 +237,7 @@ export async function openACPChatSession(options: ACPChatStartup): Promise<ACPSe
   } catch (error) {
     onStartFailed(child)
     await child.kill().catch(() => undefined)
+    if (linkedChat) releaseDesignVersion(linkedChat)
     throw startupError(error, agentDef)
   }
 }

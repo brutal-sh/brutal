@@ -1,25 +1,17 @@
 import { watch } from 'vue'
 import type { Awareness } from 'y-protocols/awareness'
 
-import type { Color } from '@open-pencil/scene-graph/primitives'
-
 import type { EditorStore } from '@/app/editor/active-store'
-import { presenceOf, setOwnerColor } from '@/app/presence/registry'
+import { presenceOf } from '@/app/presence/registry'
 
-/** Publish our agents to the room while connected; they take our collaborator color. */
+/** Publish our agents and their own palette colors while connected. */
 export function publishLocalAgents(
   store: EditorStore,
-  getAwareness: () => Awareness | null,
-  color: Color
+  getAwareness: () => Awareness | null
 ): () => void {
-  setOwnerColor(store, color)
-  const stop = watch(
+  return watch(
     presenceOf(store).agents,
     (agents) => getAwareness()?.setLocalStateField('agents', agents),
     { immediate: true }
   )
-  return () => {
-    stop()
-    setOwnerColor(store, null)
-  }
 }

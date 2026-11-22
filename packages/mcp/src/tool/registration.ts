@@ -110,7 +110,16 @@ export function registerTools(mcpServer: McpServer, options: RegisterToolsOption
     )
   }
 
-  const context = { register, sendRPC, policy, resolvedRoot, agent }
+  // The app can pin all commands from a parallel coding-agent session to its assigned version.
+  const chat = agentSession?.kind === 'acp' ? agentSession.chat : undefined
+  const scopedSender: RPCSender = (body, options) => {
+    const args = body.args
+    return sendRPC(
+      { ...body, args: { ...(args && typeof args === 'object' ? args : {}), app_chat: chat } },
+      options
+    )
+  }
+  const context = { register, sendRPC: chat ? scopedSender : sendRPC, policy, resolvedRoot, agent }
   registerCoreTools(context, agentSession?.kind === 'acp' && !!agentSession.chat)
   registerListDocuments(context)
   registerFileTools(context)

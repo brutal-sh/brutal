@@ -1,5 +1,6 @@
 import type { FigmaAPI } from '@open-pencil/core/figma-api'
 
+import { designVersionForChat, designVersionIsOpen } from '@/app/ai/chat/parallel/scope'
 import { agentSessionOpened, endAgentSession } from '@/app/automation/agents'
 import {
   handleActivateDocument,
@@ -97,6 +98,29 @@ async function dispatchRequest(
 ): Promise<unknown> {
   const { handlers, signal } = context
   signal?.throwIfAborted()
+  const { app_chat: chat, ...rawArgs } = isUnknownRecord(args) ? args : {}
+  const version = designVersionForChat(chat)
+  if (version) {
+    if (!designVersionIsOpen(version)) throw new Error('This design version’s document was closed.')
+    if (command === 'list_documents') {
+      const documents = listAutomationDocuments(version.store).filter(
+        (entry) => entry.id === version.documentId
+      )
+      return { ok: true, result: { documents, unique_document_ids: true } }
+    }
+    if (command !== 'tool') throw new Error('This command cannot run inside a design version.')
+    if (
+      (rawArgs.document_id !== undefined && rawArgs.document_id !== version.documentId) ||
+      (rawArgs.page_id !== undefined && rawArgs.page_id !== version.pageId)
+    ) {
+      throw new Error('This design version can only work on its assigned document and page.')
+    }
+    const target = resolveAutomationTarget(version.store, {
+      document_id: version.documentId,
+      page_id: version.pageId
+    })
+    return dispatchTargetCommand(target, command, stripAutomationTargetArgs(rawArgs), context)
+  }
   if (command === 'save_uri') {
     const save = handlers.save_file
     if (!save) throw new Error('Document Save is unavailable')
@@ -108,7 +132,6 @@ async function dispatchRequest(
     const handler = handlers[command]
     if (handler) return handler(resolveAutomationTarget(store, undefined), args)
   }
-  const rawArgs = isUnknownRecord(args) ? args : {}
   const target = resolveAutomationTarget(store, rawArgs)
   return dispatchTargetCommand(target, command, stripAutomationTargetArgs(rawArgs), context)
 }

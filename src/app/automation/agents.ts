@@ -1,5 +1,6 @@
 import * as v from 'valibot'
 
+import { designVersionForChat } from '@/app/ai/chat/parallel/scope'
 import type { PreviewFocus } from '@/app/ai/preview/canvas'
 import { isUnknownRecord } from '@/app/automation/bridge/target'
 import type { EditorStore } from '@/app/editor/active-store'
@@ -48,6 +49,7 @@ export function readAgentSession(value: unknown): AgentSession | null {
 interface SessionAgent {
   handle: AgentHandle
   kind: AgentSession['kind']
+  chat?: string
   /** Counts the times its chat's replies ended; a tool call from an earlier reply is ignored. */
   replies: number
   idleTimer?: ReturnType<typeof setTimeout>
@@ -56,6 +58,23 @@ interface SessionAgent {
 
 /** Each session's agent in every document it works in; tool calls name their document. */
 const sessions = new Map<string, Map<EditorStore, SessionAgent>>()
+const chatModels = new Map<string, string>()
+
+/** Model announced by the adapter, even when the MCP client only supplies its own name. */
+export function setAgentChatModel(chat: string, model: string | null): void {
+  if (!model) {
+    chatModels.delete(chat)
+    return
+  }
+  const label = model.slice(0, MAX_NAME_LENGTH)
+  if (chatModels.get(chat) === label) return
+  chatModels.set(chat, label)
+  for (const agents of sessions.values()) {
+    for (const agent of agents.values()) {
+      if (agent.chat === chat) agent.handle.update({ model: label })
+    }
+  }
+}
 
 function sessionAgent(store: EditorStore, session: AgentSession): SessionAgent {
   let agents = sessions.get(session.session)
@@ -66,8 +85,14 @@ function sessionAgent(store: EditorStore, session: AgentSession): SessionAgent {
   let agent = agents.get(store)
   if (!agent) {
     agent = {
-      handle: addAgent(store, session.kind, session.client || undefined),
+      handle: addAgent(
+        store,
+        session.kind,
+        session.chat ? chatModels.get(session.chat) : undefined,
+        Boolean(designVersionForChat(session.chat))
+      ),
       kind: session.kind,
+      chat: session.chat,
       replies: 0
     }
     agents.set(store, agent)
@@ -187,10 +212,10 @@ export function agentFinished(
  * rest now rather than when their idle timer runs out. Only the app's chats send these kinds
  * (`src/app/integrations/mcp`), so no outside MCP client is touched.
  */
-export function restAgents(kind: Exclude<AgentSession['kind'], 'mcp'>): void {
+export function restAgents(kind: Exclude<AgentSession['kind'], 'mcp'>, chat?: string): void {
   for (const agents of sessions.values()) {
     for (const agent of agents.values()) {
-      if (agent.kind !== kind) continue
+      if (agent.kind !== kind || (chat !== undefined && agent.chat !== chat)) continue
       clearTimeout(agent.idleTimer)
       agent.replies++
       agent.handle.update({

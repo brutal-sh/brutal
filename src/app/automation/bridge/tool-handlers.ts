@@ -1,6 +1,11 @@
 import type { FigmaAPI } from '@open-pencil/core/figma-api'
 import { ALL_TOOLS, registerComponentCatalog, isToolExposed } from '@open-pencil/core/tools'
 
+import {
+  designVersionForChat,
+  designVersionIsOpen,
+  designVersionRender
+} from '@/app/ai/chat/parallel/scope'
 import { clearAgentDraft, showAgentDraft } from '@/app/ai/preview/agent'
 import { agentReplyRun } from '@/app/ai/reply/run'
 import { runEditorTool, type ReplyCall } from '@/app/ai/tools/runner'
@@ -37,13 +42,14 @@ export function createAutomationToolHandler(makeFigma: FigmaFactory) {
     const requestedArgs = (args as { args?: Record<string, unknown> }).args ?? {}
     if (!toolName) throw new Error('Missing "name" in args')
     // An MCP server that shares only the selection marks its calls, and they stay inside it.
-    const toolArgs =
+    const unscopedArgs =
       (args as { scope?: unknown }).scope === 'selection'
         ? limitToSelection(target.store, toolName, requestedArgs)
         : requestedArgs
 
     // A call from an MCP session shows as that session's agent, working where the call works.
     const session = readAgentSession((args as { agent?: unknown }).agent)
+    const toolArgs = designVersionArguments(target, session, toolName, unscopedArgs)
     if (toolName === 'preview_render') {
       return previewTool(target, session, toolArgs, signal)
     }
@@ -68,6 +74,25 @@ export function createAutomationToolHandler(makeFigma: FigmaFactory) {
       }
     }
   }
+}
+
+function designVersionArguments(
+  target: AutomationTarget,
+  session: AgentSession | null,
+  toolName: string,
+  args: Record<string, unknown>
+): Record<string, unknown> {
+  const version = designVersionForChat(session?.chat)
+  if (!version) return args
+  if (!agentReplyRun(target.store, session?.chat)) {
+    throw new Error('This design version is no longer running.')
+  }
+  if (toolName === 'preview_render' && version.committed) {
+    throw new Error('This design version already committed.')
+  }
+  return toolName === 'render' || toolName === 'preview_render'
+    ? { jsx: args.jsx, x: version.x, y: version.y }
+    : args
 }
 
 async function previewTool(
@@ -97,9 +122,11 @@ async function previewTool(
  * so the reply can revert it and the transcript marks it under the agent's own call id.
  */
 function replyOf(target: AutomationTarget, session: AgentSession | null): ReplyCall | null {
-  if (session?.kind !== 'acp' || !session.call) return null
+  if (session?.kind !== 'acp') return null
   const run = agentReplyRun(target.store, session.chat)
-  return run ? { run, toolCallId: session.call } : null
+  const toolCallId =
+    session.call ?? (designVersionForChat(session.chat) ? crypto.randomUUID() : null)
+  return run && toolCallId ? { run, toolCallId } : null
 }
 
 async function runTool(
@@ -107,13 +134,23 @@ async function runTool(
   request: ToolRequest
 ): Promise<{ result: unknown; edited: boolean }> {
   const { target, toolName, toolArgs, session, signal } = request
-  const def = ALL_TOOLS.find((t) => t.name === toolName && isToolExposed(t, 'mcp'))
-  if (!def) throw new Error(`Unknown tool: ${toolName}`)
+  const coreTool = ALL_TOOLS.find((t) => t.name === toolName && isToolExposed(t, 'mcp'))
+  if (!coreTool) throw new Error(`Unknown tool: ${toolName}`)
+  const version = designVersionForChat(session?.chat)
+  if (version && toolName !== 'render' && coreTool.mutates) {
+    throw new Error('Use render to commit this design version in its assigned frame.')
+  }
+  if (version && toolArgs.path !== undefined) {
+    throw new Error('Design versions cannot write to a file.')
+  }
+  const def = version && toolName === 'render' ? designVersionRender(coreTool, version) : coreTool
   const store = target.store
   const libraryService = useLibraryService()
   libraryService.bindEditor(store)
   registerComponentCatalog(store.graph, libraryService)
   const figma = makeFigma(store, target.pageId)
+  const selectionIsLive = () => getTabById(target.documentId)?.store === store
+  const versionIsLive = version ? () => designVersionIsOpen(version) : undefined
   const result = await runEditorTool({
     store,
     figma,
@@ -121,8 +158,7 @@ async function runTool(
     args: toolArgs,
     signal,
     reply: replyOf(target, session),
-    isLive:
-      def.name === 'select_nodes' ? () => getTabById(target.documentId)?.store === store : undefined
+    isLive: versionIsLive ?? (def.name === 'select_nodes' ? selectionIsLive : undefined)
   })
   if (def.mutates) store.requestRender()
   return { result, edited: def.mutates }

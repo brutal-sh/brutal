@@ -1,6 +1,7 @@
 import type { Canvas } from 'canvaskit-wasm'
 
 import type { SceneGraph } from '@open-pencil/scene-graph'
+import { darkenForContrast } from '@open-pencil/scene-graph/color'
 import { getWorldMatrix } from '@open-pencil/scene-graph/coordinate'
 import Matrix from '@open-pencil/scene-graph/matrix'
 
@@ -93,7 +94,7 @@ function sparklePath(r: SkiaRenderer, cx: number, cy: number, R: number) {
   return builder.detachAndDelete()
 }
 
-/** The pointer, filled with a person's color, or for an agent its owner's, and outlined in white. */
+/** The pointer uses its own color and a white outline. */
 function drawArrow(r: SkiaRenderer, canvas: Canvas, x: number, y: number, cursor: PresenceCursor) {
   const path = arrowPath(r, x, y)
   r.auxStroke.setColor(r.ck.WHITE)
@@ -107,8 +108,7 @@ function drawArrow(r: SkiaRenderer, canvas: Canvas, x: number, y: number, cursor
 }
 
 /**
- * A name pill: filled for people; for agents outlined in the owner's color, with a
- * sparkle before the name.
+ * A filled name pill for people and an outlined name-and-model pill for agents.
  */
 function drawLabel(r: SkiaRenderer, canvas: Canvas, x: number, y: number, cursor: PresenceCursor) {
   const provider = r.fontProvider
@@ -116,6 +116,9 @@ function drawLabel(r: SkiaRenderer, canvas: Canvas, x: number, y: number, cursor
   const { r: red, g, b } = cursor.color
   const color = r.ck.Color4f(red, g, b, 1)
   const agent = cursor.kind === 'agent'
+  const title = agent && cursor.model ? `${cursor.name} · ${cursor.model}` : cursor.name
+  const ink = agent ? darkenForContrast(cursor.color) : cursor.color
+  const labelInk = r.ck.Color4f(ink.r, ink.g, ink.b, 1)
   const badge = agent ? LABEL_SPARKLE_RADIUS * 2 + LABEL_SPARKLE_GAP : 0
   const pillX = x + LABEL_OFFSET_X - LABEL_PADDING_X
   const pillY = y + LABEL_OFFSET_Y - LABEL_FONT_SIZE - LABEL_PADDING_Y + 2
@@ -124,10 +127,10 @@ function drawLabel(r: SkiaRenderer, canvas: Canvas, x: number, y: number, cursor
   r.labelParagraphCache.use(
     r.ck,
     provider,
-    cursor.name,
+    title,
     LABEL_FONT_SIZE,
     LABEL_MAX_WIDTH,
-    agent ? color : r.ck.WHITE,
+    agent ? labelInk : r.ck.WHITE,
     r.fontGeneration,
     ({ paragraph, metrics }) => {
       const pill = r.ck.RRectXY(
