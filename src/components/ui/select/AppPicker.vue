@@ -246,6 +246,10 @@ function select(value: AcceptableValue) {
               :placeholder="searchPlaceholder"
               :aria-label="searchPlaceholder"
               :class="styles.input({ class: ui?.input })"
+              autocomplete="off"
+              autocorrect="off"
+              autocapitalize="off"
+              spellcheck="false"
             />
             <slot name="search-trailing" />
           </div>
