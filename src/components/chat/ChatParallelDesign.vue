@@ -41,7 +41,7 @@ watch(
         @click="selectedIndex = index"
       >
         {{ version.title }}
-        <span class="text-panel-foreground" role="status">{{ status[version.status] }}</span>
+        <span role="status">{{ status[version.status] }}</span>
       </AppButton>
       <AppButton
         v-if="working"
