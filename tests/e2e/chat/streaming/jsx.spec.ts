@@ -225,3 +225,51 @@ test("the chat's agent moves through the streamed elements and outlines them", a
     await stream.dispose()
   }
 })
+
+test('sweeps over an uncommitted preview and clears when stopped', async ({
+  configuredChat: chat
+}) => {
+  await setupCanvas(chat.page)
+  const stream = await installRenderStream(chat.page, scenario)
+  try {
+    await chat.submit('Generate the card')
+    await expect.poll(() => stream.evaluate((s) => s.ready())).toBe(true)
+    await stream.evaluate((s) => s.advance())
+    await expect.poll(() => previewKey(chat.page)).not.toBe('')
+    expect(await documentState(chat.page)).toEqual({ children: [], undo: false })
+
+    const canvas = new CanvasHelper(chat.page)
+    const style = `${SCENE_SCREENSHOT_STYLE}
+      [data-test-id="canvas-element"] { visibility: visible !important; }
+    `
+    const time = Date.now()
+    await chat.page.clock.install({ time })
+    await chat.page.clock.pauseAt(time + 1000)
+    await chat.page.evaluate(() => {
+      const store = window.openPencil?.getStore?.()
+      if (!store) throw new Error('Editor unavailable')
+      for (const renderer of store.canvasRenderers) {
+        for (const { cue } of renderer.transientPreviews.values()) {
+          if (cue) cue.startedAt = performance.now() - 440
+        }
+      }
+      store.repaintEditCues()
+    })
+    await chat.page.clock.runFor(64)
+    const first = await canvas.screenshotCanvasRegion(500, 330, style)
+    expect(first).toMatchSnapshot('jsx-generating-layer-sweep.png')
+    await chat.page.clock.runFor(400)
+    const second = await canvas.screenshotCanvasRegion(500, 330, style)
+    expect(second.equals(first)).toBe(false)
+    expect(await documentState(chat.page)).toEqual({ children: [], undo: false })
+
+    await chat.page.clock.resume()
+    await chat.page.getByTestId('chat-stop-button').click()
+    await expect.poll(() => previewKey(chat.page)).toBe('')
+    expect(await documentState(chat.page)).toEqual({ children: [], undo: false })
+  } finally {
+    await chat.page.clock.resume()
+    await stream.evaluate((s) => s.dispose())
+    await stream.dispose()
+  }
+})

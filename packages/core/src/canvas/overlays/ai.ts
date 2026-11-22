@@ -43,6 +43,47 @@ function drawSweep(
   }
 }
 
+function drawLayerCue(
+  r: SkiaRenderer,
+  canvas: Canvas,
+  geometry: ReturnType<typeof createSceneGeometry>,
+  node: SceneNode,
+  elapsed: number,
+  active: boolean
+): void {
+  const phase = active
+    ? (elapsed % AI_PULSE_PERIOD_MS) / AI_PULSE_PERIOD_MS
+    : elapsed / AI_DONE_DURATION_MS
+  const opacity = active || !r.aiMotionEnabled ? 1 : 1 - phase
+  inNodeSpace(r, canvas, geometry, node, () => {
+    withNodeOutline(r, node, (outline) => {
+      r.auxFill.setColor(cueColor(r, opacity * (active ? 0.12 : 0.09)))
+      drawOutline(canvas, outline, r.auxFill)
+      drawSweep(r, canvas, node, outline, phase, opacity * (active ? 0.48 : 0.44))
+      withScreenStroke(r, { color: cueColor(r, opacity * 0.86), width: 1.5 }, (paint) =>
+        drawOutline(canvas, outline, paint)
+      )
+    })
+  })
+}
+
+export function drawGeneratingLayerCues(r: SkiaRenderer, canvas: Canvas, graph: SceneGraph): void {
+  for (const preview of r.transientPreviews.values()) {
+    const { cue } = preview
+    if (!cue || preview.graph !== graph || preview.pageId !== r.pageId) continue
+    const node = cue.graph.getNode(cue.nodeId)
+    if (!node?.visible || node.width <= 0 || node.height <= 0) continue
+    drawLayerCue(
+      r,
+      canvas,
+      createSceneGeometry(cue.graph),
+      node,
+      performance.now() - cue.startedAt,
+      true
+    )
+  }
+}
+
 export function drawAIOverlays(
   r: SkiaRenderer,
   canvas: Canvas,
@@ -64,20 +105,7 @@ export function drawAIOverlays(
     )
       return true
 
-    const phase = active
-      ? (elapsed % AI_PULSE_PERIOD_MS) / AI_PULSE_PERIOD_MS
-      : elapsed / AI_DONE_DURATION_MS
-    const opacity = active || !r.aiMotionEnabled ? 1 : 1 - phase
-    inNodeSpace(r, canvas, geometry, node, () => {
-      withNodeOutline(r, node, (outline) => {
-        r.auxFill.setColor(cueColor(r, opacity * (active ? 0.12 : 0.09)))
-        drawOutline(canvas, outline, r.auxFill)
-        drawSweep(r, canvas, node, outline, phase, opacity * (active ? 0.48 : 0.44))
-        withScreenStroke(r, { color: cueColor(r, opacity * 0.86), width: 1.5 }, (paint) =>
-          drawOutline(canvas, outline, paint)
-        )
-      })
-    })
+    drawLayerCue(r, canvas, geometry, node, elapsed, active)
     return true
   }
 

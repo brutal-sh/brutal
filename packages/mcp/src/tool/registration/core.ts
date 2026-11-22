@@ -65,11 +65,12 @@ async function runCoreTool(
   def: ToolDef,
   context: RegistrationContext,
   args: Record<string, unknown>,
-  request: ServerContext
+  request: ServerContext,
+  name = def.name
 ): Promise<MCPResult> {
   try {
     const { target, args: toolArgs } = splitAutomationTarget(args)
-    if (def.name === 'read_skill') {
+    if (name === 'read_skill') {
       const parsed = parseToolArgs(def.name, def.input, toolArgs)
       return okText(
         readSkillResource(typeof parsed.path === 'string' ? parsed.path : undefined),
@@ -77,7 +78,7 @@ async function runCoreTool(
       )
     }
     const filePath =
-      writesFileOutput(def.name) && typeof toolArgs.path === 'string' ? toolArgs.path : null
+      writesFileOutput(name) && typeof toolArgs.path === 'string' ? toolArgs.path : null
     if (context.policy.scope === 'selection' && filePath !== null) {
       return fail(new Error(SELECTION_SCOPE_FILE_OUTPUT_ERROR))
     }
@@ -86,7 +87,7 @@ async function runCoreTool(
         command: 'tool',
         args: {
           ...target,
-          name: def.name,
+          name,
           args: toolArgs,
           agent: context.agent(request.mcpReq._meta),
           ...(context.policy.scope === 'selection' ? { scope: context.policy.scope } : {})
@@ -95,24 +96,25 @@ async function runCoreTool(
       { signal: request.mcpReq.signal }
     )) as RPCResponse
     if (response.ok === false) return fail(new Error(response.error))
-    return await toolResult(def.name, response.result, filePath, context.resolvedRoot)
+    return await toolResult(name, response.result, filePath, context.resolvedRoot)
   } catch (error) {
     return fail(error)
   }
 }
 
-export function registerCoreTools(context: RegistrationContext): void {
+export function registerCoreTools(context: RegistrationContext, agentPreview = false): void {
   for (const def of getMCPToolDefinitions()) {
-    context.register(
-      def.name,
-      {
-        description: def.description,
-        inputSchema:
-          def.name === 'read_skill'
-            ? def.input
-            : v.strictObject({ ...def.input.entries, ...automationTargetEntries })
-      },
-      (args, request) => runCoreTool(def, context, args, request)
+    const inputSchema =
+      def.name === 'read_skill'
+        ? def.input
+        : v.strictObject({ ...def.input.entries, ...automationTargetEntries })
+    context.register(def.name, { inputSchema }, (args, request) =>
+      runCoreTool(def, context, args, request)
     )
+    if (agentPreview && def.name === 'render') {
+      context.register('preview_render', { inputSchema }, (args, request) =>
+        runCoreTool(def, context, args, request, 'preview_render')
+      )
+    }
   }
 }

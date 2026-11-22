@@ -32,6 +32,15 @@ export function getMCPToolDefinitions() {
 
 const SERVER_TOOLS: ToolDescriptor[] = [
   {
+    name: 'preview_render',
+    description:
+      'Display a temporary JSX draft on the canvas while you refine a design. Use the same arguments as render. This preview creates no document layers or undo step. Call render once with the finished JSX to commit it.',
+    effect: 'write',
+    availability: 'default',
+    capabilities: ['document:write'],
+    enabled: true
+  },
+  {
     name: 'list_documents',
     description:
       'List open Brutal documents/tabs with their IDs, file paths, current pages, and pages.',

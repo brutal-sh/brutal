@@ -221,7 +221,11 @@ export type FigmaClipboardImageResolver = (
 
 export interface EditorEvents extends SceneGraphEvents {
   'render:requested': (versions: { renderVersion: number; sceneVersion: number }) => void
-  'repaint:requested': (versions: { renderVersion: number; sceneVersion: number }) => void
+  'repaint:requested': (versions: {
+    renderVersion: number
+    sceneVersion: number
+    layer?: 'overlays'
+  }) => void
   'graph:replaced': (graph: SceneGraph) => void
   'document:color-space-changed': (colorSpace: DocumentColorSpace) => void
   'document:libraries-changed': () => void

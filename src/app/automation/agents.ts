@@ -1,5 +1,6 @@
 import * as v from 'valibot'
 
+import type { PreviewFocus } from '@/app/ai/preview/canvas'
 import { isUnknownRecord } from '@/app/automation/bridge/target'
 import type { EditorStore } from '@/app/editor/active-store'
 import { addAgent, agentPlacement, type AgentHandle } from '@/app/presence/registry'
@@ -89,7 +90,12 @@ function restartTimers(store: EditorStore, sessionId: string, agent: SessionAgen
   clearTimeout(agent.idleTimer)
   clearTimeout(agent.goneTimer)
   agent.idleTimer = setTimeout(() => {
-    agent.handle.update({ status: 'idle', cursor: undefined, selection: undefined })
+    agent.handle.update({
+      status: 'idle',
+      cursor: undefined,
+      selection: undefined,
+      outline: undefined
+    })
   }, MCP_AGENT_IDLE_MS)
   agent.goneTimer = setTimeout(() => remove(sessionId, store), MCP_AGENT_GONE_MS)
 }
@@ -136,6 +142,24 @@ export function agentStarted(store: EditorStore, session: AgentSession, pageId: 
   return agent.replies
 }
 
+/** An ACP agent's unstaged layer has a visible preview to point at. */
+export function agentPreviewFocus(
+  store: EditorStore,
+  session: AgentSession,
+  pageId: string,
+  focus: PreviewFocus
+): void {
+  const agent = sessionAgent(store, session)
+  agent.handle.update({
+    status: 'editing',
+    pageId,
+    cursor: { ...focus.cursor, pageId },
+    selection: undefined,
+    outline: focus.outline
+  })
+  restartTimers(store, session.session, agent)
+}
+
 /**
  * A session's tool call finished: its agent points at the layers the call read or changed, so
  * people see the context it works with, and edits show as editing.
@@ -169,7 +193,12 @@ export function restAgents(kind: Exclude<AgentSession['kind'], 'mcp'>): void {
       if (agent.kind !== kind) continue
       clearTimeout(agent.idleTimer)
       agent.replies++
-      agent.handle.update({ status: 'idle', cursor: undefined, selection: undefined })
+      agent.handle.update({
+        status: 'idle',
+        cursor: undefined,
+        selection: undefined,
+        outline: undefined
+      })
     }
   }
 }

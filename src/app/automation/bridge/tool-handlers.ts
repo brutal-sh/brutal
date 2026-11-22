@@ -1,10 +1,12 @@
 import type { FigmaAPI } from '@open-pencil/core/figma-api'
 import { ALL_TOOLS, registerComponentCatalog, isToolExposed } from '@open-pencil/core/tools'
 
+import { clearAgentDraft, showAgentDraft } from '@/app/ai/preview/agent'
 import { agentReplyRun } from '@/app/ai/reply/run'
 import { runEditorTool, type ReplyCall } from '@/app/ai/tools/runner'
 import {
   agentFinished,
+  agentPreviewFocus,
   agentStarted,
   readAgentSession,
   touchedNodeIds,
@@ -42,12 +44,20 @@ export function createAutomationToolHandler(makeFigma: FigmaFactory) {
 
     // A call from an MCP session shows as that session's agent, working where the call works.
     const session = readAgentSession((args as { agent?: unknown }).agent)
+    if (toolName === 'preview_render') {
+      return previewTool(target, session, toolArgs, signal)
+    }
+    const draftRun =
+      toolName === 'render' && session?.kind === 'acp'
+        ? agentReplyRun(target.store, session.chat)
+        : null
     const reply = session ? agentStarted(target.store, session, target.pageId) : 0
     let response: Awaited<ReturnType<typeof runTool>> | undefined
     try {
       response = await runTool(makeFigma, { target, toolName, toolArgs, session, signal })
       return { ok: true, result: response.result }
     } finally {
+      if (draftRun) clearAgentDraft(draftRun)
       if (session) {
         agentFinished(target.store, session, {
           reply,
@@ -58,6 +68,28 @@ export function createAutomationToolHandler(makeFigma: FigmaFactory) {
       }
     }
   }
+}
+
+async function previewTool(
+  target: AutomationTarget,
+  session: AgentSession | null,
+  args: Record<string, unknown>,
+  signal?: AbortSignal
+): Promise<{ ok: true; result: unknown }> {
+  const run = session?.kind === 'acp' ? agentReplyRun(target.store, session.chat) : null
+  if (!session || !run) {
+    throw new Error('A preview requires an active agent chat in this document.')
+  }
+  const { store, pageId } = target
+  if (store.state.readOnly) throw new Error('The document is read-only.')
+  const result = await showAgentDraft(
+    run,
+    target,
+    args,
+    (focus) => agentPreviewFocus(store, session, pageId, focus),
+    signal
+  )
+  return { ok: true, result }
 }
 
 /**

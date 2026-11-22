@@ -176,11 +176,12 @@ export function createCanvasJSXPreview(
     }
     if (pictures.size === 0) return null
     const focus = previewFocus(staged)
+    const cueNodeId = staged.renderedIds.at(-1)
     const id = crypto.randomUUID()
     const attached = new Set<EditorStore['canvasRenderers'][number]>()
     let disposed = false
     return {
-      show() {
+      show(startedAt) {
         if (disposed || !isCurrent(target)) return
         for (const canvasRenderer of store.canvasRenderers) {
           const picture = pictures.get(canvasRenderer.ck)
@@ -188,12 +189,14 @@ export function createCanvasJSXPreview(
           canvasRenderer.transientPreviews.set(id, {
             ...target,
             picture,
+            cue: cueNodeId ? { nodeId: cueNodeId, graph: staged.graph, startedAt } : undefined,
             replaceId: staged.replaceId,
             insertIndex: staged.insertIndex
           })
           attached.add(canvasRenderer)
         }
         store.requestRepaint()
+        store.repaintEditCues()
         if (focus) onFocus?.(focus)
       },
       dispose() {

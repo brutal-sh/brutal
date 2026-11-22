@@ -11,7 +11,9 @@ function artifact() {
   return {
     shown: 0,
     disposed: 0,
-    show() {
+    startedAt: -1,
+    show(startedAt: number) {
+      this.startedAt = startedAt
       this.shown++
     },
     dispose() {
@@ -80,6 +82,16 @@ describe('JSX tool preview controller', () => {
     } finally {
       controller.clear()
     }
+  })
+
+  it('replaces complete drafts without restarting the cue and disposes them at finish', async () => {
+    const { controller, artifacts } = fixture()
+    expect(await controller.replace('draft', '{"jsx":"<Frame w={160} h={90}/>"}')).toBe(true)
+    expect(await controller.replace('draft', '{"jsx":"<Frame w={200} h={90}/>"}')).toBe(true)
+    expect(artifacts[1]?.startedAt).toBe(artifacts[0]?.startedAt)
+    expect(artifacts[0]?.disposed).toBe(1)
+    controller.clear()
+    expect(artifacts[1]?.disposed).toBe(1)
   })
 
   it('previews a lone delta once the interval passes, without an explicit flush', async () => {
@@ -241,7 +253,7 @@ describe('JSX tool preview controller', () => {
       expect(trees).toHaveLength(0)
       controller.start('call')
       controller.delta('call', opening)
-      await expect(controller.flush('call')).resolves.toBeUndefined()
+      await expect(controller.flush('call')).resolves.toBe(false)
       controller.delta('call', '<Rect/>')
       await controller.flush('call')
       expect(trees).toHaveLength(1)

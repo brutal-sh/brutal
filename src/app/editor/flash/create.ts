@@ -11,7 +11,7 @@ export function createFlashActions(editor: Editor) {
   function repaint() {
     for (const renderer of editor.canvasRenderers)
       renderer.aiMotionEnabled = animationsEnabled.value
-    editor.requestRepaint()
+    editor.requestRepaint('overlays')
   }
 
   const expiry = useTimeoutFn(repaint, AI_DONE_DURATION_MS, { immediate: false })
@@ -29,6 +29,11 @@ export function createFlashActions(editor: Editor) {
         schedule()
       })
     }
+  }
+
+  function repaintEditCues() {
+    repaint()
+    schedule()
   }
 
   function flashNodes(nodeIds: string[]) {
@@ -74,5 +79,5 @@ export function createFlashActions(editor: Editor) {
     clearEditCues()
   }
 
-  return { flashNodes, aiMarkActive, aiClearActive, aiFlashDone, disposeFlashes }
+  return { flashNodes, aiMarkActive, aiClearActive, aiFlashDone, repaintEditCues, disposeFlashes }
 }

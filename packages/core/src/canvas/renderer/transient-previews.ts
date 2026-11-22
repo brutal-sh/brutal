@@ -9,6 +9,8 @@ export interface TransientCanvasPreview {
   graph: SceneGraph
   pageId: string
   picture: SkPicture
+  /** Geometry in the staged graph, kept out of the editable document. */
+  cue?: { graph: SceneGraph; nodeId: string; startedAt: number }
   /** Substitute a whole page child, including its proposed descendant layout. */
   replaceId?: string
   /** Insert before this page-child index, or append when omitted. */

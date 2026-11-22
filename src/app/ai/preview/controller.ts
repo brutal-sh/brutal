@@ -9,7 +9,7 @@ const MAX_INPUT_LENGTH = 256_000
 const MAX_PREVIEW_CALLS = 4
 
 export interface PreviewArtifact {
-  show(): void
+  show(startedAt: number): void
   dispose(): void
 }
 
@@ -37,6 +37,7 @@ interface PreviewCall<Target> {
   abort: AbortController
   stopAbortListener(): void
   artifact?: PreviewArtifact
+  startedAt?: number
 }
 
 /** Owns one bounded set of speculative tool calls. Never waits for rendering in a model callback. */
@@ -103,15 +104,15 @@ export function createJSXPreviewController<Target>(deps: PreviewDependencies<Tar
     if (!call.busy) call.schedule()
   }
 
-  async function flush(id: string): Promise<void> {
+  async function flush(id: string): Promise<boolean> {
     const call = calls.get(id)
-    if (!call || call.busy) return
+    if (!call || call.busy) return false
     if (!deps.isCurrent(call.target)) {
       finish(id)
-      return
+      return false
     }
     const input = readPreviewInput(call.input)
-    if (!input) return
+    if (!input) return false
     const revision = call.revision
     call.busy = true
     try {
@@ -122,25 +123,44 @@ export function createJSXPreviewController<Target>(deps: PreviewDependencies<Tar
       }
       const snapshot = call.parser.append(input.jsx.slice(call.jsx.length))
       call.jsx = input.jsx
-      if (!snapshot.tree) return
+      if (!snapshot.tree) return false
       const artifact = await deps.build(call.target, snapshot.tree, input, call.abort.signal)
-      if (!artifact) return
+      if (!artifact) return false
       // A newer revision still shows this artifact; `finally` renders the newer one next.
       if (calls.get(id) !== call || call.abort.signal.aborted || !deps.isCurrent(call.target)) {
         artifact.dispose()
-        return
+        return false
       }
       call.artifact?.dispose()
       call.artifact = artifact
-      artifact.show()
+      call.startedAt ??= performance.now()
+      artifact.show(call.startedAt)
+      return true
     } catch {
       // Disable this speculative call; authoritative execution still reports any actual error.
       finish(id)
+      return false
     } finally {
       call.busy = false
       if (calls.get(id) === call && revision !== call.revision) call.schedule()
     }
   }
 
-  return { start, delta, finish, clear, invalidate, flush }
+  /** Stage a complete draft sent as one tool call, without changing the animation phase. */
+  async function replace(id: string, input: string, signal?: AbortSignal): Promise<boolean> {
+    if (signal?.aborted || input.length > MAX_INPUT_LENGTH) return false
+    if (!calls.has(id)) start(id)
+    const call = calls.get(id)
+    if (!call || call.busy) return false
+    call.input = input
+    call.revision++
+    const stop = signal ? useEventListener(signal, 'abort', () => finish(id), { once: true }) : noop
+    try {
+      return await flush(id)
+    } finally {
+      stop()
+    }
+  }
+
+  return { start, delta, finish, clear, invalidate, flush, replace }
 }

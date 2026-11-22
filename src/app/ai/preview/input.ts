@@ -13,12 +13,16 @@ const renderPreviewInputSchema = v.object({
 
 export type RenderPreviewInput = v.InferOutput<typeof renderPreviewInputSchema>
 
+export function parsePreviewInput(value: unknown): RenderPreviewInput | null {
+  const result = v.safeParse(renderPreviewInputSchema, value)
+  return result.success ? result.output : null
+}
+
 export function readPreviewInput(source: string): RenderPreviewInput | null {
   try {
     // Omit unfinished numbers rather than guessing coordinates (for example x: 1e).
     const value: unknown = parseJSON(source, Allow.STR | Allow.OBJ)
-    const result = v.safeParse(renderPreviewInputSchema, value)
-    return result.success ? result.output : null
+    return parsePreviewInput(value)
   } catch {
     return null
   }

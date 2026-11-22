@@ -147,7 +147,7 @@ export function createEditor(options?: EditorOptions) {
     state.sceneVersion++
   }
 
-  function requestRepaint() {
+  function requestRepaint(layer?: 'overlays') {
     state.renderVersion++
     emitNavigationTrace('render:requested', {
       kind: 'repaint',
@@ -155,6 +155,7 @@ export function createEditor(options?: EditorOptions) {
       sceneVersion: state.sceneVersion
     })
     emitEditorEvent('repaint:requested', {
+      ...(layer && { layer }),
       renderVersion: state.renderVersion,
       sceneVersion: state.sceneVersion
     })

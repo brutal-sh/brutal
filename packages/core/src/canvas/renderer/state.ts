@@ -101,6 +101,9 @@ export function aiClearAll(r: SkiaRenderer): void {
 
 export function hasActiveFlashes(r: SkiaRenderer): boolean {
   if (r._flashes.length > 0 || r._aiActiveNodes.size > 0) return true
+  for (const preview of r.transientPreviews.values()) {
+    if (preview.cue) return true
+  }
   const now = performance.now()
   for (const start of r._aiDoneFlashes.values()) {
     if (now - start < AI_DONE_DURATION_MS) return true

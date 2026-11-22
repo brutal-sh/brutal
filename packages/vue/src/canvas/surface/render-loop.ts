@@ -97,7 +97,9 @@ export function createCanvasRenderLoop(
   const unsubscribe = [
     editor.onEditorEvent('render:requested', scheduleDirtyFrame),
     editor.onEditorEvent('viewport:changed', scheduleFrame),
-    editor.onEditorEvent('repaint:requested', scheduleDirtyFrame)
+    editor.onEditorEvent('repaint:requested', ({ layer }) => {
+      if (layer !== 'overlays' || options.layer !== 'scene') scheduleDirtyFrame()
+    })
   ]
 
   if (shouldScheduleForSelection(options.layer)) {

@@ -3,6 +3,7 @@ import type { StepBudget } from '@open-pencil/core/tools'
 import type { UndoEntry } from '@open-pencil/scene-graph/undo'
 
 import { describeUndoneCalls, type CallRef } from '@/app/ai/chat/context'
+import { clearAgentDraft } from '@/app/ai/preview/agent'
 import type { PreviewFocus } from '@/app/ai/preview/canvas'
 import { DEFAULT_AGENT_STEPS, resolveAgentStepLimit } from '@/app/ai/reply/step-limit'
 import { changedLayerIds } from '@/app/ai/tools/changes/layers'
@@ -111,7 +112,7 @@ export function startRun(store: EditorStore, maxSteps: number, model?: string): 
 }
 
 /** Each ACP chat's document, by the chat id its agent's MCP session carries. */
-const agentChats = new Map<string, EditorStore>()
+const agentChats = new Map<string, { store: EditorStore; run: Run }>()
 
 /**
  * Begin a run for an ACP chat's reply. Its agent shows through its MCP session instead of as
@@ -120,13 +121,15 @@ const agentChats = new Map<string, EditorStore>()
 export function startAgentRun(store: EditorStore, chat: string): Run {
   const state = getRunState(store)
   state.run = new Run(DEFAULT_AGENT_STEPS, store.state.currentPageId, false)
-  agentChats.set(chat, store)
+  agentChats.set(chat, { store, run: state.run })
   return state.run
 }
 
 /** The ACP chat is gone, so a late call from its agent belongs to no reply. */
 export function forgetAgentChat(chat: string): void {
+  const entry = agentChats.get(chat)
   agentChats.delete(chat)
+  if (entry) clearAgentDraft(entry.run)
 }
 
 /**
@@ -134,9 +137,9 @@ export function forgetAgentChat(chat: string): void {
  * the call edits the chat's own document. A call elsewhere stays an ordinary agent edit.
  */
 export function agentReplyRun(store: EditorStore, chat: string | undefined): Run | null {
-  if (!chat || agentChats.get(chat) !== store) return null
-  const run = currentRun(store)
-  return run.active ? run : null
+  const entry = chat ? agentChats.get(chat) : undefined
+  if (entry?.store !== store || currentRun(store) !== entry.run) return null
+  return entry.run.active ? entry.run : null
 }
 
 /**
@@ -147,6 +150,7 @@ export function endRun(store: EditorStore, run = currentRun(store)): void {
   const state = getRunState(store)
   if (!run.active) return
   run.active = false
+  clearAgentDraft(run)
   if (state.run !== run || !run.presence) return
   state.agent?.update({
     status: 'idle',

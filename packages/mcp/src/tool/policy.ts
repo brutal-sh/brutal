@@ -7,6 +7,7 @@ const SAVE_TOOL_NAMES: readonly string[] = ['save', 'save_file']
 
 /** The two save interfaces share one access decision. */
 export function toolPolicyNames(name: string): readonly string[] {
+  if (name === 'preview_render') return [name, 'render']
   return SAVE_TOOL_NAMES.includes(name) ? SAVE_TOOL_NAMES : [name]
 }
 

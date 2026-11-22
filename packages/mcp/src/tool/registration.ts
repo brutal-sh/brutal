@@ -111,7 +111,7 @@ export function registerTools(mcpServer: McpServer, options: RegisterToolsOption
   }
 
   const context = { register, sendRPC, policy, resolvedRoot, agent }
-  registerCoreTools(context)
+  registerCoreTools(context, agentSession?.kind === 'acp' && !!agentSession.chat)
   registerListDocuments(context)
   registerFileTools(context)
   registerURISaveTool(context)
