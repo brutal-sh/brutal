@@ -10,9 +10,12 @@ For development, the macOS/Linux installer can still build a standalone MCP
 canvas bridge under `~/.local/share/openpen/runtime`. It requires the checkout
 and its dependencies at setup. Bun 1.4.2 is the tested build runtime.
 
-With Node.js, npm, and Bun available, run these commands from the Brutal checkout:
+The desktop beta uses the bundled server. To build the standalone bridge from source, install Node.js, npm, and the Bun version in the checkout’s `package.json`. Run these commands from the Brutal checkout:
 
 ```sh
+command -v bun
+bun --version
+bun install --frozen-lockfile
 bun run build:packages
 bun run setup:local-runtime
 ```

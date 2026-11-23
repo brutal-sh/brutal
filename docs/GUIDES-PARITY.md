@@ -12,7 +12,7 @@ The Figma action shows a nonmodal informational toast, rather than a dialog. The
 
 Brutal adds the three native, browser File and command-palette actions through the existing catalog and shell dispatch. Guides also work from native Home. The code guide uses the shared dialog, the measured width/height/surface treatment, semantic steps/examples, an independent terminal card and the existing local MCP server’s reported state. Opening it refreshes health; the green state means the local server reports running, not that an external coding client is configured or authenticated. The Settings action opens the existing MCP page. It installs nothing and writes no client configuration or credentials.
 
-The Figma toast uses the shared toast component and a neutral information treatment, existing import paths, a Close action and F9 keyboard access. It does not change the canvas selection. The CLI action opens this fork’s README setup section. The documented checkout command `bun open-pencil --help` was executed; the inherited CLI still identifies its executable as `openpencil`. A vendor CLI replacement is not delivered by a documentation link.
+The Figma toast uses the shared toast component and a neutral information treatment, existing import paths, a Close action and F9 keyboard access. It does not change the canvas selection. The CLI action opens the [Brutal CLI guide](https://brutal.sh/help/#cli). From a prepared source checkout, `bun run brutal --help` displays the available commands.
 
 All new copy has matching files/menu entries in eight locales. The22 reviewed Japanese/Chinese mixed-script baseline additions retain product names, MCP, Figma, React and file extensions; existing baseline ordering is preserved.
 
