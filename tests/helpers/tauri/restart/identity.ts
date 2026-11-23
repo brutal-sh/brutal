@@ -1,6 +1,6 @@
 import { strict as assert } from 'node:assert'
 import { execFile } from 'node:child_process'
-import { realpath } from 'node:fs/promises'
+import { readFile, realpath } from 'node:fs/promises'
 import { join } from 'node:path'
 import { setTimeout } from 'node:timers/promises'
 import { promisify } from 'node:util'
@@ -28,6 +28,24 @@ export type NativeRestartOwner = {
   binary: string
 }
 
+async function liveProcess(pid: number) {
+  if (process.platform === 'linux') {
+    const [executable, commandLine] = await Promise.all([
+      realpath(`/proc/${pid}/exe`),
+      readFile(`/proc/${pid}/cmdline`, 'utf8')
+    ])
+    return { executable, args: commandLine.split('\0') }
+  }
+  const [executable, command] = await Promise.all([
+    execute('ps', ['-p', String(pid), '-o', 'comm=']),
+    execute('ps', ['-ww', '-p', String(pid), '-o', 'command='])
+  ])
+  return {
+    executable: await realpath(executable.stdout.trim()),
+    args: command.stdout.trim().split(/\s+/)
+  }
+}
+
 export async function ownedNativeProcess(value: unknown, owner: NativeRestartOwner) {
   const identity = v.parse(identitySchema, value)
   assert.notEqual(identity.pid, process.pid)
@@ -38,15 +56,9 @@ export async function ownedNativeProcess(value: unknown, owner: NativeRestartOwn
   assert.deepEqual(identity.storeId, owner.storeId)
   assert.ok(identity.storeId.some((byte) => byte !== 0))
   assert.equal(identity.appData, join(identity.root, 'profile-data'))
-  const [executable, command] = await Promise.all([
-    execute('ps', ['-p', String(identity.pid), '-o', 'comm=']),
-    execute('ps', ['-ww', '-p', String(identity.pid), '-o', 'command='])
-  ])
-  assert.equal(await realpath(executable.stdout.trim()), await realpath(owner.binary))
-  const flags = command.stdout
-    .trim()
-    .split(/\s+/)
-    .filter((part) => part.startsWith('--open-pen-native-test-profile'))
+  const { executable, args } = await liveProcess(identity.pid)
+  assert.equal(executable, await realpath(owner.binary))
+  const flags = args.filter((part) => part.startsWith('--open-pen-native-test-profile'))
   assert.deepEqual(flags, [`--open-pen-native-test-profile=${owner.marker}`])
   return identity
 }
