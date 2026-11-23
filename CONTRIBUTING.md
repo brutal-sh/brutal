@@ -2,6 +2,8 @@
 
 Use [Brutal support](https://brutal.sh/help/#support) for questions, bugs, and feedback. Follow the [security policy](SECURITY.md) to report a vulnerability privately.
 
+Use the [privacy disclosure](https://brutal.sh/help/privacy/#usage-stats) when explaining usage sharing to testers. Release maintainers can find the candidate build and verification procedure in [Desktop setup](docs/DESKTOP.md#usage-stats).
+
 ## Where the rules live
 
 - `CONTRIBUTING.md` (this file): setup, pull requests, validation, commits.
@@ -11,9 +13,10 @@ Use [Brutal support](https://brutal.sh/help/#support) for questions, bugs, and f
 ## Setup
 
 ```sh
-git clone https://github.com/jpoindexter/open-pen.git
-cd open-pen
-bun install
+git clone https://github.com/jpoindexter/brutal-editor.git
+cd brutal-editor
+bun --version  # Match packageManager in package.json
+bun install --frozen-lockfile
 bun run build:packages
 bun run dev:portless  # Local browser development at https://open-pencil.localhost
 bun run dev           # Fixed http://localhost:1420 for Playwright, Tauri, and Dev Containers
@@ -31,6 +34,8 @@ APPLE_SIGNING_IDENTITY=- bun run tauri build -c '{"bundle": { "createUpdaterArti
 ```
 
 ## Making a change
+
+For Brutal changes, fetch `origin` and start each task from `origin/feat/open-pen`. Use a separate branch and worktree when another task has local edits. Push the task branch to `origin` and open a pull request against `feat/open-pen`. Pull changes from `upstream` only when syncing OpenPencil.
 
 - Before adding a helper, type, component, state mechanism, parser, or test utility, inspect the owning folder, nearby implementations, existing dependencies, and tests. Reuse or extend the established mechanism; extract genuinely shared logic instead of introducing a parallel implementation.
 - Keep package boundaries and public exports intact. Keep pull requests focused: no temporary scaffolding, unrelated refactors, or changelog claims not represented by the diff.

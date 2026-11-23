@@ -8,7 +8,6 @@ import type { createBrowserRPCBridge } from '#mcp/browser-rpc'
 import { MCP_CORS_HEADERS, MCP_CORS_METHODS, MCP_EXPOSED_HEADERS } from '#mcp/http-options'
 import type { RPCJSONObject } from '#mcp/json'
 import { registerFileRoutes } from '#mcp/server/files'
-import { mcpInstallCommand } from '#mcp/server/install'
 import { sessionOpener, type createMCPSessionManager } from '#mcp/server/sessions'
 import type { ToolDescriptor } from '#mcp/tool/metadata'
 import type { RPCSender } from '#mcp/tool/registration'
@@ -46,13 +45,13 @@ export function createHonoApp(options: AppOptions): Hono {
     )
   }
 
-  app.get('/health', async (c) => {
+  app.get('/health', (c) => {
     const provided = bearerToken(c.req.header('authorization'))
     const canInspectConfiguration = authToken === null || isAuthorized(provided, authToken)
     return c.json({
       status: browserRPC.isConnected() ? 'ok' : 'no_app',
       version: MCP_VERSION,
-      installCommand: await mcpInstallCommand(),
+      installCommand: 'bun run setup:local-runtime',
       authRequired: authToken !== null,
       // Tells the app it reports agent_session_opened, so a chat may wait for its agent.
       agentSessionEvents: true,

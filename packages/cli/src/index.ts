@@ -5,7 +5,7 @@ import { COMMANDS } from './commands'
 import { commandHelp } from './help'
 
 const { version } = await import('../package.json')
-const name = 'openpencil'
+const name = 'brutal'
 
 const main = defineCommand({
   meta: {
