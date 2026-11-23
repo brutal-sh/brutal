@@ -2,8 +2,7 @@ import * as v from 'valibot'
 
 import { DOCUMENT_FORMATS, appVersionSchema } from '../contract/schema'
 
-export const BRUTAL_USAGE_ORIGIN = 'https://telemetry.brutal.sh'
-export const BRUTAL_BETA_ORIGIN = 'https://brutal-telemetry.jason-poindexter.workers.dev'
+export const BRUTAL_USAGE_ORIGIN = 'https://brutal.sh/usage-stats'
 
 const eventSchema = v.variant('name', [
   v.strictObject({ name: v.literal('app_opened') }),

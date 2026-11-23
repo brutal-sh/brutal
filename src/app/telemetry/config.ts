@@ -1,4 +1,4 @@
-import { BRUTAL_BETA_ORIGIN, BRUTAL_USAGE_ORIGIN } from '@open-pencil/feedback/brutal/schema'
+import { BRUTAL_USAGE_ORIGIN } from '@open-pencil/feedback/brutal/schema'
 
 import { IS_BRUTAL_MACOS_BETA } from '@/app/runtime/version'
 import { IS_ROOM_BROWSER } from '@/constants'
@@ -18,7 +18,7 @@ export const BRUTAL_STATS_ORIGIN =
   IS_BRUTAL_MACOS_BETA &&
   !IS_ROOM_BROWSER &&
   import.meta.env.PROD &&
-  (brutalOrigin === BRUTAL_USAGE_ORIGIN || brutalOrigin === BRUTAL_BETA_ORIGIN)
+  brutalOrigin === BRUTAL_USAGE_ORIGIN
     ? brutalOrigin
     : null
 

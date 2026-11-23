@@ -6,7 +6,6 @@
   "workers_dev": true,
   "preview_urls": false,
   "observability": { "enabled": false },
-  "vars": { "PUBLIC_INGEST_HOST": "brutal-telemetry.jason-poindexter.workers.dev" },
   "d1_databases": [
     {
       "binding": "DB",

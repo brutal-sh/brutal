@@ -62,6 +62,8 @@ the advertised app version. Preserve recoverable custody of the private key and 
 The Beta 18 build includes the opt-in question and uses Brutal’s Cloudflare receiver by default.
 Sharing begins after consent and can be switched off in **Settings → Privacy**.
 Set `VITE_BRUTAL_USAGE_STATS_ORIGIN` to an empty value for a build with usage stats disabled.
+Keep the website’s usage endpoint in each Vercel deployment. Before promotion, verify that a
+request to `https://brutal.sh/usage-stats/ingest.json` reaches the Brutal receiver.
 See the [receiver runbook](../packages/feedback/README.md#brutal-usage-stats) and
 [public disclosure](https://brutal.sh/help/privacy/#what-is-sent).
 

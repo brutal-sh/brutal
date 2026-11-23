@@ -42,22 +42,28 @@ Done once on the Cloudflare account; `.github/workflows/feedback.yml` deploys ev
 ## Brutal usage stats
 
 Brutal uses the separate `wrangler.brutal.jsonc` configuration and EU D1 database
-`brutal-usage-stats`. The configured Cloudflare hostname is its beta receiver.
+`brutal-usage-stats`. The Mac beta posts to `https://brutal.sh/usage-stats/ingest.json`.
 The [Brutal privacy page](https://brutal.sh/help/privacy/#usage-stats) lists
 the events and controls that users see.
 
 The receiver accepts a release version and a batch of app opens, file opens and
 exports by format, or completed AI replies. It counts by UTC day, version, event,
-and format. It uses the client address for rate limiting and saves only daily
-totals. A daily job deletes counts older than the 90-day window. View totals from
+and format. The gateway derives a rate-limit key from the client address and forwards the key.
+The Worker saves only daily totals. A daily job deletes counts older than the 90-day window. View totals from
 the private D1 console in Cloudflare. Before enabling an app build, review the
 event list and retention, verify native consent in an isolated profile, and
 publish the matching disclosure.
 
 Build a Mac beta with `VITE_BRUTAL_USAGE_STATS_ORIGIN` set to the approved HTTPS
-origin. An empty build setting keeps the prompt and sending off. Remove
-`PUBLIC_INGEST_HOST` and redeploy to close public ingestion. Authenticated
-staging uses the optional `STAGING_INGEST_TOKEN` Worker secret.
+origin. An empty build setting keeps the prompt and sending off. The deployed Worker accepts
+requests from the gateway using its shared secret. Authenticated staging uses the optional
+`STAGING_INGEST_TOKEN` Worker secret.
+
+To deploy the gateway, copy `deploy/brutal-vercel/usage.mjs` to `api/usage.mjs` in the
+Brutal website deployment. Rewrite `/usage-stats/ingest.json` to `/api/usage` and set
+`BRUTAL_TELEMETRY_PROXY_TOKEN` as a secret on both Vercel and the Worker.
+Set `BRUTAL_TELEMETRY_RECEIVER` in Vercel to the Worker's HTTPS ingest endpoint.
+Keep its hostname and the token on the server.
 
 From this directory, apply the Brutal migrations before deploying the Worker.
 

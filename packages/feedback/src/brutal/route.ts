@@ -12,6 +12,7 @@ export interface BrutalBindings {
   INGEST_LIMITER: RateLimit
   PUBLIC_INGEST_HOST?: string
   STAGING_INGEST_TOKEN?: string
+  BRUTAL_TELEMETRY_PROXY_TOKEN?: string
 }
 
 type BrutalEnv = { Bindings: BrutalBindings }
@@ -26,13 +27,16 @@ export const brutalUsageRoutes = new Hono<BrutalEnv>()
   .post(
     '/ingest',
     async (c, next) => {
-      const token = c.env.STAGING_INGEST_TOKEN
-      const staging = token && c.req.header('authorization') === `Bearer ${token}`
+      const authorization = c.req.header('authorization')
+      const proxyToken = c.env.BRUTAL_TELEMETRY_PROXY_TOKEN
+      const proxy = proxyToken && authorization === `Bearer ${proxyToken}`
+      const stagingToken = c.env.STAGING_INGEST_TOKEN
+      const staging = stagingToken && authorization === `Bearer ${stagingToken}`
       const enabled = c.env.PUBLIC_INGEST_HOST === new URL(c.req.url).host
-      if (!enabled && !staging) {
-        return c.body(null, 401)
-      }
-      const key = c.req.header('cf-connecting-ip') ?? 'unknown'
+      if (!proxy && !enabled && !staging) return c.body(null, 401)
+      const proxyKey = c.req.header('x-brutal-rate-key')
+      if (proxy && !/^[a-f0-9]{64}$/.test(proxyKey ?? '')) return c.body(null, 400)
+      const key = proxy ? `proxy:${proxyKey}` : (c.req.header('cf-connecting-ip') ?? 'unknown')
       const { success } = await c.env.INGEST_LIMITER.limit({ key })
       if (!success) return c.body(null, 429)
       return next()
