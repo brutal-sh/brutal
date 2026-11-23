@@ -1,4 +1,4 @@
-import { computed, ref } from 'vue'
+import { computed, ref, shallowRef } from 'vue'
 import type { ComputedRef, Ref } from 'vue'
 
 import { clampNumberValue, normalizeNumberValue } from '#vue/controls/number-expression'
@@ -48,7 +48,7 @@ export function createNumberFieldInteraction(options: InteractionOptions): Numbe
     editing: ref(false),
     scrubbing: ref(false),
     draftValue: ref(''),
-    inputRef: ref<HTMLInputElement | null>(null),
+    inputRef: shallowRef<HTMLInputElement | null>(null),
     invalidReason: ref<NumberExpressionError | null>(null),
     workingValue: ref(0),
     step: computed(() => {
