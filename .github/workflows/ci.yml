@@ -39,7 +39,11 @@ jobs:
       - name: Fetch comparison base
         env:
           CI_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
-        run: git fetch --no-tags --depth=1 origin "$CI_BASE_SHA"
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if ! git cat-file -e "$CI_BASE_SHA^{commit}"; then
+            git -c credential.helper= -c 'credential.helper=!gh auth git-credential' fetch --no-tags --depth=1 origin "$CI_BASE_SHA"
+          fi
 
       - name: Select validation scope
         id: classify
