@@ -6,7 +6,7 @@ Please do not report security vulnerabilities through public GitHub issues or pu
 
 If you believe you have found a security issue in Brutal, report it privately using GitHub Security Advisories:
 
-https://github.com/jpoindexter/open-pen-feedback/security/advisories/new
+[Report a vulnerability privately](https://github.com/brutal-sh/brutal-feedback/security/advisories/new)
 
 Please include as much detail as possible:
 

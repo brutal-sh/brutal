@@ -1,5 +1,7 @@
 # @open-pencil/feedback
 
+For Brutal’s separate beta receiver, see the [Brutal runbook](https://github.com/jpoindexter/open-pen/blob/codex/brutal-telemetry/packages/feedback/README.md#brutal-usage-stats) and [public privacy disclosure](https://brutal.sh/help/privacy/#what-is-sent). This guide describes upstream OpenPencil’s Worker.
+
 The Cloudflare Worker behind `feedback.openpencil.dev`. It is operated by the OpenPencil team for official builds and is not meant to be self-hosted; forks and self-built apps never call it.
 
 | Route | What it does | What it keeps |

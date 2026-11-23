@@ -4,6 +4,8 @@
 
 ## Canonical release workflow
 
+For Brutal's Apple-silicon beta, see the [desktop release and usage sharing guide](../../../docs/DESKTOP.md#updates).
+
 `.github/workflows/build.yml` runs on a new release tag, or through `workflow_dispatch` with an existing one. Release tags are stable `vX.Y.Z` or beta pre-releases `vX.Y.Z-beta.N` (`src/version.ts`). A dispatch uses the selected workflow revision but builds the immutable application commit resolved from that tag. The source must be an ancestor of `origin/master`.
 
 1. **Plan:** resolve the source commit and generate the native matrix from `native/catalog.ts`.

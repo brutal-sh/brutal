@@ -8,7 +8,7 @@ The identity table describes the current app. The executed checks below record t
 
 | Surface                              | Fork setting                                         |
 | ------------------------------------ | ---------------------------------------------------- |
-| Product/window/PWA name              | Brutal                                             |
+| Product/window/PWA name              | Brutal                                               |
 | Tauri bundle identifier              | `dev.jpoindexter.openpen`                            |
 | Native test bundle identifier        | `dev.jpoindexter.openpen.native-test`                |
 | OS link scheme                       | `openpen://`                                         |
@@ -30,13 +30,15 @@ Build the Apple-silicon candidate with `bun run build:macos-beta`. The local Tau
 
 Verify the ZIP checksum and Gatekeeper assessment after extraction. Use a clean macOS login for launch, editing, Save and reopen, recovery, and the bundled MCP bridge. Keep the previous trusted app available for rollback. The shared bundle identity carries preferences and credentials forward, so close the previous app before opening Brutal.
 
-The approved public download will be linked from [Brutal Help](https://brutal.sh/help/). Beta testers can use the [public feedback repository](https://github.com/jpoindexter/open-pen-feedback/issues).
+Find signed beta ZIPs, release notes, and checksums under [Brutal Releases](https://github.com/brutal-sh/brutal-feedback/releases). Follow [Brutal Help](https://brutal.sh/help/getting-started/#download) to install and verify a build. Use the [public feedback repository](https://github.com/brutal-sh/brutal-feedback/issues) to report issues.
 
 ## Updates
 
-The fork has no update-feed endpoints and does not generate upstream update artifacts. Vite derives the startup-update flag from the endpoint configuration, including embedded app builds. Startup checks are disabled; manually requesting an update follows the existing failure-reporting path because no feed is configured. Signed-update validation remains enabled; the retained upstream public key is inert without an endpoint. Configuring a fork release channel later requires its own signing key and explicit endpoints.
+The distributed Apple-silicon beta uses the [Brutal update feed](https://brutal.sh/download/mac-updater.json) and installs signed updates. Install from the ZIP once if you have Beta 9 or earlier. From Beta 10 onward choose **Brutal → Check for Updates…**. In a developer build, Vite derives the startup-update flag from the configured endpoint.
 
-See the [signed updater requirements](https://v2.tauri.app/plugin/updater/) when setting up a release channel.
+### Usage stats
+
+The distributed Beta 16 has usage sharing off. A beta that offers **Share stats** asks after welcome and sends usage stats only after consent. Change the choice in **Settings → Privacy**. Review the [public disclosure](https://brutal.sh/help/privacy/#what-is-sent) and the [candidate build and signed verification steps](https://github.com/jpoindexter/open-pen/blob/codex/brutal-telemetry/docs/DESKTOP.md#opt-in-usage-stats-in-a-mac-beta).
 
 ## Provider callbacks
 
@@ -58,6 +60,6 @@ Formatting checks passed for the changed OAuth, MCP spawning and Vite configurat
 - Generate native icons and build the fork. Run `cargo test --manifest-path desktop/Cargo.toml network::oauth::tests`, which includes a real local TCP callback/response/closure test with synthetic code and state.
 - Use a separate macOS login for the signed candidate. Verify `openpen://` routing, MCP discovery and authentication, and document opening.
 - Exercise OpenRouter sign-in with an explicitly chosen account and verify cancellation, retry, returned identity and authorized editor request. No live provider login or credential access was performed for these changes.
-- Verify manual update failure wording in the native app and that startup performs no upstream update request.
+- Verify manual update failure wording in a developer build without an endpoint and confirm it makes no startup update request.
 
 These are acceptance gaps, not completion claims. Full feature parity is tracked separately in [PARITY.md](PARITY.md).

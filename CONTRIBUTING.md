@@ -2,6 +2,8 @@
 
 Use [Brutal support](https://brutal.sh/help/#support) for questions, bugs, and feedback. Follow the [security policy](SECURITY.md) to report a vulnerability privately.
 
+Use the [privacy disclosure](https://brutal.sh/help/privacy/#usage-stats) when explaining usage sharing to testers. Release maintainers can find the candidate build and verification procedure in [Desktop setup](docs/DESKTOP.md#usage-stats).
+
 ## Where the rules live
 
 - `CONTRIBUTING.md` (this file): setup, pull requests, validation, commits.

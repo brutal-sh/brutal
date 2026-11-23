@@ -113,13 +113,13 @@ sign-in or credentials and may charge for usage. The normal installed core
 journey and broader file, agent and visual acceptance remain open.
 [Desktop file and provider limits](../README.md)
 
-The public [Brutal feedback tracker](https://github.com/jpoindexter/open-pen-feedback)
+The public [Brutal feedback tracker](https://github.com/brutal-sh/brutal-feedback)
 has issue forms for bugs and feature requests, Discussions for questions and
 general feedback, and private vulnerability reporting. Anyone can read its public
 pages. GitHub sign-in is required to submit. Bug reports ask for the app version,
 macOS version and what happened. Add reproduction steps when available. Review
 exports and fixtures before sharing them. Maintainers triage confirmed reports
-in Trello and keep private diagnostics out of public threads.
+in Trello and keep private diagnostics out of public threads. The [usage stats disclosure](https://brutal.sh/help/privacy/#what-is-sent) explains what the app sends after consent.
 
 Signed-out Issues, Discussions and Security pages returned HTTP 200 on
 19 November 2026. Submission links routed to GitHub sign-in, and the public
