@@ -1,5 +1,6 @@
-import type { Fill, Variable } from '@open-pencil/scene-graph'
 import { decode } from 'ufo'
+
+import type { Fill, Variable } from '@open-pencil/scene-graph'
 import { colorToHexRaw } from '@open-pencil/scene-graph/color'
 import { fragmentShaderOf, type ShaderPaint } from '@open-pencil/scene-graph/shaders'
 import { shaderEffectLabel } from '@open-pencil/vue/controls/shader'

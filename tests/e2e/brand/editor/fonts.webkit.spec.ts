@@ -48,9 +48,7 @@ const LOCALES = [
 for (const { locale, description } of LOCALES) {
   test.describe(locale, () => {
     test.use({ locale })
-    test(`unsupported font guidance identifies Brutal in ${locale}`, async ({
-      page
-    }, testInfo) => {
+    test(`unsupported font guidance identifies Brutal in ${locale}`, async ({ page }, testInfo) => {
       await page.addInitScript(() => {
         Object.defineProperty(window, 'queryLocalFonts', {
           configurable: true,

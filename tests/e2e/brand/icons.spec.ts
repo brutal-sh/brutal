@@ -5,9 +5,7 @@ import { CanvasHelper } from '#tests/helpers/canvas'
 for (const deviceScaleFactor of [1, 2]) {
   test.describe(`brand at ${deviceScaleFactor}x`, () => {
     test.use({ deviceScaleFactor })
-    test('the canvas return control shows the Brutal icon in both app themes', async ({
-      page
-    }) => {
+    test('the canvas return control shows the Brutal icon in both app themes', async ({ page }) => {
       await page.goto('/?test')
       await new CanvasHelper(page).waitForInit()
       await page.keyboard.press('ControlOrMeta+\\')
