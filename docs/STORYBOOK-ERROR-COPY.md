@@ -1,7 +1,7 @@
 # Storybook manifest error identity
 
 Updated: 2026-11-07. Status: bounded parser/writer criterion executed and published at
-[`881d0b7e5`](https://github.com/jpoindexter/open-pen/commit/881d0b7e5a65a74588daa2d105ba9a74dba908e6) for [BRAND-STORYBOOK-ERROR](https://trello.com/c/0FF3JZ3g).
+[`881d0b7e5`](https://github.com/brutal-sh/brutal/commit/881d0b7e5a65a74588daa2d105ba9a74dba908e6) for [BRAND-STORYBOOK-ERROR](https://trello.com/c/0FF3JZ3g).
 
 The invalid-manifest error names Brutal. Its remaining sentence, path context, validation
 and error handling are unchanged. `.openpencil-stories.json` and generated `openpencil/*`

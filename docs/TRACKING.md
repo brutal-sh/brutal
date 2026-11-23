@@ -195,11 +195,11 @@ Recovery copy has executed its bounded browser criterion: 76 passing cases, 72 i
 captures and unchanged retained-byte controls across nine locales and two engines. The
 [record](RECOVERY-COPY.md) preserves earlier failures and the intentionally interrupted
 baseline. The source and record are published at
-[`a289fe255`](https://github.com/jpoindexter/open-pen/commit/a289fe25500786f12e5ce9fe68070192bb295b29);
+[`a289fe255`](https://github.com/brutal-sh/brutal/commit/a289fe25500786f12e5ce9fe68070192bb295b29);
 the recovery card is Executed for this bounded criterion. Update prompts have bounded Executed component evidence published at
-[`9d399a4ab`](https://github.com/jpoindexter/open-pen/commit/9d399a4abaa9ba1c465b38fdaf00965535b82ed1);
+[`9d399a4ab`](https://github.com/brutal-sh/brutal/commit/9d399a4abaa9ba1c465b38fdaf00965535b82ed1);
 the [record](UPDATER-COPY.md) retains 36 passing cases and 234 inspected captures. Restart feedback has bounded Executed controller/component evidence at
-[`4006503a6`](https://github.com/jpoindexter/open-pen/commit/4006503a6f051a7a76e7517bf7d0c7d0d648ed99);
+[`4006503a6`](https://github.com/brutal-sh/brutal/commit/4006503a6f051a7a76e7517bf7d0c7d0d648ed99);
 its [record](RESTART-COPY.md) retains 36 passing cases and 54 inspected captures. [VERIFY-TOAST-SHORT](https://trello.com/c/f3kDECKO) allocates the
 unmeasured short-error grouping; the terminal gate now has all 413 other tasks as dependencies.
 This is not a new beta feature prerequisite or actual-Pen visual acceptance.

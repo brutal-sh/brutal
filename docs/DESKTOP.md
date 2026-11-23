@@ -8,7 +8,7 @@ The identity table describes the current app. The executed checks below record t
 
 | Surface                              | Fork setting                                         |
 | ------------------------------------ | ---------------------------------------------------- |
-| Product/window/PWA name              | Brutal                                             |
+| Product/window/PWA name              | Brutal                                               |
 | Tauri bundle identifier              | `dev.jpoindexter.openpen`                            |
 | Native test bundle identifier        | `dev.jpoindexter.openpen.native-test`                |
 | OS link scheme                       | `openpen://`                                         |
@@ -105,6 +105,6 @@ Formatting checks passed for the changed OAuth, MCP spawning and Vite configurat
 - Generate native icons and build the fork. Run `cargo test --manifest-path desktop/Cargo.toml network::oauth::tests`, which includes a real local TCP callback/response/closure test with synthetic code and state.
 - Use a separate macOS login for the signed candidate. Verify `openpen://` routing, MCP discovery and authentication, and document opening.
 - Exercise OpenRouter sign-in with an explicitly chosen account and verify cancellation, retry, returned identity and authorized editor request. No live provider login or credential access was performed for these changes.
-- Verify manual update failure wording in the native app and that startup performs no upstream update request.
+- Verify manual update failure wording in a developer build without an endpoint and confirm it makes no startup update request.
 
 These are acceptance gaps, not completion claims. Full feature parity is tracked separately in [PARITY.md](PARITY.md).

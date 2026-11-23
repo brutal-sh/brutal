@@ -45,8 +45,7 @@ for (const platform of PLATFORMS) {
       page.on('pageerror', (error) => errors.push(error.message))
       await context.route(
         (url) =>
-          (url.origin === 'https://github.com' &&
-            url.pathname.startsWith('/jpoindexter/open-pen/')) ||
+          url.origin === 'https://brutal.sh' ||
           (url.origin === 'https://developer.microsoft.com' &&
             url.pathname === '/microsoft-edge/webview2/'),
         async (route) => {

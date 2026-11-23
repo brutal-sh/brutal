@@ -1,7 +1,7 @@
 # Restart feedback identity and controller behavior
 
 Updated: 2026-11-07. Status: bounded browser criterion executed and published at
-[`4006503a6`](https://github.com/jpoindexter/open-pen/commit/4006503a6f051a7a76e7517bf7d0c7d0d648ed99) for
+[`4006503a6`](https://github.com/brutal-sh/brutal/commit/4006503a6f051a7a76e7517bf7d0c7d0d648ed99) for
 [BRAND-RESTART-COPY](https://trello.com/c/H4fe0dbb).
 Native restart, exact Pen geometry and full branding remain open.
 

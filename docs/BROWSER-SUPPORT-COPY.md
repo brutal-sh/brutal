@@ -1,7 +1,7 @@
 # Pre-boot browser identity and support routing
 
 Updated: 2026-11-07. Status: bounded browser criterion executed and published at
-[`59e02516b`](https://github.com/jpoindexter/open-pen/commit/59e02516b70bd22032906a1e8f5683c8512197ce),
+[`59e02516b`](https://github.com/brutal-sh/brutal/commit/59e02516b70bd22032906a1e8f5683c8512197ce),
 with exact remote content readback for BRAND-SUPPORT-BROWSER. Actual unsupported engines,
 native delivery, exact Pen geometry and full branding remain unaccepted.
 

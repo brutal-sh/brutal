@@ -1,7 +1,7 @@
 # Update prompt identity and guidance
 
 Updated: 2026-11-07. Status: bounded component criterion executed and published at
-[`9d399a4ab`](https://github.com/jpoindexter/open-pen/commit/9d399a4abaa9ba1c465b38fdaf00965535b82ed1) for
+[`9d399a4ab`](https://github.com/brutal-sh/brutal/commit/9d399a4abaa9ba1c465b38fdaf00965535b82ed1) for
 [BRAND-UPDATER-COPY](https://trello.com/c/XrpINmo1).
 Native update delivery, restart feedback and full branding remain open.
 

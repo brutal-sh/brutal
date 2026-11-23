@@ -13,8 +13,8 @@ Use the [privacy disclosure](https://brutal.sh/help/privacy/#usage-stats) when e
 ## Setup
 
 ```sh
-git clone https://github.com/jpoindexter/brutal-editor.git
-cd brutal-editor
+git clone https://github.com/brutal-sh/brutal.git
+cd brutal
 bun --version  # Match packageManager in package.json
 bun install --frozen-lockfile
 bun run build:packages

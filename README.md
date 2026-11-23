@@ -1,8 +1,10 @@
 # Brutal
 
-Brutal is a local-first desktop design editor by THEFT Studio, built on the MIT-licensed OpenPencil engine. The public Mac beta is in preparation. Full functional parity with Pen without an editor subscription or license activation remains on the roadmap. [OpenPencil engine](https://github.com/open-pencil/open-pencil)
+Brutal is a local-first desktop design editor by THEFT Studio, built on the MIT-licensed OpenPencil engine. Signed beta builds are available for Apple silicon Macs. Full functional parity with Pen without an editor subscription or license activation remains on the roadmap. [OpenPencil engine](https://github.com/open-pencil/open-pencil)
 
-[Brutal website](https://brutal.sh/) · [Help docs](https://brutal.sh/help/#docs) · [Desktop setup](https://brutal.sh/help/getting-started/)
+[Brutal website](https://brutal.sh/) · [Install or update](https://brutal.sh/help/getting-started/) · [Help docs](https://brutal.sh/help/#docs) · [Privacy and usage stats](https://brutal.sh/help/privacy/#usage-stats)
+
+[Pen.app parity audit and Trello work order](docs/pen-feature-reference/2026-11-23/) · [Public feedback and beta downloads](https://github.com/brutal-sh/brutal-feedback)
 
 ![Brutal desktop editor showing the Field Notes sample](packages/docs/public/screenshot.png)
 
@@ -26,9 +28,9 @@ bun run build:packages
 
 Launch the desktop app with `bun run tauri dev`. This requires Tauri 2’s Rust and platform development tools. Use `bun run dev` for browser development and `bun run storybook` for component checks. Both are contributor tools.
 
-Brutal has its own bundle identity, credential service, deep links and local MCP endpoint. See [desktop configuration](docs/DESKTOP.md). The upstream updater is disabled. This fork has no release feed yet.
+Brutal has its own bundle identity, credential service, deep links and local MCP endpoint. The signed Apple-silicon beta uses the [Brutal update feed](https://brutal.sh/download/mac-updater.json). See [desktop configuration](docs/DESKTOP.md).
 
-Cloud and feedback are off in the supplied environment example. Core editing requires no account. Optional external AI and image providers retain their own authentication and costs; local model support does not make hosted inference free.
+Cloud and usage sharing are off in the supplied development environment. Core editing requires no account. Optional external AI and image providers use their own authentication and billing.
 
 Follow [the full feature catalog](docs/pen-feature-reference/README.md), [the parity matrix](docs/PARITY.md), [execution evidence](docs/ACCEPTANCE.md), and [the private tracking board](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor). New local documents save as **Brutal documents (`.brut`)**. They use the same encoding as `.pen`. Supported `.pen` and `.fig` files can still be opened, edited and saved under their original extensions. Remote storage uses `.fig`. Unsupported content is reported before writing. See [format limits](packages/pen/README.md).
 
@@ -58,6 +60,10 @@ or a current Windows WebView2 runtime. Find signed Apple-silicon beta downloads 
 [Brutal Releases](https://github.com/brutal-sh/brutal-feedback/releases). In the app, choose
 **Help → Report an Issue** to open the public bug form. Review any diagnostic details before
 sharing them. Find usage guides and private security reporting in [Brutal Help](https://brutal.sh/help/#support).
+
+## Privacy and usage stats
+
+In builds that offer **Share stats**, sharing starts after you opt in. You can change your choice in **Settings → Privacy**. See the [privacy disclosure](https://brutal.sh/help/privacy/#what-is-sent) for the data Brutal sends.
 
 ## CLI
 

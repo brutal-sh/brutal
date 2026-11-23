@@ -373,7 +373,7 @@ are inspected. Close and failed Restore retain the disposable snapshot bytes; Re
 the named geometry; explicit Discard stays removed after reload. Failed recovery uses its
 existing translated message and retains parser details in the local warning. Eighteen owner
 tests, normal build, source/Vue/test types and focused lint pass. Source and evidence are published at
-[`a289fe255`](https://github.com/jpoindexter/open-pen/commit/a289fe25500786f12e5ce9fe68070192bb295b29).
+[`a289fe255`](https://github.com/brutal-sh/brutal/commit/a289fe25500786f12e5ce9fe68070192bb295b29).
 
 One short Chinese error toast stacks its icon, message and controls; the separate
 [reference task](https://trello.com/c/f3kDECKO) retains actual-Pen grouping adjudication.
@@ -393,7 +393,7 @@ uses an existing readable semantic token, correcting the observed dark contrast 
 
 Final normal build, source/Vue/test types, architecture/i18n and 23 owner tests pass.
 The source and record are published at
-[`9d399a4ab`](https://github.com/jpoindexter/open-pen/commit/9d399a4abaa9ba1c465b38fdaf00965535b82ed1). Typed mock emits and explicitly fictitious release data do not
+[`9d399a4ab`](https://github.com/brutal-sh/brutal/commit/9d399a4abaa9ba1c465b38fdaf00965535b82ed1). Typed mock emits and explicitly fictitious release data do not
 qualify controller transitions, a real release/feed/download/install, native restart,
 physical input, exact Pen geometry, human translation sign-off or full branding.
 
@@ -404,7 +404,7 @@ interaction through typed test-owned backends: 36 passing nine-locale/two-theme 
 54 inspected captures and thirty matching frozen hashes. Denial causes no relaunch;
 Retry after rejection does not repeat check/download/install; Later releases the pending
 handle and calls the test-owned close-window backend. Source and evidence are published at
-[`4006503a6`](https://github.com/jpoindexter/open-pen/commit/4006503a6f051a7a76e7517bf7d0c7d0d648ed99).
+[`4006503a6`](https://github.com/brutal-sh/brutal/commit/4006503a6f051a7a76e7517bf7d0c7d0d648ed99).
 Together with the published recovery and update-prompt children, this executes only the
 parent recovery/update/restart copy gate. Native approval/relaunch, exact Pen geometry
 and full branding remain unaccepted.
@@ -421,7 +421,7 @@ branding acceptance stay open. The editor-copy gate retains its mixed WebKit dep
 
 The [browser support record](BROWSER-SUPPORT-COPY.md) publishes the own requirements/report
 routing, matching issue-form platform option and preserved diagnostic details at
-[`59e02516b`](https://github.com/jpoindexter/open-pen/commit/59e02516b70bd22032906a1e8f5683c8512197ce).
+[`59e02516b`](https://github.com/brutal-sh/brutal/commit/59e02516b70bd22032906a1e8f5683c8512197ce).
 All 35 browser cases pass with inspected captures and matching frozen sources; fresh
 authenticated remote contents match the new README and template exactly. Both requested
 color schemes retain existing dark pre-boot styling. The support parent and full links
@@ -435,7 +435,7 @@ seventy-four matching frozen source/compiled hashes. Format-list text and JSON r
 byte-identical across all fourteen entries. The public command registry, compatibility
 executable/package IDs and format contracts remain unchanged. The CLI owner suite passes
 46 tests; final build/lint and source/Vue/test types pass. The source and record are published at
-[`f5eef8e84`](https://github.com/jpoindexter/open-pen/commit/f5eef8e84a2e438d53a112e199240f895f92f303).
+[`f5eef8e84`](https://github.com/brutal-sh/brutal/commit/f5eef8e84a2e438d53a112e199240f895f92f303).
 The separate [Storybook manifest error-label record](STORYBOOK-ERROR-COPY.md) now has
 bounded Executed evidence at `881d0b7e5`; compatibility filenames and namespaces are preserved. No full CLI, native or whole-brand acceptance is inferred.
 

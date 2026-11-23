@@ -5,6 +5,8 @@ the branding milestone remain open. Actual Pen 1.2.21 remains the parity referen
 
 ## Destination and ownership
 
+Current desktop downloads and verification instructions live in [Brutal Help](https://brutal.sh/help/getting-started/#download). The record below describes the November 7 setup.
+
 The shared desktop setup URL points to the private Brutal repository's existing
 `Run this fork` instructions. Authorized GitHub readback confirms the repository is
 private, its default branch is `feat/open-pen`, and its README includes the actual
