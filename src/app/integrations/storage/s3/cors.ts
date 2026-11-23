@@ -1,7 +1,8 @@
 import { escapeUTF8 } from 'entities'
 import { compact } from 'es-toolkit/array'
 
-import { IS_BROWSER, WEB_APP_ORIGIN } from '@/constants'
+import { IS_BRUTAL_MACOS_BETA } from '@/app/runtime/version'
+import { IS_BROWSER, OPEN_PEN_WEBSITE_URL, WEB_APP_ORIGIN } from '@/constants'
 
 /** Origins OpenPencil may run from when calling S3 from the browser. */
 export const CLOUD_CORS_STATIC_ORIGINS = [
@@ -20,7 +21,10 @@ export const CLOUD_CORS_STATIC_ORIGINS = [
 ] as const
 
 export function collectCloudCORSOrigins(extra?: string | null): string[] {
-  const set = new Set<string>(CLOUD_CORS_STATIC_ORIGINS)
+  const defaults = IS_BRUTAL_MACOS_BETA
+    ? [new URL(OPEN_PEN_WEBSITE_URL).origin, 'http://localhost:*', 'http://127.0.0.1:*']
+    : CLOUD_CORS_STATIC_ORIGINS
+  const set = new Set<string>(defaults)
   if (extra?.trim()) set.add(extra.trim().replace(/\/+$/, ''))
   if (IS_BROWSER && window.location.origin) {
     set.add(window.location.origin)
@@ -105,7 +109,8 @@ export function isLikelyCORSOrNetworkError(error: unknown): boolean {
 }
 
 export function formatBrowserCORSHelpMessage(): string {
-  const origin = IS_BROWSER ? window.location.origin : WEB_APP_ORIGIN
+  const defaultOrigin = IS_BRUTAL_MACOS_BETA ? new URL(OPEN_PEN_WEBSITE_URL).origin : WEB_APP_ORIGIN
+  const origin = IS_BROWSER ? window.location.origin : defaultOrigin
   return (
     `The browser could not reach this bucket from ${origin}. ` +
     'Your bucket may not allow requests from this site, or the endpoint may be unavailable. ' +

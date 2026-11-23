@@ -57,6 +57,22 @@ The encrypted updater key is managed outside the checkout. On the release Mac it
 the advertised app version. Preserve recoverable custody of the private key and password before changing release machines.
 [Tauri updater signing requirements](https://v2.tauri.app/plugin/updater/#signing-updates)
 
+### Usage stats in Brutal beta builds
+
+The Beta 18 build includes the opt-in question and uses Brutal’s Cloudflare receiver by default.
+Sharing begins after consent and can be switched off in **Settings → Privacy**.
+Set `VITE_BRUTAL_USAGE_STATS_ORIGIN` to an empty value for a build with usage stats disabled.
+See the [receiver runbook](../packages/feedback/README.md#brutal-usage-stats) and
+[public disclosure](https://brutal.sh/help/privacy/#what-is-sent).
+
+### Brutal-hosted Cloud
+
+Set `VITE_BRUTAL_CLOUD_URL` to the verified HTTPS origin of a Brutal-owned Cloud deployment
+when building a Mac beta. Until that origin is configured, Settings supports connecting a
+self-hosted server and the app skips hosted Cloud discovery. Keep the Cloud server and its
+PostgreSQL, object storage, and sign-in configuration separate from usage stats. See the
+[deployment guide](../packages/cloud/deploy/README.md).
+
 ## Provider callbacks
 
 OpenRouter native sign-in now acquires a loopback-only listener on an OS-assigned port before opening the system browser. Its callback is `http://localhost:<port>/auth/callback`. The existing PKCE exchange, per-attempt state validation, bounded request parsing, cancellation and listener cleanup remain in the flow. No hosted upstream relay receives the native callback. The browser popup flow remains separate.

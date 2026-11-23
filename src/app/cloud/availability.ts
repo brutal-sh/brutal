@@ -1,20 +1,26 @@
 import { useLocalStorage } from '@vueuse/core'
 import { computed, ref } from 'vue'
 
-import { APP_VERSION } from '@/app/runtime/version'
-import { IS_BROWSER, IS_CLOUD_SITE, OFFICIAL_CLOUD_URL } from '@/constants'
+import { APP_VERSION, IS_BRUTAL_MACOS_BETA } from '@/app/runtime/version'
+import { CONFIGURED_CLOUD_URL, IS_BROWSER, IS_CLOUD_SITE, OFFICIAL_CLOUD_URL } from '@/constants'
 
 import { discoverCloudServer } from './sessions/connection'
 
 /** `?cloud=preview` shows Cloud on this device before it is listed; `?cloud=off` stops that. */
 const PREVIEW_PARAM = 'cloud'
+const hostedCloudConfigured = !IS_BRUTAL_MACOS_BETA || CONFIGURED_CLOUD_URL !== null
 
 /**
  * The editor version from which the official server lists itself, as it last said. Kept, so an
  * offline start shows what the last online one did.
  */
 const listedFrom = IS_BROWSER
-  ? useLocalStorage<string | null>('open-pencil:cloud-listed-from', null)
+  ? useLocalStorage<string | null>(
+      IS_BRUTAL_MACOS_BETA
+        ? `brutal:cloud-listed-from:${OFFICIAL_CLOUD_URL}`
+        : 'open-pencil:cloud-listed-from',
+      null
+    )
   : ref<string | null>(null)
 const preview = IS_BROWSER ? useLocalStorage('open-pencil:cloud-preview', false) : ref(false)
 
@@ -41,13 +47,15 @@ export function isVersionAtLeast(version: string, minimum: string): boolean {
  */
 export const cloudOfficialListed = computed(
   () =>
-    IS_CLOUD_SITE ||
-    preview.value ||
-    (listedFrom.value !== null && isVersionAtLeast(APP_VERSION, listedFrom.value))
+    hostedCloudConfigured &&
+    (IS_CLOUD_SITE ||
+      preview.value ||
+      (listedFrom.value !== null && isVersionAtLeast(APP_VERSION, listedFrom.value)))
 )
 
 /** Reads the preview switch from the address and asks the official server whether it is listed. */
 export async function checkCloudAvailability(address: string): Promise<void> {
+  if (!hostedCloudConfigured) return
   const choice = new URL(address).searchParams.get(PREVIEW_PARAM)
   if (choice === 'preview') preview.value = true
   else if (choice === 'off') preview.value = false

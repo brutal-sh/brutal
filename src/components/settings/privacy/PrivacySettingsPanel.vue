@@ -22,7 +22,9 @@ const { dailyPing, usageStats, unofficialBuild, disabledByEnvironment } = useSha
       {{ diagnostics.sharingDescription }}
     </template>
     <template #actions>
-      <SettingsLink :href="PRIVACY_URL">{{ diagnostics.sharingDetails }}</SettingsLink>
+      <SettingsLink :href="`${PRIVACY_URL}#what-is-sent`">{{
+        diagnostics.sharingDetails
+      }}</SettingsLink>
     </template>
     <AppAlert v-if="unofficialBuild" :heading="diagnostics.sharingUnofficialBuild" />
     <AppAlert

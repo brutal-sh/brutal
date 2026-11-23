@@ -29,7 +29,7 @@ const styles = tv(theme)()
           : diagnostics.sharingQuestionDescription
       }}
     </p>
-    <ExternalLink :href="PRIVACY_URL" :ui="{ base: 'text-[11px]' }">{{
+    <ExternalLink :href="`${PRIVACY_URL}#what-is-sent`" :ui="{ base: 'text-[11px]' }">{{
       diagnostics.sharingDetails
     }}</ExternalLink>
     <p v-if="usageStatsConsent !== 'unset'" :class="styles.answer()" role="status">

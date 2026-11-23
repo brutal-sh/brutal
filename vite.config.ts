@@ -49,6 +49,15 @@ export default defineConfig(async ({ command, mode }) => {
   const automation = !metrics && !cloudSite && !roomBrowser
   const macOSBeta = process.env.BRUTAL_MACOS_BETA_BUILD === '1'
   const updater = macOSBeta ? macOSBetaConfig.plugins.updater : desktopConfig.plugins.updater
+  const officialCloudURL = macOSBeta
+    ? env.VITE_BRUTAL_CLOUD_URL?.trim()
+    : env.VITE_OPENPENCIL_OFFICIAL_CLOUD_URL
+  if (macOSBeta && officialCloudURL) {
+    const url = new URL(officialCloudURL)
+    if (url.protocol !== 'https:' || url.origin !== officialCloudURL.replace(/\/$/, '')) {
+      throw new Error('VITE_BRUTAL_CLOUD_URL must be an HTTPS origin.')
+    }
+  }
   await Promise.all([ensureBrandAssets(['web']), metrics ? undefined : ensureDemoDocument()])
   return {
     resolve: {
@@ -59,9 +68,7 @@ export default defineConfig(async ({ command, mode }) => {
       __BRUTAL_MACOS_BETA_VERSION__: JSON.stringify(macOSBeta ? macOSBetaConfig.version : null),
       __OPENPENCIL_UPDATES_ENABLED__: JSON.stringify(updater.endpoints.length > 0),
       __OPENPENCIL_CLOUD_SITE__: JSON.stringify(cloudSite),
-      __OPENPENCIL_OFFICIAL_CLOUD_URL__: JSON.stringify(
-        env.VITE_OPENPENCIL_OFFICIAL_CLOUD_URL ?? null
-      ),
+      __OPENPENCIL_OFFICIAL_CLOUD_URL__: JSON.stringify(officialCloudURL || null),
       __OPENPENCIL_LOCAL_AUTOMATION_TOKEN__: JSON.stringify(
         automation ? localAutomationToken(command) : null
       ),
