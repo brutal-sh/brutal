@@ -245,6 +245,9 @@ jobs:
 
       - uses: ./.github/actions/setup-bun
 
+      - name: Build native test workspace dependencies
+        run: bun run build:packages
+
       - name: Typecheck native interaction tests
         run: bun run check:native-test
 
