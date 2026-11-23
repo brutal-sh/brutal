@@ -87,7 +87,8 @@ export function registerTools(mcpServer: McpServer, options: RegisterToolsOption
     return { ...session, chat: agentSession.chat, call: agentCallId(meta) }
   }
   const resolvedRoot = options.mcpRoot ? resolve(options.mcpRoot) : null
-  const descriptors = descriptorByName(createToolDescriptors(resolvedRoot !== null))
+  const agentPreview = agentSession?.kind === 'acp' && !!agentSession.chat
+  const descriptors = descriptorByName(createToolDescriptors(resolvedRoot !== null, agentPreview))
   const register: ToolRegister = (name, toolOptions, handler) => {
     const descriptor = descriptors.get(name)
     if (!descriptor) throw new Error(`Missing MCP tool descriptor for "${name}"`)
@@ -120,7 +121,7 @@ export function registerTools(mcpServer: McpServer, options: RegisterToolsOption
     )
   }
   const context = { register, sendRPC: chat ? scopedSender : sendRPC, policy, resolvedRoot, agent }
-  registerCoreTools(context, agentSession?.kind === 'acp' && !!agentSession.chat)
+  registerCoreTools(context, agentPreview)
   registerListDocuments(context)
   registerFileTools(context)
   registerURISaveTool(context)

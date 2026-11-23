@@ -157,11 +157,18 @@ const SERVER_TOOLS: ToolDescriptor[] = [
   }
 ]
 
-export function createToolDescriptors(filesystemEnabled: boolean): ToolDescriptor[] {
+export function createToolDescriptors(
+  filesystemEnabled: boolean,
+  agentPreview = false
+): ToolDescriptor[] {
   return [
     ...getMCPToolDefinitions().map(coreToolDescriptor),
     ...structuredClone(
-      SERVER_TOOLS.filter((tool) => filesystemEnabled || tool.availability !== 'filesystem')
+      SERVER_TOOLS.filter(
+        (tool) =>
+          (agentPreview || tool.name !== 'preview_render') &&
+          (filesystemEnabled || tool.availability !== 'filesystem')
+      )
     )
   ]
 }

@@ -83,7 +83,7 @@ export function buildServerContext(options: ServerOptions) {
   })
   // Every call into the app, from MCP sessions and /rpc alike, stays within the scope.
   const sendToBrowser = scopeRPC(browserRPC.sendRPC, toolPolicy.scope)
-  const toolDescriptors = applyToolPolicy(createToolDescriptors(mcpRoot !== null), toolPolicy)
+  const toolDescriptors = applyToolPolicy(createToolDescriptors(mcpRoot !== null, true), toolPolicy)
 
   const app = createHonoApp({
     authToken,

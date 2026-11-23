@@ -186,6 +186,10 @@ describe('MCP server', () => {
   test('describes effects, capabilities, and runtime availability independently', () => {
     const descriptors = createToolDescriptors(true)
     const byName = new Map(descriptors.map((tool) => [tool.name, tool] as const))
+    expect(byName.has('preview_render')).toBe(false)
+    expect(createToolDescriptors(true, true).some((tool) => tool.name === 'preview_render')).toBe(
+      true
+    )
     expect(byName.get('get_page_tree')?.effect).toBe('read')
     expect(byName.get('switch_page')?.effect).toBe('read')
     expect(byName.get('viewport_set')?.effect).toBe('read')
