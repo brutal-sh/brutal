@@ -57,6 +57,7 @@ export async function createTestService() {
 
   const env: Env = {
     ...proxy.env,
+    GITHUB_REPOSITORY: 'open-pencil/open-pencil',
     POSTHOG_HOST: 'https://eu.i.posthog.com',
     POSTHOG_KEY: 'phc_test',
     TURNSTILE_SECRET: 'turnstile-secret',

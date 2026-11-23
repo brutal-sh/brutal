@@ -32,13 +32,14 @@ runs:
       if: inputs.lfs == 'true'
       shell: bash
       env:
+        GH_TOKEN: ${{ github.token }}
         LFS_INCLUDE: ${{ inputs.lfs-include }}
       run: |
         git lfs install --force
         if [ -n "$LFS_INCLUDE" ]; then
-          git lfs pull --include="$LFS_INCLUDE"
+          git -c credential.helper= -c 'credential.helper=!gh auth git-credential' lfs pull --include="$LFS_INCLUDE"
         else
-          git lfs pull
+          git -c credential.helper= -c 'credential.helper=!gh auth git-credential' lfs pull
           head -c 4 tests/fixtures/material3.fig | xxd
         fi
         head -c 4 tests/fixtures/gold-preview.fig | xxd
