@@ -46,7 +46,7 @@ it('delivers the native guide UI and this fork’s CLI setup link without changi
   await chooseCommand('Install Brutal CLI')
   await browser.waitUntil(async () =>
     (await invokeNative<string[]>('take_native_test_opened_urls')).includes(
-      'https://github.com/jpoindexter/open-pen#cli'
+      'https://github.com/jpoindexter/brutal-editor#cli'
     )
   )
   assert.deepEqual(
@@ -63,14 +63,14 @@ it('routes native Help events from Home without creating a document', async () =
   await $('[role="tab"][aria-label="Home"]').click()
   const before = await $$('[data-slot="tab-bar"] [role="tab"]').length
   const website = 'https://brutal.sh/'
-  const repository = 'https://github.com/jpoindexter/open-pen'
+  const repository = 'https://github.com/jpoindexter/brutal-editor'
   for (const [id, url] of [
     ['help-documentation', `${website}help/#docs`],
     ['help-prompts', `${repository}/blob/HEAD/docs/PROMPTS.md`],
     ['help-website', website],
     ['help-cursor', `${repository}/blob/HEAD/docs/EDITOR-INTEGRATIONS.md#cursor`],
     ['help-vscode', `${repository}/blob/HEAD/docs/EDITOR-INTEGRATIONS.md#vs-code`],
-    ['help-support', 'https://github.com/jpoindexter/open-pen-feedback']
+    ['help-support', 'https://github.com/brutal-sh/brutal-feedback']
   ]) {
     await invokeNative('take_native_test_opened_urls')
     await emitNativeMenuAction(id)

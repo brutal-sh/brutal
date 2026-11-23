@@ -2,7 +2,7 @@
 
 Updated: 2026-11-19. Replacement controller goal: **active**, created after Jason cleared its predecessor. [Current priorities](PRIORITIES-2026-11-17.md) and [refreshed instructions](GOAL-REFRESH-2026-11-16.md) govern execution; full independent desktop design and functionality parity remains required.
 
-Repository: [private Brutal](https://github.com/jpoindexter/open-pen), branch `feat/open-pen`, open draft PR1. Source `16bbfd9e5` publishes the bounded browser slider-label repair; earlier source-specific numeric, file and native receipts retain their precise limits. Current app work is combined candidate qualification, with the standalone Tailwind fix integrated at `dfd797a60`. Source WIP and the normal installed binary match; six older isolated test executables are absent and are recorded as an artifact gap, not current native qualification.
+Repository: [private Brutal](https://github.com/jpoindexter/brutal-editor), branch `feat/open-pen`, open draft PR1. Source `16bbfd9e5` publishes the bounded browser slider-label repair; earlier source-specific numeric, file and native receipts retain their precise limits. Current app work is combined candidate qualification, with the standalone Tailwind fix integrated at `dfd797a60`. Source WIP and the normal installed binary match; six older isolated test executables are absent and are recorded as an artifact gap, not current native qualification.
 Board: [Brutal](https://trello.com/b/Z2u82Q4O/open-pen-independent-design-editor).
 
 Current complete Trello readback: **571 cards / 552 required tasks / 1 deferred task / 18 milestones**. **397 Backlog / 1 Ready / 1 Building / 55 Verify / 99 Executed**. PARITY-ALL lists all 551 other required tasks. All milestone exits remain open. [FILE-07](https://trello.com/c/pLxRX3u0) is Building. [FILE-RECOVERY-KEEP](https://trello.com/c/vvn9pBkm) is Executed on the [isolated normal-feature Mac build](RECOVERY-FILE-DECISIONS.md#keep-an-existing-file-recovery-backup-on-macos--2026-11-19). [FILE-WATCH-METADATA](https://trello.com/c/HPooh1BH) is Executed on the [isolated Mac repair](RECOVERY-FILE-DECISIONS.md#installed-file-history-and-metadata-only-changes--2026-11-19). [ENV-01-MAC](https://trello.com/c/hzrysOeC) is Ready. The [beta qualification order](PRIORITIES-2026-11-17.md#public-beta-qualification-order) records the remaining verification and release gates.
@@ -195,11 +195,11 @@ Recovery copy has executed its bounded browser criterion: 76 passing cases, 72 i
 captures and unchanged retained-byte controls across nine locales and two engines. The
 [record](RECOVERY-COPY.md) preserves earlier failures and the intentionally interrupted
 baseline. The source and record are published at
-[`a289fe255`](https://github.com/jpoindexter/open-pen/commit/a289fe25500786f12e5ce9fe68070192bb295b29);
+[`a289fe255`](https://github.com/jpoindexter/brutal-editor/commit/a289fe25500786f12e5ce9fe68070192bb295b29);
 the recovery card is Executed for this bounded criterion. Update prompts have bounded Executed component evidence published at
-[`9d399a4ab`](https://github.com/jpoindexter/open-pen/commit/9d399a4abaa9ba1c465b38fdaf00965535b82ed1);
+[`9d399a4ab`](https://github.com/jpoindexter/brutal-editor/commit/9d399a4abaa9ba1c465b38fdaf00965535b82ed1);
 the [record](UPDATER-COPY.md) retains 36 passing cases and 234 inspected captures. Restart feedback has bounded Executed controller/component evidence at
-[`4006503a6`](https://github.com/jpoindexter/open-pen/commit/4006503a6f051a7a76e7517bf7d0c7d0d648ed99);
+[`4006503a6`](https://github.com/jpoindexter/brutal-editor/commit/4006503a6f051a7a76e7517bf7d0c7d0d648ed99);
 its [record](RESTART-COPY.md) retains 36 passing cases and 54 inspected captures. [VERIFY-TOAST-SHORT](https://trello.com/c/f3kDECKO) allocates the
 unmeasured short-error grouping; the terminal gate now has all 413 other tasks as dependencies.
 This is not a new beta feature prerequisite or actual-Pen visual acceptance.

@@ -2,7 +2,7 @@
 
 Updated: 2026-11-07. Status: bounded browser criterion executed and published for
 [BRAND-RECOVERY-COPY](https://trello.com/c/0qhVjqaB).
-Source commit: [`a289fe255`](https://github.com/jpoindexter/open-pen/commit/a289fe25500786f12e5ce9fe68070192bb295b29).
+Source commit: [`a289fe255`](https://github.com/jpoindexter/brutal-editor/commit/a289fe25500786f12e5ce9fe68070192bb295b29).
 Full branding, native recovery and Pen design parity remain open.
 
 ## Resulting behavior

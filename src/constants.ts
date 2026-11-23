@@ -95,8 +95,8 @@ export const IS_CLOUD_SITE =
 export const OPEN_PEN_WEBSITE_URL = 'https://brutal.sh/'
 const OPEN_PEN_HELP_PAGE_URL = `${OPEN_PEN_WEBSITE_URL}help/`
 export const OPEN_PEN_HELP_URL = `${OPEN_PEN_HELP_PAGE_URL}#docs`
-export const OPEN_PEN_SUPPORT_URL = 'https://github.com/jpoindexter/open-pen-feedback'
-export const OPEN_PEN_REPOSITORY_URL = 'https://github.com/jpoindexter/open-pen'
+export const OPEN_PEN_SUPPORT_URL = 'https://github.com/brutal-sh/brutal-feedback'
+export const OPEN_PEN_REPOSITORY_URL = 'https://github.com/jpoindexter/brutal-editor'
 /** Desktop setup instructions while this fork has no published installer. */
 export const DESKTOP_DOWNLOAD_URL = `${OPEN_PEN_HELP_PAGE_URL}getting-started/`
 export const NODE_DOWNLOAD_URL = 'https://nodejs.org/en/download'

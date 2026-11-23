@@ -38,7 +38,7 @@ The distributed Apple-silicon beta uses the [Brutal update feed](https://brutal.
 
 ### Usage stats
 
-The distributed Beta 16 has usage sharing off. A beta that offers **Share stats** asks after welcome and sends usage stats only after consent. Change the choice in **Settings → Privacy**. Review the [public disclosure](https://brutal.sh/help/privacy/#what-is-sent) and the [candidate build and signed verification steps](https://github.com/jpoindexter/open-pen/blob/codex/brutal-telemetry/docs/DESKTOP.md#opt-in-usage-stats-in-a-mac-beta).
+The distributed Beta 16 has usage sharing off. A beta that offers **Share stats** asks after welcome and sends usage stats only after consent. Change the choice in **Settings → Privacy**. Review the [public disclosure](https://brutal.sh/help/privacy/#what-is-sent) and the [candidate build and signed verification steps](https://github.com/jpoindexter/brutal-editor/blob/codex/brutal-telemetry/docs/DESKTOP.md#opt-in-usage-stats-in-a-mac-beta).
 
 ## Provider callbacks
 

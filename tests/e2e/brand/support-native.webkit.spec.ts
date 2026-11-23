@@ -46,7 +46,7 @@ for (const platform of PLATFORMS) {
       await context.route(
         (url) =>
           (url.origin === 'https://github.com' &&
-            url.pathname.startsWith('/jpoindexter/open-pen/')) ||
+            url.pathname.startsWith('/jpoindexter/brutal-editor/')) ||
           (url.origin === 'https://developer.microsoft.com' &&
             url.pathname === '/microsoft-edge/webview2/'),
         async (route) => {

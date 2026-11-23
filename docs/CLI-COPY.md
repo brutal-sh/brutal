@@ -1,7 +1,7 @@
 # CLI identity, help paths and format presentation
 
 Updated: 2026-11-07. Status: bounded CLI criterion executed and published at
-[`f5eef8e84`](https://github.com/jpoindexter/open-pen/commit/f5eef8e84a2e438d53a112e199240f895f92f303) for
+[`f5eef8e84`](https://github.com/jpoindexter/brutal-editor/commit/f5eef8e84a2e438d53a112e199240f895f92f303) for
 BRAND-SUPPORT-CLI. Full CLI workflows, native delivery and full branding remain open.
 
 ## Resulting behavior

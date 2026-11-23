@@ -18,7 +18,7 @@ test('brand menu uses keyboard navigation and restores trigger focus on Escape',
   await expect(menu).toHaveCSS('width', '216px')
   const repository = menu.getByRole('menuitem', { name: 'Brutal on GitHub', exact: true })
   await expect(repository).toBeFocused()
-  await expect(repository).toHaveAttribute('href', 'https://github.com/jpoindexter/open-pen')
+  await expect(repository).toHaveAttribute('href', 'https://github.com/jpoindexter/brutal-editor')
   await expect(repository).toHaveCSS('height', '24px')
   await page.keyboard.press('End')
   await expect(menu.getByRole('menuitem', { name: 'Commands', exact: true })).toBeFocused()
@@ -26,7 +26,7 @@ test('brand menu uses keyboard navigation and restores trigger focus on Escape',
   await expect(menu.getByRole('menuitem', { name: 'Brutal CLI docs', exact: true })).toBeFocused()
   await expect(
     menu.getByRole('menuitem', { name: 'Brutal CLI docs', exact: true })
-  ).toHaveAttribute('href', 'https://github.com/jpoindexter/open-pen#cli')
+  ).toHaveAttribute('href', 'https://github.com/jpoindexter/brutal-editor#cli')
   await page.screenshot({ path: testInfo.outputPath('brand-menu.png') })
   await page.keyboard.press('Escape')
   await expect(menu).toBeHidden()

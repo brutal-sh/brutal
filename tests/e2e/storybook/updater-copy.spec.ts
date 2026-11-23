@@ -3,7 +3,7 @@ import { expect, test, type Locator, type TestInfo } from '@playwright/test'
 import { mockEditorCopyServices } from '#tests/helpers/brand/editor-services'
 import { storyOutcome } from '#tests/helpers/storybook/outcome'
 
-const NOTES_URL = 'https://github.com/jpoindexter/open-pen/blob/HEAD/CHANGELOG.md'
+const NOTES_URL = 'https://github.com/jpoindexter/brutal-editor/blob/HEAD/CHANGELOG.md'
 const LOCALES = ['en', 'de', 'es', 'fr', 'it', 'ja', 'pl', 'ru', 'zh-CN'] as const
 const STATES = {
   release: [

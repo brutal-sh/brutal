@@ -61,7 +61,7 @@ Find guides and private security reporting in [Brutal Help](https://brutal.sh/he
 
 ## Privacy and usage stats
 
-Beta 16 has usage sharing off. In beta builds that offer **Share stats**, sharing starts off and requires your consent. Change your choice in **Settings → Privacy**. The [public disclosure](https://brutal.sh/help/privacy/#what-is-sent) lists the fields and retention. Maintainers can find the receiver and build instructions on the [telemetry branch](https://github.com/jpoindexter/open-pen/tree/codex/brutal-telemetry).
+Beta 16 has usage sharing off. In beta builds that offer **Share stats**, sharing starts off and requires your consent. Change your choice in **Settings → Privacy**. The [public disclosure](https://brutal.sh/help/privacy/#what-is-sent) lists the fields and retention. Maintainers can find the receiver and build instructions on the [telemetry branch](https://github.com/jpoindexter/brutal-editor/tree/codex/brutal-telemetry).
 
 ## CLI
 

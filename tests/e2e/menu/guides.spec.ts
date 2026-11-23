@@ -79,7 +79,7 @@ test('the CLI setup action opens this fork’s documentation', async () => {
     .click()
   const popup = await opening
   try {
-    await expect(popup).toHaveURL('https://github.com/jpoindexter/open-pen#cli')
+    await expect(popup).toHaveURL('https://github.com/jpoindexter/brutal-editor#cli')
   } finally {
     await popup.close()
   }
@@ -90,7 +90,7 @@ test('Help reaches this fork’s documentation, setup and support without editin
   await canvas.drawRect(350, 300, 160, 100)
   const before = await getSelectedNode(page)
   const website = 'https://brutal.sh/'
-  const repository = 'https://github.com/jpoindexter/open-pen'
+  const repository = 'https://github.com/jpoindexter/brutal-editor'
   await page
     .context()
     .route(`${repository}/blob/HEAD/**`, (route) =>
@@ -102,7 +102,7 @@ test('Help reaches this fork’s documentation, setup and support without editin
     ['Brutal Website', website],
     ['Cursor Setup…', `${repository}/blob/HEAD/docs/EDITOR-INTEGRATIONS.md#cursor`],
     ['VS Code Setup…', `${repository}/blob/HEAD/docs/EDITOR-INTEGRATIONS.md#vs-code`],
-    ['Support & Feedback', `${website}help/#support`]
+    ['Support & Feedback', `https://github.com/brutal-sh/brutal-feedback`]
   ]) {
     const opening = page.waitForEvent('popup')
     await (

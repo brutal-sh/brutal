@@ -13,8 +13,8 @@ Use the [privacy disclosure](https://brutal.sh/help/privacy/#usage-stats) when e
 ## Setup
 
 ```sh
-git clone https://github.com/jpoindexter/open-pen.git
-cd open-pen
+git clone https://github.com/jpoindexter/brutal-editor.git
+cd brutal-editor
 bun install
 bun run build:packages
 bun run dev:portless  # Local browser development at https://open-pencil.localhost
@@ -33,6 +33,8 @@ APPLE_SIGNING_IDENTITY=- bun run tauri build -c '{"bundle": { "createUpdaterArti
 ```
 
 ## Making a change
+
+For Brutal changes, fetch `origin` and start each task from `origin/feat/open-pen`. Use a separate branch and worktree when another task has local edits. Push the task branch to `origin` and open a pull request against `feat/open-pen`. Pull changes from `upstream` only when syncing OpenPencil.
 
 - Before adding a helper, type, component, state mechanism, parser, or test utility, inspect the owning folder, nearby implementations, existing dependencies, and tests. Reuse or extend the established mechanism; extract genuinely shared logic instead of introducing a parallel implementation.
 - Keep package boundaries and public exports intact. Keep pull requests focused: no temporary scaffolding, unrelated refactors, or changelog claims not represented by the diff.
