@@ -18,13 +18,22 @@ test('model editing keeps the Settings shell stable and isolates the form', asyn
   const editor = page.getByTestId('settings-model-editor')
   await expect(editor).toBeVisible()
   await expect(dialog.getByText('Chat', { exact: true })).not.toBeVisible()
-  await expect(dialog.getByRole('button', { name: 'Back', exact: true })).toHaveCount(0)
-  await expect(page.getByTestId('settings-breadcrumb')).toHaveText(/Settings\s*Models\s*Add model/)
+  const breadcrumb = page.getByTestId('settings-breadcrumb')
+  const back = breadcrumb.getByRole('button', { name: 'Back: Models', exact: true })
+  await expect(breadcrumb.getByRole('button')).toHaveCount(1)
+  await expect(breadcrumb.getByText('Settings', { exact: true })).toBeVisible()
+  await expect(breadcrumb.locator('[aria-current="page"]')).toHaveText('Add model')
+  await expect(back).toHaveCSS('text-decoration-line', 'underline')
+  await expect(back).toHaveCSS('cursor', 'pointer')
   await expect(page.getByTestId('app-settings-done')).toHaveCount(0)
   expect(await dialog.boundingBox()).toEqual(before)
 
   // An untouched form goes back through the breadcrumb without asking.
-  await page.getByTestId('settings-editor-back').click()
+  await dialog.getByRole('button', { name: 'Close', exact: true }).focus()
+  await page.keyboard.press('Shift+Tab')
+  await expect(back).toBeFocused()
+  await expect(back).not.toHaveCSS('box-shadow', 'none')
+  await page.keyboard.press('Enter')
   await expect(editor).toHaveCount(0)
   await expect(page.getByRole('alertdialog')).toHaveCount(0)
   await expect(page.getByTestId('settings-breadcrumb')).toHaveCount(0)
@@ -44,11 +53,14 @@ test('model editing keeps the Settings shell stable and isolates the form', asyn
   await expect(page.getByRole('alertdialog')).toBeVisible()
   await page.getByRole('button', { name: 'Keep editing', exact: true }).click()
   await expect(editor).toBeVisible()
-  await page.getByTestId('settings-section-ai').click()
+  await back.click()
   await expect(page.getByRole('alertdialog')).toBeVisible()
   await page.getByRole('button', { name: 'Keep editing', exact: true }).click()
-  await expect(editor).toBeVisible()
-  await editor.getByRole('button', { name: 'Cancel', exact: true }).click()
+  await expect(editor.getByRole('textbox', { name: 'Name', exact: true })).toHaveValue(
+    'Draft profile'
+  )
+  await back.click()
+  await page.getByRole('button', { name: 'Discard', exact: true }).click()
   await expect(editor).toHaveCount(0)
   await expect(page.getByTestId('app-settings-done')).toBeVisible()
   expect(await dialog.boundingBox()).toEqual(before)
@@ -78,6 +90,32 @@ for (const reducedMotion of ['reduce', 'no-preference'] as const) {
     }
     await page.getByTestId('app-settings-done').click()
     await expect(dialog).not.toBeVisible()
+  })
+}
+
+for (const theme of ['light', 'dark']) {
+  test(`mobile Settings breadcrumb returns from Storage setup in ${theme} mode`, async ({
+    page
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto('/?test')
+    await new CanvasHelper(page).waitForInit()
+    await page.evaluate(async (value) => {
+      const path = '/src/app/shell/theme.ts'
+      const themeModule = await import(path)
+      themeModule.useAppTheme().setTheme(value)
+    }, theme)
+    await page.keyboard.press('ControlOrMeta+,')
+    await page.getByRole('combobox', { name: 'Settings', exact: true }).click()
+    await page.getByRole('option', { name: 'Storage', exact: true }).click()
+    const storage = page.getByTestId('settings-storage-panel')
+    const edit = storage.getByRole('button', { name: /Edit/ })
+    await edit.click()
+    const back = page.getByRole('button', { name: 'Back: Storage', exact: true })
+    await expect(back).toHaveCSS('text-decoration-line', 'underline')
+    await back.press('Enter')
+    await expect(back).toHaveCount(0)
+    await expect(edit).toBeVisible()
   })
 }
 

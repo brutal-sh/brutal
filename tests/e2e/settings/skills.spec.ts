@@ -42,6 +42,10 @@ test('an uploaded skill is switched in the list, read in its details, and delete
   await expect(details.getByRole('heading', { name: 'Grid', exact: true })).toBeVisible()
   await expect(page.getByTestId('settings-breadcrumb')).toContainText('grid')
   await expect(details.getByRole('switch')).toHaveAttribute('data-state', 'unchecked')
+  await page.getByRole('button', { name: 'Back: Skills', exact: true }).click()
+  await expect(details).toBeHidden()
+  await expect(toggle).toBeVisible()
+  await panel.locator('[data-item="grid"]').getByRole('button').first().click()
 
   await details.getByRole('button', { name: 'Delete skill' }).click()
   await page.getByRole('alertdialog').getByRole('button', { name: 'Delete skill' }).click()

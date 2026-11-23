@@ -151,5 +151,11 @@ test('settings shortcut preserves the last visited section', async ({ page }) =>
   await page.getByTestId('app-settings-done').click()
 
   await page.keyboard.press(process.platform === 'darwin' ? 'Meta+,' : 'Control+,')
-  await expect(page.getByTestId('settings-media-panel')).toBeVisible()
+  const media = page.getByTestId('settings-media-panel')
+  await expect(media).toBeVisible()
+  const pexels = media.getByRole('button', { name: /Pexels/ })
+  await pexels.click()
+  await page.getByRole('button', { name: 'Back: Image services', exact: true }).press('Space')
+  await expect(pexels).toBeVisible()
+  await expect(page.getByTestId('settings-breadcrumb')).toHaveCount(0)
 })

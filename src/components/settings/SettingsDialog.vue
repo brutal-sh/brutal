@@ -152,7 +152,8 @@ function onOpenChange(open: boolean): void {
            list. -->
       <template v-if="crumb" #title>
         <SettingsBreadcrumb
-          :steps="isMobile ? [crumb.parent] : [settings.title, crumb.parent]"
+          :section="isMobile ? undefined : settings.title"
+          :parent="crumb.parent"
           :current="crumb.title"
           @back="navigation.back()"
         />

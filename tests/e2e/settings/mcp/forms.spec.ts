@@ -30,7 +30,7 @@ for (const viewport of [
     await search.fill('no-such-mcp-tool')
     await expect(page.getByText('No tools match your search.', { exact: true })).toBeVisible()
     // The tool list opens over the MCP page; its breadcrumb leads back.
-    await page.getByTestId('settings-editor-back').click()
+    await page.getByRole('button', { name: 'Back: MCP', exact: true }).click()
     const access = page.getByRole('combobox', { name: 'Browser agent access' })
     await expect(access).toHaveText('Off')
     await access.click()
@@ -38,6 +38,8 @@ for (const viewport of [
     await expect(
       page.getByText('Agents can inspect the document but cannot change it.', { exact: true })
     ).toBeVisible()
+    await page.getByRole('button', { name: 'Add connection', exact: true }).click()
+    await page.getByRole('button', { name: 'Back: MCP connections', exact: true }).click()
     await page.getByRole('button', { name: 'Add connection', exact: true }).click()
     await expect(page.getByText('Enable for ACP agents', { exact: true })).toBeVisible()
     await expect(page.getByText('Use bearer authentication', { exact: true })).toBeVisible()

@@ -306,10 +306,22 @@ it('delivers native picking, selected pixels and editable subtree import without
         () => !!document.querySelector('[aria-label="Selected element styles"]'),
         'style bar'
       )
-      const crumbs = [
-        ...document.querySelectorAll('[aria-label="Selected element ancestry"] button')
-      ].map((node) => node.textContent?.trim())
-      if (crumbs.join(',') !== 'body,section,p') throw new Error('Wrong selected ancestry')
+      const ancestry = '[aria-label="Selected element ancestry"]'
+      const crumbs = [...document.querySelectorAll<HTMLButtonElement>(`${ancestry} button`)]
+      if (crumbs.map((node) => node.textContent?.trim()).join(',') !== 'body,section,p')
+        throw new Error('Wrong selected ancestry')
+      const parent = crumbs.find((node) => node.textContent?.trim() === 'section')
+      if (!parent || getComputedStyle(parent).textDecorationLine !== 'underline')
+        throw new Error('The parent breadcrumb needs a visible link treatment')
+      parent.click()
+      await wait(
+        () =>
+          document.querySelector(`${ancestry} [aria-current="location"]`)?.textContent?.trim() ===
+          'section',
+        'ancestor breadcrumb selected'
+      )
+      button('Stop selecting an element')
+      await pick('first')
       if (
         store.state.sceneVersion !== initialVersion ||
         [...store.state.selectedIds].join(',') !== selected.join(',')
