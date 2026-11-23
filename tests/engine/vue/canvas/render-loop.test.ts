@@ -1,12 +1,8 @@
 import { describe, expect, test } from 'bun:test'
 
-import type { Editor, EditorEvents } from '@open-pencil/core'
+import { createEditor } from '@open-pencil/core'
 
 import { createCanvasRenderLoop } from '#vue/canvas/surface/render-loop'
-
-type EditorEventName = keyof EditorEvents
-
-type TestEditor = Pick<Editor, 'state' | 'onEditorEvent'>
 
 function createFrameScheduler() {
   let nextId = 1
@@ -39,41 +35,18 @@ function createFrameScheduler() {
   }
 }
 
-function createEditor() {
-  const handlers = new Map<EditorEventName, Set<(...args: never[]) => void>>()
-  const editor: TestEditor = {
-    state: {
-      renderVersion: 0,
-      selectedIds: new Set<string>()
-    } as Editor['state'],
-    onEditorEvent(event, handler) {
-      const listeners = handlers.get(event) ?? new Set()
-      listeners.add(handler as (...args: never[]) => void)
-      handlers.set(event, listeners)
-      return () => listeners.delete(handler as (...args: never[]) => void)
-    }
-  }
-
-  return {
-    editor: editor as Editor,
-    emit(event: EditorEventName) {
-      for (const handler of handlers.get(event) ?? []) handler()
-    }
-  }
-}
-
 describe('canvas render loop', () => {
   test('waits for editor events before scheduling renders', () => {
     const scheduler = createFrameScheduler()
     try {
-      const { editor, emit } = createEditor()
+      const editor = createEditor()
       let renders = 0
       createCanvasRenderLoop(editor, () => {
         renders++
       })
 
       expect(scheduler.pendingCount).toBe(0)
-      emit('repaint:requested')
+      editor.requestRepaint()
       expect(scheduler.pendingCount).toBe(1)
       scheduler.flush()
       expect(renders).toBe(1)
@@ -86,16 +59,17 @@ describe('canvas render loop', () => {
   test('coalesces multiple editor events into one animation frame', () => {
     const scheduler = createFrameScheduler()
     try {
-      const { editor, emit } = createEditor()
+      const editor = createEditor()
+      const node = editor.graph.createNode('RECTANGLE', editor.state.currentPageId)
       let renders = 0
       createCanvasRenderLoop(editor, () => {
         renders++
       })
 
-      emit('render:requested')
-      emit('repaint:requested')
-      emit('selection:changed')
-      emit('viewport:changed')
+      editor.requestRender()
+      editor.requestRepaint()
+      editor.select([node.id])
+      editor.pan(10, 0)
 
       expect(scheduler.pendingCount).toBe(1)
       scheduler.flush()
@@ -105,10 +79,11 @@ describe('canvas render loop', () => {
     }
   })
 
-  test('scene layers render on repaint but ignore selection events', () => {
+  test('scene layers render on full repaint and ignore selection and overlay-only repaint', () => {
     const scheduler = createFrameScheduler()
     try {
-      const { editor, emit } = createEditor()
+      const editor = createEditor()
+      const node = editor.graph.createNode('RECTANGLE', editor.state.currentPageId)
       let renders = 0
       createCanvasRenderLoop(
         editor,
@@ -118,10 +93,11 @@ describe('canvas render loop', () => {
         { layer: 'scene' }
       )
 
-      emit('selection:changed')
+      editor.select([node.id])
+      editor.requestRepaint('overlays')
       expect(scheduler.pendingCount).toBe(0)
 
-      emit('repaint:requested')
+      editor.requestRepaint()
       expect(scheduler.pendingCount).toBe(1)
       scheduler.flush()
       expect(renders).toBe(1)
@@ -133,7 +109,8 @@ describe('canvas render loop', () => {
   test('overlay layers render on repaint and selection events', () => {
     const scheduler = createFrameScheduler()
     try {
-      const { editor, emit } = createEditor()
+      const editor = createEditor()
+      const node = editor.graph.createNode('RECTANGLE', editor.state.currentPageId)
       let renders = 0
       createCanvasRenderLoop(
         editor,
@@ -143,8 +120,8 @@ describe('canvas render loop', () => {
         { layer: 'overlays' }
       )
 
-      emit('repaint:requested')
-      emit('selection:changed')
+      editor.requestRepaint()
+      editor.select([node.id])
       expect(scheduler.pendingCount).toBe(1)
       scheduler.flush()
       expect(renders).toBe(1)
@@ -156,7 +133,7 @@ describe('canvas render loop', () => {
   test('coalesces multiple canvas surfaces into one animation frame', () => {
     const scheduler = createFrameScheduler()
     try {
-      const { editor, emit } = createEditor()
+      const editor = createEditor()
       let sceneRenders = 0
       let overlayRenders = 0
       createCanvasRenderLoop(
@@ -174,7 +151,7 @@ describe('canvas render loop', () => {
         { layer: 'overlays' }
       )
 
-      emit('viewport:changed')
+      editor.pan(10, 0)
       expect(scheduler.pendingCount).toBe(1)
       scheduler.flush()
       expect(sceneRenders).toBe(1)
@@ -187,7 +164,7 @@ describe('canvas render loop', () => {
   test('repaint events dirty every canvas view even when its local version is unchanged', () => {
     const scheduler = createFrameScheduler()
     try {
-      const { editor, emit } = createEditor()
+      const editor = createEditor()
       const firstView = { ...editor.state, selectedIds: new Set<string>() }
       const secondView = { ...editor.state, selectedIds: new Set<string>() }
       let firstRenders = 0
@@ -201,13 +178,13 @@ describe('canvas render loop', () => {
         getRenderState: () => secondView
       })
 
-      emit('repaint:requested')
+      editor.requestRepaint()
       scheduler.flush()
       firstLoop.markRendered()
       secondLoop.markRendered()
       expect([firstRenders, secondRenders]).toEqual([1, 1])
 
-      emit('repaint:requested')
+      editor.requestRepaint()
       scheduler.flush()
       expect([firstRenders, secondRenders]).toEqual([2, 2])
     } finally {
@@ -218,7 +195,7 @@ describe('canvas render loop', () => {
   test('reads versions and selection from the supplied canvas view state', () => {
     const scheduler = createFrameScheduler()
     try {
-      const { editor, emit } = createEditor()
+      const editor = createEditor()
       const viewState = {
         ...editor.state,
         renderVersion: 4,
@@ -234,17 +211,17 @@ describe('canvas render loop', () => {
         { getRenderState: () => viewState }
       )
 
-      emit('repaint:requested')
+      editor.requestRepaint()
       scheduler.flush()
       loop.markRendered()
       expect(renders).toBe(1)
 
-      emit('repaint:requested')
+      editor.requestRepaint()
       scheduler.flush()
       expect(renders).toBe(2)
 
       viewState.renderVersion++
-      emit('repaint:requested')
+      editor.requestRepaint()
       scheduler.flush()
       expect(renders).toBe(3)
     } finally {
@@ -255,7 +232,7 @@ describe('canvas render loop', () => {
   test('renders after an injected suspension finishes without a version change', () => {
     const scheduler = createFrameScheduler()
     try {
-      const { editor, emit } = createEditor()
+      const editor = createEditor()
       const viewState = { ...editor.state }
       let suspended = false
       let renders = 0
@@ -270,11 +247,11 @@ describe('canvas render loop', () => {
         }
       )
 
-      emit('repaint:requested')
+      editor.requestRepaint()
       scheduler.flush()
       loop.markRendered()
       suspended = true
-      emit('repaint:requested')
+      editor.requestRepaint()
       scheduler.flush()
       expect(renders).toBe(1)
 
@@ -289,18 +266,18 @@ describe('canvas render loop', () => {
   test('cancels pending renders when paused', () => {
     const scheduler = createFrameScheduler()
     try {
-      const { editor, emit } = createEditor()
+      const editor = createEditor()
       let renders = 0
       const loop = createCanvasRenderLoop(editor, () => {
         renders++
       })
 
-      emit('render:requested')
+      editor.requestRender()
       expect(scheduler.pendingCount).toBe(1)
       loop.pause()
       expect(scheduler.pendingCount).toBe(0)
 
-      emit('render:requested')
+      editor.requestRender()
       scheduler.flush()
       expect(renders).toBe(0)
     } finally {

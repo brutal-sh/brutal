@@ -2,7 +2,7 @@
 import { useIntersectionObserver, useMediaQuery } from '@vueuse/core'
 import { MotionConfig } from 'motion-v'
 import { TooltipProvider } from 'reka-ui'
-import { defineAsyncComponent, ref, watch } from 'vue'
+import { defineAsyncComponent, ref, shallowRef, watch } from 'vue'
 
 import { useI18n } from '@open-pencil/vue/i18n'
 
@@ -34,7 +34,7 @@ const { engage, disengage, guardWheel } = useWheelEngagement()
 
 // A stage mounts once, as the visitor approaches it, and then stays mounted: its canvas and
 // WebGL context are created a single time and never torn down while the page is open.
-const root = ref<HTMLElement | null>(null)
+const root = shallowRef<HTMLElement | null>(null)
 const mounted = ref(false)
 const { stop } = useIntersectionObserver(
   root,

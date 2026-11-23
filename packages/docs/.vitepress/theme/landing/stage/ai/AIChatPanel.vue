@@ -2,7 +2,7 @@
 import { useLandingMessages } from '#docs/theme/landing/content/messages'
 import { isPosterCapture } from '#docs/theme/landing/posters'
 import { useIntersectionObserver } from '@vueuse/core'
-import { ref } from 'vue'
+import { shallowRef } from 'vue'
 import IconPlay from '~icons/lucide/play'
 import IconRotateCcw from '~icons/lucide/rotate-ccw'
 
@@ -28,7 +28,7 @@ const {
 
 // Plays once when the visitor reaches the block, not while it mounts a screen ahead. A still
 // of the stage shows it before the turn, so the capture never starts it.
-const root = ref<HTMLElement | null>(null)
+const root = shallowRef<HTMLElement | null>(null)
 const { stop } = useIntersectionObserver(
   root,
   ([entry]) => {

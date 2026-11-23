@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, shallowRef } from 'vue'
 
 import { useLayerTree } from '#vue/primitives/LayerTree/context'
 import type { LayerNode } from '#vue/primitives/LayerTree/context'
@@ -24,7 +24,7 @@ const isSelected = computed(() => ctx.selectedIds.value.has(node.id))
 const isDragging = computed(() => ctx.draggingId.value === node.id)
 const padLeft = computed(() => `${(level - 1) * ctx.indentPerLevel}px`)
 
-const rowEl = ref<HTMLElement | null>(null)
+const rowEl = shallowRef<HTMLElement | null>(null)
 
 function onRef(el: unknown) {
   const htmlEl = el as HTMLElement | null

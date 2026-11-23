@@ -11,6 +11,7 @@ import {
   endAgentSession,
   readAgentSession,
   restAgents,
+  setAgentChatModel,
   touchedNodeIds,
   type AgentSession,
   watchChatAgent
@@ -46,11 +47,26 @@ function agents() {
 }
 
 describe('MCP sessions as agents', () => {
-  test('a session shows as one agent, named by its client, while its tools run', () => {
+  test('a session shows as one agent without mistaking its client for a model', () => {
     agentStarted(store, claude, pageId())
     agentStarted(store, claude, pageId())
     expect(agents()).toHaveLength(1)
-    expect(agents()[0]).toMatchObject({ kind: 'mcp', model: 'claude-code', status: 'thinking' })
+    expect(agents()[0]).toMatchObject({ kind: 'mcp', status: 'thinking' })
+    expect(agents()[0]?.model).toBeUndefined()
+  })
+
+  test('a chat session displays the model its adapter announces and follows model changes', () => {
+    const chat = '0123456789abcdef'
+    try {
+      setAgentChatModel(chat, 'First model')
+      agentStarted(store, { ...pi, chat }, pageId())
+      expect(agents()[0]?.model).toBe('First model')
+
+      setAgentChatModel(chat, 'Second model')
+      expect(agents()[0]?.model).toBe('Second model')
+    } finally {
+      setAgentChatModel(chat, null)
+    }
   })
 
   test('the agent points at what a call reads and what it edits', () => {

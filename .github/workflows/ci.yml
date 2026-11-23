@@ -101,6 +101,8 @@ jobs:
     if: needs.changes.outputs.scope == 'code' || needs.changes.outputs.scope == 'cloud'
     timeout-minutes: 10
     runs-on: ubuntu-latest
+    env:
+      NODE_OPTIONS: --max-old-space-size=4096
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
@@ -194,6 +196,9 @@ jobs:
 
       - name: Scan for committed secrets
         run: bun run check:secrets
+
+      - name: Build workspace packages for the standalone bridge test
+        run: bun run build:packages
 
       - name: Test repository tooling
         run: bun run test:tools

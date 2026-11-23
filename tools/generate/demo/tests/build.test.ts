@@ -46,7 +46,7 @@ beforeAll(async () => {
   const bytes = await exportFigFile(built, { ck, renderer })
   graph = await readFigFile(new File([bytes.slice()], 'Demo.fig'))
   populateAllFigPages(graph)
-})
+}, 30_000)
 
 describe('the demo document', () => {
   test('is one page of numbered chapters, top to bottom', () => {

@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test'
 
-import { ref } from 'vue'
+import { shallowRef } from 'vue'
 
 import { createEditor } from '@open-pencil/core'
 
@@ -14,7 +14,7 @@ function setup() {
   Object.assign(editor.state, { showRulers: true })
   let drag: DragState | null = null
   const input = createGuideInput({
-    canvasRef: ref({ clientWidth: 500, clientHeight: 500 } as HTMLCanvasElement),
+    canvasRef: shallowRef({ clientWidth: 500, clientHeight: 500 } as HTMLCanvasElement),
     editor,
     canvasToLocal: (cx, cy, scopeId) => {
       const owner = editor.graph.getNode(scopeId)

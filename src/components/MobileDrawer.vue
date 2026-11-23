@@ -3,7 +3,7 @@ import { useElementSize, useWindowSize } from '@vueuse/core'
 import { motion } from 'motion-v'
 import type { PanInfo } from 'motion-v'
 import { TabsContent, TabsList, TabsRoot, TabsTrigger } from 'reka-ui'
-import { computed, ref } from 'vue'
+import { computed, ref, shallowRef } from 'vue'
 
 import { useI18n } from '@open-pencil/vue/i18n'
 
@@ -31,7 +31,7 @@ type DrawerTab = 'layers' | 'design' | 'code' | 'ai'
 const store = useEditorStore()
 const { settings } = useI18n()
 
-const headerRef = ref<HTMLElement | null>(null)
+const headerRef = shallowRef<HTMLElement | null>(null)
 
 const { height: headerH } = useElementSize(headerRef, { width: 0, height: 56 })
 const { height: windowH } = useWindowSize()

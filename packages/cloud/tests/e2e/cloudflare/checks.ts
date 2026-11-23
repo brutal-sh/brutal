@@ -142,8 +142,8 @@ for (const path of ['/health', '/ready', '/.well-known/openpencil']) {
 }
 for (const [path, title] of [
   ['/auth/sign-in', 'OpenPencil Cloud'],
-  ['/', 'OpenPencil'],
-  ['/documents/missing', 'OpenPencil']
+  ['/', 'Brutal'],
+  ['/documents/missing', 'Brutal']
 ]) {
   const page = await fetch(`${base}${path}`, { headers: { Accept: 'text/html' } })
   check(

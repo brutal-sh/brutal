@@ -3,7 +3,7 @@ import { useLandingMessages } from '#docs/theme/landing/content/messages'
 import { useIntersectionObserver } from '@vueuse/core'
 import { MotionConfig } from 'motion-v'
 import { TooltipProvider } from 'reka-ui'
-import { computed, ref } from 'vue'
+import { computed, ref, shallowRef } from 'vue'
 
 import { BLACK } from '@open-pencil/scene-graph/constants'
 import type { Color } from '@open-pencil/scene-graph/primitives'
@@ -37,7 +37,7 @@ function paneReady(): void {
   if (panesReady.value === 2) emit('ready')
 }
 
-const root = ref<HTMLElement | null>(null)
+const root = shallowRef<HTMLElement | null>(null)
 const mounted = ref(false)
 const { stop } = useIntersectionObserver(
   root,

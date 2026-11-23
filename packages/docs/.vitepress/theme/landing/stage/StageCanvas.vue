@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, useTemplateRef } from 'vue'
+import { computed, shallowRef, useTemplateRef } from 'vue'
 
 import { PlayIslands, useCanvasInput } from '@open-pencil/vue/canvas'
 import { useCanvasIssueMarkers } from '@open-pencil/vue/canvas/issues'
@@ -25,7 +25,7 @@ const emit = defineEmits<{
 }>()
 
 const store = useEditorStore()
-const canvasRef = ref<HTMLCanvasElement | null>(null)
+const canvasRef = shallowRef<HTMLCanvasElement | null>(null)
 
 const shouldSuspendRender = () =>
   store.state.preparation !== null &&

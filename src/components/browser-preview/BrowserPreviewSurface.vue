@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { tv } from 'tailwind-variants'
-import { ref, type CSSProperties } from 'vue'
+import { shallowRef, type CSSProperties } from 'vue'
 
 import type { PreviewStatus } from '@/app/browser-preview/schema'
 import theme from '@/theme/browser-preview'
@@ -19,8 +19,8 @@ const { status, preset, backdropSource, backdropStyle, disabled, prepare } = def
 const clipHeight = defineModel<number | null>('clipHeight', { required: true })
 const error = defineModel<string>('error', { required: true })
 const emit = defineEmits<{ reset: [] }>()
-const region = ref<HTMLElement | null>(null)
-const surface = ref<HTMLElement | null>(null)
+const region = shallowRef<HTMLElement | null>(null)
+const surface = shallowRef<HTMLElement | null>(null)
 const height = useBrowserHeight({
   region,
   model: clipHeight,

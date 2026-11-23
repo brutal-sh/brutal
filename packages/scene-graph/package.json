@@ -17,6 +17,8 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "imports": {
+    "#scene-graph/color": "./src/color/index.ts",
+    "#scene-graph/plugin-data": "./src/plugin-data/index.ts",
     "#scene-graph/*": "./src/*.ts"
   },
   "exports": {

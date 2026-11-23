@@ -7,7 +7,7 @@ import {
   PopoverPortal,
   PopoverRoot
 } from 'reka-ui'
-import { computed, onUnmounted, ref, shallowRef, useTemplateRef, watch, type Component } from 'vue'
+import { computed, onUnmounted, shallowRef, useTemplateRef, watch, type Component } from 'vue'
 import IconLucideAlignHorizontalSpaceBetween from '~icons/lucide/align-horizontal-space-between'
 import IconLucideAlignVerticalSpaceBetween from '~icons/lucide/align-vertical-space-between'
 import IconLucidePanelBottom from '~icons/lucide/panel-bottom'
@@ -64,8 +64,8 @@ const { paneId } = defineProps<{
 }>()
 
 const store = useEditorStore()
-const sceneCanvasRef = ref<HTMLCanvasElement | null>(null)
-const canvasRef = ref<HTMLCanvasElement | null>(null)
+const sceneCanvasRef = shallowRef<HTMLCanvasElement | null>(null)
+const canvasRef = shallowRef<HTMLCanvasElement | null>(null)
 
 const isActivePane = computed(() => !paneId || store.activePaneId.value === paneId)
 const followView = useFollowView(useTemplateRef<HTMLElement>('area'))

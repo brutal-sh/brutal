@@ -76,6 +76,8 @@ describe('APP_MENU_SCHEMA', () => {
       'help-website',
       'help-cursor',
       'help-vscode',
+      'help-release-notes',
+      'help-report-issue',
       'help-support'
     ])
   })
