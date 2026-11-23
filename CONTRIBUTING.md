@@ -15,7 +15,8 @@ Use the [privacy disclosure](https://brutal.sh/help/privacy/#usage-stats) when e
 ```sh
 git clone https://github.com/jpoindexter/brutal-editor.git
 cd brutal-editor
-bun install
+bun --version  # Match packageManager in package.json
+bun install --frozen-lockfile
 bun run build:packages
 bun run dev:portless  # Local browser development at https://open-pencil.localhost
 bun run dev           # Fixed http://localhost:1420 for Playwright, Tauri, and Dev Containers

@@ -54,7 +54,9 @@ function commandFor(call: InteractiveCall, output?: string) {
     return { command: call.name === 'save' ? 'save_file' : call.name, args: { path: output } }
   }
   if (!ALL_TOOLS.some((tool) => tool.name === call.name && isToolExposed(tool, 'mcp')))
-    throw new Error(`Unknown tool "${call.name}". Run openpencil tool list to see available tools.`)
+    throw new Error(
+      `Unknown tool "${call.name}". Run bun run brutal tool list to see available tools.`
+    )
   return { command: 'tool', args: { name: call.name, args: call.args } }
 }
 

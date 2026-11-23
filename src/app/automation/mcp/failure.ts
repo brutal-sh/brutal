@@ -14,7 +14,7 @@ export const MCP_EXECUTABLE = 'openpen-mcp-http'
 /** Exact package spec a user should install to match this app. */
 export const MCP_INSTALL_TARGET = `${MCP_PACKAGE_NAME}@${APP_VERSION}`
 
-/** Installs OpenPencil's MCP server at the version that matches the app. */
+/** Installs the Brutal MCP server from the matching checkout. */
 export const MCP_INSTALL_COMMAND = 'bun run setup:local-runtime'
 
 /**

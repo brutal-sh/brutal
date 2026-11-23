@@ -1,18 +1,19 @@
-# @open-pencil/mcp
+# Brutal MCP
 
-Model Context Protocol server for [OpenPencil](https://openpencil.dev). It lets MCP clients such as Claude Code, Cursor, and Windsurf inspect and edit designs through the running app, reusing the same tool definitions as the built-in AI chat.
+Connect an MCP client to documents in the running Brutal editor. The Apple-silicon Mac beta
+includes the HTTP server. In Brutal, open **Settings → MCP → Local server** and use the endpoint
+and authentication details shown there. Bun is required only for the checkout commands below.
 
 ```sh
-npm install -g @open-pencil/mcp
-openpencil-mcp        # stdio transport for MCP clients
-openpencil-mcp-http   # Streamable HTTP transport for browser extensions and scripts
+bun run brutal-mcp --help
+bun run brutal-mcp-http --help
 ```
 
-On macOS and Linux, local clients prefer a private Unix domain socket; Windows and unavailable sockets fall back to localhost TCP. File access is limited to the effective MCP root.
+The stdio bridge uses discovery for the running app. On macOS and Linux it prefers a private
+Unix socket, with a loopback TCP fallback. Use the app's connection details for Streamable HTTP.
+The client sends an initialize request and keeps the returned `Mcp-Session-Id` for its session.
 
-Streamable HTTP clients initialize with a POST, then open GET/SSE with the returned `Mcp-Session-Id`; DELETE ends the session. The server keeps at most 10 sessions and closes those idle for 15 minutes (`OPENPENCIL_MCP_SESSION_IDLE_TIMEOUT_MS`, `0` disables). Running requests keep a session alive, an open SSE stream alone does not, and an expired session ID returns 404.
-
-- Setup and client configuration: https://openpencil.dev/programmable/mcp-server
-- Source and issues: https://github.com/open-pencil/open-pencil
+- [Brutal MCP and client setup](https://brutal.sh/help/#mcp)
+- [Report an issue](https://github.com/brutal-sh/brutal-feedback/issues/new/choose)
 
 MIT License.

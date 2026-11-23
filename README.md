@@ -65,14 +65,23 @@ Beta 16 has usage sharing off. In beta builds that offer **Share stats**, sharin
 
 ## CLI
 
-From this checkout, install dependencies and build the packages using the setup steps above. Run `bun open-pencil --help` to see the available commands.
+The Brutal CLI runs from a checkout with repository access. Install the Bun version in
+`package.json` under `packageManager`, then run these commands from the repo root.
 
-The executable keeps the inherited `openpencil` name for compatibility. Use `bun open-pencil` to run this fork's version. See the [CLI reference](packages/cli/README.md) for commands and setup.
+```sh
+bun --version
+bun install --frozen-lockfile
+bun run build:packages
+bun run brutal --help
+```
+
+See the [CLI setup and smoke check](packages/cli/README.md) and the [MCP guide](packages/mcp/README.md).
+The macOS app includes the local MCP server.
 
 ### Keep a headless document open
 
 ```sh
-bun open-pencil interactive -i existing.pen -o edited.pen
+bun run brutal interactive -i existing.pen -o edited.pen
 ```
 
 Call tools from `tool list` one line at a time; `save()` writes the output and
@@ -80,7 +89,7 @@ Call tools from `tool list` one line at a time; `save()` writes the output and
 describes arguments, retry and current tool-name limits.
 
 Connect a persistent session to the running app with
-`bun open-pencil interactive --app desktop --document-id <tab-id>`. It reports
+`bun run brutal interactive --app desktop --document-id <tab-id>`. It reports
 and pins its document/page, supports `undo()`/`redo()`, and edits live; `exit()`
 performs no additional save or discard. See the [connected session guide](packages/docs/programmable/cli/app-control.md#connected-interactive-sessions).
 

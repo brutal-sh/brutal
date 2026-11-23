@@ -1,0 +1,1 @@
+- Use Brutal CLI and MCP commands from the source checkout and open the matching setup guides from the editor.

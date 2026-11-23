@@ -79,7 +79,7 @@ test('the CLI setup action opens this fork’s documentation', async () => {
     .click()
   const popup = await opening
   try {
-    await expect(popup).toHaveURL('https://github.com/jpoindexter/brutal-editor#cli')
+    await expect(popup).toHaveURL('https://brutal.sh/help/#cli')
   } finally {
     await popup.close()
   }

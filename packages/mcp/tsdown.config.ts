@@ -24,8 +24,6 @@ export default defineConfig({
       /^@open-pencil\/core\//,
       'hono',
       /^hono\//,
-      'package-manager-detector',
-      /^package-manager-detector\//,
       'ws',
       'zod',
       /^node:/
