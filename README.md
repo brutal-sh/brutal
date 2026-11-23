@@ -1,6 +1,6 @@
 # Brutal
 
-Brutal is a local-first desktop design editor built on the MIT-licensed OpenPencil engine. The public Mac beta is in preparation. Full functional parity with Pen without an editor subscription or license activation remains on the roadmap. [OpenPencil engine](https://github.com/open-pencil/open-pencil)
+Brutal is a local-first desktop design editor by THEFT Studio, built on the MIT-licensed OpenPencil engine. The public Mac beta is in preparation. Full functional parity with Pen without an editor subscription or license activation remains on the roadmap. [OpenPencil engine](https://github.com/open-pencil/open-pencil)
 
 [Brutal website](https://brutal.sh/) · [Help docs](https://brutal.sh/help/#docs) · [Desktop setup](https://brutal.sh/help/getting-started/)
 

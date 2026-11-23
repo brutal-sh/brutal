@@ -11,6 +11,9 @@ use tauri::menu::{
 #[cfg(any(target_os = "macos", target_os = "windows"))]
 use tauri::menu::PredefinedMenuItem;
 
+#[cfg(target_os = "macos")]
+use tauri::menu::AboutMetadata;
+
 #[derive(Deserialize)]
 struct MenuGroup {
     label: String,
@@ -348,7 +351,10 @@ pub fn install_app_menu<R: tauri::Runtime>(
             .item(&PredefinedMenuItem::about(
                 app,
                 Some(&items.about.label),
-                None,
+                Some(AboutMetadata {
+                    credits: Some("A product by THEFT Studio".into()),
+                    ..Default::default()
+                }),
             )?)
             .item(&check_updates.build(app)?)
             .separator()

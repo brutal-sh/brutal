@@ -42,6 +42,16 @@ The Apple-silicon beta build checks the [Brutal update feed](https://brutal.sh/d
 The window shows the release summary, opens the matching GitHub release, and installs the signed app.
 Install Beta 10 manually once if you have a previous beta. Use **Brutal → Check for Updates…** for later betas.
 
+### Organization Code Signing
+
+THEFT Studio is Brutal’s publisher. For organization signing, Apple must verify the registered
+legal entity and issue a Developer ID Application certificate for that team. Compare the old and
+new Team IDs, then test an in-place update, the resulting publisher identity, and access to saved
+credentials before distributing a newly signed build.
+
+[Apple Developer membership changes](https://developer.apple.com/help/account/membership/updating-your-account-information)
+· [Developer ID certificates](https://developer.apple.com/help/account/certificates/create-developer-id-certificates/)
+
 ### Release a Mac beta update
 
 1. Advance the version in `desktop/tauri.macos-beta.json` and build with `bun run build:macos-beta`.

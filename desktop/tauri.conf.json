@@ -27,6 +27,7 @@
   },
   "bundle": {
     "active": true,
+    "publisher": "THEFT Studio",
     "targets": "all",
     "createUpdaterArtifacts": false,
     "icon": [
