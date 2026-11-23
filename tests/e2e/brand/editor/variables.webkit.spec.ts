@@ -12,8 +12,7 @@ const LOCALES = [
   },
   {
     locale: 'de',
-    description:
-      'Brutal kann KEYFRAME noch nicht auswerten. Beim Speichern bleibt es unverändert.'
+    description: 'Brutal kann KEYFRAME noch nicht auswerten. Beim Speichern bleibt es unverändert.'
   },
   {
     locale: 'es',

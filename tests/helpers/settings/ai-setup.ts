@@ -115,8 +115,7 @@ export const AI_SETUP_LABELS = [
       'Brutal encontró {path}, otro adaptador que no admite. Instala el compatible y elimina este o ponlo más atrás en tu PATH.',
     aiSetupPiDescription:
       'Brutal ejecuta Pi mediante su complemento Harness y usa los proveedores en los que iniciaste sesión en Pi.',
-    chatNetworkFailed:
-      'Brutal no pudo acceder al proveedor. Comprueba la conexión y el endpoint.',
+    chatNetworkFailed: 'Brutal no pudo acceder al proveedor. Comprueba la conexión y el endpoint.',
     retryRequest: 'Reintentar',
     describeChange: 'Describe un cambio…',
     aiSetupChatGPTSignIn: 'Iniciar sesión con ChatGPT',
@@ -377,8 +376,7 @@ export const AI_SETUP_LABELS = [
     aiSetupAgentMCPInstall: '编程智能体通过 Brutal 的 MCP 服务器操作画布。使用以下命令安装：',
     aiSetupAgentMCPStartFailed: 'MCP 服务器已安装但未能启动。请重启 Brutal，然后重新检查。',
     aiSetupAgentToolsFailed: '{agent} 无法连接到 Brutal 的工具，因此无法开始与它的对话。',
-    aiSetupAgentToolsHint:
-      '请在设置 → MCP 中确认 Brutal 的 MCP 服务器正在运行，然后点击重新检查。',
+    aiSetupAgentToolsHint: '请在设置 → MCP 中确认 Brutal 的 MCP 服务器正在运行，然后点击重新检查。',
     aiSetupAgentAdapterMismatch:
       'Brutal 找到的 {path} 是它不支持的另一个适配器。请安装受支持的版本，并删除这个或将其在 PATH 中后移。',
     aiSetupPiDescription: 'Brutal 通过 Harness 配套程序运行 Pi，并使用你在 Pi 中登录的提供商。',

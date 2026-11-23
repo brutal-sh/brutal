@@ -54,9 +54,7 @@ const LOCALES = [
 for (const { locale, description } of LOCALES) {
   test.describe(locale, () => {
     test.use({ locale })
-    test(`unreachable room guidance identifies Brutal in ${locale}`, async ({
-      page
-    }, testInfo) => {
+    test(`unreachable room guidance identifies Brutal in ${locale}`, async ({ page }, testInfo) => {
       const relay = await startRelay()
       try {
         const interceptedURLs = await mockEditorCopyServices(page)
