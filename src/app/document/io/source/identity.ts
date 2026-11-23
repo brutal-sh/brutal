@@ -1,4 +1,5 @@
 import {
+  DEFAULT_DOCUMENT_EXTENSION,
   documentNameFromFigPath,
   downloadNameFromPath,
   documentDownloadName
@@ -56,7 +57,11 @@ function setDocumentSource(
   setSourceIdentity({ handle: handle ?? null, path: path ?? null })
   markDocumentSaved(context)
   void context.recovery.markProtectedVersion(context.changes.capture())
-  trackDocumentFormat('document_opened', sourceFormat)
+  const usageFormat =
+    sourceFormat === 'pen' && fileName.toLowerCase().endsWith(DEFAULT_DOCUMENT_EXTENSION)
+      ? 'brut'
+      : sourceFormat
+  trackDocumentFormat('document_opened', usageFormat)
   if (writable && (handle || path)) void context.fileWatch.start()
 }
 

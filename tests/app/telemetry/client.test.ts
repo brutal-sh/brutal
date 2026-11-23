@@ -151,6 +151,8 @@ describe('usage stats', () => {
     context.preferences.value = { ...context.preferences.value, brutalUsageStats: 'granted' }
     context.client.trackUsage({ name: 'usage_stats_enabled', source: 'welcome' })
     context.client.trackUsage({ name: 'app_opened', locale: 'es' })
+    context.client.trackDocumentFormat('document_opened', 'brut')
+    context.client.trackDocumentFormat('document_opened', 'pen')
     context.client.trackDocumentFormat('document_exported', 'svg')
     context.client.trackUsage({ name: 'ai_reply_finished', provider: 'acp:codex' })
     await context.client.flushUsage()
@@ -159,6 +161,8 @@ describe('usage stats', () => {
         version: '0.16.0-beta.16',
         events: [
           { name: 'app_opened' },
+          { name: 'document_opened', format: 'brut' },
+          { name: 'document_opened', format: 'pen' },
           { name: 'document_exported', format: 'svg' },
           { name: 'ai_reply_finished' }
         ]
@@ -207,6 +211,7 @@ describe('usage stats', () => {
     const context = setup()
     sharingUsage(context)
     context.client.trackDocumentFormat('document_opened', 'sketch')
+    context.client.trackDocumentFormat('document_opened', 'brut')
     await context.client.flushUsage()
 
     expect(context.posts).toEqual([])

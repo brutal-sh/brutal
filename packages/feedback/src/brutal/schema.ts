@@ -4,15 +4,17 @@ import { DOCUMENT_FORMATS, appVersionSchema } from '../contract/schema'
 
 export const BRUTAL_USAGE_ORIGIN = 'https://brutal.sh/usage-stats'
 
+const BRUTAL_DOCUMENT_FORMATS = [...DOCUMENT_FORMATS, 'brut'] as const
+
 const eventSchema = v.variant('name', [
   v.strictObject({ name: v.literal('app_opened') }),
   v.strictObject({
     name: v.literal('document_opened'),
-    format: v.picklist(DOCUMENT_FORMATS)
+    format: v.picklist(BRUTAL_DOCUMENT_FORMATS)
   }),
   v.strictObject({
     name: v.literal('document_exported'),
-    format: v.picklist(DOCUMENT_FORMATS)
+    format: v.picklist(BRUTAL_DOCUMENT_FORMATS)
   }),
   v.strictObject({ name: v.literal('ai_reply_finished') })
 ])

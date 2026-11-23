@@ -19,6 +19,11 @@ import type { SharingState } from './state'
 
 type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never
 type FlushOptions = { keepalive?: boolean }
+type BrutalDocumentEvent = {
+  name: 'document_opened' | 'document_exported'
+  format: 'brut'
+}
+type QueuedUsageEvent = UsageEvent | BrutalDocumentEvent
 
 /** A usage event as callers report it; the time is added when it is recorded. */
 export type UsageEventInput = DistributiveOmit<UsageEvent, 'timestamp'>
@@ -49,7 +54,7 @@ const FLUSH_MAX_WAIT_MS = 30_000
 const isDocumentFormat = (format: string): format is DocumentFormat =>
   (DOCUMENT_FORMATS as readonly string[]).includes(format)
 
-function aggregateEvent(event: UsageEvent): BrutalUsageBatch['events'][number] | undefined {
+function aggregateEvent(event: QueuedUsageEvent): BrutalUsageBatch['events'][number] | undefined {
   if (event.name === 'usage_stats_enabled') return undefined
   if ('format' in event) return { name: event.name, format: event.format }
   return { name: event.name }
@@ -58,7 +63,7 @@ function aggregateEvent(event: UsageEvent): BrutalUsageBatch['events'][number] |
 export function createSharingClient(options: SharingClientOptions) {
   const now = options.now ?? (() => new Date())
   const { send } = options
-  const pending: UsageEvent[] = []
+  const pending: QueuedUsageEvent[] = []
   let countedBrutalLaunch = false
 
   function canShareUsage(): boolean {
@@ -112,7 +117,9 @@ export function createSharingClient(options: SharingClientOptions) {
         pending.length = 0
         return
       }
-      const events = pending.splice(0, USAGE_BATCH_LIMIT)
+      const events = pending
+        .splice(0, USAGE_BATCH_LIMIT)
+        .filter((event): event is UsageEvent => 'timestamp' in event)
       const batch: UsageBatch = { ...build, installId, events }
       await send.ingest(batch, flush)
     }
@@ -122,19 +129,27 @@ export function createSharingClient(options: SharingClientOptions) {
     maxWait: FLUSH_MAX_WAIT_MS
   })
 
-  /** Records a usage event when the person agreed to share usage stats; otherwise does nothing. */
+  function queueUsage(event: QueuedUsageEvent): void {
+    pending.push(event)
+    void scheduleFlush()
+  }
+
+  /** Records a usage event when the person agreed to share usage stats. */
   function trackUsage(event: UsageEventInput): void {
     if (!canShareUsage() || ('aggregate' in send && event.name === 'usage_stats_enabled')) return
     if ('aggregate' in send && event.name === 'app_opened') {
       if (countedBrutalLaunch) return
       countedBrutalLaunch = true
     }
-    pending.push({ ...event, timestamp: now().toISOString() })
-    void scheduleFlush()
+    queueUsage({ ...event, timestamp: now().toISOString() })
   }
 
-  /** Reports a file format by its IO format ID; formats off the shared list are not reported. */
+  /** Reports only allowlisted file formats. .brut uses its own label on Brutal's receiver. */
   function trackDocumentFormat(name: 'document_opened' | 'document_exported', format: string) {
+    if (format === 'brut') {
+      if ('aggregate' in send && canShareUsage()) queueUsage({ name, format })
+      return
+    }
     if (isDocumentFormat(format)) trackUsage({ name, format })
   }
 
