@@ -4,6 +4,8 @@ Brutal is a local-first desktop design editor built on the MIT-licensed OpenPenc
 
 [Brutal website](https://brutal.sh/) · [Install or update](https://brutal.sh/help/getting-started/) · [Help docs](https://brutal.sh/help/#docs) · [Privacy and usage stats](https://brutal.sh/help/privacy/#usage-stats)
 
+[Pen.app parity audit and Trello work order](docs/pen-feature-reference/2026-11-23/) · [Public feedback and beta downloads](https://github.com/brutal-sh/brutal-feedback)
+
 ![Brutal desktop editor showing the Field Notes sample](packages/docs/public/screenshot.png)
 
 Brutal is the new name for Open Pen. Existing design files and local installations use the same compatibility identifiers.
@@ -61,7 +63,7 @@ Find guides and private security reporting in [Brutal Help](https://brutal.sh/he
 
 ## Privacy and usage stats
 
-Beta 16 has usage sharing off. In beta builds that offer **Share stats**, sharing starts off and requires your consent. Change your choice in **Settings → Privacy**. The [public disclosure](https://brutal.sh/help/privacy/#what-is-sent) lists the fields and retention. Maintainers can find the receiver and build instructions on the [telemetry branch](https://github.com/jpoindexter/brutal-editor/tree/codex/brutal-telemetry).
+Beta 16 has usage sharing off. In beta builds that offer **Share stats**, sharing starts off and requires your consent. Change your choice in **Settings → Privacy**. The [public disclosure](https://brutal.sh/help/privacy/#what-is-sent) lists the fields and retention. Maintainers can find the receiver and build instructions on the [telemetry branch](https://github.com/brutal-sh/brutal/tree/codex/brutal-telemetry).
 
 ## CLI
 
