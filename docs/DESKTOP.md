@@ -8,7 +8,7 @@ The identity table describes the current app. The executed checks below record t
 
 | Surface                              | Fork setting                                         |
 | ------------------------------------ | ---------------------------------------------------- |
-| Product/window/PWA name              | Brutal                                             |
+| Product/window/PWA name              | Brutal                                               |
 | Tauri bundle identifier              | `dev.jpoindexter.openpen`                            |
 | Native test bundle identifier        | `dev.jpoindexter.openpen.native-test`                |
 | OS link scheme                       | `openpen://`                                         |
@@ -56,6 +56,16 @@ The encrypted updater key is managed outside the checkout. On the release Mac it
 `sh.brutal.release.updater` Keychain item. The app contains the public key and requires the signature to name
 the advertised app version. Preserve recoverable custody of the private key and password before changing release machines.
 [Tauri updater signing requirements](https://v2.tauri.app/plugin/updater/#signing-updates)
+
+### Opt-in usage stats in a Mac beta
+
+The distributed Beta 16 has usage sharing off. To build a candidate that offers opt-in sharing, use the approved Brutal origin:
+
+```sh
+VITE_BRUTAL_USAGE_STATS_ORIGIN=https://brutal-telemetry.jason-poindexter.workers.dev bun run build:macos-beta
+```
+
+An unset build flag leaves sharing off. On the signed candidate, use an isolated profile to verify the prompt after welcome, decline across a full restart, opt-in delivery, and revocation across restart. Confirm that **What is sent** opens the live disclosure. Check aggregate read-back and remove the synthetic rows before release. See the [receiver runbook](../packages/feedback/README.md#brutal-usage-stats) and [public privacy page](https://brutal.sh/help/privacy/#what-is-sent).
 
 ## Provider callbacks
 

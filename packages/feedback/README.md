@@ -2,13 +2,13 @@
 
 The Cloudflare Worker behind `feedback.openpencil.dev`. It is operated by the OpenPencil team for official builds and is not meant to be self-hosted; forks and self-built apps never call it.
 
-| Route | What it does | What it keeps |
-| --- | --- | --- |
-| `POST /ping` | The daily anonymous ping. | One counter per day and build (version, OS, architecture, desktop or web, browser family). Nothing per install, no addresses. |
-| `POST /ingest` | Opt-in usage stats, forwarded to PostHog EU. Refuses any event or property not in `src/contract`. | Nothing. PostHog gets no client address, person profile, or GeoIP. |
-| `GET /admin/` | The team's metrics dashboard, built from the app's `metrics.html` (`bun run build:metrics` writes `dist-metrics/`, which Wrangler uploads as the Worker's assets), behind Cloudflare Access. | Nothing. |
-| `GET /admin/api/snapshot?start&end` | The metrics dashboard's data for a range of UTC days, behind Cloudflare Access. | Nothing; it reads pings, snapshots, and the waitlist from D1 (email domains only) and asks PostHog for usage. |
-| `POST /waitlist` | OpenPencil Cloud waitlist sign-ups from the website and the web app's Settings, checked by Turnstile and confirmed by email. | The address and optional note; unconfirmed sign-ups are removed after seven days. |
+| Route                               | What it does                                                                                                                                                                                 | What it keeps                                                                                                                 |
+| ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `POST /ping`                        | The daily anonymous ping.                                                                                                                                                                    | One counter per day and build (version, OS, architecture, desktop or web, browser family). Nothing per install, no addresses. |
+| `POST /ingest`                      | Opt-in usage stats, forwarded to PostHog EU. Refuses any event or property not in `src/contract`.                                                                                            | Nothing. PostHog gets no client address, person profile, or GeoIP.                                                            |
+| `GET /admin/`                       | The team's metrics dashboard, built from the app's `metrics.html` (`bun run build:metrics` writes `dist-metrics/`, which Wrangler uploads as the Worker's assets), behind Cloudflare Access. | Nothing.                                                                                                                      |
+| `GET /admin/api/snapshot?start&end` | The metrics dashboard's data for a range of UTC days, behind Cloudflare Access.                                                                                                              | Nothing; it reads pings, snapshots, and the waitlist from D1 (email domains only) and asks PostHog for usage.                 |
+| `POST /waitlist`                    | OpenPencil Cloud waitlist sign-ups from the website and the web app's Settings, checked by Turnstile and confirmed by email.                                                                 | The address and optional note; unconfirmed sign-ups are removed after seven days.                                             |
 
 Two daily cron jobs run besides the routes. Just after midnight UTC the metrics snapshot records the day that ended for the team's metrics dashboard: GitHub stars and forks, running download totals per release and kind of file (installers, macOS updates, and `latest.json` update checks), repository views, clones, and referrers, and Cloudflare's visits to `openpencil.dev` and `app.openpencil.dev` with the website's top pages and countries. It also mirrors the repository's issues and pull requests (author association, opening, closing, and merge times), syncing only what changed since the last run, so open counts per day go back to the repository's start. GitHub keeps traffic for 14 days and Cloudflare's Free plan keeps visits for 31, so these tables are the only lasting history; each run also fetches again the last few days Cloudflare may still have been counting, and fills any missing days it still can. At 03:17 UTC, retention deletes unconfirmed waitlist sign-ups.
 
@@ -39,6 +39,7 @@ Done once on the Cloudflare account; `.github/workflows/feedback.yml` deploys ev
 5. For the metrics snapshot, `bunx wrangler secret put GITHUB_TOKEN` with a fine-grained token for the repository in `GITHUB_REPOSITORY` that has read-only **Administration** access, which the traffic API requires (every token can already read the public repository's releases, issues, and pull requests), and `bunx wrangler secret put CLOUDFLARE_ANALYTICS_TOKEN` with an account API token that has **Zone → Analytics → Read** on the zone in `SITE_ZONE_ID`.
 6. For the dashboard's API, create a Cloudflare Access self-hosted application for `feedback.openpencil.dev/admin/*` that allows the team's addresses (add the One-time PIN login method for people without a Cloudflare account), then `bunx wrangler secret put ACCESS_TEAM_DOMAIN` with `https://<team>.cloudflareaccess.com` and `bunx wrangler secret put ACCESS_AUD` with the application's audience tag. Until both are set, `/admin` refuses every request.
 7. Create a PostHog personal API key scoped to the project in `POSTHOG_PROJECT_ID` with only **Query: Read**, then `bunx wrangler secret put POSTHOG_PERSONAL_KEY`.
+
 ## Brutal usage stats
 
 Brutal uses the separate `wrangler.brutal.jsonc` configuration and EU D1 database
@@ -49,10 +50,15 @@ the events and controls that users see.
 The receiver accepts a release version and a batch of app opens, file opens and
 exports by format, or completed AI replies. It counts by UTC day, version, event,
 and format. It uses the client address for rate limiting and saves only daily
-totals. A daily job deletes counts older than the 90-day window. View totals from
-the private D1 console in Cloudflare. Before enabling an app build, review the
-event list and retention, verify native consent in an isolated profile, and
-publish the matching disclosure.
+totals. A daily job deletes counts older than the 90-day window.
+
+Inspect the latest aggregates in the Cloudflare D1 console or run this from
+`packages/feedback/`:
+
+```sh
+bun run wrangler d1 execute brutal-usage-stats --remote --config wrangler.brutal.jsonc \
+  --command 'SELECT day, version, event, format, count FROM usage_counts ORDER BY day DESC LIMIT 100'
+```
 
 Build a Mac beta with `VITE_BRUTAL_USAGE_STATS_ORIGIN` set to the approved HTTPS
 origin. An empty build setting keeps the prompt and sending off. Remove

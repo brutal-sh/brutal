@@ -1,6 +1,6 @@
 ---
 title: Privacy and Usage Stats
-description: What OpenPencil sends over the network, why it sends anonymous usage stats, and how to turn every part of it off.
+description: Brutal’s privacy controls and the upstream OpenPencil network and usage stats reference.
 ---
 
 <script setup>
@@ -27,6 +27,14 @@ const events = describeUsageEvents()
 </script>
 
 # Privacy and Usage Stats
+
+## Brutal macOS beta
+
+The distributed Brutal Beta 16 has usage sharing off. In Brutal builds that offer **Share stats**, the app asks after welcome and sends usage stats only after you opt in. You can change your choice in **Settings → Privacy**. Brutal keeps daily totals for 90 days in its private Cloudflare database in the EU. See the [Brutal privacy disclosure](https://brutal.sh/help/privacy/#what-is-sent) for the exact fields and the receiver.
+
+## Upstream OpenPencil reference
+
+The remaining sections document the upstream OpenPencil build.
 
 - Your designs, file names, layer names, text, prompts, and keys never leave your device unless you share or sync them yourself.
 - Official builds send one anonymous ping a day, with no ID. You can turn it off.

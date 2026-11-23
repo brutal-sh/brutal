@@ -2,6 +2,8 @@
 
 Use [Brutal support](https://brutal.sh/help/#support) for questions, bugs, and feedback. Follow the [security policy](SECURITY.md) to report a vulnerability privately.
 
+Use the [privacy disclosure](https://brutal.sh/help/privacy/#usage-stats) when explaining usage sharing to testers. For a telemetry-enabled candidate, follow the [signed Mac verification steps](docs/DESKTOP.md#opt-in-usage-stats-in-a-mac-beta).
+
 ## Where the rules live
 
 - `CONTRIBUTING.md` (this file): setup, pull requests, validation, commits.
