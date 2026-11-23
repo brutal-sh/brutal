@@ -4,8 +4,6 @@
 
 ## Canonical release workflow
 
-For Brutal's Apple-silicon beta, see the [desktop release and usage sharing guide](../../../docs/DESKTOP.md#updates).
-
 `.github/workflows/build.yml` runs on a new release tag, or through `workflow_dispatch` with an existing one. Release tags are stable `vX.Y.Z` or beta pre-releases `vX.Y.Z-beta.N` (`src/version.ts`). A dispatch uses the selected workflow revision but builds the immutable application commit resolved from that tag. The source must be an ancestor of `origin/master`.
 
 1. **Plan:** resolve the source commit and generate the native matrix from `native/catalog.ts`.
@@ -61,3 +59,9 @@ The old `HOMEBREW_TAP_TOKEN` workflow secret is no longer used and can be remove
 - Existing published GitHub releases, moved tags, unexpected draft assets, or already-published npm versions stop preflight. Already-published npm versions require an explicit provenance/recovery review; they are never silently mixed with this run.
 - npm publication and GitHub multi-asset uploads are not atomic. A mid-publication failure requires review; the draft is not automatically published or deleted. A failed upload can leave a partial draft, not a successful canonical release.
 - Caches improve repeat installs/builds but do not establish provenance. Their scope and writer limits are documented in `.github/actions/setup-bun/README.md`.
+
+## Brutal macOS beta
+
+For the signed Apple-silicon beta distributed through Brutal’s feedback repository,
+follow the [Brutal desktop release guide](../../../docs/DESKTOP.md#release-a-mac-beta-update).
+It also documents the [usage stats build flag and consent checks](../../../docs/DESKTOP.md#usage-stats-in-brutal-beta-builds).
