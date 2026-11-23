@@ -5,3 +5,4 @@
 - Use the system mouse pointer by default, with a rounded arrow for agents and collaborators and optional left- and right-handed Compact pointers in Appearance.
 - Keep the update confirmation on one row with its checkmark and match the rounded notification style.
 - Usage stats count opened .brut and .pen documents separately.
+- Bring the editor forward on macOS when Brutal restarts after an update.

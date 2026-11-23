@@ -79,6 +79,12 @@ pub(crate) fn setup_app(app: &mut tauri::App) -> Result<(), Box<dyn std::error::
 
 pub(crate) fn on_event(_app: &tauri::AppHandle, event: tauri::RunEvent) {
     match event {
+        #[cfg(all(target_os = "macos", not(feature = "native-test")))]
+        tauri::RunEvent::Ready => {
+            // The updater starts the new binary directly, without a Finder reopen event.
+            // Bring its editor forward once AppKit and the main window are ready.
+            show_main_window(_app);
+        }
         tauri::RunEvent::ExitRequested {
             api, code: None, ..
         } if !_app.windows().is_empty() => {
