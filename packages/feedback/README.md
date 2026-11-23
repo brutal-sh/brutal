@@ -39,3 +39,29 @@ Done once on the Cloudflare account; `.github/workflows/feedback.yml` deploys ev
 5. For the metrics snapshot, `bunx wrangler secret put GITHUB_TOKEN` with a fine-grained token for the repository in `GITHUB_REPOSITORY` that has read-only **Administration** access, which the traffic API requires (every token can already read the public repository's releases, issues, and pull requests), and `bunx wrangler secret put CLOUDFLARE_ANALYTICS_TOKEN` with an account API token that has **Zone → Analytics → Read** on the zone in `SITE_ZONE_ID`.
 6. For the dashboard's API, create a Cloudflare Access self-hosted application for `feedback.openpencil.dev/admin/*` that allows the team's addresses (add the One-time PIN login method for people without a Cloudflare account), then `bunx wrangler secret put ACCESS_TEAM_DOMAIN` with `https://<team>.cloudflareaccess.com` and `bunx wrangler secret put ACCESS_AUD` with the application's audience tag. Until both are set, `/admin` refuses every request.
 7. Create a PostHog personal API key scoped to the project in `POSTHOG_PROJECT_ID` with only **Query: Read**, then `bunx wrangler secret put POSTHOG_PERSONAL_KEY`.
+## Brutal usage stats
+
+Brutal uses the separate `wrangler.brutal.jsonc` configuration and EU D1 database
+`brutal-usage-stats`. The configured Cloudflare hostname is its beta receiver.
+The [Brutal privacy page](https://brutal.sh/help/privacy/#usage-stats) lists
+the events and controls that users see.
+
+The receiver accepts a release version and a batch of app opens, file opens and
+exports by format, or completed AI replies. It counts by UTC day, version, event,
+and format. It uses the client address for rate limiting and saves only daily
+totals. A daily job deletes counts older than the 90-day window. View totals from
+the private D1 console in Cloudflare. Before enabling an app build, review the
+event list and retention, verify native consent in an isolated profile, and
+publish the matching disclosure.
+
+Build a Mac beta with `VITE_BRUTAL_USAGE_STATS_ORIGIN` set to the approved HTTPS
+origin. An empty build setting keeps the prompt and sending off. Remove
+`PUBLIC_INGEST_HOST` and redeploy to close public ingestion. Authenticated
+staging uses the optional `STAGING_INGEST_TOKEN` Worker secret.
+
+From this directory, apply the Brutal migrations before deploying the Worker.
+
+```sh
+bun run wrangler d1 migrations apply brutal-usage-stats --config wrangler.brutal.jsonc --remote
+bun run wrangler deploy --config wrangler.brutal.jsonc
+```

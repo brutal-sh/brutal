@@ -11,7 +11,9 @@
   },
   "exports": {
     "./contract": "./src/contract/index.ts",
-    "./client": "./src/client.ts"
+    "./client": "./src/client.ts",
+    "./brutal/client": "./src/brutal/client.ts",
+    "./brutal/schema": "./src/brutal/schema.ts"
   },
   "scripts": {
     "dev": "wrangler dev",

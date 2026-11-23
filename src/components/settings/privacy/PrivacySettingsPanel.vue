@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useI18n } from '@open-pencil/vue/i18n'
 
+import { IS_BRUTAL_MACOS_BETA } from '@/app/runtime/version'
 import { useSharingSettings } from '@/app/telemetry/settings'
 import SettingsGroup from '@/components/settings/layout/SettingsGroup.vue'
 import SettingsLink from '@/components/settings/layout/SettingsLink.vue'
@@ -17,7 +18,9 @@ const { dailyPing, usageStats, unofficialBuild, disabledByEnvironment } = useSha
 <template>
   <SettingsSection data-test-id="settings-privacy-panel">
     <template #title>{{ diagnostics.sharingTitle }}</template>
-    <template v-if="!unofficialBuild" #description>{{ diagnostics.sharingDescription }}</template>
+    <template v-if="!unofficialBuild && !IS_BRUTAL_MACOS_BETA" #description>
+      {{ diagnostics.sharingDescription }}
+    </template>
     <template #actions>
       <SettingsLink :href="PRIVACY_URL">{{ diagnostics.sharingDetails }}</SettingsLink>
     </template>
@@ -28,6 +31,7 @@ const { dailyPing, usageStats, unofficialBuild, disabledByEnvironment } = useSha
     />
     <SettingsGroup>
       <SettingsRow
+        v-if="!IS_BRUTAL_MACOS_BETA"
         :label="diagnostics.sharingPing"
         :description="diagnostics.sharingPingDescription"
       >
@@ -35,9 +39,17 @@ const { dailyPing, usageStats, unofficialBuild, disabledByEnvironment } = useSha
       </SettingsRow>
       <SettingsRow
         :label="diagnostics.sharingUsageStats"
-        :description="diagnostics.sharingUsageStatsDescription"
+        :description="
+          IS_BRUTAL_MACOS_BETA
+            ? diagnostics.brutalSharingUsageStatsDescription
+            : diagnostics.sharingUsageStatsDescription
+        "
       >
-        <AppSwitch v-model="usageStats" :label="diagnostics.sharingUsageStats" />
+        <AppSwitch
+          v-model="usageStats"
+          :label="diagnostics.sharingUsageStats"
+          :disabled="IS_BRUTAL_MACOS_BETA && (unofficialBuild || disabledByEnvironment)"
+        />
       </SettingsRow>
     </SettingsGroup>
     <p class="text-[11px] text-muted">{{ diagnostics.sharingLocalData }}</p>

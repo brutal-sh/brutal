@@ -83,6 +83,8 @@ export const diagnosticsMessageDefaults = {
   sharingUsageStats: 'Usage stats',
   sharingUsageStatsDescription:
     'Which features and file formats are used, under a random ID that names no person. Off unless you agree.',
+  brutalSharingUsageStatsDescription:
+    'Share app launches, file formats, and completed AI replies. Sharing is off until you agree.',
   sharingDetails: 'What is sent',
   sharingUnofficialBuild: 'This build sends no pings or usage stats.',
   sharingDisabledByEnvironment:
@@ -90,6 +92,8 @@ export const diagnosticsMessageDefaults = {
   sharingQuestionTitle: 'Share anonymous usage stats?',
   sharingQuestionDescription:
     'Send anonymous usage counts to the OpenPencil project: app launches, file formats, and features used. Designs, file names, prompts, and keys are excluded.',
+  brutalSharingQuestionDescription:
+    'Share counts of app launches, file formats, and completed AI replies with Brutal. Your designs, file names, prompts, and account details stay private.',
   sharingQuestionDecline: 'No thanks',
   sharingQuestionAccept: 'Share stats',
   sharingQuestionAccepted: 'Thank you. You can change this in Privacy settings.',

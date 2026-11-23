@@ -5,6 +5,8 @@
 interface ImportMetaEnv {
   /** `on` only in official release builds; without it the app sends no pings or usage stats. */
   readonly VITE_OPENPENCIL_FEEDBACK?: string
+  /** Explicitly enabled in Brutal beta builds after its receiver and disclosure are ready. */
+  readonly VITE_BRUTAL_USAGE_STATS_ORIGIN?: string
 }
 
 declare const __OPENPENCIL_APP_VERSION__: string

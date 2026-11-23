@@ -2,6 +2,7 @@ import { describe, expect, test } from 'bun:test'
 
 import { ref } from 'vue'
 
+import type { BrutalUsageBatch } from '@open-pencil/feedback/brutal/schema'
 import type { Build } from '@open-pencil/feedback/contract'
 
 import { createDeferred } from '@/app/runtime/deferred'
@@ -130,6 +131,46 @@ describe('daily ping', () => {
 })
 
 describe('usage stats', () => {
+  test('Brutal requires its own opt-in and sends only the event categories and file formats', async () => {
+    const aggregate: BrutalUsageBatch[] = []
+    const context = setup({
+      send: {
+        version: '0.16.0-beta.16',
+        async aggregate(batch) {
+          aggregate.push(batch)
+          return true
+        }
+      }
+    })
+    sharingUsage(context)
+    context.client.trackUsage({ name: 'app_opened', locale: 'en' })
+    await context.client.sendDailyPing()
+    await context.client.flushUsage()
+    expect(aggregate).toEqual([])
+
+    context.preferences.value = { ...context.preferences.value, brutalUsageStats: 'granted' }
+    context.client.trackUsage({ name: 'usage_stats_enabled', source: 'welcome' })
+    context.client.trackUsage({ name: 'app_opened', locale: 'es' })
+    context.client.trackDocumentFormat('document_exported', 'svg')
+    context.client.trackUsage({ name: 'ai_reply_finished', provider: 'acp:codex' })
+    await context.client.flushUsage()
+    expect(aggregate).toEqual([
+      {
+        version: '0.16.0-beta.16',
+        events: [
+          { name: 'app_opened' },
+          { name: 'document_exported', format: 'svg' },
+          { name: 'ai_reply_finished' }
+        ]
+      }
+    ])
+
+    context.client.trackUsage({ name: 'app_opened', locale: 'en' })
+    context.preferences.value = { ...context.preferences.value, brutalUsageStats: 'denied' }
+    await context.client.flushUsage()
+    expect(aggregate).toHaveLength(1)
+  })
+
   test('records nothing until the person agrees', async () => {
     const context = setup()
     context.client.trackUsage({ name: 'app_opened', locale: 'en' })

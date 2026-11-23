@@ -58,7 +58,7 @@ export type UsageStatsAnswer = (typeof USAGE_STATS_ANSWERS)[number]
 export const CONSENT_SOURCES = ['welcome', 'prompt', 'settings'] as const
 export type ConsentSource = (typeof CONSENT_SOURCES)[number]
 
-const appVersionSchema = v.pipe(
+export const appVersionSchema = v.pipe(
   v.string(),
   v.maxLength(32),
   v.regex(/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.]+)?$/)

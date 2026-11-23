@@ -75,6 +75,8 @@
   "sharingPingDescription": "Raz dziennie: wersja aplikacji, system operacyjny i to, czy działa na komputerze, czy w przeglądarce. Bez identyfikatora.",
   "sharingUsageStats": "Statystyki użycia",
   "sharingUsageStatsDescription": "Których funkcji i formatów plików używasz, pod losowym identyfikatorem, który nikogo nie wskazuje. Wyłączone, dopóki się nie zgodzisz.",
+  "brutalSharingUsageStatsDescription": "Udostępniaj informacje o uruchomieniach aplikacji, formatach plików i ukończonych odpowiedziach AI. Udostępnianie jest wyłączone do czasu wyrażenia zgody.",
+  "brutalSharingQuestionDescription": "Udostępnij Brutal liczbę uruchomień aplikacji, użytych formatów plików i ukończonych odpowiedzi AI. Twoje projekty, nazwy plików, prompty i dane konta pozostają prywatne.",
   "sharingDetails": "Co jest wysyłane",
   "sharingUnofficialBuild": "Ta kompilacja nie wysyła pingów ani statystyk użycia.",
   "sharingDisabledByEnvironment": "Wyłączone przez OPENPENCIL_TELEMETRY lub DO_NOT_TRACK w Twoim środowisku.",

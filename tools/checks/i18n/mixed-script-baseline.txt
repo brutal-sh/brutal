@@ -141,6 +141,8 @@ ja:designCheck.ruleColorContrastHelp
 ja:designCheck.ruleMinTextSizeHelp
 ja:designCheck.ruleTouchTargetSizeHelp
 ja:diagnostics.acpFailed
+ja:diagnostics.brutalSharingQuestionDescription
+ja:diagnostics.brutalSharingUsageStatsDescription
 ja:diagnostics.chatCompleted
 ja:diagnostics.chatFailed
 ja:diagnostics.chatStopped
@@ -363,6 +365,8 @@ zh-cn:designCheck.ruleColorContrastHelp
 zh-cn:designCheck.ruleMinTextSizeHelp
 zh-cn:designCheck.ruleTouchTargetSizeHelp
 zh-cn:diagnostics.acpFailed
+zh-cn:diagnostics.brutalSharingQuestionDescription
+zh-cn:diagnostics.brutalSharingUsageStatsDescription
 zh-cn:diagnostics.chatCompleted
 zh-cn:diagnostics.chatFailed
 zh-cn:diagnostics.chatStopped

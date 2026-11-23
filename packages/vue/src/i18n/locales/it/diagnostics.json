@@ -75,6 +75,8 @@
   "sharingPingDescription": "Una volta al giorno: versione dell'app, sistema operativo e se è in esecuzione su desktop o sul web. Nessun ID.",
   "sharingUsageStats": "Statistiche di utilizzo",
   "sharingUsageStatsDescription": "Quali funzioni e formati di file vengono usati, con un ID casuale che non identifica nessuno. Disattivato finché non acconsenti.",
+  "brutalSharingUsageStatsDescription": "Condividi avvii dell’app, formati di file e risposte IA completate. La condivisione resta disattivata finché non acconsenti.",
+  "brutalSharingQuestionDescription": "Condividi con Brutal i conteggi degli avvii dell’app, dei formati di file usati e delle risposte IA completate. I tuoi progetti, nomi dei file, prompt e dati dell’account restano privati.",
   "sharingDetails": "Cosa viene inviato",
   "sharingUnofficialBuild": "Questa versione non invia ping né statistiche di utilizzo.",
   "sharingDisabledByEnvironment": "Disattivato da OPENPENCIL_TELEMETRY o DO_NOT_TRACK nel tuo ambiente.",

@@ -75,6 +75,8 @@
   "sharingPingDescription": "Une fois par jour : la version de l'application, le système d'exploitation et s'il s'agit de l'application de bureau ou web. Aucun identifiant.",
   "sharingUsageStats": "Statistiques d'utilisation",
   "sharingUsageStatsDescription": "Les fonctionnalités et formats de fichier utilisés, sous un identifiant aléatoire qui ne désigne personne. Désactivé sauf accord de votre part.",
+  "brutalSharingUsageStatsDescription": "Partagez les lancements de l’application, les formats de fichiers et les réponses d’IA terminées. Le partage est désactivé jusqu’à votre accord.",
+  "brutalSharingQuestionDescription": "Partagez avec Brutal les nombres de lancements de l’application, de formats de fichiers utilisés et de réponses d’IA terminées. Vos créations, noms de fichiers, instructions et données de compte restent privés.",
   "sharingDetails": "Ce qui est envoyé",
   "sharingUnofficialBuild": "Cette version n’envoie ni pings ni statistiques d’utilisation.",
   "sharingDisabledByEnvironment": "Désactivé par OPENPENCIL_TELEMETRY ou DO_NOT_TRACK dans votre environnement.",
