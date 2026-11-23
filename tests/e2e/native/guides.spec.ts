@@ -46,7 +46,7 @@ it('delivers the native guide UI and this fork’s CLI setup link without changi
   await chooseCommand('Install Brutal CLI')
   await browser.waitUntil(async () =>
     (await invokeNative<string[]>('take_native_test_opened_urls')).includes(
-      'https://github.com/jpoindexter/brutal-editor#cli'
+      'https://brutal.sh/help/#cli'
     )
   )
   assert.deepEqual(

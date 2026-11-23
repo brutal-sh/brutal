@@ -19,7 +19,7 @@ if (process.argv.includes('--version')) {
 
 if (process.argv.includes('--help') || process.argv.includes('-h')) {
   process.stdout.write(
-    `openpencil-mcp\n\n` +
+    `Brutal MCP stdio bridge\n\n` +
       `Start the Brutal MCP stdio bridge.\n\n` +
       `Connects to the MCP server via Unix domain socket on macOS/Linux ` +
       `(with TCP fallback) or via TCP on Windows.\n` +
@@ -94,7 +94,7 @@ const bridge = createStdioRPCBridge({
   }
 })
 
-const mcpServer = new McpServer({ name: 'open-pencil', version: MCP_VERSION })
+const mcpServer = new McpServer({ name: 'brutal', title: 'Brutal MCP', version: MCP_VERSION })
 // One client per process: its tool calls show as one agent in the app.
 registerTools(mcpServer, {
   policy: toolPolicy,

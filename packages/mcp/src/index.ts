@@ -11,7 +11,7 @@ if (process.argv.includes('--version')) {
 
 if (process.argv.includes('--help') || process.argv.includes('-h')) {
   process.stdout.write(
-    `openpencil-mcp-http\n\n` +
+    `Brutal MCP HTTP server\n\n` +
       `Start the Brutal MCP server.\n\n` +
       `On macOS/Linux, the server listens on a Unix domain socket by default\n` +
       `with optional TCP for browser clients. On Windows, only TCP is available.\n\n` +

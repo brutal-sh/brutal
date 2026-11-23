@@ -106,13 +106,13 @@ export const NODE_DOWNLOAD_URL = 'https://nodejs.org/en/download'
  * at the end of the section description; alerts link only to the fix, never to docs.
  */
 const DOCS_ORIGIN = 'https://openpencil.dev'
-export const OPEN_PEN_CLI_GUIDE_URL = `${OPEN_PEN_REPOSITORY_URL}#cli`
-export const MCP_SERVER_DOCS_URL = `${DOCS_ORIGIN}/programmable/mcp-server`
+export const OPEN_PEN_CLI_GUIDE_URL = `${OPEN_PEN_HELP_PAGE_URL}#cli`
+export const MCP_SERVER_DOCS_URL = `${OPEN_PEN_HELP_PAGE_URL}#mcp`
 /** The guide to OpenPencil Cloud, linked from the Cloud server's own pages. */
 export const CLOUD_DOCS_URL = `${DOCS_ORIGIN}/user-guide/openpencil-cloud`
-export const WEBMCP_DOCS_URL = `${MCP_SERVER_DOCS_URL}#webmcp`
-export const MCP_CONNECTIONS_DOCS_URL = `${DOCS_ORIGIN}/programmable/ai-chat#external-mcp-connections`
-export const CODING_AGENTS_GUIDE_URL = `${DOCS_ORIGIN}/programmable/coding-agents`
+export const WEBMCP_DOCS_URL = `${OPEN_PEN_WEBSITE_URL}automation/#webmcp`
+export const MCP_CONNECTIONS_DOCS_URL = `${OPEN_PEN_WEBSITE_URL}automation/#external-mcp-connections`
+export const CODING_AGENTS_GUIDE_URL = OPEN_PEN_HELP_PAGE_URL
 export const PI_GUIDE_URL = `${CODING_AGENTS_GUIDE_URL}#pi`
 
 // shortcut: no signed Brutal releases, use the fork changelog until release publishing is configured.

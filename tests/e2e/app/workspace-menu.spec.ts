@@ -26,7 +26,7 @@ test('brand menu uses keyboard navigation and restores trigger focus on Escape',
   await expect(menu.getByRole('menuitem', { name: 'Brutal CLI docs', exact: true })).toBeFocused()
   await expect(
     menu.getByRole('menuitem', { name: 'Brutal CLI docs', exact: true })
-  ).toHaveAttribute('href', 'https://github.com/jpoindexter/brutal-editor#cli')
+  ).toHaveAttribute('href', 'https://brutal.sh/help/#cli')
   await page.screenshot({ path: testInfo.outputPath('brand-menu.png') })
   await page.keyboard.press('Escape')
   await expect(menu).toBeHidden()

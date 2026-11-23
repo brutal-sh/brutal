@@ -20,7 +20,7 @@ export async function createInteractiveSession(options: { input?: string; output
   async function runTool(call: InteractiveCall): Promise<unknown> {
     if (!ALL_TOOLS.some((tool) => tool.name === call.name && isToolExposed(tool, 'mcp')))
       throw new Error(
-        `Unknown tool "${call.name}". Run openpencil tool list to see available tools.`
+        `Unknown tool "${call.name}". Run bun run brutal tool list to see available tools.`
       )
     const checkpoint = captureGraphCheckpoint(graph)
     const restoreLayout = capturePendingLayout(graph)
