@@ -71,6 +71,8 @@ export interface SharingPreferences {
   dailyPing: boolean
   /** Opt-in usage stats; nothing is sent until this is `granted`. */
   usageStats: UsageStatsConsent
+  /** A separate choice for Brutal's own usage-stats contract. */
+  brutalUsageStats?: UsageStatsConsent
 }
 
 /** Whether guided AI setup was offered and finished or skipped. */
@@ -229,7 +231,8 @@ const appPreferencesSchema = section({
   }),
   sharing: section({
     dailyPing: v.fallback(v.boolean(), defaults.sharing.dailyPing),
-    usageStats: v.fallback(v.picklist(USAGE_STATS_CONSENTS), defaults.sharing.usageStats)
+    usageStats: v.fallback(v.picklist(USAGE_STATS_CONSENTS), defaults.sharing.usageStats),
+    brutalUsageStats: v.optional(v.fallback(v.picklist(USAGE_STATS_CONSENTS), 'unset'))
   })
 })
 

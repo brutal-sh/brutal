@@ -2,8 +2,8 @@ import { computed, onMounted, ref } from 'vue'
 
 import { appPreferences, updateSharingPreferences } from '@/app/settings/preferences/store'
 
-import { FEEDBACK_ENABLED } from './config'
-import { setUsageStatsConsent } from './consent'
+import { USAGE_STATS_ENABLED } from './config'
+import { setUsageStatsConsent, usageStatsConsent } from './consent'
 import { sharingDisabledByEnvironment } from './state'
 
 /** The Sharing section's switches, and why nothing is sent when nothing can be. */
@@ -19,10 +19,10 @@ export function useSharingSettings() {
       set: (dailyPing: boolean) => updateSharingPreferences({ dailyPing })
     }),
     usageStats: computed({
-      get: () => appPreferences.value.sharing.usageStats === 'granted',
+      get: () => usageStatsConsent.value === 'granted',
       set: (granted: boolean) => setUsageStatsConsent(granted, 'settings')
     }),
-    unofficialBuild: !FEEDBACK_ENABLED,
+    unofficialBuild: !USAGE_STATS_ENABLED,
     disabledByEnvironment
   }
 }

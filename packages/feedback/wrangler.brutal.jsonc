@@ -1,0 +1,22 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "brutal-telemetry",
+  "main": "src/brutal/worker.ts",
+  "compatibility_date": "2026-10-01",
+  "workers_dev": true,
+  "preview_urls": false,
+  "observability": { "enabled": false },
+  "vars": { "PUBLIC_INGEST_HOST": "brutal-telemetry.jason-poindexter.workers.dev" },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "brutal-usage-stats",
+      "database_id": "476e9b11-b4ab-46e4-ac0b-f5468f3420e0",
+      "migrations_dir": "brutal-migrations"
+    }
+  ],
+  "ratelimits": [
+    { "name": "INGEST_LIMITER", "namespace_id": "6051", "simple": { "limit": 20, "period": 60 } }
+  ],
+  "triggers": { "crons": ["25 3 * * *"] }
+}

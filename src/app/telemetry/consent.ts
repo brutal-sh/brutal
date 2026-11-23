@@ -1,12 +1,13 @@
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 import type { ConsentSource } from '@open-pencil/feedback/contract'
 import { randomHex } from '@open-pencil/scene-graph/random'
 import { locale } from '@open-pencil/vue/i18n'
 
+import { IS_BRUTAL_MACOS_BETA } from '@/app/runtime/version'
 import { appPreferences, updateSharingPreferences } from '@/app/settings/preferences/store'
 
-import { FEEDBACK_ENABLED } from './config'
+import { USAGE_STATS_ENABLED } from './config'
 import { sharingClient } from './instance'
 import { sharingDisabledByEnvironment, sharingState } from './state'
 
@@ -19,13 +20,34 @@ const askable = ref(false)
  */
 export const usageStatsPrompt = ref<Exclude<ConsentSource, 'settings'> | null>(null)
 
-export const usageStatsConsent = computed(() => appPreferences.value.sharing.usageStats)
+export const usageStatsConsent = computed(() =>
+  IS_BRUTAL_MACOS_BETA
+    ? (appPreferences.value.sharing.brutalUsageStats ?? 'unset')
+    : appPreferences.value.sharing.usageStats
+)
+
+if (IS_BRUTAL_MACOS_BETA) {
+  watch(
+    usageStatsConsent,
+    (answer) => {
+      if (answer !== 'granted') sharingClient.discardPendingUsage()
+    },
+    { flush: 'sync' }
+  )
+}
 
 /**
  * Starting to share makes a new random ID and records where the person agreed; stopping deletes
  * the ID and anything queued.
  */
 export function setUsageStatsConsent(granted: boolean, source: ConsentSource): void {
+  if (IS_BRUTAL_MACOS_BETA) {
+    if (granted && !askable.value) return
+    updateSharingPreferences({ brutalUsageStats: granted ? 'granted' : 'denied' })
+    usageStatsPrompt.value = null
+    if (granted) sharingClient.trackUsage({ name: 'app_opened', locale: locale.get() })
+    return
+  }
   updateSharingPreferences({ usageStats: granted ? 'granted' : 'denied' })
   sharingState.value = {
     ...sharingState.value,
@@ -47,5 +69,5 @@ export function offerUsageStatsPrompt(source: Exclude<ConsentSource, 'settings'>
 }
 
 export async function resolveUsageStatsQuestion(): Promise<void> {
-  askable.value = FEEDBACK_ENABLED && !(await sharingDisabledByEnvironment())
+  askable.value = USAGE_STATS_ENABLED && !(await sharingDisabledByEnvironment())
 }

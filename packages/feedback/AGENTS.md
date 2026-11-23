@@ -2,6 +2,8 @@
 
 Cloudflare Worker for pings, opt-in usage stats, and the Cloud waitlist; overview and setup in `README.md`.
 
+- Brutal's beta receiver is deployed separately with `wrangler.brutal.jsonc`. Its opt-in fields live in `src/brutal/schema.ts`, and its database contains daily aggregates under `brutal-migrations/`. Keep the [Brutal privacy page](https://brutal.sh/help/privacy/#usage-stats) in sync with that contract.
+
 - Every field the app may send is a closed Valibot list in `src/contract/schema.ts`, with its plain-language meaning in `src/contract/describe.ts`; the privacy page renders both. Add an event or property in both files and update `packages/docs/overview/privacy.md` prose if what is collected changes (`tests/contract.test.ts`).
 - The Worker never stores or forwards a client address: rate limits key on it in memory, PostHog requests are new requests from the Worker, and Turnstile is verified without `remoteip` (`tests/ingest.test.ts`).
 - Schema changes are new files in `migrations/`, applied by `wrangler d1 migrations`; keep `src/db/tables.ts` in step (`tests/harness.ts` applies them). Everything else, tests included, queries D1 through the typed Kysely database; raw `sql` templates are rejected (`open-pencil/no-raw-sql`).

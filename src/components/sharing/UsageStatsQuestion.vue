@@ -3,6 +3,7 @@ import { tv } from 'tailwind-variants'
 
 import { useI18n } from '@open-pencil/vue/i18n'
 
+import { IS_BRUTAL_MACOS_BETA } from '@/app/runtime/version'
 import { setUsageStatsConsent, usageStatsConsent } from '@/app/telemetry'
 import ExternalLink from '@/components/links/ExternalLink.vue'
 import AppButton from '@/components/ui/button/AppButton.vue'
@@ -21,7 +22,13 @@ const styles = tv(theme)()
 <template>
   <section :class="styles.root()" data-test-id="usage-stats-question">
     <h3 :id="headingId" :class="styles.heading()">{{ diagnostics.sharingQuestionTitle }}</h3>
-    <p :class="styles.text()">{{ diagnostics.sharingQuestionDescription }}</p>
+    <p :class="styles.text()">
+      {{
+        IS_BRUTAL_MACOS_BETA
+          ? diagnostics.brutalSharingQuestionDescription
+          : diagnostics.sharingQuestionDescription
+      }}
+    </p>
     <ExternalLink :href="PRIVACY_URL" :ui="{ base: 'text-[11px]' }">{{
       diagnostics.sharingDetails
     }}</ExternalLink>
