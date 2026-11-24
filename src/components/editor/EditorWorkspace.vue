@@ -92,6 +92,7 @@ provide(openBrowserExportKey, async (path) => {
   else browserOpen.value = true
 })
 const canvasHost = useTemplateRef<HTMLElement>('canvasHost')
+const floatingComposer = useTemplateRef<HTMLElement>('floatingComposer')
 const sidebar = useTemplateRef<InstanceType<typeof SplitterPanel>>('sidebar')
 const browserPane = useTemplateRef<InstanceType<typeof SplitterPanel>>('browserPane')
 const browserTarget = useTemplateRef<HTMLElement>('browserTarget')
@@ -178,12 +179,16 @@ const { pending: roomPending } = useRoomActions()
       ref="sidebar"
       :collapsible="true"
       :collapsed-size="0"
+      :inert="layout[0] === 0"
       :default-size="initialEditorLayout[0]"
       :min-size="18"
       :max-size="40"
       class="flex min-w-0 pt-12"
     >
-      <WorkspaceSidebar />
+      <WorkspaceSidebar
+        :composer-target="layout[0] === 0 ? floatingComposer : null"
+        @show-chat="sidebar?.expand()"
+      />
     </SplitterPanel>
     <SplitterResizeHandle
       data-test-id="left-splitter-handle"
@@ -210,7 +215,12 @@ const { pending: roomPending } = useRoomActions()
           <div
             class="absolute top-14 left-2 z-10 size-9 rounded-full border border-island-border bg-panel p-[3px]"
           >
-            <IconButton label="Toggle sidebar" size="sm" @click="toggleSidebar">
+            <IconButton
+              label="Toggle sidebar"
+              size="sm"
+              :aria-expanded="layout[0] !== 0"
+              @click="toggleSidebar"
+            >
               <icon-lucide-panel-left class="size-4" />
             </IconButton>
           </div>
@@ -264,6 +274,11 @@ const { pending: roomPending } = useRoomActions()
               ><icon-lucide-plus class="size-4"
             /></IconButton>
           </div>
+          <div
+            ref="floatingComposer"
+            class="pointer-events-none absolute bottom-12 left-12 z-10 flex justify-center"
+            :class="inspectorVisible && !compactInspectorCollapsed ? 'right-[277px]' : 'right-12'"
+          />
         </div>
         <div
           data-canvas-obstacle

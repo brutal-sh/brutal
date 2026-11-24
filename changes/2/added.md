@@ -3,3 +3,4 @@
 - Install signed Brutal beta updates and read release notes from the macOS update window.
 - Check for updates in the Software Update window and open the installed version’s GitHub release notes when Brutal is up to date. Turn off Show update window in Settings to see a compact notification.
 - Choose Later to tuck an available update into a notification that reopens the same update without checking again.
+- Keep the chat composer at the bottom of the canvas when the workspace sidebar is collapsed, with shortcuts to recent conversations and a new chat.

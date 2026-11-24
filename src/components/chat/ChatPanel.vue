@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import type { Chat } from '@ai-sdk/vue'
 import type { UIMessage } from 'ai'
+import { animate } from 'motion-v'
 import { TabsContent } from 'reka-ui'
-import { computed, nextTick, ref, shallowRef, useTemplateRef, watch } from 'vue'
+import { computed, nextTick, onScopeDispose, ref, shallowRef, useTemplateRef, watch } from 'vue'
 
 import { useI18n } from '@open-pencil/vue/i18n'
 
@@ -39,6 +40,7 @@ import { getActiveEditorStore } from '@/app/editor/active-store'
 import { homeCreation, takeHomeCreation } from '@/app/home/creation'
 import { useDateFormat } from '@/app/i18n/date'
 import { openSettingsDialog } from '@/app/settings/dialog'
+import { useMotionTransition } from '@/app/shell/motion/transitions'
 import { openExternalLink, toast } from '@/app/shell/ui'
 import { activeTab } from '@/app/tabs'
 import ChatFollowAgentsToggle from '@/components/chat/ChatFollowAgentsToggle.vue'
@@ -53,11 +55,18 @@ import ChatRunLocation from '@/components/chat/ChatRunLocation.vue'
 import ChatTranscript from '@/components/chat/ChatTranscript.vue'
 import { useImageDrop } from '@/components/chat/input/useImageDrop'
 import AppButton from '@/components/ui/button/AppButton.vue'
+import IconButton from '@/components/ui/button/IconButton.vue'
 import { AppConfirmationDialog } from '@/components/ui/dialog'
+import { motionTransitions } from '@/theme/motion/transitions'
 
-const { docked = false, activePanel = 'chat' } = defineProps<{
+const {
+  docked = false,
+  activePanel = 'chat',
+  composerTarget = null
+} = defineProps<{
   docked?: boolean
   activePanel?: string
+  composerTarget?: HTMLElement | null
 }>()
 
 const {
@@ -105,12 +114,44 @@ const chatInput = useTemplateRef<{
   dropFiles: (files: File[]) => void
 }>('chatInput')
 const panel = useTemplateRef<HTMLElement>('panel')
+const composer = useTemplateRef<HTMLElement>('composer')
+const floatingHistory = useTemplateRef<HTMLElement>('floatingHistory')
+const dropTarget = computed(() => (composerTarget ? composer.value : panel.value))
 const chatContent = useTemplateRef<InstanceType<typeof TabsContent>>('chatContent')
 // Images dropped anywhere on the chat go to the composer, when there is one to take them.
-const { dragging: draggingImages } = useImageDrop(panel, {
+const { dragging: draggingImages } = useImageDrop(dropTarget, {
   enabled: () => chatInput.value !== null,
   onImages: (files) => chatInput.value?.dropFiles(files)
 })
+const composerTransition = useMotionTransition(motionTransitions.layout)
+let composerAnimation: ReturnType<typeof animate> | undefined
+
+watch(
+  [() => composerTarget, composerTransition],
+  async ([target, transition], [previous], onCleanup) => {
+    const footer = composer.value
+    const from = footer?.getBoundingClientRect()
+    composerAnimation?.cancel()
+    if (target === previous || !footer || !from || transition.duration === 0) return
+
+    // Measure on either side of Teleport's DOM move so the same composer can slide between hosts.
+    let superseded = false
+    onCleanup(() => {
+      superseded = true
+    })
+    await nextTick()
+    if (superseded) return
+    const to = footer.getBoundingClientRect()
+    if (!to.width) return
+    composerAnimation = animate(
+      footer,
+      { transform: [`translate(${from.x - to.x}px, ${from.bottom - to.bottom}px)`, 'none'] },
+      transition
+    )
+  }
+)
+onScopeDispose(() => composerAnimation?.cancel())
+
 let viewGeneration = 0
 
 /** Puts an unsent message back only in the conversation it was written in. */
@@ -471,20 +512,38 @@ function handleStop() {
           @open="closeParallel($event)"
         />
         <template v-else>
-          <ChatHistory
-            :docked="docked"
-            :saved="history.conversations.value.some((row) => row.id === history.current.value?.id)"
-            :conversations="historyOptions"
-            :selected-id="history.current.value?.id"
-            :disabled="history.busy.value"
-            @create="historyAction(history.newChat)"
-            @select="openConversation($event)"
-            @rename="renameConversation"
-            @save-trace="saveTrace"
-            @delete="historyAction(() => history.remove($event))"
+          <Teleport
+            :to="floatingHistory ?? undefined"
+            :disabled="!composerTarget || !floatingHistory"
           >
-            <template #actions><ChatFollowAgentsToggle /></template>
-          </ChatHistory>
+            <ChatHistory
+              :docked="docked && !composerTarget"
+              :floating="!!composerTarget"
+              :saved="
+                history.conversations.value.some((row) => row.id === history.current.value?.id)
+              "
+              :conversations="historyOptions"
+              :selected-id="history.current.value?.id"
+              :disabled="history.busy.value"
+              @create="historyAction(history.newChat)"
+              @select="openConversation($event)"
+              @rename="renameConversation"
+              @save-trace="saveTrace"
+              @delete="historyAction(() => history.remove($event))"
+            >
+              <template #leading>
+                <IconButton
+                  v-if="composerTarget"
+                  :label="ai.parallelDesignOpen"
+                  size="sm"
+                  @click="revealConversation"
+                >
+                  <icon-lucide-panel-left-open class="size-3.5" />
+                </IconButton>
+              </template>
+              <template #actions><ChatFollowAgentsToggle v-if="!composerTarget" /></template>
+            </ChatHistory>
+          </Teleport>
           <p v-if="history.storageError.value" role="alert" class="px-3 py-2 text-xs text-error">
             {{ ai.chatStorageFailed }}
           </p>
@@ -568,54 +627,67 @@ function handleStop() {
       </TabsContent>
       <slot name="panel" />
     </div>
-    <ChatProviderSetup
-      v-if="docked && !isConfigured"
-      :fill="false"
-      size="compact"
-      class="shrink-0 rounded-[20px] border border-island-border bg-panel"
-      :ui="{
-        root: 'min-h-[110px] px-4 py-3',
-        content: 'w-full max-w-none items-start text-left',
-        icon: 'hidden',
-        action: 'mt-3 justify-start'
-      }"
-    />
-    <div
-      v-if="
-        isConfigured &&
-        canRunParallel &&
-        !parallel &&
-        !agentHistoryReadOnly &&
-        !history.readOnly.value
-      "
-      class="flex justify-end px-2"
-    >
-      <AppButton
-        size="sm"
-        :variant="twoVersions ? 'outline' : 'ghost'"
-        :aria-pressed="twoVersions"
-        :disabled="submission.busy.value || history.busy.value"
-        @click="twoVersions = !twoVersions"
+    <Teleport :to="composerTarget ?? undefined" :disabled="!composerTarget">
+      <div
+        ref="composer"
+        data-test-id="chat-composer-dock"
+        :data-docked="docked || undefined"
+        :data-canvas-obstacle="composerTarget ? '' : undefined"
+        :data-editor-input-surface="composerTarget ? '' : undefined"
+        class="group/agent flex min-w-0 shrink-0 flex-col select-text data-[docked=true]:gap-2"
+        :class="{ 'pointer-events-auto w-full max-w-lg': composerTarget }"
       >
-        <template #leading><icon-lucide-columns-2 /></template>
-        {{ ai.parallelDesignToggle({ provider: 'Codex' }) }}
-      </AppButton>
-    </div>
-    <ChatInput
-      v-if="isConfigured && !parallel && !agentHistoryReadOnly && !history.readOnly.value"
-      ref="chatInput"
-      :status="status"
-      :dragging="draggingImages"
-      :disabled="submission.busy.value || history.busy.value"
-      @submit="sendOrQueue"
-      @stop="handleStop"
-      @interrupt="handleStop"
-      @error="toast.error"
-      @select-model="selectModel"
-    />
-    <div v-else-if="!parallel && !history.readOnly.value" class="flex justify-end px-3 pb-2">
-      <ChatProfileSelect :disabled="modelSelectionDisabled" @select="selectModel" />
-    </div>
+        <div v-show="composerTarget" ref="floatingHistory" />
+        <ChatProviderSetup
+          v-if="docked && !isConfigured"
+          :fill="false"
+          size="compact"
+          class="shrink-0 rounded-[20px] border border-island-border bg-panel"
+          :ui="{
+            root: 'min-h-[110px] px-4 py-3',
+            content: 'w-full max-w-none items-start text-left',
+            icon: 'hidden',
+            action: 'mt-3 justify-start'
+          }"
+        />
+        <div
+          v-if="
+            isConfigured &&
+            canRunParallel &&
+            !parallel &&
+            !agentHistoryReadOnly &&
+            !history.readOnly.value
+          "
+          class="flex justify-end px-2"
+        >
+          <AppButton
+            size="sm"
+            :variant="twoVersions ? 'outline' : 'ghost'"
+            :aria-pressed="twoVersions"
+            :disabled="submission.busy.value || history.busy.value"
+            @click="twoVersions = !twoVersions"
+          >
+            <template #leading><icon-lucide-columns-2 /></template>
+            {{ ai.parallelDesignToggle({ provider: 'Codex' }) }}
+          </AppButton>
+        </div>
+        <ChatInput
+          v-if="isConfigured && !parallel && !agentHistoryReadOnly && !history.readOnly.value"
+          ref="chatInput"
+          :status="status"
+          :dragging="draggingImages"
+          :disabled="submission.busy.value || history.busy.value"
+          @submit="sendOrQueue"
+          @stop="handleStop"
+          @interrupt="handleStop"
+          @error="toast.error"
+          @select-model="selectModel"
+        />
+        <div v-else-if="!parallel && !history.readOnly.value" class="flex justify-end px-3 pb-2">
+          <ChatProfileSelect :disabled="modelSelectionDisabled" @select="selectModel" />
+        </div>
+      </div>
+    </Teleport>
 
     <ChatPermissionDialog v-if="isConfigured || messages.length" />
     <AppConfirmationDialog
