@@ -76,6 +76,8 @@
   "sharingUsageStats": "利用統計",
   "sharingUsageStatsDescription": "使われた機能とファイル形式を、個人を特定しないランダムな ID で送信します。同意しない限りオフです。",
   "brutalSharingUsageStatsDescription": "アプリの起動、ファイル形式、完了した AI 応答を共有します。同意するまで共有はオフです。",
+  "brutalQaUsage": "テストモード",
+  "brutalQaUsageDescription": "このセッションの使用状況をテスト用に分けて集計します。アプリを終了するとオフになります。",
   "brutalSharingQuestionDescription": "アプリの起動回数、使用されたファイル形式、完了した AI 応答数を Brutal と共有します。デザイン、ファイル名、プロンプト、アカウント情報は共有されません。",
   "sharingDetails": "送信される内容",
   "sharingUnofficialBuild": "このビルドは Ping や使用統計を送信しません。",

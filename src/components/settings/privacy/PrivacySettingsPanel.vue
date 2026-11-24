@@ -12,12 +12,15 @@ import AppSwitch from '@/components/ui/toggle/AppSwitch.vue'
 import { PRIVACY_URL } from '@/constants'
 
 const { diagnostics } = useI18n()
-const { dailyPing, usageStats, unofficialBuild, disabledByEnvironment } = useSharingSettings()
+const { dailyPing, usageStats, qaUsageAvailable, qaUsage, unofficialBuild, disabledByEnvironment } =
+  useSharingSettings()
 </script>
 
 <template>
   <SettingsSection data-test-id="settings-privacy-panel">
-    <template #title>{{ diagnostics.sharingTitle }}</template>
+    <template #title>
+      {{ IS_BRUTAL_MACOS_BETA ? diagnostics.brutalDetailedSharingTitle : diagnostics.sharingTitle }}
+    </template>
     <template v-if="!unofficialBuild && !IS_BRUTAL_MACOS_BETA" #description>
       {{ diagnostics.sharingDescription }}
     </template>
@@ -43,7 +46,7 @@ const { dailyPing, usageStats, unofficialBuild, disabledByEnvironment } = useSha
         :label="diagnostics.sharingUsageStats"
         :description="
           IS_BRUTAL_MACOS_BETA
-            ? diagnostics.brutalSharingUsageStatsDescription
+            ? diagnostics.brutalDetailedSharingDescription
             : diagnostics.sharingUsageStatsDescription
         "
       >
@@ -52,6 +55,13 @@ const { dailyPing, usageStats, unofficialBuild, disabledByEnvironment } = useSha
           :label="diagnostics.sharingUsageStats"
           :disabled="IS_BRUTAL_MACOS_BETA && (unofficialBuild || disabledByEnvironment)"
         />
+      </SettingsRow>
+      <SettingsRow
+        v-if="qaUsageAvailable"
+        :label="diagnostics.brutalQaUsage"
+        :description="diagnostics.brutalQaUsageDescription"
+      >
+        <AppSwitch v-model="qaUsage" :label="diagnostics.brutalQaUsage" />
       </SettingsRow>
     </SettingsGroup>
     <p class="text-[11px] text-muted">{{ diagnostics.sharingLocalData }}</p>

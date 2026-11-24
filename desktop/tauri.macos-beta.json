@@ -2,12 +2,12 @@
   "$schema": "https://schema.tauri.app/config/2",
   "mainBinaryName": "Brutal",
   "build": {
-    "beforeBuildCommand": "bun run generate:icons --target desktop && bun run generate:tauri-menu && BRUTAL_MACOS_BETA_BUILD=1 VITE_BRUTAL_USAGE_STATS_ORIGIN=\"${VITE_BRUTAL_USAGE_STATS_ORIGIN-https://brutal.sh/usage-stats}\" bun run build && bun tools/dev/local-runtime/src/package-macos.ts"
+    "beforeBuildCommand": "bun run generate:icons --target desktop && bun run generate:tauri-menu && BRUTAL_MACOS_BETA_BUILD=1 VITE_BRUTAL_USAGE_STATS_ORIGIN=\"${VITE_BRUTAL_USAGE_STATS_ORIGIN-https://usage.brutal.sh/telemetry}\" bun run build && bun tools/dev/local-runtime/src/package-macos.ts"
   },
   "bundle": {
     "externalBin": ["binaries/openpen-mcp-http"]
   },
-  "version": "0.16.0-beta.20",
+  "version": "0.16.0-beta.24",
   "plugins": {
     "updater": {
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDFCRTAyOEQ1NERGNkJFM0MKUldROHZ2Wk4xU2pnRzY0UkY3TXh0eUU1dVN3MkxXYy8vWnFnN3lPOFhrZXhVaU12eVFjQTlPT2gK",

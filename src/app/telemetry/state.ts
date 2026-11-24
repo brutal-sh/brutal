@@ -9,11 +9,19 @@ export interface SharingState {
   installId: string | null
   /** UTC day of the last delivered ping, so an install pings once a day. */
   lastPingDay: string | null
+  brutalInstallId?: string | null
+  brutalLastPingDay?: string | null
+  brutalPingCount?: number
 }
 
 const sharingStateSchema = v.object({
   installId: v.fallback(v.nullable(v.pipe(v.string(), v.regex(/^[0-9a-f]{32}$/))), null),
-  lastPingDay: v.fallback(v.nullable(v.pipe(v.string(), v.isoDate())), null)
+  lastPingDay: v.fallback(v.nullable(v.pipe(v.string(), v.isoDate())), null),
+  brutalInstallId: v.optional(
+    v.fallback(v.nullable(v.pipe(v.string(), v.regex(/^[0-9a-f]{32}$/))), null)
+  ),
+  brutalLastPingDay: v.optional(v.fallback(v.nullable(v.pipe(v.string(), v.isoDate())), null)),
+  brutalPingCount: v.optional(v.fallback(v.pipe(v.number(), v.safeInteger(), v.minValue(0)), 0))
 })
 
 export const sharingState = useLocalStorage<SharingState>(

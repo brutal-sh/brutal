@@ -76,6 +76,8 @@
   "sharingUsageStats": "使用统计",
   "sharingUsageStatsDescription": "使用了哪些功能和文件格式，附带一个不指向任何人的随机 ID。除非你同意，否则关闭。",
   "brutalSharingUsageStatsDescription": "分享应用启动、文件格式和已完成的 AI 回复。获得你的同意前，分享功能处于关闭状态。",
+  "brutalQaUsage": "测试模式",
+  "brutalQaUsageDescription": "将本次会话的使用情况单独计入测试统计。退出应用时会关闭此模式。",
   "brutalSharingQuestionDescription": "与 Brutal 分享应用启动次数、使用的文件格式和已完成的 AI 回复次数。你的设计、文件名、提示词和账户信息将保持私密。",
   "sharingDetails": "发送哪些内容",
   "sharingUnofficialBuild": "此构建不发送 Ping 或使用统计。",

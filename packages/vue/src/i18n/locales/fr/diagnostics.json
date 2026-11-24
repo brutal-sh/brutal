@@ -76,6 +76,8 @@
   "sharingUsageStats": "Statistiques d'utilisation",
   "sharingUsageStatsDescription": "Les fonctionnalités et formats de fichier utilisés, sous un identifiant aléatoire qui ne désigne personne. Désactivé sauf accord de votre part.",
   "brutalSharingUsageStatsDescription": "Partagez les lancements de l’application, les formats de fichiers et les réponses d’IA terminées. Le partage est désactivé jusqu’à votre accord.",
+  "brutalQaUsage": "Mode de test",
+  "brutalQaUsageDescription": "Envoie les statistiques de cette session vers les compteurs de test. Le mode se désactive à la fermeture de Brutal.",
   "brutalSharingQuestionDescription": "Partagez avec Brutal les nombres de lancements de l’application, de formats de fichiers utilisés et de réponses d’IA terminées. Vos créations, noms de fichiers, instructions et données de compte restent privés.",
   "sharingDetails": "Ce qui est envoyé",
   "sharingUnofficialBuild": "Cette version n’envoie ni pings ni statistiques d’utilisation.",

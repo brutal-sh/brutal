@@ -21,11 +21,17 @@ const styles = tv(theme)()
 
 <template>
   <section :class="styles.root()" data-test-id="usage-stats-question">
-    <h3 :id="headingId" :class="styles.heading()">{{ diagnostics.sharingQuestionTitle }}</h3>
+    <h3 :id="headingId" :class="styles.heading()">
+      {{
+        IS_BRUTAL_MACOS_BETA
+          ? diagnostics.brutalDetailedSharingQuestionTitle
+          : diagnostics.sharingQuestionTitle
+      }}
+    </h3>
     <p :class="styles.text()">
       {{
         IS_BRUTAL_MACOS_BETA
-          ? diagnostics.brutalSharingQuestionDescription
+          ? diagnostics.brutalDetailedSharingQuestion
           : diagnostics.sharingQuestionDescription
       }}
     </p>

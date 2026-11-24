@@ -18,6 +18,12 @@ const BUILD: Build = {
   browser: 'unknown'
 }
 const INSTALL_ID = '0123456789abcdef0123456789abcdef'
+const BUILD_DETAILS = {
+  platform: BUILD.platform,
+  arch: BUILD.arch,
+  app: BUILD.app,
+  browser: BUILD.browser
+}
 
 function setup(overrides: Partial<SharingClientOptions> = {}) {
   const posts: { route: string; body: unknown; keepalive?: boolean }[] = []
@@ -131,7 +137,42 @@ describe('daily ping', () => {
 })
 
 describe('usage stats', () => {
-  test('Brutal requires its own opt-in and sends only the event categories and file formats', async () => {
+  test('keeps queued Brutal events on their original route when QA mode changes', async () => {
+    const environment = createDeferred<boolean>()
+    const delivered: { qa: boolean; events: BrutalUsageBatch['events'] }[] = []
+    let qa = true
+    const context = setup({
+      disabledByEnvironment: () => environment.promise,
+      send: {
+        version: '0.16.0-beta.22',
+        get aggregate() {
+          const route = qa
+          return async ({ events }: BrutalUsageBatch) => {
+            delivered.push({ qa: route, events })
+            return true
+          }
+        }
+      }
+    })
+    context.preferences.value = {
+      ...context.preferences.value,
+      brutalDetailedUsageStats: 'granted'
+    }
+    context.state.value.brutalInstallId = INSTALL_ID
+    context.client.trackDocumentFormat('document_opened', 'brut')
+    const qaFlush = context.client.flushUsage()
+    qa = false
+    context.client.trackDocumentFormat('document_exported', 'png')
+    const regularFlush = context.client.flushUsage()
+    environment.resolve(false)
+    await Promise.all([qaFlush, regularFlush])
+    expect(delivered).toEqual([
+      { qa: true, events: [{ name: 'document_opened', format: 'brut' }] },
+      { qa: false, events: [{ name: 'document_exported', format: 'png' }] }
+    ])
+  })
+
+  test('expanded Brutal sharing requires fresh consent and sends allowlisted dimensions', async () => {
     const aggregate: BrutalUsageBatch[] = []
     const context = setup({
       send: {
@@ -143,12 +184,14 @@ describe('usage stats', () => {
       }
     })
     sharingUsage(context)
+    context.preferences.value.brutalUsageStats = 'granted'
     context.client.trackUsage({ name: 'app_opened', locale: 'en' })
     await context.client.sendDailyPing()
     await context.client.flushUsage()
     expect(aggregate).toEqual([])
 
-    context.preferences.value = { ...context.preferences.value, brutalUsageStats: 'granted' }
+    context.preferences.value.brutalDetailedUsageStats = 'granted'
+    context.state.value.brutalInstallId = INSTALL_ID
     context.client.trackUsage({ name: 'usage_stats_enabled', source: 'welcome' })
     context.client.trackUsage({ name: 'app_opened', locale: 'es' })
     context.client.trackDocumentFormat('document_opened', 'brut')
@@ -159,20 +202,57 @@ describe('usage stats', () => {
     expect(aggregate).toEqual([
       {
         version: '0.16.0-beta.16',
+        build: BUILD_DETAILS,
+        installId: INSTALL_ID,
         events: [
-          { name: 'app_opened' },
+          { name: 'usage_stats_enabled', source: 'welcome' },
+          { name: 'app_opened', locale: 'es' },
           { name: 'document_opened', format: 'brut' },
           { name: 'document_opened', format: 'pen' },
           { name: 'document_exported', format: 'svg' },
-          { name: 'ai_reply_finished' }
+          { name: 'ai_reply_finished', provider: 'acp:codex' }
         ]
       }
     ])
 
-    context.client.trackUsage({ name: 'app_opened', locale: 'en' })
-    context.preferences.value = { ...context.preferences.value, brutalUsageStats: 'denied' }
+    context.client.trackDocumentFormat('document_exported', 'png')
+    context.preferences.value.brutalDetailedUsageStats = 'denied'
     await context.client.flushUsage()
+    await context.client.sendDailyPing()
     expect(aggregate).toHaveLength(1)
+  })
+
+  test('Brutal sends one anonymous daily activity ping per UTC day after opt-in', async () => {
+    const sent: BrutalUsageBatch[] = []
+    const version = '0.16.0-beta.23'
+    const context = setup({
+      send: {
+        version,
+        async aggregate(batch) {
+          sent.push(batch)
+          return true
+        }
+      }
+    })
+    context.preferences.value.brutalDetailedUsageStats = 'denied'
+    await context.client.sendDailyPing()
+    expect(sent).toEqual([])
+
+    context.preferences.value.brutalDetailedUsageStats = 'granted'
+    context.state.value.brutalInstallId = INSTALL_ID
+    await Promise.all([context.client.sendDailyPing(), context.client.sendDailyPing()])
+    await context.client.sendDailyPing()
+    context.clock.now = new Date('2026-10-13T01:00:00.000Z')
+    await context.client.sendDailyPing()
+
+    expect(sent).toEqual(
+      (['1', '2'] as const).map((pingDays) => ({
+        version,
+        build: BUILD_DETAILS,
+        events: [{ name: 'daily_ping', pingDays, enteredStep: true, usageStats: 'granted' }]
+      }))
+    )
+    expect(context.state.value.brutalLastPingDay).toBe('2026-10-13')
   })
 
   test('records nothing until the person agrees', async () => {

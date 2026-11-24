@@ -73,6 +73,7 @@ export interface SharingPreferences {
   usageStats: UsageStatsConsent
   /** A separate choice for Brutal's own usage-stats contract. */
   brutalUsageStats?: UsageStatsConsent
+  brutalDetailedUsageStats?: UsageStatsConsent
 }
 
 /** Whether guided AI setup was offered and finished or skipped. */
@@ -232,7 +233,8 @@ const appPreferencesSchema = section({
   sharing: section({
     dailyPing: v.fallback(v.boolean(), defaults.sharing.dailyPing),
     usageStats: v.fallback(v.picklist(USAGE_STATS_CONSENTS), defaults.sharing.usageStats),
-    brutalUsageStats: v.optional(v.fallback(v.picklist(USAGE_STATS_CONSENTS), 'unset'))
+    brutalUsageStats: v.optional(v.fallback(v.picklist(USAGE_STATS_CONSENTS), 'unset')),
+    brutalDetailedUsageStats: v.optional(v.fallback(v.picklist(USAGE_STATS_CONSENTS), 'unset'))
   })
 })
 

@@ -1,8 +1,12 @@
 import { useDebounceFn } from '@vueuse/core'
-import { compact } from 'es-toolkit'
 import type { Ref } from 'vue'
 
-import { BRUTAL_BATCH_LIMIT, type BrutalUsageBatch } from '@open-pencil/feedback/brutal/schema'
+import {
+  BRUTAL_BATCH_LIMIT,
+  brutalPingStep,
+  type BrutalUsageBatch,
+  type BrutalUsageEvent
+} from '@open-pencil/feedback/brutal/schema'
 import {
   DOCUMENT_FORMATS,
   USAGE_BATCH_LIMIT,
@@ -43,6 +47,7 @@ export interface SharingClientOptions {
       }
     | {
         version: string
+        /** Snapshotted with the queued batch so settings changes cannot reroute it. */
         aggregate: (batch: BrutalUsageBatch, options: FlushOptions) => Promise<boolean>
       }
   now?: () => Date
@@ -54,10 +59,14 @@ const FLUSH_MAX_WAIT_MS = 30_000
 const isDocumentFormat = (format: string): format is DocumentFormat =>
   (DOCUMENT_FORMATS as readonly string[]).includes(format)
 
-function aggregateEvent(event: QueuedUsageEvent): BrutalUsageBatch['events'][number] | undefined {
-  if (event.name === 'usage_stats_enabled') return undefined
-  if ('format' in event) return { name: event.name, format: event.format }
-  return { name: event.name }
+function aggregateEvent(event: QueuedUsageEvent): BrutalUsageEvent {
+  if (!('timestamp' in event)) return event
+  const { timestamp: _timestamp, ...dimensions } = event
+  return dimensions
+}
+
+function buildDimensions({ platform, arch, app, browser }: Build) {
+  return { platform, arch, app, browser }
 }
 
 export function createSharingClient(options: SharingClientOptions) {
@@ -65,12 +74,14 @@ export function createSharingClient(options: SharingClientOptions) {
   const { send } = options
   const pending: QueuedUsageEvent[] = []
   let countedBrutalLaunch = false
+  let usageConsentRevision = 0
+  let brutalPingInFlight = false
 
   function canShareUsage(): boolean {
     return (
       options.enabled &&
       ('aggregate' in send
-        ? options.preferences().brutalUsageStats === 'granted'
+        ? options.preferences().brutalDetailedUsageStats === 'granted'
         : options.preferences().usageStats === 'granted' && options.state.value.installId !== null)
     )
   }
@@ -80,8 +91,41 @@ export function createSharingClient(options: SharingClientOptions) {
    * the build or environment sends nothing. A failed ping is retried on the next check.
    */
   async function sendDailyPing(): Promise<void> {
-    if (!('ping' in send) || !options.enabled || !options.preferences().dailyPing) return
     const day = now().toISOString().slice(0, 10)
+    if ('aggregate' in send) {
+      if (!canShareUsage() || brutalPingInFlight || options.state.value.brutalLastPingDay === day)
+        return
+      const { aggregate, version } = send
+      const revision = usageConsentRevision
+      brutalPingInFlight = true
+      try {
+        if (await options.disabledByEnvironment()) return
+        const build = buildDimensions(await options.build())
+        if (revision !== usageConsentRevision || !canShareUsage()) return
+        const pingCount = (options.state.value.brutalPingCount ?? 0) + 1
+        if (
+          (await aggregate(
+            {
+              version,
+              build,
+              events: [{ name: 'daily_ping', usageStats: 'granted', ...brutalPingStep(pingCount) }]
+            },
+            {}
+          )) &&
+          revision === usageConsentRevision
+        ) {
+          options.state.value = {
+            ...options.state.value,
+            brutalLastPingDay: day,
+            brutalPingCount: pingCount
+          }
+        }
+      } finally {
+        brutalPingInFlight = false
+      }
+      return
+    }
+    if (!options.enabled || !options.preferences().dailyPing) return
     if (options.state.value.lastPingDay === day) return
     if (await options.disabledByEnvironment()) return
     const build = await options.build()
@@ -96,20 +140,26 @@ export function createSharingClient(options: SharingClientOptions) {
 
   /** Sends what is queued; events that fail to send are dropped rather than piling up. */
   async function flushUsage(flush: FlushOptions = {}): Promise<void> {
+    if ('aggregate' in send) {
+      if (!pending.length) return
+      const { aggregate, version } = send
+      const queued = pending.splice(0)
+      const consentRevision = usageConsentRevision
+      if (await options.disabledByEnvironment()) return
+      const build = buildDimensions(await options.build())
+      while (queued.length) {
+        if (consentRevision !== usageConsentRevision || !canShareUsage()) return
+        const events = queued.splice(0, BRUTAL_BATCH_LIMIT).map(aggregateEvent)
+        const installId = options.state.value.brutalInstallId ?? undefined
+        if (installId) await aggregate({ version, build, installId, events }, flush)
+      }
+      return
+    }
     if (await options.disabledByEnvironment()) {
       pending.length = 0
       return
     }
     while (pending.length > 0) {
-      if ('aggregate' in send) {
-        if (!canShareUsage()) {
-          pending.length = 0
-          return
-        }
-        const events = compact(pending.splice(0, BRUTAL_BATCH_LIMIT).map(aggregateEvent))
-        if (events.length) await send.aggregate({ version: send.version, events }, flush)
-        continue
-      }
       const build = await options.build()
       // Read after every wait, so stopping takes effect before the next request goes out.
       const installId = options.state.value.installId
@@ -136,7 +186,7 @@ export function createSharingClient(options: SharingClientOptions) {
 
   /** Records a usage event when the person agreed to share usage stats. */
   function trackUsage(event: UsageEventInput): void {
-    if (!canShareUsage() || ('aggregate' in send && event.name === 'usage_stats_enabled')) return
+    if (!canShareUsage()) return
     if ('aggregate' in send && event.name === 'app_opened') {
       if (countedBrutalLaunch) return
       countedBrutalLaunch = true
@@ -160,6 +210,7 @@ export function createSharingClient(options: SharingClientOptions) {
     trackDocumentFormat,
     /** Forgets queued events, for when the person stops sharing. */
     discardPendingUsage: () => {
+      usageConsentRevision++
       pending.length = 0
     }
   }

@@ -76,6 +76,8 @@
   "sharingUsageStats": "Statystyki użycia",
   "sharingUsageStatsDescription": "Których funkcji i formatów plików używasz, pod losowym identyfikatorem, który nikogo nie wskazuje. Wyłączone, dopóki się nie zgodzisz.",
   "brutalSharingUsageStatsDescription": "Udostępniaj informacje o uruchomieniach aplikacji, formatach plików i ukończonych odpowiedziach AI. Udostępnianie jest wyłączone do czasu wyrażenia zgody.",
+  "brutalQaUsage": "Tryb testowy",
+  "brutalQaUsageDescription": "Przesyła statystyki tej sesji do oddzielnych liczników testowych. Tryb wyłącza się po zamknięciu Brutal.",
   "brutalSharingQuestionDescription": "Udostępnij Brutal liczbę uruchomień aplikacji, użytych formatów plików i ukończonych odpowiedzi AI. Twoje projekty, nazwy plików, prompty i dane konta pozostają prywatne.",
   "sharingDetails": "Co jest wysyłane",
   "sharingUnofficialBuild": "Ta kompilacja nie wysyła pingów ani statystyk użycia.",

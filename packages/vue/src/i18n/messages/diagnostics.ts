@@ -85,6 +85,15 @@ export const diagnosticsMessageDefaults = {
     'Which features and file formats are used, under a random ID that names no person. Off unless you agree.',
   brutalSharingUsageStatsDescription:
     'Share app launches, file formats, and completed AI replies. Sharing is off until you agree.',
+  brutalDetailedSharingTitle: 'Usage sharing',
+  brutalDetailedSharingQuestionTitle: 'Share usage stats?',
+  brutalDetailedSharingDescription:
+    'Share activity, file formats, app and system details, and AI provider types. A random ID counts returning installs.',
+  brutalDetailedSharingQuestion:
+    'Share activity, file formats, app and system details, and AI provider types with Brutal. A random ID counts returning installs. Designs, file names, prompts, and account details stay private.',
+  brutalQaUsage: 'QA mode',
+  brutalQaUsageDescription:
+    'Send usage stats to separate QA counts for this session. This resets when you quit Brutal.',
   sharingDetails: 'What is sent',
   sharingUnofficialBuild: 'This build sends no pings or usage stats.',
   sharingDisabledByEnvironment:

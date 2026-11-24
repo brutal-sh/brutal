@@ -22,7 +22,8 @@ export const usageStatsPrompt = ref<Exclude<ConsentSource, 'settings'> | null>(n
 
 export const usageStatsConsent = computed(() =>
   IS_BRUTAL_MACOS_BETA
-    ? (appPreferences.value.sharing.brutalUsageStats ?? 'unset')
+    ? (appPreferences.value.sharing.brutalDetailedUsageStats ??
+      (appPreferences.value.sharing.brutalUsageStats === 'denied' ? 'denied' : 'unset'))
     : appPreferences.value.sharing.usageStats
 )
 
@@ -43,9 +44,21 @@ if (IS_BRUTAL_MACOS_BETA) {
 export function setUsageStatsConsent(granted: boolean, source: ConsentSource): void {
   if (IS_BRUTAL_MACOS_BETA) {
     if (granted && !askable.value) return
-    updateSharingPreferences({ brutalUsageStats: granted ? 'granted' : 'denied' })
+    const previous = usageStatsConsent.value
+    sharingState.value = {
+      ...sharingState.value,
+      brutalInstallId: granted ? (sharingState.value.brutalInstallId ?? randomHex(16)) : null,
+      brutalLastPingDay: granted ? sharingState.value.brutalLastPingDay : null,
+      brutalPingCount: granted ? sharingState.value.brutalPingCount : 0
+    }
+    const answer = granted ? 'granted' : 'denied'
+    updateSharingPreferences({ brutalUsageStats: answer, brutalDetailedUsageStats: answer })
     usageStatsPrompt.value = null
-    if (granted) sharingClient.trackUsage({ name: 'app_opened', locale: locale.get() })
+    if (granted && previous !== 'granted') {
+      sharingClient.trackUsage({ name: 'usage_stats_enabled', source })
+      sharingClient.trackUsage({ name: 'app_opened', locale: locale.get() })
+      void sharingClient.sendDailyPing()
+    }
     return
   }
   updateSharingPreferences({ usageStats: granted ? 'granted' : 'denied' })

@@ -76,6 +76,8 @@
   "sharingUsageStats": "Nutzungsstatistik",
   "sharingUsageStatsDescription": "Welche Funktionen und Dateiformate genutzt werden, unter einer zufälligen ID, die keine Person nennt. Aus, solange du nicht zustimmst.",
   "brutalSharingUsageStatsDescription": "App-Starts, Dateiformate und abgeschlossene KI-Antworten teilen. Die Freigabe bleibt aus, bis du zustimmst.",
+  "brutalQaUsage": "QA-Modus",
+  "brutalQaUsageDescription": "Nutzungsstatistiken für diese Sitzung getrennt als QA erfassen. Der Modus wird beim Beenden von Brutal zurückgesetzt.",
   "brutalSharingQuestionDescription": "Teile mit Brutal, wie oft die App gestartet wird, welche Dateiformate verwendet werden und wie viele KI-Antworten abgeschlossen werden. Deine Designs, Dateinamen, Prompts und Kontodaten bleiben privat.",
   "sharingDetails": "Was gesendet wird",
   "sharingUnofficialBuild": "Dieser Build sendet keine Pings oder Nutzungsstatistiken.",

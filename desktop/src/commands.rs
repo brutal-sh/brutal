@@ -63,6 +63,10 @@ macro_rules! app_commands {
             crate::launch::take_pending_open,
             crate::launch::take_pending_rooms,
             crate::system::env::sharing_disabled_by_env,
+            #[cfg(target_os = "macos")]
+            crate::system::qa_usage::qa_usage_status,
+            #[cfg(target_os = "macos")]
+            crate::system::qa_usage::send_qa_usage,
             crate::launch::take_pending_cloud_links,
             crate::system::env::webview_version,
             crate::system::color::sample_screen_color,
