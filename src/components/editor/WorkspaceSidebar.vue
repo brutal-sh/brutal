@@ -12,7 +12,13 @@ import LibrarySidebar from '@/components/libraries/LibrarySidebar.vue'
 
 import WorkspaceSidebarNavigation from './WorkspaceSidebarNavigation.vue'
 
+const { composerTarget = null } = defineProps<{ composerTarget?: HTMLElement | null }>()
+const emit = defineEmits<{ showChat: [] }>()
 const panel = ref('chat')
+function showChat() {
+  panel.value = 'chat'
+  if (composerTarget) emit('showChat')
+}
 const { activeTab } = useAIChat()
 const store = useEditorStore()
 watch(
@@ -39,7 +45,7 @@ watch(activeTab, (tab, previous) => {
     class="flex min-h-0 min-w-0 flex-1 flex-col"
     aria-label="Workspace sidebar"
   >
-    <ChatPanel docked :active-panel="panel" @show-chat="panel = 'chat'">
+    <ChatPanel docked :active-panel="panel" :composer-target="composerTarget" @show-chat="showChat">
       <template #navigation>
         <WorkspaceSidebarNavigation />
       </template>

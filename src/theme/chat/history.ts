@@ -8,6 +8,8 @@ export default {
     trigger:
       'flex min-w-0 flex-1 items-center gap-1 rounded px-1.5 py-1 text-left text-xs text-surface hover:bg-hover disabled:opacity-50',
     title: 'min-w-0 flex-1 truncate',
+    recent:
+      'hidden min-w-0 max-w-32 shrink truncate rounded px-1.5 py-1 text-xs text-muted hover:bg-hover hover:text-surface focus-visible:outline-panel-focus disabled:opacity-50 @min-[350px]/history:inline-block',
     create: 'h-8 gap-1 pl-2 pr-2.5 text-[13px]',
     icon: 'size-3.5 shrink-0',
     content: ['z-50 w-80 max-w-[calc(100vw-1rem)] p-2', floatingSurface, motionStyles.floating],
@@ -30,6 +32,13 @@ export default {
       true: {
         browser: 'flex min-h-0 flex-1 flex-col px-3 pt-3 pb-2',
         list: 'max-h-none flex-1'
+      }
+    },
+    floating: {
+      true: {
+        root: '@container/history rounded-xl border border-island-border bg-panel shadow-sm',
+        header: 'px-1.5 py-1',
+        trigger: 'min-w-0 bg-hover font-medium'
       }
     },
     docked: {

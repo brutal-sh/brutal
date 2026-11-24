@@ -1,5 +1,5 @@
 import { useEventListener } from '@vueuse/core'
-import { shallowRef, toValue, type MaybeRefOrGetter, type Ref } from 'vue'
+import { shallowRef, toValue, watch, type MaybeRefOrGetter, type Ref } from 'vue'
 
 import { isAttachableImageFile } from '@/app/ai/attachment/image/prepare'
 
@@ -31,6 +31,8 @@ export function useImageDrop(
     depth = 0
     dragging.value = false
   }
+
+  watch(target, reset)
 
   useEventListener(target, 'dragenter', (event: DragEvent) => {
     depth += 1

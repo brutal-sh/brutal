@@ -12,7 +12,7 @@ import {
   DropdownMenuItem
 } from 'reka-ui'
 import { tv } from 'tailwind-variants'
-import { computed, nextTick, ref, watch } from 'vue'
+import { computed, nextTick, ref, useTemplateRef, watch } from 'vue'
 
 import { useI18n } from '@open-pencil/vue/i18n'
 
@@ -33,13 +33,15 @@ const {
   selectedId,
   disabled = false,
   saved = false,
-  docked = false
+  docked = false,
+  floating = false
 } = defineProps<{
   conversations: { id: string; title: string; documentName: string; available: boolean }[]
   selectedId?: string
   disabled?: boolean
   saved?: boolean
   docked?: boolean
+  floating?: boolean
 }>()
 const emit = defineEmits<{
   select: [id: string]
@@ -50,7 +52,7 @@ const emit = defineEmits<{
 }>()
 const { ai } = useI18n()
 const triggerClass = tv(iconButtonTheme)({ size: 'sm' })
-const styles = computed(() => chatHistoryTheme({ docked }))
+const styles = computed(() => chatHistoryTheme({ docked, floating }))
 const menu = useMenuUI({ content: 'min-w-44' })
 const item = menuItem({ justify: 'start' })
 const open = ref(false)
@@ -61,7 +63,12 @@ const confirming = ref(false)
 const title = ref('')
 const titleInput = ref<HTMLInputElement>()
 const { focused } = useFocus(titleInput)
+const historyTrigger = useTemplateRef<InstanceType<typeof PopoverTrigger>>('historyTrigger')
+let restoreRecentFocus = false
 const selected = computed(() => conversations.find((chat) => chat.id === selectedId))
+const recent = computed(() =>
+  conversations.filter((chat) => chat.available && chat.id !== selectedId).slice(0, 2)
+)
 watch(
   () => selectedId,
   () => {
@@ -69,6 +76,21 @@ watch(
     confirming.value = false
   }
 )
+// A selected shortcut becomes the active chat and leaves the recent list.
+watch(
+  () => [selectedId, disabled] as const,
+  ([, busy]) => {
+    if (busy || !restoreRecentFocus) return
+    restoreRecentFocus = false
+    const trigger: unknown = historyTrigger.value?.$el
+    if (document.activeElement === document.body && trigger instanceof HTMLElement) trigger.focus()
+  },
+  { flush: 'post' }
+)
+function chooseRecent(id: string) {
+  restoreRecentFocus = true
+  choose(id)
+}
 function choose(id: string) {
   open.value = false
   emit('select', id)
@@ -101,8 +123,15 @@ function closeMenu(event: Event) {
 <template>
   <div :class="styles.root()">
     <div :class="styles.header()">
+      <slot name="leading" />
       <PopoverRoot v-model:open="open">
-        <PopoverTrigger :class="styles.trigger()" :disabled="disabled" :aria-label="ai.chatHistory">
+        <PopoverTrigger
+          ref="historyTrigger"
+          :class="styles.trigger()"
+          :disabled="disabled"
+          :aria-label="ai.chatHistory"
+          :aria-description="floating ? selected?.title || ai.newChat : undefined"
+        >
           <span :class="styles.title()">{{ selected?.title || ai.newChat }}</span>
           <icon-lucide-chevron-down :class="styles.icon()" />
         </PopoverTrigger>
@@ -124,6 +153,24 @@ function closeMenu(event: Event) {
           </PopoverContent>
         </PopoverPortal>
       </PopoverRoot>
+      <template v-if="floating">
+        <Tip
+          v-for="chat in recent"
+          :key="chat.id"
+          :label="chat.title || ai.newChat"
+          as-child
+          truncated
+        >
+          <button
+            type="button"
+            :class="styles.recent()"
+            :disabled="disabled"
+            @click="chooseRecent(chat.id)"
+          >
+            {{ chat.title || ai.newChat }}
+          </button>
+        </Tip>
+      </template>
       <slot name="actions" />
       <AppButton
         v-if="docked"
