@@ -18,6 +18,7 @@
   "connectionTestNetworkFailed": "Impossibile raggiungere l’endpoint. Controlla l’URL e la connessione di rete.",
   "connectionTestUnknownFailed": "Verifica della connessione non riuscita. Controlla le impostazioni del provider e riprova.",
   "oneKeyManyModels": "Una chiave per oltre 100 modelli di tutti i provider.",
+  "canvasPrompt": "Crea, pianifica o cerca… @ per allegare, / per le competenze",
   "describeChange": "Descrivi una modifica…",
   "describeCreateOrChange": "Descrivi cosa vuoi creare o cambiare.",
   "stopGenerating": "Interrompi generazione",

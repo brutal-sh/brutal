@@ -78,6 +78,7 @@ export const aiChatDefaults = {
   connectionTestUnknownFailed: 'Connection test failed. Check the provider settings and try again.',
   getProviderAPIKey: params('Get an {provider} API key →'),
   oneKeyManyModels: 'One key for 100+ models from all providers.',
+  canvasPrompt: 'Create, plan or research… @ to attach, / for skills',
   describeChange: 'Describe a change…',
   describeCreateOrChange: 'Describe what you want to create or change.',
   stopGenerating: 'Stop generating',

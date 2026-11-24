@@ -13,11 +13,13 @@ import InputGroup from '@/components/ui/input/InputGroup.vue'
 const {
   status,
   disabled = false,
+  compact = false,
   completions = [],
   takeBack
 } = defineProps<{
   status: ChatStatus
   disabled?: boolean
+  compact?: boolean
   /** What `@` and `/` offer; read once, when the field mounts. */
   completions?: CompletionSource[]
   /** Messages waiting to be sent, taken back into the field by Up on its first line. */
@@ -38,7 +40,12 @@ const working = computed(() => status === 'streaming' || status === 'submitted')
 const host = useTemplateRef<HTMLDivElement>('host')
 const editor = useChatEditor(host, {
   label: () => ai.value.describeChange,
-  placeholder: () => (working.value ? ai.value.queueMessage : ai.value.describeChange),
+  placeholder: () =>
+    working.value
+      ? ai.value.queueMessage
+      : compact
+        ? ai.value.canvasPrompt
+        : ai.value.describeChange,
   editable: () => !disabled,
   attributes: { 'data-test-id': 'chat-input' },
   completions,
@@ -85,17 +92,28 @@ defineExpose({ restoreDraft, insert: editor.insert, focus: editor.focus })
       <form class="relative" @submit="handleSubmit" @paste.stop="emit('paste', $event)">
         <InputGroup
           :disabled="disabled"
-          :ui="{
-            root: 'shadow-[0_1px_2px_rgb(0_0_0/0.08),0_4px_14px_rgb(0_0_0/0.12)] group-data-[docked=true]/agent:flex group-data-[docked=true]/agent:min-h-[110px] group-data-[docked=true]/agent:flex-col group-data-[docked=true]/agent:rounded-[20px] group-data-[docked=true]/agent:bg-panel group-data-[docked=true]/agent:shadow-none',
-            control: 'group-data-[docked=true]/agent:flex-1',
-            toolbar: 'group-data-[docked=true]/agent:px-2.5 group-data-[docked=true]/agent:pb-2'
-          }"
+          :compact="compact"
+          :ui="
+            compact
+              ? undefined
+              : {
+                  root: 'shadow-[0_1px_2px_rgb(0_0_0/0.08),0_4px_14px_rgb(0_0_0/0.12)] group-data-[docked=true]/agent:flex group-data-[docked=true]/agent:min-h-[110px] group-data-[docked=true]/agent:flex-col group-data-[docked=true]/agent:rounded-[20px] group-data-[docked=true]/agent:bg-panel group-data-[docked=true]/agent:shadow-none',
+                  control: 'group-data-[docked=true]/agent:flex-1',
+                  toolbar:
+                    'group-data-[docked=true]/agent:px-2.5 group-data-[docked=true]/agent:pb-2'
+                }
+          "
         >
           <template v-if="$slots.attachment" #attachment><slot name="attachment" /></template>
 
           <div
             ref="host"
-            class="min-w-0 group-data-[docked=true]/agent:min-h-[72px]"
+            class="min-w-0"
+            :class="
+              compact
+                ? 'font-normal [--chat-editor-font-size:12px] [--chat-editor-min-height:42px] [--chat-editor-padding:10px_6px]'
+                : 'group-data-[docked=true]/agent:min-h-[72px]'
+            "
             @copy.stop
             @cut.stop
           />
@@ -106,6 +124,7 @@ defineExpose({ restoreDraft, insert: editor.insert, focus: editor.focus })
 
           <template #actions>
             <IconButton
+              v-if="!compact"
               :label="ai.providerSettings"
               size="sm"
               data-test-id="provider-settings-trigger"
@@ -130,9 +149,15 @@ defineExpose({ restoreDraft, insert: editor.insert, focus: editor.focus })
               type="submit"
               data-test-id="chat-send-button"
               class="bg-accent text-on-accent hover:bg-accent/90 hover:text-on-accent"
+              :class="
+                compact
+                  ? 'size-6 rounded-full disabled:bg-hover disabled:text-muted disabled:opacity-100 [[data-theme=light]_&]:disabled:bg-[#d9d9d7] [[data-theme=light]_&]:disabled:text-white'
+                  : undefined
+              "
               :disabled="!text.trim()"
             >
-              <icon-lucide-send class="size-3.5" />
+              <icon-lucide-arrow-up v-if="compact" class="size-3.5" />
+              <icon-lucide-send v-else class="size-3.5" />
             </IconButton>
           </template>
         </InputGroup>

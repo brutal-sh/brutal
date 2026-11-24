@@ -300,6 +300,14 @@ const parallel = computed(() => parallelDesignFor(getActiveEditorStore()))
 const canRunParallel = computed(
   () => providerID.value === 'acp:codex' && (status.value === 'ready' || status.value === 'error')
 )
+const showParallelToggle = computed(
+  () =>
+    isConfigured.value &&
+    canRunParallel.value &&
+    !parallel.value &&
+    !agentHistoryReadOnly.value &&
+    !history.readOnly.value
+)
 watch([activeTab, canRunParallel], () => {
   twoVersions.value = false
 })
@@ -538,10 +546,23 @@ function handleStop() {
                   size="sm"
                   @click="revealConversation"
                 >
-                  <icon-lucide-panel-left-open class="size-3.5" />
+                  <icon-lucide-chevron-up class="size-3 text-muted" />
                 </IconButton>
               </template>
-              <template #actions><ChatFollowAgentsToggle v-if="!composerTarget" /></template>
+              <template #actions>
+                <ChatFollowAgentsToggle v-if="!composerTarget" />
+                <IconButton
+                  v-else-if="showParallelToggle"
+                  :label="ai.parallelDesignToggle({ provider: 'Codex' })"
+                  size="sm"
+                  toggle
+                  :active="twoVersions"
+                  :disabled="submission.busy.value || history.busy.value"
+                  @click="twoVersions = !twoVersions"
+                >
+                  <icon-lucide-columns-2 class="size-3.5" />
+                </IconButton>
+              </template>
             </ChatHistory>
           </Teleport>
           <p v-if="history.storageError.value" role="alert" class="px-3 py-2 text-xs text-error">
@@ -629,37 +650,35 @@ function handleStop() {
     </div>
     <Teleport :to="composerTarget ?? undefined" :disabled="!composerTarget">
       <div
+        v-show="!composerTarget || !parallel"
         ref="composer"
         data-test-id="chat-composer-dock"
         :data-docked="docked || undefined"
         :data-canvas-obstacle="composerTarget ? '' : undefined"
         :data-editor-input-surface="composerTarget ? '' : undefined"
-        class="group/agent flex min-w-0 shrink-0 flex-col select-text data-[docked=true]:gap-2"
-        :class="{ 'pointer-events-auto w-full max-w-lg': composerTarget }"
+        class="group/agent flex min-w-0 shrink-0 flex-col select-text"
+        :class="
+          composerTarget
+            ? '@container/composer pointer-events-auto w-full max-w-[600px] rounded-[23px] border border-island-border bg-panel-secondary px-[3px] pb-2 shadow-sm [[data-theme=light]_&]:bg-[#f8f8f7] [[data-theme=light]_&]:[--color-muted:#91918f] [[data-theme=light]_&]:[--chat-placeholder:#8e8e8c]'
+            : 'data-[docked=true]:gap-2'
+        "
       >
         <div v-show="composerTarget" ref="floatingHistory" />
         <ChatProviderSetup
           v-if="docked && !isConfigured"
           :fill="false"
           size="compact"
-          class="shrink-0 rounded-[20px] border border-island-border bg-panel"
+          :class="
+            composerTarget ? 'px-2' : 'shrink-0 rounded-[20px] border border-island-border bg-panel'
+          "
           :ui="{
-            root: 'min-h-[110px] px-4 py-3',
+            root: composerTarget ? 'min-h-0 px-1 py-2' : 'min-h-[110px] px-4 py-3',
             content: 'w-full max-w-none items-start text-left',
             icon: 'hidden',
             action: 'mt-3 justify-start'
           }"
         />
-        <div
-          v-if="
-            isConfigured &&
-            canRunParallel &&
-            !parallel &&
-            !agentHistoryReadOnly &&
-            !history.readOnly.value
-          "
-          class="flex justify-end px-2"
-        >
+        <div v-if="!composerTarget && showParallelToggle" class="flex justify-end px-2">
           <AppButton
             size="sm"
             :variant="twoVersions ? 'outline' : 'ghost'"
@@ -674,6 +693,7 @@ function handleStop() {
         <ChatInput
           v-if="isConfigured && !parallel && !agentHistoryReadOnly && !history.readOnly.value"
           ref="chatInput"
+          :compact="!!composerTarget"
           :status="status"
           :dragging="draggingImages"
           :disabled="submission.busy.value || history.busy.value"

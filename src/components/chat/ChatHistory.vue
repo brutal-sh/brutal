@@ -9,7 +9,8 @@ import {
   DropdownMenuTrigger,
   DropdownMenuPortal,
   DropdownMenuContent,
-  DropdownMenuItem
+  DropdownMenuItem,
+  DropdownMenuSeparator
 } from 'reka-ui'
 import { tv } from 'tailwind-variants'
 import { computed, nextTick, ref, useTemplateRef, watch } from 'vue'
@@ -50,7 +51,7 @@ const emit = defineEmits<{
   saveTrace: [id: string]
   delete: [id: string]
 }>()
-const { ai } = useI18n()
+const { ai, menu: labels } = useI18n()
 const triggerClass = tv(iconButtonTheme)({ size: 'sm' })
 const styles = computed(() => chatHistoryTheme({ docked, floating }))
 const menu = useMenuUI({ content: 'min-w-44' })
@@ -65,6 +66,7 @@ const titleInput = ref<HTMLInputElement>()
 const { focused } = useFocus(titleInput)
 const historyTrigger = useTemplateRef<InstanceType<typeof PopoverTrigger>>('historyTrigger')
 let restoreRecentFocus = false
+const focusHistoryAfterMenu = ref(false)
 const selected = computed(() => conversations.find((chat) => chat.id === selectedId))
 const recent = computed(() =>
   conversations.filter((chat) => chat.available && chat.id !== selectedId).slice(0, 2)
@@ -116,7 +118,11 @@ function save() {
   editing.value = false
 }
 function closeMenu(event: Event) {
-  if (editing.value) event.preventDefault()
+  if (editing.value || focusHistoryAfterMenu.value) event.preventDefault()
+  if (focusHistoryAfterMenu.value) {
+    focusHistoryAfterMenu.value = false
+    open.value = true
+  }
 }
 </script>
 
@@ -133,7 +139,7 @@ function closeMenu(event: Event) {
           :aria-description="floating ? selected?.title || ai.newChat : undefined"
         >
           <span :class="styles.title()">{{ selected?.title || ai.newChat }}</span>
-          <icon-lucide-chevron-down :class="styles.icon()" />
+          <icon-lucide-chevron-down v-if="!floating" :class="styles.icon()" />
         </PopoverTrigger>
         <PopoverPortal>
           <PopoverContent
@@ -155,7 +161,7 @@ function closeMenu(event: Event) {
       </PopoverRoot>
       <template v-if="floating">
         <Tip
-          v-for="chat in recent"
+          v-for="(chat, index) in recent"
           :key="chat.id"
           :label="chat.title || ai.newChat"
           as-child
@@ -167,27 +173,35 @@ function closeMenu(event: Event) {
             :disabled="disabled"
             @click="chooseRecent(chat.id)"
           >
-            {{ chat.title || ai.newChat }}
+            <span
+              aria-hidden="true"
+              class="size-[5px] shrink-0 rounded-full"
+              :class="index === 0 ? 'bg-[#bce5e6]' : 'bg-[#e5b7c7]'"
+            />
+            <span class="truncate">{{ chat.title || ai.newChat }}</span>
           </button>
         </Tip>
       </template>
+      <div v-if="floating" class="min-w-0 flex-1" aria-hidden="true" />
       <slot name="actions" />
       <AppButton
-        v-if="docked"
-        size="md"
-        variant="outline"
+        v-if="docked || floating"
+        :size="floating ? 'sm' : 'md'"
+        :variant="floating ? 'ghost' : 'outline'"
         :ui="{ base: styles.create() }"
         :aria-label="ai.newChat"
         :disabled="disabled"
         @click="emit('create')"
       >
         <template #leading><icon-lucide-plus /></template>
-        New
+        <span :class="floating ? 'hidden @min-[310px]/history:inline' : undefined">
+          {{ labels.new }}
+        </span>
       </AppButton>
       <IconButton v-else :label="ai.newChat" :disabled="disabled" size="sm" @click="emit('create')"
         ><icon-lucide-plus :class="styles.icon()"
       /></IconButton>
-      <DropdownMenuRoot v-if="saved">
+      <DropdownMenuRoot v-if="saved || floating">
         <Tip :label="ai.chatActions">
           <DropdownMenuTrigger
             :class="triggerClass"
@@ -200,22 +214,34 @@ function closeMenu(event: Event) {
         <DropdownMenuPortal>
           <DropdownMenuContent
             align="end"
+            :side="floating ? 'top' : 'bottom'"
             :side-offset="6"
             :class="menu.content"
             @close-auto-focus="closeMenu"
           >
             <MenuScrollArea>
-              <DropdownMenuItem :class="item" @select="rename">{{
-                ai.renameChat
-              }}</DropdownMenuItem>
               <DropdownMenuItem
+                v-if="floating"
                 :class="item"
-                @select="selectedId && emit('saveTrace', selectedId)"
-                >{{ ai.saveChatTrace }}</DropdownMenuItem
+                @select="focusHistoryAfterMenu = true"
               >
-              <DropdownMenuItem :class="item" @select="confirmDelete">{{
-                ai.deleteChat
-              }}</DropdownMenuItem>
+                <icon-lucide-history class="size-4" />
+                {{ ai.chatHistory }}
+              </DropdownMenuItem>
+              <template v-if="saved">
+                <DropdownMenuSeparator v-if="floating" class="my-1 border-t border-border" />
+                <DropdownMenuItem :class="item" @select="rename">{{
+                  ai.renameChat
+                }}</DropdownMenuItem>
+                <DropdownMenuItem
+                  :class="item"
+                  @select="selectedId && emit('saveTrace', selectedId)"
+                  >{{ ai.saveChatTrace }}</DropdownMenuItem
+                >
+                <DropdownMenuItem :class="item" @select="confirmDelete">{{
+                  ai.deleteChat
+                }}</DropdownMenuItem>
+              </template>
             </MenuScrollArea>
           </DropdownMenuContent>
         </DropdownMenuPortal>

@@ -10,6 +10,7 @@ import AppSelect from '@/components/ui/select/AppSelect.vue'
 
 import { chatProfileTheme, chatThinkingTheme } from './ui'
 
+const { compact = false } = defineProps<{ compact?: boolean }>()
 const { ai } = useI18n()
 const ui = chatProfileTheme()
 const thinking = chatThinkingTheme()
@@ -26,9 +27,10 @@ const selectedLabel = computed(() => thinkingLevelLabel(chatThinkingLevel.value,
   >
     <template #trigger>
       <button type="button" :class="ui.trigger({ class: thinking.trigger() })">
-        <ChatThinkingMeter :level="chatThinkingLevel" />
-        <span :class="thinking.label()">{{ selectedLabel }}</span>
-        <icon-lucide-chevron-down :class="ui.triggerChevron()" aria-hidden="true" />
+        <icon-lucide-rocket v-if="compact" class="size-3.5" />
+        <ChatThinkingMeter v-else :level="chatThinkingLevel" />
+        <span v-if="!compact" :class="thinking.label()">{{ selectedLabel }}</span>
+        <icon-lucide-chevron-down v-if="!compact" :class="ui.triggerChevron()" aria-hidden="true" />
       </button>
     </template>
     <template #option-end="{ option }">

@@ -18,6 +18,7 @@
   "connectionTestNetworkFailed": "Nie udało się połączyć z punktem końcowym. Sprawdź adres URL i połączenie sieciowe.",
   "connectionTestUnknownFailed": "Test połączenia nie powiódł się. Sprawdź ustawienia dostawcy i spróbuj ponownie.",
   "oneKeyManyModels": "Jeden klucz do ponad 100 modeli od wszystkich dostawców.",
+  "canvasPrompt": "Twórz, planuj lub szukaj… @ dodaje załączniki, / otwiera umiejętności",
   "describeChange": "Opisz zmianę…",
   "describeCreateOrChange": "Opisz, co chcesz utworzyć lub zmienić.",
   "stopGenerating": "Zatrzymaj generowanie",

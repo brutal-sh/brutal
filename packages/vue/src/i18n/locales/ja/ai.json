@@ -18,6 +18,7 @@
   "connectionTestNetworkFailed": "エンドポイントに接続できませんでした。URLとネットワーク接続を確認してください。",
   "connectionTestUnknownFailed": "接続テストに失敗しました。プロバイダー設定を確認して、もう一度お試しください。",
   "oneKeyManyModels": "1つのキーで、すべてのプロバイダーの100以上のモデルに対応。",
+  "canvasPrompt": "作成、計画、調査… @ で添付、/ でスキル",
   "describeChange": "変更内容を入力…",
   "describeCreateOrChange": "作成または変更したい内容を入力してください。",
   "stopGenerating": "生成を停止",

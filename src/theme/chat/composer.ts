@@ -10,18 +10,18 @@ import { completionListStyles } from '@/theme/code/completion'
 export function chatComposerTheme(dark: boolean) {
   return EditorView.theme(
     {
-      '&': { fontSize: '12px', color: 'var(--color-surface)' },
+      '&': { fontSize: 'var(--chat-editor-font-size, 12px)', color: 'var(--color-surface)' },
       '&.cm-focused': { outline: 'none' },
       '.cm-scroller': {
         fontFamily: 'inherit',
         lineHeight: '1.625',
-        minHeight: '48px',
+        minHeight: 'var(--chat-editor-min-height, 48px)',
         maxHeight: '160px',
         overflowX: 'hidden',
         overflowY: 'auto'
       },
       '.cm-content': {
-        padding: '10px 12px 4px',
+        padding: 'var(--chat-editor-padding, 10px 12px 4px)',
         minWidth: '0',
         caretColor: 'var(--color-surface)'
       },
@@ -30,7 +30,7 @@ export function chatComposerTheme(dark: boolean) {
       '.cm-selectionBackground, &.cm-focused .cm-selectionBackground': {
         backgroundColor: 'color-mix(in srgb, var(--color-accent) 22%, transparent)'
       },
-      '.cm-placeholder': { color: 'var(--color-muted)' },
+      '.cm-placeholder': { color: 'var(--chat-placeholder, var(--color-muted))' },
       '.cm-content[aria-disabled="true"]': { opacity: '0.6', cursor: 'not-allowed' },
       ...completionListStyles,
       '.cm-tooltip.cm-tooltip-autocomplete > ul': {

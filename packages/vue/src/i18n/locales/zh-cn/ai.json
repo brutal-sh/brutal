@@ -18,6 +18,7 @@
   "connectionTestNetworkFailed": "无法访问端点。请检查 URL 和网络连接。",
   "connectionTestUnknownFailed": "连接测试失败。请检查提供商设置，然后重试。",
   "oneKeyManyModels": "一个密钥即可使用来自所有提供商的 100+ 模型。",
+  "canvasPrompt": "创建、规划或研究… @ 添加附件，/ 选择技能",
   "describeChange": "描述一个更改…",
   "describeCreateOrChange": "描述你想创建或更改的内容。",
   "stopGenerating": "停止生成",

@@ -18,6 +18,7 @@
   "connectionTestNetworkFailed": "Der Endpunkt ist nicht erreichbar. Prüfe die URL und deine Netzwerkverbindung.",
   "connectionTestUnknownFailed": "Verbindungstest fehlgeschlagen. Prüfe die Anbietereinstellungen und versuche es erneut.",
   "oneKeyManyModels": "Ein Schlüssel für über 100 Modelle aller Anbieter.",
+  "canvasPrompt": "Erstellen, planen oder recherchieren… @ für Anhänge, / für Skills",
   "describeChange": "Beschreibe eine Änderung…",
   "describeCreateOrChange": "Beschreibe, was du erstellen oder ändern möchtest.",
   "stopGenerating": "Generierung stoppen",

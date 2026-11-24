@@ -29,10 +29,12 @@ const { ai } = useI18n()
 const {
   status,
   disabled = false,
+  compact = false,
   dragging = false
 } = defineProps<{
   status: 'ready' | 'submitted' | 'streaming' | 'error'
   disabled?: boolean
+  compact?: boolean
   /** Whether images are being dragged over the chat, which shows where they will go. */
   dragging?: boolean
 }>()
@@ -119,6 +121,7 @@ const isAgentProvider = computed(
     ref="composer"
     :status="status"
     :disabled="disabled || preparing"
+    :compact="compact"
     :completions="completions"
     :take-back="takeBack"
     @submit="(text, afterWork) => emit('submit', takeSubmission(text), afterWork)"
@@ -179,6 +182,7 @@ const isAgentProvider = computed(
     </template>
     <template #leading>
       <IconButton
+        v-if="!compact || canMentionSelection"
         :label="ai.mentionSelection"
         size="sm"
         :disabled="disabled || !canMentionSelection"
@@ -193,14 +197,21 @@ const isAgentProvider = computed(
         :disabled="disabled || preparing"
         @click="openImageDialog()"
       >
-        <icon-lucide-image-plus class="size-4" />
+        <icon-lucide-plus v-if="compact" class="size-4" />
+        <icon-lucide-image-plus v-else class="size-4" />
       </IconButton>
     </template>
     <template #model>
       <div class="@container flex min-w-0 items-center">
-        <ChatProfileSelect :disabled="disabled || replying" @select="emit('selectModel', $event)" />
+        <ChatThinkingSelect v-if="compact && !isAgentProvider" compact />
+        <ChatProfileSelect
+          :compact="compact"
+          :agent="isAgentProvider"
+          :disabled="disabled || replying"
+          @select="emit('selectModel', $event)"
+        />
         <template v-if="!isAgentProvider">
-          <ChatThinkingSelect />
+          <ChatThinkingSelect v-if="!compact" />
           <ChatCreditBalance :replying="replying" />
         </template>
       </div>

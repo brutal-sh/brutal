@@ -18,6 +18,7 @@
   "connectionTestNetworkFailed": "Impossible d’atteindre le point de terminaison. Vérifiez l’URL et votre connexion réseau.",
   "connectionTestUnknownFailed": "Échec du test de connexion. Vérifiez les paramètres du fournisseur, puis réessayez.",
   "oneKeyManyModels": "Une clé pour plus de 100 modèles de tous les fournisseurs.",
+  "canvasPrompt": "Créer, planifier ou rechercher… @ pour joindre, / pour les compétences",
   "describeChange": "Décrivez un changement…",
   "describeCreateOrChange": "Décrivez ce que vous voulez créer ou modifier.",
   "stopGenerating": "Arrêter la génération",

@@ -33,6 +33,24 @@ test('the chat composer slides out of the sidebar and keeps its draft and images
     })
     .toBeLessThan(2)
 
+  const attach = composer.getByRole('button', { name: 'Add image or file', exact: true })
+  const prompt = composer.locator('[data-slot="input-group-control"]')
+  const controls = composer.locator('[data-slot="input-group-actions"]')
+  const compact = expectDefined(await composer.boundingBox(), 'compact composer')
+  expect(compact.height).toBeLessThanOrEqual(88)
+  const promptBounds = expectDefined(await prompt.boundingBox(), 'prompt bounds')
+  const controlsBounds = expectDefined(await controls.boundingBox(), 'control bounds')
+  const attachBounds = expectDefined(await attach.boundingBox(), 'attachment button bounds')
+  expect(attachBounds.x + attachBounds.width).toBeLessThan(promptBounds.x)
+  expect(controlsBounds.x).toBeGreaterThan(promptBounds.x + promptBounds.width)
+  expect(Math.abs(promptBounds.y - controlsBounds.y)).toBeLessThan(10)
+
+  await chat.input.fill('First line\nSecond line\nThird line')
+  await expect
+    .poll(async () => (await composer.boundingBox())?.height ?? 0)
+    .toBeGreaterThan(compact.height)
+  await chat.input.fill('A draft to keep')
+
   const accepted = await composer.evaluate(async (element) => {
     const image = new OffscreenCanvas(8, 8)
     const context = image.getContext('2d')
@@ -92,6 +110,10 @@ test('the centered composer switches recent chats and reopens their transcript',
   const firstChat = 'Plan the homepage'
   const secondChat = 'Review the navigation'
   const thirdChat = 'Choose a color palette'
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.getByRole('button', { name: 'Main menu', exact: true }).click()
+  await page.getByRole('menuitem', { name: 'Toggle Light/Dark mode', exact: true }).click()
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
 
   await chat.submit(firstChat)
   await expect(chat.assistantMessage()).toBeVisible()
@@ -106,6 +128,8 @@ test('the centered composer switches recent chats and reopens their transcript',
   await expect(history).toHaveText(secondChat)
   await newChat.click()
   await expect(history).toHaveText('New chat')
+  await page.mouse.move(0, 0)
+  await composer.screenshot({ path: testInfo.outputPath('new-chat-reference.png') })
   await chat.submit(thirdChat)
   await expect(history).toHaveText(thirdChat)
   const recent = composer.getByRole('button', { name: firstChat, exact: true })
@@ -116,12 +140,25 @@ test('the centered composer switches recent chats and reopens their transcript',
   await expect(toggle).toHaveAttribute('aria-expanded', 'false')
   await expect(composer.getByRole('button', { name: secondChat, exact: true })).toBeVisible()
   await expect(composer.getByRole('button', { name: thirdChat, exact: true })).toBeVisible()
+  await history.blur()
+  await page.mouse.move(0, 0)
   await page.screenshot({ path: testInfo.outputPath('brutal-centered-recent-chats.png') })
+  await composer.screenshot({ path: testInfo.outputPath('brutal-composer.png') })
 
   await composer.getByRole('button', { name: 'Conversation actions' }).click()
   await expect(page.getByRole('menuitem', { name: 'Rename' })).toBeVisible()
-  await page.keyboard.press('Escape')
-  await history.click()
+  const dock = expectDefined(await composer.boundingBox(), 'floating composer bounds')
+  const options = expectDefined(await page.getByRole('menu').boundingBox(), 'chat menu bounds')
+  await page.screenshot({
+    path: testInfo.outputPath('brutal-composer-menu.png'),
+    clip: {
+      x: dock.x - 16,
+      y: options.y - 16,
+      width: dock.width + 32,
+      height: dock.y + dock.height - options.y + 32
+    }
+  })
+  await page.getByRole('menuitem', { name: 'Chat history' }).click()
   const search = page.getByRole('textbox', { name: 'Search conversations…' })
   await expect(search).toBeVisible()
   await search.fill('navigation')

@@ -13,14 +13,16 @@ type InputGroupUI = ComponentUI<typeof theme>
 const {
   size = 'sm',
   disabled = false,
+  compact = false,
   ui
 } = defineProps<{
   size?: NonNullable<InputGroupVariants['size']>
   disabled?: boolean
+  compact?: boolean
   ui?: InputGroupUI
 }>()
 
-const cls = computed(() => inputGroup({ size, disabled }))
+const cls = computed(() => inputGroup({ size, disabled, compact }))
 </script>
 
 <template>
@@ -37,11 +39,14 @@ const cls = computed(() => inputGroup({ size, disabled }))
     >
       <slot name="attachment" />
     </div>
+    <div v-if="compact" data-slot="input-group-leading" :class="cls.leading()">
+      <slot name="leading" />
+    </div>
     <div data-slot="input-group-control" :class="cls.control({ class: ui?.control })">
       <slot />
     </div>
     <div data-slot="input-group-toolbar" :class="cls.toolbar({ class: ui?.toolbar })">
-      <slot name="leading" />
+      <slot v-if="!compact" name="leading" />
       <div data-slot="input-group-model" :class="cls.model({ class: ui?.model })">
         <slot name="model" />
       </div>

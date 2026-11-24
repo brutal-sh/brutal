@@ -20,7 +20,11 @@ import AppPicker from '@/components/ui/select/AppPicker.vue'
 
 import { chatProfileTheme } from './ui'
 
-const { disabled = false } = defineProps<{ disabled?: boolean }>()
+const {
+  disabled = false,
+  compact = false,
+  agent = false
+} = defineProps<{ disabled?: boolean; compact?: boolean; agent?: boolean }>()
 const emit = defineEmits<{ select: [id: AIModelProfileId] }>()
 const { ai, common } = useI18n()
 const ui = chatProfileTheme()
@@ -81,7 +85,8 @@ function manageModels(close: () => void) {
         :disabled="disabled"
         :class="ui.trigger()"
       >
-        <icon-lucide-bot :class="ui.triggerIcon()" aria-hidden="true" />
+        <icon-lucide-rocket v-if="compact && agent" class="size-3.5" aria-hidden="true" />
+        <icon-lucide-bot v-else-if="!compact" :class="ui.triggerIcon()" aria-hidden="true" />
         <span :class="ui.triggerValue()">{{
           designModelProfile?.name ?? ai.selectDesignModel
         }}</span>
