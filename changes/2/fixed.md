@@ -7,3 +7,4 @@
 - Usage stats count opened .brut and .pen documents separately.
 - Bring the editor forward on macOS when Brutal restarts after an update.
 - Switch recent conversations and compose in a compact floating panel when the sidebar is closed.
+- The usage statistics prompt and privacy settings show Brutal’s data-sharing details in the selected language.
