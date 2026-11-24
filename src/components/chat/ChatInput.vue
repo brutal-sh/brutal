@@ -202,7 +202,7 @@ const isAgentProvider = computed(
       </IconButton>
     </template>
     <template #model>
-      <div class="@container flex min-w-0 items-center">
+      <div class="@container flex min-w-0 items-center" :class="compact && 'justify-end'">
         <ChatThinkingSelect v-if="compact && !isAgentProvider" compact />
         <ChatProfileSelect
           :compact="compact"

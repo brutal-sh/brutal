@@ -659,7 +659,7 @@ function handleStop() {
         class="group/agent flex min-w-0 shrink-0 flex-col select-text"
         :class="
           composerTarget
-            ? '@container/composer pointer-events-auto w-full max-w-[600px] rounded-[23px] border border-island-border bg-panel-secondary px-[3px] pb-2 shadow-sm [[data-theme=light]_&]:bg-[#f8f8f7] [[data-theme=light]_&]:[--color-muted:#91918f] [[data-theme=light]_&]:[--chat-placeholder:#8e8e8c]'
+            ? '@container/composer pointer-events-auto w-full max-w-[624px] rounded-[24px] border border-island-border bg-panel-secondary p-[3px] shadow-[0_4px_16px_#0000000d] [&_[stroke=currentColor]]:[stroke-width:1px] [&_svg_:is(path,circle,line,polyline,polygon,rect,ellipse)]:[vector-effect:non-scaling-stroke] [[data-theme=light]_&]:bg-[#f6f6f6] [[data-theme=light]_&]:[--color-island-border:#e4e4e7] [[data-theme=light]_&]:[--color-muted:#71717a] [[data-theme=light]_&]:[--chat-placeholder:#808080]'
             : 'data-[docked=true]:gap-2'
         "
       >

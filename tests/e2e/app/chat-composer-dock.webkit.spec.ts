@@ -43,7 +43,15 @@ test('the chat composer slides out of the sidebar and keeps its draft and images
   const attachBounds = expectDefined(await attach.boundingBox(), 'attachment button bounds')
   expect(attachBounds.x + attachBounds.width).toBeLessThan(promptBounds.x)
   expect(controlsBounds.x).toBeGreaterThan(promptBounds.x + promptBounds.width)
-  expect(Math.abs(promptBounds.y - controlsBounds.y)).toBeLessThan(10)
+  const promptCenter = promptBounds.y + promptBounds.height / 2
+  const controlsCenter = controlsBounds.y + controlsBounds.height / 2
+  expect(Math.abs(promptCenter - controlsCenter)).toBeLessThan(2)
+  const modelName = composer.getByTestId('chat-profile-selector').locator('span').first()
+  const modelBounds = expectDefined(await modelName.boundingBox(), 'model name bounds')
+  expect(modelBounds.width).toBeGreaterThan(24)
+  expect(modelBounds.x + modelBounds.width).toBeLessThan(controlsBounds.x)
+  await expect(composer).toHaveCSS('border-top-left-radius', '24px')
+  await expect(composer).toHaveCSS('padding-bottom', '3px')
 
   await chat.input.fill('First line\nSecond line\nThird line')
   await expect
@@ -174,6 +182,31 @@ test('the centered composer switches recent chats and reopens their transcript',
   await expect(toggle).toHaveAttribute('aria-expanded', 'true')
   await expect(sidebar.getByTestId('chat-message-user').last()).toContainText(secondChat)
   await expect(chat.assistantMessage()).toBeVisible()
+})
+
+test('canvas composer stacks controls only below its 360 px content width', async ({
+  page,
+  configuredChat
+}) => {
+  await configuredChat.input.fill('Draft')
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.getByRole('button', { name: 'Toggle sidebar', exact: true }).click()
+  const composer = page.getByTestId('editor-canvas-surface').getByTestId('chat-composer-dock')
+  const prompt = composer.locator('[data-slot="input-group-control"]')
+  const actions = composer.locator('[data-slot="input-group-actions"]')
+  for (const contentWidth of [359, 360, 480]) {
+    await composer.evaluate((element, width) => {
+      element.style.boxSizing = 'content-box'
+      element.style.width = width + 'px'
+    }, contentWidth)
+    const input = expectDefined(await prompt.boundingBox(), 'prompt bounds')
+    const controls = expectDefined(await actions.boundingBox(), 'send bounds')
+    if (contentWidth < 360) expect(controls.y).toBeGreaterThanOrEqual(input.y + input.height)
+    else expect(controls.x).toBeGreaterThanOrEqual(input.x + input.width)
+    await composer.getByTestId('chat-profile-selector').click({ trial: true })
+    await configuredChat.sendButton.click({ trial: true })
+    await expect(configuredChat.input).toHaveText('Draft')
+  }
 })
 
 async function expectComposerSlide(toggle: Locator) {

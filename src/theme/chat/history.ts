@@ -9,7 +9,7 @@ export default {
       'flex min-w-0 flex-1 items-center gap-1 rounded px-1.5 py-1 text-left text-xs text-surface hover:bg-hover disabled:opacity-50',
     title: 'min-w-0 flex-1 truncate',
     recent:
-      'hidden h-8 min-w-0 max-w-[28%] shrink truncate rounded-md px-1.5 text-[11px] font-normal text-muted hover:bg-hover hover:text-surface focus-visible:outline-panel-focus disabled:opacity-50 items-center gap-[5px] @min-[390px]/history:inline-flex',
+      'hidden h-5 min-w-0 max-w-40 shrink truncate rounded-md px-1 text-[11px] font-normal text-muted hover:bg-hover hover:text-surface focus-visible:outline-panel-focus disabled:opacity-50 items-center gap-1.5 @min-[360px]/history:inline-flex',
     create: 'h-8 gap-1 pl-2 pr-2.5 text-[13px]',
     icon: 'size-3.5 shrink-0',
     content: ['z-50 w-80 max-w-[calc(100vw-1rem)] p-2', floatingSurface, motionStyles.floating],
@@ -37,10 +37,10 @@ export default {
     floating: {
       true: {
         root: '@container/history border-b-0',
-        header: 'h-[30px] gap-1.5 px-1.5 py-0',
+        header: 'gap-3 py-1 pr-3 pl-[9px] [&_button]:max-h-5',
         trigger:
-          'h-7 max-w-[42%] flex-none gap-[5px] rounded-md px-1 text-[11px] font-normal focus-visible:outline-panel-focus before:size-[5px] before:shrink-0 before:rounded-full before:bg-[#e8baa8]',
-        create: 'h-8 gap-1 px-2 text-[10.5px] font-normal text-muted'
+          'h-5 max-w-[min(42%,10rem)] flex-initial gap-1.5 rounded-md px-1 text-[11px] font-medium focus-visible:outline-panel-focus before:size-[7px] before:shrink-0 before:rounded-full before:bg-[#deb48c]',
+        create: 'h-5 shrink-0 gap-1 px-1 text-[11px] font-medium text-muted'
       }
     },
     docked: {

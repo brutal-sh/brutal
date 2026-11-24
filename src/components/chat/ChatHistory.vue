@@ -175,8 +175,8 @@ function closeMenu(event: Event) {
           >
             <span
               aria-hidden="true"
-              class="size-[5px] shrink-0 rounded-full"
-              :class="index === 0 ? 'bg-[#bce5e6]' : 'bg-[#e5b7c7]'"
+              class="size-[7px] shrink-0 rounded-full"
+              :class="index === 0 ? 'bg-[#9cdfe2]' : 'bg-[#ffa6c3]'"
             />
             <span class="truncate">{{ chat.title || ai.newChat }}</span>
           </button>

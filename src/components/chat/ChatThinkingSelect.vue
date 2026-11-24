@@ -27,7 +27,7 @@ const selectedLabel = computed(() => thinkingLevelLabel(chatThinkingLevel.value,
   >
     <template #trigger>
       <button type="button" :class="ui.trigger({ class: thinking.trigger() })">
-        <icon-lucide-rocket v-if="compact" class="size-3.5" />
+        <icon-lucide-rocket v-if="compact" class="size-[15px]" />
         <ChatThinkingMeter v-else :level="chatThinkingLevel" />
         <span v-if="!compact" :class="thinking.label()">{{ selectedLabel }}</span>
         <icon-lucide-chevron-down v-if="!compact" :class="ui.triggerChevron()" aria-hidden="true" />

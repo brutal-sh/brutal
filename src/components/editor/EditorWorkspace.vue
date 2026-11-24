@@ -276,8 +276,8 @@ const { pending: roomPending } = useRoomActions()
           </div>
           <div
             ref="floatingComposer"
-            class="pointer-events-none absolute bottom-12 left-12 z-10 flex justify-center"
-            :class="inspectorVisible && !compactInspectorCollapsed ? 'right-[277px]' : 'right-12'"
+            class="pointer-events-none absolute bottom-12 left-4 z-10 flex justify-center"
+            :class="inspectorVisible && !compactInspectorCollapsed ? 'right-[245px]' : 'right-4'"
           />
         </div>
         <div

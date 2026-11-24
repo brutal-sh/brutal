@@ -19,12 +19,12 @@ export default {
     },
     compact: {
       true: {
-        root: 'grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-1 rounded-[22px] border-island-border bg-panel [[data-theme=light]_&]:bg-[#fcfcfb] @min-[460px]/composer:grid-cols-[auto_minmax(0,1fr)_minmax(0,8rem)_auto] @min-[460px]/composer:pr-2',
+        root: 'grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-1 rounded-[22px] border-island-border bg-panel [[data-theme=light]_&]:bg-[#fafafa] @min-[360px]/composer:grid-cols-[auto_minmax(0,1fr)_min(36%,9rem)_auto] @min-[360px]/composer:pr-2.5',
         attachment: 'col-span-full max-h-28 overflow-y-auto',
-        toolbar: 'col-span-full px-1 pb-1 @min-[460px]/composer:contents',
+        toolbar: 'col-span-full px-1 pb-1 @min-[360px]/composer:contents',
         leading: 'flex items-center pl-1',
         model: 'max-w-52',
-        actions: '@min-[460px]/composer:ml-0'
+        actions: '@min-[360px]/composer:ml-0'
       }
     },
     disabled: {

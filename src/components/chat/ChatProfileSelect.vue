@@ -85,7 +85,7 @@ function manageModels(close: () => void) {
         :disabled="disabled"
         :class="ui.trigger()"
       >
-        <icon-lucide-rocket v-if="compact && agent" class="size-3.5" aria-hidden="true" />
+        <icon-lucide-rocket v-if="compact && agent" class="size-[15px]" aria-hidden="true" />
         <icon-lucide-bot v-else-if="!compact" :class="ui.triggerIcon()" aria-hidden="true" />
         <span :class="ui.triggerValue()">{{
           designModelProfile?.name ?? ai.selectDesignModel

@@ -109,7 +109,7 @@ defineExpose({ restoreDraft, insert: editor.insert, focus: editor.focus })
             class="min-w-0"
             :class="
               compact
-                ? 'font-normal [--chat-editor-font-size:12px] [--chat-editor-min-height:42px] [--chat-editor-padding:10px_6px]'
+                ? 'font-normal [--chat-editor-font-size:13px] [--chat-editor-min-height:42px] [--chat-editor-padding:10px_6px]'
                 : 'group-data-[docked=true]/agent:min-h-[72px]'
             "
             @copy.stop
@@ -149,7 +149,7 @@ defineExpose({ restoreDraft, insert: editor.insert, focus: editor.focus })
               class="bg-accent text-on-accent hover:bg-accent/90 hover:text-on-accent"
               :class="
                 compact
-                  ? 'size-6 rounded-full disabled:bg-hover disabled:text-muted disabled:opacity-100 [[data-theme=light]_&]:disabled:bg-[#d9d9d7] [[data-theme=light]_&]:disabled:text-white'
+                  ? 'size-5 rounded-full disabled:bg-hover disabled:text-muted disabled:opacity-100 [[data-theme=light]_&]:disabled:bg-[#e4e4e7] [[data-theme=light]_&]:disabled:text-white'
                   : undefined
               "
               :disabled="!text.trim()"
