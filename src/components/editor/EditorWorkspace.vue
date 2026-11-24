@@ -201,7 +201,7 @@ const { pending: roomPending } = useRoomActions()
       :style="{ flexGrow: layout[1] ?? 100 - (initialEditorLayout[0] ?? 26) }"
       :default-size="100 - (initialEditorLayout[0] ?? 26)"
       :min-size="30"
-      class="flex"
+      class="isolate flex"
     >
       <div ref="canvasHost" class="relative flex min-w-0 flex-1">
         <div

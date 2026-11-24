@@ -8,3 +8,4 @@
 - Bring the editor forward on macOS when Brutal restarts after an update.
 - Switch recent conversations and compose in a compact floating panel when the sidebar is closed.
 - The usage statistics prompt and privacy settings show Brutal’s data-sharing details in the selected language.
+- Document tabs and the sidebar resize handle stay accessible while a file opens.
