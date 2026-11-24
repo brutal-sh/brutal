@@ -17,9 +17,9 @@ Only Share puts a document into a room: the tab you share from becomes the room'
 
 ## Joining a Room
 
-Open the link, or paste it (or just the room ID) into **Join** in the share panel or **Join room…** on Home. The room opens in a tab of its own, so the documents you already have open are never changed. On a computer, a browser also offers **Open in Brutal**, which opens the room through a `brutal://join` link. Choose **Open in an older beta** for builds through Beta 25.
+Open the link, or paste it (or just the room ID) into **Join** in the share panel or **Join room…** on Home. The room opens in a tab of its own, so the documents you already have open are never changed. On a computer, a browser also offers **Open in Brutal**, which opens the room through a `brutal://join` link. If the desktop app doesn’t open, install the current Brutal beta from [Desktop setup](https://brutal.sh/help/getting-started/).
 
-You join right away under a generated name such as *Teal Fox*; set your own in the share panel or in Settings, and it is used in every room.
+You join right away under a generated name such as _Teal Fox_; set your own in the share panel or in Settings, and it is used in every room.
 
 Rooms are not stored on a server: the file lives on the devices of the people who have been in the room, so a room tab opens its document only while one of them is online. Until then it says it is waiting, explains why, and opens the file as soon as someone who has it joins. A room you have been in before opens from this device's copy right away and syncs your changes when others return.
 
@@ -30,7 +30,7 @@ Rooms are not stored on a server: the file lives on the devices of the people wh
 - **Document changes** — every edit (shapes, text, properties, layout) syncs instantly
 - **Cursors** — see where each collaborator is pointing, with their name and color
 - **Selections** — highlighted selections are visible to everyone
-- **Agents** — the built-in AI chat, ACP and Pi harness chats, and every connected MCP client appear as cursors at the layers they read or edit, each outlined label showing a sparkle and a callsign such as *Fern*. While the chat streams JSX, its cursor moves through the elements as they appear and outlines them. The cursor and outline have the color of the person running the agent, so you can tell whose agent it is. Only its name, kind, model, status, page, position, and edited layers are shared, never prompts or replies.
+- **Agents** — the built-in AI chat, ACP and Pi harness chats, and every connected MCP client appear as cursors at the layers they read or edit, each outlined label showing a sparkle and a callsign such as _Fern_. While the chat streams JSX, its cursor moves through the elements as they appear and outlines them. The cursor and outline have the color of the person running the agent, so you can tell whose agent it is. Only its name, kind, model, status, page, position, and edited layers are shared, never prompts or replies.
 
 ## Follow Mode
 

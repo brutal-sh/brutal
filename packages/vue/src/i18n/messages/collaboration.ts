@@ -54,7 +54,6 @@ export const collaborationMessageDefaults = {
   leftRoomDescription: 'This is now a local copy. Save it to keep it.',
   dismiss: 'Dismiss',
   openInDesktopApp: 'Open in Brutal',
-  openInOlderBeta: 'Open in an older beta',
   downloadDesktopApp: 'Desktop setup',
   appearsAs: params('You’ll appear as {name}'),
   changeName: 'Change',

@@ -4,7 +4,7 @@ Brutal is a local-first desktop design editor by THEFT Studio, built on the MIT-
 
 [Brutal website](https://brutal.sh/) · [Install or update](https://brutal.sh/help/getting-started/) · [Help docs](https://brutal.sh/help/#docs) · [Privacy and usage stats](https://brutal.sh/help/privacy/#usage-stats)
 
-[Pen.app parity audit and Trello work order](docs/pen-feature-reference/2026-11-23/) · [Public feedback and beta downloads](https://github.com/brutal-sh/brutal-feedback)
+[Pen.app parity audit and Trello work order](docs/pen-feature-reference/2026-11-23/) · [Beta downloads](https://github.com/brutal-sh/brutal/releases) · [Feedback](https://github.com/brutal-sh/brutal-feedback)
 
 ![Brutal desktop editor showing the Field Notes sample](packages/docs/public/screenshot.png)
 
@@ -57,7 +57,7 @@ These are configured support thresholds, not evidence that every platform is qua
 
 The desktop notice requires macOS 13+ with current Safari updates, Linux WebKitGTK 2.40+,
 or a current Windows WebView2 runtime. Find signed Apple-silicon beta downloads in
-[Brutal Releases](https://github.com/brutal-sh/brutal-feedback/releases). In the app, choose
+[Brutal Releases](https://github.com/brutal-sh/brutal/releases). In the app, choose
 **Help → Report an Issue** to open the public bug form. Review any diagnostic details before
 sharing them. Find usage guides and private security reporting in [Brutal Help](https://brutal.sh/help/#support).
 

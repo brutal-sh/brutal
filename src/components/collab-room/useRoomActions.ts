@@ -32,13 +32,13 @@ export function useRoomActions() {
     state.value.peers.filter((peer) => !peer.hasFile).map((peer) => peer.name)
   )
   // Browsers on a computer can hand the room to the desktop app; phones and the app cannot.
-  const desktopLinks = computed(() => {
+  const desktopLink = computed(() => {
     const roomId = state.value.roomId
     if (!roomId || !IS_BROWSER || IS_TAURI || isMobile.value) return null
-    return { current: roomLinkURL(roomId), legacy: roomLinkURL(roomId, 'openpen') }
+    return roomLinkURL(roomId)
   })
   /** Offered beside the desktop link, for people without the app. */
-  const downloadURL = computed(() => (desktopLinks.value ? DESKTOP_DOWNLOAD_URL : null))
+  const downloadURL = computed(() => (desktopLink.value ? DESKTOP_DOWNLOAD_URL : null))
 
   function copyLink() {
     const roomId = state.value.roomId
@@ -67,7 +67,7 @@ export function useRoomActions() {
     sender,
     othersWaiting,
     copied,
-    desktopLinks,
+    desktopLink,
     downloadURL,
     copyLink,
     leave,

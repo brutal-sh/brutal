@@ -13,7 +13,6 @@ type Args = {
   name: string
   copied: boolean
   desktopLink: string | null
-  legacyDesktopLink: string | null
   downloadURL: string | null
   onCopyLink: () => void
   onLeave: () => void
@@ -31,7 +30,6 @@ const meta = {
     name: 'Teal Fox',
     copied: false,
     desktopLink: null,
-    legacyDesktopLink: null,
     downloadURL: null,
     onCopyLink: fn(),
     onLeave: fn(),
@@ -72,7 +70,6 @@ export const Waiting: Story = {}
 export const WaitingInDesktopBrowser: Story = {
   args: {
     desktopLink: 'brutal://join?room=abcdefghijklmnopqrstuvwxyz012345',
-    legacyDesktopLink: 'openpen://join?room=abcdefghijklmnopqrstuvwxyz012345',
     downloadURL: DESKTOP_DOWNLOAD_URL
   }
 }

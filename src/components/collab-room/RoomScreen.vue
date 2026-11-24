@@ -22,7 +22,6 @@ const {
   name,
   copied = false,
   desktopLink = null,
-  legacyDesktopLink = null,
   downloadURL = null
 } = defineProps<{
   status: PendingRoomStatus
@@ -35,7 +34,6 @@ const {
   copied?: boolean
   /** A `brutal://join` link, offered in desktop browsers. */
   desktopLink?: string | null
-  legacyDesktopLink?: string | null
   /** Where to get the desktop app, offered beside `desktopLink`. */
   downloadURL?: string | null
 }>()
@@ -159,12 +157,6 @@ const progress = computed(() => {
             <a :href="desktopLink" :class="ui.link()" data-test-id="room-screen-open-desktop">
               {{ messages.openInDesktopApp }}
             </a>
-            <template v-if="legacyDesktopLink">
-              <span aria-hidden="true">·</span>
-              <a :href="legacyDesktopLink" :class="ui.link()">
-                {{ messages.openInOlderBeta }}
-              </a>
-            </template>
             <template v-if="downloadURL">
               <span aria-hidden="true">·</span>
               <a

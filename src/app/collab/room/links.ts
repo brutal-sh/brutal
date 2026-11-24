@@ -6,8 +6,8 @@ import { bindDesktopLinkQueue } from '@/app/tauri/link-queue'
 export const ROOM_LINKS_EVENT = 'open-room-links'
 const TAKE_PENDING_ROOMS = 'take_pending_rooms'
 
-export function roomLinkURL(roomId: string, scheme: 'brutal' | 'openpen' = 'brutal'): string {
-  return `${scheme}://join?room=${encodeURIComponent(roomId)}`
+export function roomLinkURL(roomId: string): string {
+  return `brutal://join?room=${encodeURIComponent(roomId)}`
 }
 
 /**

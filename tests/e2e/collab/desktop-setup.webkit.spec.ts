@@ -10,60 +10,51 @@ const LOCALES = [
   {
     locale: 'en',
     label: 'Desktop setup',
-    primaryLabel: 'Open in Brutal',
-    legacyLabel: 'Open in an older beta'
+    primaryLabel: 'Open in Brutal'
   },
   {
     locale: 'de',
     label: 'Desktop-Einrichtung',
-    primaryLabel: 'In Brutal öffnen',
-    legacyLabel: 'In einer älteren Beta öffnen'
+    primaryLabel: 'In Brutal öffnen'
   },
   {
     locale: 'es',
     label: 'Configurar la aplicación de escritorio',
-    primaryLabel: 'Abrir en Brutal',
-    legacyLabel: 'Abrir en una beta anterior'
+    primaryLabel: 'Abrir en Brutal'
   },
   {
     locale: 'fr',
     label: 'Configurer l’application de bureau',
-    primaryLabel: 'Ouvrir dans Brutal',
-    legacyLabel: 'Ouvrir dans une bêta antérieure'
+    primaryLabel: 'Ouvrir dans Brutal'
   },
   {
     locale: 'it',
     label: 'Configura l’app desktop',
-    primaryLabel: 'Apri in Brutal',
-    legacyLabel: 'Apri in una beta precedente'
+    primaryLabel: 'Apri in Brutal'
   },
   {
     locale: 'ja',
     label: 'デスクトップ版のセットアップ',
-    primaryLabel: 'Brutal で開く',
-    legacyLabel: '以前のベータ版で開く'
+    primaryLabel: 'Brutal で開く'
   },
   {
     locale: 'pl',
     label: 'Konfiguracja aplikacji komputerowej',
-    primaryLabel: 'Otwórz w Brutal',
-    legacyLabel: 'Otwórz w starszej wersji beta'
+    primaryLabel: 'Otwórz w Brutal'
   },
   {
     locale: 'ru',
     label: 'Настройка настольного приложения',
-    primaryLabel: 'Открыть в Brutal',
-    legacyLabel: 'Открыть в более ранней бета-версии'
+    primaryLabel: 'Открыть в Brutal'
   },
   {
     locale: 'zh-CN',
     label: '桌面版设置',
-    primaryLabel: '在 Brutal 中打开',
-    legacyLabel: '使用较早的测试版打开'
+    primaryLabel: '在 Brutal 中打开'
   }
 ] as const
 
-for (const { locale, label, primaryLabel, legacyLabel } of LOCALES) {
+for (const { locale, label, primaryLabel } of LOCALES) {
   test.describe(locale, () => {
     test.use({ locale })
     for (const mode of ['waiting', 'sharing'] as const) {
@@ -103,13 +94,8 @@ for (const { locale, label, primaryLabel, legacyLabel } of LOCALES) {
           }
           const before = mode === 'sharing' ? await getSelectedNode(page) : undefined
           const primary = surface.getByRole('link', { name: primaryLabel, exact: true })
-          const legacy = surface.getByRole('link', { name: legacyLabel, exact: true })
           await expect(primary).toHaveAttribute('href', /^brutal:\/\/join\?room=[a-z0-9]{32}$/)
-          const primaryURL = await primary.getAttribute('href')
-          await expect(legacy).toHaveAttribute(
-            'href',
-            primaryURL?.replace(/^brutal:/, 'openpen:') ?? ''
-          )
+          await expect(surface.locator('a[href^="openpen:"]')).toHaveCount(0)
           const link = surface.getByRole('link', { name: label, exact: true })
           await expect(link).toHaveAttribute('href', SETUP_URL)
           await surface.screenshot({

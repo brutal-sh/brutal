@@ -59,7 +59,7 @@ pub(crate) fn setup_app(app: &mut tauri::App) -> Result<(), Box<dyn std::error::
     // - Windows / Linux: the link is argv, and the plugin parses it in its own
     //   setup (`handle_cli_arguments`).
     // - macOS: AppKit delivers the GetURL event *before* the app's setup. Traced
-    //   on a cold `open openpen://…`: `RunEvent::Opened` at T+0.085 s, this
+    //   on a cold `open brutal://…`: `RunEvent::Opened` at T+0.085 s, this
     //   closure at T+0.342 s, and `on_open_url` never fired.
     //
     // In all three cases the URL survives only in the plugin's `current`, so it

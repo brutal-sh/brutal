@@ -11,7 +11,7 @@ The identity table describes the current app. The executed checks below record t
 | Product/window/PWA name              | Brutal                                               |
 | Tauri bundle identifier              | `dev.jpoindexter.openpen`                            |
 | Native test bundle identifier        | `dev.jpoindexter.openpen.native-test`                |
-| OS link scheme                       | `brutal://` (legacy `openpen://` links also open) |
+| OS link scheme                       | `brutal://` (legacy `openpen://` links also open)    |
 | Keychain service                     | `dev.jpoindexter.openpen.credentials`                |
 | MCP default HTTP port                | `7610`                                               |
 | macOS MCP discovery/socket directory | `~/Library/Application Support/Open Pen/`            |
@@ -31,7 +31,7 @@ Build the Apple-silicon candidate with `bun run build:macos-beta`. The local Tau
 Verify the ZIP checksum and Gatekeeper assessment after extraction. Use a clean macOS login for launch, editing, Save and reopen, recovery, and the bundled MCP bridge. Keep the previous trusted app available for rollback. The shared bundle identity carries preferences and credentials forward, so close the previous app before opening Brutal.
 
 Publish the signed ZIP and `SHA256SUMS.txt` as a prerelease at
-[`brutal-sh/brutal-feedback`](https://github.com/brutal-sh/brutal-feedback/releases).
+[`brutal-sh/brutal`](https://github.com/brutal-sh/brutal/releases).
 Verify the uploaded ZIP's SHA-256 against the candidate before publishing, then download
 it from the public release and check the digest again. Link the approved release from
 [Brutal Help](https://brutal.sh/help/getting-started/#download).
@@ -59,7 +59,7 @@ credentials before distributing a newly signed build.
 3. Archive the stapled `Brutal.app` with `bsdtar --no-mac-metadata -czf "Brutal-$version-macOS-arm64.app.tar.gz" -C "$bundle_directory" Brutal.app`. Check that every archive entry lives inside `Brutal.app` and that the extracted app still passes stapler validation.
 4. Sign that archive with the Brutal updater key using `bun run tauri signer sign --app-version "$version" "$archive"`. Set `TAURI_SIGNING_PRIVATE_KEY_PATH` to the encrypted key and supply its password through `TAURI_SIGNING_PRIVATE_KEY_PASSWORD` only for the signing command.
 5. Put `release-notes.md`, the archive, and its `.sig` in the release directory. Run `bun tools/release/release-packages/src/native/brutal-beta-manifest.ts "$release_directory"` from the repo root to produce `latest.json`.
-6. Test checking, opening Full release notes, installing and restarting from an older updater-enabled build in a disposable location. Publish the ZIP, archive, signature, manifest, and checksums on the [feedback repository](https://github.com/brutal-sh/brutal-feedback/releases).
+6. Test checking, opening Full release notes, installing and restarting from an older updater-enabled build in a disposable location. Publish the ZIP, archive, signature, manifest, and checksums on the [Brutal source repository](https://github.com/brutal-sh/brutal/releases).
 7. Verify the public archive and checksum, then deploy `latest.json` at `/download/mac-updater.json` with the website’s download links for the same release. The deployment lets the feed and download links change together.
 
 The encrypted updater key is managed outside the checkout. On the release Mac its password is stored in the
