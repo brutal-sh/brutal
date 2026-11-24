@@ -56,7 +56,7 @@ credentials before distributing a newly signed build.
 
 1. Advance the version in `desktop/tauri.macos-beta.json` and build with `bun run build:macos-beta`.
 2. Developer ID-sign and notarize the app. Staple and validate the ticket before assembling both the manual ZIP and the updater archive.
-3. Archive the stapled `Brutal.app` with `bsdtar -czf "Brutal-$version-macOS-arm64.app.tar.gz" -C "$bundle_directory" Brutal.app`.
+3. Archive the stapled `Brutal.app` with `bsdtar --no-mac-metadata -czf "Brutal-$version-macOS-arm64.app.tar.gz" -C "$bundle_directory" Brutal.app`. Check that every archive entry lives inside `Brutal.app` and that the extracted app still passes stapler validation.
 4. Sign that archive with the Brutal updater key using `bun run tauri signer sign --app-version "$version" "$archive"`. Set `TAURI_SIGNING_PRIVATE_KEY_PATH` to the encrypted key and supply its password through `TAURI_SIGNING_PRIVATE_KEY_PASSWORD` only for the signing command.
 5. Put `release-notes.md`, the archive, and its `.sig` in the release directory. Run `bun tools/release/release-packages/src/native/brutal-beta-manifest.ts "$release_directory"` from the repo root to produce `latest.json`.
 6. Test checking, opening Full release notes, installing and restarting from an older updater-enabled build in a disposable location. Publish the ZIP, archive, signature, manifest, and checksums on the [feedback repository](https://github.com/brutal-sh/brutal-feedback/releases).
