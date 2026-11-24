@@ -11,7 +11,7 @@ The identity table describes the current app. The executed checks below record t
 | Product/window/PWA name              | Brutal                                               |
 | Tauri bundle identifier              | `dev.jpoindexter.openpen`                            |
 | Native test bundle identifier        | `dev.jpoindexter.openpen.native-test`                |
-| OS link scheme                       | `openpen://`                                         |
+| OS link scheme                       | `brutal://` (legacy `openpen://` links also open) |
 | Keychain service                     | `dev.jpoindexter.openpen.credentials`                |
 | MCP default HTTP port                | `7610`                                               |
 | macOS MCP discovery/socket directory | `~/Library/Application Support/Open Pen/`            |
@@ -20,7 +20,7 @@ The identity table describes the current app. The executed checks below record t
 
 The app passes its computed discovery and socket paths explicitly to the MCP process. On Linux, app-managed MCP uses the home-directory fallback. `OPENPENCIL_MCP_DISCOVERY_PATH`, `OPENPENCIL_MCP_SOCKET`, and `PORT` remain supported overrides. A separately installed upstream MCP client must receive the fork discovery path to connect to this fork. Installing the fork globally under upstream executable names can replace those executables; use a local build/path when co-installing.
 
-Internal `@open-pencil/*` package imports, Rust crate and development binary names and document-chat `openpencil://node/...` reference syntax remain compatible. Chat references do not register an OS protocol. Cloud, collaboration and generated Storybook links use the fork OS scheme. Existing MIT licensing, upstream authorship and attribution are retained.
+Internal `@open-pencil/*` package imports, Rust crate and development binary names remain compatible. The editor handles document-chat node references in the active document. Cloud, collaboration and generated Storybook links use the fork OS scheme. Existing MIT licensing, upstream authorship and attribution are retained.
 
 No original app files or keychain entries were migrated or modified. The native capability file retains existing sensitive-file deny rules, adds the fork discovery files to those denies, and permits read access only to the fork discovery locations.
 
@@ -103,7 +103,7 @@ Formatting checks passed for the changed OAuth, MCP spawning and Vite configurat
 ## Remaining runtime proof
 
 - Generate native icons and build the fork. Run `cargo test --manifest-path desktop/Cargo.toml network::oauth::tests`, which includes a real local TCP callback/response/closure test with synthetic code and state.
-- Use a separate macOS login for the signed candidate. Verify `openpen://` routing, MCP discovery and authentication, and document opening.
+- Use a separate macOS login for the signed candidate. Verify `brutal://` routing, MCP discovery and authentication, and document opening.
 - Exercise OpenRouter sign-in with an explicitly chosen account and verify cancellation, retry, returned identity and authorized editor request. No live provider login or credential access was performed for these changes.
 - Verify manual update failure wording in a developer build without an endpoint and confirm it makes no startup update request.
 

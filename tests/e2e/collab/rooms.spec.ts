@@ -51,9 +51,9 @@ test('a share link opens the room in its own tab, waiting until someone with it 
       guest.page.getByRole('heading', { name: 'Waiting for someone who has this file' })
     ).toBeVisible()
     // A browser on a computer can hand the room to the desktop app, or point to its download.
-    await expect(guest.page.getByRole('link', { name: 'Open in desktop app' })).toHaveAttribute(
+    await expect(guest.page.getByRole('link', { name: 'Open in Brutal' })).toHaveAttribute(
       'href',
-      `openpen://join?room=${ROOM_ID}`
+      `brutal://join?room=${ROOM_ID}`
     )
     await expect(guest.page.getByRole('link', { name: 'Desktop setup' })).toHaveAttribute(
       'href',
@@ -216,6 +216,7 @@ test("a guest's page list shows which page the sharer is on, and who is there on
   try {
     host = await createPeer(browser, 'Host', relay.url)
     await addRectangle(host.page, 'Card')
+    await host.page.evaluate(() => window.openPencil?.getStore?.().graph.addPage('Other page'))
     await share(host)
     guest = await createPeer(browser, 'Guest', relay.url, { path: roomLinkPath() })
     await expect(guest.page.getByTestId('room-screen')).toHaveCount(0, { timeout: 15_000 })
@@ -226,11 +227,16 @@ test("a guest's page list shows which page the sharer is on, and who is there on
     await host.page.mouse.move(box.x + 120, box.y + 80)
     await host.page.mouse.move(box.x + 160, box.y + 100, { steps: 4 })
 
-    const marker = guest.page.getByTestId('pages-item').getByTestId('presence-markers')
-    await expect(marker).toHaveAttribute('aria-label', 'Host')
+    await guest.page.getByRole('tab', { name: 'Layers', exact: true }).click()
+    const pages = guest.page.getByTestId('pages-item')
+    const hostPage = pages.filter({ hasText: 'Page 1' })
+    const otherPage = pages.filter({ hasText: 'Other page' })
+    await expect(otherPage).toBeVisible()
+    await expect(hostPage.getByTestId('presence-markers')).toHaveAttribute('aria-label', 'Host')
+    await expect(otherPage.getByTestId('presence-markers')).toHaveCount(0)
 
     // Hovering the page shows who is there and lets the guest follow them.
-    await guest.page.getByTestId('pages-item').hover()
+    await hostPage.hover()
     const card = guest.page.getByTestId('page-presence-card')
     await expect(card).toBeVisible()
     await expect(card.getByRole('button', { name: 'Follow Host' })).toBeVisible()

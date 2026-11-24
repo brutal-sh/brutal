@@ -1,6 +1,6 @@
 /**
- * References to things in OpenPencil, written in chat text as Markdown links with the
- * `openpencil:` scheme: `[Hero](openpencil://node/12:34)`. People insert them from the
+ * References to things in Brutal, written in chat text as Markdown links with the
+ * `brutal:` scheme: `[Hero](brutal://node/12:34)`. People insert them from the
  * composer and the model cites what it touched with them; the chat shows them as chips.
  */
 export type ChatReferenceKind = 'node' | 'page' | 'skill'
@@ -19,11 +19,11 @@ export interface ChatReferenceMatch {
   end: number
 }
 
-const SCHEME = 'openpencil://'
 const KINDS: ReadonlySet<string> = new Set<ChatReferenceKind>(['node', 'page', 'skill'])
 
 /** A link whose label holds no unescaped `]` or line break and whose URL has no space. */
-const LINK = /\[((?:\\.|[^\]\\\n])*)\]\(openpencil:\/\/([a-z]+)\/([^)\s]+)\)/g
+const LINK = /\[((?:\\.|[^\]\\\n])*)\]\(([^)\s]+)\)/g
+const REFERENCE_URL = /^(?:brutal|openpencil):\/\/([a-z]+)\/([^/?#\s]+)$/
 
 function isKind(kind: string): kind is ChatReferenceKind {
   return KINDS.has(kind)
@@ -51,7 +51,7 @@ export function chatReference(kind: string, id: string, label: string): ChatRefe
 }
 
 export function referenceURL({ kind, id }: Pick<ChatReference, 'kind' | 'id'>): string {
-  return `${SCHEME}${kind}/${encodeURIComponent(id)}`
+  return `brutal://${kind}/${encodeURIComponent(id)}`
 }
 
 export function referenceLink(reference: ChatReference): string {
@@ -60,21 +60,21 @@ export function referenceLink(reference: ChatReference): string {
 
 /** The reference a link's URL names, or null when it names none. */
 export function parseReferenceURL(url: string): Pick<ChatReference, 'kind' | 'id'> | null {
-  if (!url.startsWith(SCHEME)) return null
-  const [kind = '', encoded = '', ...rest] = url.slice(SCHEME.length).split('/')
-  const id = rest.length === 0 ? decodeID(encoded) : null
-  return isKind(kind) && id ? { kind, id } : null
+  const [, kind, encoded] = url.match(REFERENCE_URL) ?? []
+  if (!kind || !isKind(kind) || !encoded) return null
+  const id = decodeID(encoded)
+  return id ? { kind, id } : null
 }
 
 /** Every reference link in the text, in order. */
 export function findReferences(text: string): ChatReferenceMatch[] {
   const matches: ChatReferenceMatch[] = []
   for (const match of text.matchAll(LINK)) {
-    const [source, label = '', kind = '', encoded = ''] = match
-    const id = decodeID(encoded)
-    if (!isKind(kind) || !id) continue
+    const [source, label = '', url = ''] = match
+    const target = parseReferenceURL(url)
+    if (!target) continue
     matches.push({
-      reference: { kind, id, label: unescapeLabel(label) },
+      reference: { ...target, label: unescapeLabel(label) },
       start: match.index,
       end: match.index + source.length
     })

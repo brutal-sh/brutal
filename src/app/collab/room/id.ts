@@ -18,6 +18,11 @@ export function isRoomId(value: string): boolean {
  */
 export function parseRoomInput(text: string): string | null {
   let candidate = text.trim()
+  if (/^(?:brutal|openpen):/i.test(candidate)) {
+    const url = URL.canParse(candidate) ? new URL(candidate) : null
+    const room = url?.host === 'join' && !url.pathname ? url.searchParams.get('room') : null
+    return room && isRoomId(room) ? room : null
+  }
   const roomIndex = candidate.lastIndexOf('/rooms/')
   if (roomIndex !== -1) candidate = candidate.slice(roomIndex + '/rooms/'.length)
   candidate = candidate.split(/[?#]/)[0] ?? ''

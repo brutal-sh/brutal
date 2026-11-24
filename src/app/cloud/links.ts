@@ -24,11 +24,11 @@ import { openCloudShareLink } from './sharing/link'
 /**
  * An invitation, `/invitations/:id#token`, or a document shared by link, `/share/:id#secret`, on
  * the server they belong to. The desktop app gets the same link as
- * `openpen://cloud?url=<link>#secret`.
+ * `brutal://cloud?url=<link>#secret`.
  */
 export type CloudLink = { kind: CloudLinkKind; id: string; server: string; secret: string }
 
-/** Desktop events and commands for `openpen://cloud` links (`desktop/src/launch/mod.rs`). */
+/** Desktop events and commands for `brutal://cloud` links (`desktop/src/launch/mod.rs`). */
 const CLOUD_LINKS_EVENT = 'open-cloud-links'
 const TAKE_PENDING_CLOUD_LINKS = 'take_pending_cloud_links'
 

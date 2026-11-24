@@ -1,4 +1,4 @@
-//! Parsing `openpen://` links into what the app should open, join, or hand to sign-in.
+//! Parsing `brutal://` links into what the app should open, join, or hand to sign-in.
 
 use url::Url;
 
@@ -8,14 +8,14 @@ pub struct DeepLinkOpen {
     pub node: Option<String>,
 }
 
-/// A collaboration room to open, from `openpen://join?room=<id>`.
+/// A collaboration room to open, from `brutal://join?room=<id>`.
 #[derive(Debug, PartialEq, Eq)]
 pub struct DeepLinkJoin {
     pub room: String,
 }
 
-/// An OpenPencil Cloud invitation or a document shared by link, from
-/// `openpen://cloud?url=<link>#<secret>`: the web link on its server, `/<invitations|share>/<id>`,
+/// A Brutal Cloud invitation or a document shared by link, from
+/// `brutal://cloud?url=<link>#<secret>`: the web link on its server, `/<invitations|share>/<id>`,
 /// with its secret in the deep link's fragment. The server is the web link's origin.
 #[derive(Debug, Clone, PartialEq, Eq, serde::Serialize)]
 pub struct CloudLink {
@@ -63,8 +63,13 @@ fn is_room_id(room: &str) -> bool {
             .all(|byte| byte.is_ascii_lowercase() || byte.is_ascii_digit())
 }
 
+/// Installed Brutal builds also accept links issued before the product rebrand.
+pub fn is_app_link(url: &Url) -> bool {
+    matches!(url.scheme(), "brutal" | "openpen")
+}
+
 pub fn parse_deep_link(url: &Url) -> Result<DeepLink, DeepLinkError> {
-    // openpen://<action>?…  → host is the action.
+    // brutal://<action>?…  → host is the action.
     match url.host_str().unwrap_or("") {
         "open" => parse_open_url(url).map(DeepLink::Open),
         "join" => parse_join_url(url).map(DeepLink::Join),
@@ -141,7 +146,7 @@ fn is_secret(value: &str) -> bool {
     (32..=128).contains(&value.len()) && value.bytes().all(|byte| byte.is_ascii_hexdigit())
 }
 
-/// An OAuth redirect relayed by the web app's callback page: `openpen://oauth/<provider>?…`.
+/// An OAuth redirect relayed by the web app's callback page: `brutal://oauth/<provider>?…`.
 /// The query goes to the webview untouched; the attempt that started sign-in checks its state.
 #[derive(Debug, Clone, PartialEq, Eq, serde::Serialize)]
 pub struct OAuthCallback {
@@ -211,6 +216,22 @@ mod tests {
 
     fn oauth(url: &str) -> Option<OAuthCallback> {
         parse_oauth_url(&Url::parse(url).unwrap())
+    }
+
+    #[test]
+    fn registered_app_schemes_accept_room_invites() {
+        let room = "abcdefghijklmnopqrstuvwxyz012345";
+        for scheme in ["brutal", "openpen"] {
+            let url = Url::parse(&format!("{scheme}://join?room={room}")).unwrap();
+            assert!(super::is_app_link(&url));
+            assert_eq!(
+                parse_deep_link(&url),
+                Ok(DeepLink::Join(DeepLinkJoin { room: room.into() }))
+            );
+        }
+        for unrelated in ["https://join", "file:///example.pen", "pencil://join"] {
+            assert!(!super::is_app_link(&Url::parse(unrelated).unwrap()));
+        }
     }
 
     #[test]

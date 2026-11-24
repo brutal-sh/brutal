@@ -41,7 +41,7 @@ pub fn open_paths_from_args(args: Vec<String>, cwd: &Path) -> Vec<PathBuf> {
         .collect()
 }
 
-/// `openpen://` URLs among a second launch's arguments: Windows and Linux start a new
+/// `brutal://` URLs among a second launch's arguments: Windows and Linux start a new
 /// process for a link, and the single-instance plugin hands its arguments to this one.
 #[cfg(all(
     any(target_os = "macos", windows, target_os = "linux"),
@@ -49,8 +49,8 @@ pub fn open_paths_from_args(args: Vec<String>, cwd: &Path) -> Vec<PathBuf> {
 ))]
 pub fn deep_links_from_args(args: &[String]) -> Vec<url::Url> {
     args.iter()
-        .filter(|arg| arg.starts_with("openpen://"))
         .filter_map(|arg| url::Url::parse(arg).ok())
+        .filter(super::links::is_app_link)
         .collect()
 }
 

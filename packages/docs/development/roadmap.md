@@ -24,7 +24,7 @@ v0.15.0 and v0.15.1 shipped work that earlier versions of this roadmap listed as
 - Multidimensional component variants and published component libraries with revision review and linked-instance updates.
 - Local recovery of unsaved documents, saved AI conversations, and CLI font diagnostics.
 - Opt-in browser WebMCP access, separate controls for the local MCP server and remote connections, and per-tool permissions.
-- `openpencil://` and web links that open a document and select a layer.
+- `brutal://` and web links that open a document and select a layer.
 
 ### Current development version
 

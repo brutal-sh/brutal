@@ -52,10 +52,10 @@ Claude Code, Cursor, Windsurf i inni klienci MCP mogą korzystać z tych samych 
 
 ## Schemat URL {#url-scheme}
 
-Aplikacja na komputer rejestruje `openpencil://`, dzięki czemu opublikowana strona — historyjka Storybook, przegląd projektu, README — może prowadzić prosto do warstwy:
+Aplikacja na komputer rejestruje `brutal://`, dzięki czemu opublikowana strona — historyjka Storybook, przegląd projektu, README — może prowadzić prosto do warstwy:
 
 ```
-openpencil://open?file=web/design/hikyo.pen&node=Button/Large/Default
+brutal://open?file=web/design/hikyo.pen&node=Button/Large/Default
 ```
 
 `file` to ścieżka względem repozytorium, kończąca się na `.pen` lub `.fig`; ścieżki bezwzględne oraz segmenty `.` i `..` są odrzucane. `node` jest opcjonalny. Obie wartości są kodowane jako URL — separatory ścieżki mogą pozostać dosłowne, ale dosłowny `+` trzeba wysłać jako `%2B` — a powtórzony klucz przyjmuje ostatnią wartość.

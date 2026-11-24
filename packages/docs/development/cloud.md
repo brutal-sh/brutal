@@ -467,9 +467,9 @@ says whether it is for a document or a workspace, so one link format, one email 
 editor dialog cover both, and the desktop app's link handling needs no new kind. Invitation
 continuations through OAuth stay document-only; the editor keeps a pending invitation itself.
 
-**2026-10 · Cloud links hand off to the desktop app through `openpencil://cloud`.** Links stay web
+**2026-10 · Cloud links hand off to the desktop app through `brutal://cloud`.** Links stay web
 addresses on the server's editor, so they work for anyone; the web editor on a computer offers the
-desktop app, which gets the web link as `openpencil://cloud?url=<link>#<secret>`. The native side
+desktop app, which gets the web link as `brutal://cloud?url=<link>#<secret>`. The native side
 checks the link, ID, and secret before the editor sees it. The secret is
 visible in the launch arguments to other processes on the same computer; pasting links into the
 app would avoid that at the cost of a manual step for everyone.
@@ -515,7 +515,7 @@ shared link `/share/:id`, and an invitation `/invitations/:id` on the server tha
 no `server` parameter and no `/cloud` prefix, and the server has no separate editor address to
 send them to. Peer-to-peer rooms move to `/rooms/:id` so "share" names a shared document. The
 cost is that a browser editor at any other address cannot keep a Cloud document in its address
-bar; every server serves its own editor, and the desktop app gets links through `openpencil://`.
+bar; every server serves its own editor, and the desktop app gets links through `brutal://`.
 
 **2026-10 · A link shows nothing until its document does.** A document link asks someone signed
 out to sign in on the server's page before the editor loads, and comes back to the document. A

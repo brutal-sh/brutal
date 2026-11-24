@@ -46,10 +46,10 @@ Claude Code, Cursor, Windsurf und andere MCP-Clients können dieselben 90 Werkze
 
 ## URL-Schema {#url-scheme}
 
-Die Desktop-Anwendung registriert `openpencil://`. Eine veröffentlichte Seite – eine Storybook-Story, eine Design-Review, eine README – kann damit direkt auf eine Ebene verweisen:
+Die Desktop-Anwendung registriert `brutal://`. Eine veröffentlichte Seite – eine Storybook-Story, eine Design-Review, eine README – kann damit direkt auf eine Ebene verweisen:
 
 ```
-openpencil://open?file=web/design/hikyo.pen&node=Button/Large/Default
+brutal://open?file=web/design/hikyo.pen&node=Button/Large/Default
 ```
 
 `file` ist ein auf das Repository bezogener Pfad, der auf `.pen` oder `.fig` endet; absolute Pfade und Segmente `.` oder `..` werden abgelehnt. `node` ist optional. Beide Werte sind URL-kodiert – Pfadtrenner dürfen unkodiert bleiben, ein literales `+` muss jedoch als `%2B` gesendet werden –, und bei einem wiederholten Schlüssel gilt der letzte Wert.

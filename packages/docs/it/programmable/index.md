@@ -44,10 +44,10 @@ Il comando `eval` esegue JavaScript con un oggetto globale `figma` compatibile. 
 
 ## Schema URL {#url-scheme}
 
-L’app desktop registra `openpencil://`, quindi una pagina pubblicata (una storia Storybook, una revisione del design, un README) può rimandare direttamente a un livello:
+L’app desktop registra `brutal://`, quindi una pagina pubblicata (una storia Storybook, una revisione del design, un README) può rimandare direttamente a un livello:
 
 ```
-openpencil://open?file=web/design/hikyo.pen&node=Button/Large/Default
+brutal://open?file=web/design/hikyo.pen&node=Button/Large/Default
 ```
 
 `file` è un percorso relativo al repository che termina con `.pen` o `.fig`; percorsi assoluti e segmenti `.` o `..` vengono rifiutati. `node` è facoltativo. L’app cerca `file` tra i percorsi delle schede aperte e, se non ne trova, chiede il file con un selettore.

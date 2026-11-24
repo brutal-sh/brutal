@@ -11,7 +11,7 @@ import {
 describe('chat references', () => {
   test('a link round-trips its kind, ID, and label', () => {
     const link = referenceLink({ kind: 'node', id: '12:34', label: 'Hero [main]' })
-    expect(link).toBe('[Hero \\[main\\]](openpencil://node/12%3A34)')
+    expect(link).toBe('[Hero \\[main\\]](brutal://node/12%3A34)')
     expect(findReferences(`See ${link}.`)).toEqual([
       {
         reference: { kind: 'node', id: '12:34', label: 'Hero [main]' },
@@ -23,7 +23,7 @@ describe('chat references', () => {
 
   test('reads what a model writes by hand, and nothing that is not a reference', () => {
     expect(
-      findReferences('[Card](openpencil://node/1:2) and [Home](openpencil://page/0:1)').map(
+      findReferences('[Card](openpencil://node/1:2) and [Home](brutal://page/0:1)').map(
         ({ reference }) => reference
       )
     ).toEqual([
@@ -35,7 +35,17 @@ describe('chat references', () => {
       kind: 'skill',
       id: 'brand-review'
     })
-    expect(parseReferenceURL('openpencil://node/1/2')).toBeNull()
+    expect(parseReferenceURL('brutal://node/1:2')).toEqual({ kind: 'node', id: '1:2' })
+    for (const url of [
+      'brutal://node/1/2',
+      'brutal://node/1?x=2',
+      'brutal://join/room',
+      'brutal://node/%FF',
+      'https://node/1'
+    ]) {
+      expect(parseReferenceURL(url)).toBeNull()
+      expect(findReferences(`[Example](${url})`)).toEqual([])
+    }
   })
 
   test('the transcript renders references as components and leaves other links alone', () => {

@@ -44,10 +44,10 @@ El comando `eval` ejecuta JavaScript con un objeto global `figma` compatible. Pe
 
 ## Esquema de URL {#url-scheme}
 
-La aplicación de escritorio registra `openpencil://`, de modo que una página publicada —una historia de Storybook, una revisión de diseño, un README— puede enlazar directamente a una capa:
+La aplicación de escritorio registra `brutal://`, de modo que una página publicada —una historia de Storybook, una revisión de diseño, un README— puede enlazar directamente a una capa:
 
 ```
-openpencil://open?file=web/design/hikyo.pen&node=Button/Large/Default
+brutal://open?file=web/design/hikyo.pen&node=Button/Large/Default
 ```
 
 `file` es una ruta relativa al repositorio que termina en `.pen` o `.fig`; se rechazan las rutas absolutas y los segmentos `.` o `..`. `node` es opcional. Ambos valores van codificados como URL —los separadores de ruta pueden quedar tal cual, pero un `+` literal debe enviarse como `%2B`— y, si una clave se repite, se usa su último valor.

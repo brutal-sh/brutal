@@ -1,0 +1,1 @@
+- Room invitations open Brutal with a branded desktop link and existing invitations still work.

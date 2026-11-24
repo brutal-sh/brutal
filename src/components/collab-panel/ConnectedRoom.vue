@@ -66,16 +66,25 @@ const statusText = computed(() =>
 
   <div class="mt-3 flex items-center justify-between gap-2 border-t border-border pt-3">
     <p
-      v-if="room.desktopLink.value"
+      v-if="room.desktopLinks.value"
       class="flex min-w-0 flex-wrap items-center gap-x-1.5 gap-y-1 text-[11px] text-muted"
     >
       <a
-        :href="room.desktopLink.value"
+        :href="room.desktopLinks.value.current"
         class="text-primary underline-offset-2 hover:underline focus-visible:underline focus-visible:outline-none"
         data-test-id="collab-open-desktop"
       >
         {{ collab.messages.openInDesktopApp }}
       </a>
+      <span class="inline-flex min-w-0 items-baseline gap-1.5">
+        <span aria-hidden="true">·</span>
+        <a
+          :href="room.desktopLinks.value.legacy"
+          class="text-primary underline-offset-2 hover:underline focus-visible:underline focus-visible:outline-none"
+        >
+          {{ collab.messages.openInOlderBeta }}
+        </a>
+      </span>
       <span v-if="room.downloadURL.value" class="inline-flex min-w-0 items-baseline gap-1.5">
         <span aria-hidden="true">·</span>
         <a

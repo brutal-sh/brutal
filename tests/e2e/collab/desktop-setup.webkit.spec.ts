@@ -7,18 +7,63 @@ import { getSelectedNode } from '#tests/helpers/store'
 
 const SETUP_URL = 'https://brutal.sh/help/getting-started/'
 const LOCALES = [
-  { locale: 'en', label: 'Desktop setup' },
-  { locale: 'de', label: 'Desktop-Einrichtung' },
-  { locale: 'es', label: 'Configurar la aplicación de escritorio' },
-  { locale: 'fr', label: 'Configurer l’application de bureau' },
-  { locale: 'it', label: 'Configura l’app desktop' },
-  { locale: 'ja', label: 'デスクトップ版のセットアップ' },
-  { locale: 'pl', label: 'Konfiguracja aplikacji komputerowej' },
-  { locale: 'ru', label: 'Настройка настольного приложения' },
-  { locale: 'zh-CN', label: '桌面版设置' }
+  {
+    locale: 'en',
+    label: 'Desktop setup',
+    primaryLabel: 'Open in Brutal',
+    legacyLabel: 'Open in an older beta'
+  },
+  {
+    locale: 'de',
+    label: 'Desktop-Einrichtung',
+    primaryLabel: 'In Brutal öffnen',
+    legacyLabel: 'In einer älteren Beta öffnen'
+  },
+  {
+    locale: 'es',
+    label: 'Configurar la aplicación de escritorio',
+    primaryLabel: 'Abrir en Brutal',
+    legacyLabel: 'Abrir en una beta anterior'
+  },
+  {
+    locale: 'fr',
+    label: 'Configurer l’application de bureau',
+    primaryLabel: 'Ouvrir dans Brutal',
+    legacyLabel: 'Ouvrir dans une bêta antérieure'
+  },
+  {
+    locale: 'it',
+    label: 'Configura l’app desktop',
+    primaryLabel: 'Apri in Brutal',
+    legacyLabel: 'Apri in una beta precedente'
+  },
+  {
+    locale: 'ja',
+    label: 'デスクトップ版のセットアップ',
+    primaryLabel: 'Brutal で開く',
+    legacyLabel: '以前のベータ版で開く'
+  },
+  {
+    locale: 'pl',
+    label: 'Konfiguracja aplikacji komputerowej',
+    primaryLabel: 'Otwórz w Brutal',
+    legacyLabel: 'Otwórz w starszej wersji beta'
+  },
+  {
+    locale: 'ru',
+    label: 'Настройка настольного приложения',
+    primaryLabel: 'Открыть в Brutal',
+    legacyLabel: 'Открыть в более ранней бета-версии'
+  },
+  {
+    locale: 'zh-CN',
+    label: '桌面版设置',
+    primaryLabel: '在 Brutal 中打开',
+    legacyLabel: '使用较早的测试版打开'
+  }
 ] as const
 
-for (const { locale, label } of LOCALES) {
+for (const { locale, label, primaryLabel, legacyLabel } of LOCALES) {
   test.describe(locale, () => {
     test.use({ locale })
     for (const mode of ['waiting', 'sharing'] as const) {
@@ -57,6 +102,14 @@ for (const { locale, label } of LOCALES) {
             await expect(surface.getByTestId('collab-room-link')).toBeVisible()
           }
           const before = mode === 'sharing' ? await getSelectedNode(page) : undefined
+          const primary = surface.getByRole('link', { name: primaryLabel, exact: true })
+          const legacy = surface.getByRole('link', { name: legacyLabel, exact: true })
+          await expect(primary).toHaveAttribute('href', /^brutal:\/\/join\?room=[a-z0-9]{32}$/)
+          const primaryURL = await primary.getAttribute('href')
+          await expect(legacy).toHaveAttribute(
+            'href',
+            primaryURL?.replace(/^brutal:/, 'openpen:') ?? ''
+          )
           const link = surface.getByRole('link', { name: label, exact: true })
           await expect(link).toHaveAttribute('href', SETUP_URL)
           await surface.screenshot({

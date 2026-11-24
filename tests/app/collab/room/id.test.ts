@@ -13,6 +13,8 @@ describe('room links and IDs', () => {
   test('reads the room ID from a bare ID or a room link, whatever surrounds it', () => {
     for (const input of [
       ROOM,
+      `brutal://join?room=${ROOM}`,
+      `openpen://join?room=${ROOM}`,
       `  ${ROOM}  `,
       `https://brutal.sh/rooms/${ROOM}`,
       `https://brutal.sh/rooms/${ROOM}/`,
@@ -29,6 +31,9 @@ describe('room links and IDs', () => {
     for (const input of [
       '',
       'e2e-collaboration-room',
+      'brutal://join?room=short',
+      `brutal://open?room=${ROOM}`,
+      `brutal://join/wrong?room=${ROOM}`,
       ROOM.slice(1),
       `${ROOM}0`,
       ROOM.toUpperCase(),

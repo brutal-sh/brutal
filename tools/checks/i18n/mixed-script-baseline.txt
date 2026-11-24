@@ -130,6 +130,7 @@ ja:code.noSelectionDesignJSX
 ja:code.writeJSX
 ja:collaboration.invalidRoomLink
 ja:collaboration.joinRoomDescription
+ja:collaboration.openInDesktopApp
 ja:collaboration.pasteRoomLinkOrId
 ja:collaboration.unreachableDescription
 ja:collaboration.voiceDeniedDescription
@@ -356,6 +357,7 @@ zh-cn:code.noSelectionDesignJSX
 zh-cn:code.writeJSX
 zh-cn:collaboration.invalidRoomLink
 zh-cn:collaboration.joinRoomDescription
+zh-cn:collaboration.openInDesktopApp
 zh-cn:collaboration.pasteRoomLinkOrId
 zh-cn:collaboration.unreachableDescription
 zh-cn:collaboration.voiceDeniedDescription

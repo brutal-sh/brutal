@@ -44,10 +44,10 @@ La commande `eval` exécute JavaScript avec un objet global `figma` compatible. 
 
 ## Schéma d’URL {#url-scheme}
 
-L’application de bureau enregistre `openpencil://` : une page publiée — une story Storybook, une revue de design, un README — peut ainsi pointer directement vers un calque :
+L’application de bureau enregistre `brutal://` : une page publiée — une story Storybook, une revue de design, un README — peut ainsi pointer directement vers un calque :
 
 ```
-openpencil://open?file=web/design/hikyo.pen&node=Button/Large/Default
+brutal://open?file=web/design/hikyo.pen&node=Button/Large/Default
 ```
 
 `file` est un chemin relatif au dépôt se terminant par `.pen` ou `.fig` ; les chemins absolus et les segments `.` ou `..` sont refusés. `node` est facultatif. Les deux valeurs sont encodées en URL — les séparateurs de chemin peuvent rester littéraux, mais un `+` littéral doit être envoyé sous la forme `%2B` — et une clé répétée prend sa dernière valeur.

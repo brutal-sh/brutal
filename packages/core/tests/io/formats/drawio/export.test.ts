@@ -96,7 +96,7 @@ describe('saving a draw.io file', () => {
   test('a diagram opened from draw.io saves to one that opens the same', async () => {
     const opened = await read(ORDER_FLOW)
     const saved = await write(opened)
-    expect(saved).toStartWith('<mxfile host="OpenPencil">')
+    expect(saved).toStartWith('<mxfile host="Brutal">')
     expect(summary(await read(saved))).toEqual(summary(opened))
   })
 

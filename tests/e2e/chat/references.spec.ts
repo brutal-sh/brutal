@@ -25,9 +25,7 @@ test('@ inserts a layer as a chip that the reply shows and that selects the laye
   // An `@` inside a word, as in an address, is not a reference.
   await page.keyboard.type('ann@Her')
   await expect(page.getByRole('option', { name: /Hero/ })).toHaveCount(0)
-  await page.keyboard.press('ControlOrMeta+a')
-  await page.keyboard.press('Backspace')
-  await page.keyboard.type('Tighten @Her')
+  await page.keyboard.type(' and tighten @Her')
   await page.getByRole('option', { name: /Hero/ }).click()
   const draftChip = chat.input.locator('[data-slot="chat-reference"]')
   await expect(draftChip).toHaveText('Hero')
@@ -37,13 +35,28 @@ test('@ inserts a layer as a chip that the reply shows and that selects the laye
   const sent = chat.userMessage().locator('[data-slot="chat-reference"]')
   await expect(sent).toHaveText('Hero')
   const request = await page.evaluate(() => document.documentElement.dataset.lastChatRequest)
-  expect(request).toContain(`(openpencil://node/${encodeURIComponent(heroId)})`)
+  expect(request).toContain(`(brutal://node/${encodeURIComponent(heroId)})`)
 
   // The mock reply repeats the request, so it carries the reference too.
   const replied = chat.assistantMessage().getByRole('button', { name: /Hero/ })
   await replied.click()
   await expect
     .poll(() => page.evaluate(() => [...(window.openPencil?.getStore?.().state.selectedIds ?? [])]))
+    .toEqual([heroId])
+})
+
+test('legacy chat references still focus their canvas node', async ({ configuredChat: chat }) => {
+  const heroId = await chat.page.evaluate(() => {
+    const store = window.openPencil?.getStore?.()
+    if (!store) throw new Error('No store')
+    return store.graph.createNode('FRAME', store.state.currentPageId, { name: 'Hero' }).id
+  })
+  await chat.submit(`Find [Hero](openpencil://node/${encodeURIComponent(heroId)})`)
+  await chat.assistantMessage().getByRole('button', { name: /Hero/ }).click()
+  await expect
+    .poll(() =>
+      chat.page.evaluate(() => [...(window.openPencil?.getStore?.().state.selectedIds ?? [])])
+    )
     .toEqual([heroId])
 })
 

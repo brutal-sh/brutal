@@ -8,7 +8,7 @@ Brutal is a local-first desktop design editor by THEFT Studio, built on the MIT-
 
 ![Brutal desktop editor showing the Field Notes sample](packages/docs/public/screenshot.png)
 
-Brutal is the new name for Open Pen. Existing design files and local installations use the same compatibility identifiers.
+Brutal opens designs created by earlier releases and recognizes their existing local installation data.
 
 The implementation baseline is OpenPencil `24461adec7073312d460d76f08f069de18e4fb78`. Its attribution and MIT license remain intact. Pen's proprietary code and assets are not part of this repository.
 

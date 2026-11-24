@@ -16,18 +16,16 @@ export function loadSidebarWidth(): number {
   try {
     const stored = localStorage.getItem(SIDEBAR_WIDTH_KEY)
     const legacy = v.safeParse(legacyLayoutSchema, localStorage.getItem(LEGACY_LAYOUT_KEY))
-    const width =
-      stored !== null
-        ? Number(stored)
-        : legacy.success
-          ? (legacy.output[0] / 100) * (window.innerWidth - 16)
-          : SIDEBAR_WIDTH.initial
+    const fallback = legacy.success
+      ? (legacy.output[0] / 100) * (window.innerWidth - 16)
+      : SIDEBAR_WIDTH.initial
+    const width = stored === null ? fallback : Number(stored)
     if (width === 0) return 0
     if (Number.isFinite(width) && width > 0) {
       return Math.max(SIDEBAR_WIDTH.min, Math.min(SIDEBAR_WIDTH.max, width))
     }
   } catch {
-    // A window with unavailable storage starts at the normal width.
+    return SIDEBAR_WIDTH.initial
   }
   return SIDEBAR_WIDTH.initial
 }
@@ -36,8 +34,8 @@ export function saveSidebarWidth(width: number): void {
   if (IS_BROWSER && Number.isFinite(width)) {
     try {
       localStorage.setItem(SIDEBAR_WIDTH_KEY, String(Math.round(width)))
-    } catch {
-      // Resizing still works when the preference cannot be persisted.
+    } catch (error) {
+      console.warn('[Layout] Could not save sidebar width', error)
     }
   }
 }

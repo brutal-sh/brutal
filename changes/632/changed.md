@@ -1,0 +1,1 @@
+- Cloud invitations, OpenRouter desktop sign-in, Storybook exports, and chat references use Brutal links. Earlier chat references still select their layers.

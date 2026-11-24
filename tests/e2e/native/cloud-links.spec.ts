@@ -10,7 +10,7 @@ const SECRET = 'ab'.repeat(32)
 const SERVER = 'http://127.0.0.1:9'
 
 function invitationLink(secret: string): string {
-  return `openpen://cloud?url=${encodeURIComponent(`${SERVER}/invitations/${INVITATION}`)}#${secret}`
+  return `brutal://cloud?url=${encodeURIComponent(`${SERVER}/invitations/${INVITATION}`)}#${secret}`
 }
 
 describe('native Cloud links', () => {
