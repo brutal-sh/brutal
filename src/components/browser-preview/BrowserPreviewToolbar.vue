@@ -169,8 +169,8 @@ defineExpose({ focusAddress })
       :disabled="busy"
       @click="codingMode = !codingMode"
     >
-      <icon-lucide-minimize-2 v-if="codingMode" class="size-3.5" />
-      <icon-lucide-maximize-2 v-else class="size-3.5" />
+      <icon-lucide-minimize-2 v-if="codingMode" class="size-4" />
+      <icon-lucide-maximize-2 v-else class="size-4" />
     </IconButton>
     <BrowserPreviewMore
       :zoom="zoom"

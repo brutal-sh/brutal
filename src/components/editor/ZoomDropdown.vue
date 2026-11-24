@@ -24,6 +24,7 @@ import AppShortcutText from '@/components/ui/menu/AppShortcutText.vue'
 import { menuItem, useMenuUI } from '@/components/ui/menu/menu'
 import MenuScrollArea from '@/components/ui/menu/MenuScrollArea.vue'
 
+const { canvas = false } = defineProps<{ canvas?: boolean }>()
 const store = useEditorStore()
 const { getCommand } = useEditorCommands()
 const { menu: menuText, commands, panels } = useI18n()
@@ -107,7 +108,10 @@ watch(open, (v) => {
     <DropdownMenuTrigger as-child>
       <button
         data-test-id="zoom-dropdown-trigger"
-        class="ml-auto cursor-pointer rounded px-1.5 py-0.5 text-[11px] text-muted hover:bg-hover"
+        class="cursor-pointer rounded text-muted hover:bg-hover"
+        :class="
+          canvas ? 'w-11 py-1 text-center font-mono text-xs' : 'ml-auto px-1.5 py-0.5 text-[11px]'
+        "
       >
         {{ zoomPercent() }}%
       </button>

@@ -58,7 +58,7 @@ if (IS_BROWSER) {
     v-model:open="open"
     size="md"
     :ui="{
-      content: 'w-[min(40rem,94vw)] p-0',
+      content: 'top-[14%] w-[min(560px,calc(100%-32px))] translate-y-0 p-0',
       overlay: 'bg-black/40'
     }"
     @escape-key-down="close"
@@ -69,7 +69,7 @@ if (IS_BROWSER) {
     </VisuallyHidden>
     <CommandPaletteRoot :groups="groups" :labels="labels" :ui="paletteUI" @select="open = false">
       <template #search-leading>
-        <Search class="mx-2 size-5 shrink-0 text-muted" />
+        <Search class="size-4 shrink-0 text-muted" />
       </template>
       <template #search-trailing>
         <IconButton class="ml-2" size="md" :label="common.close" @click="close">

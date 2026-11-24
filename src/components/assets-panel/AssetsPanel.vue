@@ -142,7 +142,8 @@ async function insertSelectedAsset() {
 
     <div v-if="workspace" class="shrink-0 px-3 pb-3">
       <AppButton
-        class="w-full"
+        class="w-full gap-1 rounded-lg text-[13px]"
+        size="md"
         variant="solid"
         color="primary"
         :disabled="!createComponent.enabled.value"

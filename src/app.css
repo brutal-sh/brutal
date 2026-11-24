@@ -46,6 +46,14 @@ input[type='number']::-webkit-outer-spin-button {
 }
 
 @layer base {
+  /* Iconify may place the stroke on the root, a group, or an individual shape. */
+  :where(svg[data-ui-glyph], svg[data-ui-glyph] [stroke-width]) {
+    stroke-width: 1px;
+  }
+  :where(svg[data-ui-glyph]) :is(path, line, polyline, polygon, rect, circle, ellipse) {
+    vector-effect: non-scaling-stroke;
+  }
+
   :where(a[href], button:not(:disabled), summary) {
     cursor: var(--app-link-pointer);
   }

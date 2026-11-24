@@ -10,3 +10,4 @@
 - The usage statistics prompt and privacy settings show Brutal’s data-sharing details in the selected language.
 - Document tabs and the sidebar resize handle stay accessible while a file opens.
 - The floating chat uses a uniform inset, compact conversation tabs, and single-row controls down to a 360 px composer width.
+- The editor remembers sidebar width in pixels and keeps comment search visible while the comment tool is active.

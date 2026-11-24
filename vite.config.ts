@@ -23,7 +23,7 @@ import {
 } from './vite/automation'
 import { bootSplashPlugin } from './vite/boot-splash'
 import { cloudSitePlugin } from './vite/cloud-site'
-import { aiIconCollection, brutalIconCollection } from './vite/icons'
+import { aiIconCollection, brutalIconCollection, markInterfaceIcon } from './vite/icons'
 import { inlineScriptPlugin } from './vite/inline-script'
 import { metricsBrandPlugin } from './vite/metrics'
 import { nativeTestPlugin } from './vite/native-test'
@@ -90,6 +90,7 @@ export default defineConfig(async ({ command, mode }) => {
       tailwindcss(),
       Icons({
         compiler: 'vue3',
+        iconCustomizer: markInterfaceIcon,
         customCollections: { ai: aiIconCollection(), brutal: brutalIconCollection }
       }),
       Components({ resolvers: [IconsResolver({ prefix: 'icon', customCollections: ['ai'] })] }),

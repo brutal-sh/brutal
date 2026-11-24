@@ -1,7 +1,7 @@
 const toolbarTheme = {
   slots: {
     desktopRoot:
-      'absolute top-24 left-2 z-10 flex max-h-[calc(100%-6.5rem)] flex-col items-center gap-2',
+      'absolute top-1/2 left-2 z-10 flex max-h-[calc(100%-12rem)] -translate-y-1/2 flex-col items-center gap-2',
     desktopRail:
       'scrollbar-none flex w-9 flex-col items-center gap-1 overflow-y-auto rounded-[20px] border border-island-border bg-panel p-[3px]',
     button:

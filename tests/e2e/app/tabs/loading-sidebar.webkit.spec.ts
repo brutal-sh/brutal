@@ -29,7 +29,7 @@ test('document tabs stay clickable across sidebar widths while the active docume
       })
       .toBeLessThan(5)
   }
-  await resizeSidebar(238)
+  await resizeSidebar(288)
   await page.evaluate(() => {
     const store = window.openPencil?.getStore?.()
     if (!store) throw new Error('Missing editor store')
@@ -44,12 +44,12 @@ test('document tabs stay clickable across sidebar widths while the active docume
   const close = page.getByTestId('tabbar-close').last()
   const add = page.getByTestId('tabbar-new')
   await add.click({ trial: true, timeout: 2000 })
-  for (const target of [238, 328, 500]) {
+  for (const target of [288, 328, 500]) {
     await resizeSidebar(target)
     await expect(loader).toBeVisible()
     await close.click({ trial: true, timeout: 2000 })
     await add.click({ trial: true, timeout: 2000 })
-    if (target === 238)
+    if (target === 288)
       await page.screenshot({ path: test.info().outputPath('loading-sidebar.png') })
   }
   await add.click()

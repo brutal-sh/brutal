@@ -1,12 +1,12 @@
 export default {
   slots: {
-    root: 'flex h-[min(70vh,32rem)] flex-col overflow-hidden',
-    searchWrapper: 'flex h-14 shrink-0 items-center border-b border-border px-3',
+    root: 'flex max-h-[calc(86vh-1rem)] flex-col overflow-hidden',
+    searchWrapper: 'flex h-12 shrink-0 items-center gap-2.5 border-b border-border px-4',
     search:
       'h-8 flex-1 rounded-none border-0 bg-transparent px-0 text-[13px] outline-none placeholder:text-muted',
     back: 'px-2 pt-2 text-xs text-muted',
     content:
-      'min-h-0 flex-1 overflow-y-auto px-2 pb-2 pt-1 [scrollbar-color:theme(colors.muted)_transparent]',
+      'min-h-0 max-h-[min(400px,55vh)] overflow-y-auto p-1.5 [scrollbar-color:theme(colors.muted)_transparent]',
     label: 'px-2 py-1 text-[11px] font-medium text-muted',
     group: 'mb-2 last:mb-0',
     item: 'mx-0 flex h-8 cursor-pointer items-center gap-2 rounded-md p-1 text-[13px] leading-6 text-surface outline-none data-[disabled]:cursor-not-allowed data-[disabled]:text-muted data-[disabled]:opacity-55 data-[highlighted]:bg-hover',

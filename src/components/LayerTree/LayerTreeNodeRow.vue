@@ -113,7 +113,7 @@ const styles = computed(() =>
         action: styles.action({ class: ui?.action }),
         lockIcon: layerTree({ actionActive: node.locked }).actionIcon({ class: ui?.actionIcon }),
         visibilityIcon: layerTree({ actionActive: !node.visible }).actionIcon({
-          class: ui?.actionIcon
+          class: ['size-4', ui?.actionIcon]
         })
       }"
       @toggle-lock="actions.toggleLock"

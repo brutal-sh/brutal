@@ -5,6 +5,11 @@ import { FileSystemIconLoader } from 'unplugin-icons/loaders'
 
 import { MOUSE_POINTER } from '@open-pencil/core/constants'
 
+// Isolate editor glyph styling from document SVGs, branding and provider logos.
+export function markInterfaceIcon(collection: string, name: string, props: Record<string, string>) {
+  if (collection === 'lucide') props['data-ui-glyph'] = name
+}
+
 export const brutalIconCollection = {
   pointer: () => {
     const { size, path } = MOUSE_POINTER

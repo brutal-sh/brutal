@@ -22,7 +22,7 @@ import { provideTabEditorStore } from '@/app/editor/active-store'
 import { openVariablesDialog } from '@/app/editor/tokens/dialog'
 import { consumeHomeBrowserRequest } from '@/app/home/creation'
 import { appRuntimeConfig } from '@/app/runtime/config'
-import { loadEditorLayout, saveEditorLayout } from '@/app/shell/layout-storage'
+import { loadSidebarWidth, saveSidebarWidth, SIDEBAR_WIDTH } from '@/app/shell/layout-storage'
 import { appMenuShortcut } from '@/app/shell/menu/shortcut'
 import type { Tab } from '@/app/tabs'
 import BrowserPreviewControl from '@/components/browser-preview/BrowserPreviewControl.vue'
@@ -61,7 +61,7 @@ const { tab } = defineProps<{ tab: Tab }>()
 const store = tab.store
 provideTabEditorStore(store)
 const { isMobile } = useViewportKind()
-const initialEditorLayout = loadEditorLayout()
+const initialSidebarWidth = loadSidebarWidth()
 const inspectorPinned = ref(false)
 const inspectorCollapsed = ref(false)
 const browserOpen = ref(consumeHomeBrowserRequest(store))
@@ -101,7 +101,7 @@ let layoutRevision = 0
 watch(
   splitBrowser,
   async (visible) => {
-    const left = sidebar.value?.getSize() ?? initialEditorLayout[0] ?? 26
+    const left = sidebar.value?.getSize() ?? initialSidebarWidth
     const leftElement: unknown = sidebar.value?.$el
     const width = leftElement instanceof HTMLElement ? leftElement.getBoundingClientRect().width : 0
     if (!visible && browserPane.value) browserWidth = browserPane.value.getSize()
@@ -128,6 +128,7 @@ const { activeTab, advancedProperties } = useAIChat()
 const inspectorVisible = computed(
   () =>
     inspectorPinned.value ||
+    store.state.activeTool === 'COMMENT' ||
     advancedProperties.value ||
     store.state.selectedIds.size > 0 ||
     activeTab.value === 'code' ||
@@ -145,7 +146,7 @@ const compactInspectorCollapsed = computed(
 )
 function rememberLayout(layout: number[]) {
   emit('headerWidth', layout.length === 3 ? (layout[0] ?? 0) + (layout[1] ?? 0) : 100)
-  if (layout.length === 2) saveEditorLayout([layout[0] ?? 26, (layout[1] ?? 74) - 20, 20])
+  if (layout.length === 2 && sidebar.value) saveSidebarWidth(sidebar.value.getSize())
 }
 function zoom(delta: number) {
   const center = store.viewportCanvasCenter()
@@ -175,14 +176,15 @@ const { pending: roomPending } = useRoomActions()
     <!-- Keep fractional panel sizes instead of Reka's three-significant-digit flex rounding. -->
     <SplitterPanel
       id="layers"
-      :style="{ flexGrow: layout[0] ?? initialEditorLayout[0] ?? 26 }"
+      :style="{ flexGrow: layout[0] }"
+      size-unit="px"
       ref="sidebar"
       :collapsible="true"
       :collapsed-size="0"
       :inert="layout[0] === 0"
-      :default-size="initialEditorLayout[0]"
-      :min-size="18"
-      :max-size="40"
+      :default-size="initialSidebarWidth"
+      :min-size="SIDEBAR_WIDTH.min"
+      :max-size="SIDEBAR_WIDTH.max"
       class="flex min-w-0 pt-12"
     >
       <WorkspaceSidebar
@@ -196,13 +198,7 @@ const { pending: roomPending } = useRoomActions()
     >
       <div class="h-full w-2" />
     </SplitterResizeHandle>
-    <SplitterPanel
-      id="canvas"
-      :style="{ flexGrow: layout[1] ?? 100 - (initialEditorLayout[0] ?? 26) }"
-      :default-size="100 - (initialEditorLayout[0] ?? 26)"
-      :min-size="30"
-      class="isolate flex"
-    >
+    <SplitterPanel id="canvas" :style="{ flexGrow: layout[1] }" :min-size="30" class="isolate flex">
       <div ref="canvasHost" class="relative flex min-w-0 flex-1">
         <div
           data-test-id="editor-canvas-surface"
@@ -263,13 +259,13 @@ const { pending: roomPending } = useRoomActions()
           </div>
           <div
             data-canvas-obstacle
-            class="absolute bottom-0 z-10 flex items-center gap-2 rounded-full border border-island-border bg-panel px-2 py-1"
+            class="absolute bottom-0 z-10 flex items-center gap-1 rounded-[20px] border border-island-border bg-panel p-0.5"
             :class="inspectorVisible && !compactInspectorCollapsed ? 'right-[229px]' : 'right-0'"
           >
             <IconButton label="Zoom out" size="sm" @click="zoom(100)"
               ><icon-lucide-minus class="size-4"
             /></IconButton>
-            <ZoomDropdown />
+            <ZoomDropdown canvas />
             <IconButton label="Zoom in" size="sm" @click="zoom(-100)"
               ><icon-lucide-plus class="size-4"
             /></IconButton>
