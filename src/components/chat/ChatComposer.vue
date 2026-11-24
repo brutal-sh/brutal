@@ -40,12 +40,10 @@ const working = computed(() => status === 'streaming' || status === 'submitted')
 const host = useTemplateRef<HTMLDivElement>('host')
 const editor = useChatEditor(host, {
   label: () => ai.value.describeChange,
-  placeholder: () =>
-    working.value
-      ? ai.value.queueMessage
-      : compact
-        ? ai.value.canvasPrompt
-        : ai.value.describeChange,
+  placeholder: () => {
+    if (working.value) return ai.value.queueMessage
+    return compact ? ai.value.canvasPrompt : ai.value.describeChange
+  },
   editable: () => !disabled,
   attributes: { 'data-test-id': 'chat-input' },
   completions,
