@@ -137,7 +137,10 @@ function onOpenChange(open: boolean): void {
   <AppDialogRoot
     :open="settingsDialogOpen"
     size="xl"
-    :ui="{ content: 'w-[min(52.5rem,96vw)]' }"
+    :ui="{
+      content:
+        'w-[96vw] rounded-3xl sm:h-[min(697px,calc(100vh-118px))] sm:max-h-none sm:w-[min(1100px,calc(100%-32px))]'
+    }"
     height="full"
     data-test-id="app-settings-dialog"
     @update:open="onOpenChange"
@@ -146,6 +149,7 @@ function onOpenChange(open: boolean): void {
       :heading="settings.title"
       :description="settings.description"
       :close-label="common.close"
+      :ui="{ close: 'size-7 rounded-[7px]' }"
     >
       <!-- An open editor turns the title into the path back to where it was opened from. On a
            phone the section picker below already names the section, so the path starts at the
@@ -174,7 +178,11 @@ function onOpenChange(open: boolean): void {
           @update:model-value="onSectionChange"
         />
       </div>
-      <AppTabsList v-show="!isMobile" :label="settings.title">
+      <AppTabsList
+        v-show="!isMobile"
+        :label="settings.title"
+        class="gap-px overflow-y-auto px-5 data-[orientation=vertical]:w-[232px]"
+      >
         <template v-for="group in groups" :key="group.label">
           <AppTabsHeading>{{ group.label }}</AppTabsHeading>
           <AppTabsTrigger
@@ -182,6 +190,7 @@ function onOpenChange(open: boolean): void {
             :key="section.value"
             :value="section.value"
             :data-test-id="`settings-section-${section.value}`"
+            class="h-9 gap-1.5 rounded-[7px] px-3 py-0 text-[13px] font-medium"
             @click="onTriggerClick(section.value)"
           >
             <template #leading><component :is="section.icon" class="size-3.5" /></template>

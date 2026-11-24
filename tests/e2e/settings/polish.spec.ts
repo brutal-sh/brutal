@@ -15,7 +15,7 @@ for (const reducedMotion of ['no-preference', 'reduce'] as const) {
     await page.setViewportSize({ width: 1280, height: 900 })
     await page.emulateMedia({ reducedMotion })
     await openSettings(page)
-    await expect(page.getByRole('dialog')).toHaveCSS('width', '840px')
+    await expect(page.getByRole('dialog')).toHaveCSS('width', '1100px')
     await page.getByTestId('settings-section-tools').click()
     const trigger = page.getByRole('button', { name: 'Read-only tools', exact: true })
     await trigger.click()

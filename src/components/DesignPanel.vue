@@ -167,7 +167,7 @@ const panelStyles = tv(designPanelTheme)
     <ConstraintsSection v-if="advanced" />
     <SelectionLayoutSection :compact="!advanced" />
     <AppearanceSection :compact="!advanced" />
-    <TypographySection />
+    <TypographySection :compact="!advanced" />
     <FillSection :compact="!advanced" />
     <template v-if="strokesAndEffects">
       <StrokeSection :compact="!advanced" />
@@ -263,7 +263,10 @@ const panelStyles = tv(designPanelTheme)
       <template v-if="node.type !== 'CONNECTOR'">
         <MaskSection />
         <!-- A shape with text's typography is its label's, as in Figma. -->
-        <TypographySection v-if="node.type === 'TEXT' || node.type === 'SHAPE_WITH_TEXT'" />
+        <TypographySection
+          v-if="node.type === 'TEXT' || node.type === 'SHAPE_WITH_TEXT'"
+          :compact="!advanced"
+        />
         <FillSection v-if="!scriptOfNode(node)" :compact="!advanced" />
         <IconSection v-if="!advanced" compact />
         <template v-if="strokesAndEffects">

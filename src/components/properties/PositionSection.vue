@@ -14,6 +14,8 @@ import PanelSection from '@/components/ui/panel/PanelSection.vue'
 import AppCheckbox from '@/components/ui/toggle/AppCheckbox.vue'
 
 const { compact = false } = defineProps<{ compact?: boolean }>()
+const compactSegments =
+  'flex min-w-0 rounded-md bg-panel-field [&>button]:min-w-0 [&>button]:flex-1 [&>button]:rounded-none [&>button:first-child]:rounded-l-md [&>button:last-child]:rounded-r-md [&>button]:text-[11px] [&>button>svg]:size-4'
 const { panels } = useI18n()
 const store = useEditorStore()
 const { getCommand } = useEditorCommands()
@@ -67,10 +69,7 @@ function handleAlign(
         :aria-label="panels.alignment"
         :class="compact ? 'grid grid-cols-2 gap-1.5' : 'flex justify-between'"
       >
-        <div
-          class="flex gap-0.5"
-          :class="compact ? 'justify-between rounded-md bg-panel-field' : undefined"
-        >
+        <div :class="compact ? compactSegments : 'flex gap-0.5'">
           <IconButton
             :label="panels.alignLeft"
             size="xs"
@@ -93,10 +92,7 @@ function handleAlign(
             ><icon-lucide-align-end-vertical class="size-3.5"
           /></IconButton>
         </div>
-        <div
-          class="flex gap-0.5"
-          :class="compact ? 'justify-between rounded-md bg-panel-field' : undefined"
-        >
+        <div :class="compact ? compactSegments : 'flex gap-0.5'">
           <IconButton
             :label="panels.alignTop"
             size="xs"
@@ -178,8 +174,8 @@ function handleAlign(
           </NumberField>
         </Tip>
         <div
-          class="flex h-6 items-center justify-end gap-0.5"
-          :class="compact ? 'rounded-md bg-panel-field' : undefined"
+          class="h-6 items-center"
+          :class="compact ? compactSegments : 'flex justify-end gap-0.5'"
         >
           <IconButton v-if="compact" :label="panels.rotate90" size="xs" @click="actions.rotate(90)">
             <RotateRightIcon class="size-4" />

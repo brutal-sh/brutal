@@ -9,6 +9,7 @@ import AppButton from '@/components/ui/button/AppButton.vue'
 import AppAlert from '@/components/ui/feedback/AppAlert.vue'
 import PanelSection from '@/components/ui/panel/PanelSection.vue'
 import AppSelect from '@/components/ui/select/AppSelect.vue'
+import { exportSelectUI } from '@/theme/properties/export-select'
 
 const store = useEditorStore()
 const { panels } = useI18n()
@@ -16,7 +17,8 @@ const formats = [
   { value: 'png', label: 'PNG' },
   { value: 'jpg', label: 'JPEG' },
   { value: 'webp', label: 'WEBP' },
-  { value: 'pdf', label: 'PDF' }
+  { value: 'pdf', label: 'PDF' },
+  { value: 'svg', label: 'SVG' }
 ]
 const scales = [1, 2, 3].map((value) => ({ value, label: `${value}x` }))
 const savedFormat = useLocalStorage('open-pen:export-format', 'png')
@@ -68,15 +70,21 @@ async function output() {
       <AppSelect
         :model-value="format === 'pdf' ? 1 : scale"
         :options="scales"
+        :ui="exportSelectUI"
         :label="panels.exportScale"
         :disabled="format === 'pdf'"
         @update:model-value="scale = $event"
       />
-      <AppSelect v-model="format" :options="formats" :label="panels.exportFormat" />
+      <AppSelect
+        v-model="format"
+        :options="formats"
+        :ui="exportSelectUI"
+        :label="panels.exportFormat"
+      />
     </div>
     <p v-if="format === 'pdf'" class="mt-2 text-[11px] text-muted">{{ panels.exportPDFPages }}</p>
     <AppButton
-      class="mt-1.5 h-6 w-full bg-input font-normal text-surface"
+      class="mt-1.5 h-6 w-full bg-input text-[11px] font-normal text-surface"
       :disabled="busy || !store.state.selectedIds.size"
       @click="output"
     >

@@ -358,7 +358,7 @@ const groupOptions = computed(() => groupEntries.value.map((entry) => entry.path
 <template>
   <div ref="root" :class="ui.root()" data-test-id="tokens-panel">
     <template v-if="!collection">
-      <div :class="ui.toolbar()">
+      <div :class="ui.toolbar({ class: 'p-2' })">
         <span class="flex-1" />
         <slot name="actions" />
       </div>

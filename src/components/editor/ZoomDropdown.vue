@@ -108,9 +108,11 @@ watch(open, (v) => {
     <DropdownMenuTrigger as-child>
       <button
         data-test-id="zoom-dropdown-trigger"
-        class="cursor-pointer rounded text-muted hover:bg-hover"
+        class="cursor-pointer text-muted hover:bg-hover"
         :class="
-          canvas ? 'w-11 py-1 text-center font-mono text-xs' : 'ml-auto px-1.5 py-0.5 text-[11px]'
+          canvas
+            ? 'w-11 rounded-[18px] py-1 text-center font-mono text-xs'
+            : 'ml-auto rounded px-1.5 py-0.5 text-[11px]'
         "
       >
         {{ zoomPercent() }}%

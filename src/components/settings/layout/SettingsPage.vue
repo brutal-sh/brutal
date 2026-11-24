@@ -4,7 +4,7 @@ import { AppDialogBody, AppDialogFooter } from '@/components/ui/dialog'
 
 <template>
   <div class="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden" data-slot="settings-page">
-    <AppDialogBody :ui="{ body: 'p-5 sm:p-6' }">
+    <AppDialogBody :ui="{ body: 'p-5 sm:p-8' }">
       <slot />
     </AppDialogBody>
     <AppDialogFooter v-if="$slots.footer">

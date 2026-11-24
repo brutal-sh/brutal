@@ -24,6 +24,11 @@ import AppSelect from '@/components/ui/select/AppSelect.vue'
 import SegmentedControl from '@/components/ui/select/SegmentedControl.vue'
 import AppSwitch from '@/components/ui/toggle/AppSwitch.vue'
 
+const { compact = false } = defineProps<{ compact?: boolean }>()
+const compactAlignmentUI = {
+  root: 'gap-px rounded-md p-px',
+  item: 'h-[22px] min-w-0 flex-1 rounded-[5px] px-0 [&>svg]:size-4'
+}
 const { panels, menu, fonts } = useI18n()
 const fontLoader = { load: loadFont }
 const alignmentOptions = computed(() => [
@@ -197,42 +202,46 @@ function picked<T>(value: MixedValue<T>): T | '' {
           />
         </PanelFieldGroup>
 
-        <PanelFieldGroup :label="panels.textAlignment" class="mb-3">
-          <SegmentedControl
-            :model-value="picked(ctx.merged('textAlignHorizontal'))"
-            :options="alignmentOptions"
-            :label="panels.textAlignment"
-            @change="ctx.actions.align($event as 'LEFT' | 'CENTER' | 'RIGHT' | 'JUSTIFIED')"
-          >
-            <template #option="{ option }">
-              <icon-lucide-align-left v-if="option.value === 'LEFT'" class="size-3.5" />
-              <icon-lucide-align-center v-else-if="option.value === 'CENTER'" class="size-3.5" />
-              <icon-lucide-align-right v-else-if="option.value === 'RIGHT'" class="size-3.5" />
-              <icon-lucide-align-justify v-else class="size-3.5" />
-            </template>
-          </SegmentedControl>
-        </PanelFieldGroup>
+        <div :class="compact ? 'grid grid-cols-2 gap-1.5' : 'contents'">
+          <PanelFieldGroup :label="compact ? undefined : panels.textAlignment" class="mb-3">
+            <SegmentedControl
+              :model-value="picked(ctx.merged('textAlignHorizontal'))"
+              :ui="compact ? compactAlignmentUI : undefined"
+              :options="alignmentOptions"
+              :label="panels.textAlignment"
+              @change="ctx.actions.align($event as 'LEFT' | 'CENTER' | 'RIGHT' | 'JUSTIFIED')"
+            >
+              <template #option="{ option }">
+                <icon-lucide-align-left v-if="option.value === 'LEFT'" class="size-3.5" />
+                <icon-lucide-align-center v-else-if="option.value === 'CENTER'" class="size-3.5" />
+                <icon-lucide-align-right v-else-if="option.value === 'RIGHT'" class="size-3.5" />
+                <icon-lucide-align-justify v-else class="size-3.5" />
+              </template>
+            </SegmentedControl>
+          </PanelFieldGroup>
 
-        <PanelFieldGroup :label="panels.verticalTextAlignment" class="mb-3">
-          <SegmentedControl
-            :model-value="picked(ctx.merged('textAlignVertical'))"
-            :options="verticalAlignmentOptions"
-            :label="panels.verticalTextAlignment"
-            @change="ctx.actions.setVerticalAlign($event as 'TOP' | 'CENTER' | 'BOTTOM')"
-          >
-            <template #option="{ option }">
-              <icon-lucide-align-vertical-justify-start
-                v-if="option.value === 'TOP'"
-                class="size-3.5"
-              />
-              <icon-lucide-align-vertical-justify-center
-                v-else-if="option.value === 'CENTER'"
-                class="size-3.5"
-              />
-              <icon-lucide-align-vertical-justify-end v-else class="size-3.5" />
-            </template>
-          </SegmentedControl>
-        </PanelFieldGroup>
+          <PanelFieldGroup :label="compact ? undefined : panels.verticalTextAlignment" class="mb-3">
+            <SegmentedControl
+              :model-value="picked(ctx.merged('textAlignVertical'))"
+              :ui="compact ? compactAlignmentUI : undefined"
+              :options="verticalAlignmentOptions"
+              :label="panels.verticalTextAlignment"
+              @change="ctx.actions.setVerticalAlign($event as 'TOP' | 'CENTER' | 'BOTTOM')"
+            >
+              <template #option="{ option }">
+                <icon-lucide-align-vertical-justify-start
+                  v-if="option.value === 'TOP'"
+                  class="size-3.5"
+                />
+                <icon-lucide-align-vertical-justify-center
+                  v-else-if="option.value === 'CENTER'"
+                  class="size-3.5"
+                />
+                <icon-lucide-align-vertical-justify-end v-else class="size-3.5" />
+              </template>
+            </SegmentedControl>
+          </PanelFieldGroup>
+        </div>
       </div>
 
       <div class="border-t border-border pt-3">

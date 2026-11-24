@@ -20,6 +20,7 @@ import { usePopoverUI } from '@/components/ui/overlay/popover'
 import PanelSection from '@/components/ui/panel/PanelSection.vue'
 import AppSelect from '@/components/ui/select/AppSelect.vue'
 import AppCheckbox from '@/components/ui/toggle/AppCheckbox.vue'
+import { exportSelectUI } from '@/theme/properties/export-select'
 
 const { nodeIds } = defineProps<{ nodeIds: readonly string[] }>()
 const store = useEditorStore()
@@ -111,12 +112,12 @@ async function output(save: boolean) {
 }
 </script>
 <template>
-  <PanelSection label="Code">
+  <PanelSection label="Code" :ui="{ actions: '[&_[data-slot=icon-button]]:rounded-md' }">
     <template #actions>
       <PopoverRoot v-model:open="settingsOpen">
         <PopoverTrigger as-child
-          ><IconButton label="Code export settings"
-            ><icon-lucide-settings class="size-3.5" /></IconButton
+          ><IconButton label="Code export settings" class="text-[11px]"
+            ><icon-lucide-settings class="size-4" /></IconButton
         ></PopoverTrigger>
         <PopoverPortal v-if="portalActive"
           ><PopoverContent
@@ -166,12 +167,17 @@ async function output(save: boolean) {
         >
       </PopoverRoot>
     </template>
-    <AppSelect v-model="style" :options="formats" label="Select code export format" />
+    <AppSelect
+      v-model="style"
+      :options="formats"
+      label="Select code export format"
+      :ui="exportSelectUI"
+    />
     <div class="mt-1.5 flex gap-1.5">
       <AppButton
         variant="soft"
         size="xs"
-        class="flex-1 font-normal"
+        class="flex-1 text-[11px] font-normal"
         :disabled="busy"
         @click="output(false)"
         >{{ copied ? 'Copied' : 'Copy HTML' }}</AppButton
@@ -179,7 +185,7 @@ async function output(save: boolean) {
       <AppButton
         variant="soft"
         size="xs"
-        class="flex-1 font-normal"
+        class="flex-1 text-[11px] font-normal"
         :disabled="busy"
         @click="output(true)"
         >Export HTML</AppButton
@@ -189,7 +195,7 @@ async function output(save: boolean) {
       v-if="IS_TAURI && !isMobile && toggleBrowserPreview"
       variant="soft"
       size="xs"
-      class="mt-1.5 w-full font-normal"
+      class="mt-1.5 w-full text-[11px] font-normal"
       aria-label="Import Web via Browser"
       @click="toggleBrowserPreview"
       >Import Web via Browser</AppButton

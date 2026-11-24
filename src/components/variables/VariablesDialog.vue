@@ -5,6 +5,7 @@ import { computed, defineAsyncComponent, ref, shallowRef, watch } from 'vue'
 
 import type { DesignTokenBundle } from '@open-pencil/core/io/formats/design-tokens'
 import { useI18n } from '@open-pencil/vue/i18n'
+import { useSceneComputed } from '@open-pencil/vue/internal/scene-computed'
 
 import { useEditorStore } from '@/app/editor/active-store'
 import { createTokenCopy } from '@/app/editor/tokens/copy'
@@ -35,6 +36,13 @@ const onKeydown = useDocumentShortcuts()
 const { variables, common } = useI18n()
 /** Expanding gives a large design system most of the window; it is kept for this session. */
 const expanded = ref(false)
+const hasCollections = useSceneComputed(() => store.graph.variableCollections.size > 0)
+const dialogUI = computed(() => ({
+  content:
+    expanded.value || hasCollections.value
+      ? 'rounded-[20px]'
+      : 'h-[min(30rem,90vh)] w-[min(40rem,96vw)] rounded-[20px] text-[11px]'
+}))
 const copyTokens = createTokenCopy(store)
 
 const TokenImportDialog = defineAsyncComponent(
@@ -95,6 +103,7 @@ function exportTokens() {
     v-model:open="open"
     :size="expanded ? 'screen' : 'xl'"
     :height="expanded ? 'screen' : 'full'"
+    :ui="dialogUI"
     data-test-id="variables-dialog"
     @keydown="onKeydown"
     :aria-describedby="undefined"

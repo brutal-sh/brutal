@@ -11,3 +11,5 @@
 - Document tabs and the sidebar resize handle stay accessible while a file opens.
 - The floating chat uses a uniform inset, compact conversation tabs, and single-row controls down to a 360 px composer width.
 - The editor remembers sidebar width in pixels and keeps comment search visible while the comment tool is active.
+- Keep Settings navigation usable at narrow widths and provide more space for desktop settings.
+- Fit both text alignment groups on one row in the compact inspector and offer SVG in its export menu.

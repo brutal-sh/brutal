@@ -58,7 +58,7 @@ if (IS_BROWSER) {
     v-model:open="open"
     size="md"
     :ui="{
-      content: 'top-[14%] w-[min(560px,calc(100%-32px))] translate-y-0 p-0',
+      content: 'top-[14%] w-[min(560px,calc(100%-32px))] translate-y-0 rounded-[14px] p-0',
       overlay: 'bg-black/40'
     }"
     @escape-key-down="close"
